@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGame", "GameExamples\TestGame\TestGame.vcxproj", "{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmolEngine", "SmolEngine\SmolEngine.vcxproj", "{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}.Debug|x64.ActiveCfg = Debug|x64
+		{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}.Debug|x64.Build.0 = Debug|x64
+		{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}.Debug|x86.ActiveCfg = Debug|x64
+		{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}.Release|x64.ActiveCfg = Release|x64
+		{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}.Release|x64.Build.0 = Release|x64
+		{2DD8C8F2-D1AB-4F6A-97A2-49E9D9B78812}.Release|x86.ActiveCfg = Release|x64
+		{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}.Debug|x64.ActiveCfg = Debug|x64
+		{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}.Debug|x64.Build.0 = Debug|x64
+		{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}.Debug|x86.ActiveCfg = Debug|x64
+		{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}.Release|x64.ActiveCfg = Release|x64
+		{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}.Release|x64.Build.0 = Release|x64
+		{68A7A5C0-8EC7-48EC-A509-E06CACEFE8C3}.Release|x86.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3827775D-8934-42E7-9EFD-5E5BC09871F3}
+	EndGlobalSection
+EndGlobal
