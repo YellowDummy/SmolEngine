@@ -1,0 +1,2 @@
+C:\Dev\SmolEngine\SmolEngine\Libraries\glad\bin\Debug-windows-x86_64\Glad\Glad.pdb
+C:\Dev\SmolEngine\SmolEngine\Libraries\glad\bin-int\Debug-windows-x86_64\Glad\Glad.pdb

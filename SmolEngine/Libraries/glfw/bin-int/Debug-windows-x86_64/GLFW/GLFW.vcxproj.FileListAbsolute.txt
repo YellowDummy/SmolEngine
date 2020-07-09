@@ -1,0 +1,2 @@
+C:\Dev\SmolEngine\SmolEngine\Libraries\glfw\bin\Debug-windows-x86_64\GLFW\GLFW.pdb
+C:\Dev\SmolEngine\SmolEngine\Libraries\glfw\bin-int\Debug-windows-x86_64\GLFW\GLFW.pdb

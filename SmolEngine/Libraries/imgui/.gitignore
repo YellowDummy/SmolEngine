@@ -1,0 +1,13 @@
+# Directories
+.vs/
+bin/
+bin-int/
+
+ # Files
+*.user
+Makefile 
+
+# Visual Studio files and folder
+.vs/
+*.sln
+*.vcxproj*

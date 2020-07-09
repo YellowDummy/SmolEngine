@@ -4,11 +4,11 @@
 
 extern SmolEngine::Application* SmolEngine::CreateApp();
 
-int main(int args, char** argv)
+int main(int argc, char** argv)
 {
 	auto app = SmolEngine::CreateApp();
 	app->StartApp();
-	delete app;
+	//delete app // reminder;
 }
 
 #endif
