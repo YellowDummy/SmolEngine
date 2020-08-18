@@ -1,6 +1,6 @@
 workspace "SmolEngine"
 	architecture "x64"
-	startproject "GameX"
+	startproject "SmolEngine-Editor"
 
 	configurations
 	{
@@ -15,7 +15,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "SmolEngine/Libraries/glfw/include"
 IncludeDir["Glad"] = "SmolEngine/Libraries/glad/include"
-IncludeDir["ImGui"] = "Hazel/vendor/imgui"
+IncludeDir["ImGui"] = "SmolEngine/Libraries/imgui"
+IncludeDir["glm"] = "SmolEngine/Libraries/glm"
+IncludeDir["stb"] = "SmolEngine/Libraries/stb_image"
+IncludeDir["entt"] = "SmolEngine/Libraries/entt"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -27,19 +30,25 @@ group ""
 
 project "SmolEngine"
 	location "SmolEngine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "stdafx.h"
-	pchsource "SmolEngine/Source/Core/stdafx.cpp"
+	pchsource "SmolEngine/Source/stdafx.cpp"
 
 	files
 	{
 		"%{prj.name}/Source/**.h",
-		"%{prj.name}/Source/**.cpp"
+		"%{prj.name}/Source/**.cpp",
+		"%{prj.name}/Libraries/glm/glm/**.hpp",
+		"%{prj.name}/Libraries/glm/glm/**.inl",
+		"%{prj.name}/Libraries/stb_image/**.h",
+		"%{prj.name}/Libraries/stb_image/**.cpp"
 	}
 
 	includedirs
@@ -48,7 +57,10 @@ project "SmolEngine"
 		"%{prj.name}/Libraries/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb}",
+           "%{IncludeDir.entt}"
 	}
 
 	links 
@@ -59,8 +71,15 @@ project "SmolEngine"
 		"opengl32.lib"
 	}
 
+	defines
+	{
+        "_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE"
+	}
+
+
+
 	filter "system:windows"
-		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
 
@@ -71,25 +90,20 @@ project "SmolEngine"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/GameX")
-		}
-
 	filter "configurations:Debug"
 		defines "SE_DEBUG"
 		buildoptions "/MDd"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
 
 project "GameX"
 	location "GameX"
@@ -103,16 +117,19 @@ project "GameX"
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/**.h",
+		"%{prj.name}/**.cpp",
+		"%{prj.name}/Libraries/glm/glm/**.hpp",
+		"%{prj.name}/Libraries/glm/glm/**.inl",
 	}
 
 	includedirs
 	{
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Source",
-		"SmolEngine/Libraries"
-
+		"SmolEngine/Libraries",
+		"%{IncludeDir.glm}",
+           "%{IncludeDir.entt}"
 	}
 
 	links
@@ -131,14 +148,71 @@ project "GameX"
 	filter "configurations:Debug"
 		defines "SE_DEBUG"
 		buildoptions "/MDd"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
+
+
+
+	project "SmolEngine-Editor"
+	location "SmolEngine-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/**.h",
+		"%{prj.name}/**.cpp",
+		"%{prj.name}/Libraries/glm/glm/**.hpp",
+		"%{prj.name}/Libraries/glm/glm/**.inl",
+	}
+
+	includedirs
+	{
+		"SmolEngine/Libraries/spdlog/include",
+		"SmolEngine/Source",
+		"SmolEngine/Libraries",
+		"%{IncludeDir.glm}",
+           "%{IncludeDir.entt}"
+	}
+
+	links
+	{
+		"SmolEngine"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"PLATFORM_WIN"
+		}
+
+	filter "configurations:Debug"
+		defines "SE_DEBUG"
+		buildoptions "/MDd"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "SE_RELEASE"
+		buildoptions "/MD"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "SE_DIST"
+		buildoptions "/MD"
+		optimize "on"
