@@ -1,14 +1,12 @@
 #include "Main.h"
 #include "Core/EntryPoint.h"
 #include "SmolEngineCore.h"
-#include "Playground2D.h"
 
 
 class Game : public SmolEngine::Application
 {
 public:
 
-	//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 	void ClientInit() override
 	{
 		auto& app = Application::GetApplication();
@@ -17,7 +15,6 @@ public:
 
 		CLIENT_INFO("Initialized successfully");
 	}
-	//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 };
 
 SmolEngine::Application* SmolEngine::CreateApp()

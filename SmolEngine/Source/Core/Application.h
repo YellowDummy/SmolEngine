@@ -38,6 +38,9 @@ namespace SmolEngine
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& GetApplication() { return *s_Instance; }
 
+		const uint32_t GetWindowHeight();
+		const uint32_t GetWindowWidth();
+
 	protected:
 		ImGuiLayer* m_ImGuiLayer;
 		Ref<Window> m_Window;

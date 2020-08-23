@@ -77,11 +77,11 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Libraries\spdlog\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MDd /bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -89,8 +89,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Debug-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug-windows-x86_64\ImGui\ImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -98,14 +101,14 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Libraries\spdlog\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,8 +117,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Release-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release-windows-x86_64\ImGui\ImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -123,14 +129,14 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Libraries\spdlog\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -139,8 +145,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Dist-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Dist-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Dist-windows-x86_64\ImGui\ImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\glm\glm\common.hpp" />
@@ -506,20 +515,54 @@
     <ClInclude Include="Libraries\glm\glm\vec4.hpp" />
     <ClInclude Include="Libraries\glm\glm\vector_relational.hpp" />
     <ClInclude Include="Libraries\stb_image\stb_image.h" />
+    <ClInclude Include="Lua\LuaBridge\List.h" />
+    <ClInclude Include="Lua\LuaBridge\LuaBridge.h" />
+    <ClInclude Include="Lua\LuaBridge\Map.h" />
+    <ClInclude Include="Lua\LuaBridge\RefCountedObject.h" />
+    <ClInclude Include="Lua\LuaBridge\RefCountedPtr.h" />
+    <ClInclude Include="Lua\LuaBridge\UnorderedMap.h" />
+    <ClInclude Include="Lua\LuaBridge\Vector.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\CFunctions.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\ClassInfo.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Config.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Constructor.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\FuncTraits.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Iterator.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\LuaException.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\LuaHelpers.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\LuaRef.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Namespace.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Security.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Stack.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\TypeList.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\TypeTraits.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\Userdata.h" />
+    <ClInclude Include="Lua\LuaBridge\detail\dump.h" />
+    <ClInclude Include="Lua\include\lauxlib.h" />
+    <ClInclude Include="Lua\include\lua.h" />
+    <ClInclude Include="Lua\include\lua.hpp" />
+    <ClInclude Include="Lua\include\luaconf.h" />
+    <ClInclude Include="Lua\include\lualib.h" />
     <ClInclude Include="Source\Core\Application.h" />
     <ClInclude Include="Source\Core\AssetManager.h" />
     <ClInclude Include="Source\Core\Core.h" />
+    <ClInclude Include="Source\Core\ECS\Actor.h" />
     <ClInclude Include="Source\Core\ECS\Components.h" />
+    <ClInclude Include="Source\Core\ECS\DefaultSystems.h" />
+    <ClInclude Include="Source\Core\ECS\Scene.h" />
+    <ClInclude Include="Source\Core\ECS\ScriptableObject.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
     <ClInclude Include="Source\Core\EventHandler.h" />
     <ClInclude Include="Source\Core\Events\ApplicationEvent.h" />
     <ClInclude Include="Source\Core\Events\InputEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
+    <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h" />
     <ClInclude Include="Source\Core\ImGui\ImGuiLayer.h" />
     <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\Core\InputCodes.h" />
     <ClInclude Include="Source\Core\Layer.h" />
     <ClInclude Include="Source\Core\LayerManager.h" />
+    <ClInclude Include="Source\Core\Networking\NetworkComponents.h" />
     <ClInclude Include="Source\Core\Renderer\Buffer.h" />
     <ClInclude Include="Source\Core\Renderer\Camera.h" />
     <ClInclude Include="Source\Core\Renderer\Framebuffer.h" />
@@ -537,8 +580,10 @@
     <ClInclude Include="Source\Core\Renderer\Shader.h" />
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
-    <ClInclude Include="Source\Core\ECS\Scene.h" />
     <ClInclude Include="Source\Core\SLog.h" />
+    <ClInclude Include="Source\Core\Scripting\Jinx.h" />
+    <ClInclude Include="Source\Core\Scripting\Lua.h" />
+    <ClInclude Include="Source\Core\Scripting\Native.h" />
     <ClInclude Include="Source\Core\Time.h" />
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\Window.h" />
@@ -549,6 +594,8 @@
     <ClCompile Include="Libraries\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Core\AssetManager.cpp" />
+    <ClCompile Include="Source\Core\ECS\DefaultSystems.cpp" />
+    <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiLayer.cpp" />
@@ -585,6 +632,9 @@
     </ProjectReference>
     <ProjectReference Include="Libraries\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Libraries\yojimbo\Yojimbo.vcxproj">
+      <Project>{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

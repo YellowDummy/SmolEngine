@@ -3,6 +3,7 @@
 
 #include "EditorLayer.h"
 
+
 namespace SmolEngine
 {
 	Editor::Editor()
@@ -15,10 +16,12 @@ namespace SmolEngine
 
 	}
 
+
 	void Editor::ClientInit()
 	{
 		auto& app = Application::GetApplication();
 		app.PushLayer(new EditorLayer);
+
 
 		EDITOR_INFO("Initialized successfully");
 	}

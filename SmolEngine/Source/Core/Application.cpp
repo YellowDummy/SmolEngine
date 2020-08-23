@@ -44,7 +44,7 @@ namespace SmolEngine
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
 
-		//Initializing Timer Class
+		//Creating Timer
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
 
@@ -58,7 +58,7 @@ namespace SmolEngine
 		m_LayerHandler = std::make_shared<LayerManager>();
 
 		//Initializing Main Window
-		m_Window = std::make_shared<Window>(std::string("SmolEngine Editor - v0.1"), 720, 1280, m_EventHandler);
+		m_Window = std::make_shared<Window>(std::string("SmolEngine Editor - v0.1"), 1080, 1920, m_EventHandler);
 
 		//Initializing GUI
 		m_ImGuiLayer = new ImGuiLayer();
@@ -173,6 +173,16 @@ namespace SmolEngine
 		m_WindowMinimized = false; 
 		Renderer::OnWidowResize(e.GetHeight(), e.GetWidth());
 		return false;
+	}
+
+	const uint32_t Application::GetWindowHeight()
+	{
+		return m_Window->GetHeight();
+	}
+
+	const uint32_t Application::GetWindowWidth()
+	{
+		return m_Window->GetWidth();
 	}
 
 }

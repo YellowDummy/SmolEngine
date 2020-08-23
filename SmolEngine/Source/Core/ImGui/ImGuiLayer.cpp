@@ -28,8 +28,13 @@ namespace SmolEngine
 
 	void ImGuiLayer::OnEvent(Event& event)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		if (io.WantTextInput)
+		{
+			event.m_Handled = true;
+		}
 		//TO DO: Block Mouse & Keyboard events
-		//ImGuiIO& io = ImGui::GetIO();
 		//event.m_Handled |= event.m_EventCategory == (uint32_t) EventType::S_MOUSE_MOVE && io.WantCaptureMouse;
 		//event.m_Handled |= event.m_EventCategory == (uint32_t)EventCategory::S_EVENT_KEYBOARD && io.WantCaptureKeyboard;
 	}

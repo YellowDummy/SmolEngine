@@ -25,11 +25,26 @@
     <Filter Include="Libraries\stb_image">
       <UniqueIdentifier>{1CB49886-8815-7694-1183-BC467DE3AC53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{A705880B-130F-887C-9C8A-9E7C0893937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\LuaBridge">
+      <UniqueIdentifier>{85B194FE-F171-1035-BAAC-59B2262C5511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\LuaBridge\detail">
+      <UniqueIdentifier>{A72111A5-93B0-9A6E-3CCF-AE69283DAB14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\include">
+      <UniqueIdentifier>{1AE47779-8699-F06E-0F8E-EA457B42E772}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\ECS">
+      <UniqueIdentifier>{B890B921-241C-27E6-2D2D-AADA993783E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Core\Events">
       <UniqueIdentifier>{92191B46-7EFD-DB9B-E75D-D6EED360C61D}</UniqueIdentifier>
@@ -37,11 +52,20 @@
     <Filter Include="Source\Core\ImGui">
       <UniqueIdentifier>{18E5BF76-84FB-BD0C-CD72-492E39C88E94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\ImGui\FileBrowser">
+      <UniqueIdentifier>{8BC60963-F7DE-F08C-C08B-80262C638526}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Networking">
+      <UniqueIdentifier>{C55D9593-B157-BEE5-9AC4-54F6865D2452}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Renderer">
       <UniqueIdentifier>{D4D44230-C063-CCF9-6982-E0F455F0DC9F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Core\Renderer\OpenGL">
       <UniqueIdentifier>{88472D1F-F454-5B05-7D3B-57F0E94727BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Scripting">
+      <UniqueIdentifier>{F02BF114-5C98-AC0F-258C-446D91B7CE77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1134,11 +1158,113 @@
     <ClInclude Include="Libraries\stb_image\stb_image.h">
       <Filter>Libraries\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\List.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\LuaBridge.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\Map.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\RefCountedObject.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\RefCountedPtr.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\UnorderedMap.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\Vector.h">
+      <Filter>Lua\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\CFunctions.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\ClassInfo.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Config.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Constructor.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\FuncTraits.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Iterator.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\LuaException.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\LuaHelpers.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\LuaRef.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Namespace.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Security.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Stack.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\TypeList.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\TypeTraits.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\Userdata.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaBridge\detail\dump.h">
+      <Filter>Lua\LuaBridge\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\include\lauxlib.h">
+      <Filter>Lua\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\include\lua.h">
+      <Filter>Lua\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\include\lua.hpp">
+      <Filter>Lua\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\include\luaconf.h">
+      <Filter>Lua\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\include\lualib.h">
+      <Filter>Lua\include</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Application.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\AssetManager.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Actor.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\DefaultSystems.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Scene.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\ScriptableObject.h">
+      <Filter>Source\Core\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\EntryPoint.h">
       <Filter>Source\Core</Filter>
@@ -1155,6 +1281,9 @@
     <ClInclude Include="Source\Core\Events\MouseEvent.h">
       <Filter>Source\Core\Events</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h">
+      <Filter>Source\Core\ImGui\FileBrowser</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\ImGui\ImGuiLayer.h">
       <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
@@ -1169,6 +1298,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\LayerManager.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Networking\NetworkComponents.h">
+      <Filter>Source\Core\Networking</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Buffer.h">
       <Filter>Source\Core\Renderer</Filter>
@@ -1224,6 +1356,15 @@
     <ClInclude Include="Source\Core\SLog.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\Jinx.h">
+      <Filter>Source\Core\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\Lua.h">
+      <Filter>Source\Core\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\Native.h">
+      <Filter>Source\Core\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Time.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1239,15 +1380,21 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Components.h" />
-    <ClInclude Include="Source\Core\ECS\Scene.h" />
-    <ClInclude Include="Source\Core\AssetManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
       <Filter>Libraries\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Application.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\AssetManager.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\DefaultSystems.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\EntryPoint.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EventHandler.cpp">
@@ -1322,6 +1469,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\AssetManager.cpp" />
   </ItemGroup>
 </Project>

@@ -16,6 +16,13 @@ namespace SmolEngine
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
+	OrthographicCamera::OrthographicCamera(float zoomLevel, float aspectRatio)
+		:m_ProjectionMatrix(glm::ortho(-aspectRatio * zoomLevel, aspectRatio* zoomLevel, -zoomLevel, zoomLevel)),
+		m_ViewMatrix(1.0f)
+	{
+		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+	}
+
 	void OrthographicCamera::SetProjection(float left, float right, float buttom, float top, float zNear, float zFar)
 	{
 		m_ProjectionMatrix = glm::ortho(left, right, buttom, top, zNear, zFar);
@@ -46,26 +53,26 @@ namespace SmolEngine
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
-	void CameraController::OnUpdate(DeltaTime deltaTime)
+	void CameraController::OnUpdate(DeltaTime deltaTime, glm::vec3& wolrdPos)
 	{
 		if (Input::IsKeyPressed(S_KEY_D))
 		{
-			m_CameraPosition.x += m_CameraSpeed * deltaTime;
+			wolrdPos.x += m_CameraSpeed * deltaTime;
 		}
 		else if (Input::IsKeyPressed(S_KEY_A))
 		{
-			m_CameraPosition.x -= m_CameraSpeed * deltaTime;
+			wolrdPos.x -= m_CameraSpeed * deltaTime;
 		}
 		else if (Input::IsKeyPressed(S_KEY_W))
 		{
-			m_CameraPosition.y += m_CameraSpeed * deltaTime;
+			wolrdPos.y += m_CameraSpeed * deltaTime;
 		}
 		else if (Input::IsKeyPressed(S_KEY_S))
 		{
-			m_CameraPosition.y -= m_CameraSpeed * deltaTime;
+			wolrdPos.y -= m_CameraSpeed * deltaTime;
 		}
 
-		m_Camera.SetPosition(m_CameraPosition);
+		m_Camera.SetPosition(wolrdPos);
 		m_CameraSpeed = m_ZoomLevel;
 	}
 

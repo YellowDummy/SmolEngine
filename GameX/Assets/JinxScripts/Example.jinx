@@ -1,0 +1,15 @@
+-- Use the core library
+import core
+-- Use the SmolEngine library
+import smolengine
+
+-- Call JinxScript::Start() in C++
+call start func
+
+-- Write to the debug output
+function meaning of life
+ return 42
+end
+
+set a to meaning of life
+write line "a’s value = ", a -- a = 42

@@ -11,6 +11,8 @@ namespace SmolEngine
 	{
 	public:
 		OrthographicCamera(float left, float right, float buttom, float top, float zNear = -1.0f, float zFar = 1.0f);
+		OrthographicCamera(float zoomLevel, float aspectRation);
+
 
 		void SetPosition(const glm::vec3& position) { m_CameraPos = position; RecalculateViewMatrix(); }
 		void SetRotation(const float rotation) { m_CameraRotation = rotation; RecalculateViewMatrix(); }
@@ -38,8 +40,10 @@ namespace SmolEngine
 	{
 	public:
 		CameraController(float aspectRatio, bool roatationEnabled = false);
+		virtual ~CameraController() = default;
+
 		void CalculateView();
-		void OnUpdate(DeltaTime deltaTime);
+		void OnUpdate(DeltaTime deltaTime, glm::vec3& wolrdPos);
 		void OnEvent(Event& event);
 		void SetZoom(float value) { m_ZoomLevel = value; CalculateView(); }
 		void OnResize(float width, float height);
@@ -55,7 +59,6 @@ namespace SmolEngine
 	private:
 		float m_AspectRatio, m_ZoomLevel = 1.0f;
 		float m_CameraSpeed = 3.0f, m_CameraRotationSpeed = 1.0f;
-		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		OrthographicCamera m_Camera;
 	};
 }

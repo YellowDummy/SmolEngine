@@ -19,12 +19,13 @@ IncludeDir["ImGui"] = "SmolEngine/Libraries/imgui"
 IncludeDir["glm"] = "SmolEngine/Libraries/glm"
 IncludeDir["stb"] = "SmolEngine/Libraries/stb_image"
 IncludeDir["entt"] = "SmolEngine/Libraries/entt"
+IncludeDir["yojimbo"] = "SmolEngine/Libraries/yojimbo"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
 include "SmolEngine/Libraries/glad"
 include "SmolEngine/Libraries/imgui"
-
+include "SmolEngine/Libraries/yojimbo"
 group ""
 
 
@@ -48,19 +49,27 @@ project "SmolEngine"
 		"%{prj.name}/Libraries/glm/glm/**.hpp",
 		"%{prj.name}/Libraries/glm/glm/**.inl",
 		"%{prj.name}/Libraries/stb_image/**.h",
-		"%{prj.name}/Libraries/stb_image/**.cpp"
+		"%{prj.name}/Libraries/stb_image/**.cpp",
+		"%{prj.name}/Lua/**.cpp",
+		"%{prj.name}/Lua/**.h",
+		"%{prj.name}/Lua/**.hpp"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/Source",
 		"%{prj.name}/Libraries/spdlog/include",
+		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/jinx",
+		"%{prj.name}/Lua",
+		"%{prj.name}/Lua/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
-           "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+		"%{IncludeDir.yojimbo}"
 	}
 
 	links 
@@ -68,6 +77,7 @@ project "SmolEngine"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"Yojimbo",
 		"opengl32.lib"
 	}
 
@@ -76,8 +86,6 @@ project "SmolEngine"
         "_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE"
 	}
-
-
 
 	filter "system:windows"
 		staticruntime "On"
@@ -93,16 +101,19 @@ project "SmolEngine"
 	filter "configurations:Debug"
 		defines "SE_DEBUG"
 		buildoptions "/MDd"
+		buildoptions "/bigobj"
 		symbols "on"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
+		buildoptions "/bigobj"
 		optimize "on"
 
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
+		buildoptions "/bigobj"
 		optimize "on"
 
 project "GameX"
@@ -126,15 +137,21 @@ project "GameX"
 	includedirs
 	{
 		"SmolEngine/Libraries/spdlog/include",
+		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
+		"SmolEngine/Lua",
+		"SmolEngine/Lua/include",
 		"SmolEngine/Libraries",
 		"%{IncludeDir.glm}",
-           "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+		"%{IncludeDir.yojimbo}"
 	}
 
 	links
 	{
-		"SmolEngine"
+		"SmolEngine",
+		"SmolEngine/Lua/lua54.lib"
 	}
 
 	filter "system:windows"
@@ -148,21 +165,24 @@ project "GameX"
 	filter "configurations:Debug"
 		defines "SE_DEBUG"
 		buildoptions "/MDd"
+		buildoptions "/bigobj"
 		symbols "on"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
+		buildoptions "/bigobj"
 		optimize "on"
 
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
+		buildoptions "/bigobj"
 		optimize "on"
 
-
-
+	
 	project "SmolEngine-Editor"
+
 	location "SmolEngine-Editor"
 	kind "ConsoleApp"
 	language "C++"
@@ -183,15 +203,21 @@ project "GameX"
 	includedirs
 	{
 		"SmolEngine/Libraries/spdlog/include",
+		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
+		"SmolEngine/Lua",
+		"SmolEngine/Lua/include",
 		"%{IncludeDir.glm}",
-           "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+		"%{IncludeDir.yojimbo}"
 	}
 
 	links
 	{
-		"SmolEngine"
+		"SmolEngine",
+		"SmolEngine/Lua/lua54.lib"
 	}
 
 	filter "system:windows"
@@ -205,14 +231,17 @@ project "GameX"
 	filter "configurations:Debug"
 		defines "SE_DEBUG"
 		buildoptions "/MDd"
+		buildoptions "/bigobj"
 		symbols "on"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
+		buildoptions "/bigobj"
 		optimize "on"
 
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
+		buildoptions "/bigobj"
 		optimize "on"
