@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "EditorLayer.h"
-#include "Core/Scripting/Native.h"
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Scripting/Jinx.h"
 
@@ -10,7 +9,6 @@
 
 namespace SmolEngine
 {
-
 	//Example Of Native C++ Script
 	class CharMovementScript: public ScriptableObject
 	{
@@ -486,7 +484,6 @@ namespace SmolEngine
 		{
 			m_FilePath = m_FileBrowser->GetSelected().u8string();
 
-			//TODO: Add FileBrowser Flags
 			switch (m_FileBrowserState)
 			{
 			case (uint32_t)FileBrowserFlags::ScriptPath:

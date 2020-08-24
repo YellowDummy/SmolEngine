@@ -50,8 +50,6 @@ namespace SmolEngine
 			{
 				EDITOR_ERROR("JinxScript initialization failed!");
 			}
-
-
 		}
 
 		void Start() override
@@ -68,7 +66,6 @@ namespace SmolEngine
 		{
 
 		}
-
 
 	private:
 		Jinx::RuntimePtr m_Runtime;

@@ -1362,9 +1362,6 @@
     <ClInclude Include="Source\Core\Scripting\Lua.h">
       <Filter>Source\Core\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\Native.h">
-      <Filter>Source\Core\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Time.h">
       <Filter>Source\Core</Filter>
     </ClInclude>

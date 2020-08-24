@@ -114,14 +114,14 @@ namespace SmolEngine
 			style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
 		}
 
-		Application& app = Application::GetApplication();
-		GLFWwindow* window = (app.GetWindow().GetNativeWindow());
-
 		ImFontConfig config;
 		config.OversampleH = 3;
 		config.OversampleV = 1;
 		config.GlyphExtraSpacing.x = 1.0f;
 		io.Fonts->AddFontFromFileTTF("C:/Dev/SmolEngine/SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
+
+		Application& app = Application::GetApplication();
+		GLFWwindow* window = (app.GetWindow().GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
