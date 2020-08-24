@@ -16,7 +16,8 @@ project "Yojimbo"
         targetdir "bin/"  
     end
 
-    rtti "Off"
+    systemversion "latest"
+    staticruntime "On"
     links { libs }
     warnings "Extra"
     floatingpoint "Fast"

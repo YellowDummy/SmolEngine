@@ -5,14 +5,11 @@
 #include "Core/Scripting/Jinx.h"
 
 #include <imgui/imgui.h>
+#include <filesystem>
+#include "icon_font_cpp_headers/IconsFontAwesome5.h"
 
 namespace SmolEngine
 {
-
-	enum class ComponentItem: char
-	{
-		None = 0, Tetxure2D, JinxScript, Camera, AnimationContoller, ParticleSystem
-	};
 
 	//Example Of Native C++ Script
 	class CharMovementScript: public ScriptableObject
@@ -70,6 +67,8 @@ namespace SmolEngine
 	void EditorLayer::OnAttach()
 	{
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
+		m_Console = std::make_shared<EditorConsole>();
+		m_Console->AddMessage(std::string("Console Successfully Initialized!"), LogLevel::Info);
 
 		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
 		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
@@ -114,6 +113,7 @@ namespace SmolEngine
 
 	void EditorLayer::OnImGuiRender()
 	{
+
 		const GLubyte* renderer = glGetString(GL_RENDERER);
 
 		static bool p_open = true;
@@ -205,6 +205,8 @@ namespace SmolEngine
 			ImGui::End();
 		}
 
+		m_Console->Update();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f});
 		if(ImGui::Begin("Scene View"))
 		{
@@ -269,7 +271,6 @@ namespace SmolEngine
 
 					if (ImGui::TreeNode("Components"))
 					{
-
 						if (ImGui::TreeNode("Transform"))
 						{
 							ImGui::InputFloat3("Transform", glm::value_ptr(actor->GetComponent<TransfromComponent>().WorldPos));
@@ -282,7 +283,42 @@ namespace SmolEngine
 						{
 							if (ImGui::TreeNode("Texture2D"))
 							{
-								ImGui::Checkbox("Texture2D Enabled", &actor->GetComponent<Texture2DComponent>().Enabled);
+								if (actor->GetComponent<Texture2DComponent>().Texture != nullptr)
+								{
+									ImGui::Separator();
+									ImGui::NewLine();
+									ImGui::Image((void*)actor->GetComponent<Texture2DComponent>().Texture->GetID(), ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+									ImGui::SameLine();
+
+									if (ImGui::Button("Change"))
+									{
+										m_FileBrowserState = (uint32_t)FileBrowserFlags::Texture2dPath;
+										m_SelectedActor = actor;
+										m_FileBrowser->SetTitle("Select a texture");
+										m_FileBrowser->SetTypeFilters({ ".png" });
+										m_FileBrowser->Open();
+									}
+
+									ImGui::SameLine();
+									ImGui::Checkbox("Texture2D Enabled", &actor->GetComponent<Texture2DComponent>().Enabled);
+								}
+								else
+								{
+									ImGui::NewLine();
+									ImGui::Separator();
+
+									if (ImGui::Button("New Texture2D"))
+									{
+										m_FileBrowserState = (uint32_t)FileBrowserFlags::Texture2dPath;
+										m_SelectedActor = actor;
+										m_FileBrowser->SetTitle("Select a texture");
+										m_FileBrowser->SetTypeFilters({ ".png" });
+										m_FileBrowser->Open();
+									}
+								}
+
+								ImGui::NewLine();
+								ImGui::Separator();
 								ImGui::ColorEdit3("Color", glm::value_ptr(actor->GetComponent<Texture2DComponent>().Color));
 								ImGui::TreePop();
 							}
@@ -315,6 +351,7 @@ namespace SmolEngine
 						{
 							static int current_item = 0;
 							ImGui::Combo("Component", &current_item, "None\0Texture2D\0JinxScript\0AnimationContoller\0ParticleSystem\0\0");
+							ImGui::Separator();
 
 							if (ImGui::Button("Add", ImVec2{ 60, 25 }))
 							{
@@ -339,7 +376,11 @@ namespace SmolEngine
 								{
 									if (!actor->HasComponent<JinxScriptComponent>())
 									{
+										m_FileBrowserState = (uint32_t)FileBrowserFlags::ScriptPath;
+
 										m_SelectedActor = actor;
+										m_FileBrowser->SetTitle("Select a Jinx script");
+										m_FileBrowser->SetTypeFilters({".jinx"});
 										m_FileBrowser->Open();
 										break;
 									}
@@ -354,6 +395,7 @@ namespace SmolEngine
 								current_item = 0;
 							}
 
+							ImGui::SameLine();
 							if (ImGui::Button("Delete", ImVec2{ 60, 25 }))
 							{
 								switch (current_item)
@@ -407,18 +449,15 @@ namespace SmolEngine
 							ImGui::TreePop();
 						}
 
-						if (ImGui::TreeNode("Save as Blueprint"))
+						if (ImGui::TreeNode("Default"))
 						{
 							if (ImGui::Button("Save", ImVec2{ 60, 25 }))
 							{
 								//!TODO: Serialize Actor Class
 							}
 
-							ImGui::TreePop();
-						}
-						
-						if (ImGui::TreeNode("Delete Actor"))
-						{
+							ImGui::SameLine();
+
 							if (ImGui::Button("Delete", ImVec2{ 60, 25 }))
 							{
 								//TODO: Fix DeleteActorImmediately method
@@ -427,6 +466,7 @@ namespace SmolEngine
 
 							ImGui::TreePop();
 						}
+						
 
 						ImGui::TreePop();
 					}
@@ -444,12 +484,34 @@ namespace SmolEngine
 
 		if (m_FileBrowser->HasSelected())
 		{
+			m_FilePath = m_FileBrowser->GetSelected().u8string();
+
 			//TODO: Add FileBrowser Flags
-			m_scriptFilePath = m_FileBrowser->GetSelected().u8string();
-			m_SelectedActor->AddComponent<JinxScriptComponent>(m_Actor, m_Scene.GetJinxRuntime(), m_scriptFilePath);
-			m_FileBrowser->ClearSelected();
-			m_SelectedActor = nullptr;
+			switch (m_FileBrowserState)
+			{
+			case (uint32_t)FileBrowserFlags::ScriptPath:
+
+				m_SelectedActor->AddComponent<JinxScriptComponent>(m_Actor, m_Scene.GetJinxRuntime(), m_FilePath);
+				ResetFileBrowser();
+				break;
+			case (uint32_t)FileBrowserFlags::Texture2dPath:
+			{
+				m_SelectedActor->GetComponent<Texture2DComponent>().Texture = Texture2D::Create(m_FilePath);
+				ResetFileBrowser();
+				break;
+			}
+			default:
+				break;
+			}
 		}
 
+	}
+
+	void EditorLayer::ResetFileBrowser()
+	{
+		m_FileBrowser->ClearSelected();
+		m_SelectedActor = nullptr;
+		m_FilePath = "";
+		m_FileBrowserState = 0;
 	}
 }

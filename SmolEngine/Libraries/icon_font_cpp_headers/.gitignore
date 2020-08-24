@@ -1,0 +1,8 @@
+# don't commit pyhton compiled files
+*.pyc
+
+# Pycharm ignore
+.idea/
+
+venv/
+icons.yml

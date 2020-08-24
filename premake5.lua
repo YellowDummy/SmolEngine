@@ -57,10 +57,11 @@ project "SmolEngine"
 
 	includedirs
 	{
-		"%{prj.name}/Source",
+		"%{prj.name}/Libraries/icon_font_cpp_headers",
 		"%{prj.name}/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
+		"%{prj.name}/Source",
 		"%{prj.name}/Lua",
 		"%{prj.name}/Lua/include",
 		"%{IncludeDir.GLFW}",
@@ -136,6 +137,7 @@ project "GameX"
 
 	includedirs
 	{
+		"%{prj.name}/Libraries/icon_font_cpp_headers",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
@@ -202,6 +204,7 @@ project "GameX"
 
 	includedirs
 	{
+		"%{prj.name}/Libraries/icon_font_cpp_headers",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
