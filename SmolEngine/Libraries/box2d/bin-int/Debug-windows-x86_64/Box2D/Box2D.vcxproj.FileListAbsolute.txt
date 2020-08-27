@@ -1,0 +1,2 @@
+C:\Dev\SmolEngine\SmolEngine\Libraries\box2d\bin\Debug-windows-x86_64\Box2D\Box2D.pdb
+C:\Dev\SmolEngine\SmolEngine\Libraries\box2d\bin-int\Debug-windows-x86_64\Box2D\Box2D.pdb

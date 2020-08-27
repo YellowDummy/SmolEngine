@@ -58,6 +58,9 @@
     <Filter Include="Source\Core\Networking">
       <UniqueIdentifier>{C55D9593-B157-BEE5-9AC4-54F6865D2452}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Physics2D">
+      <UniqueIdentifier>{96656886-02D2-2381-CBC5-BBDE37F145E9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Renderer">
       <UniqueIdentifier>{D4D44230-C063-CCF9-6982-E0F455F0DC9F}</UniqueIdentifier>
     </Filter>
@@ -1266,6 +1269,9 @@
     <ClInclude Include="Source\Core\ECS\ScriptableObject.h">
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\EngineCommand.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\EntryPoint.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1280,6 +1286,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\Events\MouseEvent.h">
       <Filter>Source\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\EditorConsole.h">
+      <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h">
       <Filter>Source\Core\ImGui\FileBrowser</Filter>
@@ -1299,8 +1308,11 @@
     <ClInclude Include="Source\Core\LayerManager.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Networking\NetworkComponents.h">
+    <ClInclude Include="Source\Core\Networking\NetworkManager.h">
       <Filter>Source\Core\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Rigidbody2D.h">
+      <Filter>Source\Core\Physics2D</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Buffer.h">
       <Filter>Source\Core\Renderer</Filter>
@@ -1377,7 +1389,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ImGui\EditorConsole.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1389,7 +1400,19 @@
     <ClCompile Include="Source\Core\AssetManager.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Actor.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\ECS\DefaultSystems.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Scene.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp">
       <Filter>Source\Core\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EntryPoint.cpp">
@@ -1409,6 +1432,9 @@
     </ClCompile>
     <ClCompile Include="Source\Core\LayerManager.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Physics2D\Rigidbody2D.cpp">
+      <Filter>Source\Core\Physics2D</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Buffer.cpp">
       <Filter>Source\Core\Renderer</Filter>

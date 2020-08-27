@@ -26,6 +26,7 @@ include "SmolEngine/Libraries/glfw"
 include "SmolEngine/Libraries/glad"
 include "SmolEngine/Libraries/imgui"
 include "SmolEngine/Libraries/yojimbo"
+include "SmolEngine/Libraries/box2d"
 group ""
 
 
@@ -61,6 +62,7 @@ project "SmolEngine"
 		"%{prj.name}/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
+		"%{prj.name}/Libraries/box2d/include",
 		"%{prj.name}/Source",
 		"%{prj.name}/Lua",
 		"%{prj.name}/Lua/include",
@@ -79,6 +81,7 @@ project "SmolEngine"
 		"Glad",
 		"ImGui",
 		"Yojimbo",
+		"Box2D",
 		"opengl32.lib"
 	}
 
@@ -137,7 +140,8 @@ project "GameX"
 
 	includedirs
 	{
-		"%{prj.name}/Libraries/icon_font_cpp_headers",
+		"SmolEngine/Libraries/icon_font_cpp_headers",
+		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
@@ -154,6 +158,7 @@ project "GameX"
 	{
 		"SmolEngine",
 		"SmolEngine/Lua/lua54.lib"
+		--"SmolEngine/Libraries/box2d/Box2D.lib"
 	}
 
 	filter "system:windows"
@@ -204,7 +209,8 @@ project "GameX"
 
 	includedirs
 	{
-		"%{prj.name}/Libraries/icon_font_cpp_headers",
+		"SmolEngine/Libraries/icon_font_cpp_headers",
+		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
@@ -221,6 +227,7 @@ project "GameX"
 	{
 		"SmolEngine",
 		"SmolEngine/Lua/lua54.lib"
+		--"SmolEngine/Libraries/box2d/Box2D.lib"
 	}
 
 	filter "system:windows"
