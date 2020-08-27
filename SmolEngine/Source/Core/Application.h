@@ -8,7 +8,6 @@
 #include "SLog.h"
 #include "Core/Time.h"
 
-
 namespace SmolEngine
 {
 	class ImGuiLayer;

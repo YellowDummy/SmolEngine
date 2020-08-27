@@ -1,16 +1,18 @@
 #include "stdafx.h"
 #include "Application.h"
 #include "GLFW/glfw3.h"
+
 #include "Tools.h"
 #include "Input.h"
 #include "Window.h"
+
 #include "ImGui/ImGuiLayer.h" 
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Renderer/Renderer.h"
+#include "Core/ECS/Scene.h"
 
 namespace SmolEngine 
 {
-
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
@@ -44,7 +46,7 @@ namespace SmolEngine
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
 
-		//Creating Timer
+		//Creating Startup Timer
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
 
@@ -63,6 +65,10 @@ namespace SmolEngine
 		//Initializing GUI
 		m_ImGuiLayer = new ImGuiLayer();
 		//---------------------------------------------------------------------///
+
+		//Initializing Main Scene
+		Scene::GetScene()->Init();
+
 		NATIVE_INFO("Initialized successfully");
 		timer.StopTimer();
 
@@ -85,8 +91,9 @@ namespace SmolEngine
 	void Application::CloseApp()
 	{
 		NATIVE_INFO("State : Shutdown");
-		m_Window->ShutDown();
 		m_Running = false;
+		Scene::GetScene()->ShutDown();
+		m_Window->ShutDown();
 		exit(0);
 	}
 

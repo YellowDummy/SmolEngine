@@ -1,24 +1,20 @@
 #pragma once
 
 #include <../Libraries/entt/entt.hpp>
-
 #include "Core/ECS/Components.h"
-
 #include "Core/Time.h"
 #include "Core/SLog.h"
+
+#include <functional>
+#include <vector>
 
 namespace SmolEngine
 {
 	class Actor
 	{
 	public:
-
-		Actor() = default;
-		Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag)
-			:Entity(entity), Tag(tag), Reg(reg), Name(name), IsDisabled(false)
-		{
-			AddComponent<TransfromComponent>();
-		}
+		Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id);
+		Ref<Actor> operator==(const Ref<Actor> other);
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
@@ -29,8 +25,8 @@ namespace SmolEngine
 				NATIVE_ERROR("Actor already has component.");
 				abort();
 			}
-
-			return Reg.emplace<T>(Entity, std::forward<Args>(args)...);
+			auto& component = Reg.emplace<T>(Entity, std::forward<Args>(args)...);
+			return component;
 		}
 
 		template<typename T>
@@ -63,16 +59,27 @@ namespace SmolEngine
 
 		std::string& GetName() { return Name; }
 		const std::string& GetTag() { return Tag; }
+		const size_t GetID() { return ID; }
+
+		Ref<Actor> GetParent() { return Parent; }
+		void SetParent(Ref<Actor> parent) { Parent = parent; }
+
+		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
+
+		Ref<Actor> GetChildByName(const std::string& name);
+		Ref<Actor> GetChildByTag(const std::string& tag);
 
 	public:
 		bool IsDisabled;
 		bool showActions = false;
 
 	private:
-		entt::entity Entity;
+		std::vector<Ref<Actor>> Childs;
+		Ref<Actor> Parent;
 		std::string Name;
 		std::string Tag;
+		entt::entity Entity;
 		entt::registry& Reg;
-
+		size_t ID;
 	};
 }
