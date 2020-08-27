@@ -52,14 +52,12 @@ namespace SmolEngine
 
 		OrthographicCamera& GetCamera() {return m_Camera;}
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
-
 	private:
 		bool IsMouseScrolled(Event& event);
 		bool IsWindowResized(Event& event);
 
 	private:
-		float m_ZoomLevel = 1.0f;
-		float m_AspectRatio;
+		float m_AspectRatio, m_ZoomLevel = 1.0f;
 		float m_CameraSpeed = 3.0f, m_CameraRotationSpeed = 1.0f;
 		OrthographicCamera m_Camera;
 	};

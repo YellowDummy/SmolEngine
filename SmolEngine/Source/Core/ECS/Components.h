@@ -9,22 +9,15 @@
 #include "Core/ECS/ScriptableObject.h"
 #include "Core/Scripting/Jinx.h"
 
-#include "Core/Physics2D/Rigidbody2D.h"
-
 #include <glm/glm.hpp>
+#include <unordered_map>
+#include <tuple>
+#include <any>
 #include <Jinx.hpp>
-#include <box2d/box2d.h>
 
 namespace SmolEngine
 {
 	class Actor;
-
-	struct B2Data
-	{
-		float* B2Rotation = nullptr;
-		b2Transform* B2Pos = nullptr;
-		b2Body* B2Body = nullptr;
-	};
 
 	struct TransfromComponent
 	{
@@ -32,16 +25,9 @@ namespace SmolEngine
 		glm::vec2 Scale = glm::vec2(1.0f);;
 		float Rotation = 0;
 
-		Ref<B2Data> B2Data = nullptr; // !Should never be initialized outside of Rigidbody2D
-
 		TransfromComponent(const TransfromComponent&) = default;
 		TransfromComponent(const glm::vec3& worldPos = glm::vec3(1.0f), const glm::vec2& scale = glm::vec2(1.0f), const float rotation = 0)
 			:WorldPos(worldPos), Scale(scale), Rotation(rotation) {}
-
-		void SetTranform(float x, float y, float z = 1)
-		{
-			WorldPos.x = x; WorldPos.y = y; WorldPos.z = z;
-		}
 
 	};
 
@@ -69,24 +55,7 @@ namespace SmolEngine
 			Camera = std::make_shared<CameraController>(aspectRatio);
 			Camera->SetZoom(4.0f);
 		}
-	};
 
-	struct Rigidbody2DComponent
-	{
-		bool Enabled = true;
-		Rigidbody2DComponent(Ref<Actor> actor, b2World* world, BodyType type)
-			:Rigidbody(std::make_shared<Rigidbody2D>(actor, world, type)) {}
-
-		void AddForce(const glm::vec2& force)
-		{
-			Rigidbody->GetBody()->ApplyForceToCenter({ force.x, force.y }, true);
-		}
-
-	private:
-		friend class EditorLayer;
-		friend class Scene;
-
-		Ref<Rigidbody2D> Rigidbody;
 	};
 
 	struct ScriptComponent
@@ -100,9 +69,14 @@ namespace SmolEngine
 			return std::make_shared<T>(actor);
 		}
 
-		void OnUpdate(DeltaTime deltaTime);
-		void Start();
-		void OnDestroy();
+		void OnUpdate(DeltaTime deltaTime)
+		{
+			if (Script != nullptr)
+			{
+				if (Script->Enabled == false) { return; }
+				Script->OnUpdate(deltaTime);
+			}
+		}
 
 	private:
 		std::shared_ptr<ScriptableObject> Script = nullptr;

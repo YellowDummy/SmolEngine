@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Layer.h"
 
-
 namespace SmolEngine 
 {
 	class SMOL_ENGINE_API ImGuiLayer: public Layer

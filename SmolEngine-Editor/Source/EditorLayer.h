@@ -11,23 +11,10 @@
 
 namespace SmolEngine
 {
-	static Ref<EditorConsole> s_EditorConsole;
-
-#define CONSOLE_INFO(...) s_EditorConsole->AddMessageInfo(__VA_ARGS__)
-#define CONSOLE_WARN(...) s_EditorConsole->AddMessageWarn(__VA_ARGS__)
-#define CONSOLE_ERROR(...) s_EditorConsole->AddMessageError(__VA_ARGS__)
-
 
 	enum class ComponentItem : char
 	{
-		None = 0, 
-		Tetxure2D, JinxScript, Rigidbody2D, AnimationContoller, ParticleSystem
-	};
-
-	enum class EditorViewportFlags : uint16_t
-	{
-		None = 0,
-		is_SceneView
+		None = 0, Tetxure2D, JinxScript, Camera, AnimationContoller, ParticleSystem
 	};
 
 	enum class FileBrowserFlags : uint32_t
@@ -56,23 +43,22 @@ namespace SmolEngine
 		void ResetFileBrowser();
 
 	private:
-
+		std::unordered_map<char, SmolEngine::Ref<SmolEngine::SubTexture2D>> m_TextureMap;
+		Scene m_Scene;
 		glm::vec2 m_ViewPortSize = {0.0f, 0.0f};
 		std::string m_FilePath = "";
-		Ref<Scene> m_Scene;
 
-		//TEMP 
-		Ref<Actor> m_Actor = nullptr;
-		Ref<Actor> m_CameraActor = nullptr;
+		Ref<Actor> m_Actor;
+		Ref<Actor> m_CameraActor;
 		Ref<Actor> m_SelectedActor = nullptr;
 		Ref<ImGui::FileBrowser> m_FileBrowser = nullptr;
-		Ref<Texture2D> m_Texture = nullptr;
-		Ref<Texture2D> m_SheetTexture = nullptr;
-		Ref<SubTexture2D> m_HouseSubTexture = nullptr;
-		Ref<SubTexture2D> m_FieldSubTexture = nullptr;
+		Ref<EditorConsole> m_Console = nullptr;
+		Ref<Texture2D> m_Texture;
+		Ref<Texture2D> m_SheetTexture;
+		Ref<SubTexture2D> m_HouseSubTexture;
+		Ref<SubTexture2D> m_FieldSubTexture;
 
-		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
-		EditorViewportFlags m_EditorViewportFlags = EditorViewportFlags::None;
+		uint32_t m_FileBrowserState = 0;
 		bool PlayMode = false;
 	};
 }

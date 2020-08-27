@@ -5,33 +5,28 @@
 #include "../Libraries/imgui/imgui.h"
 
 #include <vector>
-#include <ctime>
-#include <sstream>
-
-
+#include <functional>
 
 namespace SmolEngine
 {
-	enum class LogLevel: int
+	enum class LogLevel: uint16_t
 	{
-		None = 0, 
-		Info, Error, Warn
+		Info, Warn, Error
 	};
 
 	struct Message
 	{
-		ImVec4 Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		std::string Text = std::string("");
-		LogLevel Type = LogLevel::Info;
+		ImVec4 Color;
+		std::string Text;
 	};
 
 	class EditorConsole
 	{
 	public:
 
-		void Update(bool& enabled)
+		void Update()
 		{
-			if (ImGui::Begin("Console", &enabled))
+			if (ImGui::Begin("Console"))
 			{
 				ImGui::SameLine();
 				if (ImGui::Button("Clear"))
@@ -47,22 +42,10 @@ namespace SmolEngine
 				ImGui::Separator();
 				if (ImGui::BeginChild("Log"))
 				{
-					if (current_item == 0)
+
+					for (auto& msg : m_Messages)
 					{
-						for (auto& msg : m_Messages)
-						{
-							ImGui::TextColored(msg.Color, msg.Text.c_str());
-						}
-					}
-					else
-					{
-						for (auto& msg : m_Messages)
-						{
-							if (current_item == (int)msg.Type)
-							{
-								ImGui::TextColored(msg.Color, msg.Text.c_str());
-							}
-						}
+						ImGui::TextColored(msg.Color, msg.Text.c_str());
 					}
 
 					ImGui::EndChild();
@@ -72,40 +55,29 @@ namespace SmolEngine
 			}
 		}
 
-		void AddMessage(const std::string& message, LogLevel logLevel)
+		void AddMessage(std::string& message, LogLevel logLevel)
 		{
 			Message msg;
-			msg.Type = logLevel;
-
-			time_t theTime = time(NULL);
-			struct tm* aTime = localtime(&theTime);
-			int hour = aTime->tm_hour;
-			int min = aTime->tm_min;
-			int second = aTime->tm_sec;
-			std::ostringstream oss;
 
 			switch (logLevel)
 			{
 			case LogLevel::Info:
 			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << "[INFO]: " << message;
-				msg.Text = oss.str();
+				msg.Text = std::string("[INFO]: ") + message;
 				msg.Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 				m_Messages.push_back(msg);
 				break;
 			}
 			case LogLevel::Warn:
 			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << "[WARN]: " << message;
-				msg.Text = oss.str();
+				msg.Text = std::string("[Warn]: ") + message;
 				msg.Color = ImVec4{ 2.2f, 1.2f, 0.1f, 1.0f };
 				m_Messages.push_back(msg);
 				break;
 			}
 			case LogLevel::Error:
 			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << "[ERROR]: " << message;
-				msg.Text = oss.str();
+				msg.Text = std::string("[Error]: ") + message;
 				msg.Color = ImVec4{ 0.99f, 0.1f, 0.1f, 1.0f };
 				m_Messages.push_back(msg);
 				break;
@@ -116,22 +88,6 @@ namespace SmolEngine
 				break;
 			}
 		}
-
-		void AddMessageInfo(const std::string& message)
-		{
-			AddMessage(message, LogLevel::Info);
-		}
-
-		void AddMessageWarn(const std::string& message)
-		{
-			AddMessage(message, LogLevel::Warn);
-		}
-
-		void AddMessageError(const std::string& message)
-		{
-			AddMessage(message, LogLevel::Error);
-		}
-
 
 	private:
 		std::vector<Message> m_Messages;

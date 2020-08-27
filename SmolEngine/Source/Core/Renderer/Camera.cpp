@@ -55,7 +55,6 @@ namespace SmolEngine
 
 	void CameraController::OnUpdate(DeltaTime deltaTime, glm::vec3& wolrdPos)
 	{
-
 		if (Input::IsKeyPressed(S_KEY_D))
 		{
 			wolrdPos.x += m_CameraSpeed * deltaTime;

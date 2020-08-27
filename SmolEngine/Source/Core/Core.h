@@ -2,7 +2,6 @@
 
 #include <memory>
 
-
 #ifdef PLATFORM_WIN
 #if SE_STATIC_LINK
     #ifdef BUILD_DLL
@@ -20,7 +19,6 @@
 
 namespace SmolEngine
 {
-
     template<typename T>
     using Scope = std::unique_ptr<T>;
 

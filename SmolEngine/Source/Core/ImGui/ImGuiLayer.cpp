@@ -2,7 +2,6 @@
 #include "ImGuiLayer.h"
 
 #include <../Libraries/imgui/imgui.h>
-#include "../Libraries/imgui/imgui_internal.h"
 #include <../Libraries/imgui/examples/imgui_impl_glfw.h>
 #include <../Libraries/imgui/examples/imgui_impl_opengl3.h>
 
@@ -13,6 +12,8 @@
 #include "Core/EventHandler.h"
 #include "Core/Application.h"
 #include "IconsFontAwesome5.h"
+
+#include "../Libraries/imgui/imgui_internal.h"
 
 namespace SmolEngine 
 {
@@ -25,6 +26,7 @@ namespace SmolEngine
 
 	ImGuiLayer::~ImGuiLayer()
 	{
+
 	}
 
 	void ImGuiLayer::OnEvent(Event& event)
