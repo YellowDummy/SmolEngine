@@ -50,22 +50,22 @@ namespace SmolEngine
 		Scene::GetScene()->RemoveChild(m_Actor, child);
 	}
 
-	Ref<Actor> ScriptableObject::GetChildByName(const std::string& name)
+	Ref<Actor> ScriptableObject::FindChildByName(const std::string& name)
 	{
 		return m_Actor->GetChildByName(name);
 	}
 
-	Ref<Actor> ScriptableObject::GetChildByTag(const std::string& tag)
+	Ref<Actor> ScriptableObject::FindChildByTag(const std::string& tag)
 	{
 		return m_Actor->GetChildByTag(tag);
 	}
 
-	Ref<Actor> ScriptableObject::GetActorByName(const std::string& name)
+	Ref<Actor> ScriptableObject::FindActorByName(const std::string& name)
 	{
 		return Scene::GetScene()->FindActorByName(name);
 	}
 
-	Ref<Actor> ScriptableObject::GetActorByTag(const std::string& tag)
+	Ref<Actor> ScriptableObject::FindActorByTag(const std::string& tag)
 	{
 		return Scene::GetScene()->FindActorByTag(tag);
 	}

@@ -13,6 +13,8 @@ namespace SmolEngine
 		inline float GetTimeMiliseconds() const { return m_Time * 1000; }
 		operator float() const { return m_Time; }
 
+		float GetTime() { return m_Time; }
+
 	private:
 		float m_Time;
 	};

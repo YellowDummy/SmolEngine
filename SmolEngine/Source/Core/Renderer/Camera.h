@@ -2,6 +2,7 @@
 
 #include "Core/Time.h"
 #include "Core/EventHandler.h"
+#include "Core/Renderer/Framebuffer.h"
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -43,10 +44,9 @@ namespace SmolEngine
 		virtual ~CameraController() = default;
 
 		void CalculateView();
-		void OnUpdate(DeltaTime deltaTime, glm::vec3& wolrdPos);
-		void OnEvent(Event& event);
+
 		void SetZoom(float value) { m_ZoomLevel = value; CalculateView(); }
-		void OnResize(float width, float height);
+		void SetTransform(glm::vec3& wolrdPos);
 
 		const float GetZoom() { return m_ZoomLevel; }
 
@@ -54,13 +54,53 @@ namespace SmolEngine
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
 
 	private:
+		void OnResize(float width, float height);
+		void OnSceneEvent(Event& event);
+		bool IsWindowResized(Event& event);
+
+	private:
+		Ref<Framebuffer> m_FrameBuffer;
+		float m_ZoomLevel = 1.0f;
+		float m_AspectRatio;
+		OrthographicCamera m_Camera;
+
+		friend class Scene;
+		friend class EditorLayer;
+	};
+
+	class EditorCameraController
+	{
+	public:
+		EditorCameraController(float aspectRatio, bool roatationEnabled = false);
+		virtual ~EditorCameraController() = default;
+
+		void CalculateView();
+		void OnUpdate(DeltaTime deltaTime);
+		void OnEvent(Event& event);
+		void SetZoom(float value) { m_ZoomLevel = value; CalculateView(); }
+		void OnResize(float width, float height);
+
+		const float GetZoom() { return m_ZoomLevel; }
+
+		OrthographicCamera& GetCamera() { return m_Camera; }
+		const OrthographicCamera& GetCamera() const { return m_Camera; }
+
+	private:
 		bool IsMouseScrolled(Event& event);
 		bool IsWindowResized(Event& event);
 
 	private:
+		glm::vec3 m_WorldPos;
+		bool m_RoatationEnabled;
 		float m_ZoomLevel = 1.0f;
 		float m_AspectRatio;
 		float m_CameraSpeed = 3.0f, m_CameraRotationSpeed = 1.0f;
+
+		Ref<Framebuffer> m_FrameBuffer;
 		OrthographicCamera m_Camera;
+
+		friend class Scene;
+		friend class EditorLayer;
 	};
+
 }

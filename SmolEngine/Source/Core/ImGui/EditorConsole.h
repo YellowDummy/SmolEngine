@@ -45,7 +45,7 @@ namespace SmolEngine
 				ImGui::Combo("Filter", &current_item, "None\0Info\0Error\0Warn\0\0");
 
 				ImGui::Separator();
-				if (ImGui::BeginChild("Log"))
+				ImGui::BeginChild("Log");
 				{
 					if (current_item == 0)
 					{
@@ -65,8 +65,8 @@ namespace SmolEngine
 						}
 					}
 
-					ImGui::EndChild();
 				}
+				ImGui::EndChild();
 
 				ImGui::End();
 			}

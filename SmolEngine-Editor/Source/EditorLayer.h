@@ -21,13 +21,12 @@ namespace SmolEngine
 	enum class ComponentItem : char
 	{
 		None = 0, 
-		Tetxure2D, JinxScript, Rigidbody2D, AnimationContoller, ParticleSystem
+		Tetxure2D, JinxScript, Rigidbody2D, CameraController, AnimationContoller, ParticleSystem
 	};
 
 	enum class EditorViewportFlags : uint16_t
 	{
-		None = 0,
-		is_SceneView
+
 	};
 
 	enum class FileBrowserFlags : uint32_t
@@ -58,6 +57,8 @@ namespace SmolEngine
 	private:
 
 		glm::vec2 m_ViewPortSize = {0.0f, 0.0f};
+		glm::vec2 m_GameViewPortSize = { 0.0f, 0.0f };
+
 		std::string m_FilePath = "";
 		Ref<Scene> m_Scene;
 
@@ -72,8 +73,9 @@ namespace SmolEngine
 		Ref<SubTexture2D> m_FieldSubTexture = nullptr;
 
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
-		EditorViewportFlags m_EditorViewportFlags = EditorViewportFlags::None;
-		bool PlayMode = false;
+
+		bool isSceneViewFocused = false;
+		bool isGameViewFocused = false;
 	};
 }
 

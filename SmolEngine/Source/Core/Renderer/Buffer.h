@@ -34,7 +34,7 @@ namespace SmolEngine
 		case ShaderDataType::Int4:     return 4 * 4;       break;
 		case ShaderDataType::Bool:     return 1;           break;
 
-		default:                     return 0; abort;
+		default:                     return 0;
 		}
 	}
 
@@ -67,7 +67,7 @@ namespace SmolEngine
 			case ShaderDataType::Int4:     return 4;           break;
 			case ShaderDataType::Bool:     return 1;           break;
 
-			default:                     return 0; abort;
+			default:                     return 0;
 			}
 		}
 	};

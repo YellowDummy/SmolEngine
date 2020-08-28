@@ -32,7 +32,7 @@ namespace SmolEngine
 		glm::vec2 Scale = glm::vec2(1.0f);;
 		float Rotation = 0;
 
-		Ref<B2Data> B2Data = nullptr; // !Should never be initialized outside of Rigidbody2D
+		Ref<B2Data> B2Data = nullptr; // Should never be initialized outside of Rigidbody2D!
 
 		TransfromComponent(const TransfromComponent&) = default;
 		TransfromComponent(const glm::vec3& worldPos = glm::vec3(1.0f), const glm::vec2& scale = glm::vec2(1.0f), const float rotation = 0)
@@ -61,7 +61,7 @@ namespace SmolEngine
 	struct CameraComponent
 	{
 		bool Enabled = true;
-		float aspectRatio = Application::GetApplication().GetWindowHeight() / Application::GetApplication().GetWindowWidth();
+		float aspectRatio = (float)Application::GetApplication().GetWindowHeight() / (float)Application::GetApplication().GetWindowWidth();
 		Ref<CameraController> Camera = nullptr;
 
 		CameraComponent()
@@ -69,6 +69,12 @@ namespace SmolEngine
 			Camera = std::make_shared<CameraController>(aspectRatio);
 			Camera->SetZoom(4.0f);
 		}
+
+	private:
+		friend class EditorLayer;
+		friend class Scene;
+
+		bool isSelected = true;
 	};
 
 	struct Rigidbody2DComponent

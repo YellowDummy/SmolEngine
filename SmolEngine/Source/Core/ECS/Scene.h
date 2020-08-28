@@ -26,7 +26,6 @@ namespace SmolEngine
 	struct SceneData
 	{
 		std::vector<Ref<Actor>> m_ActorPool;
-		Ref<Framebuffer> m_FrameBuffer;
 		b2Vec2 m_Gravity = b2Vec2(0, -9.81f);
 	};
 
@@ -41,7 +40,11 @@ namespace SmolEngine
 
 		void OnUpdate(DeltaTime deltaTime);
 		void OnEvent(Event& e);
-		void OnEditorResize(float width, float height);
+
+		void UpdateEditorCamera();
+
+		void OnSceneViewResize(float width, float height);
+		void OnGameViewResize(float width, float height);
 
 		Ref<Actor> CreateActor(const std::string& name, const std::string& tag = std::string("Default"));
 		void DeleteActor(const Ref<Actor> actor);
@@ -57,7 +60,6 @@ namespace SmolEngine
 		std::vector<Ref<Actor>>& GetActorPool();
 
 		const Jinx::RuntimePtr GetJinxRuntime();
-		Ref<Framebuffer> GetFrameBuffer();
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
 		static Ref<Scene> GetScene() { return s_Scene; }
 		b2World* GetWorld() { return m_World; }
@@ -67,13 +69,15 @@ namespace SmolEngine
 
 	private:
 		static Ref<Scene> s_Scene;
+		bool m_InPlayMode = false;
+
 		b2World* m_World;
 		Jinx::RuntimePtr m_JinxRuntime;
 		entt::registry m_Registry;
-
-		bool m_InPlayMode = false;
-		Ref<Actor> m_EditorCamera;
+		Ref<EditorCameraController> m_EditorCamera;
 
 		std::unordered_map<std::string, size_t> m_IDSet;
+
+		friend class EditorLayer;
 	};
 }

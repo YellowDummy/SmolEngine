@@ -13,11 +13,8 @@ namespace SmolEngine
 		s_SceneData = std::make_shared<SceneData>();
 		m_World = new b2World(s_SceneData->m_Gravity);
 		m_Registry = entt::registry();
-
-		FramebufferData m_FramebufferData;
-		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
-		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
-		s_SceneData->m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+		m_EditorCamera = std::make_shared<EditorCameraController>(Application::GetApplication().GetWindowWidth() / Application::GetApplication().GetWindowHeight());
+		m_EditorCamera->SetZoom(4.0f);
 
 		//----------------------------------JINXSCRIPT-INITIALIZATION---------------------------------//
 		Jinx::GlobalParams globalParams;
@@ -87,31 +84,21 @@ namespace SmolEngine
 
 	void Scene::OnUpdate(DeltaTime deltaTime)
 	{
-		//Updating transform of Rigidbody2D
-		auto transformView = m_Registry.view<TransfromComponent>();
-		for (auto component: transformView)
-		{
-			auto& obj = transformView.get<TransfromComponent>(component);
-			if (obj.B2Data != nullptr)
-			{
-				obj.WorldPos.x = obj.B2Data->B2Pos->p.x;
-				obj.WorldPos.y = obj.B2Data->B2Pos->p.y;
-				obj.Rotation = *obj.B2Data->B2Rotation;
-			}
-		}
+		UpdateEditorCamera();
 
-		//Updating all cameras in the current scene
+		//Updating all the user's cameras in the current scene
 		{
 			auto cameraGroup = m_Registry.group<TransfromComponent>(entt::get<CameraComponent>);
 			for (auto obj : cameraGroup)
 			{
 				auto& [cameraTransformComponent, cameraComponent] = cameraGroup.get<TransfromComponent, CameraComponent>(obj);
-
-				s_SceneData->m_FrameBuffer->Bind();
 				{
+					cameraComponent.Camera->m_FrameBuffer->Bind();
+
 					RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1, 1 });
 					RendererCommand::Clear();
 					Renderer2D::ResetDataStats();
+
 					Renderer2D::BeginScene(cameraComponent.Camera->GetCamera());
 
 					auto& group = m_Registry.group<Texture2DComponent>(entt::get<TransfromComponent>);
@@ -133,19 +120,32 @@ namespace SmolEngine
 						}
 					}
 
-
 					Renderer2D::EndScene();
-				}
-				s_SceneData->m_FrameBuffer->UnBind();
 
-				cameraComponent.Camera->OnUpdate(deltaTime, cameraTransformComponent.WorldPos);
+					cameraComponent.Camera->SetZoom(cameraComponent.Camera->m_ZoomLevel);
+					cameraComponent.Camera->SetTransform(cameraTransformComponent.WorldPos);
+					cameraComponent.Camera->m_FrameBuffer->UnBind();
+				}
 			}
 		}
 
-		//Updating all scripts & rigibbodies in the current scene
-		{
-			if (!m_InPlayMode) { return; }
+		if(!m_InPlayMode) { return; }
 
+		//Updating transform of Rigidbody2D
+		auto transformView = m_Registry.view<TransfromComponent>();
+		for (auto component : transformView)
+		{
+			auto& obj = transformView.get<TransfromComponent>(component);
+			if (obj.B2Data != nullptr)
+			{
+				obj.WorldPos.x = obj.B2Data->B2Pos->p.x;
+				obj.WorldPos.y = obj.B2Data->B2Pos->p.y;
+				obj.Rotation = *obj.B2Data->B2Rotation;
+			}
+		}
+
+		//Update all scripts and Rigidbodies in the current scene
+		{
 			m_World->Step(deltaTime, 6, 2);
 
 			auto scriptGroup = m_Registry.view<ScriptComponent>();
@@ -167,16 +167,57 @@ namespace SmolEngine
 		for (auto obj : cameraGroup)
 		{
 			auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
-			cameraComponent.Camera->OnEvent(e);
+			cameraComponent.Camera->OnSceneEvent(e);
 		}
 	}
 
-	void Scene::OnEditorResize(float width, float height)
+	void Scene::UpdateEditorCamera()
+	{
+		m_EditorCamera->m_FrameBuffer->Bind();
+		RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1, 1 });
+		RendererCommand::Clear();
+		Renderer2D::ResetDataStats();
+		Renderer2D::BeginScene(m_EditorCamera->GetCamera());
+
+		auto& group = m_Registry.group<Texture2DComponent>(entt::get<TransfromComponent>);
+		for (auto entity : group)
+		{
+			//Rendering all textures in the current scene
+			auto& [transform, texture] = group.get<TransfromComponent, Texture2DComponent>(entity);
+			if (texture.Enabled && texture.Texture != nullptr)
+			{
+				if (transform.B2Data != nullptr)
+				{
+					glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, 1.0f);
+					Renderer2D::DrawSprite(vec3, transform.Scale, *transform.B2Data->B2Rotation, texture.Texture, 1.0f, texture.Color);
+				}
+				else
+				{
+					Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
+				}
+			}
+		}
+
+		Renderer2D::EndScene();
+		m_EditorCamera->m_FrameBuffer->UnBind();
+	}
+
+	void Scene::OnSceneViewResize(float width, float height)
+	{
+		if (!m_InPlayMode)
+		{
+			m_EditorCamera->m_FrameBuffer->OnResize(width, height);
+			m_EditorCamera->OnResize(width, height);
+		}
+	}
+
+	void Scene::OnGameViewResize(float width, float height)
 	{
 		auto cameraGroup = m_Registry.view<CameraComponent>();
 		for (auto& obj : cameraGroup)
 		{
 			auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
+			cameraComponent.Camera->m_FrameBuffer->OnResize(width, height);
 			cameraComponent.Camera->OnResize(width, height);
 		}
 	}
@@ -277,11 +318,6 @@ namespace SmolEngine
 		}
 
 		return temp;
-	}
-
-	Ref<Framebuffer> Scene::GetFrameBuffer()
-	{
-		return s_SceneData->m_FrameBuffer;
 	}
 
 	std::vector<Ref<Actor>>& Scene::GetActorPool()

@@ -7,7 +7,7 @@ namespace SmolEngine
 {
 	class Actor;
 
-	struct ScriptableObject 	//Base Class *Sturct* For All Script Classes
+	struct ScriptableObject 	//Base Class *Struct* For All Script Classes
 	{
 		bool Enabled = true;
 
@@ -41,10 +41,10 @@ namespace SmolEngine
 		void AddChild(Ref<Actor> child);
 		void RemoveChild(Ref<Actor> child);
 
-		Ref<Actor> GetChildByName(const std::string& name);
-		Ref<Actor> GetChildByTag(const std::string& tag);
-		Ref<Actor> GetActorByName(const std::string& name);
-		Ref<Actor> GetActorByTag(const std::string& tag);
+		Ref<Actor> FindChildByName(const std::string& name);
+		Ref<Actor> FindChildByTag(const std::string& tag);
+		Ref<Actor> FindActorByName(const std::string& name);
+		Ref<Actor> FindActorByTag(const std::string& tag);
 		Ref<Actor> GetActor() { return m_Actor; }
 
 		virtual void Start() {}
