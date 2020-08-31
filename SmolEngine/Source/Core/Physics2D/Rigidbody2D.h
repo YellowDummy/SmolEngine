@@ -3,6 +3,8 @@
 #include "Core/Core.h"
 #include "box2d/box2d.h"
 
+#include <cereal/cereal.hpp>
+
 namespace SmolEngine
 {
 	class Actor;
@@ -27,6 +29,7 @@ namespace SmolEngine
 		bool m_IsAwake = true;
 		bool m_IsBullet = false;
 
+		Rigidbody2D() = default;
 		Rigidbody2D(Ref<Actor> actor, b2World* world, BodyType type);
 		~Rigidbody2D() = default;
 
@@ -39,9 +42,19 @@ namespace SmolEngine
 		b2BodyType FindType(uint16_t type);
 
 	private:
-		Ref<Actor> m_Actor;
-		b2World* m_World;
+		friend class cereal::access;
+		friend class Scene;
+
+		Ref<Actor> m_Actor = nullptr;
+		b2World* m_World = nullptr;
 		b2Body* m_Body = nullptr;
 		b2Fixture* m_Fixture = nullptr;
+
+		template<typename Archive>
+		void serialize(Archive& archive) 
+		{
+			archive(m_canSleep, m_Actor, m_Density, m_Friction, m_GravityScale, m_IsAwake, m_IsBullet, m_Restitution, m_ShapeX, m_ShapeY, m_Type);
+			archive.serializeDeferments();
+		}
 	};
 }

@@ -3,8 +3,10 @@
 #include "Core/Time.h"
 #include "Core/EventHandler.h"
 #include "Core/Renderer/Framebuffer.h"
+
 #include <memory>
 #include <glm/glm.hpp>
+#include <cereal/cereal.hpp>
 
 namespace SmolEngine
 {
@@ -35,6 +37,14 @@ namespace SmolEngine
 		glm::vec3 m_CameraPos = { 0.0f, 0.0f, 0.0f };
 
 		float m_CameraRotation = 0;
+
+		friend class cereal::access;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(m_CameraPos.x, m_CameraPos.y, m_CameraPos.z, m_CameraRotation);
+		}
 	};
 
 	class CameraController
@@ -45,8 +55,8 @@ namespace SmolEngine
 
 		void CalculateView();
 
-		void SetZoom(float value) { m_ZoomLevel = value; CalculateView(); }
-		void SetTransform(glm::vec3& wolrdPos);
+		void SetZoom(const float value) { m_ZoomLevel = value; CalculateView(); }
+		void SetTransform(const glm::vec3& wolrdPos);
 
 		const float GetZoom() { return m_ZoomLevel; }
 
@@ -66,6 +76,14 @@ namespace SmolEngine
 
 		friend class Scene;
 		friend class EditorLayer;
+		friend class cereal::access;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(m_ZoomLevel, m_AspectRatio, m_Camera);
+			archive.serializeDeferments();
+		}
 	};
 
 	class EditorCameraController

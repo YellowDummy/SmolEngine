@@ -1,131 +1,32 @@
 #include "stdafx.h"
+#include "../../GameX/Scripts.h"
+
 #include "EditorLayer.h"
+#include "icon_font_cpp_headers/IconsFontAwesome5.h"
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Scripting/Jinx.h"
+#include "Core/ECS/Scene.h"
 
 #include <imgui/imgui.h>
-
-#include "cxx_linear/lerp.h"
-#include "cxx_linear/midpoint.h"
-#include "icon_font_cpp_headers/IconsFontAwesome5.h"
+#include <fstream>
+#include <cereal/cereal.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
 
 namespace SmolEngine
 {
-	//Examples Of Scripting In C++
-
-	class CharMovementScript: public ScriptableObject
-	{
-	public:
-
-		CharMovementScript(Ref<Actor> actor)
-			:ScriptableObject(actor) {}
-
-		void Start() override 
-		{
-			rb = &GetComponent<Rigidbody2DComponent>();
-
-
-			for (auto obj : GetActorList())
-			{
-				CONSOLE_INFO(std::string("Actor found : ") +  obj->GetName());
-			}
-
-			for (auto obj : GetActorListByTag("Default"))
-			{
-				NATIVE_INFO("Actor ID find by tag: {}", obj->GetID());
-			}
-
-			auto ground = FindChildByName("Ground");
-			if (ground)
-			{
-				CONSOLE_INFO(std::string("Child found : ") + ground->GetName());
-			}
-
-		}
-
-		void OnUpdate(DeltaTime deltaTime) override
-		{
-			if (Input::IsKeyPressed(KeyCode::Q))
-			{
-				rb->AddForce({ 0.0f, 50.0f });
-			}
-		}
-
-		void OnDestroy() override {}
-
-	private:
-		Rigidbody2DComponent* rb = nullptr;
-	};
-
-	class CameraMovementScript : public ScriptableObject
-	{
-	public:
-
-		CameraMovementScript(Ref<Actor> actor)
-			:ScriptableObject(actor) {}
-
-
-		void Start() override 
-		{
-			m_Player = FindActorByTag("Player");
-			if (m_Player == nullptr) { CONSOLE_ERROR("Player not found!"); }
-		}
-
-
-		void OnUpdate(DeltaTime deltaTime) override
-		{
-			auto& playerPos = m_Player->GetComponent<TransfromComponent>().WorldPos;
-			auto& cameraPos = GetComponent<TransfromComponent>().WorldPos;
-
-			int distanceY = playerPos.y - cameraPos.y;
-			int distanceX = playerPos.x - cameraPos.x;
-
-			if (distanceY > 1 || distanceX > 1)
-			{
-				m_CameraSpeed += 0.3f;
-			}
-			else
-			{
-				m_CameraSpeed = 0.5f;
-			}
-
-			if (playerPos.x > cameraPos.x)
-			{
-				cameraPos.x += m_CameraSpeed * deltaTime;
-			}
-
-			if (playerPos.x > cameraPos.x)
-			{
-				cameraPos.x -= m_CameraSpeed * deltaTime;
-			}
-
-			if (playerPos.y > cameraPos.y)
-			{
-				cameraPos.y += m_CameraSpeed * deltaTime;
-			}
-
-			if (playerPos.y < cameraPos.y)
-			{
-				cameraPos.y -= m_CameraSpeed * deltaTime;
-			}
-		}
-
-
-		void OnDestroy() override {}
-
-	private:
-		float m_CameraSpeed = 0.5f;
-		Ref<Actor> m_Player;
-	};
-
-
 	void EditorLayer::OnAttach()
 	{
-		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
-		m_Scene = Scene::GetScene();
-		s_EditorConsole = std::make_shared<EditorConsole>();
+		m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+		m_SettingsWindow = std::make_unique<SettingsWindow>();
+		m_ActorCreationWindow = std::make_unique<ActorCreationWindow>();
 
-		s_EditorConsole->AddMessage(std::string("Console Successfully Initialized!"), LogLevel::Info);
+		m_EditorConsole = EditorConsole::GetConsole();
+
+		m_Scene = Scene::GetScene();
+
+		m_Scene->GetSceneData().m_filePath = "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene";
+		m_Scene->GetSceneData().m_ID = 12233456445;
 
 		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
 		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
@@ -134,13 +35,15 @@ namespace SmolEngine
 		m_FieldSubTexture = SubTexture2D::GenerateFromCoods(m_SheetTexture, { 1.0f, 11.0f }, { 128.0f, 128.0f });
 
 		m_Actor = m_Scene->CreateActor("Actor_1", "Player");
-		m_Actor->AddComponent<Texture2DComponent>(m_Texture);
-		m_Actor->AddComponent<ScriptComponent>().SetScript<CharMovementScript>(m_Actor);
+		m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
+
+		m_Scene->SetScriptToActor<CharMovementScript>(m_Actor);
+
 		m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, Scene::GetScene()->GetWorld(), BodyType::Dynamic);
 
 		m_CameraActor = m_Scene->CreateActor("Camera");
 		m_CameraActor->AddComponent<CameraComponent>();
-		m_CameraActor->AddComponent<ScriptComponent>().SetScript<CameraMovementScript>(m_CameraActor);
+		m_Scene->SetScriptToActor<CameraMovementScript>(m_CameraActor);
 
 		auto& ground = m_Scene->CreateActor("Ground","TestTag");
 		ground->GetComponent<TransfromComponent>().SetTranform(1.0f, -2.0f);;
@@ -156,6 +59,9 @@ namespace SmolEngine
 		//luaL_openlibs(L);
 
 		//JinxScript script(m_Actor, m_Scene.GetJinxRuntime(), std::string("../GameX/Assets/JinxScripts/Example.jinx"));
+
+		m_Scene->Save(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene"));
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -238,8 +144,10 @@ namespace SmolEngine
 		static bool showRenderer2Dstats;
 		static bool showConsole = true;
 		static bool showGameView = false;
+		static bool showSettingsWindow = false;
 		//---------------------------------------WINDOW-STATES----------------------------------------//
 
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 25.0f, 10.0f });
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File")) 
@@ -247,35 +155,63 @@ namespace SmolEngine
 				// Disabling fullscreen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
-
 				if (ImGui::MenuItem("Close"))
 				{
 					Application::GetApplication().CloseApp();
 				}
 
-				if (ImGui::MenuItem("Save Scene"))
-				{
+				ImGui::EndMenu();
+			}
 
+			if (ImGui::BeginMenu("Scene"))
+			{
+
+				if (ImGui::MenuItem("Create New"))
+				{
+					m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
+
+					m_FileBrowser->SetTypeFilters({ ".scene" });
+					m_FileBrowser->SetTitle("New Scene");
+					m_FileBrowserState = FileBrowserFlags::SceneCreate;
+					m_FileBrowser->Open();
+				}
+
+				if (ImGui::MenuItem("Save Current"))
+				{
+					m_Scene->Save(m_Scene->GetSceneData().m_filePath);
+				}
+
+				if (ImGui::MenuItem("Save as"))
+				{
+					m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
+
+					m_FileBrowser->SetTypeFilters({ ".scene" });
+					m_FileBrowser->SetTitle("Save as");
+					m_FileBrowserState = FileBrowserFlags::SceneSave;
+					m_FileBrowser->Open();
+				}
+
+				if (ImGui::MenuItem("Load Scene"))
+				{
+					m_FileBrowser->SetTypeFilters({ ".scene" });
+					m_FileBrowser->SetTitle("Load Scene");
+					m_FileBrowserState = FileBrowserFlags::SceneLoad;
+					m_FileBrowser->Open();
 				}
 
 				ImGui::EndMenu();
 			}
 
 
-			if (ImGui::BeginMenu("Create"))
+			if (ImGui::BeginMenu("Actor"))
 			{
 
-				if (ImGui::MenuItem("Actor"))
+				if (ImGui::MenuItem("New Actor"))
 				{
 					showActorCreationWindow = true;
 				}
 
-				if (ImGui::MenuItem("System // Not Implemented"))
-				{
-
-				}
-
-				if (ImGui::MenuItem("Scene // Not Implemented"))
+				if (ImGui::MenuItem("New System"))
 				{
 
 				}
@@ -283,18 +219,34 @@ namespace SmolEngine
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Build & Play"))
+			if (ImGui::BeginMenu("Simulation"))
 			{
 				if (ImGui::MenuItem("Play"))
 				{
 					m_Scene->OnPlay();
 				}
 
+				if (ImGui::MenuItem("Stop"))
+				{
+					m_Scene->OnEndPlay();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Build"))
+			{
+
 				ImGui::EndMenu();
 			}
 
 			if (ImGui::BeginMenu("Window"))
 			{
+				if (ImGui::MenuItem("Settings"))
+				{
+					showSettingsWindow = true;
+				}
+
 				if (ImGui::MenuItem("Renderer2D Stats"))
 				{
 					showRenderer2Dstats = true;
@@ -315,40 +267,13 @@ namespace SmolEngine
 
 		}
 		ImGui::EndMainMenuBar();
+		ImGui::PopStyleVar();
 
+		m_SettingsWindow->Update(showSettingsWindow, m_Scene);
 
-		if (showActorCreationWindow)
-		{
-			ImGui::Begin("Create Actor", &showActorCreationWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
-			//ImGui::SetWindowPos(ImVec2{ (float)Application::GetApplication().GetWindowWidth() / 2 - 350, 
-//(float)Application::GetApplication().GetWindowHeight() / 2 - 180 });
-			ImGui::SetWindowSize("Create Actor", { 480, 200 });
+		m_ActorCreationWindow->Update(showActorCreationWindow, m_Scene);
 
-			static char name[128] = "Default Actor";
-			ImGui::NewLine();
-			ImGui::InputText("Name", name, IM_ARRAYSIZE(name));
-			ImGui::PushItemWidth(200);
-			ImGui::Separator();
-			ImGui::NewLine();
-
-			static char tag[128] = "Default";
-			ImGui::InputText("Tag", tag, IM_ARRAYSIZE(tag));
-			ImGui::PushItemWidth(200);
-			ImGui::Separator();
-			ImGui::NewLine();
-
-			if (ImGui::Button("Add", ImVec2{ 100, 25 }))
-			{
-				auto ref = m_Scene->CreateActor(name, tag);
-				if (!ref)
-				{
-					s_EditorConsole->AddMessage(std::string("Actor was not created, it already exists"), LogLevel::Error);
-				}
-
-				showActorCreationWindow = false;
-			}
-			ImGui::End();
-		}
+		m_EditorConsole->Update(showConsole);
 
 		if (showRenderer2Dstats)
 		{
@@ -362,67 +287,68 @@ namespace SmolEngine
 			}
 		}
 
-		if (showConsole)
-		{
-			s_EditorConsole->Update(showConsole);
-		}
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f});
-		ImGui::Begin("Scene View");
-		{
-			if (ImGui::IsWindowFocused()) { isSceneViewFocused = true; }
-			else { isSceneViewFocused = false; }
-
-			auto& m_FrameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
-			ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-
-			if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
-			{
-				m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-				m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
-			}
-
-			size_t textureID = m_FrameBuffer->GetColorAttachmentID();
-			ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		}
-		ImGui::End();
-		ImGui::PopStyleVar();
-
-		if (showGameView)
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-			ImGui::Begin("Game View", &showGameView);
+			ImGui::Begin("Scene View");
 			{
+				if (ImGui::IsWindowFocused()) { isSceneViewFocused = true; }
+				else { isSceneViewFocused = false; }
 
-				if (ImGui::IsWindowFocused()) { isGameViewFocused = true; }
-				else { isGameViewFocused = false; }
-
+				auto& m_FrameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
 				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 
-				if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
+				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
 				{
-					m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
+					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+					m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
 				}
 
-				auto camGroup = m_Scene->m_Registry.view<CameraComponent>();
-
-				for (auto obj : camGroup)
-				{
-					auto& cameraComponent = camGroup.get<CameraComponent>(obj);
-					if (cameraComponent.isSelected)
-					{
-						size_t ImageTextureID = cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID();
-						ImGui::Image((void*)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-					}
-				}
-
+				size_t textureID = m_FrameBuffer->GetColorAttachmentID();
+				ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			}
 			ImGui::End();
 			ImGui::PopStyleVar();
 		}
+
+		{
+			if (showGameView)
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
+				ImGui::Begin("Game View", &showGameView);
+				{
+
+					if (ImGui::IsWindowFocused()) { isGameViewFocused = true; }
+					else { isGameViewFocused = false; }
+
+					ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
+
+					if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
+					{
+						m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+						m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
+					}
+
+					auto camGroup = m_Scene->GetSceneData().m_Registry.view<CameraComponent>();
+
+					for (auto obj : camGroup)
+					{
+						auto& cameraComponent = camGroup.get<CameraComponent>(obj);
+						if (cameraComponent.isSelected)
+						{
+							size_t ImageTextureID = cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID();
+							ImGui::Image((void*)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+						}
+					}
+
+
+				}
+				ImGui::End();
+				ImGui::PopStyleVar();
+			}
+
+		}
+	
 
 		ImGui::Begin("Hierarchy");
 		{
@@ -430,7 +356,18 @@ namespace SmolEngine
 			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
 			ImGui::Separator();
 
-			if (ImGui::TreeNodeEx("Scene", ImGuiTreeNodeFlags_DefaultOpen))
+			std::string sceneStr;
+
+			if (m_Scene->GetSceneData().m_Name == std::string(""))
+			{
+				sceneStr = "Scene (" + std::to_string(m_Scene->GetSceneData().m_ID) + ")";
+			}
+			else
+			{
+				sceneStr = "Scene (" + m_Scene->GetSceneData().m_Name + ")";
+			}
+
+			if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				for (auto actor : m_Scene->GetActorPool())
 				{
@@ -480,7 +417,7 @@ namespace SmolEngine
 
 		ImGui::End();
 
-		ImGui::Begin("Actor View");
+		ImGui::Begin("Inspector");
 		{
 			if (m_SelectedActor == nullptr)
 			{
@@ -641,6 +578,10 @@ namespace SmolEngine
 								if (!m_SelectedActor->HasComponent<Texture2DComponent>())
 								{
 									m_SelectedActor->AddComponent<Texture2DComponent>();
+									m_FileBrowserState = FileBrowserFlags::Texture2dPath;
+									m_FileBrowser->SetTitle("Select a texture");
+									m_FileBrowser->SetTypeFilters({ ".png" });
+									m_FileBrowser->Open();
 									break;
 								}
 
@@ -674,6 +615,7 @@ namespace SmolEngine
 
 								CONSOLE_WARN("Actor already has Rigidbody2D component");
 								EDITOR_WARN("Actor <{}> already has Rigidbody2D component.", m_SelectedActor->GetName());
+								break;
 							}
 							case (uint32_t)ComponentItem::CameraController:
 							{
@@ -803,7 +745,32 @@ namespace SmolEngine
 				break;
 			case FileBrowserFlags::Texture2dPath:
 			{
+				m_SelectedActor->GetComponent<Texture2DComponent>().TexturePath = m_FilePath;
 				m_SelectedActor->GetComponent<Texture2DComponent>().Texture = Texture2D::Create(m_FilePath);
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::SceneCreate:
+			{
+				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+				m_SelectedActor = nullptr;
+
+				m_Scene->CreateScene(m_FilePath);
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::SceneSave:
+			{
+				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+				m_Scene->Save(m_FilePath);
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::SceneLoad:
+			{
+				m_SelectedActor = nullptr;
+
+				m_Scene->Load(m_FilePath);
 				ResetFileBrowser();
 				break;
 			}

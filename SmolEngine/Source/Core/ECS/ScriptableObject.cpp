@@ -5,6 +5,16 @@
 
 namespace SmolEngine
 {
+	ScriptableObject::ScriptableObject()
+	{
+		m_Actor = Scene::GetScene()->FindActorByID(ActorID);
+	}
+	ScriptableObject::ScriptableObject(Ref<Actor> actor)
+		:m_Actor(actor)
+	{
+		ActorID = actor->GetID();
+	}
+
 	std::string& ScriptableObject::GetName()
 	{
 		return m_Actor->GetName();

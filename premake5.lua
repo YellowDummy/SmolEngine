@@ -62,6 +62,7 @@ project "SmolEngine"
 		"%{prj.name}/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
+		"SmolEngine/Libraries/cereal/include",
 		"%{prj.name}/Libraries/box2d/include",
 		"%{prj.name}/Source",
 		"%{prj.name}/Lua",
@@ -144,6 +145,7 @@ project "GameX"
 		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/cereal/include",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
 		"SmolEngine/Lua",
@@ -158,7 +160,6 @@ project "GameX"
 	{
 		"SmolEngine",
 		"SmolEngine/Lua/lua54.lib"
-		--"SmolEngine/Libraries/box2d/Box2D.lib"
 	}
 
 	filter "system:windows"
@@ -213,6 +214,7 @@ project "GameX"
 		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/cereal/include",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
@@ -227,7 +229,6 @@ project "GameX"
 	{
 		"SmolEngine",
 		"SmolEngine/Lua/lua54.lib"
-		--"SmolEngine/Libraries/box2d/Box2D.lib"
 	}
 
 	filter "system:windows"

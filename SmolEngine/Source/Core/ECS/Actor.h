@@ -8,13 +8,16 @@
 #include <functional>
 #include <vector>
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+
 namespace SmolEngine
 {
 	class Actor
 	{
 	public:
+		Actor();
 		Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id);
-		Ref<Actor> operator==(const Ref<Actor> other);
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
@@ -58,28 +61,41 @@ namespace SmolEngine
 		bool HasComponent() { return Reg.has<T>(Entity); }
 
 		std::string& GetName() { return Name; }
+
 		const std::string& GetTag() { return Tag; }
 		const size_t GetID() { return ID; }
 
-		Ref<Actor> GetParent() { return Parent; }
 		void SetParent(Ref<Actor> parent) { Parent = parent; }
 
 		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
 
+		Ref<Actor> GetParent() { return Parent; }
 		Ref<Actor> GetChildByName(const std::string& name);
 		Ref<Actor> GetChildByTag(const std::string& tag);
 
+		entt::entity& GetEntity() { return Entity; }
+
 	public:
 		bool IsDisabled;
-		bool showActions = false;
-
 	private:
-		std::vector<Ref<Actor>> Childs;
-		Ref<Actor> Parent;
-		std::string Name;
-		std::string Tag;
+		friend class cereal::access;
+
 		entt::entity Entity;
 		entt::registry& Reg;
+
+		std::string Name;
+		std::string Tag;
 		size_t ID;
+
+		std::vector<Ref<Actor>> Childs;
+		Ref<Actor> Parent;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(ID, IsDisabled, Entity, Name, Parent, Tag, Parent, Childs);
+			archive.serializeDeferments();
+		}
+
 	};
 }

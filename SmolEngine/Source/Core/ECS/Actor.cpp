@@ -4,6 +4,12 @@
 
 namespace SmolEngine
 {
+	Actor::Actor()
+		:Reg(Scene::GetScene()->GetRegistry())
+	{
+
+	}
+
 	Actor::Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id)
 		:Parent(nullptr),
 		Entity(entity),
@@ -15,15 +21,6 @@ namespace SmolEngine
 		ID = id;
 	}
 
-	Ref<Actor> Actor::operator==(const Ref<Actor> other)
-	{
-		if (other->GetID() == ID)
-		{
-			return other;
-		}
-
-		return nullptr;;
-	}
 
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{

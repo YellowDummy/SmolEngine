@@ -52,17 +52,17 @@ namespace SmolEngine
 			}
 		}
 
-		void Start() override
+		void Start()
 		{
 
 		}
 
-		void OnUpdate(DeltaTime deltaTime) override
+		void OnUpdate(DeltaTime deltaTime)
 		{
 
 		}
 
-		void OnDestroy() override
+		void OnDestroy()
 		{
 
 		}

@@ -1,0 +1,224 @@
+{
+    "value0": 3,
+    "value1": 1048576,
+    "value2": 1048577,
+    "value3": 2097151,
+    "value4": 2,
+    "value5": 1048576,
+    "value6": {
+        "value0": true,
+        "value1": {
+            "ptr_wrapper": {
+                "id": 2147483649,
+                "data": {
+                    "value0": true,
+                    "value1": {
+                        "ptr_wrapper": {
+                            "id": 2147483650,
+                            "data": {
+                                "value0": 8513662857222493520,
+                                "value1": false,
+                                "value2": 1048576,
+                                "value3": "TextureTest",
+                                "value4": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value5": "Default",
+                                "value6": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value7": [],
+                                "value8": {
+                                    "ptr_wrapper": {
+                                        "id": 1
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "value2": 1.0,
+                    "value3": 0.30000001192092898,
+                    "value4": 1.0,
+                    "value5": true,
+                    "value6": false,
+                    "value7": 0.0,
+                    "value8": 1.0,
+                    "value9": 1.0,
+                    "value10": 0,
+                    "value11": {
+                        "ptr_wrapper": {
+                            "id": 1
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "value7": 1048577,
+    "value8": {
+        "value0": true,
+        "value1": {
+            "ptr_wrapper": {
+                "id": 1
+            }
+        },
+        "value2": {
+            "ptr_wrapper": {
+                "id": 2147483651,
+                "data": {
+                    "value0": true,
+                    "value1": {
+                        "ptr_wrapper": {
+                            "id": 2147483652,
+                            "data": {
+                                "value0": 759898504481165509,
+                                "value1": false,
+                                "value2": 1048577,
+                                "value3": "PlayerObj",
+                                "value4": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value5": "Player",
+                                "value6": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value7": [],
+                                "value8": {
+                                    "ptr_wrapper": {
+                                        "id": 1
+                                    }
+                                },
+                                "value9": {
+                                    "ptr_wrapper": {
+                                        "id": 3
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "value2": 1.0,
+                    "value3": 0.30000001192092898,
+                    "value4": 1.0,
+                    "value5": true,
+                    "value6": false,
+                    "value7": 0.0,
+                    "value8": 1.0,
+                    "value9": 1.0,
+                    "value10": 2,
+                    "value11": {
+                        "ptr_wrapper": {
+                            "id": 1
+                        }
+                    },
+                    "value12": {
+                        "ptr_wrapper": {
+                            "id": 3
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "value9": 0,
+    "value10": 2,
+    "value11": 1048576,
+    "value12": {
+        "value0": 0.0,
+        "value1": 10.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": -2.0,
+        "value5": 1.0
+    },
+    "value13": 1048577,
+    "value14": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 3.0,
+        "value5": 1.0
+    },
+    "value15": 0,
+    "value16": 2,
+    "value17": 1048576,
+    "value18": {
+        "value0": true,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Q0yP6.png"
+    },
+    "value19": 1048577,
+    "value20": {
+        "value0": true,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png"
+    }
+}|{
+    "value0": [
+        {
+            "ptr_wrapper": {
+                "id": 2147483649,
+                "data": {
+                    "value0": 8513662857222493520,
+                    "value1": false,
+                    "value2": 1048576,
+                    "value3": "TextureTest",
+                    "value4": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value5": "Default",
+                    "value6": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value7": []
+                }
+            }
+        },
+        {
+            "ptr_wrapper": {
+                "id": 2147483650,
+                "data": {
+                    "value0": 759898504481165509,
+                    "value1": false,
+                    "value2": 1048577,
+                    "value3": "PlayerObj",
+                    "value4": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value5": "Player",
+                    "value6": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value7": []
+                }
+            }
+        }
+    ],
+    "value1": 0.0,
+    "value2": -9.8100004196167,
+    "value3": 13641197540793733055,
+    "value4": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Test2Scene.scene",
+    "value5": "TestScene"
+}

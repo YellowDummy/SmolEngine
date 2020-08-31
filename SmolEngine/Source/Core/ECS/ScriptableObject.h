@@ -2,6 +2,10 @@
 
 #include "Core/Core.h"
 #include "Core/Time.h"
+#include "Core/SLog.h"
+
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 namespace SmolEngine
 {
@@ -11,10 +15,11 @@ namespace SmolEngine
 	{
 		bool Enabled = true;
 
-		ScriptableObject(Ref<Actor> actor)
-			:m_Actor(actor)
-		{
-		}
+		ScriptableObject();
+
+		ScriptableObject(Ref<Actor> actor);
+
+		virtual ~ScriptableObject() {}
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) { return m_Actor->AddComponent<T>(args); }
@@ -47,12 +52,15 @@ namespace SmolEngine
 		Ref<Actor> FindActorByTag(const std::string& tag);
 		Ref<Actor> GetActor() { return m_Actor; }
 
-		virtual void Start() {}
-		virtual void OnUpdate(DeltaTime deltaTime) {}
-		virtual void OnDestroy() {}
-		virtual void OnEndFrame() {}
+		virtual void Start() {};
+		virtual void OnUpdate(DeltaTime deltaTime) {};
+		virtual void OnDestroy() {};
 
 	private:
+		friend class cereal::access;
+
+		size_t ActorID = 0;
 		Ref<Actor> m_Actor;
 	};
+
 }

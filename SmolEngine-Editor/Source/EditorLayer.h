@@ -2,6 +2,7 @@
 #include "SmolEngineCore.h"
 #include "Core/Layer.h"
 #include "Core/ImGui/EditorConsole.h"
+#include "Core/ImGui/CustomWindows.h"
 #include "Core/ECS/Components.h"
 #include "Core/ECS/Scene.h"
 #include "Core/ECS/DefaultSystems.h"
@@ -11,12 +12,6 @@
 
 namespace SmolEngine
 {
-	static Ref<EditorConsole> s_EditorConsole;
-
-#define CONSOLE_INFO(...) s_EditorConsole->AddMessageInfo(__VA_ARGS__)
-#define CONSOLE_WARN(...) s_EditorConsole->AddMessageWarn(__VA_ARGS__)
-#define CONSOLE_ERROR(...) s_EditorConsole->AddMessageError(__VA_ARGS__)
-
 
 	enum class ComponentItem : char
 	{
@@ -24,14 +19,11 @@ namespace SmolEngine
 		Tetxure2D, JinxScript, Rigidbody2D, CameraController, AnimationContoller, ParticleSystem
 	};
 
-	enum class EditorViewportFlags : uint16_t
-	{
-
-	};
 
 	enum class FileBrowserFlags : uint32_t
 	{
-		None = 0, ScriptPath, Texture2dPath
+		None = 0, 
+		ScriptPath, Texture2dPath, SceneLoad, SceneCreate, SceneSave
 	};
 
 	class EditorLayer: public Layer
@@ -66,7 +58,13 @@ namespace SmolEngine
 		Ref<Actor> m_Actor = nullptr;
 		Ref<Actor> m_CameraActor = nullptr;
 		Ref<Actor> m_SelectedActor = nullptr;
-		Ref<ImGui::FileBrowser> m_FileBrowser = nullptr;
+
+		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
+
+		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
+		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
+		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
+
 		Ref<Texture2D> m_Texture = nullptr;
 		Ref<Texture2D> m_SheetTexture = nullptr;
 		Ref<SubTexture2D> m_HouseSubTexture = nullptr;

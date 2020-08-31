@@ -1,0 +1,271 @@
+{
+    "value0": 3,
+    "value1": 0,
+    "value2": 1,
+    "value3": 2,
+    "value4": 2,
+    "value5": 0,
+    "value6": {
+        "value0": true,
+        "value1": {
+            "ptr_wrapper": {
+                "id": 2147483649,
+                "data": {
+                    "value0": true,
+                    "value1": {
+                        "ptr_wrapper": {
+                            "id": 2147483650,
+                            "data": {
+                                "value0": 8606991425209588650,
+                                "value1": false,
+                                "value2": 0,
+                                "value3": "Actor_1",
+                                "value4": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value5": "Player",
+                                "value6": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value7": [
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483651,
+                                            "data": {
+                                                "value0": 11489088586242532446,
+                                                "value1": false,
+                                                "value2": 2,
+                                                "value3": "Ground",
+                                                "value4": {
+                                                    "ptr_wrapper": {
+                                                        "id": 2
+                                                    }
+                                                },
+                                                "value5": "TestTag",
+                                                "value6": {
+                                                    "ptr_wrapper": {
+                                                        "id": 2
+                                                    }
+                                                },
+                                                "value7": [],
+                                                "value8": {
+                                                    "ptr_wrapper": {
+                                                        "id": 1
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "value8": {
+                                    "ptr_wrapper": {
+                                        "id": 1
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "value2": 1.0,
+                    "value3": 0.30000001192092898,
+                    "value4": 1.0,
+                    "value5": true,
+                    "value6": false,
+                    "value7": 0.0,
+                    "value8": 1.0,
+                    "value9": 1.0,
+                    "value10": 2,
+                    "value11": {
+                        "ptr_wrapper": {
+                            "id": 1
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "value7": 2,
+    "value8": {
+        "value0": true,
+        "value1": {
+            "ptr_wrapper": {
+                "id": 1
+            }
+        },
+        "value2": {
+            "ptr_wrapper": {
+                "id": 2147483652,
+                "data": {
+                    "value0": true,
+                    "value1": {
+                        "ptr_wrapper": {
+                            "id": 3
+                        }
+                    },
+                    "value2": 1.0,
+                    "value3": 0.30000001192092898,
+                    "value4": 1.0,
+                    "value5": true,
+                    "value6": false,
+                    "value7": 0.0,
+                    "value8": 1.0,
+                    "value9": 1.0,
+                    "value10": 0,
+                    "value11": {
+                        "ptr_wrapper": {
+                            "id": 1
+                        }
+                    },
+                    "value12": {
+                        "ptr_wrapper": {
+                            "id": 4
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "value9": 1,
+    "value10": 1,
+    "value11": {
+        "value0": true,
+        "value1": 0.5625
+    },
+    "value12": 3,
+    "value13": 1,
+    "value14": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0
+    },
+    "value15": 0,
+    "value16": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0
+    },
+    "value17": 2,
+    "value18": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": -2.0,
+        "value5": 1.0
+    },
+    "value19": 2,
+    "value20": 0,
+    "value21": {
+        "value0": true,
+        "value1": 8606991425209588650,
+        "value2": 12233456445
+    },
+    "value22": 1,
+    "value23": {
+        "value0": true,
+        "value1": 6111862596534002478,
+        "value2": 12233456445
+    },
+    "value24": 1,
+    "value25": 0,
+    "value26": {
+        "value0": true,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": "Assets/Textures/Background.png"
+    }
+}|{
+    "value0": [
+        {
+            "ptr_wrapper": {
+                "id": 2147483649,
+                "data": {
+                    "value0": 8606991425209588650,
+                    "value1": false,
+                    "value2": 0,
+                    "value3": "Actor_1",
+                    "value4": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value5": "Player",
+                    "value6": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value7": [
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483650,
+                                "data": {
+                                    "value0": 11489088586242532446,
+                                    "value1": false,
+                                    "value2": 2,
+                                    "value3": "Ground",
+                                    "value4": {
+                                        "ptr_wrapper": {
+                                            "id": 1
+                                        }
+                                    },
+                                    "value5": "TestTag",
+                                    "value6": {
+                                        "ptr_wrapper": {
+                                            "id": 1
+                                        }
+                                    },
+                                    "value7": []
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "ptr_wrapper": {
+                "id": 2147483651,
+                "data": {
+                    "value0": 6111862596534002478,
+                    "value1": false,
+                    "value2": 1,
+                    "value3": "Camera",
+                    "value4": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value5": "Default",
+                    "value6": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value7": []
+                }
+            }
+        },
+        {
+            "ptr_wrapper": {
+                "id": 2
+            }
+        }
+    ],
+    "value1": 0.0,
+    "value2": -9.8100004196167,
+    "value3": 12233456445,
+    "value4": "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene",
+    "value5": ""
+}

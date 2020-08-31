@@ -2,19 +2,22 @@
 #include "Scene.h"
 
 #include <glm/glm.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/archives/json.hpp>
+
 
 namespace SmolEngine
 {
 	Ref<Scene> Scene::s_Scene = std::make_shared<Scene>();
-	static Ref<SceneData> s_SceneData;
 
 	void Scene::Init()
 	{
-		s_SceneData = std::make_shared<SceneData>();
-		m_World = new b2World(s_SceneData->m_Gravity);
-		m_Registry = entt::registry();
+		m_World = new b2World(b2Vec2{ s_SceneData.Gravity.x, s_SceneData.Gravity.y });
+		s_SceneData.m_Registry = entt::registry();
+
 		m_EditorCamera = std::make_shared<EditorCameraController>(Application::GetApplication().GetWindowWidth() / Application::GetApplication().GetWindowHeight());
 		m_EditorCamera->SetZoom(4.0f);
+		m_InPlayMode = false;
 
 		//----------------------------------JINXSCRIPT-INITIALIZATION---------------------------------//
 		Jinx::GlobalParams globalParams;
@@ -49,14 +52,15 @@ namespace SmolEngine
 
 	void Scene::OnPlay()
 	{
-		//TODO: Serialize Scene Data
-		auto rbGroup = m_Registry.view<Rigidbody2DComponent>();
+		Save(s_SceneData.m_filePath);
+
+		auto rbGroup = s_SceneData.m_Registry.view<Rigidbody2DComponent>();
 		for (auto body : rbGroup)
 		{
 			rbGroup.get<Rigidbody2DComponent>(body).Rigidbody->CreateBody();
 		}
 
-		auto scriptGroup = m_Registry.view<ScriptComponent>();
+		auto scriptGroup = s_SceneData.m_Registry.view<ScriptComponent>();
 		for (auto script : scriptGroup)
 		{
 			scriptGroup.get<ScriptComponent>(script).Start();
@@ -69,17 +73,19 @@ namespace SmolEngine
 	{
 		m_InPlayMode = false;
 
-		auto rbGroup = m_Registry.view<Rigidbody2DComponent>();
+		auto rbGroup = s_SceneData.m_Registry.view<Rigidbody2DComponent>();
 		for (auto body : rbGroup)
 		{
 			rbGroup.get<Rigidbody2DComponent>(body).Rigidbody->DeleteBody();
 		}
 
-		auto scriptGroup = m_Registry.view<ScriptComponent>();
+		auto scriptGroup = s_SceneData.m_Registry.view<ScriptComponent>();
 		for (auto script : scriptGroup)
 		{
 			scriptGroup.get<ScriptComponent>(script).OnDestroy();
 		}
+
+		Load(s_SceneData.m_filePath);
 	}
 
 	void Scene::OnUpdate(DeltaTime deltaTime)
@@ -88,7 +94,7 @@ namespace SmolEngine
 
 		//Updating all the user's cameras in the current scene
 		{
-			auto cameraGroup = m_Registry.group<TransfromComponent>(entt::get<CameraComponent>);
+			auto cameraGroup = s_SceneData.m_Registry.group<TransfromComponent>(entt::get<CameraComponent>);
 			for (auto obj : cameraGroup)
 			{
 				auto& [cameraTransformComponent, cameraComponent] = cameraGroup.get<TransfromComponent, CameraComponent>(obj);
@@ -101,7 +107,7 @@ namespace SmolEngine
 
 					Renderer2D::BeginScene(cameraComponent.Camera->GetCamera());
 
-					auto& group = m_Registry.group<Texture2DComponent>(entt::get<TransfromComponent>);
+					auto& group = s_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransfromComponent>);
 					for (auto entity : group)
 					{
 						//Rendering all textures in the current scene
@@ -132,7 +138,7 @@ namespace SmolEngine
 		if(!m_InPlayMode) { return; }
 
 		//Updating transform of Rigidbody2D
-		auto transformView = m_Registry.view<TransfromComponent>();
+		auto transformView = s_SceneData.m_Registry.view<TransfromComponent>();
 		for (auto component : transformView)
 		{
 			auto& obj = transformView.get<TransfromComponent>(component);
@@ -148,7 +154,7 @@ namespace SmolEngine
 		{
 			m_World->Step(deltaTime, 6, 2);
 
-			auto scriptGroup = m_Registry.view<ScriptComponent>();
+			auto scriptGroup = s_SceneData.m_Registry.view<ScriptComponent>();
 			for (auto script : scriptGroup)
 			{
 				auto& scriptComponent = scriptGroup.get<ScriptComponent>(script);
@@ -163,7 +169,7 @@ namespace SmolEngine
 
 	void Scene::OnEvent(Event& e)
 	{
-		auto cameraGroup = m_Registry.view<CameraComponent>();
+		auto cameraGroup = s_SceneData.m_Registry.view<CameraComponent>();
 		for (auto obj : cameraGroup)
 		{
 			auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
@@ -179,7 +185,7 @@ namespace SmolEngine
 		Renderer2D::ResetDataStats();
 		Renderer2D::BeginScene(m_EditorCamera->GetCamera());
 
-		auto& group = m_Registry.group<Texture2DComponent>(entt::get<TransfromComponent>);
+		auto& group = s_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransfromComponent>);
 		for (auto entity : group)
 		{
 			//Rendering all textures in the current scene
@@ -204,16 +210,13 @@ namespace SmolEngine
 
 	void Scene::OnSceneViewResize(float width, float height)
 	{
-		if (!m_InPlayMode)
-		{
-			m_EditorCamera->m_FrameBuffer->OnResize(width, height);
-			m_EditorCamera->OnResize(width, height);
-		}
+		m_EditorCamera->m_FrameBuffer->OnResize(width, height);
+		m_EditorCamera->OnResize(width, height);
 	}
 
 	void Scene::OnGameViewResize(float width, float height)
 	{
-		auto cameraGroup = m_Registry.view<CameraComponent>();
+		auto cameraGroup = s_SceneData.m_Registry.view<CameraComponent>();
 		for (auto& obj : cameraGroup)
 		{
 			auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
@@ -224,15 +227,20 @@ namespace SmolEngine
 
 	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
+		if (s_SceneData.m_ID == 0)
+		{
+			NATIVE_ERROR("The scene is not initialized! Use CreateScene() to initialize the scene"); abort();
+		}
+
 		size_t id = std::hash<std::string>{}(name);
 		m_IDSet[name] = id;
 
-		auto obj = std::make_shared<Actor>(m_Registry.create(), m_Registry, name, tag, id);
+		auto obj = std::make_shared<Actor>(s_SceneData.m_Registry.create(), s_SceneData.m_Registry, name, tag, id);
 		obj->AddComponent<TransfromComponent>();
 
 		if (!IsActorExist(obj))
 		{
-			s_SceneData->m_ActorPool.push_back(obj);
+			s_SceneData.m_ActorPool.push_back(obj);
 			return obj;
 		}
 
@@ -252,13 +260,13 @@ namespace SmolEngine
 			actor->GetComponent<ScriptComponent>().Enabled = false;
 		}
 
-		s_SceneData->m_ActorPool.erase(std::remove(s_SceneData->m_ActorPool.begin(), s_SceneData->m_ActorPool.end(), actor), s_SceneData->m_ActorPool.end());
+		s_SceneData.m_ActorPool.erase(std::remove(s_SceneData.m_ActorPool.begin(), s_SceneData.m_ActorPool.end(), actor), s_SceneData.m_ActorPool.end());
 	}
 
 	void Scene::DeleteActorFromScene(const Ref<Actor> actor)
 	{
 		actor->IsDisabled = true;
-		s_SceneData->m_ActorPool.erase(std::remove(s_SceneData->m_ActorPool.begin(), s_SceneData->m_ActorPool.end(), actor), s_SceneData->m_ActorPool.end());
+		s_SceneData.m_ActorPool.erase(std::remove(s_SceneData.m_ActorPool.begin(), s_SceneData.m_ActorPool.end(), actor), s_SceneData.m_ActorPool.end());
 	}
 
 	void Scene::AddChild(Ref<Actor> parent, Ref<Actor> child)
@@ -273,12 +281,11 @@ namespace SmolEngine
 		parent->GetChilds().erase(std::remove(parent->GetChilds().begin(), parent->GetChilds().end(), child), parent->GetChilds().end());
 	}
 
-	//TEMP
 	Ref<Actor> Scene::FindActorByName(const std::string& name)
 	{
 		size_t id = m_IDSet[name];
 
-		for (auto actor : s_SceneData->m_ActorPool)
+		for (auto actor : s_SceneData.m_ActorPool)
 		{
 			if (actor->GetID() == id)
 			{
@@ -289,10 +296,9 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	//TEMP
 	Ref<Actor> Scene::FindActorByTag(const std::string& tag)
 	{
-		for (auto actor : s_SceneData->m_ActorPool)
+		for (auto actor : s_SceneData.m_ActorPool)
 		{
 			if (actor->GetTag() == tag)
 			{
@@ -303,12 +309,24 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	//TEMP
+	Ref<Actor> Scene::FindActorByID(size_t id)
+	{
+		for (auto actor : s_SceneData.m_ActorPool)
+		{
+			if (actor->GetID() == id)
+			{
+				return actor;
+			}
+		}
+
+		return nullptr;
+	}
+
 	std::vector<Ref<Actor>> Scene::GetActorListByTag(const std::string& tag)
 	{
 		std::vector<Ref<Actor>> temp;
 
-		for (auto actor: s_SceneData->m_ActorPool)
+		for (auto actor: s_SceneData.m_ActorPool)
 		{
 			if (actor->GetTag() == tag)
 			{
@@ -322,7 +340,7 @@ namespace SmolEngine
 
 	std::vector<Ref<Actor>>& Scene::GetActorPool()
 	{
-		return s_SceneData->m_ActorPool;
+		return s_SceneData.m_ActorPool;
 	}
 
 	const Jinx::RuntimePtr Scene::GetJinxRuntime()
@@ -330,9 +348,148 @@ namespace SmolEngine
 		return m_JinxRuntime;
 	}
 
+	void Scene::Save(std::string& filePath)
+	{
+		std::stringstream storageRegistry;
+		std::stringstream storageSceneData;
+
+		{
+			cereal::JSONOutputArchive output{ storageRegistry };
+			entt::snapshot{ s_SceneData.m_Registry }.entities(output)
+.component<Rigidbody2DComponent, CameraComponent, TransfromComponent, ScriptComponent, Texture2DComponent>(output);
+
+		}
+
+		{
+			cereal::JSONOutputArchive output{ storageSceneData };
+			s_SceneData.serialize(output);
+		}
+
+		std::stringstream result;
+		result << storageRegistry.str() << "|" << storageSceneData.str();
+
+		std::ofstream myfile(filePath);
+		if (myfile.is_open())
+		{
+			myfile << result.str();
+			myfile.close();
+			NATIVE_WARN("Scene saved successfully");
+		}
+		else
+		{
+			NATIVE_ERROR("Could not write to file!");
+		}
+	}
+
+	void Scene::Load(std::string& filePath)
+	{
+		std::ifstream file(filePath);
+		std::stringstream buffer;
+
+		if (file)
+		{
+			buffer << file.rdbuf();
+			file.close();
+		}
+		else 
+		{ 
+			NATIVE_ERROR("Could not open the file: {}", filePath); return; 
+		}
+
+		std::string segment;
+		std::vector<std::string> seglist;
+
+		while (std::getline(buffer, segment, '|'))
+		{
+			seglist.push_back(segment);
+		}
+
+		std::stringstream regisrtyStorage;
+		regisrtyStorage << seglist.front();
+
+		std::stringstream sceneDataStorage;
+		sceneDataStorage << seglist.back();
+
+		SceneData data;
+		
+		{
+			cereal::JSONInputArchive sceneDataInput{ sceneDataStorage };
+			sceneDataInput(data.m_ActorPool, data.Gravity.x, data.Gravity.y, data.m_ID, data.m_filePath, data.m_Name);
+		}
+
+		s_SceneData.m_Registry.clear();
+
+		{
+			cereal::JSONInputArchive regisrtyInput{ regisrtyStorage };
+			entt::snapshot_loader{ s_SceneData.m_Registry }.entities(regisrtyInput).
+				component<Rigidbody2DComponent, CameraComponent, TransfromComponent, ScriptComponent, Texture2DComponent>(regisrtyInput);
+		}
+
+		m_World = new b2World({ data.Gravity.x, data.Gravity.y });
+
+		{
+			auto cameraGroup = s_SceneData.m_Registry.view<CameraComponent>();
+			for (auto obj : cameraGroup)
+			{
+				auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
+				cameraComponent.Camera = std::make_shared<CameraController>((float)Application::GetApplication().GetWindowHeight() / (float)Application::GetApplication().GetWindowWidth());
+			}
+		}
+
+		{
+			auto textureGroup = s_SceneData.m_Registry.view<Texture2DComponent>();
+			for (auto obj : textureGroup)
+			{
+				auto& texture = textureGroup.get<Texture2DComponent>(obj);
+				texture.Texture = Texture2D::Create(texture.TexturePath);
+			}
+		}
+
+		{
+			auto rbGroup = s_SceneData.m_Registry.view<Rigidbody2DComponent>();
+			for (auto obj : rbGroup)
+			{
+				auto& rb = rbGroup.get<Rigidbody2DComponent>(obj);
+				rb.Rigidbody->m_World = m_World;
+			}
+		}
+
+		{
+			auto scriptGroup = s_SceneData.m_Registry.view<ScriptComponent>();
+			for (auto obj : scriptGroup)
+			{
+				auto& script = scriptGroup.get<ScriptComponent>(obj);
+
+				for (auto item : m_Scripts)
+				{
+					if (script.SceneID == data.m_ID && script.ActorID == item.ActorID)
+					{
+						script.Script = item.Script; break;
+					}
+				}
+			}
+		}
+
+		s_SceneData = data;
+		NATIVE_WARN("Scene loaded successfully");
+	}
+
+	void Scene::CreateScene(std::string& filePath)
+	{
+		s_SceneData.m_Registry.clear();
+
+		SceneData newScene;
+		newScene.m_filePath = filePath;
+		newScene.m_ID = std::hash<std::string>{}(filePath);
+
+		s_SceneData = newScene;
+		Save(filePath);
+	}
+
+
 	bool Scene::IsActorExist(Ref<Actor> actor)
 	{
-		for (auto obj : s_SceneData->m_ActorPool)
+		for (auto obj : s_SceneData.m_ActorPool)
 		{
 			if (obj->GetID() == actor->GetID())
 			{
@@ -341,5 +498,10 @@ namespace SmolEngine
 		}
 
 		return false;
+	}
+
+	SceneData& Scene::GetSceneData()
+	{
+		return s_SceneData;
 	}
 }

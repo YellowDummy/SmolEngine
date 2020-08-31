@@ -8,6 +8,8 @@
 #include <ctime>
 #include <sstream>
 
+#include "Core/SLog.h"
+
 
 
 namespace SmolEngine
@@ -29,47 +31,52 @@ namespace SmolEngine
 	{
 	public:
 
+
 		void Update(bool& enabled)
 		{
-			if (ImGui::Begin("Console", &enabled))
+			if (enabled)
 			{
-				ImGui::SameLine();
-				if (ImGui::Button("Clear"))
+				if (ImGui::Begin("Console", &enabled))
 				{
-					m_Messages.clear();
-				}
-
-				static int current_item = 0;
-
-				ImGui::SameLine();
-				ImGui::Combo("Filter", &current_item, "None\0Info\0Error\0Warn\0\0");
-
-				ImGui::Separator();
-				ImGui::BeginChild("Log");
-				{
-					if (current_item == 0)
+					ImGui::SameLine();
+					if (ImGui::Button("Clear"))
 					{
-						for (auto& msg : m_Messages)
-						{
-							ImGui::TextColored(msg.Color, msg.Text.c_str());
-						}
+						m_Messages.clear();
 					}
-					else
+
+					static int current_item = 0;
+
+					ImGui::SameLine();
+					ImGui::Combo("Filter", &current_item, "None\0Info\0Error\0Warn\0\0");
+
+					ImGui::Separator();
+					ImGui::BeginChild("Log");
 					{
-						for (auto& msg : m_Messages)
+						if (current_item == 0)
 						{
-							if (current_item == (int)msg.Type)
+							for (auto& msg : m_Messages)
 							{
 								ImGui::TextColored(msg.Color, msg.Text.c_str());
 							}
 						}
+						else
+						{
+							for (auto& msg : m_Messages)
+							{
+								if (current_item == (int)msg.Type)
+								{
+									ImGui::TextColored(msg.Color, msg.Text.c_str());
+								}
+							}
+						}
+
 					}
+					ImGui::EndChild();
 
+					ImGui::End();
 				}
-				ImGui::EndChild();
-
-				ImGui::End();
 			}
+			
 		}
 
 		void AddMessage(const std::string& message, LogLevel logLevel)
@@ -132,8 +139,15 @@ namespace SmolEngine
 			AddMessage(message, LogLevel::Error);
 		}
 
+		static std::shared_ptr<EditorConsole> GetConsole() { return s_EditorConsole; }
 
 	private:
 		std::vector<Message> m_Messages;
+		static std::shared_ptr<EditorConsole> s_EditorConsole;
 	};
+
+
+#define CONSOLE_INFO(...)  EditorConsole::GetConsole()->AddMessageInfo(__VA_ARGS__)
+#define CONSOLE_WARN(...)  EditorConsole::GetConsole()->AddMessageWarn(__VA_ARGS__)
+#define CONSOLE_ERROR(...) EditorConsole::GetConsole()->AddMessageError(__VA_ARGS__)
 }

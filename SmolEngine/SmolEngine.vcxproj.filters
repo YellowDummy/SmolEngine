@@ -1389,6 +1389,7 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\CustomWindows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1493,5 +1494,7 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\CustomWindows.cpp" />
+    <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp" />
   </ItemGroup>
 </Project>

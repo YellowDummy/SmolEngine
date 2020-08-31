@@ -22,7 +22,6 @@ namespace SmolEngine
 		auto& app = Application::GetApplication();
 		app.PushLayer(new EditorLayer);
 
-
 		EDITOR_INFO("Initialized successfully");
 	}
 

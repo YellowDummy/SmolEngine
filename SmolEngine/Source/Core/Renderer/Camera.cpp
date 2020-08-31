@@ -55,7 +55,7 @@ namespace SmolEngine
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
-	void CameraController::SetTransform(glm::vec3& wolrdPos)
+	void CameraController::SetTransform(const glm::vec3& wolrdPos)
 	{
 		m_Camera.SetPosition(wolrdPos);
 	}
