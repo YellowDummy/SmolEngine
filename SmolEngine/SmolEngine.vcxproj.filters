@@ -55,6 +55,9 @@
     <Filter Include="Source\Core\ImGui\FileBrowser">
       <UniqueIdentifier>{8BC60963-F7DE-F08C-C08B-80262C638526}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\ImGui\NodeEditor">
+      <UniqueIdentifier>{543A9C34-40F5-8BE0-E9AC-042BD546D670}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Networking">
       <UniqueIdentifier>{C55D9593-B157-BEE5-9AC4-54F6865D2452}</UniqueIdentifier>
     </Filter>
@@ -1287,6 +1290,9 @@
     <ClInclude Include="Source\Core\Events\MouseEvent.h">
       <Filter>Source\Core\Events</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\CustomWindows.h">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\ImGui\EditorConsole.h">
       <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
@@ -1295,6 +1301,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\ImGui\ImGuiLayer.h">
       <Filter>Source\Core\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\NodeEditor\imnodes.h">
+      <Filter>Source\Core\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Input.h">
       <Filter>Source\Core</Filter>
@@ -1324,6 +1333,9 @@
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\GraphicsContext.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Light2D.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglBuffer.h">
@@ -1389,7 +1401,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ImGui\CustomWindows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1422,11 +1433,20 @@
     <ClCompile Include="Source\Core\EventHandler.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\CustomWindows.cpp">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ImGui\ImGuiLayer.cpp">
       <Filter>Source\Core\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\NodeEditor\imnodes.cpp">
+      <Filter>Source\Core\ImGui\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Layer.cpp">
       <Filter>Source\Core</Filter>
@@ -1494,7 +1514,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ImGui\CustomWindows.cpp" />
-    <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp" />
   </ItemGroup>
 </Project>

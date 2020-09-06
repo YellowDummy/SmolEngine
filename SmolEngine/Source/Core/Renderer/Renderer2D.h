@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Core.h"
 #include "Core/Renderer/Texture.h"
 #include "Core/Renderer/SubTexture.h"
 #include <glm/glm.hpp>
@@ -7,27 +8,35 @@
 namespace SmolEngine
 {
 	class OrthographicCamera;
+	enum class DebugPrimitives
+	{
+		None = 0,
+		Quad, Circle
+	};
 
+	//TODO: Implement Batch Rendering
 	class Renderer2D
 	{
 	public:
 		static void Init();
-		static void BeginScene(const OrthographicCamera& camera);
+		static void Shutdown();
+
+		static void BeginScene(Ref<OrthographicCamera> camera, float ambientValue);
 		static void EndScene();
-		static void Flush();
 
 		static void DrawQuadRotated(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color);
-		static void DrawSprite(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture, float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-
-		static void DrawTexture(const glm::mat4& transform, const glm::vec4& color);
-		static void DrawTexture(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& tintColor = glm::vec4(1.0f), float repeatValue = 1.0f);
+		static void DrawSprite(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		static void DrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color);
-		static void DrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const Ref<Texture2D>& texture, float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
-		static void DrawSpriteSheetTexture(const glm::vec3& worldPos, const glm::vec2& scale, const Ref<SubTexture2D>& subTexture, float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+		//Debug
+		static void BeginDebug(Ref<OrthographicCamera> camera);
+		static void EndDebug();
+		static void DebugDraw(DebugPrimitives type, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
-		static void Shutdown();
+		//Light
+		static void DrawLight2D(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color, const float lightIntensity, Ref<OrthographicCamera> camera);
 
 		struct RendererData2D
 		{
@@ -37,9 +46,5 @@ namespace SmolEngine
 			inline uint32_t GetTotalVertexCount() { return QuadCount * 4; }
 			inline uint32_t GetTotalIndexCount() { return QuadCount * 6; }
 		};
-
-		static void ResetDataStats();
-		static RendererData2D& GetData();
-		static void StartNewBath();
 	};
 }

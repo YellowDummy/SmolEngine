@@ -4,5 +4,12 @@
 
 namespace SmolEngine
 {
-	
+	class Character2D
+	{
+	public:
+
+		Character2D() = default;
+
+		~Character2D() = default;
+	};
 }

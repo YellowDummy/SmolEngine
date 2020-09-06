@@ -5,25 +5,36 @@
 
 namespace SmolEngine
 {
-	void ScriptComponent::OnUpdate(DeltaTime deltaTime)
+	void ScriptObject::OnUpdate(DeltaTime deltaTime)
 	{
-		if (Script == nullptr) { return; }
+		//TEMP
+		if (Script == nullptr) { NATIVE_ERROR("Invalid Script"); return; }
 
 		Script->OnUpdate(deltaTime);
 	}
 
-	void ScriptComponent::Start()
+	void ScriptObject::Start()
 	{
-		if (Script == nullptr) { return; }
+		//TEMP
+		if (Script == nullptr) { NATIVE_ERROR("Invalid Script"); return; }
 
 
 		Script->Start();
 	}
 
-	void ScriptComponent::OnDestroy()
+	void ScriptObject::OnDestroy()
 	{
-		if (Script == nullptr) { return; }
+		//TEMP
+		if (Script == nullptr) { NATIVE_ERROR("Invalid Script"); return; }
 
 		Script->OnDestroy();
+	}
+
+	void TransformComponent::operator=(const TransformComponent& other)
+	{
+		Rotation = other.Rotation;
+		Scale = other.Scale;
+		WorldPos = other.WorldPos;
+		Enabled = other.Enabled;
 	}
 }

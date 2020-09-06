@@ -1,7 +1,7 @@
 # SmolEngine
 
 
-![alt text](https://i.imgur.com/JGy78b9.png "SmolEngine")
+![alt text](https://i.imgur.com/1nqPNG9.png "SmolEngine")
 
 SmolEngine is a 2D game engine that is developed primarily by one person for a learning purpose.
 

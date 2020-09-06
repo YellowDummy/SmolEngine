@@ -27,9 +27,9 @@ namespace SmolEngine
 		virtual void SetUniformIntArray(const std::string& name, int* values, uint32_t count) override;
 
 		void SetUniformFloat(const std::string& name, const float value) override;
-		void UploadUniformFloat2(const std::string& name, const glm::vec2 float2);
-		void SetUniformFloat3(const std::string& name, const glm::vec3 vec3) override;
-		void SetUniformFloat4(const std::string& name, const glm::vec4 vec4) override;
+		void SetUniformFloat2(const std::string& name, const glm::vec2& float2) override;
+		void SetUniformFloat3(const std::string& name, const glm::vec3& vec3) override;
+		void SetUniformFloat4(const std::string& name, const glm::vec4& vec4) override;
 
 		void SetUniformMat4(const std::string& name, const glm::mat4& mat4) override;
 		void UploadUniformMatrix3(const std::string& name, const glm::mat3& matrix);

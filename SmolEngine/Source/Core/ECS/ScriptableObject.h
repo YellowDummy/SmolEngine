@@ -17,8 +17,6 @@ namespace SmolEngine
 
 		ScriptableObject();
 
-		ScriptableObject(Ref<Actor> actor);
-
 		virtual ~ScriptableObject() {}
 
 		template<typename T, typename... Args>
@@ -52,12 +50,17 @@ namespace SmolEngine
 		Ref<Actor> FindActorByTag(const std::string& tag);
 		Ref<Actor> GetActor() { return m_Actor; }
 
-		virtual void Start() {};
+		virtual void Start() {  };
 		virtual void OnUpdate(DeltaTime deltaTime) {};
 		virtual void OnDestroy() {};
 
+		//Must be implemented by the user in order to register an external script in the engine
+		virtual std::shared_ptr<ScriptableObject> Instantiate() { NATIVE_ERROR("ScriptableObject: No matching overloaded function found"); return nullptr; };
+
 	private:
 		friend class cereal::access;
+		friend class Scene;
+		friend class EditorLayer;
 
 		size_t ActorID = 0;
 		Ref<Actor> m_Actor;

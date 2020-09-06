@@ -8,6 +8,7 @@
 #include <../Libraries/imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "box2d/box2d.h"
 
 namespace SmolEngine
 {
@@ -18,7 +19,7 @@ namespace SmolEngine
 			ImGui::Begin("Settings", &isOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
 			//ImGui::SetWindowPos(ImVec2{ (float)Application::GetApplication().GetWindowWidth() / 2 - 350, 
 //(float)Application::GetApplication().GetWindowHeight() / 2 - 180 });
-			ImGui::SetWindowSize("Settings", { 480, 200 });
+			ImGui::SetWindowSize("Settings", { 480, 380 });
 
 			static char name[128] = "Default Name";
 			ImGui::NewLine();
@@ -32,9 +33,17 @@ namespace SmolEngine
 			ImGui::Separator();
 			ImGui::NewLine();
 
+			ImGui::InputFloat("Ambient Light Strength", &scene->GetSceneData().m_AmbientStrength);
+			ImGui::PushItemWidth(200);
+			ImGui::Separator();
+			ImGui::NewLine();
+
 			if (ImGui::Button("Update"))
 			{
+				auto& data = scene->GetSceneData();
 				scene->GetSceneData().m_Name = name;
+				scene->m_World = new b2World({ data.Gravity.x, data.Gravity.y });
+
 				isOpened = false;
 			}
 

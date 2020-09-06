@@ -5,6 +5,8 @@
 #include <vector>
 #include <functional>
 
+#include <box2d/b2_world.h>
+
 #include "Core/ECS/Components.h"
 #include "Core/ECS/Actor.h"
 
@@ -17,30 +19,23 @@
 
 #include <Jinx.hpp>
 #include <unordered_map>
-#include <functional>
 #include <glm/glm.hpp>
 
-#include <box2d/b2_world.h>
-
 namespace SmolEngine
-{
+{ 
+	//TODO: Move to a separate header
 	struct SceneData
 	{
-		SceneData() = default;
-
 		entt::registry m_Registry;
+		//TODO: Replace vector
 		std::vector<Ref<Actor>> m_ActorPool;
 		glm::vec2 Gravity = glm::vec2(0.0f, -9.81f);
 
-		void operator=(const SceneData& other)
-		{
-			m_ActorPool = other.m_ActorPool;
-			Gravity.x = other.Gravity.x;
-			Gravity.y = other.Gravity.y;
-			m_ID = other.m_ID;
-			m_filePath = other.m_filePath;
-			m_Name = other.m_Name;
-		}
+		float m_AmbientStrength = 1.0f;
+
+	public:
+		SceneData() = default;
+		void operator=(const SceneData& other);
 
 	private:
 		friend class EditorLayer;
@@ -55,7 +50,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_ActorPool, Gravity.x, Gravity.y, m_ID, m_filePath, m_Name);
+			archive(m_ActorPool, Gravity.x, Gravity.y, m_ID, m_filePath, m_Name, m_AmbientStrength);
 			archive.serializeDeferments();
 		}
 	};
@@ -66,6 +61,7 @@ namespace SmolEngine
 
 		Scene() = default;
 
+		// Logic
 		void Init();
 		void ShutDown();
 
@@ -75,16 +71,20 @@ namespace SmolEngine
 		void OnUpdate(DeltaTime deltaTime);
 		void OnEvent(Event& e);
 
+		//Serilization
 		void Save(std::string& filePath);
 		void Load(std::string& filePath);
+		void Load(int index) {}
 		void CreateScene(std::string& filePath);
 
+		//Camera handling
 		void UpdateEditorCamera();
 		void OnSceneViewResize(float width, float height);
 		void OnGameViewResize(float width, float height);
 
-		void DeleteActor(const Ref<Actor> actor);
-		void DeleteActorFromScene(const Ref<Actor> actor);
+		//Operations with actors
+		void DeleteActor(Ref<Actor> actor);
+		void DuplicateActor(Ref<Actor> actor);
 
 		void AddChild(Ref<Actor> parent, Ref<Actor> child);
 		void RemoveChild(Ref<Actor> parent, Ref<Actor> child);
@@ -97,26 +97,44 @@ namespace SmolEngine
 		std::vector<Ref<Actor>> GetActorListByTag(const std::string& tag);
 		std::vector<Ref<Actor>>& GetActorPool();
 
+		//Scripting
+		template<typename T>
+		void RegistryScript(std::string& keyName)
+		{
+			for (auto pair: m_ScriptRegistry)
+			{
+				if (std::get<0>(pair) == keyName)
+				{
+					NATIVE_ERROR("<{}> script is already registered!", keyName); return;
+				}
+			}
+
+			std::shared_ptr<ScriptableObject> obj = std::make_shared<T>();
+			m_ScriptNameList.push_back(keyName);
+			m_ScriptRegistry[keyName] = obj;
+		}
+
+		bool AttachScript(std::string& keyName, Ref<Actor> actor);
+
+		//Internal needs
 		const Jinx::RuntimePtr GetJinxRuntime();
+
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
 
 		static Ref<Scene> GetScene() { return s_Scene; }
 
 		b2World* GetWorld() { return m_World; }
+
 		entt::registry& GetRegistry() { return s_SceneData.m_Registry; }
-
-		template<typename T>
-		void SetScriptToActor(Ref<Actor> actor)
-		{
-			auto& ref = actor->AddComponent<ScriptComponent>();
-			ref.SetScript<T>(actor, s_SceneData.m_ID);
-
-			m_Scripts.push_back(ref);
-		}
 
 	private:
 		bool IsActorExist(Ref<Actor> actor);
 		SceneData& GetSceneData();
+
+	private:
+		friend class EditorLayer;
+		friend class Actor;
+		friend class SettingsWindow;
 
 	private:
 		static Ref<Scene> s_Scene;
@@ -130,11 +148,9 @@ namespace SmolEngine
 
 		Ref<EditorCameraController> m_EditorCamera;
 
-		std::vector<ScriptComponent> m_Scripts;
+		std::unordered_map<std::string, Ref<ScriptableObject>> m_ScriptRegistry;
 		std::unordered_map<std::string, size_t> m_IDSet;
+		std::vector<std::string> m_ScriptNameList;
 
-		friend class EditorLayer;
-		friend class Actor;
-		friend class SettingsWindow;
 	};
 }

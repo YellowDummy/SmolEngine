@@ -7,7 +7,8 @@
     "value5": 0,
     "value6": {
         "value0": true,
-        "value1": {
+        "value1": true,
+        "value2": {
             "ptr_wrapper": {
                 "id": 2147483649,
                 "data": {
@@ -78,7 +79,11 @@
                     "value8": 1.0,
                     "value9": 1.0,
                     "value10": 2,
-                    "value11": {
+                    "value11": 0,
+                    "value12": 1.0,
+                    "value13": 0.0,
+                    "value14": 0.0,
+                    "value15": {
                         "ptr_wrapper": {
                             "id": 1
                         }
@@ -90,12 +95,13 @@
     "value7": 2,
     "value8": {
         "value0": true,
-        "value1": {
+        "value1": true,
+        "value2": {
             "ptr_wrapper": {
                 "id": 1
             }
         },
-        "value2": {
+        "value3": {
             "ptr_wrapper": {
                 "id": 2147483652,
                 "data": {
@@ -114,12 +120,16 @@
                     "value8": 1.0,
                     "value9": 1.0,
                     "value10": 0,
-                    "value11": {
+                    "value11": 0,
+                    "value12": 1.0,
+                    "value13": 0.0,
+                    "value14": 0.0,
+                    "value15": {
                         "ptr_wrapper": {
                             "id": 1
                         }
                     },
-                    "value12": {
+                    "value16": {
                         "ptr_wrapper": {
                             "id": 4
                         }
@@ -132,7 +142,8 @@
     "value10": 1,
     "value11": {
         "value0": true,
-        "value1": 0.5625
+        "value1": 0.5625,
+        "value2": true
     },
     "value12": 3,
     "value13": 1,
@@ -142,7 +153,9 @@
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": 1.0
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
     },
     "value15": 0,
     "value16": {
@@ -151,7 +164,9 @@
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": 1.0
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
     },
     "value17": 2,
     "value18": {
@@ -160,31 +175,29 @@
         "value2": 1.0,
         "value3": 1.0,
         "value4": -2.0,
-        "value5": 1.0
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
     },
-    "value19": 2,
+    "value19": 1,
     "value20": 0,
     "value21": {
         "value0": true,
         "value1": 8606991425209588650,
-        "value2": 12233456445
+        "value2": 2787749688047389887,
+        "value3": "CharMovementScript"
     },
     "value22": 1,
-    "value23": {
-        "value0": true,
-        "value1": 6111862596534002478,
-        "value2": 12233456445
-    },
-    "value24": 1,
-    "value25": 0,
-    "value26": {
+    "value23": 0,
+    "value24": {
         "value0": true,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
         "value5": "Assets/Textures/Background.png"
-    }
+    },
+    "value25": 0
 }|{
     "value0": [
         {
@@ -265,7 +278,8 @@
     ],
     "value1": 0.0,
     "value2": -9.8100004196167,
-    "value3": 12233456445,
+    "value3": 2787749688047389887,
     "value4": "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene",
-    "value5": ""
+    "value5": "",
+    "value6": 1.0
 }

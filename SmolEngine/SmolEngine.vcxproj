@@ -557,10 +557,11 @@
     <ClInclude Include="Source\Core\Events\ApplicationEvent.h" />
     <ClInclude Include="Source\Core\Events\InputEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
+    <ClInclude Include="Source\Core\ImGui\CustomWindows.h" />
     <ClInclude Include="Source\Core\ImGui\EditorConsole.h" />
     <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h" />
     <ClInclude Include="Source\Core\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="Source\Core\ImGui\CustomWindows.h" />
+    <ClInclude Include="Source\Core\ImGui\NodeEditor\imnodes.h" />
     <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\Core\InputCodes.h" />
     <ClInclude Include="Source\Core\Layer.h" />
@@ -571,6 +572,7 @@
     <ClInclude Include="Source\Core\Renderer\Camera.h" />
     <ClInclude Include="Source\Core\Renderer\Framebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\GraphicsContext.h" />
+    <ClInclude Include="Source\Core\Renderer\Light2D.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglContext.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.h" />
@@ -608,6 +610,7 @@
     <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="Source\Core\ImGui\NodeEditor\imnodes.cpp" />
     <ClCompile Include="Source\Core\Layer.cpp" />
     <ClCompile Include="Source\Core\LayerManager.cpp" />
     <ClCompile Include="Source\Core\Physics2D\Rigidbody2D.cpp" />

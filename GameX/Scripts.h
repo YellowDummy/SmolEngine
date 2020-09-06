@@ -14,11 +14,12 @@ class CharMovementScript : public ScriptableObject
 {
 public:
 
-	CharMovementScript(Ref<Actor> actor)
-		:ScriptableObject(actor) {}
+	//Default constructor must be implemented
+	CharMovementScript() {}
 
 	void Start() override
 	{
+
 		rb = &GetComponent<Rigidbody2DComponent>();
 
 		for (auto obj : GetActorList())
@@ -43,11 +44,22 @@ public:
 	{
 		if (Input::IsKeyPressed(KeyCode::Q))
 		{
+			rb->AddForce({ 20.0f, 0.0f });
+		}
+
+		if (Input::IsKeyPressed(KeyCode::Space))
+		{
 			rb->AddForce({ 0.0f, 50.0f });
 		}
 	}
 
 	void OnDestroy() override {}
+
+	//Must be implemented by the user in order to register an external script in the engine
+	std::shared_ptr<ScriptableObject> Instantiate() override
+	{
+		return std::make_shared<CharMovementScript>();
+	}
 
 private:
 	Rigidbody2DComponent* rb = nullptr;
@@ -57,8 +69,8 @@ class CameraMovementScript : public ScriptableObject
 {
 public:
 
-	CameraMovementScript(Ref<Actor> actor)
-		:ScriptableObject(actor) {}
+	//Default constructor must be implemented
+	CameraMovementScript() {}
 
 
 	void Start() override
@@ -70,8 +82,10 @@ public:
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
-		auto& playerPos = m_Player->GetComponent<TransfromComponent>().WorldPos;
-		auto& cameraPos = GetComponent<TransfromComponent>().WorldPos;
+		if (m_Player == nullptr) { return; }
+
+		auto& playerPos = m_Player->GetComponent<TransformComponent>().WorldPos;
+		auto& cameraPos = GetComponent<TransformComponent>().WorldPos;
 
 		int distanceY = playerPos.y - cameraPos.y;
 		int distanceX = playerPos.x - cameraPos.x;
@@ -108,6 +122,12 @@ public:
 
 
 	void OnDestroy() override  {}
+
+	//Must be implemented by the user in order to register an external script in the engine
+	std::shared_ptr<ScriptableObject> Instantiate() override
+	{
+		return std::make_shared<CameraMovementScript>();
+	}
 
 private:
 	float m_CameraSpeed = 0.5f;

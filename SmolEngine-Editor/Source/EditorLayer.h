@@ -8,17 +8,22 @@
 #include "Core/ECS/DefaultSystems.h"
 
 #include <imgui/imgui.h>
+
 #include "Core/ImGui/FileBrowser/imfilebrowser.h"
 
 namespace SmolEngine
 {
-
 	enum class ComponentItem : char
 	{
 		None = 0, 
-		Tetxure2D, JinxScript, Rigidbody2D, CameraController, AnimationContoller, ParticleSystem
+		Tetxure2D, JinxScript, Rigidbody2D, CameraController, Light2D, AnimationContoller, ParticleSystem
 	};
 
+	enum class SelectionFlags: uint16_t
+	{
+		None = 0,
+		Inspector, Actions
+	};
 
 	enum class FileBrowserFlags : uint32_t
 	{
@@ -30,17 +35,18 @@ namespace SmolEngine
 	{
 	public:
 		EditorLayer()
-			:Layer("EditorLayer")
-		{
-
-		}
+			:Layer("EditorLayer") {}
 
 		~EditorLayer() {}
 
 		void OnAttach() override;
+
 		void OnDetach() override;
+
 		void OnUpdate(DeltaTime deltaTime) override;
+
 		void OnEvent(Event& event) override;
+
 		void OnImGuiRender() override;
 
 	private:
@@ -54,10 +60,11 @@ namespace SmolEngine
 		std::string m_FilePath = "";
 		Ref<Scene> m_Scene;
 
-		//TEMP 
-		Ref<Actor> m_Actor = nullptr;
-		Ref<Actor> m_CameraActor = nullptr;
-		Ref<Actor> m_SelectedActor = nullptr;
+		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
+		SelectionFlags m_SelectionFlags = SelectionFlags::None;
+
+		bool isSceneViewFocused = false;
+		bool isGameViewFocused = false;
 
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
 
@@ -65,15 +72,15 @@ namespace SmolEngine
 		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
 
+		//TEMP 
+		Ref<Actor> m_Actor = nullptr;
+		Ref<Actor> m_CameraActor = nullptr;
+		Ref<Actor> m_SelectedActor = nullptr;
+
 		Ref<Texture2D> m_Texture = nullptr;
 		Ref<Texture2D> m_SheetTexture = nullptr;
 		Ref<SubTexture2D> m_HouseSubTexture = nullptr;
 		Ref<SubTexture2D> m_FieldSubTexture = nullptr;
-
-		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
-
-		bool isSceneViewFocused = false;
-		bool isGameViewFocused = false;
 	};
 }
 

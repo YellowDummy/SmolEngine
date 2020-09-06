@@ -1,6 +1,6 @@
 project "Box2D"
 	kind "StaticLib"
-	language "C"
+	language "C++"
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")

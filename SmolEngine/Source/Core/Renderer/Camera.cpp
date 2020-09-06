@@ -40,8 +40,19 @@ namespace SmolEngine
 
 	///----------------------------------------------------------------CAMERA-CONTROLLER--------------------------------------------------------------------------------------------//
 
+	CameraController::CameraController()
+	{
+		float aspectRatio = (float)Application::GetApplication().GetWindowHeight() / (float)Application::GetApplication().GetWindowWidth();
+		m_Camera = std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+
+		FramebufferData m_FramebufferData;
+		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
+		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
+		m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+	}
+
 	CameraController::CameraController(float aspectRatio, bool roatationEnabled)
-		:m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel),
+		:m_Camera(std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)),
 		m_AspectRatio(aspectRatio)
 	{
 		FramebufferData m_FramebufferData;
@@ -52,12 +63,12 @@ namespace SmolEngine
 
 	void CameraController::CalculateView()
 	{
-		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_Camera->SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
 	void CameraController::SetTransform(const glm::vec3& wolrdPos)
 	{
-		m_Camera.SetPosition(wolrdPos);
+		m_Camera->SetPosition(wolrdPos);
 	}
 
 	void CameraController::OnResize(float width, float height)
@@ -83,7 +94,7 @@ namespace SmolEngine
 ///--------------------------------------------------------------------------------EDITOR-CAMERA-CONTROLLER--------------------------------------------------------------------------------------------//
 
 	EditorCameraController::EditorCameraController(float aspectRatio, bool rotationEnabled)
-		:m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel),
+		:m_Camera(std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)),
 		m_AspectRatio(aspectRatio),
 		m_RoatationEnabled(rotationEnabled),
 		m_WorldPos(glm::vec3(0.0f))
@@ -96,7 +107,7 @@ namespace SmolEngine
 
 	void EditorCameraController::CalculateView()
 	{
-		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_Camera->SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
 	void EditorCameraController::OnUpdate(DeltaTime deltaTime)
@@ -118,7 +129,7 @@ namespace SmolEngine
 			m_WorldPos.y -= m_CameraSpeed * deltaTime;
 		}
 
-		m_Camera.SetPosition(m_WorldPos);
+		m_Camera->SetPosition(m_WorldPos);
 		m_CameraSpeed = m_ZoomLevel;
 	}
 

@@ -64,13 +64,13 @@ namespace SmolEngine
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
 	}
 
-	void OpenglShader::SetUniformFloat3(const std::string& name, const glm::vec3 vec3)
+	void OpenglShader::SetUniformFloat3(const std::string& name, const glm::vec3& vec3)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform3f(location, vec3.x, vec3.y, vec3.z);
 	}
 
-	void OpenglShader::SetUniformFloat4(const std::string& name, const glm::vec4 vec4)
+	void OpenglShader::SetUniformFloat4(const std::string& name, const glm::vec4& vec4)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
@@ -94,7 +94,7 @@ namespace SmolEngine
 		glUniform1f(location, value);
 	}
 
-	void OpenglShader::UploadUniformFloat2(const std::string& name, const glm::vec2 float2)
+	void OpenglShader::SetUniformFloat2(const std::string& name, const glm::vec2& float2)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform2f(location, float2.x, float2.y);

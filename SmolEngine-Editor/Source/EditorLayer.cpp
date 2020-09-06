@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "../../GameX/Scripts.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+
 #include "EditorLayer.h"
 #include "icon_font_cpp_headers/IconsFontAwesome5.h"
 #include "Core/Renderer/Renderer2D.h"
@@ -8,10 +10,13 @@
 #include "Core/ECS/Scene.h"
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 #include <fstream>
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
+
+#include "Core/ImGui/NodeEditor/imnodes.h"
 
 namespace SmolEngine
 {
@@ -20,13 +25,10 @@ namespace SmolEngine
 		m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
 		m_SettingsWindow = std::make_unique<SettingsWindow>();
 		m_ActorCreationWindow = std::make_unique<ActorCreationWindow>();
-
 		m_EditorConsole = EditorConsole::GetConsole();
 
 		m_Scene = Scene::GetScene();
-
-		m_Scene->GetSceneData().m_filePath = "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene";
-		m_Scene->GetSceneData().m_ID = 12233456445;
+		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene"));
 
 		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
 		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
@@ -36,18 +38,19 @@ namespace SmolEngine
 
 		m_Actor = m_Scene->CreateActor("Actor_1", "Player");
 		m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
+		m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, BodyType::Dynamic);
 
-		m_Scene->SetScriptToActor<CharMovementScript>(m_Actor);
+		m_Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
+		m_Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
 
-		m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, Scene::GetScene()->GetWorld(), BodyType::Dynamic);
+		m_Scene->AttachScript(std::string("CharMovementScript"), m_Actor);
 
 		m_CameraActor = m_Scene->CreateActor("Camera");
 		m_CameraActor->AddComponent<CameraComponent>();
-		m_Scene->SetScriptToActor<CameraMovementScript>(m_CameraActor);
 
 		auto& ground = m_Scene->CreateActor("Ground","TestTag");
-		ground->GetComponent<TransfromComponent>().SetTranform(1.0f, -2.0f);;
-		ground->AddComponent<Rigidbody2DComponent>(ground, Scene::GetScene()->GetWorld(), BodyType::Static);
+		ground->GetComponent<TransformComponent>().SetTranform(1.0f, -2.0f);;
+		ground->AddComponent<Rigidbody2DComponent>(ground, BodyType::Static);
 
 		m_Scene->AddChild(m_Actor, ground);
 
@@ -59,9 +62,6 @@ namespace SmolEngine
 		//luaL_openlibs(L);
 
 		//JinxScript script(m_Actor, m_Scene.GetJinxRuntime(), std::string("../GameX/Assets/JinxScripts/Example.jinx"));
-
-		m_Scene->Save(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene"));
-
 	}
 
 	void EditorLayer::OnDetach()
@@ -75,6 +75,7 @@ namespace SmolEngine
 		{
 			m_Scene->m_EditorCamera->OnUpdate(deltaTime);
 		}
+
 
 		m_Scene->OnUpdate(deltaTime);
 	}
@@ -91,7 +92,6 @@ namespace SmolEngine
 
 	void EditorLayer::OnImGuiRender()
 	{
-
 		const GLubyte* renderer = glGetString(GL_RENDERER);
 
 		static bool p_open = true;
@@ -140,14 +140,19 @@ namespace SmolEngine
 		}
 
 		//---------------------------------------WINDOW-STATES----------------------------------------//
+
 		static bool showActorCreationWindow;
 		static bool showRenderer2Dstats;
 		static bool showConsole = true;
 		static bool showGameView = false;
 		static bool showSettingsWindow = false;
+
+		//TEMP
+		static bool showNodeEditorTest = false;
+
 		//---------------------------------------WINDOW-STATES----------------------------------------//
 
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 25.0f, 10.0f });
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 10.0f, 10.0f });
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File")) 
@@ -165,55 +170,59 @@ namespace SmolEngine
 
 			if (ImGui::BeginMenu("Scene"))
 			{
-
-				if (ImGui::MenuItem("Create New"))
+				if (!m_Scene->m_InPlayMode)
 				{
-					m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
+					if (ImGui::MenuItem("New"))
+					{
+						m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
 
-					m_FileBrowser->SetTypeFilters({ ".scene" });
-					m_FileBrowser->SetTitle("New Scene");
-					m_FileBrowserState = FileBrowserFlags::SceneCreate;
-					m_FileBrowser->Open();
-				}
+						m_FileBrowser->SetTypeFilters({ ".scene" });
+						m_FileBrowser->SetTitle("New Scene");
+						m_FileBrowserState = FileBrowserFlags::SceneCreate;
+						m_FileBrowser->Open();
+					}
 
-				if (ImGui::MenuItem("Save Current"))
-				{
-					m_Scene->Save(m_Scene->GetSceneData().m_filePath);
-				}
+					if (ImGui::MenuItem("Save"))
+					{
+						m_Scene->Save(m_Scene->GetSceneData().m_filePath);
+					}
 
-				if (ImGui::MenuItem("Save as"))
-				{
-					m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
+					if (ImGui::MenuItem("Save as"))
+					{
+						m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
 
-					m_FileBrowser->SetTypeFilters({ ".scene" });
-					m_FileBrowser->SetTitle("Save as");
-					m_FileBrowserState = FileBrowserFlags::SceneSave;
-					m_FileBrowser->Open();
-				}
+						m_FileBrowser->SetTypeFilters({ ".scene" });
+						m_FileBrowser->SetTitle("Save as");
+						m_FileBrowserState = FileBrowserFlags::SceneSave;
+						m_FileBrowser->Open();
+					}
 
-				if (ImGui::MenuItem("Load Scene"))
-				{
-					m_FileBrowser->SetTypeFilters({ ".scene" });
-					m_FileBrowser->SetTitle("Load Scene");
-					m_FileBrowserState = FileBrowserFlags::SceneLoad;
-					m_FileBrowser->Open();
+					if (ImGui::MenuItem("Load"))
+					{
+						m_FileBrowser->SetTypeFilters({ ".scene" });
+						m_FileBrowser->SetTitle("Load Scene");
+						m_FileBrowserState = FileBrowserFlags::SceneLoad;
+						m_FileBrowser->Open();
+					}
 				}
 
 				ImGui::EndMenu();
 			}
 
 
-			if (ImGui::BeginMenu("Actor"))
+			if (ImGui::BeginMenu("Actors & Systems"))
 			{
-
-				if (ImGui::MenuItem("New Actor"))
+				if (!m_Scene->m_InPlayMode)
 				{
-					showActorCreationWindow = true;
-				}
+					if (ImGui::MenuItem("New Actor"))
+					{
+						showActorCreationWindow = true;
+					}
 
-				if (ImGui::MenuItem("New System"))
-				{
+					if (ImGui::MenuItem("New System"))
+					{
 
+					}
 				}
 
 				ImGui::EndMenu();
@@ -221,14 +230,28 @@ namespace SmolEngine
 
 			if (ImGui::BeginMenu("Simulation"))
 			{
-				if (ImGui::MenuItem("Play"))
+				if (ImGui::MenuItem("Play Mode"))
 				{
-					m_Scene->OnPlay();
+					if (!m_Scene->m_InPlayMode)
+					{
+						m_Scene->OnPlay();
+					}
+					else
+					{
+						CONSOLE_WARN("The scene is already in play mode!");
+					}
 				}
 
 				if (ImGui::MenuItem("Stop"))
 				{
-					m_Scene->OnEndPlay();
+					if (m_Scene->m_InPlayMode)
+					{
+						m_Scene->OnEndPlay();
+					}
+					else
+					{
+						CONSOLE_WARN("The scene is not in play mode!");
+					}
 				}
 
 				ImGui::EndMenu();
@@ -279,10 +302,7 @@ namespace SmolEngine
 		{
 			if (ImGui::Begin("Renderer2D: Stats", &showRenderer2Dstats))
 			{
-				ImGui::Text("Active GPU: %s", reinterpret_cast<char const*>(renderer));
-				ImGui::Text("Draw Calls: %d", Renderer2D::GetData().DrawCalls);
-				ImGui::Text("Quads Rendered: %d", Renderer2D::GetData().QuadCount);
-				ImGui::Text("Total Vertices: %d", Renderer2D::GetData().GetTotalVertexCount());
+
 				ImGui::End();
 			}
 		}
@@ -311,44 +331,71 @@ namespace SmolEngine
 			ImGui::PopStyleVar();
 		}
 
+		if (showGameView)
 		{
-			if (showGameView)
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
+			ImGui::Begin("Game View", &showGameView);
 			{
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-				ImGui::Begin("Game View", &showGameView);
+
+				if (ImGui::IsWindowFocused()) { isGameViewFocused = true; }
+				else { isGameViewFocused = false; }
+
+				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
+
+				if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
 				{
-
-					if (ImGui::IsWindowFocused()) { isGameViewFocused = true; }
-					else { isGameViewFocused = false; }
-
-					ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-
-					if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
-					{
-						m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-						m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
-					}
-
-					auto camGroup = m_Scene->GetSceneData().m_Registry.view<CameraComponent>();
-
-					for (auto obj : camGroup)
-					{
-						auto& cameraComponent = camGroup.get<CameraComponent>(obj);
-						if (cameraComponent.isSelected)
-						{
-							size_t ImageTextureID = cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID();
-							ImGui::Image((void*)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-						}
-					}
-
-
+					m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+					m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
 				}
-				ImGui::End();
-				ImGui::PopStyleVar();
+
+				auto camGroup = m_Scene->GetSceneData().m_Registry.view<CameraComponent>();
+
+				for (auto obj : camGroup)
+				{
+					auto& cameraComponent = camGroup.get<CameraComponent>(obj);
+					if (cameraComponent.isSelected)
+					{
+						size_t ImageTextureID = cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID();
+						ImGui::Image((void*)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+					}
+				}
+
+
 			}
+			ImGui::End();
+			ImGui::PopStyleVar();
 
 		}
-	
+
+		//TEMP
+		if (showNodeEditorTest)
+		{
+			if (ImGui::Begin("Node Editor Test"), &showNodeEditorTest)
+			{
+				const int hardcoded_node_id = 1;
+
+				imnodes::BeginNodeEditor();
+
+				imnodes::BeginNode(hardcoded_node_id);
+				{
+					imnodes::BeginNodeTitleBar();
+					ImGui::TextUnformatted("output node");
+					imnodes::EndNodeTitleBar();
+
+					const int output_attr_id = 2;
+					imnodes::BeginOutputAttribute(output_attr_id);
+					// in between Begin|EndAttribute calls, you can call ImGui
+					// UI functions
+					ImGui::Text("output pin");
+					imnodes::EndOutputAttribute();
+				}
+				imnodes::EndNode();
+
+				imnodes::EndNodeEditor();
+
+			}
+			ImGui::End();
+		}
 
 		ImGui::Begin("Hierarchy");
 		{
@@ -367,70 +414,126 @@ namespace SmolEngine
 				sceneStr = "Scene (" + m_Scene->GetSceneData().m_Name + ")";
 			}
 
-			if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			ImGui::BeginChild("Scene");
 			{
-				for (auto actor : m_Scene->GetActorPool())
+				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					if (actor->IsDisabled) { continue; }
-
-					auto result = actor->GetName().find(name);
-					if (result == std::string::npos)
+					for (auto actor : m_Scene->GetActorPool())
 					{
-						continue;
-					}
+						if (actor->IsDisabled) { continue; }
 
-					if (ImGui::TreeNodeEx(actor->GetName().c_str()))
-					{
-						if (ImGui::TreeNodeEx("Childs"))
+						auto result = actor->GetName().find(name);
+						if (result == std::string::npos)
 						{
-							if (actor->GetChilds().empty())
+							continue;
+						}
+
+						if (ImGui::TreeNodeEx(actor->GetName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+						{
+							if (ImGui::TreeNodeEx("Childs"))
 							{
-								ImGui::BulletText("Empty");
-							}
-							else
-							{
-								for (auto obj : actor->GetChilds())
+								if (actor->GetChilds().empty())
 								{
-									ImGui::BulletText(obj->GetName().c_str());
+									ImGui::BulletText("Empty");
 								}
+								else
+								{
+									for (auto obj : actor->GetChilds())
+									{
+										ImGui::BulletText(obj->GetName().c_str());
+									}
+								}
+
+								ImGui::TreePop();
 							}
 
 							ImGui::TreePop();
 						}
 
-						ImGui::TreePop();
+						if (ImGui::IsItemClicked(1))
+						{
+							m_SelectionFlags = SelectionFlags::Actions;
+
+							m_SelectedActor = nullptr;
+							m_SelectedActor = actor;
+						}
+
+						if (ImGui::IsItemClicked())
+						{
+							m_SelectionFlags = SelectionFlags::Inspector;
+							m_SelectedActor = nullptr;
+							m_SelectedActor = actor;
+						}
+
 					}
 
-					if (ImGui::IsItemClicked())
-					{
-						m_SelectedActor = nullptr;
-						m_SelectedActor = actor;
-					}
-
+					ImGui::TreePop();
 				}
 
-				ImGui::TreePop();
+
+				if (m_SelectionFlags == SelectionFlags::Actions)
+				{
+					ImGui::OpenPopup("ActionPopup");
+					m_SelectionFlags = SelectionFlags::None;
+				}
+
+				if (ImGui::BeginPopup("ActionPopup"))
+				{
+					ImGui::MenuItem(m_SelectedActor->GetName().c_str(), NULL, false, false);
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Save")) {}
+					if (ImGui::MenuItem("Save as", "Ctrl+O")) {}
+
+					if (ImGui::BeginMenu("Rename"))
+					{
+						static char name[128] = "";
+						ImGui::InputText("Name", name, IM_ARRAYSIZE(name));
+
+						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
+						{
+							m_SelectedActor->GetName() = std::string(name);
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::MenuItem("Dublicate", "Ctrl+C"))
+					{
+						m_Scene->DuplicateActor(m_SelectedActor);
+					}
+					if (ImGui::MenuItem("Delete"))
+					{
+						m_Scene->DeleteActor(m_SelectedActor);
+					}
+
+					ImGui::EndPopup();
+				}
 			}
-
+			ImGui::EndChild();
 		}
-		ImGui::End();
-
 		ImGui::End();
 
 		ImGui::Begin("Inspector");
 		{
-			if (m_SelectedActor == nullptr)
+			ImGui::BeginChild("InspectorChild");
+
+			if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
 			{
 				ImGui::Text("No Actor selected");
 			}
 			else
 			{
+				ImGui::Text(m_SelectedActor->GetName().c_str());
+				ImGui::Separator();
+
 				ImGui::PushID(m_SelectedActor->GetName().c_str());
 				if (ImGui::TreeNodeEx("Components", ImGuiTreeNodeFlags_Leaf))
 				{
 					if (ImGui::TreeNode("Transform"))
 					{
-						auto& tranfrom = m_SelectedActor->GetComponent<TransfromComponent>();
+						auto& tranfrom = m_SelectedActor->GetComponent<TransformComponent>();
 
 						ImGui::InputFloat3("Transform", glm::value_ptr(tranfrom.WorldPos));
 						ImGui::InputFloat("Rotation", &tranfrom.Rotation);
@@ -445,9 +548,22 @@ namespace SmolEngine
 						if (ImGui::TreeNode("Rigidbody2D"))
 						{
 							auto& rb = m_SelectedActor->GetComponent<Rigidbody2DComponent>();
-
 							ImGui::NewLine();
-							ImGui::Combo("Type", &rb.Rigidbody->m_Type, "Static\0Kinematic\0Dynamic\0\0");
+							ImGui::Combo("Body Type", &rb.Rigidbody->m_Type, "Static\0Kinematic\0Dynamic\0\0");
+							ImGui::Separator();
+							ImGui::Combo("Shape Type", &rb.Rigidbody->m_ShapeType, "Box\0Circle\0\0");
+							ImGui::Separator();
+
+							if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Box)
+							{
+								ImGui::InputFloat2("Shape", glm::value_ptr(rb.Rigidbody->m_Shape));
+							}
+							else if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Cirlce)
+							{
+								ImGui::InputFloat("Radius", &rb.Rigidbody->m_Radius);
+								ImGui::Separator();
+								ImGui::InputFloat2("Offset", glm::value_ptr(rb.Rigidbody->m_Offset));
+							}
 
 							if (rb.Rigidbody->m_Type == 2)
 							{
@@ -464,11 +580,30 @@ namespace SmolEngine
 							}
 
 							ImGui::Separator();
+							ImGui::Checkbox("Show Shape", &rb.ShowShape);
+							ImGui::Separator();
 							ImGui::Checkbox("Awake", &rb.Rigidbody->m_IsAwake);
 							ImGui::Separator();
 							ImGui::Checkbox("Allow Sleep", &rb.Rigidbody->m_canSleep);
 
 							ImGui::TreePop();
+						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("RbPopup");
+
+						}
+
+						if (ImGui::BeginPopup("RbPopup"))
+						{
+							ImGui::MenuItem("Rigidbody2D", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<Rigidbody2DComponent>();
+							}
+
+							ImGui::EndPopup();
 						}
 					}
 
@@ -515,6 +650,57 @@ namespace SmolEngine
 							ImGui::ColorEdit3("Color", glm::value_ptr(comp.Color));
 							ImGui::TreePop();
 						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("TexturePopup");
+
+						}
+
+						if (ImGui::BeginPopup("TexturePopup"))
+						{
+							ImGui::MenuItem("Texture2D", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<Texture2DComponent>();
+							}
+
+							ImGui::EndPopup();
+						}
+					}
+
+
+					if (m_SelectedActor->HasComponent<Light2DComponent>())
+					{
+						auto& light = m_SelectedActor->GetComponent<Light2DComponent>();
+
+						if (ImGui::TreeNode("Light2D"))
+						{
+							ImGui::InputFloat2("Size", glm::value_ptr(light.Light->m_Shape));
+							ImGui::Separator();
+							ImGui::InputFloat("Intensity", &light.Light->intensity);
+							if (light.Light->intensity > 1.0f) { light.Light->intensity = 1.0f; };
+							ImGui::Separator();
+							ImGui::ColorEdit3("Light Color", glm::value_ptr(light.Light->m_Color));
+							ImGui::TreePop();
+						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("LightPopup");
+
+						}
+
+						if (ImGui::BeginPopup("LightPopup"))
+						{
+							ImGui::MenuItem("Light2D", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<Light2DComponent>();
+							}
+
+							ImGui::EndPopup();
+						}
 					}
 
 					if (m_SelectedActor->HasComponent<JinxScriptComponent>())
@@ -524,21 +710,60 @@ namespace SmolEngine
 							ImGui::Checkbox("JinxScript Enabled", &m_SelectedActor->GetComponent<JinxScriptComponent>().Enabled);
 							ImGui::TreePop();
 						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("JinxScriptPopup");
+
+						}
+
+						if (ImGui::BeginPopup("JinxScriptPopup"))
+						{
+							ImGui::MenuItem("Jinx Script", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<JinxScriptComponent>();
+							}
+
+							ImGui::EndPopup();
+						}
 					}
 
-					if (m_SelectedActor->HasComponent<ScriptComponent>())
+					if (m_SelectedActor->HasComponent<ScriptObject>())
 					{
 						if (ImGui::TreeNode("C++ Script"))
 						{
-							ImGui::Checkbox("C++ Script Enabled", &m_SelectedActor->GetComponent<ScriptComponent>().Enabled);
+							auto& ref = m_SelectedActor->GetComponent<ScriptObject>();
+
+							std::string typeName = "Type: " + ref.keyName;
+							ImGui::Text(typeName.c_str());
+
+							ImGui::Checkbox("C++ Script Enabled", &ref.Enabled);
 							ImGui::TreePop();
 						}
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("CppScriptPopup");
+
+						}
+
+						if (ImGui::BeginPopup("CppScriptPopup"))
+						{
+							ImGui::MenuItem("C++ Script", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<ScriptObject>();
+							}
+
+							ImGui::EndPopup();
+						}
+
 					}
 
 					if (m_SelectedActor->HasComponent<CameraComponent>())
 					{
 						auto& comp = m_SelectedActor->GetComponent<CameraComponent>();
-						auto& transform = m_SelectedActor->GetComponent<TransfromComponent>();
+						auto& transform = m_SelectedActor->GetComponent<TransformComponent>();
 
 						if (ImGui::TreeNode("Camera Controller"))
 						{
@@ -549,6 +774,23 @@ namespace SmolEngine
 							ImGui::Checkbox("Camera Enabled", &comp.Enabled);
 							ImGui::TreePop();
 						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("CameraPopup");
+
+						}
+
+						if (ImGui::BeginPopup("CameraPopup"))
+						{
+							ImGui::MenuItem("Camera Controller", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<CameraComponent>();
+							}
+
+							ImGui::EndPopup();
+						}
 					}
 
 					ImGui::TreePop();
@@ -556,16 +798,14 @@ namespace SmolEngine
 				}
 
 				ImGui::Separator();
-				ImGui::PushID(m_SelectedActor->GetName().c_str());
-				if (ImGui::TreeNodeEx("Actions", ImGuiTreeNodeFlags_Leaf))
+				if (ImGui::TreeNodeEx("Attach", ImGuiTreeNodeFlags_Leaf))
 				{
-					if (ImGui::TreeNode("Add/Delete Component"))
+					if (ImGui::TreeNode("Component"))
 					{
 						static int current_item = 0;
-						ImGui::Combo("Component", &current_item, "None\0Texture2D\0JinxScript\0Rigidbody2D\0CameraController\0AnimationContoller\0ParticleSystem\0\0");
-						ImGui::Separator();
+						ImGui::Combo("Component", &current_item, "None\0Texture2D\0JinxScript\0Rigidbody2D\0CameraController\0Light2D\0AnimationContoller\0ParticleSystem\0\0");
 
-						if (ImGui::Button("Add", ImVec2{ 60, 25 }))
+						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
 						{
 							switch (current_item)
 							{
@@ -608,7 +848,7 @@ namespace SmolEngine
 							{
 								if (!m_SelectedActor->HasComponent<Rigidbody2DComponent>())
 								{
-									m_SelectedActor->AddComponent<Rigidbody2DComponent>(m_SelectedActor, Scene::GetScene()->GetWorld(), BodyType::Static);
+									m_SelectedActor->AddComponent<Rigidbody2DComponent>(m_SelectedActor, BodyType::Static);
 
 									break;
 								}
@@ -629,58 +869,17 @@ namespace SmolEngine
 								EDITOR_WARN("Actor <{}> already has CameraController component.", m_SelectedActor->GetName());
 								break;
 							}
-							default:
-								break;
-							}
-
-							current_item = 0;
-						}
-
-						ImGui::SameLine();
-						if (ImGui::Button("Delete", ImVec2{ 60, 25 }))
-						{
-							switch (current_item)
+							case (uint32_t)ComponentItem::Light2D:
 							{
-							case (uint32_t)ComponentItem::None:
-							{
-								break;
-							}
-							case (uint32_t)ComponentItem::Tetxure2D:
-							{
-								if (m_SelectedActor->HasComponent<Texture2DComponent>())
+								if (!m_SelectedActor->HasComponent<Light2DComponent>())
 								{
-									m_SelectedActor->DeleteComponent<Texture2DComponent>();
+									m_SelectedActor->AddComponent<Light2DComponent>();
 									break;
 								}
 
-								CONSOLE_WARN("Actor does not have Tetxure2D component");
-								EDITOR_WARN("Actor <{}> does not have Tetxure2D component.", m_SelectedActor->GetName());
+								CONSOLE_WARN("Actor already has Light2D component");
+								EDITOR_WARN("Actor <{}> already has Light2D component.", m_SelectedActor->GetName());
 								break;
-							}
-							case (uint32_t)ComponentItem::JinxScript:
-							{
-								if (m_SelectedActor->HasComponent<JinxScriptComponent>())
-								{
-									m_SelectedActor->DeleteComponent<JinxScriptComponent>();
-									break;
-								}
-
-								CONSOLE_WARN("Actor does not have Script component");
-								EDITOR_WARN("Actor <{}> does not have Script component.", m_SelectedActor->GetName());
-								break;
-							}
-							case (uint32_t)ComponentItem::Rigidbody2D:
-							{
-								if (m_SelectedActor->HasComponent<Rigidbody2DComponent>())
-								{
-									m_SelectedActor->DeleteComponent<Rigidbody2DComponent>();
-									break;
-								}
-
-								CONSOLE_WARN("Actor does not have Rigidbody2D component");
-								EDITOR_WARN("Actor <{}> does not have Rigidbody2D component.", m_SelectedActor->GetName());
-								break;
-
 							}
 							default:
 								break;
@@ -688,45 +887,50 @@ namespace SmolEngine
 
 							current_item = 0;
 						}
-
 						ImGui::TreePop();
 					}
 
-					if (ImGui::TreeNode("Rename Actor"))
+					if (!m_SelectedActor->HasComponent<ScriptObject>())
 					{
-						static char name[128] = "Default Actor";
-						ImGui::InputText("Name", name, IM_ARRAYSIZE(name));
-
-						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
+						if (ImGui::TreeNode("Script"))
 						{
-							m_SelectedActor->GetName() = std::string(name);
+							static const char* current_item = m_Scene->m_ScriptNameList.front().c_str();
+
+							if (ImGui::BeginCombo("Scripts", current_item))
+							{
+								for (int i = 0; i < m_Scene->m_ScriptNameList.size(); i++)
+								{
+									bool is_selected = (current_item == nullptr) ? false : (m_Scene->m_ScriptNameList[i].compare(current_item) == 0);
+									if (ImGui::Selectable(m_Scene->m_ScriptNameList[i].c_str(), is_selected))
+									{
+										current_item = m_Scene->m_ScriptNameList[i].c_str();
+									}
+
+									if (is_selected)
+									{
+										ImGui::SetItemDefaultFocus();
+									}
+								}
+
+								ImGui::EndCombo();
+							}
+
+							ImGui::Separator();
+							ImGui::PushID("ScriptOKButton");
+							if (ImGui::Button("OK", ImVec2{ 60, 25 }))
+							{
+								m_Scene->AttachScript(std::string(current_item), m_SelectedActor);
+							}
+							ImGui::PopID();
+
+							ImGui::TreePop();
 						}
-
-						ImGui::TreePop();
-					}
-
-					if (ImGui::TreeNode("Default"))
-					{
-						if (ImGui::Button("Save", ImVec2{ 60, 25 }))
-						{
-							//!TODO: Serialize Actor Class
-						}
-
-						ImGui::SameLine();
-
-						if (ImGui::Button("Delete", ImVec2{ 60, 25 }))
-						{
-							//TODO: Fix DeleteActorImmediately method
-							m_Scene->DeleteActor(m_SelectedActor);
-						}
-
-						ImGui::TreePop();
 					}
 
 					ImGui::TreePop();
-					ImGui::PopID();
 				}
 			}
+			ImGui::EndChild();
 		}
 		ImGui::End();
 
@@ -762,6 +966,7 @@ namespace SmolEngine
 			case FileBrowserFlags::SceneSave:
 			{
 				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+				m_Scene->GetSceneData().m_filePath = m_FilePath;
 				m_Scene->Save(m_FilePath);
 				ResetFileBrowser();
 				break;
@@ -778,6 +983,9 @@ namespace SmolEngine
 				break;
 			}
 		}
+
+
+		ImGui::End();
 
 	}
 

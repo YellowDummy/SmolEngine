@@ -15,8 +15,9 @@ namespace SmolEngine
 
 		virtual void SetUniformMat4(const std::string& name, const glm::mat4& mat4) = 0;
 		virtual void SetUniformFloat(const std::string& name, const float value) = 0;
-		virtual void SetUniformFloat3(const std::string& name, const glm::vec3 vec3) = 0;
-		virtual void SetUniformFloat4(const std::string& name, const glm::vec4 vec4) = 0;
+		virtual void SetUniformFloat2(const std::string& name, const glm::vec2& vec3) = 0;
+		virtual void SetUniformFloat3(const std::string& name, const glm::vec3& vec3) = 0;
+		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& vec4) = 0;
 		virtual void SetUniformInt(const std::string& name, const int value) = 0;
 		virtual void SetUniformIntArray(const std::string& name, int* values, uint32_t count) = 0;
 

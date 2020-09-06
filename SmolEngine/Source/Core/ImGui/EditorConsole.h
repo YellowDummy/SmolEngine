@@ -38,38 +38,42 @@ namespace SmolEngine
 			{
 				if (ImGui::Begin("Console", &enabled))
 				{
-					ImGui::SameLine();
-					if (ImGui::Button("Clear"))
+					ImGui::BeginChild("ConsoleChild");
 					{
-						m_Messages.clear();
-					}
-
-					static int current_item = 0;
-
-					ImGui::SameLine();
-					ImGui::Combo("Filter", &current_item, "None\0Info\0Error\0Warn\0\0");
-
-					ImGui::Separator();
-					ImGui::BeginChild("Log");
-					{
-						if (current_item == 0)
+						ImGui::SameLine();
+						if (ImGui::Button("Clear"))
 						{
-							for (auto& msg : m_Messages)
-							{
-								ImGui::TextColored(msg.Color, msg.Text.c_str());
-							}
+							m_Messages.clear();
 						}
-						else
+
+						static int current_item = 0;
+
+						ImGui::SameLine();
+						ImGui::Combo("Filter", &current_item, "None\0Info\0Error\0Warn\0\0");
+
+						ImGui::Separator();
+						ImGui::BeginChild("Log");
 						{
-							for (auto& msg : m_Messages)
+							if (current_item == 0)
 							{
-								if (current_item == (int)msg.Type)
+								for (auto& msg : m_Messages)
 								{
 									ImGui::TextColored(msg.Color, msg.Text.c_str());
 								}
 							}
-						}
+							else
+							{
+								for (auto& msg : m_Messages)
+								{
+									if (current_item == (int)msg.Type)
+									{
+										ImGui::TextColored(msg.Color, msg.Text.c_str());
+									}
+								}
+							}
 
+						}
+						ImGui::EndChild();
 					}
 					ImGui::EndChild();
 

@@ -63,6 +63,21 @@ namespace SmolEngine
 			s_RendererAPI->DrawIndexed(vertexArray, count);
 		}
 
+		inline static void DrawLine(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		{
+			s_RendererAPI->DrawLine(vertexArray, count);
+		}
+
+		inline static void DrawFan(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		{
+			s_RendererAPI->DrawFan(vertexArray, count);
+		}
+
+		inline static void DrawLight()
+		{
+			s_RendererAPI->DrawLight();
+		}
+
 		inline static Ref<Shader> LoadShader(const std::string& filePath)
 		{
 			return AssetManager::GetShaderLib()->Load(filePath);

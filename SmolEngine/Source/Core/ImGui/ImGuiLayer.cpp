@@ -14,6 +14,8 @@
 #include "Core/Application.h"
 #include "IconsFontAwesome5.h"
 
+#include "NodeEditor/imnodes.h"
+
 namespace SmolEngine 
 {
 
@@ -44,7 +46,10 @@ namespace SmolEngine
 	{
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
+
 		ImGui::CreateContext();
+		imnodes::Initialize();
+
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -129,7 +134,9 @@ namespace SmolEngine
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
+
 		ImGui::DestroyContext();
+		imnodes::Shutdown();
 	}
 
 	void ImGuiLayer::OnImGuiRender()

@@ -35,7 +35,7 @@ namespace SmolEngine
 		//TO DO: Create Customized Framebuffer
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Data.Width, m_Data.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_Data.Width, m_Data.Height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -51,6 +51,7 @@ namespace SmolEngine
 		{
 			NATIVE_ERROR("Creating framebuffer is failed!");
 		}
+
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

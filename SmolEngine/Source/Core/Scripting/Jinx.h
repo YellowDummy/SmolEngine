@@ -33,7 +33,7 @@ namespace SmolEngine
 	{
 	public:
 		JinxScript(Ref<Actor> actor, Jinx::RuntimePtr runtime, std::string& filePath = std::string(""))
-			:ScriptableObject(actor), m_Runtime(runtime) 
+			:m_Runtime(runtime) 
 		{
 			RegisterScriptFunctions<JinxScript>(m_Runtime);
 
