@@ -20,6 +20,7 @@
 
 namespace SmolEngine
 {
+
 	void EditorLayer::OnAttach()
 	{
 		m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
@@ -28,7 +29,11 @@ namespace SmolEngine
 		m_EditorConsole = EditorConsole::GetConsole();
 
 		m_Scene = Scene::GetScene();
-		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene"));
+		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene"), std::string("TestScene.scene"));
+
+		//Temp
+		m_Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
+		m_Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
 
 		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
 		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
@@ -39,14 +44,11 @@ namespace SmolEngine
 		m_Actor = m_Scene->CreateActor("Actor_1", "Player");
 		m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
 		m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, BodyType::Dynamic);
-
-		m_Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
-		m_Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
-
 		m_Scene->AttachScript(std::string("CharMovementScript"), m_Actor);
 
 		m_CameraActor = m_Scene->CreateActor("Camera");
 		m_CameraActor->AddComponent<CameraComponent>();
+		m_Scene->AttachScript(std::string("CameraMovementScript"), m_CameraActor);
 
 		auto& ground = m_Scene->CreateActor("Ground","TestTag");
 		ground->GetComponent<TransformComponent>().SetTranform(1.0f, -2.0f);;
@@ -184,7 +186,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Save"))
 					{
-						m_Scene->Save(m_Scene->GetSceneData().m_filePath);
+						m_Scene->SaveCurrentScene();
 					}
 
 					if (ImGui::MenuItem("Save as"))
@@ -199,6 +201,8 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Load"))
 					{
+						m_SelectedActor = nullptr;
+
 						m_FileBrowser->SetTypeFilters({ ".scene" });
 						m_FileBrowser->SetTitle("Load Scene");
 						m_FileBrowserState = FileBrowserFlags::SceneLoad;
@@ -246,7 +250,15 @@ namespace SmolEngine
 				{
 					if (m_Scene->m_InPlayMode)
 					{
+						size_t selectedActorID = -1;
+						if (m_SelectedActor != nullptr)
+						{
+							selectedActorID = m_SelectedActor->GetID();
+						}
+
+						m_SelectedActor = nullptr;
 						m_Scene->OnEndPlay();
+						m_SelectedActor = m_Scene->FindActorByID(selectedActorID);
 					}
 					else
 					{
@@ -488,7 +500,7 @@ namespace SmolEngine
 					if (ImGui::BeginMenu("Rename"))
 					{
 						static char name[128] = "";
-						ImGui::InputText("Name", name, IM_ARRAYSIZE(name));
+						ImGui::InputTextWithHint("Name", m_SelectedActor->GetName().c_str(), name, IM_ARRAYSIZE(name));
 
 						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
 						{
@@ -499,10 +511,25 @@ namespace SmolEngine
 						ImGui::EndMenu();
 					}
 
+					if (ImGui::BeginMenu("Change Tag"))
+					{
+						static char name[128] = "";
+						ImGui::InputTextWithHint("Tag", m_SelectedActor->GetTag().c_str(), name, IM_ARRAYSIZE(name));
+
+						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
+						{
+							m_SelectedActor->GetTag() = std::string(name);
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndMenu();
+					}
+
 					if (ImGui::MenuItem("Dublicate", "Ctrl+C"))
 					{
 						m_Scene->DuplicateActor(m_SelectedActor);
 					}
+
 					if (ImGui::MenuItem("Delete"))
 					{
 						m_Scene->DeleteActor(m_SelectedActor);
@@ -738,6 +765,36 @@ namespace SmolEngine
 							std::string typeName = "Type: " + ref.keyName;
 							ImGui::Text(typeName.c_str());
 
+							for (auto val : m_SelectedActor->m_OutValues)
+							{
+								switch (val->Value.index())
+								{
+
+								case (uint32_t)OutValueType::Float:
+								{
+									ImGui::InputFloat(val->Key.c_str(), &std::get<float>(val->Value));
+									break;
+								}
+								case (uint32_t)OutValueType::Int:
+								{
+									ImGui::InputInt(val->Key.c_str(), &std::get<int>(val->Value));
+									break;
+								}
+								case (uint32_t)OutValueType::String:
+								{
+									ImGui::InputText(val->Key.c_str(), val->stringBuffer, IM_ARRAYSIZE(val->stringBuffer));
+									if (std::get<std::string>(val->Value).c_str() != val->stringBuffer)
+									{
+										std::get<std::string>(val->Value) = val->stringBuffer;
+									}
+
+									break;
+								}
+								default:
+									break;
+								}
+							}
+
 							ImGui::Checkbox("C++ Script Enabled", &ref.Enabled);
 							ImGui::TreePop();
 						}
@@ -939,6 +996,7 @@ namespace SmolEngine
 		if (m_FileBrowser->HasSelected())
 		{
 			m_FilePath = m_FileBrowser->GetSelected().u8string();
+			auto fileName = m_FileBrowser->GetSelected().filename().u8string();
 
 			switch (m_FileBrowserState)
 			{
@@ -947,10 +1005,14 @@ namespace SmolEngine
 				m_SelectedActor->AddComponent<JinxScriptComponent>(m_Actor, m_Scene->GetJinxRuntime(), m_FilePath);
 				ResetFileBrowser();
 				break;
+
 			case FileBrowserFlags::Texture2dPath:
 			{
-				m_SelectedActor->GetComponent<Texture2DComponent>().TexturePath = m_FilePath;
-				m_SelectedActor->GetComponent<Texture2DComponent>().Texture = Texture2D::Create(m_FilePath);
+				auto& texture = m_SelectedActor->GetComponent<Texture2DComponent>();
+				
+				texture.TexturePath = m_FilePath;
+				texture.FileName = fileName;
+				texture.Texture = Texture2D::Create(m_FilePath);
 				ResetFileBrowser();
 				break;
 			}
@@ -958,15 +1020,17 @@ namespace SmolEngine
 			{
 				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
 				m_SelectedActor = nullptr;
-
-				m_Scene->CreateScene(m_FilePath);
+				m_Scene->CreateScene(m_FilePath, fileName);
 				ResetFileBrowser();
 				break;
 			}
 			case FileBrowserFlags::SceneSave:
 			{
 				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+
 				m_Scene->GetSceneData().m_filePath = m_FilePath;
+				m_Scene->GetSceneData().m_fileName = fileName;
+
 				m_Scene->Save(m_FilePath);
 				ResetFileBrowser();
 				break;

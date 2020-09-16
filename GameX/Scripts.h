@@ -1,10 +1,11 @@
 #pragma once
 
-#include "SmolEngineCore.h"
-#include "Core/ECS/ScriptableObject.h"
+#include <SmolEngineCore.h>
+#include <Core/ECS/ScriptableObject.h>
 #include <Core/ECS/Components.h>
+#include <Core/ECS/Actor.h>
 
-#include "../SmolEngine-Editor/Source/EditorLayer.h"
+#include <Core/ImGui/EditorConsole.h>
 
 using namespace SmolEngine;
 
@@ -14,11 +15,24 @@ class CharMovementScript : public ScriptableObject
 {
 public:
 
-	//Default constructor must be implemented
-	CharMovementScript() {}
+	//Must be implemented by the user in order to register an external script in the engine
+	std::shared_ptr<ScriptableObject> Instantiate() override
+	{
+		return std::make_shared<CharMovementScript>();
+	}
+
+	//Default constructor must be implemented!
+	CharMovementScript()
+	{
+		//Exposes a variable to the editor
+		OUT_FLOAT("Speed", &speed);
+		OUT_INT("SpeedMod", &speedMod);
+		OUT_STRING("Name", &name);
+	}
 
 	void Start() override
 	{
+		CONSOLE_ERROR("Player name is: " + name);
 
 		rb = &GetComponent<Rigidbody2DComponent>();
 
@@ -44,41 +58,43 @@ public:
 	{
 		if (Input::IsKeyPressed(KeyCode::Q))
 		{
-			rb->AddForce({ 20.0f, 0.0f });
+			rb->AddForce({ 20.0f * (speed * speedMod), 0.0f });
 		}
 
 		if (Input::IsKeyPressed(KeyCode::Space))
 		{
-			rb->AddForce({ 0.0f, 50.0f });
+			rb->AddForce({ 0.0f, 50.0f * (speed * speedMod) });
 		}
 	}
 
 	void OnDestroy() override {}
 
-	//Must be implemented by the user in order to register an external script in the engine
-	std::shared_ptr<ScriptableObject> Instantiate() override
-	{
-		return std::make_shared<CharMovementScript>();
-	}
-
 private:
 	Rigidbody2DComponent* rb = nullptr;
+
+	float speed = 1.0f;
+	int speedMod = 1;
+	std::string name = "Noob99";
 };
 
 class CameraMovementScript : public ScriptableObject
 {
 public:
 
-	//Default constructor must be implemented
-	CameraMovementScript() {}
+	//Must be implemented by the user in order to register an external script in the engine
+	std::shared_ptr<ScriptableObject> Instantiate() override
+	{
+		return std::make_shared<CameraMovementScript>();
+	}
 
+	//Default constructor must be implemented
+	CameraMovementScript() { OUT_FLOAT("CameraSpeed", &m_CameraSpeed); }
 
 	void Start() override
 	{
 		m_Player = FindActorByTag("Player");
 		if (m_Player == nullptr) { CONSOLE_ERROR("Player not found!"); }
 	}
-
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
@@ -120,14 +136,7 @@ public:
 		}
 	}
 
-
 	void OnDestroy() override  {}
-
-	//Must be implemented by the user in order to register an external script in the engine
-	std::shared_ptr<ScriptableObject> Instantiate() override
-	{
-		return std::make_shared<CameraMovementScript>();
-	}
 
 private:
 	float m_CameraSpeed = 0.5f;

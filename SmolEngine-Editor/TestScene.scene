@@ -53,7 +53,8 @@
                                                     }
                                                 },
                                                 "value7": [],
-                                                "value8": {
+                                                "value8": [],
+                                                "value9": {
                                                     "ptr_wrapper": {
                                                         "id": 1
                                                     }
@@ -62,7 +63,48 @@
                                         }
                                     }
                                 ],
-                                "value8": {
+                                "value8": [
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483652,
+                                            "data": {
+                                                "value0": "Speed",
+                                                "value1": {
+                                                    "index": 0,
+                                                    "data": 1.0
+                                                },
+                                                "value2": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483653,
+                                            "data": {
+                                                "value0": "SpeedMod",
+                                                "value1": {
+                                                    "index": 1,
+                                                    "data": 1
+                                                },
+                                                "value2": 1
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483654,
+                                            "data": {
+                                                "value0": "Name",
+                                                "value1": {
+                                                    "index": 2,
+                                                    "data": "Noob99"
+                                                },
+                                                "value2": 2
+                                            }
+                                        }
+                                    }
+                                ],
+                                "value9": {
                                     "ptr_wrapper": {
                                         "id": 1
                                     }
@@ -103,7 +145,7 @@
         },
         "value3": {
             "ptr_wrapper": {
-                "id": 2147483652,
+                "id": 2147483655,
                 "data": {
                     "value0": true,
                     "value1": {
@@ -131,7 +173,7 @@
                     },
                     "value16": {
                         "ptr_wrapper": {
-                            "id": 4
+                            "id": 7
                         }
                     }
                 }
@@ -179,7 +221,7 @@
         "value6": 0,
         "value7": true
     },
-    "value19": 1,
+    "value19": 2,
     "value20": 0,
     "value21": {
         "value0": true,
@@ -188,16 +230,24 @@
         "value3": "CharMovementScript"
     },
     "value22": 1,
-    "value23": 0,
-    "value24": {
+    "value23": {
+        "value0": true,
+        "value1": 6111862596534002478,
+        "value2": 2787749688047389887,
+        "value3": "CameraMovementScript"
+    },
+    "value24": 1,
+    "value25": 0,
+    "value26": {
         "value0": true,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": "Assets/Textures/Background.png"
+        "value5": "Assets/Textures/Background.png",
+        "value6": ""
     },
-    "value25": 0
+    "value27": 0
 }|{
     "value0": [
         {
@@ -239,7 +289,49 @@
                                             "id": 1
                                         }
                                     },
-                                    "value7": []
+                                    "value7": [],
+                                    "value8": []
+                                }
+                            }
+                        }
+                    ],
+                    "value8": [
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483651,
+                                "data": {
+                                    "value0": "Speed",
+                                    "value1": {
+                                        "index": 0,
+                                        "data": 3.0
+                                    },
+                                    "value2": 0
+                                }
+                            }
+                        },
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483652,
+                                "data": {
+                                    "value0": "SpeedMod",
+                                    "value1": {
+                                        "index": 1,
+                                        "data": 1
+                                    },
+                                    "value2": 1
+                                }
+                            }
+                        },
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483653,
+                                "data": {
+                                    "value0": "Name",
+                                    "value1": {
+                                        "index": 2,
+                                        "data": "Noob99"
+                                    },
+                                    "value2": 2
                                 }
                             }
                         }
@@ -249,7 +341,7 @@
         },
         {
             "ptr_wrapper": {
-                "id": 2147483651,
+                "id": 2147483654,
                 "data": {
                     "value0": 6111862596534002478,
                     "value1": false,
@@ -266,7 +358,22 @@
                             "id": 0
                         }
                     },
-                    "value7": []
+                    "value7": [],
+                    "value8": [
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483655,
+                                "data": {
+                                    "value0": "CameraSpeed",
+                                    "value1": {
+                                        "index": 0,
+                                        "data": 0.5
+                                    },
+                                    "value2": 0
+                                }
+                            }
+                        }
+                    ]
                 }
             }
         },
@@ -280,6 +387,7 @@
     "value2": -9.8100004196167,
     "value3": 2787749688047389887,
     "value4": "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene",
-    "value5": "",
-    "value6": 1.0
+    "value5": "TestScene.scene",
+    "value6": "",
+    "value7": 1.0
 }

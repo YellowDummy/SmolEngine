@@ -93,7 +93,6 @@ namespace SmolEngine
 
 	struct Texture2DComponent: public BaseComponent
 	{
-		std::string TexturePath;
 
 		Texture2DComponent() = default;
 		Texture2DComponent(const Texture2DComponent&) = default;
@@ -110,11 +109,13 @@ namespace SmolEngine
 
 		glm::vec4 Color = glm::vec4(1.0f);
 		Ref<Texture2D> Texture = nullptr;
+		std::string TexturePath;
+		std::string FileName;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Enabled, Color.r, Color.g, Color.b, Color.a, TexturePath);
+			archive(Enabled, Color.r, Color.g, Color.b, Color.a, TexturePath, FileName);
 		}
 	};
 
@@ -177,10 +178,16 @@ namespace SmolEngine
 		}
 	};
 
-	struct JinxScriptComponent: BaseComponent
-	{
-		bool Enabled = true;
 
+	struct Animation2DComponent : public BaseComponent
+	{
+		Animation2DComponent() = default;
+
+
+	};
+
+	struct JinxScriptComponent: public BaseComponent
+	{
 		JinxScriptComponent() = default;
 
 		JinxScriptComponent(Ref<Actor> actor, Jinx::RuntimePtr runtime, std::string& filePath)

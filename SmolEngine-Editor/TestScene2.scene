@@ -1,15 +1,11 @@
 {
-    "value0": 7,
+    "value0": 3,
     "value1": 0,
     "value2": 1,
     "value3": 2,
-    "value4": 3,
-    "value5": 4,
-    "value6": 5,
-    "value7": 6,
-    "value8": 5,
-    "value9": 0,
-    "value10": {
+    "value4": 2,
+    "value5": 0,
+    "value6": {
         "value0": true,
         "value1": true,
         "value2": {
@@ -57,7 +53,8 @@
                                                     }
                                                 },
                                                 "value7": [],
-                                                "value8": {
+                                                "value8": [],
+                                                "value9": {
                                                     "ptr_wrapper": {
                                                         "id": 1
                                                     }
@@ -66,7 +63,48 @@
                                         }
                                     }
                                 ],
-                                "value8": {
+                                "value8": [
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483652,
+                                            "data": {
+                                                "value0": "Speed",
+                                                "value1": {
+                                                    "index": 0,
+                                                    "data": 1.0
+                                                },
+                                                "value2": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483653,
+                                            "data": {
+                                                "value0": "SpeedMod",
+                                                "value1": {
+                                                    "index": 1,
+                                                    "data": 1
+                                                },
+                                                "value2": 1
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "ptr_wrapper": {
+                                            "id": 2147483654,
+                                            "data": {
+                                                "value0": "Name",
+                                                "value1": {
+                                                    "index": 2,
+                                                    "data": "Noob99"
+                                                },
+                                                "value2": 2
+                                            }
+                                        }
+                                    }
+                                ],
+                                "value9": {
                                     "ptr_wrapper": {
                                         "id": 1
                                     }
@@ -96,8 +134,8 @@
             }
         }
     },
-    "value11": 2,
-    "value12": {
+    "value7": 2,
+    "value8": {
         "value0": true,
         "value1": true,
         "value2": {
@@ -107,7 +145,7 @@
         },
         "value3": {
             "ptr_wrapper": {
-                "id": 2147483652,
+                "id": 2147483655,
                 "data": {
                     "value0": true,
                     "value1": {
@@ -135,199 +173,6 @@
                     },
                     "value16": {
                         "ptr_wrapper": {
-                            "id": 4
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "value13": 3,
-    "value14": {
-        "value0": true,
-        "value1": true,
-        "value2": {
-            "ptr_wrapper": {
-                "id": 1
-            }
-        },
-        "value3": {
-            "ptr_wrapper": {
-                "id": 4
-            }
-        },
-        "value4": {
-            "ptr_wrapper": {
-                "id": 2147483653,
-                "data": {
-                    "value0": true,
-                    "value1": {
-                        "ptr_wrapper": {
-                            "id": 2147483654,
-                            "data": {
-                                "value0": 15141494769145803947,
-                                "value1": false,
-                                "value2": 3,
-                                "value3": "Default Actor",
-                                "value4": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value5": "Default",
-                                "value6": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value7": [],
-                                "value8": {
-                                    "ptr_wrapper": {
-                                        "id": 1
-                                    }
-                                },
-                                "value9": {
-                                    "ptr_wrapper": {
-                                        "id": 4
-                                    }
-                                },
-                                "value10": {
-                                    "ptr_wrapper": {
-                                        "id": 5
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "value2": 1.0,
-                    "value3": 0.30000001192092898,
-                    "value4": 1.0,
-                    "value5": true,
-                    "value6": false,
-                    "value7": 0.0,
-                    "value8": 1.0,
-                    "value9": 1.0,
-                    "value10": 2,
-                    "value11": 0,
-                    "value12": 1.0,
-                    "value13": 0.0,
-                    "value14": 0.0,
-                    "value15": {
-                        "ptr_wrapper": {
-                            "id": 1
-                        }
-                    },
-                    "value16": {
-                        "ptr_wrapper": {
-                            "id": 4
-                        }
-                    },
-                    "value17": {
-                        "ptr_wrapper": {
-                            "id": 5
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "value15": 4,
-    "value16": {
-        "value0": true,
-        "value1": true,
-        "value2": {
-            "ptr_wrapper": {
-                "id": 1
-            }
-        },
-        "value3": {
-            "ptr_wrapper": {
-                "id": 4
-            }
-        },
-        "value4": {
-            "ptr_wrapper": {
-                "id": 5
-            }
-        },
-        "value5": {
-            "ptr_wrapper": {
-                "id": 2147483655,
-                "data": {
-                    "value0": true,
-                    "value1": {
-                        "ptr_wrapper": {
-                            "id": 2147483656,
-                            "data": {
-                                "value0": 7904852223276457979,
-                                "value1": false,
-                                "value2": 4,
-                                "value3": "Default Actor2",
-                                "value4": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value5": "Default",
-                                "value6": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value7": [],
-                                "value8": {
-                                    "ptr_wrapper": {
-                                        "id": 1
-                                    }
-                                },
-                                "value9": {
-                                    "ptr_wrapper": {
-                                        "id": 4
-                                    }
-                                },
-                                "value10": {
-                                    "ptr_wrapper": {
-                                        "id": 5
-                                    }
-                                },
-                                "value11": {
-                                    "ptr_wrapper": {
-                                        "id": 7
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "value2": 1.0,
-                    "value3": 0.30000001192092898,
-                    "value4": 1.0,
-                    "value5": true,
-                    "value6": false,
-                    "value7": 0.0,
-                    "value8": 1.0,
-                    "value9": 1.0,
-                    "value10": 2,
-                    "value11": 0,
-                    "value12": 1.0,
-                    "value13": 0.0,
-                    "value14": 0.0,
-                    "value15": {
-                        "ptr_wrapper": {
-                            "id": 1
-                        }
-                    },
-                    "value16": {
-                        "ptr_wrapper": {
-                            "id": 4
-                        }
-                    },
-                    "value17": {
-                        "ptr_wrapper": {
-                            "id": 5
-                        }
-                    },
-                    "value18": {
-                        "ptr_wrapper": {
                             "id": 7
                         }
                     }
@@ -335,135 +180,16 @@
             }
         }
     },
-    "value17": 6,
-    "value18": {
-        "value0": true,
-        "value1": true,
-        "value2": {
-            "ptr_wrapper": {
-                "id": 1
-            }
-        },
-        "value3": {
-            "ptr_wrapper": {
-                "id": 4
-            }
-        },
-        "value4": {
-            "ptr_wrapper": {
-                "id": 5
-            }
-        },
-        "value5": {
-            "ptr_wrapper": {
-                "id": 7
-            }
-        },
-        "value6": {
-            "ptr_wrapper": {
-                "id": 2147483657,
-                "data": {
-                    "value0": true,
-                    "value1": {
-                        "ptr_wrapper": {
-                            "id": 2147483658,
-                            "data": {
-                                "value0": 7904851123764829768,
-                                "value1": false,
-                                "value2": 6,
-                                "value3": "Default Actor3",
-                                "value4": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value5": "Default",
-                                "value6": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value7": [],
-                                "value8": {
-                                    "ptr_wrapper": {
-                                        "id": 1
-                                    }
-                                },
-                                "value9": {
-                                    "ptr_wrapper": {
-                                        "id": 4
-                                    }
-                                },
-                                "value10": {
-                                    "ptr_wrapper": {
-                                        "id": 5
-                                    }
-                                },
-                                "value11": {
-                                    "ptr_wrapper": {
-                                        "id": 7
-                                    }
-                                },
-                                "value12": {
-                                    "ptr_wrapper": {
-                                        "id": 9
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "value2": 1.0,
-                    "value3": 0.30000001192092898,
-                    "value4": 1.0,
-                    "value5": true,
-                    "value6": false,
-                    "value7": 0.0,
-                    "value8": 1.0,
-                    "value9": 1.0,
-                    "value10": 2,
-                    "value11": 0,
-                    "value12": 1.0,
-                    "value13": 0.0,
-                    "value14": 0.0,
-                    "value15": {
-                        "ptr_wrapper": {
-                            "id": 1
-                        }
-                    },
-                    "value16": {
-                        "ptr_wrapper": {
-                            "id": 4
-                        }
-                    },
-                    "value17": {
-                        "ptr_wrapper": {
-                            "id": 5
-                        }
-                    },
-                    "value18": {
-                        "ptr_wrapper": {
-                            "id": 7
-                        }
-                    },
-                    "value19": {
-                        "ptr_wrapper": {
-                            "id": 9
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "value19": 1,
-    "value20": 1,
-    "value21": {
+    "value9": 1,
+    "value10": 1,
+    "value11": {
         "value0": true,
         "value1": 0.5625,
         "value2": true
     },
-    "value22": 6,
-    "value23": 1,
-    "value24": {
+    "value12": 3,
+    "value13": 1,
+    "value14": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -473,19 +199,19 @@
         "value6": 0,
         "value7": true
     },
-    "value25": 0,
-    "value26": {
+    "value15": 0,
+    "value16": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
-        "value4": 6.0,
+        "value4": 1.0,
         "value5": 1.0,
         "value6": 0,
         "value7": true
     },
-    "value27": 2,
-    "value28": {
+    "value17": 2,
+    "value18": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -495,79 +221,33 @@
         "value6": 0,
         "value7": true
     },
-    "value29": 3,
-    "value30": {
-        "value0": 0.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 7.0,
-        "value4": 5.0,
-        "value5": 1.0,
-        "value6": 0,
-        "value7": true
-    },
-    "value31": 4,
-    "value32": {
-        "value0": 0.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": -5.0,
-        "value4": 5.0,
-        "value5": 1.0,
-        "value6": 0,
-        "value7": true
-    },
-    "value33": 6,
-    "value34": {
-        "value0": 0.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 15.0,
-        "value5": 1.0,
-        "value6": 0,
-        "value7": true
-    },
-    "value35": 4,
-    "value36": 0,
-    "value37": {
+    "value19": 2,
+    "value20": 0,
+    "value21": {
         "value0": true,
         "value1": 8606991425209588650,
         "value2": 2787749688047389887,
         "value3": "CharMovementScript"
     },
-    "value38": 3,
-    "value39": {
+    "value22": 1,
+    "value23": {
         "value0": true,
-        "value1": 15141494769145803947,
+        "value1": 6111862596534002478,
         "value2": 2787749688047389887,
-        "value3": "CharMovementScript"
+        "value3": "CameraMovementScript"
     },
-    "value40": 4,
-    "value41": {
-        "value0": true,
-        "value1": 7904852223276457979,
-        "value2": 2787749688047389887,
-        "value3": "CharMovementScript"
-    },
-    "value42": 6,
-    "value43": {
-        "value0": true,
-        "value1": 7904851123764829768,
-        "value2": 2787749688047389887,
-        "value3": "CharMovementScript"
-    },
-    "value44": 1,
-    "value45": 0,
-    "value46": {
+    "value24": 1,
+    "value25": 0,
+    "value26": {
         "value0": true,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": "Assets/Textures/Background.png"
+        "value5": "../GameX/Assets\\Textures\\dungeons_and_flagons.png",
+        "value6": "dungeons_and_flagons.png"
     },
-    "value47": 0
+    "value27": 0
 }|{
     "value0": [
         {
@@ -609,7 +289,49 @@
                                             "id": 1
                                         }
                                     },
-                                    "value7": []
+                                    "value7": [],
+                                    "value8": []
+                                }
+                            }
+                        }
+                    ],
+                    "value8": [
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483651,
+                                "data": {
+                                    "value0": "Speed",
+                                    "value1": {
+                                        "index": 0,
+                                        "data": 3.0
+                                    },
+                                    "value2": 0
+                                }
+                            }
+                        },
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483652,
+                                "data": {
+                                    "value0": "SpeedMod",
+                                    "value1": {
+                                        "index": 1,
+                                        "data": 1
+                                    },
+                                    "value2": 1
+                                }
+                            }
+                        },
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483653,
+                                "data": {
+                                    "value0": "Name",
+                                    "value1": {
+                                        "index": 2,
+                                        "data": "Noob99"
+                                    },
+                                    "value2": 2
                                 }
                             }
                         }
@@ -619,7 +341,7 @@
         },
         {
             "ptr_wrapper": {
-                "id": 2147483651,
+                "id": 2147483654,
                 "data": {
                     "value0": 6111862596534002478,
                     "value1": false,
@@ -636,7 +358,22 @@
                             "id": 0
                         }
                     },
-                    "value7": []
+                    "value7": [],
+                    "value8": [
+                        {
+                            "ptr_wrapper": {
+                                "id": 2147483655,
+                                "data": {
+                                    "value0": "CameraSpeed",
+                                    "value1": {
+                                        "index": 0,
+                                        "data": 0.5
+                                    },
+                                    "value2": 0
+                                }
+                            }
+                        }
+                    ]
                 }
             }
         },
@@ -644,81 +381,13 @@
             "ptr_wrapper": {
                 "id": 2
             }
-        },
-        {
-            "ptr_wrapper": {
-                "id": 2147483652,
-                "data": {
-                    "value0": 15141494769145803947,
-                    "value1": false,
-                    "value2": 3,
-                    "value3": "Default Actor",
-                    "value4": {
-                        "ptr_wrapper": {
-                            "id": 0
-                        }
-                    },
-                    "value5": "Default",
-                    "value6": {
-                        "ptr_wrapper": {
-                            "id": 0
-                        }
-                    },
-                    "value7": []
-                }
-            }
-        },
-        {
-            "ptr_wrapper": {
-                "id": 2147483653,
-                "data": {
-                    "value0": 7904852223276457979,
-                    "value1": false,
-                    "value2": 4,
-                    "value3": "Default Actor2",
-                    "value4": {
-                        "ptr_wrapper": {
-                            "id": 0
-                        }
-                    },
-                    "value5": "Default",
-                    "value6": {
-                        "ptr_wrapper": {
-                            "id": 0
-                        }
-                    },
-                    "value7": []
-                }
-            }
-        },
-        {
-            "ptr_wrapper": {
-                "id": 2147483654,
-                "data": {
-                    "value0": 7904851123764829768,
-                    "value1": false,
-                    "value2": 6,
-                    "value3": "Default Actor3",
-                    "value4": {
-                        "ptr_wrapper": {
-                            "id": 0
-                        }
-                    },
-                    "value5": "Default",
-                    "value6": {
-                        "ptr_wrapper": {
-                            "id": 0
-                        }
-                    },
-                    "value7": []
-                }
-            }
         }
     ],
     "value1": 0.0,
     "value2": -9.8100004196167,
     "value3": 2787749688047389887,
     "value4": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\TestScene2.scene",
-    "value5": "",
-    "value6": 1.0
+    "value5": "TestScene2.scene",
+    "value6": "",
+    "value7": 1.0
 }

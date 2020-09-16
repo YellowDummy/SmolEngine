@@ -7,6 +7,7 @@
 
 #include "Core/ImGui/EditorConsole.h"
 #include <glad\glad.h>
+#include <filesystem>
 
 namespace SmolEngine
 {
@@ -54,18 +55,80 @@ namespace SmolEngine
 
 	void Scene::OnPlay()
 	{
+		//TODO: Save() should return bool
+		//SceneData must be saved before the simulation starts
 		Save(s_SceneData.m_filePath);
 
 		auto rbGroup = s_SceneData.m_Registry.view<Rigidbody2DComponent>();
 		for (auto body : rbGroup)
 		{
+			//Creating rigidbodies using user data
 			rbGroup.get<Rigidbody2DComponent>(body).Rigidbody->CreateBody(m_World);
 		}
 
 		auto scriptGroup = s_SceneData.m_Registry.view<ScriptObject>();
 		for (auto script : scriptGroup)
 		{
-			scriptGroup.get<ScriptObject>(script).Start();
+			auto gr = scriptGroup.get<ScriptObject>(script);
+
+			//Handling serialized values (out-values)
+			//Values that being modified inside editor
+			for (auto actorValues : gr.Script->m_Actor->m_OutValues)
+			{
+				//Values that must be set as soon as simulation begins
+				switch (actorValues->Value.index())
+				{
+
+				case (uint32_t)OutValueType::Float:
+				{
+					for (auto scriptValues : gr.Script->m_OutFloatVariables)
+					{
+						auto [varName, varValue] = scriptValues;
+
+						if (actorValues->Key == varName)
+						{
+							*varValue = std::get<float>(actorValues->Value);
+						}
+					}
+
+					break;
+				}
+				case (uint32_t)OutValueType::Int:
+				{
+					for (auto scriptValues : gr.Script->m_OutIntVariables)
+					{
+						auto [varName, varValue] = scriptValues;
+
+						if (actorValues->Key == varName)
+						{
+							*varValue = std::get<int>(actorValues->Value);
+						}
+					}
+
+					break;
+				}
+				case (uint32_t)OutValueType::String:
+				{
+					for (auto scriptValues : gr.Script->m_OutStringVariables)
+					{
+						auto& [varName, varValue] = scriptValues;
+
+						if (actorValues->Key == varName)
+						{
+							*varValue = std::get<std::string>(actorValues->Value);
+						}
+					}
+
+					break;
+				}
+				default:
+					break;
+				}
+			}
+
+			//Sending start callback
+			gr.Script->Start();
+
 		}
 
 		m_InPlayMode = true;
@@ -92,6 +155,8 @@ namespace SmolEngine
 
 	void Scene::OnUpdate(DeltaTime deltaTime)
 	{
+		//TODO: Implement double buffering
+
 		UpdateEditorCamera();
 
 		//Updating all the user's cameras in the current scene
@@ -107,26 +172,26 @@ namespace SmolEngine
 					RendererCommand::Clear();
 
 					Renderer2D::BeginScene(cameraComponent.Camera->GetCamera(), s_SceneData.m_AmbientStrength);
-
-					auto& group = s_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransformComponent>);
-					for (auto entity : group)
 					{
-						//Rendering all textures in the current scene
-						auto& [transform, texture] = group.get<TransformComponent, Texture2DComponent>(entity);
-						if (texture.Enabled && texture.Texture != nullptr)
+						auto& group = s_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransformComponent>);
+						for (auto entity : group)
 						{
-							if (transform.B2Data == nullptr)
+							//Rendering all textures in the current scene
+							auto& [transform, texture] = group.get<TransformComponent, Texture2DComponent>(entity);
+							if (texture.Enabled && texture.Texture != nullptr)
 							{
-								Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
-							}
-							else if(transform.B2Data != nullptr && m_InPlayMode)
-							{
-								glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, 1.0f);
-								Renderer2D::DrawSprite(vec3, transform.Scale, *transform.B2Data->B2Rotation, texture.Texture, 1.0f, texture.Color);
+								if (transform.B2Data == nullptr)
+								{
+									Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
+								}
+								else if (transform.B2Data != nullptr && m_InPlayMode)
+								{
+									glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, 1.0f);
+									Renderer2D::DrawSprite(vec3, transform.Scale, *transform.B2Data->B2Rotation, texture.Texture, 1.0f, texture.Color);
+								}
 							}
 						}
 					}
-
 					Renderer2D::EndScene();
 
 					cameraComponent.Camera->SetZoom(cameraComponent.Camera->m_ZoomLevel);
@@ -164,6 +229,7 @@ namespace SmolEngine
 				}
 			}
 
+			//Updating Box2D logic
 			m_World->Step(deltaTime, 6, 2);
 		}
 
@@ -171,11 +237,14 @@ namespace SmolEngine
 
 	void Scene::OnEvent(Event& e)
 	{
-		auto cameraGroup = s_SceneData.m_Registry.view<CameraComponent>();
-		for (auto obj : cameraGroup)
+		//Sending events to all cameras in the current scene
 		{
-			auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
-			cameraComponent.Camera->OnSceneEvent(e);
+			auto cameraGroup = s_SceneData.m_Registry.view<CameraComponent>();
+			for (auto obj : cameraGroup)
+			{
+				auto& cameraComponent = cameraGroup.get<CameraComponent>(obj);
+				cameraComponent.Camera->OnSceneEvent(e);
+			}
 		}
 	}
 
@@ -183,56 +252,63 @@ namespace SmolEngine
 	{
 		m_EditorCamera->m_FrameBuffer->Bind();
 
-		RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		RendererCommand::Clear();
-
-		Renderer2D::BeginScene(m_EditorCamera->GetCamera(), s_SceneData.m_AmbientStrength);
+		//
 		{
-			auto& group = s_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransformComponent>);
-			for (auto entity : group)
-			{
-				auto& [transform, texture] = group.get<TransformComponent, Texture2DComponent>(entity);
-				if (texture.Enabled && texture.Texture != nullptr)
-				{
+			RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RendererCommand::Clear();
 
-					if (transform.B2Data != nullptr)
+			Renderer2D::BeginScene(m_EditorCamera->GetCamera(), s_SceneData.m_AmbientStrength);
+			{
+				auto& group = s_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransformComponent>);
+				for (auto entity : group)
+				{
+					auto& [transform, texture] = group.get<TransformComponent, Texture2DComponent>(entity);
+					if (texture.Enabled && texture.Texture != nullptr)
 					{
-						glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, transform.WorldPos.z);
-						Renderer2D::DrawSprite(vec3, transform.Scale, *transform.B2Data->B2Rotation, texture.Texture, 1.0f, texture.Color);
+
+						if (transform.B2Data != nullptr)
+						{
+							glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, transform.WorldPos.z);
+							Renderer2D::DrawSprite(vec3, transform.Scale, *transform.B2Data->B2Rotation, texture.Texture, 1.0f, texture.Color);
+						}
+						else
+						{
+							Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
+						}
 					}
-					else
+				}
+
+			}
+			Renderer2D::EndScene();
+		}
+
+		//Rendering debug shapes
+		{
+			Renderer2D::BeginDebug(m_EditorCamera->GetCamera());
+			{
+				auto& group = s_SceneData.m_Registry.group<Rigidbody2DComponent>(entt::get<TransformComponent>);
+				for (auto entity : group)
+				{
+					auto& [transform, rb] = group.get<TransformComponent, Rigidbody2DComponent>(entity);
+
+					if (!rb.ShowShape) { continue; }
+
+					if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Box)
 					{
-						Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
+						Renderer2D::DebugDraw(DebugPrimitives::Quad, { transform.WorldPos.x, transform.WorldPos.y, 1.0f }, { rb.Rigidbody->m_Shape.x * 2 , rb.Rigidbody->m_Shape.y * 2 }, transform.Rotation);
+					}
+					else if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Cirlce)
+					{
+						Renderer2D::DebugDraw(DebugPrimitives::Circle, { transform.WorldPos.x + rb.Rigidbody->m_Offset.x,
+	transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radius,  rb.Rigidbody->m_Radius }, transform.Rotation);
+
 					}
 				}
 			}
-
+			Renderer2D::EndDebug();
 		}
-		Renderer2D::EndScene();
 
-		Renderer2D::BeginDebug(m_EditorCamera->GetCamera());
-		{
-			auto& group = s_SceneData.m_Registry.group<Rigidbody2DComponent>(entt::get<TransformComponent>);
-			for (auto entity : group)
-			{
-				auto& [transform, rb] = group.get<TransformComponent, Rigidbody2DComponent>(entity);
-				
-				if (!rb.ShowShape) { continue; }
-
-				if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Box)
-				{
-					Renderer2D::DebugDraw(DebugPrimitives::Quad, { transform.WorldPos.x, transform.WorldPos.y, 1.0f }, { rb.Rigidbody->m_Shape.x * 2 , rb.Rigidbody->m_Shape.y * 2 }, transform.Rotation);
-				}
-				else if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Cirlce)
-				{
-					Renderer2D::DebugDraw(DebugPrimitives::Circle, { transform.WorldPos.x + rb.Rigidbody->m_Offset.x,
-transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radius,  rb.Rigidbody->m_Radius }, transform.Rotation);
-
-				}
-			}
-		}
-		Renderer2D::EndDebug();
-
+		//Rendering all lights in the current scene
 		{
 			auto& group = s_SceneData.m_Registry.group<Light2DComponent>(entt::get<TransformComponent>);
 			for (auto entity : group)
@@ -272,12 +348,39 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 
 		for (auto item : m_ScriptRegistry)
 		{
-			auto& key = std::get<0>(item);
-			if (key == keyName)
+			auto& [strKey, scriptObj] = item;
+
+			if (strKey == keyName)
 			{
-				auto& script = std::get<1>(item);
-				auto& ref = actor->AddComponent<ScriptObject>(s_SceneData.m_ID, actor->GetID(), keyName, script->Instantiate());
+				auto& ref = actor->AddComponent<ScriptObject>(s_SceneData.m_ID, actor->GetID(), keyName, scriptObj->Instantiate());
 				ref.Script->m_Actor = actor; 
+
+				//Creating out-variables inside actor class
+				{
+					for (auto pair : ref.Script->m_OutFloatVariables)
+					{
+						auto [varName, varValue] = pair;
+						std::shared_ptr<OutValue> value = std::make_shared<OutValue>(varName, *varValue, OutValueType::Float);
+						ref.Script->m_Actor->m_OutValues.push_back(value);
+					}
+
+					for (auto pair : ref.Script->m_OutIntVariables)
+					{
+						auto [varName, varValue] = pair;
+						std::shared_ptr<OutValue> value = std::make_shared<OutValue>(varName, *varValue, OutValueType::Int);
+						ref.Script->m_Actor->m_OutValues.push_back(value);
+					}
+
+					for (auto pair : ref.Script->m_OutStringVariables)
+					{
+						auto& [varName, varValue] = pair;
+						std::shared_ptr<OutValue> value = std::make_shared<OutValue>(varName, *varValue, OutValueType::String);
+						strcpy(value->stringBuffer, varValue->data());
+
+						ref.Script->m_Actor->m_OutValues.push_back(value);
+					}
+				}
+
 				return true;
 			}
 		}
@@ -307,7 +410,6 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		return nullptr;
 	}
 
-	//TODO: Runtime Version
 	void Scene::DeleteActor(Ref<Actor> actor)
 	{
 		{
@@ -346,7 +448,7 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		actor = nullptr;
 	}
 
-	//TODO: Copy ScriptObjects
+	//TODO: Copy ScriptObject component
 	void Scene::DuplicateActor(Ref<Actor> actor)
 	{
 		std::string name = std::string(actor->GetName()) + std::string("_Copy_");
@@ -492,6 +594,7 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		std::stringstream storageRegistry;
 		std::stringstream storageSceneData;
 
+		//Serializing all components in the current scene
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
 			entt::snapshot{ s_SceneData.m_Registry }.entities(output)
@@ -499,14 +602,17 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 
 		}
 
+		//Serializing scene data
 		{
 			cereal::JSONOutputArchive output{ storageSceneData };
 			s_SceneData.serialize(output);
 		}
 
+		//Merging two streams
 		std::stringstream result;
 		result << storageRegistry.str() << "|" << storageSceneData.str();
 
+		//Writing result to a file
 		std::ofstream myfile(filePath);
 		if (myfile.is_open())
 		{
@@ -525,6 +631,7 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		std::ifstream file(filePath);
 		std::stringstream buffer;
 
+		//Copying file contents to a buffer
 		if (file)
 		{
 			buffer << file.rdbuf();
@@ -538,34 +645,41 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		std::string segment;
 		std::vector<std::string> seglist;
 
+		//Spliting one string into two
 		while (std::getline(buffer, segment, '|'))
 		{
 			seglist.push_back(segment);
 		}
 
+		//Components data
 		std::stringstream regisrtyStorage;
 		regisrtyStorage << seglist.front();
 
+		//Scene data
 		std::stringstream sceneDataStorage;
 		sceneDataStorage << seglist.back();
 
 		SceneData data;
 		
+		//Deserializing scene data to a new scene object
 		{
 			cereal::JSONInputArchive sceneDataInput{ sceneDataStorage };
-			sceneDataInput(data.m_ActorPool, data.Gravity.x, data.Gravity.y, data.m_ID, data.m_filePath, data.m_Name, data.m_AmbientStrength);
+			sceneDataInput(data.m_ActorPool, data.Gravity.x, data.Gravity.y, data.m_ID, data.m_filePath, data.m_fileName, data.m_Name, data.m_AmbientStrength);
 		}
 
-		s_SceneData.m_Registry.clear(); 
+		s_SceneData.m_Registry.clear(); //The registry must be cleared before writing new data (!!)
 
+		//Deserializing compoentns data to an existing registry object
 		{
 			cereal::JSONInputArchive regisrtyInput{ regisrtyStorage };
 			entt::snapshot_loader{ s_SceneData.m_Registry }.entities(regisrtyInput).
 				component<Rigidbody2DComponent, CameraComponent, TransformComponent, ScriptObject, Texture2DComponent, Light2DComponent>(regisrtyInput);
 		}
 
+		//Creating new Box2D instance using new data
 		m_World = new b2World({ data.Gravity.x, data.Gravity.y });
 
+		//Creating cameras
 		{
 			auto cameraGroup = s_SceneData.m_Registry.view<CameraComponent>();
 			for (auto obj : cameraGroup)
@@ -579,24 +693,28 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 			}
 		}
 
+		//Creating textures
 		{
 			auto textureGroup = s_SceneData.m_Registry.view<Texture2DComponent>();
 			for (auto obj : textureGroup)
 			{
 				auto& texture = textureGroup.get<Texture2DComponent>(obj);
+
+				//Searching for a file in assets folders if absolute path is not valid and replace old path if file found
+				if (!IsPathValid(texture.TexturePath))
+				{
+					if(!ChangeFilePath(texture.FileName, texture.TexturePath))
+					{
+						CONSOLE_ERROR(std::string("Texture ") + texture.FileName + std::string(" not found"));
+						break;
+					}
+				}
+
 				texture.Texture = Texture2D::Create(texture.TexturePath);
 			}
 		}
 
-		{
-			auto rbGroup = s_SceneData.m_Registry.view<Rigidbody2DComponent>();
-			for (auto obj : rbGroup)
-			{
-				auto& rb = rbGroup.get<Rigidbody2DComponent>(obj);
-				rb.Rigidbody->m_World = m_World;
-			}
-		}
-
+		//Loading scripts
 		{
 			auto scriptGroup = s_SceneData.m_Registry.view<ScriptObject>();
 			for (auto obj : scriptGroup)
@@ -605,16 +723,26 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 
 				for (auto item: m_ScriptRegistry)
 				{
-					auto& key = std::get<0>(item);
-					if (key == script.keyName && script.SceneID == data.m_ID)
+					auto& [strKey, scriptObj] = item;
+
+					if (strKey == script.keyName && script.SceneID == data.m_ID)
 					{
-						script.Script = m_ScriptRegistry[script.keyName]->Instantiate();
+						script.Script = m_ScriptRegistry[script.keyName]->Instantiate(); // Creating new intance of script
 
 						for (auto actor: data.m_ActorPool)
 						{
 							if (actor->GetID() == script.ActorID)
 							{
-								script.Script->m_Actor = actor; break;
+								script.Script->m_Actor = actor; break;  // Assigning right actor
+							}
+						}
+
+						//Setting string buffer to saved value in std::variant
+						for (auto val : script.Script->m_Actor->m_OutValues)
+						{
+							if (val->Value.index() == (uint32_t)OutValueType::String)
+							{
+								strcpy(val->stringBuffer, std::get<std::string>(val->Value).data());
 							}
 						}
 
@@ -628,16 +756,29 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		CONSOLE_WARN(std::string("Scene loaded successfully"));
 	}
 
-	void Scene::CreateScene(std::string& filePath)
+	void Scene::SaveCurrentScene()
+	{
+		//Searching for a file in assets folders if absolute path is not valid and replace old path if file found
+		if (!IsPathValid(s_SceneData.m_filePath))
+		{
+			if (!ChangeFilePath(s_SceneData.m_fileName, s_SceneData.m_filePath))
+			{
+				CONSOLE_ERROR(std::string("Scene ") + s_SceneData.m_fileName + std::string(" not found"));
+				return;
+			}
+		}
+
+		Save(s_SceneData.m_filePath);
+	}
+
+	void Scene::CreateScene(const std::string& filePath, const std::string& fileName)
 	{
 		s_SceneData.m_Registry.clear();
-
 		SceneData newScene;
 		newScene.m_filePath = filePath;
+		newScene.m_fileName = fileName;
 		newScene.m_ID = std::hash<std::string>{}(filePath);
-
 		s_SceneData = newScene;
-		Save(filePath);
 	}
 
 
@@ -654,6 +795,37 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		return false;
 	}
 
+	bool Scene::ChangeFilePath(const std::string& fileName, std::string& pathToChange)
+	{
+		using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
+
+		//TODO: Main assets folder should be defined by the user (via settings window)
+		for (const auto& dirEntry : recursive_directory_iterator(std::string("../GameX/")))
+		{
+			if (dirEntry.path().filename() == fileName)
+			{
+				pathToChange = dirEntry.path().u8string();
+				return true;
+			}
+		}
+
+		for (const auto& dirEntry : recursive_directory_iterator(std::string("../SmolEngine-Editor/")))
+		{
+			if (dirEntry.path().filename() == fileName)
+			{
+				pathToChange = dirEntry.path().u8string();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool Scene::IsPathValid(const std::string& path)
+	{
+		return std::filesystem::exists(path);
+	}
+
 	SceneData& Scene::GetSceneData()
 	{
 		return s_SceneData;
@@ -666,6 +838,7 @@ transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radiu
 		Gravity.y = other.Gravity.y;
 		m_ID = other.m_ID;
 		m_filePath = other.m_filePath;
+		m_fileName = other.m_fileName;
 		m_Name = other.m_Name;
 		m_AmbientStrength = other.m_AmbientStrength;
 	}

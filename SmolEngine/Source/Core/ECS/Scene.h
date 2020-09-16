@@ -44,13 +44,15 @@ namespace SmolEngine
 		friend class cereal::access;
 
 		std::string m_filePath;
+		std::string m_fileName;
+
 		std::string m_Name = std::string("");
 		size_t m_ID = 0;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_ActorPool, Gravity.x, Gravity.y, m_ID, m_filePath, m_Name, m_AmbientStrength);
+			archive(m_ActorPool, Gravity.x, Gravity.y, m_ID, m_filePath, m_fileName, m_Name, m_AmbientStrength);
 			archive.serializeDeferments();
 		}
 	};
@@ -75,7 +77,8 @@ namespace SmolEngine
 		void Save(std::string& filePath);
 		void Load(std::string& filePath);
 		void Load(int index) {}
-		void CreateScene(std::string& filePath);
+		void SaveCurrentScene();
+		void CreateScene(const std::string& filePath, const std::string& fileName);
 
 		//Camera handling
 		void UpdateEditorCamera();
@@ -129,6 +132,9 @@ namespace SmolEngine
 
 	private:
 		bool IsActorExist(Ref<Actor> actor);
+		bool ChangeFilePath(const std::string& fileName, std::string& pathToChange);
+		bool IsPathValid(const std::string& path);
+
 		SceneData& GetSceneData();
 
 	private:

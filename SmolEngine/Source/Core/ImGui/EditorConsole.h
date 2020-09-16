@@ -10,8 +10,6 @@
 
 #include "Core/SLog.h"
 
-
-
 namespace SmolEngine
 {
 	enum class LogLevel: int
@@ -151,7 +149,7 @@ namespace SmolEngine
 	};
 
 
-#define CONSOLE_INFO(...)  EditorConsole::GetConsole()->AddMessageInfo(__VA_ARGS__)
-#define CONSOLE_WARN(...)  EditorConsole::GetConsole()->AddMessageWarn(__VA_ARGS__)
-#define CONSOLE_ERROR(...) EditorConsole::GetConsole()->AddMessageError(__VA_ARGS__)
+#define CONSOLE_INFO(...)  SmolEngine::EditorConsole::GetConsole()->AddMessageInfo(__VA_ARGS__)
+#define CONSOLE_WARN(...)  SmolEngine::EditorConsole::GetConsole()->AddMessageWarn(__VA_ARGS__)
+#define CONSOLE_ERROR(...) SmolEngine::EditorConsole::GetConsole()->AddMessageError(__VA_ARGS__)
 }

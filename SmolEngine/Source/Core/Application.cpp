@@ -50,23 +50,23 @@ namespace SmolEngine
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
 
-		//Initializing Event & EventHandler Classes
+		//Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();
 
 		//Binding Callbacks
 		m_EventHandler->OnEventFn = std::bind(&Application::OnEvent, this, std::placeholders::_1);
 
-		//Initializing Layer & LayerManager
+		//Initializing LayerManager and Related Classes
 		m_LayerHandler = std::make_shared<LayerManager>();
 
-		//Initializing Main Window
+		//Creating New Window Using GLFW
 		m_Window = std::make_shared<Window>(std::string("SmolEngine Editor - v0.1"), 1080, 1920, m_EventHandler);
 
-		//Initializing GUI
+		//Initializing ImGui
 		m_ImGuiLayer = new ImGuiLayer();
 		//---------------------------------------------------------------------///
 
-		//Initializing Main Scene
+		//Initializing Scene Handler
 		Scene::GetScene()->Init();
 
 		NATIVE_INFO("Initialized successfully");

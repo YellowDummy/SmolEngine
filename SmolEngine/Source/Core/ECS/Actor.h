@@ -7,12 +7,16 @@
 
 #include <functional>
 #include <vector>
+#include <unordered_map>
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
+#include <cereal/types/unordered_map.hpp>
 
 namespace SmolEngine
 {
+	struct OutValue;
+
 	class Actor
 	{
 	public:
@@ -62,7 +66,7 @@ namespace SmolEngine
 
 		std::string& GetName() { return Name; }
 
-		const std::string& GetTag() { return Tag; }
+		std::string& GetTag() { return Tag; }
 		const size_t GetID() { return ID; }
 
 		void SetParent(Ref<Actor> parent) { Parent = parent; }
@@ -79,6 +83,9 @@ namespace SmolEngine
 		bool IsDisabled;
 	private:
 		friend class cereal::access;
+		friend struct ScriptableObject;
+		friend class Scene;
+		friend class EditorLayer;
 
 		entt::entity Entity;
 		entt::registry& Reg;
@@ -90,10 +97,12 @@ namespace SmolEngine
 		std::vector<Ref<Actor>> Childs;
 		Ref<Actor> Parent;
 
+		std::vector<Ref<OutValue>> m_OutValues;
+
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ID, IsDisabled, Entity, Name, Parent, Tag, Parent, Childs);
+			archive(ID, IsDisabled, Entity, Name, Parent, Tag, Parent, Childs, m_OutValues);
 			archive.serializeDeferments();
 		}
 

@@ -3,8 +3,13 @@
 #include "Core/Core.h"
 #include "Core/Time.h"
 #include "Core/SLog.h"
+#include "Core/Scripting/OutValues.h"
 
-#include <cereal/cereal.hpp>
+#include "Core/Scripting/OutValues.h"
+
+#include <unordered_map>
+#include <any>
+#include <glm/glm.hpp>
 #include <cereal/types/polymorphic.hpp>
 
 namespace SmolEngine
@@ -13,9 +18,18 @@ namespace SmolEngine
 
 	struct ScriptableObject 	//Base Class *Struct* For All Script Classes
 	{
+
+#define OUT_FLOAT(name, value) PushOutVariable(name, value, OutValueType::Float)
+#define OUT_INT(name, value) PushOutVariable(name, value, OutValueType::Int)
+#define OUT_STRING(name, value) PushOutVariable(name, value, OutValueType::String)
+
 		bool Enabled = true;
 
 		ScriptableObject();
+		ScriptableObject(Ref<Actor> actor)
+			: m_Actor(actor)
+		{
+		}
 
 		virtual ~ScriptableObject() {}
 
@@ -53,17 +67,26 @@ namespace SmolEngine
 		virtual void Start() {  };
 		virtual void OnUpdate(DeltaTime deltaTime) {};
 		virtual void OnDestroy() {};
+		virtual void OnValidate() {}
 
 		//Must be implemented by the user in order to register an external script in the engine
 		virtual std::shared_ptr<ScriptableObject> Instantiate() { NATIVE_ERROR("ScriptableObject: No matching overloaded function found"); return nullptr; };
+
+		void PushOutVariable(const char* keyName, std::any val, OutValueType type);
 
 	private:
 		friend class cereal::access;
 		friend class Scene;
 		friend class EditorLayer;
 
+		std::unordered_map<const char*, float*> m_OutFloatVariables;
+		std::unordered_map<const char*, int*> m_OutIntVariables;
+		std::unordered_map<const char*, std::string*> m_OutStringVariables;
+
 		size_t ActorID = 0;
+
 		Ref<Actor> m_Actor;
+
 	};
 
 }

@@ -589,6 +589,7 @@
     <ClInclude Include="Source\Core\SLog.h" />
     <ClInclude Include="Source\Core\Scripting\Jinx.h" />
     <ClInclude Include="Source\Core\Scripting\Lua.h" />
+    <ClInclude Include="Source\Core\Scripting\OutValues.h" />
     <ClInclude Include="Source\Core\Time.h" />
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\Window.h" />

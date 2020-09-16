@@ -74,4 +74,44 @@ namespace SmolEngine
 	{
 		return Scene::GetScene()->FindActorByTag(tag);
 	}
+
+	void ScriptableObject::PushOutVariable(const char* keyName, std::any val, OutValueType type)
+	{
+		switch (type)
+		{
+		case SmolEngine::OutValueType::Float:
+		{
+			auto result = m_OutFloatVariables.find(keyName);
+			if (result == m_OutFloatVariables.end())
+			{
+				m_OutFloatVariables[keyName] = std::any_cast<float*>(val);
+			}
+
+			break;
+		}
+		case SmolEngine::OutValueType::Int:
+		{
+			auto result = m_OutIntVariables.find(keyName);
+			if (result == m_OutIntVariables.end())
+			{
+				m_OutIntVariables[keyName] = std::any_cast<int*>(val);
+			}
+
+			break;
+		}
+		case SmolEngine::OutValueType::String:
+		{
+			auto result = m_OutStringVariables.find(keyName);
+			if (result == m_OutStringVariables.end())
+			{
+				m_OutStringVariables[keyName] = std::any_cast<std::string*>(val);
+			}
+
+			break;
+		}
+		default:
+
+			break;
+		}
+	}
 }
