@@ -97,7 +97,7 @@ namespace SmolEngine
 			{
 			case LogLevel::Info:
 			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << "[INFO]: " << message;
+				oss << "[" << hour << ":" << min << ":" << second << "] " << message;
 				msg.Text = oss.str();
 				msg.Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 				m_Messages.push_back(msg);
@@ -105,7 +105,7 @@ namespace SmolEngine
 			}
 			case LogLevel::Warn:
 			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << "[WARN]: " << message;
+				oss << "[" << hour << ":" << min << ":" << second << "] " << message;
 				msg.Text = oss.str();
 				msg.Color = ImVec4{ 2.2f, 1.2f, 0.1f, 1.0f };
 				m_Messages.push_back(msg);
@@ -113,7 +113,7 @@ namespace SmolEngine
 			}
 			case LogLevel::Error:
 			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << "[ERROR]: " << message;
+				oss << "[" << hour << ":" << min << ":" << second << "] " << message;
 				msg.Text = oss.str();
 				msg.Color = ImVec4{ 0.99f, 0.1f, 0.1f, 1.0f };
 				m_Messages.push_back(msg);
@@ -149,7 +149,7 @@ namespace SmolEngine
 	};
 
 
-#define CONSOLE_INFO(...)  SmolEngine::EditorConsole::GetConsole()->AddMessageInfo(__VA_ARGS__)
-#define CONSOLE_WARN(...)  SmolEngine::EditorConsole::GetConsole()->AddMessageWarn(__VA_ARGS__)
-#define CONSOLE_ERROR(...) SmolEngine::EditorConsole::GetConsole()->AddMessageError(__VA_ARGS__)
+#define CONSOLE_INFO(string)  SmolEngine::EditorConsole::GetConsole()->AddMessageInfo(string)
+#define CONSOLE_WARN(string)  SmolEngine::EditorConsole::GetConsole()->AddMessageWarn(string)
+#define CONSOLE_ERROR(string) SmolEngine::EditorConsole::GetConsole()->AddMessageError(string)
 }

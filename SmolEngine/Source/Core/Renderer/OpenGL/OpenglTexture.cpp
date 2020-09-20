@@ -22,13 +22,15 @@ namespace SmolEngine
 		}
 
 		GLenum openglFormat = 0, dataFormat = 0;
+
 		if (channels == 4)
 		{
 			openglFormat = GL_RGBA8;
 			dataFormat = GL_RGBA;
 
 		}
-		else if (channels == 3)
+
+		if (channels == 3)
 		{
 			openglFormat = GL_RGB8;
 			dataFormat = GL_RGB;

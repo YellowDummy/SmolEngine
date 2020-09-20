@@ -2,10 +2,12 @@
 #include "SmolEngineCore.h"
 #include "Core/Layer.h"
 #include "Core/ImGui/EditorConsole.h"
-#include "Core/ImGui/CustomWindows.h"
+#include "Core/ImGui/EditorPanels.h"
 #include "Core/ECS/Components.h"
 #include "Core/ECS/Scene.h"
 #include "Core/ECS/DefaultSystems.h"
+#include "Core/ImGui/AnimationPanel.h"
+#include "Core/Animation/Animation2D.h"
 
 #include <imgui/imgui.h>
 
@@ -13,10 +15,16 @@
 
 namespace SmolEngine
 {
+	enum class FileBrowserFlags : uint32_t
+	{
+		None = 0,
+		ScriptPath, Texture2dPath, SceneLoad, SceneCreate, SceneSave, LoadClip, LoadClipController
+	};
+
 	enum class ComponentItem : char
 	{
 		None = 0, 
-		Tetxure2D, JinxScript, Rigidbody2D, CameraController, Light2D, AnimationContoller, ParticleSystem
+		Tetxure2D, JinxScript, Rigidbody2D, CameraController, Light2D, Animation2DContoller, ParticleSystem
 	};
 
 	enum class SelectionFlags: uint16_t
@@ -25,11 +33,7 @@ namespace SmolEngine
 		Inspector, Actions
 	};
 
-	enum class FileBrowserFlags : uint32_t
-	{
-		None = 0, 
-		ScriptPath, Texture2dPath, SceneLoad, SceneCreate, SceneSave
-	};
+	class Framebuffer;
 
 	class EditorLayer: public Layer
 	{
@@ -58,6 +62,7 @@ namespace SmolEngine
 		glm::vec2 m_GameViewPortSize = { 0.0f, 0.0f };
 
 		std::string m_FilePath = "";
+		std::string m_FileName = "";
 		Ref<Scene> m_Scene;
 
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
@@ -67,9 +72,10 @@ namespace SmolEngine
 		bool isGameViewFocused = false;
 
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
+		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
+		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
 		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
-		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
 
 		//TEMP 

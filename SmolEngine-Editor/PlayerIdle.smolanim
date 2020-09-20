@@ -1,0 +1,43 @@
+{
+    "value0": [
+        {
+            "key": 0,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483649,
+                    "data": {
+                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
+                        "value1": "skin1_idle_1.png",
+                        "value2": 200.0,
+                        "value3": 0.22990235686302186,
+                        "value4": 0.10633455216884613,
+                        "value5": 0.24193549156188966,
+                        "value6": 1.0,
+                        "value7": 1.0,
+                        "value8": 1.0
+                    }
+                }
+            }
+        },
+        {
+            "key": 1,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483650,
+                    "data": {
+                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
+                        "value1": "skin1_idle_2.png",
+                        "value2": 200.0,
+                        "value3": 0.6796724200248718,
+                        "value4": 0.45218196511268618,
+                        "value5": 0.8185483813285828,
+                        "value6": 1.0,
+                        "value7": 1.0,
+                        "value8": 1.0
+                    }
+                }
+            }
+        }
+    ],
+    "value1": "PlayerIdle"
+}

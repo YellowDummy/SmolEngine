@@ -3,14 +3,14 @@
 #include "Core/Renderer/Texture.h"
 #include "Core/Renderer/Camera.h"
 #include "Core/Application.h"
-#include "Core/Time.h"
-#include "Core/Core.h"
-
 #include "Core/ECS/ScriptableObject.h"
 #include "Core/Scripting/Jinx.h"
-
 #include "Core/Physics2D/Rigidbody2D.h"
 #include "Core/Renderer/Light2D.h"
+#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/Animation2DController.h"
+#include "Core/Time.h"
+#include "Core/Core.h"
 
 #include <Jinx.hpp>
 #include <box2d/box2d.h>
@@ -93,7 +93,6 @@ namespace SmolEngine
 
 	struct Texture2DComponent: public BaseComponent
 	{
-
 		Texture2DComponent() = default;
 		Texture2DComponent(const Texture2DComponent&) = default;
 		Texture2DComponent(const std::string& filePath, const glm::vec4& color = glm::vec4(1.0f))
@@ -144,6 +143,7 @@ namespace SmolEngine
 		}
 	};
 
+
 	struct Rigidbody2DComponent: public BaseComponent
 	{
 		Rigidbody2DComponent() = default;
@@ -178,11 +178,29 @@ namespace SmolEngine
 		}
 	};
 
-
-	struct Animation2DComponent : public BaseComponent
+	struct Animation2DControllerComponent : public BaseComponent
 	{
-		Animation2DComponent() = default;
+		Animation2DControllerComponent() = default;
 
+		Ref<Animation2DController> GetController() { return AnimationController; }
+
+	private:
+		friend class EditorLayer;
+		friend class Scene;
+		friend class cereal::access;
+
+		Ref<Animation2DController> AnimationController = nullptr;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(Enabled, ID, AnimationController);
+		}
+	};
+
+	struct AudioSourceComponent: public BaseComponent
+	{
+		AudioSourceComponent() = default;
 
 	};
 

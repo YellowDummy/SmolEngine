@@ -543,8 +543,11 @@
     <ClInclude Include="Lua\include\lua.hpp" />
     <ClInclude Include="Lua\include\luaconf.h" />
     <ClInclude Include="Lua\include\lualib.h" />
+    <ClInclude Include="Source\Core\Animation\Animation2D.h" />
+    <ClInclude Include="Source\Core\Animation\Animation2DController.h" />
     <ClInclude Include="Source\Core\Application.h" />
     <ClInclude Include="Source\Core\AssetManager.h" />
+    <ClInclude Include="Source\Core\Audio\AudioClip.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\ECS\Actor.h" />
     <ClInclude Include="Source\Core\ECS\Components.h" />
@@ -557,8 +560,9 @@
     <ClInclude Include="Source\Core\Events\ApplicationEvent.h" />
     <ClInclude Include="Source\Core\Events\InputEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
-    <ClInclude Include="Source\Core\ImGui\CustomWindows.h" />
+    <ClInclude Include="Source\Core\ImGui\AnimationPanel.h" />
     <ClInclude Include="Source\Core\ImGui\EditorConsole.h" />
+    <ClInclude Include="Source\Core\ImGui\EditorPanels.h" />
     <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h" />
     <ClInclude Include="Source\Core\ImGui\ImGuiLayer.h" />
     <ClInclude Include="Source\Core\ImGui\NodeEditor\imnodes.h" />
@@ -586,6 +590,7 @@
     <ClInclude Include="Source\Core\Renderer\Shader.h" />
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
     <ClInclude Include="Source\Core\SLog.h" />
     <ClInclude Include="Source\Core\Scripting\Jinx.h" />
     <ClInclude Include="Source\Core\Scripting\Lua.h" />
@@ -598,8 +603,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp" />
+    <ClCompile Include="Source\Core\Animation\Animation2D.cpp" />
+    <ClCompile Include="Source\Core\Animation\Animation2DController.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Core\AssetManager.cpp" />
+    <ClCompile Include="Source\Core\Audio\AudioClip.cpp" />
     <ClCompile Include="Source\Core\ECS\Actor.cpp" />
     <ClCompile Include="Source\Core\ECS\Components.cpp" />
     <ClCompile Include="Source\Core\ECS\DefaultSystems.cpp" />
@@ -607,8 +615,9 @@
     <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
-    <ClCompile Include="Source\Core\ImGui\CustomWindows.cpp" />
+    <ClCompile Include="Source\Core\ImGui\AnimationPanel.cpp" />
     <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp" />
+    <ClCompile Include="Source\Core\ImGui\EditorPanels.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="Source\Core\ImGui\NodeEditor\imnodes.cpp" />
@@ -631,6 +640,7 @@
     <ClCompile Include="Source\Core\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Core\Renderer\SubTexture.cpp" />
     <ClCompile Include="Source\Core\Renderer\Texture.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\stdafx.cpp">

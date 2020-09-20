@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "../../GameX/Scripts.h"
-
-#define IMGUI_DEFINE_MATH_OPERATORS
+#include "../../GameX/CppScriptingExamples.h"
 
 #include "EditorLayer.h"
 #include "icon_font_cpp_headers/IconsFontAwesome5.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
 #include "Core/Renderer/Renderer2D.h"
+#include "Core/Animation/Animation2D.h"
 #include "Core/Scripting/Jinx.h"
 #include "Core/ECS/Scene.h"
 
@@ -23,13 +23,16 @@ namespace SmolEngine
 
 	void EditorLayer::OnAttach()
 	{
-		m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
+
+		m_AnimationPanel = std::make_unique<AnimationPanel>();
 		m_SettingsWindow = std::make_unique<SettingsWindow>();
 		m_ActorCreationWindow = std::make_unique<ActorCreationWindow>();
+
 		m_EditorConsole = EditorConsole::GetConsole();
 
 		m_Scene = Scene::GetScene();
-		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.scene"), std::string("TestScene.scene"));
+		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene"), std::string("TestScene.smolscene"));
 
 		//Temp
 		m_Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
@@ -38,8 +41,11 @@ namespace SmolEngine
 		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
 		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
 
+		auto test2 = Texture2D::Create("Assets/Textures/7yWvW.png");
+
+
 		m_HouseSubTexture = SubTexture2D::GenerateFromCoods(m_SheetTexture, { 4.0f, 6.0f }, { 128.0f, 128.0f });
-		m_FieldSubTexture = SubTexture2D::GenerateFromCoods(m_SheetTexture, { 1.0f, 11.0f }, { 128.0f, 128.0f });
+		m_Scene->m_TestSub = SubTexture2D::GenerateFromCoods(test2, { 2.0f, 1.0f }, { 260, 513 }, { 1, 1 });
 
 		m_Actor = m_Scene->CreateActor("Actor_1", "Player");
 		m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
@@ -149,6 +155,8 @@ namespace SmolEngine
 		static bool showGameView = false;
 		static bool showSettingsWindow = false;
 
+		static bool showAnimationPanel = false;
+
 		//TEMP
 		static bool showNodeEditorTest = false;
 
@@ -178,7 +186,7 @@ namespace SmolEngine
 					{
 						m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
 
-						m_FileBrowser->SetTypeFilters({ ".scene" });
+						m_FileBrowser->SetTypeFilters({ ".smolscene" });
 						m_FileBrowser->SetTitle("New Scene");
 						m_FileBrowserState = FileBrowserFlags::SceneCreate;
 						m_FileBrowser->Open();
@@ -193,7 +201,7 @@ namespace SmolEngine
 					{
 						m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
 
-						m_FileBrowser->SetTypeFilters({ ".scene" });
+						m_FileBrowser->SetTypeFilters({ ".smolscene" });
 						m_FileBrowser->SetTitle("Save as");
 						m_FileBrowserState = FileBrowserFlags::SceneSave;
 						m_FileBrowser->Open();
@@ -203,7 +211,7 @@ namespace SmolEngine
 					{
 						m_SelectedActor = nullptr;
 
-						m_FileBrowser->SetTypeFilters({ ".scene" });
+						m_FileBrowser->SetTypeFilters({ ".smolscene" });
 						m_FileBrowser->SetTitle("Load Scene");
 						m_FileBrowserState = FileBrowserFlags::SceneLoad;
 						m_FileBrowser->Open();
@@ -232,6 +240,26 @@ namespace SmolEngine
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Animation"))
+			{
+				if (ImGui::MenuItem("New Clip"))
+				{
+					showAnimationPanel = true;
+					m_AnimationPanel->m_AnimationClip = std::make_unique<Animation2D>();
+				}
+
+				if (ImGui::MenuItem("Load Clip"))
+				{
+					m_FileBrowserState = FileBrowserFlags::LoadClip;
+
+					m_FileBrowser->SetTitle("Load Clip");
+					m_FileBrowser->SetTypeFilters({ ".smolanim" });
+					m_FileBrowser->Open();
+				}
+
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Simulation"))
 			{
 				if (ImGui::MenuItem("Play Mode"))
@@ -250,7 +278,7 @@ namespace SmolEngine
 				{
 					if (m_Scene->m_InPlayMode)
 					{
-						size_t selectedActorID = -1;
+						size_t selectedActorID = 0;
 						if (m_SelectedActor != nullptr)
 						{
 							selectedActorID = m_SelectedActor->GetID();
@@ -307,6 +335,8 @@ namespace SmolEngine
 		m_SettingsWindow->Update(showSettingsWindow, m_Scene);
 
 		m_ActorCreationWindow->Update(showActorCreationWindow, m_Scene);
+
+		m_AnimationPanel->Update(showAnimationPanel);
 
 		m_EditorConsole->Update(showConsole);
 
@@ -499,28 +529,14 @@ namespace SmolEngine
 
 					if (ImGui::BeginMenu("Rename"))
 					{
-						static char name[128] = "";
-						ImGui::InputTextWithHint("Name", m_SelectedActor->GetName().c_str(), name, IM_ARRAYSIZE(name));
-
-						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
-						{
-							m_SelectedActor->GetName() = std::string(name);
-							ImGui::CloseCurrentPopup();
-						}
-
+						ImGui::InputTextWithHint("Name", m_SelectedActor->GetName().c_str(), &m_SelectedActor->GetName());
 						ImGui::EndMenu();
 					}
 
 					if (ImGui::BeginMenu("Change Tag"))
 					{
-						static char name[128] = "";
-						ImGui::InputTextWithHint("Tag", m_SelectedActor->GetTag().c_str(), name, IM_ARRAYSIZE(name));
+						ImGui::InputTextWithHint("Tag", m_SelectedActor->GetTag().c_str(), &m_SelectedActor->GetTag());
 
-						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
-						{
-							m_SelectedActor->GetTag() = std::string(name);
-							ImGui::CloseCurrentPopup();
-						}
 
 						ImGui::EndMenu();
 					}
@@ -798,6 +814,7 @@ namespace SmolEngine
 							ImGui::Checkbox("C++ Script Enabled", &ref.Enabled);
 							ImGui::TreePop();
 						}
+
 						if (ImGui::IsItemClicked(1))
 						{
 							ImGui::OpenPopup("CppScriptPopup");
@@ -850,6 +867,82 @@ namespace SmolEngine
 						}
 					}
 
+					if (m_SelectedActor->HasComponent<Animation2DControllerComponent>())
+					{
+						auto& controller = m_SelectedActor->GetComponent<Animation2DControllerComponent>();
+
+						if (ImGui::TreeNode("Animation2D Controller"))
+						{
+							if (ImGui::TreeNodeEx("Clips", ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								if (controller.AnimationController->m_Clips.size() == 0)
+								{
+									ImGui::BulletText("Empty");
+								}
+
+								for (auto& pair : controller.AnimationController->m_Clips)
+								{
+									auto& [key, clip] = pair;
+
+									std::stringstream ss;
+									ss << "Clip #" << clip->Clip->ClipName;
+
+									if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
+									{
+										ImGui::InputText("Clip Name", &clip->Clip->ClipName);
+										ImGui::Checkbox("Defaul Clip", &clip->IsDefaultClip);
+
+										ImGui::SameLine();
+										if (ImGui::SmallButton("Play"))
+										{
+											controller.AnimationController->Reset();
+											controller.AnimationController->PlayClip(clip->Clip->ClipName);
+										}
+
+										ImGui::SameLine();
+										if (ImGui::SmallButton("Stop"))
+										{
+											controller.AnimationController->Reset();
+										}
+
+										ImGui::TreePop();
+									}
+								}
+
+								ImGui::TreePop();
+							}
+
+							if (ImGui::IsItemClicked(1))
+							{
+								ImGui::OpenPopup("Animation2DControllerPopup");
+
+							}
+
+							if (ImGui::BeginPopup("Animation2DControllerPopup"))
+							{
+								ImGui::MenuItem("Animation 2D Controller", NULL, false, false);
+								if (ImGui::MenuItem("Delete"))
+								{
+									m_SelectedActor->DeleteComponent<Animation2DControllerComponent>();
+								}
+
+								ImGui::EndPopup();
+							}
+
+							ImGui::NewLine();
+							if (ImGui::Button("Load Clip"))
+							{
+								m_FileBrowserState = FileBrowserFlags::LoadClipController;
+								m_FileBrowser->SetTitle("Select Clip");
+								m_FileBrowser->SetTypeFilters({ ".smolanim" });
+								m_FileBrowser->Open();
+							}
+
+							ImGui::TreePop();
+						}
+					}
+
+
 					ImGui::TreePop();
 					ImGui::PopID();
 				}
@@ -860,7 +953,7 @@ namespace SmolEngine
 					if (ImGui::TreeNode("Component"))
 					{
 						static int current_item = 0;
-						ImGui::Combo("Component", &current_item, "None\0Texture2D\0JinxScript\0Rigidbody2D\0CameraController\0Light2D\0AnimationContoller\0ParticleSystem\0\0");
+						ImGui::Combo("Component", &current_item, "None\0Texture 2D\0Jinx Script\0Rigidbody 2D\0Camera Controller\0Light 2D\0Animation Contoller\0Particle System\0\0");
 
 						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
 						{
@@ -884,6 +977,13 @@ namespace SmolEngine
 
 								CONSOLE_WARN("Actor already has Tetxure2D component");
 								EDITOR_WARN("Actor <{}> already has Tetxure2D component.", m_SelectedActor->GetName());
+								break;
+							}
+							case (uint32_t)ComponentItem::Animation2DContoller:
+							{
+								auto& ref = m_SelectedActor->AddComponent<Animation2DControllerComponent>();
+								ref.AnimationController = std::make_shared<Animation2DController>();
+
 								break;
 							}
 							case (uint32_t)ComponentItem::JinxScript:
@@ -996,7 +1096,7 @@ namespace SmolEngine
 		if (m_FileBrowser->HasSelected())
 		{
 			m_FilePath = m_FileBrowser->GetSelected().u8string();
-			auto fileName = m_FileBrowser->GetSelected().filename().u8string();
+			m_FileName = m_FileBrowser->GetSelected().filename().u8string();
 
 			switch (m_FileBrowserState)
 			{
@@ -1011,7 +1111,7 @@ namespace SmolEngine
 				auto& texture = m_SelectedActor->GetComponent<Texture2DComponent>();
 				
 				texture.TexturePath = m_FilePath;
-				texture.FileName = fileName;
+				texture.FileName = m_FileName;
 				texture.Texture = Texture2D::Create(m_FilePath);
 				ResetFileBrowser();
 				break;
@@ -1020,7 +1120,7 @@ namespace SmolEngine
 			{
 				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
 				m_SelectedActor = nullptr;
-				m_Scene->CreateScene(m_FilePath, fileName);
+				m_Scene->CreateScene(m_FilePath, m_FileName);
 				ResetFileBrowser();
 				break;
 			}
@@ -1029,7 +1129,7 @@ namespace SmolEngine
 				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
 
 				m_Scene->GetSceneData().m_filePath = m_FilePath;
-				m_Scene->GetSceneData().m_fileName = fileName;
+				m_Scene->GetSceneData().m_fileName = m_FileName;
 
 				m_Scene->Save(m_FilePath);
 				ResetFileBrowser();
@@ -1040,6 +1140,20 @@ namespace SmolEngine
 				m_SelectedActor = nullptr;
 
 				m_Scene->Load(m_FilePath);
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::LoadClip:
+			{
+				m_AnimationPanel->Load(m_FilePath);
+				ResetFileBrowser();
+				showAnimationPanel = true;
+				break;
+			}
+			case FileBrowserFlags::LoadClipController:
+			{
+				auto& controller = m_SelectedActor->GetComponent<Animation2DControllerComponent>();
+				controller.AnimationController->LoadClip(m_FilePath);
 				ResetFileBrowser();
 				break;
 			}
@@ -1057,6 +1171,7 @@ namespace SmolEngine
 	{
 		m_FileBrowser->ClearSelected();
 		m_FilePath = "";
+		m_FileName = "";
 		m_FileBrowserState = FileBrowserFlags::None;
 	}
 }

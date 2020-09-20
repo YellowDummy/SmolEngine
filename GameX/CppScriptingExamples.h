@@ -1,15 +1,12 @@
 #pragma once
 
-#include <SmolEngineCore.h>
-#include <Core/ECS/ScriptableObject.h>
-#include <Core/ECS/Components.h>
-#include <Core/ECS/Actor.h>
+// 16.09.2020
+//
+// Scripting using C++
 
-#include <Core/ImGui/EditorConsole.h>
+#include <SmolEngineCore.h>
 
 using namespace SmolEngine;
-
-//Examples Of Scripting In C++
 
 class CharMovementScript : public ScriptableObject
 {
@@ -24,7 +21,7 @@ public:
 	//Default constructor must be implemented!
 	CharMovementScript()
 	{
-		//Exposes a variable to the editor
+		//Exposes a property to the editor
 		OUT_FLOAT("Speed", &speed);
 		OUT_INT("SpeedMod", &speedMod);
 		OUT_STRING("Name", &name);
@@ -32,7 +29,7 @@ public:
 
 	void Start() override
 	{
-		CONSOLE_ERROR("Player name is: " + name);
+		CONSOLE_WARN("Player name is: " + name);
 
 		rb = &GetComponent<Rigidbody2DComponent>();
 
@@ -43,7 +40,7 @@ public:
 
 		for (auto obj : GetActorListByTag("Default"))
 		{
-			NATIVE_INFO("Actor ID find by tag: {}", obj->GetID());
+			CONSOLE_INFO(std::string("Actor ID find by tag: ") + std::to_string(obj->GetID()));
 		}
 
 		auto ground = FindChildByName("Ground");
@@ -56,9 +53,14 @@ public:
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
-		if (Input::IsKeyPressed(KeyCode::Q))
+		if (Input::IsKeyPressed(KeyCode::E))
 		{
 			rb->AddForce({ 20.0f * (speed * speedMod), 0.0f });
+		}
+
+		if (Input::IsKeyPressed(KeyCode::Q))
+		{
+			rb->AddForce({ -20.0f * (speed * speedMod), 0.0f });
 		}
 
 		if (Input::IsKeyPressed(KeyCode::Space))

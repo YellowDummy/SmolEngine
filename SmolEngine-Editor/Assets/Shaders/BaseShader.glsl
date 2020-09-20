@@ -8,13 +8,24 @@ uniform mat4 u_ViewProjection;
 uniform float u_AmbientValue;
 uniform mat4 u_Transform;
 
+//support for animated sprites
+uniform vec2 u_TexCoord;
+
 out vec2 v_TexCoord;
 out float v_AmbientValue;
 
 void main()
 {
 	v_AmbientValue = u_AmbientValue;
-	v_TexCoord = a_TexCoord;
+	if(u_TexCoord == vec2(-1.0, -1.0))
+	{
+	   v_TexCoord = a_TexCoord;
+			
+	}
+	else
+	{
+	   v_TexCoord = u_TexCoord;
+	}
 	gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 }
 
@@ -33,5 +44,7 @@ uniform sampler2D u_Texture;
 void main()
 {
 	vec4 ambient = u_Color * v_AmbientValue;
-	color = vec4((texture(u_Texture, v_TexCoord * u_TilingFactor)).rgb * ambient.rgb, 1.0);
+	vec4 result = texture(u_Texture, v_TexCoord * u_TilingFactor);
+	result.rgb = result.rgb * ambient.rgb;
+	color = result;
 }

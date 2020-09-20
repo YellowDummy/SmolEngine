@@ -38,7 +38,9 @@ class ToolTimer
 {
 public:
 
-	unsigned long long m_resultTime;
+	size_t m_resultTime;
+
+	ToolTimer() = default;
 
 	ToolTimer(const char* TimerName)
 		:m_TimerName(TimerName), 
@@ -51,12 +53,25 @@ public:
 	~ToolTimer()
 	{
 		if (!m_Stopped) { StopTimer("Destructor: Forced Shutdown"); }
-		delete m_Logger;
+		if (m_Logger != nullptr)
+		{
+			delete m_Logger;
+		}
 	}
 
 	void StartTimer()
 	{
 		m_StartTime = std::chrono::high_resolution_clock::now();
+	}
+
+	size_t GetTimeInMiliseconds()
+	{
+		auto recordEndTime = std::chrono::high_resolution_clock::now();
+
+		unsigned long long startTime = std::chrono::time_point_cast<std::chrono::milliseconds>(m_StartTime).time_since_epoch().count();
+		unsigned long long endTime = std::chrono::time_point_cast<std::chrono::milliseconds>(recordEndTime).time_since_epoch().count();
+
+		return m_resultTime = endTime - startTime;
 	}
 
 	void StopTimer(const char* shutdownState = "No Errors")
@@ -71,14 +86,17 @@ public:
 			m_Stopped = true;
 		}
 
-		m_Logger->GetLogger()->warn("{0} | Execution Time : {1} ms | Shutdown State : {2}", m_TimerName, m_resultTime, shutdownState);
+		if (m_Logger != nullptr)
+		{
+			m_Logger->GetLogger()->warn("{0} | Execution Time : {1} ms | Shutdown State : {2}", m_TimerName, m_resultTime, shutdownState);
+		}
 	}
 
 private:
-	ToolLogger* m_Logger;
+	ToolLogger* m_Logger = nullptr;
 	std::chrono::time_point<std::chrono::steady_clock> m_StartTime;
-	const char* m_TimerName;
-	bool m_Stopped;
+	const char* m_TimerName = "";
+	bool m_Stopped = false;
 };
 
 

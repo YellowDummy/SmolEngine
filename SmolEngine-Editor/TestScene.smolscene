@@ -1,11 +1,12 @@
 {
-    "value0": 3,
+    "value0": 4,
     "value1": 0,
     "value2": 1,
     "value3": 2,
-    "value4": 2,
-    "value5": 0,
-    "value6": {
+    "value4": 3,
+    "value5": 2,
+    "value6": 0,
+    "value7": {
         "value0": true,
         "value1": true,
         "value2": {
@@ -134,8 +135,8 @@
             }
         }
     },
-    "value7": 2,
-    "value8": {
+    "value8": 2,
+    "value9": {
         "value0": true,
         "value1": true,
         "value2": {
@@ -159,7 +160,7 @@
                     "value5": true,
                     "value6": false,
                     "value7": 0.0,
-                    "value8": 1.0,
+                    "value8": 26.0,
                     "value9": 1.0,
                     "value10": 0,
                     "value11": 0,
@@ -180,16 +181,16 @@
             }
         }
     },
-    "value9": 1,
     "value10": 1,
-    "value11": {
+    "value11": 1,
+    "value12": {
         "value0": true,
         "value1": 0.5625,
         "value2": true
     },
-    "value12": 3,
-    "value13": 1,
-    "value14": {
+    "value13": 4,
+    "value14": 1,
+    "value15": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -199,8 +200,8 @@
         "value6": 0,
         "value7": true
     },
-    "value15": 0,
-    "value16": {
+    "value16": 0,
+    "value17": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -210,44 +211,131 @@
         "value6": 0,
         "value7": true
     },
-    "value17": 2,
-    "value18": {
+    "value18": 2,
+    "value19": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
-        "value4": -2.0,
+        "value4": -13.0,
         "value5": 1.0,
         "value6": 0,
         "value7": true
     },
-    "value19": 2,
-    "value20": 0,
+    "value20": 3,
     "value21": {
+        "value0": 0.0,
+        "value1": 50.0,
+        "value2": 30.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 0.0,
+        "value6": 0,
+        "value7": true
+    },
+    "value22": 2,
+    "value23": 0,
+    "value24": {
         "value0": true,
         "value1": 8606991425209588650,
-        "value2": 2787749688047389887,
+        "value2": 2822656395751046258,
         "value3": "CharMovementScript"
     },
-    "value22": 1,
-    "value23": {
+    "value25": 1,
+    "value26": {
         "value0": true,
         "value1": 6111862596534002478,
-        "value2": 2787749688047389887,
+        "value2": 2822656395751046258,
         "value3": "CameraMovementScript"
     },
-    "value24": 1,
-    "value25": 0,
-    "value26": {
+    "value27": 1,
+    "value28": 3,
+    "value29": {
         "value0": true,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": "../GameX/Assets\\Textures\\dungeons_and_flagons.png",
-        "value6": "dungeons_and_flagons.png"
+        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png",
+        "value6": "Background.png"
     },
-    "value27": 0
+    "value30": 0,
+    "value31": 1,
+    "value32": 0,
+    "value33": {
+        "value0": true,
+        "value1": 0,
+        "value2": {
+            "ptr_wrapper": {
+                "id": 2147483656,
+                "data": {
+                    "value0": [
+                        {
+                            "key": "PlayerIdle2",
+                            "value": {
+                                "ptr_wrapper": {
+                                    "id": 2147483657,
+                                    "data": {
+                                        "value0": 0,
+                                        "value1": {
+                                            "ptr_wrapper": {
+                                                "id": 2147483658,
+                                                "data": {
+                                                    "value0": [
+                                                        {
+                                                            "key": 0,
+                                                            "value": {
+                                                                "ptr_wrapper": {
+                                                                    "id": 2147483659,
+                                                                    "data": {
+                                                                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
+                                                                        "value1": "skin1_idle_1.png",
+                                                                        "value2": 100.0,
+                                                                        "value3": 0.30593132972717287,
+                                                                        "value4": 0.6774193644523621,
+                                                                        "value5": 0.3811134099960327,
+                                                                        "value6": 1.0,
+                                                                        "value7": 1.0,
+                                                                        "value8": 1.0
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": 1,
+                                                            "value": {
+                                                                "ptr_wrapper": {
+                                                                    "id": 2147483660,
+                                                                    "data": {
+                                                                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
+                                                                        "value1": "skin1_idle_2.png",
+                                                                        "value2": 100.0,
+                                                                        "value3": 1.0,
+                                                                        "value4": 1.0,
+                                                                        "value5": 1.0,
+                                                                        "value6": 1.0,
+                                                                        "value7": 1.0,
+                                                                        "value8": 1.0
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "value1": "PlayerIdle2"
+                                                }
+                                            }
+                                        },
+                                        "value2": true
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "value1": true
+                }
+            }
+        }
+    }
 }|{
     "value0": [
         {
@@ -303,7 +391,7 @@
                                     "value0": "Speed",
                                     "value1": {
                                         "index": 0,
-                                        "data": 3.0
+                                        "data": 1.0
                                     },
                                     "value2": 0
                                 }
@@ -381,13 +469,37 @@
             "ptr_wrapper": {
                 "id": 2
             }
+        },
+        {
+            "ptr_wrapper": {
+                "id": 2147483656,
+                "data": {
+                    "value0": 2232655362972280253,
+                    "value1": false,
+                    "value2": 3,
+                    "value3": "Background",
+                    "value4": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value5": "Default",
+                    "value6": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value7": [],
+                    "value8": []
+                }
+            }
         }
     ],
     "value1": 0.0,
     "value2": -9.8100004196167,
-    "value3": 2787749688047389887,
-    "value4": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\TestScene2.scene",
-    "value5": "TestScene2.scene",
-    "value6": "",
+    "value3": 2822656395751046258,
+    "value4": "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene",
+    "value5": "TestScene.smolscene",
+    "value6": "Default Name",
     "value7": 1.0
 }

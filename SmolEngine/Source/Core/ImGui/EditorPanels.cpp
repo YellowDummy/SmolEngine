@@ -1,14 +1,17 @@
 #include "stdafx.h"
-#include "CustomWindows.h"
+#include "EditorPanels.h"
 
-#include "Core/ECS/Scene.h"
-#include "Core/SLog.h"
-#include "Core/ImGui/EditorConsole.h"
-
-#include <../Libraries/imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "box2d/box2d.h"
+#include <box2d/box2d.h>
+
+#include "Core/ECS/Scene.h"
+#include "Core/Application.h"
+#include "Core/SLog.h"
+#include "Core/ImGui/EditorConsole.h"
+#include "Core/ImGui/FileBrowser/imfilebrowser.h"
+#include "Core/Animation/Animation2D.h"
+#include "Core/Renderer/Renderer2D.h"
 
 namespace SmolEngine
 {
@@ -28,7 +31,7 @@ namespace SmolEngine
 			ImGui::Separator();
 			ImGui::NewLine();
 
-			ImGui::InputFloat2("Gravity", glm::value_ptr(scene->GetSceneData().Gravity));
+			ImGui::InputFloat2("Gravity", glm::value_ptr(scene->GetSceneData().m_Gravity));
 			ImGui::PushItemWidth(200);
 			ImGui::Separator();
 			ImGui::NewLine();
@@ -42,7 +45,7 @@ namespace SmolEngine
 			{
 				auto& data = scene->GetSceneData();
 				scene->GetSceneData().m_Name = name;
-				scene->m_World = new b2World({ data.Gravity.x, data.Gravity.y });
+				scene->m_World = new b2World({ data.m_Gravity.x, data.m_Gravity.y });
 
 				isOpened = false;
 			}
@@ -56,8 +59,6 @@ namespace SmolEngine
 		if (isOpened)
 		{
 			ImGui::Begin("Create Actor", &isOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
-			//ImGui::SetWindowPos(ImVec2{ (float)Application::GetApplication().GetWindowWidth() / 2 - 350, 
-//(float)Application::GetApplication().GetWindowHeight() / 2 - 180 });
 			ImGui::SetWindowSize("Create Actor", { 480, 200 });
 
 			static char name[128] = "Default Actor";

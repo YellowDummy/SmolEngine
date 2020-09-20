@@ -38,6 +38,13 @@ float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		//Light
 		static void DrawLight2D(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color, const float lightIntensity, Ref<OrthographicCamera> camera);
 
+		//Animation
+		static void DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+			float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+
+		static void DrawAnimation2D(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+			float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+
 		struct RendererData2D
 		{
 			uint32_t DrawCalls;

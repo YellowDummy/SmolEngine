@@ -22,10 +22,11 @@ namespace SmolEngine
 	void OpenglRendererAPI::Init()
 	{
 		glEnable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_ALPHA_TEST);
-		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+
+		glEnable(GL_ALPHA_TEST);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void OpenglRendererAPI::SetClearColor(const glm::vec4& color)

@@ -60,6 +60,7 @@ namespace SmolEngine
 		const float GetZoom() { return m_ZoomLevel; }
 
 		Ref<OrthographicCamera> GetCamera() {return m_Camera;}
+		const Ref<Framebuffer> GetFramebuffer() { return m_FrameBuffer; }
 
 	private:
 		void OnResize(float width, float height);
@@ -74,6 +75,7 @@ namespace SmolEngine
 
 		friend class Scene;
 		friend class EditorLayer;
+		friend class AnimationPanel;
 		friend class cereal::access;
 
 		template<typename Archive>

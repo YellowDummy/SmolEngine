@@ -5,8 +5,6 @@
 #include "Core/SLog.h"
 #include "Core/Scripting/OutValues.h"
 
-#include "Core/Scripting/OutValues.h"
-
 #include <unordered_map>
 #include <any>
 #include <glm/glm.hpp>

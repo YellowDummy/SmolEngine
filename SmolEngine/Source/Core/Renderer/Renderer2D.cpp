@@ -155,6 +155,7 @@ namespace SmolEngine
 	{
 		s_Data->TextureShader->SetUniformFloat4("u_Color", color);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
+		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 		s_Data->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), worldPos)
@@ -170,6 +171,7 @@ namespace SmolEngine
 	{
 		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
+		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 		texture->Bind();
 
 		glm::mat4 transform;
@@ -195,6 +197,7 @@ namespace SmolEngine
 	{
 		s_Data->TextureShader->SetUniformFloat4("u_Color", color);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
+		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 		s_Data->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), worldPos)
@@ -279,6 +282,63 @@ namespace SmolEngine
 
 		s_Data->DebugCircleVertexArray->Bind();
 		RendererCommand::DrawLight();
+	}
+
+	void Renderer2D::DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture, float repeatValue, const glm::vec4& tintColor)
+	{
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniformMat4("u_ViewProjection", camera->GetViewProjectionMatrix());
+		s_Data->TextureShader->SetUniformFloat("u_AmbientValue", ambientValue);
+		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
+		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
+		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		texture->Bind();
+
+		glm::mat4 transform;
+
+		if (rotation == 0)
+		{
+			transform = glm::translate(glm::mat4(1.0f), worldPos)
+				* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+		}
+		else
+		{
+			transform = glm::translate(glm::mat4(1.0f), worldPos)
+				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+		}
+
+		s_Data->TextureShader->SetUniformMat4("u_Transform", transform);
+
+		s_Data->QuadVertexArray->Bind();
+		RendererCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawAnimation2D(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation,
+		const Ref<Texture2D>& texture, float repeatValue, const glm::vec4& tintColor)
+	{
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
+		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
+		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		texture->Bind();
+
+		glm::mat4 transform;
+
+		if (rotation == 0)
+		{
+			transform = glm::translate(glm::mat4(1.0f), worldPos)
+				* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+		}
+		else
+		{
+			transform = glm::translate(glm::mat4(1.0f), worldPos)
+				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+		}
+
+		s_Data->TextureShader->SetUniformMat4("u_Transform", transform);
+
+		s_Data->QuadVertexArray->Bind();
+		RendererCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
 }

@@ -12,7 +12,7 @@ namespace SmolEngine
 		m_TextureCoods[3] = { min.x, max.y };
 	}
 
-	Ref<SubTexture2D> SubTexture2D::GenerateFromCoods(const Ref<Texture2D>& texture, const glm::vec2& coods, const glm::vec2& cellSize, const glm::vec2& spriteSize)
+	Ref<SubTexture2D> SubTexture2D::GenerateFromCoods(const Ref<Texture2D> texture, const glm::vec2& coods, const glm::vec2& cellSize, const glm::vec2& spriteSize)
 	{
 		glm::vec2 min = { (coods.x * cellSize.x) / texture->GetWidth(), (coods.y * cellSize.y) / texture->GetHeight() };
 		glm::vec2 max = { ((coods.x + spriteSize.x) * cellSize.x) / texture->GetWidth(), ((coods.y + spriteSize.y) * cellSize.y) / texture->GetHeight() };

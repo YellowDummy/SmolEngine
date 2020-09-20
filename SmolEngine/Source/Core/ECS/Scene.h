@@ -21,15 +21,18 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 
+
 namespace SmolEngine
 { 
+	class SubTexture2D;
+
 	//TODO: Move to a separate header
 	struct SceneData
 	{
 		entt::registry m_Registry;
 		//TODO: Replace vector
 		std::vector<Ref<Actor>> m_ActorPool;
-		glm::vec2 Gravity = glm::vec2(0.0f, -9.81f);
+		glm::vec2 m_Gravity = glm::vec2(0.0f, -9.81f);
 
 		float m_AmbientStrength = 1.0f;
 
@@ -52,7 +55,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_ActorPool, Gravity.x, Gravity.y, m_ID, m_filePath, m_fileName, m_Name, m_AmbientStrength);
+			archive(m_ActorPool, m_Gravity.x, m_Gravity.y, m_ID, m_filePath, m_fileName, m_Name, m_AmbientStrength);
 			archive.serializeDeferments();
 		}
 	};
@@ -104,12 +107,10 @@ namespace SmolEngine
 		template<typename T>
 		void RegistryScript(std::string& keyName)
 		{
-			for (auto pair: m_ScriptRegistry)
+			auto result = m_ScriptRegistry.find(keyName);
+			if (result != m_ScriptRegistry.end())
 			{
-				if (std::get<0>(pair) == keyName)
-				{
-					NATIVE_ERROR("<{}> script is already registered!", keyName); return;
-				}
+				NATIVE_ERROR("<{}> script is already registered!", keyName); return;
 			}
 
 			std::shared_ptr<ScriptableObject> obj = std::make_shared<T>();
@@ -120,6 +121,8 @@ namespace SmolEngine
 		bool AttachScript(std::string& keyName, Ref<Actor> actor);
 
 		//Internal needs
+		bool PathCheck(std::string& path, const std::string& fileName);
+
 		const Jinx::RuntimePtr GetJinxRuntime();
 
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
@@ -141,6 +144,8 @@ namespace SmolEngine
 		friend class EditorLayer;
 		friend class Actor;
 		friend class SettingsWindow;
+		friend class AnimationPanel;
+		friend class Animation2DController;
 
 	private:
 		static Ref<Scene> s_Scene;
@@ -152,6 +157,7 @@ namespace SmolEngine
 		b2World* m_World = nullptr;
 		Jinx::RuntimePtr m_JinxRuntime;
 
+		Ref<SubTexture2D> m_TestSub = nullptr;
 		Ref<EditorCameraController> m_EditorCamera;
 
 		std::unordered_map<std::string, Ref<ScriptableObject>> m_ScriptRegistry;

@@ -1,9 +1,13 @@
 #pragma once
 #include "Core/Core.h"
 
+#include <string>
+
 namespace SmolEngine
 {
 	class Scene;
+	class Animation2D;
+	class CameraController;
 
 	class SettingsWindow
 	{

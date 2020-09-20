@@ -43,6 +43,9 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Animation">
+      <UniqueIdentifier>{DD6F7E5E-49DC-3959-12D0-D1B67EFB5BC1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\ECS">
       <UniqueIdentifier>{B890B921-241C-27E6-2D2D-AADA993783E6}</UniqueIdentifier>
     </Filter>
@@ -1248,6 +1251,12 @@
     <ClInclude Include="Lua\include\lualib.h">
       <Filter>Lua\include</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Animation\Animation2D.h">
+      <Filter>Source\Core\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Animation\Animation2DController.h">
+      <Filter>Source\Core\Animation</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Application.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1290,10 +1299,13 @@
     <ClInclude Include="Source\Core\Events\MouseEvent.h">
       <Filter>Source\Core\Events</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ImGui\CustomWindows.h">
+    <ClInclude Include="Source\Core\ImGui\AnimationPanel.h">
       <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ImGui\EditorConsole.h">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\EditorPanels.h">
       <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h">
@@ -1404,10 +1416,18 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Audio\AudioClip.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
       <Filter>Libraries\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Animation\Animation2D.cpp">
+      <Filter>Source\Core\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Animation\Animation2DController.cpp">
+      <Filter>Source\Core\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Application.cpp">
       <Filter>Source\Core</Filter>
@@ -1436,10 +1456,13 @@
     <ClCompile Include="Source\Core\EventHandler.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ImGui\CustomWindows.cpp">
+    <ClCompile Include="Source\Core\ImGui\AnimationPanel.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\EditorPanels.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp">
@@ -1517,5 +1540,7 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Audio\AudioClip.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
   </ItemGroup>
 </Project>

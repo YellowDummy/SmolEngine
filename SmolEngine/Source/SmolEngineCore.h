@@ -12,7 +12,13 @@
 #include "Core/Events/InputEvent.h"
 #include "Core/Events/MouseEvent.h"
 
+#include "Core/ECS/ScriptableObject.h"
+#include "Core/ECS/Components.h"
+#include "Core/ECS/Actor.h"
+#include "Core/ECS/DefaultSystems.h"
+
 #include "Core/ImGui/ImGuiLayer.h"
+#include "Core/ImGui/EditorConsole.h"
 
 #include "Core/Renderer/Renderer.h"
 #include "Core/Renderer/Texture.h"

@@ -15,7 +15,7 @@ namespace SmolEngine
 
 	void Scene::Init()
 	{
-		m_World = new b2World(b2Vec2{ s_SceneData.Gravity.x, s_SceneData.Gravity.y });
+		m_World = new b2World(b2Vec2{ s_SceneData.m_Gravity.x, s_SceneData.m_Gravity.y });
 		s_SceneData.m_Registry = entt::registry();
 
 		m_EditorCamera = std::make_shared<EditorCameraController>(Application::GetApplication().GetWindowWidth() / Application::GetApplication().GetWindowHeight());
@@ -66,6 +66,15 @@ namespace SmolEngine
 			rbGroup.get<Rigidbody2DComponent>(body).Rigidbody->CreateBody(m_World);
 		}
 
+		//Finding which animation should play on awake
+		auto& animGroup = s_SceneData.m_Registry.view<Animation2DControllerComponent>();
+		for (auto entity : animGroup)
+		{
+			auto& ref = animGroup.get<Animation2DControllerComponent>(entity).AnimationController;
+			ref->Reset();
+			ref->OnAwake();
+		}
+
 		auto scriptGroup = s_SceneData.m_Registry.view<ScriptObject>();
 		for (auto script : scriptGroup)
 		{
@@ -88,6 +97,7 @@ namespace SmolEngine
 						if (actorValues->Key == varName)
 						{
 							*varValue = std::get<float>(actorValues->Value);
+							break;
 						}
 					}
 
@@ -102,6 +112,7 @@ namespace SmolEngine
 						if (actorValues->Key == varName)
 						{
 							*varValue = std::get<int>(actorValues->Value);
+							break;
 						}
 					}
 
@@ -116,6 +127,7 @@ namespace SmolEngine
 						if (actorValues->Key == varName)
 						{
 							*varValue = std::get<std::string>(actorValues->Value);
+							break;
 						}
 					}
 
@@ -276,9 +288,39 @@ namespace SmolEngine
 							Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
 						}
 					}
+
+				}
+
+				auto& animGroup = s_SceneData.m_Registry.group<Animation2DControllerComponent>(entt::get<TransformComponent>);
+				for (auto entity : animGroup)
+				{
+				   auto& [animController, transfrom] = animGroup.get<Animation2DControllerComponent, TransformComponent>(entity);
+
+				   if (animController.AnimationController != nullptr)
+				   {
+					   if (animController.AnimationController->m_CurrentClip != nullptr)
+					   {
+						   animController.AnimationController->Update();
+
+						   auto& currentClip = animController.AnimationController->m_CurrentClip;
+
+						   if (transfrom.Scale == glm::vec2(1.0f))
+						   {
+							   Renderer2D::DrawAnimation2D(transfrom.WorldPos, currentClip->Clip->m_CurrentFrameKey->TextureScale,
+								   0, currentClip->Clip->m_CurrentFrameKey->Texture, 1.0f, currentClip->Clip->m_CurrentFrameKey->TextureColor);
+						   }
+						   else
+						   {
+							   Renderer2D::DrawAnimation2D(transfrom.WorldPos, currentClip->Clip->m_CurrentFrameKey->TextureScale + transfrom.Scale,
+								   0, currentClip->Clip->m_CurrentFrameKey->Texture, 1.0f, currentClip->Clip->m_CurrentFrameKey->TextureColor);
+						   }
+
+					   }
+				   }
 				}
 
 			}
+
 			Renderer2D::EndScene();
 		}
 
@@ -359,14 +401,14 @@ namespace SmolEngine
 				{
 					for (auto pair : ref.Script->m_OutFloatVariables)
 					{
-						auto [varName, varValue] = pair;
+						auto& [varName, varValue] = pair;
 						std::shared_ptr<OutValue> value = std::make_shared<OutValue>(varName, *varValue, OutValueType::Float);
 						ref.Script->m_Actor->m_OutValues.push_back(value);
 					}
 
 					for (auto pair : ref.Script->m_OutIntVariables)
 					{
-						auto [varName, varValue] = pair;
+						auto& [varName, varValue] = pair;
 						std::shared_ptr<OutValue> value = std::make_shared<OutValue>(varName, *varValue, OutValueType::Int);
 						ref.Script->m_Actor->m_OutValues.push_back(value);
 					}
@@ -598,7 +640,7 @@ namespace SmolEngine
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
 			entt::snapshot{ s_SceneData.m_Registry }.entities(output)
-.component<Rigidbody2DComponent, CameraComponent, TransformComponent, ScriptObject, Texture2DComponent, Light2DComponent>(output);
+.component<Rigidbody2DComponent, CameraComponent, TransformComponent, ScriptObject, Texture2DComponent, Light2DComponent, Animation2DControllerComponent>(output);
 
 		}
 
@@ -622,7 +664,7 @@ namespace SmolEngine
 		}
 		else
 		{
-			CONSOLE_ERROR(std::string("Could not write to file!"));
+			CONSOLE_ERROR(std::string("Could not write to a file!"));
 		}
 	}
 
@@ -664,7 +706,7 @@ namespace SmolEngine
 		//Deserializing scene data to a new scene object
 		{
 			cereal::JSONInputArchive sceneDataInput{ sceneDataStorage };
-			sceneDataInput(data.m_ActorPool, data.Gravity.x, data.Gravity.y, data.m_ID, data.m_filePath, data.m_fileName, data.m_Name, data.m_AmbientStrength);
+			sceneDataInput(data.m_ActorPool, data.m_Gravity.x, data.m_Gravity.y, data.m_ID, data.m_filePath, data.m_fileName, data.m_Name, data.m_AmbientStrength);
 		}
 
 		s_SceneData.m_Registry.clear(); //The registry must be cleared before writing new data (!!)
@@ -673,11 +715,11 @@ namespace SmolEngine
 		{
 			cereal::JSONInputArchive regisrtyInput{ regisrtyStorage };
 			entt::snapshot_loader{ s_SceneData.m_Registry }.entities(regisrtyInput).
-				component<Rigidbody2DComponent, CameraComponent, TransformComponent, ScriptObject, Texture2DComponent, Light2DComponent>(regisrtyInput);
+				component<Rigidbody2DComponent, CameraComponent, TransformComponent, ScriptObject, Texture2DComponent, Light2DComponent, Animation2DControllerComponent>(regisrtyInput);
 		}
 
 		//Creating new Box2D instance using new data
-		m_World = new b2World({ data.Gravity.x, data.Gravity.y });
+		m_World = new b2World({ data.m_Gravity.x, data.m_Gravity.y });
 
 		//Creating cameras
 		{
@@ -700,17 +742,20 @@ namespace SmolEngine
 			{
 				auto& texture = textureGroup.get<Texture2DComponent>(obj);
 
-				//Searching for a file in assets folders if absolute path is not valid and replace old path if file found
-				if (!IsPathValid(texture.TexturePath))
+				if (PathCheck(texture.TexturePath, texture.FileName)) // Searching for a file in assets folders if absolute path is not valid and replace old path if file found
 				{
-					if(!ChangeFilePath(texture.FileName, texture.TexturePath))
-					{
-						CONSOLE_ERROR(std::string("Texture ") + texture.FileName + std::string(" not found"));
-						break;
-					}
+					texture.Texture = Texture2D::Create(texture.TexturePath);
 				}
+			}
+		}
 
-				texture.Texture = Texture2D::Create(texture.TexturePath);
+		//Reloading textures in animations
+		{
+			auto animControllerGroup = s_SceneData.m_Registry.view<Animation2DControllerComponent>();
+			for (auto obj : animControllerGroup)
+			{
+				auto& controller = animControllerGroup.get<Animation2DControllerComponent>(obj);
+				controller.AnimationController->ReloadTextures();
 			}
 		}
 
@@ -727,7 +772,7 @@ namespace SmolEngine
 
 					if (strKey == script.keyName && script.SceneID == data.m_ID)
 					{
-						script.Script = m_ScriptRegistry[script.keyName]->Instantiate(); // Creating new intance of script
+						script.Script = m_ScriptRegistry[script.keyName]->Instantiate(); // Create a new instance of the script
 
 						for (auto actor: data.m_ActorPool)
 						{
@@ -758,17 +803,10 @@ namespace SmolEngine
 
 	void Scene::SaveCurrentScene()
 	{
-		//Searching for a file in assets folders if absolute path is not valid and replace old path if file found
-		if (!IsPathValid(s_SceneData.m_filePath))
+		if (PathCheck(s_SceneData.m_filePath, s_SceneData.m_fileName))  //Searching for a file in assets folders if absolute path is not valid and replace old path if file found
 		{
-			if (!ChangeFilePath(s_SceneData.m_fileName, s_SceneData.m_filePath))
-			{
-				CONSOLE_ERROR(std::string("Scene ") + s_SceneData.m_fileName + std::string(" not found"));
-				return;
-			}
+			Save(s_SceneData.m_filePath);
 		}
-
-		Save(s_SceneData.m_filePath);
 	}
 
 	void Scene::CreateScene(const std::string& filePath, const std::string& fileName)
@@ -826,6 +864,20 @@ namespace SmolEngine
 		return std::filesystem::exists(path);
 	}
 
+	bool Scene::PathCheck(std::string& path, const std::string& fileName)
+	{
+		if (!IsPathValid(path))
+		{
+			if (!ChangeFilePath(fileName, path))
+			{
+				CONSOLE_ERROR(std::string("Asset ") + fileName + std::string(" not found"));
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	SceneData& Scene::GetSceneData()
 	{
 		return s_SceneData;
@@ -834,8 +886,8 @@ namespace SmolEngine
 	void SceneData::operator=(const SceneData& other)
 	{
 		m_ActorPool = other.m_ActorPool;
-		Gravity.x = other.Gravity.x;
-		Gravity.y = other.Gravity.y;
+		m_Gravity.x = other.m_Gravity.x;
+		m_Gravity.y = other.m_Gravity.y;
 		m_ID = other.m_ID;
 		m_filePath = other.m_filePath;
 		m_fileName = other.m_fileName;

@@ -121,7 +121,7 @@ namespace SmolEngine
 		config.OversampleH = 3;
 		config.OversampleV = 1;
 		config.GlyphExtraSpacing.x = 1.0f;
-		io.Fonts->AddFontFromFileTTF("C:/Dev/SmolEngine/SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
+		io.Fonts->AddFontFromFileTTF("../SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
 
 		Application& app = Application::GetApplication();
 		GLFWwindow* window = (app.GetWindow().GetNativeWindow());
@@ -156,7 +156,6 @@ namespace SmolEngine
 	void ImGuiLayer::OnEnd()
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		Application& app = Application::GetApplication();
 		io.DisplaySize = ImVec2((float)Data.Width, (float)Data.Height);
 
 		ImGui::Render();

@@ -137,12 +137,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CppScriptingExamples.h" />
     <ClInclude Include="Main.h" />
-    <ClInclude Include="Scripts.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CppScriptingExamples.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Scripts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmolEngine\SmolEngine.vcxproj">
