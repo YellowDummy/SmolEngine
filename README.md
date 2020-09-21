@@ -1,10 +1,6 @@
 # SmolEngine
 
-<!-- blank line -->
-<iframe width="560" height="315" src="https://www.youtube.com/embed/aTUVuj_jre4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<!-- blank line -->
-
-SmolEngine is an open-source 2D game engine that is developed primarily by one person for learning purposes.
+[![Demo Doccou alpha](https://j.gifs.com/ANp5wl.gif)](https://www.youtube.com/watch?v=aTUVuj_jre4&t=4s)
 
 Short-Term Goals:
 
