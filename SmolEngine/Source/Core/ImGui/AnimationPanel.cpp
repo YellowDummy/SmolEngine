@@ -36,10 +36,11 @@ namespace SmolEngine
 
 		if (isOpened && m_AnimationClip != nullptr)
 		{
+			static bool showPreview = false;
+			static bool showTools = false;
+
 			ImGui::Begin("Animation Clip Editor", &isOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking |ImGuiWindowFlags_MenuBar);
 			{
-				static bool showPreview = false;
-
 				ImGui::SetWindowSize("Animation Clip Editor", { 780, 530 });
 
 				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 10.0f, 10.0f });
@@ -93,6 +94,17 @@ namespace SmolEngine
 						m_FileBrowser->Open();
 					}
 
+					if (ImGui::BeginMenu("Tools"))
+					{
+						if (ImGui::MenuItem("Set Global Parameters"))
+						{
+							showTools = true;
+						}
+
+						ImGui::EndMenu();
+					}
+
+
 					if (ImGui::MenuItem("Help"))
 					{
 						m_AnimationClip->Reset();
@@ -103,7 +115,7 @@ namespace SmolEngine
 				ImGui::PopStyleVar();
 
 				ImGui::NewLine();
-				ImGui::InputTextWithHint("Clip Name", m_AnimationClip->ClipName.c_str(), &m_AnimationClip->ClipName);
+				ImGui::InputTextWithHint("Clip Name", m_AnimationClip->m_ClipName.c_str(), &m_AnimationClip->m_ClipName);
 
 				ImGui::NewLine();
 
@@ -204,6 +216,29 @@ namespace SmolEngine
 
 
 			ImGui::End();
+
+			if(showTools)
+			{
+				ImGui::Begin("Tools", &showTools);
+				{
+					ImGui::SetWindowSize("Tools", { 240, 140 });
+
+					static float time = 0;
+					ImGui::InputFloat("Duration", &time);
+
+					if (ImGui::Button("OK"))
+					{
+						for (auto pair: m_AnimationClip->m_Frames)
+						{
+							auto& [key, frame] = pair;
+							frame->Speed = time;
+						}
+
+						showTools = false;
+					}
+				}
+				ImGui::End();
+			}
 
 			m_FileBrowser->Display();
 
@@ -318,7 +353,7 @@ namespace SmolEngine
 
 		{
 			cereal::JSONInputArchive sceneDataInput{ storage };
-			sceneDataInput(m_AnimationClip->m_Frames, m_AnimationClip->ClipName);
+			sceneDataInput(m_AnimationClip->m_Frames, m_AnimationClip->m_ClipName);
 		}
 
 		auto scene = Scene::GetScene();

@@ -58,12 +58,13 @@ project "SmolEngine"
 
 	includedirs
 	{
-		"%{prj.name}/Libraries/icon_font_cpp_headers",
-		"%{prj.name}/Libraries/spdlog/include",
+		"SmolEngine/Libraries/icon_font_cpp_headers",
+		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Libraries/cereal/include",
-		"%{prj.name}/Libraries/box2d/include",
+		"SmolEngine/Libraries/fmod/include",
+		"SmolEngine/Libraries/box2d/include",
 		"%{prj.name}/Source",
 		"%{prj.name}/Lua",
 		"%{prj.name}/Lua/include",
@@ -83,7 +84,9 @@ project "SmolEngine"
 		"ImGui",
 		"Yojimbo",
 		"Box2D",
-		"opengl32.lib"
+		"opengl32.lib",
+		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
+		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}
 
 	defines
@@ -145,6 +148,7 @@ project "GameX"
 		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
@@ -159,7 +163,9 @@ project "GameX"
 	links
 	{
 		"SmolEngine",
-		"SmolEngine/Lua/lua54.lib"
+		"SmolEngine/Lua/lua54.lib",
+		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
+		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}
 
 	filter "system:windows"
@@ -214,6 +220,7 @@ project "GameX"
 		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/jinx/Include",
+		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
@@ -228,7 +235,9 @@ project "GameX"
 	links
 	{
 		"SmolEngine",
-		"SmolEngine/Lua/lua54.lib"
+		"SmolEngine/Lua/lua54.lib",
+		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
+		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}
 
 	filter "system:windows"

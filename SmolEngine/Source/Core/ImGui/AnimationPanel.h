@@ -32,7 +32,7 @@ namespace SmolEngine
 
 		std::unique_ptr<CameraController> m_Camera = nullptr;
 		std::unique_ptr<Animation2D> m_AnimationClip = nullptr;
-		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser;
+		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
 		std::shared_ptr<Animation2DFrameKey> m_SelectedFrame = nullptr;
 

@@ -18,13 +18,13 @@ namespace SmolEngine
 	enum class FileBrowserFlags : uint32_t
 	{
 		None = 0,
-		ScriptPath, Texture2dPath, SceneLoad, SceneCreate, SceneSave, LoadClip, LoadClipController
+		ScriptPath, Texture2dPath, SceneLoad, SceneCreate, SceneSave, LoadAnimationClip, LoadClipController, LoadAudioClip
 	};
 
 	enum class ComponentItem : char
 	{
 		None = 0, 
-		Tetxure2D, JinxScript, Rigidbody2D, CameraController, Light2D, Animation2DContoller, ParticleSystem
+		Tetxure2D, JinxScript, Rigidbody2D, CameraController, Light2D, Animation2DContoller, AudioSource, ParticleSystem
 	};
 
 	enum class SelectionFlags: uint16_t

@@ -5,7 +5,7 @@
 Short-Term Goals:
 
 - 2D Batch Renderer (OpenGL / Vulkan)
-- Entity component system (ECS)
+- Entity Component System (ECS)
 - Editor 
 - UI System
 - Scripting in C++, Jinx & Lua

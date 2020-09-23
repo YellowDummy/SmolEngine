@@ -35,9 +35,9 @@ namespace SmolEngine
 		return m_Actor->GetChilds();
 	}
 
-	std::vector<Ref<Actor>>& ScriptableObject::GetActorList()
+	std::vector<Ref<Actor>> ScriptableObject::GetActorList()
 	{
-		return Scene::GetScene()->GetActorPool();
+		return Scene::GetScene()->GetActorList();
 	}
 
 	std::vector<Ref<Actor>> ScriptableObject::GetActorListByTag(const std::string& tag)

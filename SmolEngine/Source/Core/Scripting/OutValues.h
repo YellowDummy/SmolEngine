@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <any>
 #include <cereal/cereal.hpp>
 #include <cereal/types/variant.hpp>
 
@@ -19,9 +18,9 @@ namespace SmolEngine
 		OutValue(const std::string& key, std::variant<float, int, std::string> val, OutValueType type)
 			: Key(key), Value(val), Type(type) {}
 
-		std::string Key;
 		std::variant<float, int, std::string> Value;
 
+		std::string Key;
 		OutValueType Type;
 
 	private:

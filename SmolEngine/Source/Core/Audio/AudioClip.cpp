@@ -3,5 +3,8 @@
 
 namespace SmolEngine
 {
+	AudioClip::AudioClip()
+	{
 
+	}
 }

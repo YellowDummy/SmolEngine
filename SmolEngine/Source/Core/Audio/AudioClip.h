@@ -1,16 +1,40 @@
 #pragma once
 #include "Core/Core.h"
 
+#include <string>
+#include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 
 namespace SmolEngine
 {
-	class AudioClip
+	struct AudioClip
 	{
-	public:
-		AudioClip() = default;
+		AudioClip();
+
+		glm::vec3 WorldPos = glm::vec3(0.0f);
+
+		std::string FilePath = "";
+		std::string FileName = "";
+		std::string ClipName = "";
+
+		float Volume = 1.0f;
+
+		bool isDefaultClip = false;
+		bool IsLooping = false;
+		bool B3D = false;
+		bool BStream = false;
+		bool HasWorldPosition = false;
+
+		int Channel = 0;
 
 	private:
 		friend class cereal::access;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(FilePath, FileName, ClipName, Volume, WorldPos.x, WorldPos.y, WorldPos.z, isDefaultClip, IsLooping, B3D, BStream, HasWorldPosition, Channel);
+		}
 	};
+
 }

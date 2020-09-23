@@ -50,7 +50,7 @@ namespace SmolEngine
 		if (m_CurrentClip != nullptr && m_State == Animation2DControllerState::PlayState)
 		{
 			m_CurrentClip->Clip->Reset();
-			m_State == Animation2DControllerState::SleepState;
+			m_State = Animation2DControllerState::SleepState;
 			m_CurrentClip = nullptr;
 		}
 	}
@@ -73,13 +73,19 @@ namespace SmolEngine
 		auto result = m_Clips.find(clipName);
 		if (result != m_Clips.end())
 		{
-			m_CurrentClip = m_Clips[clipName];
+			if (m_CurrentClip != nullptr)
+			{
+				m_CurrentClip->Clip->Reset();
+				m_CurrentClip = nullptr;
+			}
+
+			m_CurrentClip = result->second;
 			m_State = Animation2DControllerState::PlayState;
 			m_CurrentClip->Clip->Play();
 			return;
 		}
 
-		CONSOLE_WARN(std::string("Clip " + clipName + std::string("not found")));
+		CONSOLE_WARN(std::string("Clip " + clipName + std::string(" not found")));
 	}
 
 	void Animation2DController::ReloadTextures()
@@ -131,7 +137,7 @@ namespace SmolEngine
 
 		{
 			cereal::JSONInputArchive sceneDataInput{ storage };
-			sceneDataInput(Clip->m_Frames, Clip->ClipName);
+			sceneDataInput(Clip->m_Frames, Clip->m_ClipName);
 		}
 
 		auto scene = Scene::GetScene();
@@ -146,10 +152,10 @@ namespace SmolEngine
 			}
 		}
 
-		auto result = m_Clips.find(Clip->ClipName);
+		auto result = m_Clips.find(Clip->m_ClipName);
 		if (result == m_Clips.end())
 		{
-			m_Clips[Clip->ClipName] = animationClip;
+			m_Clips[Clip->m_ClipName] = animationClip;
 			NATIVE_INFO("Animation2DController: Clip Loaded");
 			return;
 		}

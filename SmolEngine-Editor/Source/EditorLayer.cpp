@@ -4,10 +4,13 @@
 #include "EditorLayer.h"
 #include "icon_font_cpp_headers/IconsFontAwesome5.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Animation/Animation2D.h"
 #include "Core/Scripting/Jinx.h"
 #include "Core/ECS/Scene.h"
+#include "Core/Audio/AudioClip.h"
+#include "Core/Audio/AudioSource.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -90,6 +93,13 @@ namespace SmolEngine
 
 	void EditorLayer::OnEvent(Event& event)
 	{
+		if (event.m_EventType == (uint32_t)EventType::S_WINDOW_RESIZE)
+		{
+			auto& e = static_cast<WindowResizeEvent&>(event);
+
+			m_ViewPortSize = { e.GetWidth() , e.GetHeight() };
+		}
+
 		if (isSceneViewFocused)
 		{
 			m_Scene->m_EditorCamera->OnEvent(event);
@@ -250,7 +260,7 @@ namespace SmolEngine
 
 				if (ImGui::MenuItem("Load Clip"))
 				{
-					m_FileBrowserState = FileBrowserFlags::LoadClip;
+					m_FileBrowserState = FileBrowserFlags::LoadAnimationClip;
 
 					m_FileBrowser->SetTitle("Load Clip");
 					m_FileBrowser->SetTypeFilters({ ".smolanim" });
@@ -366,7 +376,7 @@ namespace SmolEngine
 				}
 
 				size_t textureID = m_FrameBuffer->GetColorAttachmentID();
-				ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+				ImGui::Image((void*)(intptr_t)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			}
 			ImGui::End();
@@ -398,7 +408,7 @@ namespace SmolEngine
 					if (cameraComponent.isSelected)
 					{
 						size_t ImageTextureID = cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID();
-						ImGui::Image((void*)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+						ImGui::Image((void*)(intptr_t)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 					}
 				}
 
@@ -460,7 +470,7 @@ namespace SmolEngine
 			{
 				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					for (auto actor : m_Scene->GetActorPool())
+					for (auto actor : m_Scene->GetSortedActorList())
 					{
 						if (actor->IsDisabled) { continue; }
 
@@ -660,7 +670,7 @@ namespace SmolEngine
 							{
 								ImGui::Separator();
 								ImGui::NewLine();
-								ImGui::Image((void*)comp.Texture->GetID(), ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+								ImGui::Image((void*)(intptr_t)comp.Texture->GetID(), ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 								ImGui::SameLine();
 
 								if (ImGui::Button("Change"))
@@ -873,7 +883,7 @@ namespace SmolEngine
 
 						if (ImGui::TreeNode("Animation2D Controller"))
 						{
-							if (ImGui::TreeNodeEx("Clips", ImGuiTreeNodeFlags_DefaultOpen))
+							if (ImGui::TreeNodeEx("Animation Clips", ImGuiTreeNodeFlags_DefaultOpen))
 							{
 								if (controller.AnimationController->m_Clips.size() == 0)
 								{
@@ -885,18 +895,25 @@ namespace SmolEngine
 									auto& [key, clip] = pair;
 
 									std::stringstream ss;
-									ss << "Clip #" << clip->Clip->ClipName;
+									ss << "Clip #" << clip->Clip->m_ClipName;
 
 									if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
 									{
-										ImGui::InputText("Clip Name", &clip->Clip->ClipName);
-										ImGui::Checkbox("Defaul Clip", &clip->IsDefaultClip);
+										static std::string name = clip->Clip->m_ClipName;
+
+										ImGui::InputText("Name", &name);
+										if (ImGui::SmallButton("Set Name"))
+										{
+											clip->Clip->m_ClipName = name;
+										}
+
+										ImGui::Checkbox("Default Clip", &clip->IsDefaultClip);
 
 										ImGui::SameLine();
 										if (ImGui::SmallButton("Play"))
 										{
 											controller.AnimationController->Reset();
-											controller.AnimationController->PlayClip(clip->Clip->ClipName);
+											controller.AnimationController->PlayClip(clip->Clip->m_ClipName);
 										}
 
 										ImGui::SameLine();
@@ -912,23 +929,6 @@ namespace SmolEngine
 								ImGui::TreePop();
 							}
 
-							if (ImGui::IsItemClicked(1))
-							{
-								ImGui::OpenPopup("Animation2DControllerPopup");
-
-							}
-
-							if (ImGui::BeginPopup("Animation2DControllerPopup"))
-							{
-								ImGui::MenuItem("Animation 2D Controller", NULL, false, false);
-								if (ImGui::MenuItem("Delete"))
-								{
-									m_SelectedActor->DeleteComponent<Animation2DControllerComponent>();
-								}
-
-								ImGui::EndPopup();
-							}
-
 							ImGui::NewLine();
 							if (ImGui::Button("Load Clip"))
 							{
@@ -939,6 +939,117 @@ namespace SmolEngine
 							}
 
 							ImGui::TreePop();
+						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("AnimationPopUp");
+						}
+
+						if (ImGui::BeginPopup("AnimationPopUp"))
+						{
+							ImGui::MenuItem("Animation 2D Controller", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<Animation2DControllerComponent>();
+							}
+
+							ImGui::EndPopup();
+						}
+
+					}
+
+					if (m_SelectedActor->HasComponent<AudioSourceComponent>())
+					{
+						auto& as = m_SelectedActor->GetComponent<AudioSourceComponent>();
+
+						if (ImGui::TreeNode("Audio Source"))
+						{
+
+							if (ImGui::TreeNodeEx("Audio Clips", ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								if (as.AS->m_AudioClips.size() == 0)
+								{
+									ImGui::BulletText("Empty");
+								}
+								else
+								{
+									for (auto pair : as.AS->m_AudioClips)
+									{
+										auto& [key, clip] = pair;
+
+										std::stringstream ss;
+										ss << "Clip #" << clip->ClipName;
+
+										if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
+										{
+											static std::string name = clip->ClipName;
+											ImGui::InputText("Name", &name);
+											if (ImGui::SmallButton("Set Name"))
+											{
+												clip->ClipName = name;
+											}
+
+											ImGui::InputFloat("Volume", &clip->Volume);
+
+											if (clip->HasWorldPosition)
+											{
+												ImGui::InputFloat3("Position", glm::value_ptr(clip->WorldPos));
+											}
+
+											if (ImGui::Button("Play"))
+											{
+												as.AS->DebugPlay(clip);
+											}
+											ImGui::SameLine();
+											if (ImGui::Button("Stop"))
+											{
+												as.AS->DebugStop(clip);
+											}
+
+											ImGui::Checkbox("Looping", &clip->IsLooping);
+											ImGui::Checkbox("Default Clip", &clip->isDefaultClip);
+											ImGui::Checkbox("3D Space", &clip->HasWorldPosition);
+
+											ImGui::TreePop();
+										}
+									}
+								}
+
+								ImGui::TreePop();
+							}
+
+
+							ImGui::NewLine();
+							if (ImGui::Button("Load Clip"))
+							{
+								m_FileBrowserState = FileBrowserFlags::LoadAudioClip;
+								m_FileBrowser->SetTitle("Select a sound");
+								m_FileBrowser->SetTypeFilters({ ".wav" });
+								m_FileBrowser->Open();
+							}
+
+							ImGui::SameLine();
+							ImGui::Checkbox("Play On Awake", &as.AS->m_PlayOnAwake);
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::IsItemClicked(1))
+						{
+							ImGui::OpenPopup("ASPopup");
+
+						}
+
+						if (ImGui::BeginPopup("ASPopup"))
+						{
+							ImGui::MenuItem("Audio Source", NULL, false, false);
+							if (ImGui::MenuItem("Delete"))
+							{
+								m_SelectedActor->DeleteComponent<AudioSourceComponent>();
+							}
+
+							ImGui::EndPopup();
 						}
 					}
 
@@ -953,7 +1064,7 @@ namespace SmolEngine
 					if (ImGui::TreeNode("Component"))
 					{
 						static int current_item = 0;
-						ImGui::Combo("Component", &current_item, "None\0Texture 2D\0Jinx Script\0Rigidbody 2D\0Camera Controller\0Light 2D\0Animation Contoller\0Particle System\0\0");
+						ImGui::Combo("Component", &current_item, "None\0Texture 2D\0Jinx Script\0Rigidbody 2D\0Camera Controller\0Light 2D\0Animation Contoller\0Audio Source\0\0");
 
 						if (ImGui::Button("OK", ImVec2{ 60, 25 }))
 						{
@@ -961,6 +1072,16 @@ namespace SmolEngine
 							{
 							case (uint32_t)ComponentItem::None:
 							{
+								break;
+							}
+							case (uint32_t)ComponentItem::AudioSource:
+							{
+								if (!m_SelectedActor->HasComponent<AudioSourceComponent>())
+								{
+									auto& ref = m_SelectedActor->AddComponent<AudioSourceComponent>();
+									ref.AS = std::make_shared<AudioSource>();
+								}
+
 								break;
 							}
 							case (uint32_t)ComponentItem::Tetxure2D:
@@ -981,8 +1102,11 @@ namespace SmolEngine
 							}
 							case (uint32_t)ComponentItem::Animation2DContoller:
 							{
-								auto& ref = m_SelectedActor->AddComponent<Animation2DControllerComponent>();
-								ref.AnimationController = std::make_shared<Animation2DController>();
+								if (!m_SelectedActor->HasComponent<Animation2DControllerComponent>())
+								{
+									auto& ref = m_SelectedActor->AddComponent<Animation2DControllerComponent>();
+									ref.AnimationController = std::make_shared<Animation2DController>();
+								}
 
 								break;
 							}
@@ -1143,11 +1267,27 @@ namespace SmolEngine
 				ResetFileBrowser();
 				break;
 			}
-			case FileBrowserFlags::LoadClip:
+			case FileBrowserFlags::LoadAnimationClip:
 			{
 				m_AnimationPanel->Load(m_FilePath);
 				ResetFileBrowser();
 				showAnimationPanel = true;
+				break;
+			}
+			case FileBrowserFlags::LoadAudioClip:
+			{
+				auto& ac = m_SelectedActor->GetComponent<AudioSourceComponent>();
+				auto clip = std::make_shared<AudioClip>();
+
+				std::stringstream ss;
+				ss << "New Audio Clip #" << ac.AS->m_AudioClips.size();
+
+				clip->FileName = m_FileName;
+				clip->FilePath = m_FilePath;
+				clip->ClipName = ss.str();
+
+				ac.AS->AddClip(clip);
+				ResetFileBrowser();
 				break;
 			}
 			case FileBrowserFlags::LoadClipController:

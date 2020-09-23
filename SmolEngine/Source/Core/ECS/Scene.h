@@ -1,12 +1,5 @@
 #pragma once
 
-#include <string>
-#include <utility>
-#include <vector>
-#include <functional>
-
-#include <box2d/b2_world.h>
-
 #include "Core/ECS/Components.h"
 #include "Core/ECS/Actor.h"
 
@@ -17,9 +10,18 @@
 #include "Core/EventHandler.h"
 #include "Core/Application.h"
 
+#include <string>
+#include <utility>
+#include <vector>
+#include <functional>
+#include <box2d/b2_world.h>
 #include <Jinx.hpp>
 #include <unordered_map>
+#include <map>
 #include <glm/glm.hpp>
+#include <cereal/types/unordered_map.hpp>
+
+#include "Core/Audio/AudioEngine.h"
 
 
 namespace SmolEngine
@@ -30,8 +32,8 @@ namespace SmolEngine
 	struct SceneData
 	{
 		entt::registry m_Registry;
-		//TODO: Replace vector
-		std::vector<Ref<Actor>> m_ActorPool;
+
+		std::unordered_map<size_t, Ref<Actor>> m_ActorPool;
 		glm::vec2 m_Gravity = glm::vec2(0.0f, -9.81f);
 
 		float m_AmbientStrength = 1.0f;
@@ -63,10 +65,9 @@ namespace SmolEngine
 	class Scene
 	{
 	public:
-
 		Scene() = default;
 
-		// Logic
+		// Main Logic
 		void Init();
 		void ShutDown();
 
@@ -101,11 +102,14 @@ namespace SmolEngine
 		Ref<Actor> FindActorByID(size_t id);
 
 		std::vector<Ref<Actor>> GetActorListByTag(const std::string& tag);
-		std::vector<Ref<Actor>>& GetActorPool();
+		std::unordered_map<size_t, Ref<Actor>>& GetActorPool();
+
+		std::vector <Ref<Actor>> GetActorList();
+		std::vector <Ref<Actor>> GetSortedActorList();
 
 		//Scripting
 		template<typename T>
-		void RegistryScript(std::string& keyName)
+		void RegistryScript(const std::string& keyName)
 		{
 			auto result = m_ScriptRegistry.find(keyName);
 			if (result != m_ScriptRegistry.end())
@@ -118,23 +122,17 @@ namespace SmolEngine
 			m_ScriptRegistry[keyName] = obj;
 		}
 
-		bool AttachScript(std::string& keyName, Ref<Actor> actor);
+		bool AttachScript(const std::string& keyName, const Ref<Actor> actor);
 
 		//Internal needs
 		bool PathCheck(std::string& path, const std::string& fileName);
-
 		const Jinx::RuntimePtr GetJinxRuntime();
-
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
-
 		static Ref<Scene> GetScene() { return s_Scene; }
-
 		b2World* GetWorld() { return m_World; }
-
-		entt::registry& GetRegistry() { return s_SceneData.m_Registry; }
+		entt::registry& GetRegistry() { return m_SceneData.m_Registry; }
 
 	private:
-		bool IsActorExist(Ref<Actor> actor);
 		bool ChangeFilePath(const std::string& fileName, std::string& pathToChange);
 		bool IsPathValid(const std::string& path);
 
@@ -148,21 +146,21 @@ namespace SmolEngine
 		friend class Animation2DController;
 
 	private:
-		static Ref<Scene> s_Scene;
+		SceneData m_SceneData;
 
-		SceneData s_SceneData;
-
-		bool m_InPlayMode = false;
-
-		b2World* m_World = nullptr;
-		Jinx::RuntimePtr m_JinxRuntime;
-
-		Ref<SubTexture2D> m_TestSub = nullptr;
-		Ref<EditorCameraController> m_EditorCamera;
-
-		std::unordered_map<std::string, Ref<ScriptableObject>> m_ScriptRegistry;
+		std::map<std::string, Ref<ScriptableObject>> m_ScriptRegistry;
 		std::unordered_map<std::string, size_t> m_IDSet;
 		std::vector<std::string> m_ScriptNameList;
 
+		static Ref<Scene> s_Scene;
+
+		Jinx::RuntimePtr m_JinxRuntime = nullptr;
+		AudioEngine* m_AudioEngine = nullptr;
+
+		Ref<SubTexture2D> m_TestSub = nullptr;
+		Ref<EditorCameraController> m_EditorCamera = nullptr;
+
+		bool m_InPlayMode = false;
+		b2World* m_World = nullptr;
 	};
 }

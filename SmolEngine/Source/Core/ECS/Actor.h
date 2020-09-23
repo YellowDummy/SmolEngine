@@ -21,7 +21,7 @@ namespace SmolEngine
 	{
 	public:
 		Actor();
-		Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id);
+		Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id, const size_t index);
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
@@ -92,7 +92,9 @@ namespace SmolEngine
 
 		std::string Name;
 		std::string Tag;
-		size_t ID;
+
+		size_t ID = 0;
+		size_t Index = 0;
 
 		std::vector<Ref<Actor>> Childs;
 		Ref<Actor> Parent;
@@ -102,7 +104,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ID, IsDisabled, Entity, Name, Parent, Tag, Parent, Childs, m_OutValues);
+			archive(ID, Index, IsDisabled, Entity, Name, Parent, Tag, Parent, Childs, m_OutValues);
 			archive.serializeDeferments();
 		}
 

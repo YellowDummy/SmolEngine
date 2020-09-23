@@ -53,6 +53,8 @@ public:
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
+		if (rb == nullptr) { return; }
+
 		if (Input::IsKeyPressed(KeyCode::E))
 		{
 			rb->AddForce({ 20.0f * (speed * speedMod), 0.0f });
@@ -105,8 +107,8 @@ public:
 		auto& playerPos = m_Player->GetComponent<TransformComponent>().WorldPos;
 		auto& cameraPos = GetComponent<TransformComponent>().WorldPos;
 
-		int distanceY = playerPos.y - cameraPos.y;
-		int distanceX = playerPos.x - cameraPos.x;
+		float distanceY = playerPos.y - cameraPos.y;
+		float distanceX = playerPos.x - cameraPos.x;
 
 		if (distanceY > 0.3 || distanceX > 0.3 || distanceY < -0.3f || distanceX < -0.3f)
 		{

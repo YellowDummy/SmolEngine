@@ -46,6 +46,9 @@
     <Filter Include="Source\Core\Animation">
       <UniqueIdentifier>{DD6F7E5E-49DC-3959-12D0-D1B67EFB5BC1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Audio">
+      <UniqueIdentifier>{EFFD3376-5B14-320C-A48B-BD2D10E10294}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\ECS">
       <UniqueIdentifier>{B890B921-241C-27E6-2D2D-AADA993783E6}</UniqueIdentifier>
     </Filter>
@@ -72,6 +75,9 @@
     </Filter>
     <Filter Include="Source\Core\Renderer\OpenGL">
       <UniqueIdentifier>{88472D1F-F454-5B05-7D3B-57F0E94727BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Renderer\Vulkan">
+      <UniqueIdentifier>{D4ABDF2F-40B9-0D16-C99F-090135ACD9CC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Core\Scripting">
       <UniqueIdentifier>{F02BF114-5C98-AC0F-258C-446D91B7CE77}</UniqueIdentifier>
@@ -1263,6 +1269,12 @@
     <ClInclude Include="Source\Core\AssetManager.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Audio\AudioClip.h">
+      <Filter>Source\Core\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Audio\AudioEngine.h">
+      <Filter>Source\Core\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1389,6 +1401,9 @@
     <ClInclude Include="Source\Core\Renderer\Texture.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\SLog.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1416,8 +1431,8 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Audio\AudioClip.h" />
-    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="Source\Core\Audio\AudioSource.h" />
+    <ClInclude Include="Source\Core\UI\Button.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1434,6 +1449,9 @@
     </ClCompile>
     <ClCompile Include="Source\Core\AssetManager.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Audio\AudioEngine.cpp">
+      <Filter>Source\Core\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Actor.cpp">
       <Filter>Source\Core\ECS</Filter>
@@ -1531,6 +1549,9 @@
     <ClCompile Include="Source\Core\Renderer\Texture.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\SLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
@@ -1540,7 +1561,8 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Audio\AudioSource.cpp" />
     <ClCompile Include="Source\Core\Audio\AudioClip.cpp" />
-    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
+    <ClCompile Include="Source\Core\UI\Button.cpp" />
   </ItemGroup>
 </Project>

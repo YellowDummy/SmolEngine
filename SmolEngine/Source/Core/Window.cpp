@@ -56,7 +56,13 @@ namespace SmolEngine
 		glfwInit();
 		glfwSetErrorCallback([](int error, const char* description) { NATIVE_ERROR("GLFW Error ({0}): {1}", error, description); });
 
-		m_Window = glfwCreateWindow((int)width, (int)height, title.c_str(), nullptr, nullptr);
+
+		m_Window = glfwCreateWindow((int)width, (int)height, title.c_str(), NULL, NULL);
+
+		//const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		//glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+
 		if (!m_Window)
 		{
 			return;

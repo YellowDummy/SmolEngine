@@ -42,6 +42,7 @@ namespace SmolEngine
 
 	void Application::InitApp()
 	{
+
 		NATIVE_INFO("Initializing a framework...");
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///

@@ -8,7 +8,7 @@ uniform mat4 u_ViewProjection;
 uniform float u_AmbientValue;
 uniform mat4 u_Transform;
 
-//support for animated sprites
+//animated sprites support
 uniform vec2 u_TexCoord;
 
 out vec2 v_TexCoord;

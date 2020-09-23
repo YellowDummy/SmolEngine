@@ -10,15 +10,18 @@ namespace SmolEngine
 
 	}
 
-	Actor::Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id)
-		:Parent(nullptr),
+	Actor::Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id, const size_t index)
+		:
+		ID(id),
+		Index(index),
+		Parent(nullptr),
 		Entity(entity),
 		Tag(tag),
 		Reg(reg),
 		Name(name),
 		IsDisabled(false)
 	{
-		ID = id;
+
 	}
 
 

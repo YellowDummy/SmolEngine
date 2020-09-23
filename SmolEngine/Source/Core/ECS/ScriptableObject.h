@@ -50,7 +50,7 @@ namespace SmolEngine
 		void SetParent(Ref<Actor> parent);
 
 		std::vector<Ref<Actor>>& GetChilds();
-		std::vector<Ref<Actor>>& GetActorList();
+		std::vector<Ref<Actor>>  GetActorList();
 		std::vector<Ref<Actor>>  GetActorListByTag(const std::string& tag);
 
 		void AddChild(Ref<Actor> child);

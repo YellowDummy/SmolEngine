@@ -1,5 +1,6 @@
 #pragma once
-
+#include "Core/Time.h"
+#include "Core/Core.h"
 #include "Core/Renderer/Texture.h"
 #include "Core/Renderer/Camera.h"
 #include "Core/Application.h"
@@ -9,8 +10,8 @@
 #include "Core/Renderer/Light2D.h"
 #include "Core/Animation/Animation2D.h"
 #include "Core/Animation/Animation2DController.h"
-#include "Core/Time.h"
-#include "Core/Core.h"
+#include "Core/Audio/AudioSource.h"
+#include "Core/Audio/AudioClip.h"
 
 #include <Jinx.hpp>
 #include <box2d/box2d.h>
@@ -202,6 +203,19 @@ namespace SmolEngine
 	{
 		AudioSourceComponent() = default;
 
+	private:
+		friend class EditorLayer;
+		friend class Scene;
+		friend class cereal::access;
+
+		Ref<AudioSource> AS = nullptr;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(Enabled, ID, AS);
+		}
+
 	};
 
 	struct JinxScriptComponent: public BaseComponent
@@ -239,7 +253,7 @@ namespace SmolEngine
 	struct ScriptObject : public BaseComponent
 	{
 		ScriptObject() = default;
-		ScriptObject(size_t sceneId, size_t actorID, std::string& key, Ref<ScriptableObject> script)
+		ScriptObject(size_t sceneId, size_t actorID, const std::string& key, Ref<ScriptableObject> script)
 			:SceneID(sceneId), ActorID(actorID), Script(script), keyName(key)
 		{
 		}

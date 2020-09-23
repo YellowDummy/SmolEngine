@@ -52,9 +52,8 @@ namespace SmolEngine
 		void Reset();
 
 	private:
-
 		std::unordered_map<int, Ref<Animation2DFrameKey>> m_Frames;
-		std::string ClipName = "";
+		std::string m_ClipName = "";
 		ToolTimer m_Timer;
 
 		Ref<Texture2D> m_CurrentTexture = nullptr;
@@ -73,7 +72,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_Frames, ClipName);
+			archive(m_Frames, m_ClipName);
 		}
 	};
 }

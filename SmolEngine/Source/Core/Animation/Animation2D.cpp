@@ -55,12 +55,7 @@ namespace SmolEngine
 
 	void Animation2D::ResetAllFrames()
 	{
-		m_IsActive = false;
-		m_CurrentIndex = 0;
-		m_CurrentFrameKey = nullptr;
-		m_CurrentTexture = nullptr;
-		m_Timer.StopTimer();
-
+		Reset();
 		m_Frames.clear();
 	}
 
