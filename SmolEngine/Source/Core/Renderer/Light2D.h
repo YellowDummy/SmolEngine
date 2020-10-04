@@ -8,6 +8,7 @@ namespace SmolEngine
 	class Light2D
 	{
 	public:
+
 		Light2D() = default;
 
 		glm::vec4 m_Color = glm::vec4(1.0f);
@@ -16,6 +17,7 @@ namespace SmolEngine
 		float intensity = 1.0f;
 
 	private:
+
 		friend class cereal::access;
 
 		template<typename Archive>

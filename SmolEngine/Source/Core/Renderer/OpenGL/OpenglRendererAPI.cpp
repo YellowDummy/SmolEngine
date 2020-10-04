@@ -29,6 +29,21 @@ namespace SmolEngine
 		glEnable(GL_DEPTH_TEST);
 	}
 
+	void OpenglRendererAPI::DisableDepth()
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+
+	void OpenglRendererAPI::DrawFrameBuffer()
+	{
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	}
+
+	void OpenglRendererAPI::BindTexture(uint32_t id)
+	{
+		glBindTextureUnit(0, id);
+	}
+
 	void OpenglRendererAPI::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);

@@ -5,10 +5,12 @@
 #include "Core/Events/InputEvent.h"
 
 #include "GLFW/glfw3.h"
+#include <glad\glad.h>
 
 
 namespace SmolEngine 
 {
+	
 	Window::Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler)
 		:m_Window(nullptr)
 	{
@@ -56,8 +58,10 @@ namespace SmolEngine
 		glfwInit();
 		glfwSetErrorCallback([](int error, const char* description) { NATIVE_ERROR("GLFW Error ({0}): {1}", error, description); });
 
+		m_Window = glfwCreateWindow((int)width, (int)height, title.c_str(), nullptr, nullptr);
 
-		m_Window = glfwCreateWindow((int)width, (int)height, title.c_str(), NULL, NULL);
+		Data.Width = width;
+		Data.Height = height;
 
 		//const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
@@ -65,6 +69,7 @@ namespace SmolEngine
 
 		if (!m_Window)
 		{
+			NATIVE_ERROR("Failed to create window!");
 			return;
 		}
 

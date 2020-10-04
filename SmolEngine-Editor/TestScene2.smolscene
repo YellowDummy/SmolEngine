@@ -187,7 +187,16 @@
     "value11": {
         "value0": true,
         "value1": 0.5625,
-        "value2": true
+        "value2": true,
+        "value3": {
+            "ptr_wrapper": {
+                "id": 2147483656,
+                "data": {
+                    "value0": 4.0,
+                    "value1": 1.479632019996643
+                }
+            }
+        }
     },
     "value12": 3,
     "value13": 1,
@@ -246,8 +255,8 @@
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": "Assets/Textures/Background.png",
-        "value6": ""
+        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png",
+        "value6": "Ball.png"
     },
     "value27": 0,
     "value28": 1,
@@ -257,33 +266,33 @@
         "value1": 0,
         "value2": {
             "ptr_wrapper": {
-                "id": 2147483656,
+                "id": 2147483657,
                 "data": {
                     "value0": [
                         {
-                            "key": "PlayerIdle",
+                            "key": "PlayerIdle2",
                             "value": {
                                 "ptr_wrapper": {
-                                    "id": 2147483657,
+                                    "id": 2147483658,
                                     "data": {
                                         "value0": 0,
                                         "value1": {
                                             "ptr_wrapper": {
-                                                "id": 2147483658,
+                                                "id": 2147483659,
                                                 "data": {
                                                     "value0": [
                                                         {
                                                             "key": 0,
                                                             "value": {
                                                                 "ptr_wrapper": {
-                                                                    "id": 2147483659,
+                                                                    "id": 2147483660,
                                                                     "data": {
                                                                         "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
                                                                         "value1": "skin1_idle_1.png",
-                                                                        "value2": 200.0,
-                                                                        "value3": 0.22990235686302186,
-                                                                        "value4": 0.10633455216884613,
-                                                                        "value5": 0.24193549156188966,
+                                                                        "value2": 100.0,
+                                                                        "value3": 0.30593132972717287,
+                                                                        "value4": 0.6774193644523621,
+                                                                        "value5": 0.3811134099960327,
                                                                         "value6": 1.0,
                                                                         "value7": 1.0,
                                                                         "value8": 1.0
@@ -295,14 +304,14 @@
                                                             "key": 1,
                                                             "value": {
                                                                 "ptr_wrapper": {
-                                                                    "id": 2147483660,
+                                                                    "id": 2147483661,
                                                                     "data": {
                                                                         "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
                                                                         "value1": "skin1_idle_2.png",
-                                                                        "value2": 200.0,
-                                                                        "value3": 0.6796724200248718,
-                                                                        "value4": 0.45218196511268618,
-                                                                        "value5": 0.8185483813285828,
+                                                                        "value2": 100.0,
+                                                                        "value3": 1.0,
+                                                                        "value4": 1.0,
+                                                                        "value5": 1.0,
                                                                         "value6": 1.0,
                                                                         "value7": 1.0,
                                                                         "value8": 1.0
@@ -311,7 +320,7 @@
                                                             }
                                                         }
                                                     ],
-                                                    "value1": "PlayerIdle"
+                                                    "value1": "PlayerIdle2"
                                                 }
                                             }
                                         },
@@ -326,41 +335,80 @@
             }
         }
     },
-    "value31": 1,
-    "value32": 0,
-    "value33": {
+    "value31": 0,
+    "value32": 1,
+    "value33": 0,
+    "value34": {
         "value0": true,
         "value1": 0,
         "value2": {
             "ptr_wrapper": {
-                "id": 2147483661,
+                "id": 2147483662,
                 "data": {
                     "value0": [
                         {
-                            "key": "New Audio Clip #0",
+                            "key": 0,
                             "value": {
+                                "polymorphic_id": 2147483649,
+                                "polymorphic_name": "SmolEngine::UIButton",
                                 "ptr_wrapper": {
-                                    "id": 2147483662,
+                                    "id": 2147483663,
                                     "data": {
-                                        "value0": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\test.wav",
-                                        "value1": "test.wav",
-                                        "value2": "New Audio Clip #0",
-                                        "value3": 1.0,
-                                        "value4": 0.0,
-                                        "value5": 0.0,
+                                        "value0": 0,
+                                        "value1": 2,
+                                        "value2": "Start_BTN.png",
+                                        "value3": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\Textures\\Start_BTN.png",
+                                        "value4": 2.0,
+                                        "value5": 0.5,
                                         "value6": 0.0,
-                                        "value7": true,
-                                        "value8": false,
-                                        "value9": false,
-                                        "value10": false,
-                                        "value11": false,
-                                        "value12": 0
+                                        "value7": -3.0,
+                                        "value8": 970,
+                                        "value9": 781,
+                                        "value10": 770,
+                                        "value11": 731,
+                                        "value12": false,
+                                        "value13": false,
+                                        "value14": false,
+                                        "value15": 0.736732542514801,
+                                        "value16": 0.909416913986206,
+                                        "value17": 0.9516128897666931,
+                                        "value18": 1.0,
+                                        "value19": 1.0,
+                                        "value20": 1.0,
+                                        "value21": 1.0,
+                                        "value22": 1.0,
+                                        "value23": 1.0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "key": 1,
+                            "value": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "SmolEngine::UITextLabel",
+                                "ptr_wrapper": {
+                                    "id": 2147483664,
+                                    "data": {
+                                        "value0": 1,
+                                        "value1": 1,
+                                        "value2": 1.0,
+                                        "value3": 1.0,
+                                        "value4": 1.0,
+                                        "value5": 1.0,
+                                        "value6": -5.0,
+                                        "value7": 3.5,
+                                        "value8": 0.05000000074505806,
+                                        "value9": 0.20000000298023225,
+                                        "value10": "C:\\Dev\\SmolEngine\\SmolEngine\\Assets\\Fonts\\Font1.ttf",
+                                        "value11": "Font1.ttf",
+                                        "value12": "Null",
+                                        "value13": 0.009999999776482582
                                     }
                                 }
                             }
                         }
-                    ],
-                    "value1": true
+                    ]
                 }
             }
         }

@@ -12,7 +12,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <SmolEngineCore.h>
 
-
 namespace SmolEngine
 {
 
@@ -35,6 +34,8 @@ namespace SmolEngine
 		//---------------------------------------------------------------------------------------------------------
 
 		Ref<Shader> Light2DShader;
+
+		Ref<Shader> TextShader;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -136,7 +137,7 @@ namespace SmolEngine
 			s_Data->Light2DShader = RendererCommand::LoadShader("Assets/Shaders/Light2DShader.glsl");
 		}
 
-
+		s_Data->TextShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/TextShader.glsl");
 	}
 
 	void Renderer2D::BeginScene(Ref<OrthographicCamera> camera, float ambientValue)
@@ -156,6 +157,7 @@ namespace SmolEngine
 		s_Data->TextureShader->SetUniformFloat4("u_Color", color);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
 		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		s_Data->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), worldPos)
@@ -172,6 +174,7 @@ namespace SmolEngine
 		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
 		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		texture->Bind();
 
 		glm::mat4 transform;
@@ -188,9 +191,35 @@ namespace SmolEngine
 		}
 
 		s_Data->TextureShader->SetUniformMat4("u_Transform", transform);
+		s_Data->QuadVertexArray->Bind();
+		RendererCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
+	{
+		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
+		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
+		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		s_Data->TextureShader->SetUniformInt("u_TextMode", true);
+		texture->Bind();
+
+#ifdef SMOLENGINE_EDITOR
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
+			* glm::scale(glm::mat4(1.0f), { scale.x, -scale.y, 1.0f });
+
+		s_Data->TextureShader->SetUniformMat4("u_Transform", transform);
+#else
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
+			* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+
+		s_Data->TextureShader->SetUniformMat4("u_Transform", transform);
+
+#endif
 
 		s_Data->QuadVertexArray->Bind();
 		RendererCommand::DrawIndexed(s_Data->QuadVertexArray);
+
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color)
@@ -198,6 +227,7 @@ namespace SmolEngine
 		s_Data->TextureShader->SetUniformFloat4("u_Color", color);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
 		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		s_Data->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), worldPos)
@@ -292,6 +322,7 @@ namespace SmolEngine
 		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
 		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		texture->Bind();
 
 		glm::mat4 transform;
@@ -320,6 +351,7 @@ namespace SmolEngine
 		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
 		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
+		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		texture->Bind();
 
 		glm::mat4 transform;

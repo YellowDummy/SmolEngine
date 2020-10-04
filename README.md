@@ -1,6 +1,7 @@
 # SmolEngine
 
-[![Demo Doccou alpha](https://j.gifs.com/ANp5wl.gif)](https://www.youtube.com/watch?v=aTUVuj_jre4&t=4s)
+
+![SmolEngine](https://i.imgur.com/E5HLCy0.png)
 
 Short-Term Goals:
 

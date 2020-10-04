@@ -23,6 +23,7 @@ namespace SmolEngine
 	class Rigidbody2D
 	{
 	public:
+
 		int m_Type = (int)BodyType::Static;
 		int m_ShapeType = (int)ShapeType::Box;
 
@@ -40,6 +41,7 @@ namespace SmolEngine
 		glm::vec2 m_Offset = glm::vec2(0.0f);
 
 	public:
+
 		Rigidbody2D() = default;
 		Rigidbody2D(Ref<Actor> actor, BodyType type);
 		Rigidbody2D(Ref<Actor> actor, int type);
@@ -51,9 +53,11 @@ namespace SmolEngine
 		b2Body* GetBody() const { return m_Body; }
 
 	private:
+
 		b2BodyType FindType(uint16_t type);
 
 	private:
+
 		friend class cereal::access;
 		friend class Scene;
 

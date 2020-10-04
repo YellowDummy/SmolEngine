@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Core/Time.h"
 #include "Core/Core.h"
 #include "Core/Renderer/Texture.h"
@@ -12,6 +13,7 @@
 #include "Core/Animation/Animation2DController.h"
 #include "Core/Audio/AudioSource.h"
 #include "Core/Audio/AudioClip.h"
+#include "Core/UI/UICanvas.h"
 
 #include <Jinx.hpp>
 #include <box2d/box2d.h>
@@ -20,7 +22,6 @@ namespace SmolEngine
 {
 	class Actor;
 
-	//TEMP
 	struct B2Data
 	{
 		float* B2Rotation = nullptr;
@@ -54,8 +55,12 @@ namespace SmolEngine
 
 		void operator=(const TransformComponent& other);
 
+	private:
+
+		Ref<B2Data> B2Data = nullptr; // Should never be initialized outside of Rigidbody2D!
 
 	private:
+
 		friend class cereal::access;
 		friend class Rigidbody2D;
 		friend class Scene;
@@ -66,9 +71,6 @@ namespace SmolEngine
 		{
 			archive(Rotation, Scale.x, Scale.y, WorldPos.x, WorldPos.y, WorldPos.z, ID, Enabled);
 		}
-
-	private:
-		Ref<B2Data> B2Data = nullptr; // Should never be initialized outside of Rigidbody2D!
 	};
 
 	struct Light2DComponent: public BaseComponent
@@ -81,6 +83,7 @@ namespace SmolEngine
 		Ref<Light2D> Light;
 
 	private:
+
 		friend class cereal::access;
 
 		template<typename Archive>
@@ -102,15 +105,19 @@ namespace SmolEngine
 			Texture = Texture2D::Create(filePath);
 		}
 
-	private:
-		friend class EditorLayer;
-		friend class Scene;
-		friend class cereal::access;
+	private: 
 
 		glm::vec4 Color = glm::vec4(1.0f);
 		Ref<Texture2D> Texture = nullptr;
 		std::string TexturePath;
 		std::string FileName;
+
+	private:
+
+		friend class EditorLayer;
+		friend class Scene;
+		friend class cereal::access;
+
 
 		template<typename Archive>
 		void serialize(Archive& archive)
@@ -133,6 +140,7 @@ namespace SmolEngine
 		}
 
 	private:
+
 		friend class EditorLayer;
 		friend class Scene;
 		friend class cereal::access;
@@ -140,7 +148,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Enabled, aspectRatio, isSelected);
+			archive(Enabled, aspectRatio, isSelected, Camera);
 		}
 	};
 
@@ -164,12 +172,15 @@ namespace SmolEngine
 		}
 
 	private:
-		friend class EditorLayer;
-		friend class Scene;
-		friend class cereal::access;
 
 		bool ShowShape = true;
 		Ref<Rigidbody2D> Rigidbody = nullptr;
+
+	private:
+
+		friend class EditorLayer;
+		friend class Scene;
+		friend class cereal::access;
 
 		template<typename Archive>
 		void serialize(Archive& archive) 
@@ -186,6 +197,7 @@ namespace SmolEngine
 		Ref<Animation2DController> GetController() { return AnimationController; }
 
 	private:
+
 		friend class EditorLayer;
 		friend class Scene;
 		friend class cereal::access;
@@ -204,16 +216,49 @@ namespace SmolEngine
 		AudioSourceComponent() = default;
 
 	private:
+
+		Ref<AudioSource> AS = nullptr;
+
+	private:
+
 		friend class EditorLayer;
 		friend class Scene;
 		friend class cereal::access;
-
-		Ref<AudioSource> AS = nullptr;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
 			archive(Enabled, ID, AS);
+		}
+
+	};
+
+	struct CanvasComponent : public BaseComponent
+	{
+		CanvasComponent() = default;
+
+		Ref<UIElement> GetElement(size_t index);
+
+		Ref<UIButton> GetButton(size_t index);
+
+		Ref<UITextLabel> GetTextLabel(size_t index);
+
+		bool IsValid() { return Canvas != nullptr; }
+
+	private:
+
+		Ref<UICanvas> Canvas = nullptr;
+
+	private:
+
+		friend class EditorLayer;
+		friend class Scene;
+		friend class cereal::access;
+
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(Enabled, ID, Canvas);
 		}
 
 	};
@@ -232,8 +277,11 @@ namespace SmolEngine
 		}
 
 	private:
+
 		Ref<JinxScript> Script = nullptr;
 		std::string FilePath;
+
+	private:
 
 		friend class cereal::access;
 
@@ -263,9 +311,6 @@ namespace SmolEngine
 		void OnDestroy();
 
 	private:
-		friend class EditorLayer;
-		friend class Scene;
-		friend class cereal::access;
 
 		size_t ActorID = 0;
 		size_t SceneID = 0;
@@ -273,6 +318,12 @@ namespace SmolEngine
 		std::string keyName = std::string("");
 
 		std::shared_ptr<ScriptableObject> Script = nullptr;
+
+	private:
+
+		friend class EditorLayer;
+		friend class Scene;
+		friend class cereal::access;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

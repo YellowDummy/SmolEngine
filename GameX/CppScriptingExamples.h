@@ -1,10 +1,11 @@
 #pragma once
 
-// 16.09.2020
+// 04.10.2020
 //
 // Scripting using C++
 
 #include <SmolEngineCore.h>
+#include <functional>
 
 using namespace SmolEngine;
 
@@ -12,13 +13,13 @@ class CharMovementScript : public ScriptableObject
 {
 public:
 
-	//Must be implemented by the user in order to register an external script in the engine
+	//Must be implemented by the user in order to register an external script in the engine (!!)
 	std::shared_ptr<ScriptableObject> Instantiate() override
 	{
 		return std::make_shared<CharMovementScript>();
 	}
 
-	//Default constructor must be implemented!
+	//Default constructor must be implemented
 	CharMovementScript()
 	{
 		//Exposes a property to the editor
@@ -31,24 +32,53 @@ public:
 	{
 		CONSOLE_WARN("Player name is: " + name);
 
-		rb = &GetComponent<Rigidbody2DComponent>();
+		if (HasComponent<Rigidbody2DComponent>())
+		{
+			rb = &GetComponent<Rigidbody2DComponent>();
+		}
 
-		for (auto obj : GetActorList())
+		if (HasComponent<CanvasComponent>())
+		{
+			auto& canvas = GetComponent<CanvasComponent>();
+
+			if (canvas.IsValid())
+			{
+				const auto button = canvas.GetButton(0); // 0 is index inside canvas component
+				if (button)
+				{
+					button->SetOnClickCallback(std::bind(&CharMovementScript::ButtonClickCallback, this));
+				}
+
+				const auto text = canvas.GetTextLabel(1);
+				if (text)
+				{
+					text->SetText("GAME STARTED");
+					text->SetColor({ 0.4f, 0.3f, 0.6f, 1.0f });
+				}
+			}
+		}
+
+		for (const auto obj : GetActorList())
 		{
 			CONSOLE_INFO(std::string("Actor found : ") + obj->GetName());
 		}
 
-		for (auto obj : GetActorListByTag("Default"))
+		for (const auto obj : GetActorListByTag("Default"))
 		{
-			CONSOLE_INFO(std::string("Actor ID find by tag: ") + std::to_string(obj->GetID()));
+			CONSOLE_INFO(std::string("IDs by tag <Default>: ") + std::to_string(obj->GetID()));
 		}
 
-		auto ground = FindChildByName("Ground");
+		const auto ground = FindChildByName("Ground");
 		if (ground)
 		{
 			CONSOLE_INFO(std::string("Child found : ") + ground->GetName());
 		}
 
+	}
+
+	void ButtonClickCallback()
+	{
+		CONSOLE_INFO(std::string("Button Is Pressed!"));
 	}
 
 	void OnUpdate(DeltaTime deltaTime) override
@@ -74,6 +104,7 @@ public:
 	void OnDestroy() override {}
 
 private:
+
 	Rigidbody2DComponent* rb = nullptr;
 
 	float speed = 1.0f;
@@ -85,24 +116,28 @@ class CameraMovementScript : public ScriptableObject
 {
 public:
 
-	//Must be implemented by the user in order to register an external script in the engine
+	//Must be implemented by the user in order to register an external script in the engine!
 	std::shared_ptr<ScriptableObject> Instantiate() override
 	{
 		return std::make_shared<CameraMovementScript>();
 	}
 
 	//Default constructor must be implemented
-	CameraMovementScript() { OUT_FLOAT("CameraSpeed", &m_CameraSpeed); }
+	CameraMovementScript() 
+	{ 
+		OUT_FLOAT("CameraSpeed", &m_CameraSpeed); 
+	}
 
 	void Start() override
 	{
 		m_Player = FindActorByTag("Player");
-		if (m_Player == nullptr) { CONSOLE_ERROR("Player not found!"); }
+
+		if (!m_Player) { CONSOLE_ERROR("Player not found!"); }
 	}
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
-		if (m_Player == nullptr) { return; }
+		if (!m_Player) { return; }
 
 		auto& playerPos = m_Player->GetComponent<TransformComponent>().WorldPos;
 		auto& cameraPos = GetComponent<TransformComponent>().WorldPos;
@@ -143,6 +178,7 @@ public:
 	void OnDestroy() override  {}
 
 private:
+
 	float m_CameraSpeed = 0.5f;
 	Ref<Actor> m_Player;
 };

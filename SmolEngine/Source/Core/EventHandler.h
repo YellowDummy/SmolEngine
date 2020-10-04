@@ -7,7 +7,7 @@ namespace SmolEngine
 {
 	class Application;
 
-	enum class EventType: uint32_t  //or 16
+	enum class EventType: uint32_t
 	{
 
 		S_KEY_PRESS, S_KEY_RELEASE, S_KEY_REPEAT,
@@ -15,7 +15,7 @@ namespace SmolEngine
 		S_WINDOW_CLOSE, S_WINDOW_RESIZE, S_WINDOW_UPDATE,
 	};
 
-	enum class EventCategory: uint32_t //or 16
+	enum class EventCategory: uint32_t
 	{
 		S_EVENT_NONE = 0,
 		S_EVENT_KEYBOARD, S_EVENT_MOUSE, S_EVENT_APPLICATION,
@@ -24,8 +24,12 @@ namespace SmolEngine
 	class Event
 	{
 	public:
+
 		Event() {}
+
 		virtual ~Event() {}
+
+	public:
 
 		bool m_Handled = false;
 		int m_EventType = -1, m_EventCategory = -1, m_Action = -1, m_Key = -1;
@@ -35,14 +39,13 @@ namespace SmolEngine
 	{
 	public:
 
-		std::function<void(Event& event_to_send)> OnEventFn;
-		void SendEvent(Event& event, EventType eventType, EventCategory eventCategory, int action = -1, int key = -1);
-		void BindAction(const int eventType, const int key, const void(*event_ptr));
 		EventHandler();
+
 		~EventHandler();
 
-	private:
-		std::map<int, const void*> m_InputMap;
+		void SendEvent(Event& event, EventType eventType, EventCategory eventCategory, int action = -1, int key = -1);
+
+		std::function<void(Event& event_to_send)> OnEventFn;
 	};
 }
 

@@ -15,12 +15,17 @@ namespace SmolEngine
 	class Framebuffer
 	{
 	public:
+
 		virtual ~Framebuffer() {}
+
 		virtual void Bind() = 0;
+
 		virtual void UnBind() = 0;
+
 		virtual void OnResize(const uint32_t width, const uint32_t height) = 0;
 
 		virtual const FramebufferData& GetData() const = 0;
+
 		virtual uint32_t GetColorAttachmentID() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferData& data);

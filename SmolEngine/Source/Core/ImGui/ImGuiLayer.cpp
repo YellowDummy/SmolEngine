@@ -13,6 +13,7 @@
 #include "Core/EventHandler.h"
 #include "Core/Application.h"
 #include "IconsFontAwesome5.h"
+#include "Core/Window.h"
 
 #include "NodeEditor/imnodes.h"
 
@@ -37,6 +38,7 @@ namespace SmolEngine
 		{
 			event.m_Handled = true;
 		}
+
 		//TO DO: Block Mouse & Keyboard events
 		//event.m_Handled |= event.m_EventCategory == (uint32_t) EventType::S_MOUSE_MOVE && io.WantCaptureMouse;
 		//event.m_Handled |= event.m_EventCategory == (uint32_t)EventCategory::S_EVENT_KEYBOARD && io.WantCaptureKeyboard;
@@ -124,9 +126,11 @@ namespace SmolEngine
 		io.Fonts->AddFontFromFileTTF("../SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
 
 		Application& app = Application::GetApplication();
-		GLFWwindow* window = (app.GetWindow().GetNativeWindow());
 
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		GLFWwindow* EditorWindow = app.GetWindow().GetNativeWindow();
+
+		ImGui_ImplGlfw_InitForOpenGL(EditorWindow, true);
+
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
@@ -153,6 +157,7 @@ namespace SmolEngine
 		ImGui::NewFrame();
 	}
 
+
 	void ImGuiLayer::OnEnd()
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -169,4 +174,5 @@ namespace SmolEngine
 			glfwMakeContextCurrent(backup_current_context);
 		}
 	}
+
 }

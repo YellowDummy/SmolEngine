@@ -76,8 +76,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\fmod\include;Libraries\fmod\libs;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;SMOLENGINE_EDITOR;GLFW_INCLUDE_NONE;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -89,7 +89,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Debug-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Debug-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -100,8 +100,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\fmod\include;Libraries\fmod\libs;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;SMOLENGINE_EDITOR;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -117,7 +117,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Release-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Release-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -128,8 +128,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\fmod\include;Libraries\fmod\libs;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;SMOLENGINE_EDITOR;GLFW_INCLUDE_NONE;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -145,7 +145,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Dist-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Dist-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Dist-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Dist-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Dist-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Dist-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Dist-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Dist-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -555,6 +555,7 @@
     <ClInclude Include="Source\Core\ECS\Components.h" />
     <ClInclude Include="Source\Core\ECS\DefaultSystems.h" />
     <ClInclude Include="Source\Core\ECS\Scene.h" />
+    <ClInclude Include="Source\Core\ECS\SceneData.h" />
     <ClInclude Include="Source\Core\ECS\ScriptableObject.h" />
     <ClInclude Include="Source\Core\EngineCommand.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
@@ -584,6 +585,7 @@
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglRendererAPI.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglShader.h" />
+    <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglText.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglTexture.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="Source\Core\Renderer\Renderer.h" />
@@ -591,6 +593,7 @@
     <ClInclude Include="Source\Core\Renderer\RendererAPI.h" />
     <ClInclude Include="Source\Core\Renderer\Shader.h" />
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />
+    <ClInclude Include="Source\Core\Renderer\Text.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
     <ClInclude Include="Source\Core\SLog.h" />
@@ -599,7 +602,11 @@
     <ClInclude Include="Source\Core\Scripting\OutValues.h" />
     <ClInclude Include="Source\Core\Time.h" />
     <ClInclude Include="Source\Core\Tools.h" />
-    <ClInclude Include="Source\Core\UI\Button.h" />
+    <ClInclude Include="Source\Core\UI\UIButton.h" />
+    <ClInclude Include="Source\Core\UI\UICanvas.h" />
+    <ClInclude Include="Source\Core\UI\UIElement.h" />
+    <ClInclude Include="Source\Core\UI\UILayer.h" />
+    <ClInclude Include="Source\Core\UI\UITextLabel.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\SmolEngineCore.h" />
     <ClInclude Include="Source\stdafx.h" />
@@ -617,6 +624,7 @@
     <ClCompile Include="Source\Core\ECS\Components.cpp" />
     <ClCompile Include="Source\Core\ECS\DefaultSystems.cpp" />
     <ClCompile Include="Source\Core\ECS\Scene.cpp" />
+    <ClCompile Include="Source\Core\ECS\SceneData.cpp" />
     <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
@@ -637,6 +645,7 @@
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglRendererAPI.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglShader.cpp" />
+    <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglText.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglTexture.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglVertexArray.cpp" />
     <ClCompile Include="Source\Core\Renderer\Renderer.cpp" />
@@ -644,10 +653,14 @@
     <ClCompile Include="Source\Core\Renderer\RendererAPI.cpp" />
     <ClCompile Include="Source\Core\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Core\Renderer\SubTexture.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Text.cpp" />
     <ClCompile Include="Source\Core\Renderer\Texture.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
-    <ClCompile Include="Source\Core\UI\Button.cpp" />
+    <ClCompile Include="Source\Core\UI\UIButton.cpp" />
+    <ClCompile Include="Source\Core\UI\UICanvas.cpp" />
+    <ClCompile Include="Source\Core\UI\UILayer.cpp" />
+    <ClCompile Include="Source\Core\UI\UITextLabel.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

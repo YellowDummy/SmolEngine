@@ -13,6 +13,7 @@ namespace SmolEngine
 	class ImGuiLayer;
 	class Window;
 	struct DeltaTime;
+	class UIText;
 
 
 	class Application
@@ -20,40 +21,61 @@ namespace SmolEngine
 	public:
 
 		Application();
+
 		Application(const Application&) = delete;
+
 		virtual ~Application();
 
 		void InitApp();
+
 		void CloseApp();
-		void BindAction(const int eventType, const int key, const void *event_ptr);
+
 		void PushLayer(Layer* layer);
+
 		void PushOverlay(Layer* layer);
+
 		void PopLayer();
 
 		//Callbacks
 		bool OnWindowClose(Event& e);
+
 		bool OnWindowResize(Event& e);
 
-		inline Window& GetWindow() { return *m_Window; }
-		inline static Application& GetApplication() { return *s_Instance; }
+		Window& GetWindow() { return *m_Window; }
+
+		static Application& GetApplication() { return *s_Instance; }
 
 		const uint32_t GetWindowHeight();
+
 		const uint32_t GetWindowWidth();
 
 	protected:
+
 		ImGuiLayer* m_ImGuiLayer;
+
 		Ref<Window> m_Window;
+
+
 		Ref<LayerManager> m_LayerHandler;
+
 		Ref<EventHandler> m_EventHandler;
 
 	private:
+
 		virtual void ClientInit() = 0;
+
 		void RunApp();
+
 		void OnEvent(Event& event);
 
 	private:
+
+		UIText* m_UIText = nullptr;
+
 		static Application* s_Instance;
+
 		bool m_Running, m_WindowMinimized;
+
 		float m_LastFrameTime;
 	};
 

@@ -76,6 +76,29 @@ namespace SmolEngine
 
 	}
 
+	OpenglTexture2D::OpenglTexture2D(FT_Bitmap* bitmap)
+	{
+		m_Width = bitmap->width;
+		m_Height = bitmap->rows;
+
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_Width, m_Height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap->buffer);
+
+	}
+
 	OpenglTexture2D::~OpenglTexture2D()
 	{
 		glDeleteTextures(1, &m_RendererID);

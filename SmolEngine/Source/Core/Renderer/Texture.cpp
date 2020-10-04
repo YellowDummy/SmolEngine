@@ -30,4 +30,15 @@ namespace SmolEngine
 		default: NATIVE_ERROR("Unknow Renderer API"); return nullptr;
 		}
 	}
+
+	Ref<Texture2D> Texture2D::Create(FT_Bitmap* bitmap)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None: NATIVE_ERROR("No renderer API  specified."); return nullptr;
+		case RendererAPI::API::OpenGL: return std::make_shared<OpenglTexture2D>(bitmap); break;
+		case RendererAPI::API::Vulkan: return nullptr; break;
+		default: NATIVE_ERROR("Unknow Renderer API"); return nullptr;
+		}
+	}
 }

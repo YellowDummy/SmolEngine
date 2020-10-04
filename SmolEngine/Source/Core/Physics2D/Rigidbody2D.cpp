@@ -117,5 +117,7 @@ namespace SmolEngine
 		{
 			return b2BodyType::b2_staticBody;
 		}
+
+		return b2BodyType::b2_staticBody;
 	}
 }

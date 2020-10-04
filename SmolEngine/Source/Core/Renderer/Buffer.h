@@ -75,7 +75,9 @@ namespace SmolEngine
 	class BufferLayout
 	{
 	public:
+
 		BufferLayout(){}
+
 		BufferLayout(const std::initializer_list<BufferElement>& elemets)
 			:m_Elements(elemets)
 		{
@@ -83,13 +85,17 @@ namespace SmolEngine
 		}
 
 		inline uint32_t GetStride() const { return m_Stride; }
+
 		inline const std::vector<BufferElement>& GetElements() const { return m_Elements; }
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
+
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
 
 		std::vector<BufferElement>::const_iterator begin() const { return m_Elements.begin(); }
+
 		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
+
 	private:
 
 		void CalculateOffsetAndPride()
@@ -106,6 +112,7 @@ namespace SmolEngine
 		}
 
 	private:
+
 		std::vector<BufferElement> m_Elements;
 		uint32_t m_Stride = 0;
 	};
@@ -113,23 +120,34 @@ namespace SmolEngine
 	class VertexBuffer
 	{
 	public:
+
 		virtual ~VertexBuffer() {};
+
 		virtual void Bind() const = 0;
+
 		virtual void UnBind() const = 0;
+
 		virtual void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0) const = 0;
+
 		virtual const BufferLayout& GetLayout() const = 0;
+
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 
 		static Ref<VertexBuffer> Create(uint32_t size);
+
 		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 	};
 
 	class IndexBuffer
 	{
 	public:
+
 		virtual ~IndexBuffer() {};
+
 		virtual void Bind() const = 0;
+
 		virtual void UnBind() const = 0;
+
 		virtual uint32_t GetCount() const = 0;
 
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
@@ -138,12 +156,17 @@ namespace SmolEngine
 	class VertexArray
 	{
 	public:
+
 		~VertexArray() {}
+
 		virtual void Bind() const = 0;
+
 		virtual void UnBind() const = 0;
 
 		virtual void SetVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) = 0;
+
 		virtual void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
+
 		virtual Ref<IndexBuffer> GetIndexBuffer() const = 0;
 
 		static Ref<VertexArray> Create();

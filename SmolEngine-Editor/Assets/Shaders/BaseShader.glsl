@@ -17,6 +17,7 @@ out float v_AmbientValue;
 void main()
 {
 	v_AmbientValue = u_AmbientValue;
+
 	if(u_TexCoord == vec2(-1.0, -1.0))
 	{
 	   v_TexCoord = a_TexCoord;
@@ -26,6 +27,7 @@ void main()
 	{
 	   v_TexCoord = u_TexCoord;
 	}
+	
 	gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 }
 
@@ -40,11 +42,21 @@ in float v_AmbientValue;
 uniform vec4 u_Color;
 uniform float u_TilingFactor;
 uniform sampler2D u_Texture;
+uniform bool u_TextMode;
 
 void main()
 {
 	vec4 ambient = u_Color * v_AmbientValue;
 	vec4 result = texture(u_Texture, v_TexCoord * u_TilingFactor);
-	result.rgb = result.rgb * ambient.rgb;
+
+	if(u_TextMode)
+	{
+		result = vec4(ambient.rgb, texture(u_Texture, v_TexCoord * u_TilingFactor).r);
+	}
+	else
+	{
+		result.rgb = result.rgb * ambient.rgb;
+	}
+
 	color = result;
 }

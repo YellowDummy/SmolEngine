@@ -82,6 +82,9 @@
     <Filter Include="Source\Core\Scripting">
       <UniqueIdentifier>{F02BF114-5C98-AC0F-258C-446D91B7CE77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\UI">
+      <UniqueIdentifier>{DB99E684-C767-DA8A-B0FB-4AB19C68B6EF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\glm\glm\common.hpp">
@@ -1275,6 +1278,9 @@
     <ClInclude Include="Source\Core\Audio\AudioEngine.h">
       <Filter>Source\Core\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Audio\AudioSource.h">
+      <Filter>Source\Core\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1288,6 +1294,9 @@
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Scene.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\SceneData.h">
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\ScriptableObject.h">
@@ -1377,6 +1386,9 @@
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglShader.h">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglText.h">
+      <Filter>Source\Core\Renderer\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglTexture.h">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClInclude>
@@ -1396,6 +1408,9 @@
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\SubTexture.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Text.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Texture.h">
@@ -1422,6 +1437,21 @@
     <ClInclude Include="Source\Core\Tools.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\UI\UIButton.h">
+      <Filter>Source\Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UI\UICanvas.h">
+      <Filter>Source\Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UI\UIElement.h">
+      <Filter>Source\Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UI\UILayer.h">
+      <Filter>Source\Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UI\UITextLabel.h">
+      <Filter>Source\Core\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Window.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1431,8 +1461,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Audio\AudioSource.h" />
-    <ClInclude Include="Source\Core\UI\Button.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1450,7 +1478,13 @@
     <ClCompile Include="Source\Core\AssetManager.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Audio\AudioClip.cpp">
+      <Filter>Source\Core\Audio</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Audio\AudioEngine.cpp">
+      <Filter>Source\Core\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Audio\AudioSource.cpp">
       <Filter>Source\Core\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Actor.cpp">
@@ -1463,6 +1497,9 @@
       <Filter>Source\Core\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Scene.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\SceneData.cpp">
       <Filter>Source\Core\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp">
@@ -1525,6 +1562,9 @@
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglShader.cpp">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglText.cpp">
+      <Filter>Source\Core\Renderer\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglTexture.cpp">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClCompile>
@@ -1546,6 +1586,9 @@
     <ClCompile Include="Source\Core\Renderer\SubTexture.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\Text.cpp">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Texture.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
@@ -1555,14 +1598,23 @@
     <ClCompile Include="Source\Core\SLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\UI\UIButton.cpp">
+      <Filter>Source\Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\UI\UICanvas.cpp">
+      <Filter>Source\Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\UI\UILayer.cpp">
+      <Filter>Source\Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\UI\UITextLabel.cpp">
+      <Filter>Source\Core\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Window.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Audio\AudioSource.cpp" />
-    <ClCompile Include="Source\Core\Audio\AudioClip.cpp" />
-    <ClCompile Include="Source\Core\UI\Button.cpp" />
   </ItemGroup>
 </Project>

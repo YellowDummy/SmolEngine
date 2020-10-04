@@ -67,6 +67,7 @@ namespace SmolEngine
 		std::string& GetName() { return Name; }
 
 		std::string& GetTag() { return Tag; }
+
 		const size_t GetID() { return ID; }
 
 		void SetParent(Ref<Actor> parent) { Parent = parent; }
@@ -74,18 +75,18 @@ namespace SmolEngine
 		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
 
 		Ref<Actor> GetParent() { return Parent; }
+
 		Ref<Actor> GetChildByName(const std::string& name);
+
 		Ref<Actor> GetChildByTag(const std::string& tag);
 
 		entt::entity& GetEntity() { return Entity; }
 
 	public:
+
 		bool IsDisabled;
+
 	private:
-		friend class cereal::access;
-		friend struct ScriptableObject;
-		friend class Scene;
-		friend class EditorLayer;
 
 		entt::entity Entity;
 		entt::registry& Reg;
@@ -100,6 +101,15 @@ namespace SmolEngine
 		Ref<Actor> Parent;
 
 		std::vector<Ref<OutValue>> m_OutValues;
+
+		bool m_showComponentUI = false;
+
+	private:
+
+		friend class cereal::access;
+		friend struct ScriptableObject;
+		friend class Scene;
+		friend class EditorLayer;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

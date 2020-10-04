@@ -28,6 +28,7 @@ namespace SmolEngine
 		void Load(const std::string& filePath);
 
 	private:
+
 		friend class EditorLayer;
 
 		std::unique_ptr<CameraController> m_Camera = nullptr;

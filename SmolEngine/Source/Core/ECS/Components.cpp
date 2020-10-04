@@ -37,4 +37,34 @@ namespace SmolEngine
 		WorldPos = other.WorldPos;
 		Enabled = other.Enabled;
 	}
+
+	Ref<UIElement> CanvasComponent::GetElement(size_t index)
+	{
+		if (Canvas)
+		{
+			return Canvas->GetElement(index);
+		}
+
+		return nullptr;
+	}
+
+	Ref<UIButton> CanvasComponent::GetButton(size_t index)
+	{
+		if (Canvas)
+		{
+			return Canvas->GetButton(index);
+		}
+
+		return nullptr;
+	}
+
+	Ref<UITextLabel> CanvasComponent::GetTextLabel(size_t index)
+	{
+		if (Canvas)
+		{
+			return Canvas->GetTextLabel(index);
+		}
+
+		return nullptr;
+	}
 }

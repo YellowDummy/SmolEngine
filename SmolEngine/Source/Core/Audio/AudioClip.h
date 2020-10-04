@@ -28,6 +28,7 @@ namespace SmolEngine
 		int Channel = 0;
 
 	private:
+
 		friend class cereal::access;
 
 		template<typename Archive>

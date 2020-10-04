@@ -17,31 +17,44 @@ namespace SmolEngine
 		}
 
 		std::string Title;
+
 		unsigned int Width, Height;
+
 		Ref<EventHandler> m_eventHandler;
 	};
 
 	static WindowData Data;
 
-	class SMOL_ENGINE_API Window
+	class Window
 	{
 	public:
 
 		GLFWwindow* m_Window;
 
 		Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler);
+
 		virtual ~Window() {  }
+
 		void OnUpdate();
+
 		void SetWidth(int);
+
 		void SetHeight(int);
+
 		unsigned int GetWidth() const;
+
 		unsigned int GetHeight() const;
+
 		GLFWwindow* GetNativeWindow() const { return m_Window; }
+
 		void ShutDown();
 
 	private:
+
 		GraphicsContext* m_Context;
+
 		void WidnowInit(const std::string& title, const int& height, const int& width);
+
 		void SetVSync(bool enabled);
 	};
 

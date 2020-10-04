@@ -23,6 +23,7 @@ namespace SmolEngine
 	{
 		m_StudioSystem = nullptr;
 		m_System = nullptr;
+		m_NextChannelId = 0;
 
 		ErrorCheck(FMOD::Studio::System::create(&m_StudioSystem));
 		ErrorCheck(m_StudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL));
@@ -85,11 +86,11 @@ namespace SmolEngine
 	{
 		if (!m_IsInitialized) { return; }
 
-		auto tFoundIt = m_SoundsMap.find(filePath);
-		if (tFoundIt != m_SoundsMap.end())
+		auto result = m_SoundsMap.find(filePath);
+		if (result != m_SoundsMap.end())
 		{
-			CONSOLE_WARN("Sound already exist!");
-			return;
+			CONSOLE_WARN("Sound already exist! Replacing...");
+			m_SoundsMap.erase(filePath);
 		}
 
 		FMOD_MODE eMode = FMOD_DEFAULT;

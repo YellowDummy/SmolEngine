@@ -10,6 +10,8 @@
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Renderer/Renderer.h"
 #include "Core/ECS/Scene.h"
+#include "Core/UI/UILayer.h"
+
 
 namespace SmolEngine 
 {
@@ -63,15 +65,14 @@ namespace SmolEngine
 		//Creating New Window Using GLFW
 		m_Window = std::make_shared<Window>(std::string("SmolEngine Editor - v0.1"), 1080, 1920, m_EventHandler);
 
-		//Initializing ImGui
+		//Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
-		//---------------------------------------------------------------------///
+
+		//Initializing Platform Specific Renderer
+		RendererCommand::Init();
 
 		//Initializing Scene Handler
 		Scene::GetScene()->Init();
-
-		NATIVE_INFO("Initialized successfully");
-		timer.StopTimer();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
@@ -79,11 +80,15 @@ namespace SmolEngine
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
-		//Creating & Pushing ImGui Layer As Overlay
-		PushOverlay(m_ImGuiLayer);
+		//Pushing Dear ImGui Layer
+		PushLayer(m_ImGuiLayer);
 
-		//Initializing Platform Specific Renderer
-		RendererCommand::Init();
+		//Pushing UI Layer as Overlay
+		auto uiLayer = UILayer::GetSingleton();
+		PushOverlay(uiLayer);
+
+		timer.StopTimer();
+		NATIVE_INFO("Initialized successfully");
 
 		//Starting Main Loop
 		RunApp();
@@ -92,9 +97,11 @@ namespace SmolEngine
 	void Application::CloseApp()
 	{
 		NATIVE_INFO("State : Shutdown");
+
 		m_Running = false;
 		Scene::GetScene()->ShutDown();
 		m_Window->ShutDown();
+
 		exit(0);
 	}
 
@@ -135,6 +142,7 @@ namespace SmolEngine
 		//Setting Event Hooks - Functions Must Always Return Boolean: True If Event Should Be Blocked, False If Not
 
 		//S_BIND_EVENT_CATEGORY(Application, OnWindowClose, EventCategory::S_EVENT_APPLICATION, event);
+
 		S_BIND_EVENT_TYPE(Application, OnWindowClose, EventType::S_WINDOW_CLOSE, event);
 		S_BIND_EVENT_TYPE(Application, OnWindowResize, EventType::S_WINDOW_RESIZE, event);
 
@@ -149,11 +157,6 @@ namespace SmolEngine
 		}
 	}
 
-	void Application::BindAction(const int eventType, const int key, const void *event_ptr)
-	{
-		m_EventHandler->BindAction(eventType, key, event_ptr);
-	}
-
 	void Application::PushLayer(Layer* layer)
 	{
 		m_LayerHandler->AddLayer(layer);
@@ -162,6 +165,11 @@ namespace SmolEngine
 	void Application::PushOverlay(Layer* layer)
 	{
 		m_LayerHandler->AddOverlay(layer);
+	}
+
+	void Application::PopLayer()
+	{
+
 	}
 
 	bool Application::OnWindowClose(Event& e)

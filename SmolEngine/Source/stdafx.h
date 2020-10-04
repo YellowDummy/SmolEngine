@@ -13,7 +13,6 @@
 #include <fstream>
 #include <sstream>
 
-//-----------------Data------------------\\
 
 #include <vector>
 #include <unordered_map>

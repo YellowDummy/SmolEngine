@@ -63,6 +63,7 @@ project "SmolEngine"
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Libraries/cereal/include",
+		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/box2d/include",
 		"%{prj.name}/Source",
@@ -103,6 +104,7 @@ project "SmolEngine"
 		{
 			"PLATFORM_WIN",
 			"BUILD_DLL",
+			"SMOLENGINE_EDITOR",
 			"GLFW_INCLUDE_NONE"
 		}
 
@@ -112,17 +114,33 @@ project "SmolEngine"
 		buildoptions "/bigobj"
 		symbols "on"
 
+		links 
+		{ 
+			"SmolEngine/Libraries/freetype/libs/freetype_d.lib"
+		}
+
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		optimize "on"
 
+		links 
+		{ 
+			"SmolEngine/Libraries/freetype/libs/freetype.lib"
+		}
+
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		optimize "on"
+
+		links 
+		{ 
+			"SmolEngine/Libraries/freetype/libs/freetype.lib"
+		}
+
 
 project "GameX"
 	location "GameX"
@@ -150,13 +168,15 @@ project "GameX"
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
+		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
 		"SmolEngine/Lua",
 		"SmolEngine/Lua/include",
 		"SmolEngine/Libraries",
 		"%{IncludeDir.glm}",
-        "%{IncludeDir.entt}",
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}"
 	}
 
@@ -173,6 +193,7 @@ project "GameX"
 
 		defines
 		{
+			"_CRT_SECURE_NO_WARNINGS",
 			"PLATFORM_WIN"
 		}
 
@@ -184,7 +205,7 @@ project "GameX"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
-		buildoptions "/MD"
+		buildoptions "/MDd"
 		buildoptions "/bigobj"
 		optimize "on"
 
@@ -193,6 +214,7 @@ project "GameX"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		optimize "on"
+
 
 	
 	project "SmolEngine-Editor"
@@ -222,13 +244,15 @@ project "GameX"
 		"SmolEngine/Libraries/jinx/Include",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
+		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Libraries/jinx",
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
 		"SmolEngine/Lua",
 		"SmolEngine/Lua/include",
 		"%{IncludeDir.glm}",
-        "%{IncludeDir.entt}",
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}"
 	}
 
@@ -245,6 +269,7 @@ project "GameX"
 
 		defines
 		{
+			"_CRT_SECURE_NO_WARNINGS",
 			"PLATFORM_WIN"
 		}
 
@@ -254,14 +279,17 @@ project "GameX"
 		buildoptions "/bigobj"
 		symbols "on"
 
+
 	filter "configurations:Release"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		optimize "on"
 
+
 	filter "configurations:Dist"
 		defines "SE_DIST"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		optimize "on"
+

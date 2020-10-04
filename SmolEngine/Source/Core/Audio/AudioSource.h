@@ -34,12 +34,14 @@ namespace SmolEngine
 		void DebugStop(Ref<AudioClip> clip);
 
 	private:
+
 		std::map <std::string, Ref<AudioClip>> m_AudioClips;
 		AudioEngine* m_AudioEngine = nullptr;
 
 		bool m_PlayOnAwake = true;
 
 	private:
+
 		friend class cereal::access;
 		friend class EditorLayer;
 		friend class Scene;

@@ -71,6 +71,19 @@ namespace SmolEngine
 		m_Camera->SetPosition(wolrdPos);
 	}
 
+	void CameraController::Reload()
+	{
+		float aspectRatio = (float)Application::GetApplication().GetWindowHeight() / (float)Application::GetApplication().GetWindowWidth();
+		m_Camera = std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+
+		FramebufferData m_FramebufferData;
+		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
+		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
+		m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+
+		SetZoom(m_ZoomLevel);
+	}
+
 	void CameraController::OnResize(float width, float height)
 	{
 		m_AspectRatio = width / height;

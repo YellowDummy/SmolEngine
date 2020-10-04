@@ -6,6 +6,7 @@ namespace SmolEngine
 	class NetworkManager
 	{
 	public:
+
 		NetworkManager() = default;
 	};
 }

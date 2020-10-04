@@ -7,6 +7,7 @@
 
 namespace SmolEngine
 {
+	
 	class OrthographicCamera;
 	enum class DebugPrimitives
 	{
@@ -18,21 +19,30 @@ namespace SmolEngine
 	class Renderer2D
 	{
 	public:
+
 		static void Init();
+
 		static void Shutdown();
 
 		static void BeginScene(Ref<OrthographicCamera> camera, float ambientValue);
+
 		static void EndScene();
 
 		static void DrawQuadRotated(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color);
+
 		static void DrawSprite(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
 float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		static void DrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color);
 
+		//UI
+		static void DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D>& texture, const glm::vec4& tintColor = glm::vec4(1.0f));
+
 		//Debug
 		static void BeginDebug(Ref<OrthographicCamera> camera);
+
 		static void EndDebug();
+
 		static void DebugDraw(DebugPrimitives type, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
 		//Light

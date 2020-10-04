@@ -14,14 +14,19 @@ namespace SmolEngine
 	class Renderer
 	{
 	public:
+
 		Renderer(const Renderer&) = delete;
+
 		static void Init();
+
 		static void BeginScene(OrthographicCamera& cameraRef);
+
 		static void EndScene();
 
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f), const glm::vec4& color = glm::vec4(1.0f));
 
 		static void OnWidowResize(uint32_t width, uint32_t height);
+
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
 	private:
@@ -40,7 +45,28 @@ namespace SmolEngine
 		inline static void Init()
 		{
 			s_RendererAPI->Init();
+
 			Renderer2D::Init();
+		}
+
+		inline static void BindTexture(uint32_t id)
+		{
+			s_RendererAPI->BindTexture(id);
+		}
+
+		inline static void DisableDepth()
+		{
+			s_RendererAPI->DisableDepth();
+		}
+
+		inline static void DrawFrameBuffer()
+		{
+			s_RendererAPI->DrawFrameBuffer();
+		}
+
+		inline static void Reset()
+		{
+			s_RendererAPI->Init();
 		}
 
 		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
