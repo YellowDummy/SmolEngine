@@ -19,8 +19,6 @@ namespace SmolEngine
 
 		void DisableDepth() override;
 
-		void DrawFrameBuffer() override;
-
 		void BindTexture(uint32_t id) override;
 
 		void SetClearColor(const glm::vec4& color) override;

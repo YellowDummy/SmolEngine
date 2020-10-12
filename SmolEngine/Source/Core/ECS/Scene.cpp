@@ -13,6 +13,8 @@
 
 #include "Core/Renderer/Text.h"
 
+#include "Core/UI/UICanvas.h"
+
 
 namespace SmolEngine
 {
@@ -27,35 +29,29 @@ namespace SmolEngine
 
 		m_World = new b2World(b2Vec2{ m_SceneData.m_Gravity.x, m_SceneData.m_Gravity.y });
 		m_SceneData.m_Registry = entt::registry();
+		m_InPlayMode = false;
+
+#ifdef SMOLENGINE_EDITOR
 
 		m_EditorCamera = std::make_shared<EditorCameraController>(Application::GetApplication().GetWindowWidth() / Application::GetApplication().GetWindowHeight());
 		m_EditorCamera->SetZoom(4.0f);
-		m_InPlayMode = false;
 
-		//----------------------------------JINXSCRIPT-INITIALIZATION---------------------------------//
-		Jinx::GlobalParams globalParams;
-		globalParams.enableLogging = true;
-		globalParams.logBytecode = true;
-		globalParams.logSymbols = true;
-		globalParams.enableDebugInfo = true;
-		globalParams.logFn = [](Jinx::LogLevel level, const char* msg)
+#endif
+
+	}
+
+	void Scene::StartGame()
+	{
+		m_BuildConfig = LoadConfigFile();
+		if (m_BuildConfig)
 		{
-			if (level == Jinx::LogLevel::Error)
+			if (!LoadSceneRuntime(0))
 			{
-				NATIVE_ERROR(msg);
-				return;
+				const auto scene = m_BuildConfig->m_Scenes[0];
+				NATIVE_ERROR("Couldn't load the scene! File name: {}, file path: {}", scene.FileName, scene.FilePath);
+				abort();
 			}
-
-			printf(msg);
-		};
-		globalParams.allocBlockSize = 1024 * 16;
-		globalParams.allocFn = [](size_t size) { return malloc(size); };
-		globalParams.reallocFn = [](void* p, size_t size) { return realloc(p, size); };
-		globalParams.freeFn = [](void* p) { free(p); };
-		Jinx::Initialize(globalParams);
-		m_JinxRuntime = Jinx::CreateRuntime();
-
-		//----------------------------------JINXSCRIPT-INITIALIZATION---------------------------------//
+		}
 	}
 
 	void Scene::ShutDown()
@@ -70,8 +66,11 @@ namespace SmolEngine
 			return;
 		}
 
-        //SceneData must be saved before the simulation starts
+#ifdef SMOLENGINE_EDITOR
+
+		//SceneData must be saved before the simulation starts
 		Save(m_SceneData.m_filePath);
+#endif
 
 		//Updating UI Layer
 		auto uiLayer = UILayer::GetSingleton();
@@ -202,7 +201,11 @@ namespace SmolEngine
 			scriptGroup.get<ScriptObject>(script).OnDestroy();
 		}
 
+#ifdef SMOLENGINE_EDITOR
+
 		Load(m_SceneData.m_filePath);
+
+#endif
 	}
 
 	void Scene::OnUpdate(DeltaTime deltaTime)
@@ -222,6 +225,7 @@ namespace SmolEngine
 
 					cameraComponent.Camera->m_FrameBuffer->Bind();
 
+					RendererCommand::Reset();
 					RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1, 1 });
 					RendererCommand::Clear();
 
@@ -250,7 +254,7 @@ namespace SmolEngine
 
 						//Rendering UI Elements to the target framebuffer
 						{
-							RendererCommand::DisableDepth();
+							//RendererCommand::DisableDepth();
 
 							auto cameraGroup = m_SceneData.m_Registry.group<TransformComponent>(entt::get<CameraComponent>);
 							for (const auto& obj : cameraGroup)
@@ -270,7 +274,38 @@ namespace SmolEngine
 								}
 							}
 
-							RendererCommand::Reset();
+							//RendererCommand::Reset();
+						}
+
+						//Rendering 2D Animation
+						{
+							auto& animGroup = m_SceneData.m_Registry.group<Animation2DControllerComponent>(entt::get<TransformComponent>);
+							for (auto entity : animGroup)
+							{
+								auto& [animController, transfrom] = animGroup.get<Animation2DControllerComponent, TransformComponent>(entity);
+
+								if (animController.AnimationController != nullptr)
+								{
+									if (animController.AnimationController->m_CurrentClip != nullptr)
+									{
+										animController.AnimationController->Update();
+
+										auto& currentClip = animController.AnimationController->m_CurrentClip;
+
+										if (transfrom.Scale == glm::vec2(1.0f))
+										{
+											Renderer2D::DrawAnimation2D(transfrom.WorldPos, currentClip->Clip->m_CurrentFrameKey->TextureScale,
+												0, currentClip->Clip->m_CurrentFrameKey->Texture, 1.0f, currentClip->Clip->m_CurrentFrameKey->TextureColor);
+										}
+										else
+										{
+											Renderer2D::DrawAnimation2D(transfrom.WorldPos, currentClip->Clip->m_CurrentFrameKey->TextureScale + transfrom.Scale,
+												0, currentClip->Clip->m_CurrentFrameKey->Texture, 1.0f, currentClip->Clip->m_CurrentFrameKey->TextureColor);
+										}
+
+									}
+								}
+							}
 						}
 					}
 					Renderer2D::EndScene();
@@ -278,8 +313,14 @@ namespace SmolEngine
 					cameraComponent.Camera->SetZoom(cameraComponent.Camera->m_ZoomLevel);
 					cameraComponent.Camera->SetTransform(cameraTransformComponent.WorldPos);
 
-
 					cameraComponent.Camera->m_FrameBuffer->UnBind();
+
+#ifdef SMOLENGINE_EDITOR
+
+#else
+
+					Renderer2D::DrawFrameBuffer(cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID());
+#endif
 				}
 			}
 		}
@@ -809,12 +850,7 @@ namespace SmolEngine
 		return buffer;
 	}
 
-	const Jinx::RuntimePtr Scene::GetJinxRuntime()
-	{
-		return m_JinxRuntime;
-	}
-
-	void Scene::Save(const std::string& filePath)
+	bool Scene::Save(const std::string& filePath)
 	{
 		std::stringstream storageRegistry;
 		std::stringstream storageSceneData;
@@ -862,28 +898,27 @@ namespace SmolEngine
 			myfile << result.str();
 			myfile.close();
 			CONSOLE_WARN(std::string("Scene saved successfully"));
+			return true;
 		}
-		else
-		{
-			CONSOLE_ERROR(std::string("Could not write to a file!"));
-		}
+
+		CONSOLE_ERROR(std::string("Could not write to a file!"));
+		return false;
 	}
 
-	void Scene::Load(const std::string& filePath)
+	bool Scene::Load(const std::string& filePath)
 	{
 		std::ifstream file(filePath);
 		std::stringstream buffer;
 
-		//Copying file content to a buffer
-		if (file)
+		if (!file)
 		{
-			buffer << file.rdbuf();
-			file.close();
+			NATIVE_ERROR("Could not open the file: {}", filePath);
+			return false;
 		}
-		else 
-		{ 
-			NATIVE_ERROR("Could not open the file: {}", filePath); return; 
-		}
+
+		//Copying file content to a buffer
+		buffer << file.rdbuf();
+		file.close();
 
 		std::string segment;
 		std::vector<std::string> seglist;
@@ -892,6 +927,11 @@ namespace SmolEngine
 		while (std::getline(buffer, segment, '|'))
 		{
 			seglist.push_back(segment);
+		}
+
+		if (seglist.size() != 2)
+		{
+			return false;
 		}
 
 		//Components data
@@ -1034,7 +1074,8 @@ namespace SmolEngine
 
 							if (actor->GetID() == script.ActorID)
 							{
-								script.Script->m_Actor = actor; break; 
+								script.Script->m_Actor = actor;
+								break; 
 							}
 						}
 
@@ -1055,15 +1096,18 @@ namespace SmolEngine
 
 		m_SceneData = data;
 		CONSOLE_WARN(std::string("Scene loaded successfully"));
+		return true;
 	}
 
-	void Scene::SaveCurrentScene()
+	bool Scene::SaveCurrentScene()
 	{
 		//Searching for a file in assets folders if absolute path is not valid and replace old path if file found
 		if (PathCheck(m_SceneData.m_filePath, m_SceneData.m_fileName)) 
 		{
-			Save(m_SceneData.m_filePath);
+			return Save(m_SceneData.m_filePath);
 		}
+
+		return false;
 	}
 
 	void Scene::CreateScene(const std::string& filePath, const std::string& fileName)
@@ -1076,12 +1120,50 @@ namespace SmolEngine
 		m_SceneData = newScene;
 	}
 
+	bool Scene::LoadSceneRuntime(uint32_t index)
+	{
+		if (m_BuildConfig)
+		{
+			auto result = m_BuildConfig->m_Scenes.find(index);
+			if (result == m_BuildConfig->m_Scenes.end())
+			{
+				NATIVE_ERROR("Could not load the scene, index: {}", index);
+				return false;
+			}
+
+			auto path = result->second.FilePath;
+			auto name = result->second.FileName;
+
+			if (PathCheck(path, name))
+			{
+				if (Load(path))
+				{
+					OnPlay();
+					return true;
+				}
+			}
+
+			return false;
+		}
+	}
+
+	//TODO: Assets folder should be defined by the user (via settings window)
 	bool Scene::ChangeFilePath(const std::string& fileName, std::string& pathToChange)
 	{
 		using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
-		//TODO: Assets folder should be defined by the user (via settings window)
+#ifdef SMOLENGINE_EDITOR
+
 		for (const auto& dirEntry : recursive_directory_iterator(std::string("../GameX/")))
+		{
+			if (dirEntry.path().filename() == fileName)
+			{
+				pathToChange = dirEntry.path().u8string();
+				return true;
+			}
+		}
+
+		for (const auto& dirEntry : recursive_directory_iterator(std::string("../SmolEngine/Assets/")))
 		{
 			if (dirEntry.path().filename() == fileName)
 			{
@@ -1098,6 +1180,17 @@ namespace SmolEngine
 				return true;
 			}
 		}
+#else
+		for (const auto& dirEntry : recursive_directory_iterator(std::string("C:/Dev/SmolEngine/")))
+		{
+			if (dirEntry.path().filename() == fileName)
+			{
+				pathToChange = dirEntry.path().u8string();
+				return true;
+			}
+		}
+#endif
+
 
 		return false;
 	}
@@ -1126,6 +1219,36 @@ namespace SmolEngine
 		}
 
 		return true;
+	}
+
+	BuildConfig* Scene::LoadConfigFile()
+	{
+		std::string path = "../Config/ProjectConfig.smolconfig";
+		if (!PathCheck(path, { "ProjectConfig.smolconfig" }))
+		{
+			return nullptr;
+		}
+
+		std::ifstream file(path);
+		std::stringstream storage;
+
+		if (!file)
+		{
+			NATIVE_ERROR("Could not open the file: {}", path);
+			return nullptr;
+		}
+
+		storage << file.rdbuf();
+		file.close();
+
+		BuildConfig* temp = new BuildConfig();
+
+		{
+			cereal::JSONInputArchive dataInput{ storage };
+			dataInput(temp->m_Scenes);
+		}
+
+		return temp;
 	}
 
 	SceneData& Scene::GetSceneData()

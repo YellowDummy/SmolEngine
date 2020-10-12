@@ -13,7 +13,7 @@ class CharMovementScript : public ScriptableObject
 {
 public:
 
-	//Must be implemented by the user in order to register an external script in the engine (!!)
+	//Must be implemented by the user in order to register an external script in the engine
 	std::shared_ptr<ScriptableObject> Instantiate() override
 	{
 		return std::make_shared<CharMovementScript>();
@@ -73,12 +73,6 @@ public:
 		{
 			CONSOLE_INFO(std::string("Child found : ") + ground->GetName());
 		}
-
-	}
-
-	void ButtonClickCallback()
-	{
-		CONSOLE_INFO(std::string("Button Is Pressed!"));
 	}
 
 	void OnUpdate(DeltaTime deltaTime) override
@@ -101,15 +95,25 @@ public:
 		}
 	}
 
-	void OnDestroy() override {}
+	void OnDestroy() override
+	{
+
+	}
+
+	void ButtonClickCallback()
+	{
+		CONSOLE_INFO(std::string("Button Is Pressed!"));
+
+		EngineCommand::LoadScene(1);
+	}
 
 private:
 
-	Rigidbody2DComponent* rb = nullptr;
-
+	std::string name = "Noob99";
 	float speed = 1.0f;
 	int speedMod = 1;
-	std::string name = "Noob99";
+
+	Rigidbody2DComponent* rb = nullptr;
 };
 
 class CameraMovementScript : public ScriptableObject

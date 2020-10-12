@@ -7,6 +7,7 @@
 #include "Core/Input.h"
 #include "Core/Layer.h"
 #include "Core/InputCodes.h"
+#include "Core/EngineCommand.h"
 
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Events/InputEvent.h"

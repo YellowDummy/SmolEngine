@@ -138,10 +138,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CppScriptingExamples.h" />
+    <ClInclude Include="GameLayer.h" />
     <ClInclude Include="Main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppScriptingExamples.cpp" />
+    <ClCompile Include="GameLayer.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>

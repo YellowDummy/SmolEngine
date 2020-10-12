@@ -16,6 +16,7 @@ Already Implemented:
 - UI (buttons, text labels)
 - 2D Animation
 - 2D Physics
+- Build System (Windows)
 - Serialization (scene, animation files etc)
 
 

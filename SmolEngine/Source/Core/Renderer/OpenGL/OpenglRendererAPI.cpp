@@ -21,22 +21,19 @@ namespace SmolEngine
 
 	void OpenglRendererAPI::Init()
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendEquation(GL_FUNC_ADD);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
 
 		glEnable(GL_ALPHA_TEST);
-		glEnable(GL_DEPTH_TEST);
+
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	void OpenglRendererAPI::DisableDepth()
 	{
 		glDisable(GL_DEPTH_TEST);
-	}
-
-	void OpenglRendererAPI::DrawFrameBuffer()
-	{
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	}
 
 	void OpenglRendererAPI::BindTexture(uint32_t id)

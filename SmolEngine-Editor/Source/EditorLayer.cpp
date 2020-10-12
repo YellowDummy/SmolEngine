@@ -35,6 +35,7 @@ namespace SmolEngine
 	{
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
 
+		m_BuildPanel = std::make_unique<BuildPanel>();
 		m_AnimationPanel = std::make_unique<AnimationPanel>();
 		m_SettingsWindow = std::make_unique<SettingsWindow>();
 		m_ActorCreationWindow = std::make_unique<ActorCreationWindow>();
@@ -43,10 +44,6 @@ namespace SmolEngine
 
 		m_Scene = Scene::GetScene();
 		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene"), std::string("TestScene.smolscene"));
-
-		//Temp
-		m_Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
-		m_Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
 
 		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
 		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
@@ -74,12 +71,6 @@ namespace SmolEngine
 
 		auto nameActor = m_Scene->FindActorByName("Ground");
 		auto tagActor = m_Scene->FindActorByTag("TestTag");
-
-		// Initialize Lua
-		//lua_State* L = luaL_newstate();
-		//luaL_openlibs(L);
-
-		//JinxScript script(m_Actor, m_Scene.GetJinxRuntime(), std::string("../GameX/Assets/JinxScripts/Example.jinx"));
 	}
 
 	void EditorLayer::OnDetach()
@@ -127,7 +118,7 @@ namespace SmolEngine
 		static bool showConsole = true;
 		static bool showGameView = false;
 		static bool showSettingsWindow = false;
-
+		static bool showBuildPanel = false;
 		static bool showAnimationPanel = false;
 
 		//TEMP
@@ -321,6 +312,22 @@ namespace SmolEngine
 			if (ImGui::BeginMenu("Build"))
 			{
 
+				if (ImGui::MenuItem("Windows"))
+				{
+					m_BuildPanel->Load("../Config/ProjectConfig.smolconfig");
+					showBuildPanel = true;
+				}
+
+				if (ImGui::MenuItem("Linux"))
+				{
+
+				}
+
+				if (ImGui::MenuItem("Android"))
+				{
+
+				}
+
 				ImGui::EndMenu();
 			}
 
@@ -357,6 +364,8 @@ namespace SmolEngine
 		}
 		ImGui::EndMainMenuBar();
 		ImGui::PopStyleVar();
+
+		m_BuildPanel->Update(showBuildPanel);
 
 		m_SettingsWindow->Update(showSettingsWindow, m_Scene);
 
@@ -624,7 +633,18 @@ namespace SmolEngine
 					{
 						auto& tranfrom = m_SelectedActor->GetComponent<TransformComponent>();
 
-						ImGui::InputFloat3("Transform", glm::value_ptr(tranfrom.WorldPos));
+						static glm::vec3 pos = tranfrom.WorldPos;
+
+						if (ImGui::InputFloat3("Transform", glm::value_ptr(pos)))
+						{
+							if (pos.z > 10)
+							{
+								pos.z = 10;
+							}
+
+							tranfrom.WorldPos = pos;
+						}
+
 						ImGui::InputFloat("Rotation", &tranfrom.Rotation);
 						ImGui::InputFloat2("Scale", glm::value_ptr(tranfrom.Scale));
 
@@ -1426,6 +1446,8 @@ namespace SmolEngine
 								{
 									CONSOLE_WARN("Actor already has C++ Script component");
 								}
+
+								break;
 							}
 						}
 
@@ -1450,7 +1472,7 @@ namespace SmolEngine
 			{
 			case FileBrowserFlags::Load_Jinx_Script:
 
-				m_SelectedActor->AddComponent<JinxScriptComponent>(m_Actor, m_Scene->GetJinxRuntime(), m_FilePath);
+				//m_SelectedActor->AddComponent<JinxScriptComponent>(m_Actor, m_Scene->GetJinxRuntime(), m_FilePath);
 				ResetFileBrowser();
 				break;
 

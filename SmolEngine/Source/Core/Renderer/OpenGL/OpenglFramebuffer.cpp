@@ -62,6 +62,11 @@ namespace SmolEngine
 		glViewport(0, 0, m_Data.Width, m_Data.Height);
 	}
 
+	void OpenglFramebuffer::BindColorAttachment(uint32_t slot)
+	{
+		glBindTexture(slot, m_ColorAttachment);
+	}
+
 	void OpenglFramebuffer::UnBind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

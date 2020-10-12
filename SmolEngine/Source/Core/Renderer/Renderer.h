@@ -59,11 +59,6 @@ namespace SmolEngine
 			s_RendererAPI->DisableDepth();
 		}
 
-		inline static void DrawFrameBuffer()
-		{
-			s_RendererAPI->DrawFrameBuffer();
-		}
-
 		inline static void Reset()
 		{
 			s_RendererAPI->Init();

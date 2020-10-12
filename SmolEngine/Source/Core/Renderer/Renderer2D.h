@@ -3,12 +3,36 @@
 #include "Core/Renderer/Texture.h"
 #include "Core/Renderer/SubTexture.h"
 #include <glm/glm.hpp>
+#include <vector>
 
 
 namespace SmolEngine
 {
 	
 	class OrthographicCamera;
+	class Framebuffer;
+
+	enum class DrawableType : uint16_t
+	{
+		None = 0,
+		Sprite, Quad, Text, Animation, Light
+	};
+
+	struct Drawable
+	{
+		glm::vec4 Color = glm::vec4(1.0f);
+		glm::vec3 Transform = glm::vec3(1.0f);
+		glm::vec2 Scale = glm::vec2(1.0f);
+
+		Ref<Texture2D> Texture = nullptr;
+
+		float Rotation = 0.0f;
+		float AmbientValue = 1.0f;
+		uint32_t Layer = 0;
+
+		DrawableType Type = DrawableType::None;
+	};
+
 	enum class DebugPrimitives
 	{
 		None = 0,
@@ -30,13 +54,13 @@ namespace SmolEngine
 
 		static void DrawQuadRotated(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color);
 
-		static void DrawSprite(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+		static void DrawSprite(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D> texture,
 float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		static void DrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color);
 
 		//UI
-		static void DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D>& texture, const glm::vec4& tintColor = glm::vec4(1.0f));
+		static void DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D> texture, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		//Debug
 		static void BeginDebug(Ref<OrthographicCamera> camera);
@@ -52,8 +76,10 @@ float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
 			float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
-		static void DrawAnimation2D(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+		static void DrawAnimation2D(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D> texture,
 			float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+
+		static void DrawFrameBuffer(const uint32_t colorAttachmentID);
 
 		struct RendererData2D
 		{
@@ -63,5 +89,9 @@ float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 			inline uint32_t GetTotalVertexCount() { return QuadCount * 4; }
 			inline uint32_t GetTotalIndexCount() { return QuadCount * 6; }
 		};
+
+	private:
+
+		static bool FindShader(std::string& filePath, const std::string& shaderName);
 	};
 }

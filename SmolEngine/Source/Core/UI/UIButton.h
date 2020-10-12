@@ -7,6 +7,7 @@
 #include <string>
 #include <functional>
 
+
 namespace SmolEngine
 {
 	class Event;

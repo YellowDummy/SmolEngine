@@ -4,6 +4,7 @@
 
 #include "Core/ImGui/EditorConsole.h"
 #include "Core/ImGui/EditorPanels.h"
+#include "Core/ImGui/BuildPanel.h"
 
 #include "Core/ECS/Components.h"
 #include "Core/ECS/Scene.h"
@@ -113,6 +114,7 @@ namespace SmolEngine
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
 		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
+		std::unique_ptr<BuildPanel> m_BuildPanel = nullptr;
 		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
 		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;

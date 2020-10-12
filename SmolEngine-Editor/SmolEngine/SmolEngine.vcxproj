@@ -1,0 +1,693 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dist|x64">
+      <Configuration>Dist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{76BC28B1-6274-6AFE-CB7B-435AB75205EF}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SmolEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\..\Config\Build\Debug-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\..\Config\Obj\Debug-windows-x86_64\SmolEngine\</IntDir>
+    <TargetName>SmolEngine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\Config\Build\Release-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\..\Config\Obj\Release-windows-x86_64\SmolEngine\</IntDir>
+    <TargetName>SmolEngine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <OutDir>..\..\Config\Build\Dist-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\..\Config\Obj\Dist-windows-x86_64\SmolEngine\</IntDir>
+    <TargetName>SmolEngine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\SmolEngine\Libraries\icon_font_cpp_headers;..\..\SmolEngine\Libraries\spdlog\include;..\..\SmolEngine\Libraries\jinx\Include;..\..\SmolEngine\Libraries\jinx;..\..\SmolEngine\Libraries\cereal\include;..\..\SmolEngine\Libraries\freetype\include;..\..\SmolEngine\Libraries\fmod\include;..\..\SmolEngine\Libraries\box2d\include;..\..\SmolEngine\Source;..\..\SmolEngine\Lua;..\..\SmolEngine\Lua\include;..\..\SmolEngine\Libraries\glfw\include;..\..\SmolEngine\Libraries\glad\include;..\..\SmolEngine\Libraries\imgui;..\..\SmolEngine\Libraries\glm;..\..\SmolEngine\Libraries\stb_image;..\..\SmolEngine\Libraries\entt;..\..\SmolEngine\Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>..\..\SmolEngine\Libraries\glfw\bin\Debug-windows-x86_64\GLFW\GLFW.lib;..\..\SmolEngine\Libraries\glad\bin\Debug-windows-x86_64\Glad\Glad.lib;..\..\SmolEngine\Libraries\imgui\bin\Debug-windows-x86_64\ImGui\ImGui.lib;..\..\SmolEngine\Libraries\box2d\bin\Debug-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;..\..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;..\..\SmolEngine\Libraries\freetype\libs\freetype_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\SmolEngine\Libraries\icon_font_cpp_headers;..\..\SmolEngine\Libraries\spdlog\include;..\..\SmolEngine\Libraries\jinx\Include;..\..\SmolEngine\Libraries\jinx;..\..\SmolEngine\Libraries\cereal\include;..\..\SmolEngine\Libraries\freetype\include;..\..\SmolEngine\Libraries\fmod\include;..\..\SmolEngine\Libraries\box2d\include;..\..\SmolEngine\Source;..\..\SmolEngine\Lua;..\..\SmolEngine\Lua\include;..\..\SmolEngine\Libraries\glfw\include;..\..\SmolEngine\Libraries\glad\include;..\..\SmolEngine\Libraries\imgui;..\..\SmolEngine\Libraries\glm;..\..\SmolEngine\Libraries\stb_image;..\..\SmolEngine\Libraries\entt;..\..\SmolEngine\Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>..\..\SmolEngine\Libraries\glfw\bin\Release-windows-x86_64\GLFW\GLFW.lib;..\..\SmolEngine\Libraries\glad\bin\Release-windows-x86_64\Glad\Glad.lib;..\..\SmolEngine\Libraries\imgui\bin\Release-windows-x86_64\ImGui\ImGui.lib;..\..\SmolEngine\Libraries\box2d\bin\Release-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;..\..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;..\..\SmolEngine\Libraries\freetype\libs\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\SmolEngine\Libraries\icon_font_cpp_headers;..\..\SmolEngine\Libraries\spdlog\include;..\..\SmolEngine\Libraries\jinx\Include;..\..\SmolEngine\Libraries\jinx;..\..\SmolEngine\Libraries\cereal\include;..\..\SmolEngine\Libraries\freetype\include;..\..\SmolEngine\Libraries\fmod\include;..\..\SmolEngine\Libraries\box2d\include;..\..\SmolEngine\Source;..\..\SmolEngine\Lua;..\..\SmolEngine\Lua\include;..\..\SmolEngine\Libraries\glfw\include;..\..\SmolEngine\Libraries\glad\include;..\..\SmolEngine\Libraries\imgui;..\..\SmolEngine\Libraries\glm;..\..\SmolEngine\Libraries\stb_image;..\..\SmolEngine\Libraries\entt;..\..\SmolEngine\Libraries\yojimbo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>..\..\SmolEngine\Libraries\glfw\bin\Dist-windows-x86_64\GLFW\GLFW.lib;..\..\SmolEngine\Libraries\glad\bin\Dist-windows-x86_64\Glad\Glad.lib;..\..\SmolEngine\Libraries\imgui\bin\Dist-windows-x86_64\ImGui\ImGui.lib;..\..\SmolEngine\Libraries\box2d\bin\Dist-windows-x86_64\Box2D\Box2D.lib;opengl32.lib;..\..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;..\..\SmolEngine\Libraries\freetype\libs\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\common.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\_features.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\_fixes.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\_noise.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\_swizzle.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\_swizzle_func.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\_vectorize.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\compute_common.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\compute_vector_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_common.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_common_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_exponential.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_exponential_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_geometric.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_geometric_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_integer.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_integer_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_matrix.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_matrix_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_packing.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_packing_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_trigonometric.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_trigonometric_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_vector_relational.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\func_vector_relational_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\qualifier.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\setup.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_float.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_half.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_half.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat2x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat2x2.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat2x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat2x3.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat2x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat2x4.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat3x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat3x2.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat3x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat3x3.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat3x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat3x4.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x2.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x3.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x4.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_mat4x4_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_quat.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_quat.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_quat_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec1.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec2.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec3.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec4.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\detail\type_vec4_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\exponential.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_clip_space.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_clip_space.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double2x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double2x2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double2x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double2x3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double2x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double2x4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double3x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double3x2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double3x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double3x3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double3x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double3x4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double4x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double4x2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double4x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double4x3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double4x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_double4x4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float2x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float2x2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float2x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float2x3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float2x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float2x4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float3x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float3x2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float3x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float3x3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float3x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float3x4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float4x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float4x2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float4x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float4x3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float4x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_float4x4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_projection.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_projection.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_relational.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_transform.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\matrix_transform.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_common.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_common.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_common_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_double.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_double_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_exponential.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_exponential.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_float.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_float_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_geometric.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_geometric.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_relational.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_transform.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_transform.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_trigonometric.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\quaternion_trigonometric.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_common.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_common.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_constants.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_constants.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_int_sized.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_relational.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_uint_sized.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_ulp.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\scalar_ulp.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool1_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_bool4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_common.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_common.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double1_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_double4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float1_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_float4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int1_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_int4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_relational.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint1_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint2_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint3_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_uint4_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_ulp.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\ext\vector_ulp.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\fwd.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\geometric.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\glm.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\bitfield.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\bitfield.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\color_space.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\color_space.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\constants.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\constants.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\epsilon.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\epsilon.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\integer.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\integer.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_access.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_access.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_integer.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_inverse.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_inverse.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_transform.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\matrix_transform.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\noise.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\noise.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\packing.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\packing.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\quaternion.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\quaternion.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\quaternion_simd.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\random.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\random.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\reciprocal.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\reciprocal.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\round.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\round.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\type_aligned.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\type_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\type_precision.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\type_ptr.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\type_ptr.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\ulp.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\ulp.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtc\vec1.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\associated_min_max.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\associated_min_max.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\bit.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\bit.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\closest_point.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\closest_point.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\color_encoding.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\color_encoding.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\color_space.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\color_space.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\color_space_YCoCg.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\color_space_YCoCg.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\common.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\common.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\compatibility.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\compatibility.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\component_wise.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\component_wise.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\dual_quaternion.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\dual_quaternion.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\easing.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\easing.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\euler_angles.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\euler_angles.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\extend.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\extend.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\extended_min_max.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\extended_min_max.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\exterior_product.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\exterior_product.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\fast_exponential.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\fast_exponential.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\fast_square_root.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\fast_square_root.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\fast_trigonometry.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\fast_trigonometry.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\float_notmalize.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\functions.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\functions.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\gradient_paint.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\gradient_paint.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\handed_coordinate_space.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\handed_coordinate_space.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\hash.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\hash.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\integer.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\integer.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\intersect.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\intersect.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\io.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\io.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\log_base.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\log_base.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_cross_product.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_cross_product.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_decompose.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_decompose.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_factorisation.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_factorisation.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_interpolation.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_interpolation.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_major_storage.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_major_storage.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_operation.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_operation.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_query.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_query.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_transform_2d.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\matrix_transform_2d.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\mixed_product.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\mixed_product.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\norm.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\norm.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\normal.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\normal.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\normalize_dot.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\normalize_dot.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\number_precision.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\number_precision.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\optimum_pow.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\optimum_pow.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\orthonormalize.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\orthonormalize.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\perpendicular.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\perpendicular.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\polar_coordinates.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\polar_coordinates.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\projection.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\projection.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\quaternion.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\quaternion.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\range.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\raw_data.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\raw_data.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\rotate_normalized_axis.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\rotate_normalized_axis.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\rotate_vector.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\rotate_vector.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\scalar_multiplication.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\scalar_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\scalar_relational.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\spline.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\spline.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\std_based_type.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\std_based_type.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\string_cast.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\string_cast.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\texture.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\texture.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\transform.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\transform.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\transform2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\transform2.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\type_aligned.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\type_aligned.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\type_trait.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\type_trait.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\vec_swizzle.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\vector_angle.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\vector_angle.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\vector_query.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\vector_query.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\wrap.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\gtx\wrap.inl" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\integer.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat2x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat2x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat2x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat3x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat3x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat3x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat4x2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat4x3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\mat4x4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\matrix.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\packing.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\trigonometric.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\vec2.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\vec3.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\vec4.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Libraries\stb_image\stb_image.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\List.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\LuaBridge.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\Map.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\RefCountedObject.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\RefCountedPtr.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\UnorderedMap.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\Vector.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\CFunctions.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\ClassInfo.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Config.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Constructor.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\FuncTraits.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Iterator.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\LuaException.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\LuaHelpers.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\LuaRef.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Namespace.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Security.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Stack.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\TypeList.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\TypeTraits.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\Userdata.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\LuaBridge\detail\dump.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\include\lauxlib.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\include\lua.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\include\lua.hpp" />
+    <ClInclude Include="..\..\SmolEngine\Lua\include\luaconf.h" />
+    <ClInclude Include="..\..\SmolEngine\Lua\include\lualib.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Animation\Animation2D.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Animation\Animation2DController.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Application.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\AssetManager.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Audio\AudioClip.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Audio\AudioEngine.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Audio\AudioSource.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\BuildConfig.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Core.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ECS\Actor.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ECS\Components.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ECS\DefaultSystems.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ECS\Scene.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ECS\SceneData.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ECS\ScriptableObject.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\EngineCommand.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\EntryPoint.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\EventHandler.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Events\ApplicationEvent.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Events\InputEvent.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Events\MouseEvent.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\AnimationPanel.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\BuildPanel.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\EditorConsole.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\EditorPanels.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\FileBrowser\imfilebrowser.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\ImGui\NodeEditor\imnodes.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Input.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\InputCodes.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Layer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\LayerManager.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Networking\NetworkManager.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Rigidbody2D.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Buffer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Camera.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Framebuffer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\GraphicsContext.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Light2D.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglBuffer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglContext.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglFramebuffer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglRendererAPI.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglShader.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglText.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglTexture.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglVertexArray.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Renderer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Renderer2D.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\RendererAPI.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Shader.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\SubTexture.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Text.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Texture.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\SLog.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Scripting\Jinx.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Scripting\Lua.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Scripting\OutValues.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Time.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Tools.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\UI\UIButton.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\UI\UICanvas.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\UI\UIElement.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\UI\UILayer.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\UI\UITextLabel.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Window.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\SmolEngineCore.h" />
+    <ClInclude Include="..\..\SmolEngine\Source\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\SmolEngine\Libraries\stb_image\stb_image.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Animation\Animation2D.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Animation\Animation2DController.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Application.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\AssetManager.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Audio\AudioClip.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Audio\AudioEngine.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Audio\AudioSource.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ECS\Actor.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ECS\Components.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ECS\DefaultSystems.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ECS\Scene.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ECS\SceneData.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ECS\ScriptableObject.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\EngineCommand.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\EntryPoint.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\EventHandler.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\AnimationPanel.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\BuildPanel.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\EditorConsole.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\EditorPanels.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\ImGuiBuid.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\ImGui\NodeEditor\imnodes.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Layer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\LayerManager.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Rigidbody2D.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Buffer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Camera.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglBuffer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglContext.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglFramebuffer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglRendererAPI.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglShader.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglText.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglTexture.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\OpenGL\OpenglVertexArray.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Renderer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\RendererAPI.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Shader.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\SubTexture.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Text.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Texture.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\SLog.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\UI\UIButton.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\UI\UICanvas.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\UI\UILayer.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\UI\UITextLabel.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Window.cpp" />
+    <ClCompile Include="..\..\SmolEngine\Source\stdafx.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SmolEngine\Libraries\glfw\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SmolEngine\Libraries\glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SmolEngine\Libraries\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SmolEngine\Libraries\yojimbo\Yojimbo.vcxproj">
+      <Project>{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SmolEngine\Libraries\box2d\Box2D.vcxproj">
+      <Project>{A434E80C-1049-10BE-D9CA-B31D459E0CEF}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

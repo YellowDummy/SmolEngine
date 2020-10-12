@@ -29,8 +29,6 @@ namespace SmolEngine
 		
 		virtual void BindTexture(uint32_t id) = 0;
 
-		virtual void DrawFrameBuffer() = 0;
-
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 
 		virtual void DrawLine(const Ref<VertexArray>& vertexArray, uint32_t count = 0) = 0;

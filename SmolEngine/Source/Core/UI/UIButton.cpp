@@ -60,6 +60,10 @@ namespace SmolEngine
 
 	void UIButton::CalculatePos(const glm::vec2& screenCenter)
 	{
+		//TODO: Apply camera zooom / screen resolution
+
+#ifdef SMOLEGNINE_EDITOR
+
 		float x = fabs((screenCenter.x + (m_UCood.x * 100.0f) - 90.0f));
 		float y = fabs((-screenCenter.y + ((m_UCood.y * 100.0f) - ((1.0f * 100.0f) * 0.5f))));
 
@@ -68,6 +72,17 @@ namespace SmolEngine
 
 		minX = (x - (m_Size.x * 50.0f));
 		minY = (y - (m_Size.y * 50.0f));
+
+#else
+		float x = fabs((screenCenter.x + (m_UCood.x * 100.0f)));
+		float y = fabs((-screenCenter.y + ((m_UCood.y * 100.0f) - ((2.0f * 100.0f)))));
+
+		maxX = (x + (m_Size.x * 100.0f));
+		maxY = (y + (m_Size.y * 100.0f));
+
+		minX = (x - (m_Size.x * 100.0f));
+		minY = (y - (m_Size.y * 100.0f));
+#endif 
 	}
 
 	void UIButton::Reload()

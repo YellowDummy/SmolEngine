@@ -24,8 +24,12 @@ namespace SmolEngine
 
 		void Update(bool& isOpened);
 
+	private:
+
 		void Save(const std::string& filePath);
+
 		void Load(const std::string& filePath);
+
 
 	private:
 

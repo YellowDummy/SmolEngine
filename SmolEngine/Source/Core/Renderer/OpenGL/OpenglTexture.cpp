@@ -19,6 +19,7 @@ namespace SmolEngine
 		if (data == nullptr)
 		{
 			NATIVE_ERROR("Texture not found!");
+			abort();
 		}
 
 		GLenum openglFormat = 0, dataFormat = 0;

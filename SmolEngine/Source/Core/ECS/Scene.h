@@ -18,7 +18,6 @@
 #include <vector>
 #include <functional>
 #include <box2d/b2_world.h>
-#include <Jinx.hpp>
 #include <map>
 #include <cereal/types/unordered_map.hpp>
 
@@ -27,6 +26,7 @@ namespace SmolEngine
 { 
 	class SubTexture2D;
 	class UILayer;
+	struct BuildConfig;
 
 	class Scene
 	{
@@ -40,6 +40,8 @@ namespace SmolEngine
 
 		void Init();
 
+		void StartGame();
+
 		void ShutDown();
 
 		void OnPlay();
@@ -52,17 +54,18 @@ namespace SmolEngine
 
 		//Scene handling
 
-		void Save(const std::string& filePath);
+		bool Save(const std::string& filePath);
 
-		void Load(const std::string& filePath);
+		bool Load(const std::string& filePath);
 
-		void SaveCurrentScene();
+		bool SaveCurrentScene();
+
+		bool LoadSceneRuntime(uint32_t index);
 
 		void CreateScene(const std::string& filePath, const std::string& fileName);
 
 		void AddScene(const std::string& filePath) {};
 
-		void LoadSceneRuntime(uint32_t index) {};
 
 		//Camera handling
 
@@ -120,9 +123,9 @@ namespace SmolEngine
 
 		bool PathCheck(std::string& path, const std::string& fileName);
 
-		const Jinx::RuntimePtr GetJinxRuntime();
-
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
+
+		BuildConfig* LoadConfigFile();
 
 		static Ref<Scene> GetScene() { return s_Scene; }
 
@@ -130,12 +133,12 @@ namespace SmolEngine
 
 		entt::registry& GetRegistry() { return m_SceneData.m_Registry; }
 
+		SceneData& GetSceneData();
+
 	private:
 
 		bool ChangeFilePath(const std::string& fileName, std::string& pathToChange);
 		bool IsPathValid(const std::string& path);
-
-		SceneData& GetSceneData();
 
 	private:
 
@@ -147,8 +150,6 @@ namespace SmolEngine
 
 		static Ref<Scene> s_Scene;
 
-		Jinx::RuntimePtr m_JinxRuntime = nullptr;
-
 		AudioEngine* m_AudioEngine = nullptr;
 		UILayer* m_UILayer = nullptr;
 
@@ -157,6 +158,8 @@ namespace SmolEngine
 
 		bool m_InPlayMode = false;
 		b2World* m_World = nullptr;
+
+		BuildConfig* m_BuildConfig = nullptr;
 
 	private:
 

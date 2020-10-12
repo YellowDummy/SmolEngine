@@ -36,6 +36,8 @@ namespace SmolEngine
 
 		void PopLayer();
 
+		void InitializeScripts();
+
 		//Callbacks
 		bool OnWindowClose(Event& e);
 

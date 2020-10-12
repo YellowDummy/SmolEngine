@@ -12,6 +12,8 @@
 #include "Core/ECS/Scene.h"
 #include "Core/UI/UILayer.h"
 
+#include "../../GameX/CppScriptingExamples.h"
+
 
 namespace SmolEngine 
 {
@@ -65,8 +67,12 @@ namespace SmolEngine
 		//Creating New Window Using GLFW
 		m_Window = std::make_shared<Window>(std::string("SmolEngine Editor - v0.1"), 1080, 1920, m_EventHandler);
 
+#ifdef SMOLENGINE_EDITOR
+
 		//Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
+
+#endif
 
 		//Initializing Platform Specific Renderer
 		RendererCommand::Init();
@@ -74,18 +80,29 @@ namespace SmolEngine
 		//Initializing Scene Handler
 		Scene::GetScene()->Init();
 
+		//Initializing external scripts
+		InitializeScripts();
+
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
 		ClientInit();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
-		//Pushing Dear ImGui Layer
-		PushLayer(m_ImGuiLayer);
-
 		//Pushing UI Layer as Overlay
 		auto uiLayer = UILayer::GetSingleton();
 		PushOverlay(uiLayer);
+
+#ifdef SMOLENGINE_EDITOR
+
+		//Pushing Dear ImGui Layer
+		PushLayer(m_ImGuiLayer);
+
+#else
+		//Loading a scene with index 0 and starting the game
+		Scene::GetScene()->StartGame();
+
+#endif
 
 		timer.StopTimer();
 		NATIVE_INFO("Initialized successfully");
@@ -124,15 +141,15 @@ namespace SmolEngine
 				}
 			}
 
-			//--------------------IMGUI-RENDERER-----------------//
+#ifdef SMOLENGINE_EDITOR
+
 			m_ImGuiLayer->OnBegin();
 			for (Layer* layer : *m_LayerHandler)
 			{
 				layer->OnImGuiRender();
 			}
 			m_ImGuiLayer->OnEnd();
-			//--------------------IMGUI-RENDERER-----------------//
-
+#endif
 			m_Window->OnUpdate();
 		}
 	}
@@ -170,6 +187,14 @@ namespace SmolEngine
 	void Application::PopLayer()
 	{
 
+	}
+
+	void Application::InitializeScripts()
+	{
+		const auto Scene = Scene::GetScene();
+		
+		Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
+		Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
 	}
 
 	bool Application::OnWindowClose(Event& e)

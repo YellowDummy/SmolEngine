@@ -20,6 +20,8 @@ namespace SmolEngine
 
 		virtual void Bind() = 0;
 
+		virtual void BindColorAttachment(uint32_t slot = 0) = 0;
+
 		virtual void UnBind() = 0;
 
 		virtual void OnResize(const uint32_t width, const uint32_t height) = 0;
@@ -27,6 +29,8 @@ namespace SmolEngine
 		virtual const FramebufferData& GetData() const = 0;
 
 		virtual uint32_t GetColorAttachmentID() const = 0;
+
+		virtual uint32_t GetRendererID() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferData& data);
 	};

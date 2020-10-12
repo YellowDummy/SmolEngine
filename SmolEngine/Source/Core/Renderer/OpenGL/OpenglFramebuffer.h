@@ -15,6 +15,8 @@ namespace SmolEngine
 
 		void Bind() override;
 
+		void BindColorAttachment(uint32_t slot = 0) override;
+
 		void UnBind() override;
 
 		void OnResize(const uint32_t width, const uint32_t height) override;
@@ -22,6 +24,8 @@ namespace SmolEngine
 		const FramebufferData& GetData() const override { return m_Data; }
 
 		uint32_t GetColorAttachmentID() const override { return m_ColorAttachment; }
+
+		uint32_t GetRendererID() const override { return m_RendererID; }
 
 	private:
 

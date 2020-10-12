@@ -123,7 +123,13 @@ namespace SmolEngine
 		config.OversampleH = 3;
 		config.OversampleV = 1;
 		config.GlyphExtraSpacing.x = 1.0f;
+
+#ifdef SMOLENGINE_EDITOR
+
 		io.Fonts->AddFontFromFileTTF("../SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
+#else
+		io.Fonts->AddFontFromFileTTF("../../SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
+#endif
 
 		Application& app = Application::GetApplication();
 

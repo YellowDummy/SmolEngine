@@ -15,6 +15,7 @@ namespace SmolEngine
 
 		//TODO: Add ImGui Flags
 		SettingsWindow() = default;
+
 		void Update(bool& isOpened, Ref<Scene> scene);
 	};
 
@@ -23,6 +24,7 @@ namespace SmolEngine
 	public:
 
 		ActorCreationWindow() = default;
+
 		void Update(bool& isOpened, Ref<Scene> scene);
 	};
 

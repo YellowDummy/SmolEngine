@@ -550,6 +550,7 @@
     <ClInclude Include="Source\Core\Audio\AudioClip.h" />
     <ClInclude Include="Source\Core\Audio\AudioEngine.h" />
     <ClInclude Include="Source\Core\Audio\AudioSource.h" />
+    <ClInclude Include="Source\Core\BuildConfig.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\ECS\Actor.h" />
     <ClInclude Include="Source\Core\ECS\Components.h" />
@@ -564,6 +565,7 @@
     <ClInclude Include="Source\Core\Events\InputEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
     <ClInclude Include="Source\Core\ImGui\AnimationPanel.h" />
+    <ClInclude Include="Source\Core\ImGui\BuildPanel.h" />
     <ClInclude Include="Source\Core\ImGui\EditorConsole.h" />
     <ClInclude Include="Source\Core\ImGui\EditorPanels.h" />
     <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h" />
@@ -626,9 +628,11 @@
     <ClCompile Include="Source\Core\ECS\Scene.cpp" />
     <ClCompile Include="Source\Core\ECS\SceneData.cpp" />
     <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp" />
+    <ClCompile Include="Source\Core\EngineCommand.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
     <ClCompile Include="Source\Core\ImGui\AnimationPanel.cpp" />
+    <ClCompile Include="Source\Core\ImGui\BuildPanel.cpp" />
     <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp" />
     <ClCompile Include="Source\Core\ImGui\EditorPanels.cpp" />
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp" />

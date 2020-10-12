@@ -5,7 +5,7 @@
     "value3": 2,
     "value4": 3,
     "value5": 2,
-    "value6": 0,
+    "value6": 2,
     "value7": {
         "value0": true,
         "value1": true,
@@ -18,95 +18,95 @@
                         "ptr_wrapper": {
                             "id": 2147483650,
                             "data": {
-                                "value0": 8606991425209588650,
-                                "value1": 0,
+                                "value0": 11489088586242532446,
+                                "value1": 2,
                                 "value2": false,
-                                "value3": 0,
-                                "value4": "Actor_1",
+                                "value3": 2,
+                                "value4": "Ground",
                                 "value5": {
                                     "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value6": "Player",
-                                "value7": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value8": [
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483651,
-                                            "data": {
-                                                "value0": 11489088586242532446,
-                                                "value1": 2,
-                                                "value2": false,
-                                                "value3": 2,
-                                                "value4": "Ground",
-                                                "value5": {
+                                        "id": 2147483651,
+                                        "data": {
+                                            "value0": 8606991425209588650,
+                                            "value1": 0,
+                                            "value2": false,
+                                            "value3": 0,
+                                            "value4": "Actor_1",
+                                            "value5": {
+                                                "ptr_wrapper": {
+                                                    "id": 0
+                                                }
+                                            },
+                                            "value6": "Player",
+                                            "value7": {
+                                                "ptr_wrapper": {
+                                                    "id": 0
+                                                }
+                                            },
+                                            "value8": [
+                                                {
                                                     "ptr_wrapper": {
                                                         "id": 2
                                                     }
-                                                },
-                                                "value6": "TestTag",
-                                                "value7": {
+                                                }
+                                            ],
+                                            "value9": [
+                                                {
                                                     "ptr_wrapper": {
-                                                        "id": 2
+                                                        "id": 2147483652,
+                                                        "data": {
+                                                            "value0": "Speed",
+                                                            "value1": {
+                                                                "index": 0,
+                                                                "data": 1.0
+                                                            },
+                                                            "value2": 0
+                                                        }
                                                     }
                                                 },
-                                                "value8": [],
-                                                "value9": [],
-                                                "value10": {
+                                                {
                                                     "ptr_wrapper": {
-                                                        "id": 1
+                                                        "id": 2147483653,
+                                                        "data": {
+                                                            "value0": "SpeedMod",
+                                                            "value1": {
+                                                                "index": 1,
+                                                                "data": 1
+                                                            },
+                                                            "value2": 1
+                                                        }
                                                     }
+                                                },
+                                                {
+                                                    "ptr_wrapper": {
+                                                        "id": 2147483654,
+                                                        "data": {
+                                                            "value0": "Name",
+                                                            "value1": {
+                                                                "index": 2,
+                                                                "data": "Noob99"
+                                                            },
+                                                            "value2": 2
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "value10": {
+                                                "ptr_wrapper": {
+                                                    "id": 1
                                                 }
                                             }
                                         }
                                     }
-                                ],
-                                "value9": [
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483652,
-                                            "data": {
-                                                "value0": "Speed",
-                                                "value1": {
-                                                    "index": 0,
-                                                    "data": 1.0
-                                                },
-                                                "value2": 0
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483653,
-                                            "data": {
-                                                "value0": "SpeedMod",
-                                                "value1": {
-                                                    "index": 1,
-                                                    "data": 1
-                                                },
-                                                "value2": 1
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483654,
-                                            "data": {
-                                                "value0": "Name",
-                                                "value1": {
-                                                    "index": 2,
-                                                    "data": "Noob99"
-                                                },
-                                                "value2": 2
-                                            }
-                                        }
+                                },
+                                "value6": "TestTag",
+                                "value7": {
+                                    "ptr_wrapper": {
+                                        "id": 3
                                     }
-                                ],
+                                },
+                                "value8": [],
+                                "value9": [],
                                 "value10": {
                                     "ptr_wrapper": {
                                         "id": 1
@@ -121,9 +121,9 @@
                     "value5": true,
                     "value6": false,
                     "value7": 0.0,
-                    "value8": 1.0,
+                    "value8": 15.0,
                     "value9": 1.0,
-                    "value10": 2,
+                    "value10": 0,
                     "value11": 0,
                     "value12": 1.0,
                     "value13": 0.0,
@@ -137,7 +137,7 @@
             }
         }
     },
-    "value8": 2,
+    "value8": 3,
     "value9": {
         "value0": true,
         "value1": true,
@@ -153,7 +153,37 @@
                     "value0": true,
                     "value1": {
                         "ptr_wrapper": {
-                            "id": 3
+                            "id": 2147483656,
+                            "data": {
+                                "value0": 15141494769145803947,
+                                "value1": 3,
+                                "value2": false,
+                                "value3": 3,
+                                "value4": "Default Actor",
+                                "value5": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value6": "Default",
+                                "value7": {
+                                    "ptr_wrapper": {
+                                        "id": 0
+                                    }
+                                },
+                                "value8": [],
+                                "value9": [],
+                                "value10": {
+                                    "ptr_wrapper": {
+                                        "id": 1
+                                    }
+                                },
+                                "value11": {
+                                    "ptr_wrapper": {
+                                        "id": 7
+                                    }
+                                }
+                            }
                         }
                     },
                     "value2": 1.0,
@@ -161,12 +191,12 @@
                     "value4": 1.0,
                     "value5": true,
                     "value6": false,
-                    "value7": 0.0,
-                    "value8": 1.0,
-                    "value9": 1.0,
-                    "value10": 0,
+                    "value7": 0.20000000298023225,
+                    "value8": 0.5,
+                    "value9": 0.699999988079071,
+                    "value10": 2,
                     "value11": 0,
-                    "value12": 1.0,
+                    "value12": 0.47999998927116396,
                     "value13": 0.0,
                     "value14": 0.0,
                     "value15": {
@@ -191,10 +221,10 @@
         "value2": true,
         "value3": {
             "ptr_wrapper": {
-                "id": 2147483656,
+                "id": 2147483657,
                 "data": {
                     "value0": 4.0,
-                    "value1": 1.479632019996643
+                    "value1": 1.545335054397583
                 }
             }
         }
@@ -214,11 +244,11 @@
     "value16": 0,
     "value17": {
         "value0": 0.0,
-        "value1": 1.0,
-        "value2": 1.0,
+        "value1": 25.0,
+        "value2": 15.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": 1.0,
+        "value5": 0.0,
         "value6": 0,
         "value7": true
     },
@@ -228,7 +258,7 @@
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
-        "value4": -2.0,
+        "value4": -6.5,
         "value5": 1.0,
         "value6": 0,
         "value7": true
@@ -236,15 +266,15 @@
     "value20": 3,
     "value21": {
         "value0": 0.0,
-        "value1": 15.0,
-        "value2": 10.0,
+        "value1": 1.0,
+        "value2": 1.0,
         "value3": 1.0,
-        "value4": 1.0,
-        "value5": 0.10000000149011612,
+        "value4": 4.0,
+        "value5": 1.0,
         "value6": 0,
         "value7": true
     },
-    "value22": 2,
+    "value22": 3,
     "value23": 0,
     "value24": {
         "value0": true,
@@ -259,18 +289,15 @@
         "value2": 2822656395751046258,
         "value3": "CameraMovementScript"
     },
-    "value27": 2,
-    "value28": 0,
-    "value29": {
+    "value27": 3,
+    "value28": {
         "value0": true,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png",
-        "value6": "Ball.png"
+        "value1": 15141494769145803947,
+        "value2": 2822656395751046258,
+        "value3": "CharMovementScript"
     },
-    "value30": 3,
+    "value29": 2,
+    "value30": 0,
     "value31": {
         "value0": true,
         "value1": 1.0,
@@ -280,41 +307,51 @@
         "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png",
         "value6": "Background.png"
     },
-    "value32": 0,
-    "value33": 1,
+    "value32": 3,
+    "value33": {
+        "value0": false,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png",
+        "value6": "Ball.png"
+    },
     "value34": 0,
-    "value35": {
+    "value35": 1,
+    "value36": 3,
+    "value37": {
         "value0": true,
         "value1": 0,
         "value2": {
             "ptr_wrapper": {
-                "id": 2147483657,
+                "id": 2147483658,
                 "data": {
                     "value0": [
                         {
                             "key": "PlayerIdle2",
                             "value": {
                                 "ptr_wrapper": {
-                                    "id": 2147483658,
+                                    "id": 2147483659,
                                     "data": {
                                         "value0": 0,
                                         "value1": {
                                             "ptr_wrapper": {
-                                                "id": 2147483659,
+                                                "id": 2147483660,
                                                 "data": {
                                                     "value0": [
                                                         {
                                                             "key": 0,
                                                             "value": {
                                                                 "ptr_wrapper": {
-                                                                    "id": 2147483660,
+                                                                    "id": 2147483661,
                                                                     "data": {
-                                                                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
+                                                                        "value0": "../GameX/Assets\\Textures\\skin1_idle_1.png",
                                                                         "value1": "skin1_idle_1.png",
-                                                                        "value2": 100.0,
-                                                                        "value3": 0.30593132972717287,
-                                                                        "value4": 0.6774193644523621,
-                                                                        "value5": 0.3811134099960327,
+                                                                        "value2": 120.0,
+                                                                        "value3": 0.8024193644523621,
+                                                                        "value4": 0.9378577470779419,
+                                                                        "value5": 1.0,
                                                                         "value6": 1.0,
                                                                         "value7": 1.0,
                                                                         "value8": 1.0
@@ -326,11 +363,11 @@
                                                             "key": 1,
                                                             "value": {
                                                                 "ptr_wrapper": {
-                                                                    "id": 2147483661,
+                                                                    "id": 2147483662,
                                                                     "data": {
-                                                                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
+                                                                        "value0": "../GameX/Assets\\Textures\\skin1_idle_2.png",
                                                                         "value1": "skin1_idle_2.png",
-                                                                        "value2": 100.0,
+                                                                        "value2": 130.0,
                                                                         "value3": 1.0,
                                                                         "value4": 1.0,
                                                                         "value5": 1.0,
@@ -357,15 +394,15 @@
             }
         }
     },
-    "value36": 0,
-    "value37": 1,
     "value38": 0,
-    "value39": {
+    "value39": 1,
+    "value40": 3,
+    "value41": {
         "value0": true,
         "value1": 0,
         "value2": {
             "ptr_wrapper": {
-                "id": 2147483662,
+                "id": 2147483663,
                 "data": {
                     "value0": [
                         {
@@ -374,26 +411,26 @@
                                 "polymorphic_id": 2147483649,
                                 "polymorphic_name": "SmolEngine::UIButton",
                                 "ptr_wrapper": {
-                                    "id": 2147483663,
+                                    "id": 2147483664,
                                     "data": {
                                         "value0": 0,
                                         "value1": 2,
                                         "value2": "Start_BTN.png",
                                         "value3": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\Textures\\Start_BTN.png",
-                                        "value4": 2.0,
+                                        "value4": 1.5,
                                         "value5": 0.5,
                                         "value6": 0.0,
                                         "value7": -3.0,
-                                        "value8": 970,
+                                        "value8": 945,
                                         "value9": 781,
-                                        "value10": 770,
+                                        "value10": 795,
                                         "value11": 731,
                                         "value12": false,
                                         "value13": false,
                                         "value14": false,
-                                        "value15": 0.736732542514801,
-                                        "value16": 0.909416913986206,
-                                        "value17": 0.9516128897666931,
+                                        "value15": 1.0,
+                                        "value16": 0.15725809335708619,
+                                        "value17": 0.15725809335708619,
                                         "value18": 1.0,
                                         "value19": 1.0,
                                         "value20": 1.0,
@@ -410,21 +447,21 @@
                                 "polymorphic_id": 2147483650,
                                 "polymorphic_name": "SmolEngine::UITextLabel",
                                 "ptr_wrapper": {
-                                    "id": 2147483664,
+                                    "id": 2147483665,
                                     "data": {
                                         "value0": 1,
                                         "value1": 1,
-                                        "value2": 0.21169349551200868,
-                                        "value3": 0.875,
-                                        "value4": 0.7626657485961914,
+                                        "value2": 0.7695266604423523,
+                                        "value3": 0.8951612710952759,
+                                        "value4": 0.29598066210746767,
                                         "value5": 1.0,
-                                        "value6": -5.0,
+                                        "value6": -5.699999809265137,
                                         "value7": 3.5,
                                         "value8": 0.10000000149011612,
-                                        "value9": 0.30000001192092898,
+                                        "value9": 0.20000000298023225,
                                         "value10": "C:\\Dev\\SmolEngine\\SmolEngine\\Assets\\Fonts\\Font2.ttf",
                                         "value11": "Font2.ttf",
-                                        "value12": "SCORE ",
+                                        "value12": "START",
                                         "value13": 0.0
                                     }
                                 }
@@ -438,7 +475,7 @@
 }|{
     "value0": [
         {
-            "key": 221405838615140689,
+            "key": 11489088586242532446,
             "value": {
                 "ptr_wrapper": {
                     "id": 2147483649,
@@ -447,7 +484,7 @@
                         "value1": 2,
                         "value2": false,
                         "value3": 2,
-                        "value4": "Button",
+                        "value4": "Ground",
                         "value5": {
                             "ptr_wrapper": {
                                 "id": 2147483650,
@@ -456,13 +493,13 @@
                                     "value1": 0,
                                     "value2": false,
                                     "value3": 0,
-                                    "value4": "Ball",
+                                    "value4": "Actor_1",
                                     "value5": {
                                         "ptr_wrapper": {
                                             "id": 0
                                         }
                                     },
-                                    "value6": "Player",
+                                    "value6": "Player2",
                                     "value7": {
                                         "ptr_wrapper": {
                                             "id": 0
@@ -532,7 +569,7 @@
             }
         },
         {
-            "key": 13923961987056342276,
+            "key": 8606991425209588650,
             "value": {
                 "ptr_wrapper": {
                     "id": 2
@@ -540,38 +577,10 @@
             }
         },
         {
-            "key": 653885095709141030,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483654,
-                    "data": {
-                        "value0": 653885095709141030,
-                        "value1": 3,
-                        "value2": false,
-                        "value3": 3,
-                        "value4": "BG",
-                        "value5": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value6": "Default",
-                        "value7": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value8": [],
-                        "value9": []
-                    }
-                }
-            }
-        },
-        {
             "key": 6111862596534002478,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483655,
+                    "id": 2147483654,
                     "data": {
                         "value0": 6111862596534002478,
                         "value1": 1,
@@ -593,7 +602,7 @@
                         "value9": [
                             {
                                 "ptr_wrapper": {
-                                    "id": 2147483656,
+                                    "id": 2147483655,
                                     "data": {
                                         "value0": "CameraSpeed",
                                         "value1": {
@@ -608,6 +617,74 @@
                     }
                 }
             }
+        },
+        {
+            "key": 15141494769145803947,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483656,
+                    "data": {
+                        "value0": 15141494769145803947,
+                        "value1": 3,
+                        "value2": false,
+                        "value3": 3,
+                        "value4": "Default Actor",
+                        "value5": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value6": "Player",
+                        "value7": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value8": [],
+                        "value9": [
+                            {
+                                "ptr_wrapper": {
+                                    "id": 2147483657,
+                                    "data": {
+                                        "value0": "Speed",
+                                        "value1": {
+                                            "index": 0,
+                                            "data": 1.0
+                                        },
+                                        "value2": 0
+                                    }
+                                }
+                            },
+                            {
+                                "ptr_wrapper": {
+                                    "id": 2147483658,
+                                    "data": {
+                                        "value0": "SpeedMod",
+                                        "value1": {
+                                            "index": 1,
+                                            "data": 1
+                                        },
+                                        "value2": 1
+                                    }
+                                }
+                            },
+                            {
+                                "ptr_wrapper": {
+                                    "id": 2147483659,
+                                    "data": {
+                                        "value0": "Name",
+                                        "value1": {
+                                            "index": 2,
+                                            "data": "Noob99"
+                                        },
+                                        "value2": 2
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
         }
     ],
     "value1": 0.0,
@@ -615,6 +692,6 @@
     "value3": 2822656395751046258,
     "value4": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Physic2DTest.smolscene",
     "value5": "Physic2DTest.smolscene",
-    "value6": "UITest",
+    "value6": "",
     "value7": 1.0
 }

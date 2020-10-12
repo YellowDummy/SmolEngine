@@ -6,12 +6,12 @@
                 "ptr_wrapper": {
                     "id": 2147483649,
                     "data": {
-                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
+                        "value0": "../GameX/Assets\\Textures\\skin1_idle_1.png",
                         "value1": "skin1_idle_1.png",
-                        "value2": 100.0,
-                        "value3": 0.30593132972717287,
-                        "value4": 0.6774193644523621,
-                        "value5": 0.3811134099960327,
+                        "value2": 120.0,
+                        "value3": 0.8024193644523621,
+                        "value4": 0.9378577470779419,
+                        "value5": 1.0,
                         "value6": 1.0,
                         "value7": 1.0,
                         "value8": 1.0
@@ -25,9 +25,9 @@
                 "ptr_wrapper": {
                     "id": 2147483650,
                     "data": {
-                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
+                        "value0": "../GameX/Assets\\Textures\\skin1_idle_2.png",
                         "value1": "skin1_idle_2.png",
-                        "value2": 100.0,
+                        "value2": 130.0,
                         "value3": 1.0,
                         "value4": 1.0,
                         "value5": 1.0,

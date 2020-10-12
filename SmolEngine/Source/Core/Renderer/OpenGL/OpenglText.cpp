@@ -37,6 +37,8 @@ namespace SmolEngine
 
     void OpenglText::SetText(const std::string& text)
     {
+        if (text.empty()) { return; }
+
         m_Text = text;
 
         m_Characters.clear();
@@ -102,7 +104,7 @@ namespace SmolEngine
 
     void OpenglText::Render(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color, float padding)
     {
-        if (m_Characters.size() == 0) { return; }
+        if (m_Characters.empty()) { return; }
 
         m_xOffset = 0.0f;
 

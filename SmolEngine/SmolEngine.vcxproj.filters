@@ -1281,6 +1281,9 @@
     <ClInclude Include="Source\Core\Audio\AudioSource.h">
       <Filter>Source\Core\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\BuildConfig.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1321,6 +1324,9 @@
       <Filter>Source\Core\Events</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ImGui\AnimationPanel.h">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\BuildPanel.h">
       <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ImGui\EditorConsole.h">
@@ -1514,6 +1520,9 @@
     <ClCompile Include="Source\Core\ImGui\AnimationPanel.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\BuildPanel.cpp">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\ImGui\EditorConsole.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
@@ -1616,5 +1625,6 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\EngineCommand.cpp" />
   </ItemGroup>
 </Project>
