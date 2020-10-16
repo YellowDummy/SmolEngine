@@ -1359,9 +1359,6 @@
     <ClInclude Include="Source\Core\Networking\NetworkManager.h">
       <Filter>Source\Core\Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Physics2D\Rigidbody2D.h">
-      <Filter>Source\Core\Physics2D</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Buffer.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
@@ -1467,6 +1464,15 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\Body2D.h">
+      <Filter>Source\Core\Physics2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\Box2DEngine.h" />
+    <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionListener2D.h" />
+    <ClInclude Include="Source\Core\Physics2D\PhysicsEngine.h" />
+    <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionFilter2D.h" />
+    <ClInclude Include="Source\Core\Physics2D\Box2D\RayCast2D.h" />
+    <ClInclude Include="Source\Core\Physics2D\Box2D\Body2DDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1543,9 +1549,6 @@
     </ClCompile>
     <ClCompile Include="Source\Core\LayerManager.cpp">
       <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Physics2D\Rigidbody2D.cpp">
-      <Filter>Source\Core\Physics2D</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Buffer.cpp">
       <Filter>Source\Core\Renderer</Filter>
@@ -1626,5 +1629,13 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EngineCommand.cpp" />
+    <ClCompile Include="Source\Core\Physics2D\Box2D\Body2D.cpp">
+      <Filter>Source\Core\Physics2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Physics2D\Box2D\Box2DEngine.cpp" />
+    <ClCompile Include="Source\Core\Physics2D\Box2D\CollisionListener2D.cpp" />
+    <ClCompile Include="Source\Core\Physics2D\PhysicsEngine.cpp" />
+    <ClCompile Include="Source\Core\Physics2D\Box2D\CollisionFilter2D.cpp" />
+    <ClCompile Include="Source\Core\Physics2D\Box2D\RayCast2D.cpp" />
   </ItemGroup>
 </Project>

@@ -5,15 +5,14 @@
 #include "Core/Events/MouseEvent.h"
 #include "Core/UI/UIButton.h"
 #include "Core/UI/UILayer.h"
+#include "Core/UI/UICanvas.h"
+#include "Core/Renderer/Text.h"
+#include "Core/Physics2D/Box2D/CollisionListener2D.h"
 
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
-
-#include "Core/Renderer/Text.h"
-
-#include "Core/UI/UICanvas.h"
 
 
 namespace SmolEngine
@@ -27,8 +26,10 @@ namespace SmolEngine
 
 		m_UILayer = UILayer::GetSingleton();
 
-		m_World = new b2World(b2Vec2{ m_SceneData.m_Gravity.x, m_SceneData.m_Gravity.y });
 		m_SceneData.m_Registry = entt::registry();
+		m_PhysicsEngine = PhysicsEngine::Create(EngineType::Box2D);
+		m_PhysicsEngine->Init(m_SceneData.m_Gravity);
+
 		m_InPlayMode = false;
 
 #ifdef SMOLENGINE_EDITOR
@@ -61,8 +62,9 @@ namespace SmolEngine
 
 	void Scene::OnPlay()
 	{
-		if (!PathCheck(m_SceneData.m_filePath, m_SceneData.m_fileName))
+		if (!PathCheck(m_SceneData.m_filePath, m_SceneData.m_fileName) || !m_PhysicsEngine)
 		{
+			NATIVE_ERROR("Failed to start the game!");
 			return;
 		}
 
@@ -71,6 +73,28 @@ namespace SmolEngine
 		//SceneData must be saved before the simulation starts
 		Save(m_SceneData.m_filePath);
 #endif
+
+		//Setting Box2D Collision Callbacks & Collision Filtering
+		m_PhysicsEngine->OnPlay();
+
+		//Creating Rigidbodies
+		const auto& rbGroup = m_SceneData.m_Registry.view<Rigidbody2DComponent>();
+		auto world = static_cast<b2World*>(m_PhysicsEngine->GetWorld());
+		if (world)
+		{
+			for (const auto& body : rbGroup)
+			{
+				auto& rb = rbGroup.get<Rigidbody2DComponent>(body);
+				const auto result = m_SceneData.m_ActorPool.find(rb.ActorID);
+				if (result == m_SceneData.m_ActorPool.end())
+				{
+					NATIVE_ERROR("Actor ID not found: {}", rb.ActorID);
+					continue;
+				}
+
+				rbGroup.get<Rigidbody2DComponent>(body).Body->CreateBody(world, result->second);
+			}
+		}
 
 		//Updating UI Layer
 		auto uiLayer = UILayer::GetSingleton();
@@ -84,13 +108,6 @@ namespace SmolEngine
 			{
 				uiLayer->AddCanvas(canvas);
 			}
-		}
-
-		//Creating rigidbodies using user data
-		const auto& rbGroup = m_SceneData.m_Registry.view<Rigidbody2DComponent>();
-		for (const auto& body : rbGroup)
-		{
-			rbGroup.get<Rigidbody2DComponent>(body).Rigidbody->CreateBody(m_World);
 		}
 
 		//Finding which animation clip should play on awake
@@ -173,8 +190,8 @@ namespace SmolEngine
 				}
 			}
 
-			//Sending start callback
-			gr.Script->Start();
+			//Sending Start callback
+			gr.Script->OnBeginPlay();
 
 		}
 
@@ -186,13 +203,12 @@ namespace SmolEngine
 		m_InPlayMode = false;
 
 		m_AudioEngine->Reset();
-
 		m_UILayer->Clear();
 
 		const auto& rbGroup = m_SceneData.m_Registry.view<Rigidbody2DComponent>();
 		for (const auto& body : rbGroup)
 		{
-			rbGroup.get<Rigidbody2DComponent>(body).Rigidbody->DeleteBody();
+			rbGroup.get<Rigidbody2DComponent>(body).Body->DeleteBody();
 		}
 
 		const auto& scriptGroup = m_SceneData.m_Registry.view<ScriptObject>();
@@ -204,7 +220,6 @@ namespace SmolEngine
 #ifdef SMOLENGINE_EDITOR
 
 		Load(m_SceneData.m_filePath);
-
 #endif
 	}
 
@@ -216,7 +231,7 @@ namespace SmolEngine
 
 		//Updating all the user's cameras in the current scene
 		{
-			auto cameraGroup = m_SceneData.m_Registry.group<TransformComponent>(entt::get<CameraComponent>);
+			const auto& cameraGroup = m_SceneData.m_Registry.group<TransformComponent>(entt::get<CameraComponent>);
 			for (const auto& obj : cameraGroup)
 			{
 				const auto& [cameraTransformComponent, cameraComponent] = cameraGroup.get<TransformComponent, CameraComponent>(obj);
@@ -235,54 +250,48 @@ namespace SmolEngine
 						const auto& group = m_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransformComponent>);
 						for (const auto& entity : group)
 						{
-							//Rendering all textures in the current scene
+							//Rendering Texture
 							const auto& [transform, texture] = group.get<TransformComponent, Texture2DComponent>(entity);
 							if (texture.Enabled && texture.Texture != nullptr)
 							{
-								if (transform.B2Data == nullptr)
+								if (!transform.B2Data)
 								{
 									Renderer2D::DrawSprite(transform.WorldPos, transform.Scale, transform.Rotation, texture.Texture, 1.0f, texture.Color);
 								}
-								else if (transform.B2Data != nullptr && m_InPlayMode)
+								else if (transform.B2Data && m_InPlayMode)
 								{
-									glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, 1.0f);
+									const glm::vec3 vec3 = glm::vec3(transform.B2Data->B2Pos->p.x, transform.B2Data->B2Pos->p.y, 1.0f);
 									Renderer2D::DrawSprite(vec3, transform.Scale, *transform.B2Data->B2Rotation, texture.Texture, 1.0f, texture.Color);
 								}
 							}
 						}
 
 
-						//Rendering UI Elements to the target framebuffer
+						//Rendering UI Elements
 						{
-							//RendererCommand::DisableDepth();
-
-							auto cameraGroup = m_SceneData.m_Registry.group<TransformComponent>(entt::get<CameraComponent>);
+							const auto& cameraGroup = m_SceneData.m_Registry.group<TransformComponent>(entt::get<CameraComponent>);
 							for (const auto& obj : cameraGroup)
 							{
 								const auto& [transform, camera] = cameraGroup.get<TransformComponent, CameraComponent>(obj);
 
-								if (camera.isSelected)
+								if (!camera.isSelected) { continue; }
+
+								const auto& canvasGroup = m_SceneData.m_Registry.view<CanvasComponent>();
+								for (const auto& item : canvasGroup)
 								{
-									auto canvasGroup = m_SceneData.m_Registry.view<CanvasComponent>();
-
-									for (auto item : canvasGroup)
-									{
-										canvasGroup.get<CanvasComponent>(item).Canvas->DrawAllElements(transform.WorldPos);
-									}
-
-									break;
+									canvasGroup.get<CanvasComponent>(item).Canvas->DrawAllElements(transform.WorldPos, camera.Camera->GetZoom());
 								}
-							}
 
-							//RendererCommand::Reset();
+								break;
+							}
 						}
 
 						//Rendering 2D Animation
 						{
-							auto& animGroup = m_SceneData.m_Registry.group<Animation2DControllerComponent>(entt::get<TransformComponent>);
-							for (auto entity : animGroup)
+							const auto& animGroup = m_SceneData.m_Registry.group<Animation2DControllerComponent>(entt::get<TransformComponent>);
+							for (const auto& entity : animGroup)
 							{
-								auto& [animController, transfrom] = animGroup.get<Animation2DControllerComponent, TransformComponent>(entity);
+								const auto& [animController, transfrom] = animGroup.get<Animation2DControllerComponent, TransformComponent>(entity);
 
 								if (animController.AnimationController != nullptr)
 								{
@@ -290,7 +299,7 @@ namespace SmolEngine
 									{
 										animController.AnimationController->Update();
 
-										auto& currentClip = animController.AnimationController->m_CurrentClip;
+										const auto currentClip = animController.AnimationController->m_CurrentClip;
 
 										if (transfrom.Scale == glm::vec2(1.0f))
 										{
@@ -318,7 +327,6 @@ namespace SmolEngine
 #ifdef SMOLENGINE_EDITOR
 
 #else
-
 					Renderer2D::DrawFrameBuffer(cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID());
 #endif
 				}
@@ -328,19 +336,21 @@ namespace SmolEngine
 		if(!m_InPlayMode) { return; }
 
 		//Updating transform of Rigidbody2D
-		auto transformView = m_SceneData.m_Registry.view<TransformComponent>();
+		const auto& transformView = m_SceneData.m_Registry.view<TransformComponent>();
 		for (const auto& component : transformView)
 		{
 			auto& obj = transformView.get<TransformComponent>(component);
-			if (obj.B2Data != nullptr)
+			if (!obj.B2Data)
 			{
-				obj.WorldPos.x = obj.B2Data->B2Pos->p.x;
-				obj.WorldPos.y = obj.B2Data->B2Pos->p.y;
-				obj.Rotation = *obj.B2Data->B2Rotation;
+				continue;
 			}
+
+			obj.WorldPos.x = obj.B2Data->B2Pos->p.x;
+			obj.WorldPos.y = obj.B2Data->B2Pos->p.y;
+			obj.Rotation = *obj.B2Data->B2Rotation;
 		}
 
-		//Updating all scripts & rigidbodies in the current scene
+		//Updating Scripts
 		{
 			const auto& scriptGroup = m_SceneData.m_Registry.view<ScriptObject>();
 			for (const auto& script : scriptGroup)
@@ -351,11 +361,10 @@ namespace SmolEngine
 					scriptComponent.OnUpdate(deltaTime);
 				}
 			}
-
-			//Updating Box2D logic
-			m_World->Step(deltaTime, 6, 2);
 		}
 
+		//Updating Physics
+		m_PhysicsEngine->Update(deltaTime, 6, 2);
 	}
 
 	void Scene::OnEvent(Event& e)
@@ -369,13 +378,10 @@ namespace SmolEngine
 				cameraComponent.Camera->OnSceneEvent(e);
 			}
 		}
-
-		if (!m_InPlayMode) { return; }
 	}
 
 	void Scene::UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize)
 	{
-
 		m_EditorCamera->m_FrameBuffer->Bind();
 
 		//
@@ -385,7 +391,6 @@ namespace SmolEngine
 
 			Renderer2D::BeginScene(m_EditorCamera->GetCamera(), m_SceneData.m_AmbientStrength);
 			{
-
 				auto& group = m_SceneData.m_Registry.group<Texture2DComponent>(entt::get<TransformComponent>);
 				for (auto entity : group)
 				{
@@ -406,7 +411,7 @@ namespace SmolEngine
 
 				}
 
-				//Rendering UI Elements to the target framebuffer
+				//Rendering UI
 				{
 					RendererCommand::DisableDepth();
 
@@ -421,7 +426,7 @@ namespace SmolEngine
 
 							for (auto item : canvasGroup)
 							{
-								canvasGroup.get<CanvasComponent>(item).Canvas->DrawAllElements(transform.WorldPos);
+								canvasGroup.get<CanvasComponent>(item).Canvas->DrawAllElements(transform.WorldPos, camera.Camera->GetZoom());
 							}
 
 							break;
@@ -488,15 +493,15 @@ namespace SmolEngine
 
 						if (!rb.ShowShape) { continue; }
 
-						if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Box)
+						if (rb.Body->m_ShapeType == (int)ShapeType::Box)
 						{
 							Renderer2D::DebugDraw(DebugPrimitives::Quad, { transform.WorldPos.x, transform.WorldPos.y, 1.0f },
-								{ rb.Rigidbody->m_Shape.x * 2 , rb.Rigidbody->m_Shape.y * 2 }, transform.Rotation);
+								{ rb.Body->m_Shape.x * 2 , rb.Body->m_Shape.y * 2 }, transform.Rotation);
 						}
-						else if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Cirlce)
+						else if (rb.Body->m_ShapeType == (int)ShapeType::Cirlce)
 						{
-							Renderer2D::DebugDraw(DebugPrimitives::Circle, { transform.WorldPos.x + rb.Rigidbody->m_Offset.x,
-								transform.WorldPos.y + rb.Rigidbody->m_Offset.y, 1.0f }, { rb.Rigidbody->m_Radius,  rb.Rigidbody->m_Radius }, transform.Rotation);
+							Renderer2D::DebugDraw(DebugPrimitives::Circle, { transform.WorldPos.x + rb.Body->m_Offset.x,
+								transform.WorldPos.y + rb.Body->m_Offset.y, 1.0f }, { rb.Body->m_Radius,  rb.Body->m_Radius }, transform.Rotation);
 
 						}
 					}
@@ -609,22 +614,27 @@ namespace SmolEngine
 			NATIVE_ERROR("The scene is not initialized! Use CreateScene() to initialize the scene"); abort();
 		}
 
-		size_t id = std::hash<std::string>{}(name);
-		auto result = m_SceneData.m_ActorPool.find(id);
+		const auto searchNameResult = m_IDSet.find(name);
+		if (searchNameResult != m_IDSet.end())
 		{
-			if (result != m_SceneData.m_ActorPool.end())
+			NATIVE_ERROR("Actor {} already exist!", name);
+			return nullptr;
+		}
+
+		size_t id = m_SceneData.m_ActorPool.size();
+		const auto searchIDResult = m_SceneData.m_ActorPool.find(id);
+		{
+			if (searchIDResult != m_SceneData.m_ActorPool.end())
 			{
-				NATIVE_ERROR("Actor {} already exist!", name);
 				return nullptr;
 			}
 		}
 
 		auto actor = std::make_shared<Actor>(m_SceneData.m_Registry.create(), m_SceneData.m_Registry, name, tag, id, m_SceneData.m_ActorPool.size());
+		actor->AddComponent<TransformComponent>();
 
 		m_IDSet[name] = id;
-		actor->AddComponent<TransformComponent>();
 		m_SceneData.m_ActorPool[id] = actor;
-
 		return actor;
 	}
 
@@ -710,23 +720,23 @@ namespace SmolEngine
 		if (actor->HasComponent<Rigidbody2DComponent>())
 		{
 			auto& rb = newActor->AddComponent<Rigidbody2DComponent>();
-			rb.Rigidbody = std::make_shared<Rigidbody2D>();
+			rb.Body = std::make_shared<Body2D>();
 
 			auto& refRb = actor->GetComponent<Rigidbody2DComponent>();
 
-			rb.Rigidbody->m_Actor = newActor;
-			rb.Rigidbody->m_Type = refRb.Rigidbody->m_Type;
-			rb.Rigidbody->m_canSleep = refRb.Rigidbody->m_canSleep;
-			rb.Rigidbody->m_GravityScale = refRb.Rigidbody->m_GravityScale;
-			rb.Rigidbody->m_Density = refRb.Rigidbody->m_Density;
-			rb.Rigidbody->m_IsAwake = refRb.Rigidbody->m_IsAwake;
-			rb.Rigidbody->m_Offset = refRb.Rigidbody->m_Offset;
-			rb.Rigidbody->m_IsBullet = refRb.Rigidbody->m_IsBullet;
-			rb.Rigidbody->m_Radius = refRb.Rigidbody->m_Radius;
-			rb.Rigidbody->m_Restitution = refRb.Rigidbody->m_Restitution;
-			rb.Rigidbody->m_Shape = refRb.Rigidbody->m_Shape;
-			rb.Rigidbody->m_ShapeType = refRb.Rigidbody->m_ShapeType;
-			rb.Rigidbody->m_Friction = refRb.Rigidbody->m_Friction;
+			rb.Body->m_Type = refRb.Body->m_Type;
+			rb.Body->m_canSleep = refRb.Body->m_canSleep;
+			rb.Body->m_GravityScale = refRb.Body->m_GravityScale;
+			rb.Body->m_Density = refRb.Body->m_Density;
+			rb.Body->m_IsAwake = refRb.Body->m_IsAwake;
+			rb.Body->m_Offset = refRb.Body->m_Offset;
+			rb.Body->m_IsBullet = refRb.Body->m_IsBullet;
+			rb.Body->m_Radius = refRb.Body->m_Radius;
+			rb.Body->m_Restitution = refRb.Body->m_Restitution;
+			rb.Body->m_Shape = refRb.Body->m_Shape;
+			rb.Body->m_ShapeType = refRb.Body->m_ShapeType;
+			rb.Body->m_Friction = refRb.Body->m_Friction;
+			rb.Body->m_InertiaMoment = refRb.Body->m_InertiaMoment;
 		}
 		if (actor->HasComponent<CameraComponent>())
 		{
@@ -855,22 +865,6 @@ namespace SmolEngine
 		std::stringstream storageRegistry;
 		std::stringstream storageSceneData;
 
-		//Updating ID / Actor maps
-		{
-			std::unordered_map<size_t, Ref<Actor>> buffer;
-			m_IDSet.clear();
-
-			for (auto pair : m_SceneData.m_ActorPool)
-			{
-				auto& [key, actor] = pair;
-				size_t id = std::hash<std::string>{}(actor->GetName());
-				buffer[id] = actor;
-				m_IDSet[actor->GetName()] = id;
-			}
-
-			m_SceneData.m_ActorPool = buffer;
-		}
-
 		//Serializing all components in the current scene
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
@@ -915,6 +909,8 @@ namespace SmolEngine
 			NATIVE_ERROR("Could not open the file: {}", filePath);
 			return false;
 		}
+
+		m_SceneData.m_ActorPool.clear();
 
 		//Copying file content to a buffer
 		buffer << file.rdbuf();
@@ -961,8 +957,9 @@ namespace SmolEngine
 				AudioSourceComponent, CanvasComponent>(regisrtyInput);
 		}
 
-		//Creating new Box2D instance using new data
-		m_World = new b2World({ data.m_Gravity.x, data.m_Gravity.y });
+
+		//Creating new Physics Engine instance
+		m_PhysicsEngine->Init(data.m_Gravity);
 
 		//Creating cameras
 		{
@@ -1068,16 +1065,14 @@ namespace SmolEngine
 					{
 						script.Script = m_ScriptRegistry[script.keyName]->Instantiate(); // Create a new instance of the script
 
-						for (auto pair: data.m_ActorPool) // Search for an actor by ID in the current script
+						auto& result = data.m_ActorPool.find(script.ActorID);
+						if (result == data.m_ActorPool.end())
 						{
-							auto& [key, actor] = pair;
-
-							if (actor->GetID() == script.ActorID)
-							{
-								script.Script->m_Actor = actor;
-								break; 
-							}
+							NATIVE_ERROR("Script Loading: Actor ID nor found!");
+							continue;
 						}
+
+						script.Script->m_Actor = result->second;
 
 						//Setting string buffer to saved value in std::variant
 						for (auto val : script.Script->m_Actor->m_OutValues)
@@ -1198,6 +1193,26 @@ namespace SmolEngine
 	bool Scene::IsPathValid(const std::string& path)
 	{
 		return std::filesystem::exists(path);
+	}
+
+	bool Scene::UpdateIDSet(const std::string& lastName, const std::string& newName)
+	{
+		auto resultLast = m_IDSet.find(lastName);
+		if (resultLast == m_IDSet.end())
+		{
+			return false;
+		}
+
+		auto resultNew = m_IDSet.find(newName);
+		if (resultNew != m_IDSet.end())
+		{
+			return false;
+		}
+
+		m_IDSet.erase(lastName);
+		m_IDSet[newName] = resultLast->second;
+
+		return true;
 	}
 
 	//return true if path is valid

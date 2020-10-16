@@ -11,14 +11,20 @@ namespace SmolEngine
 
 		static void InitLog();
 
+		///
+
 		inline static std::shared_ptr<spdlog::logger>& GetNativeLogger() { return s_NativeLogger; }
+
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+
 		inline static std::shared_ptr<spdlog::logger>& GetEditorLogger() { return s_EditorLogger; }
 
 	private:
 
 		static std::shared_ptr<spdlog::logger> s_NativeLogger;
+
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+
 		static std::shared_ptr<spdlog::logger> s_EditorLogger;
 	};
 }

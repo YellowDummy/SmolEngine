@@ -7,7 +7,6 @@
 
 namespace SmolEngine 
 {
-
 	class Layer
 	{
 	public:
@@ -15,6 +14,8 @@ namespace SmolEngine
 		Layer(const std::string& name = "Basic Layer");
 
 		virtual ~Layer();
+
+		/// Overloads
 
 		virtual void OnAttach() {}
 
@@ -26,11 +27,14 @@ namespace SmolEngine
 
 		virtual void OnImGuiRender() {}
 
+		/// Getters
+
 		inline const std::string& GetName() const { return m_Name; }
 
 	protected:
 
 		std::string m_Name;
+
 		bool enabled = true;
 	};
 }

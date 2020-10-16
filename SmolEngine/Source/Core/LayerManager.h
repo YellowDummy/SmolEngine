@@ -13,12 +13,15 @@ namespace SmolEngine
 
 		~LayerManager();
 
+		///
+
 		void AddLayer(Layer*);
 
 		void AddOverlay(Layer*);
 
 		void PopLayer(Layer*, bool);
 
+		///
 
 		std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
 
@@ -27,6 +30,7 @@ namespace SmolEngine
 	private:
 
 		std::vector<Layer*> m_Layers;
+
 		unsigned int m_LayerInsertsCount;
 
 	};

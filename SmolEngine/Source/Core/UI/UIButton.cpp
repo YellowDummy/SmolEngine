@@ -3,6 +3,8 @@
 
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/ECS/Scene.h"
+#include "Core/Application.h"
+#include "Core/Window.h"
 
 namespace SmolEngine
 {
@@ -58,11 +60,10 @@ namespace SmolEngine
 		Renderer2D::DrawSprite({ cameraPos.x + m_UCood.x, cameraPos.y + m_UCood.y, cameraPos.z }, m_Size, 0, m_Texture, 1.0f, { m_CurrentColor, 1.0f });
 	}
 
-	void UIButton::CalculatePos(const glm::vec2& screenCenter)
+	void UIButton::CalculatePos(const glm::vec2& screenCenter, const float zoomLevel)
 	{
-		//TODO: Apply camera zooom / screen resolution
 
-#ifdef SMOLEGNINE_EDITOR
+#ifdef SMOLENGINE_EDITOR
 
 		float x = fabs((screenCenter.x + (m_UCood.x * 100.0f) - 90.0f));
 		float y = fabs((-screenCenter.y + ((m_UCood.y * 100.0f) - ((1.0f * 100.0f) * 0.5f))));
@@ -74,15 +75,60 @@ namespace SmolEngine
 		minY = (y - (m_Size.y * 50.0f));
 
 #else
-		float x = fabs((screenCenter.x + (m_UCood.x * 100.0f)));
-		float y = fabs((-screenCenter.y + ((m_UCood.y * 100.0f) - ((2.0f * 100.0f)))));
+		auto& app = Application::GetApplication();
 
-		maxX = (x + (m_Size.x * 100.0f));
-		maxY = (y + (m_Size.y * 100.0f));
+		const float width = app.GetWindow().GetHeight();
+		const float height = app.GetWindow().GetWidth();
+		const float aspectRatio = height / width;
+		const float w = 108.0f;
 
-		minX = (x - (m_Size.x * 100.0f));
-		minY = (y - (m_Size.y * 100.0f));
-#endif 
+		float x = screenCenter.x + (m_UCood.x * 100.0f);
+		float y = fabs((-screenCenter.y + ((m_UCood.y * 100.0f) - ((zoomLevel * aspectRatio) + (zoomLevel * fabs(m_UCood.y) ) ))));
+
+		if (!signbit(m_UCood.y))
+		{
+			if (m_UCood.y == 0)
+			{
+				y += w - zoomLevel;
+			}
+			else
+			{
+				y += ((m_UCood.y - zoomLevel) * (zoomLevel));
+
+				y += (w + zoomLevel) * (zoomLevel / 5.0f);
+			}
+		}
+		else
+		{
+			y += ( ( (zoomLevel - m_UCood.y) * (zoomLevel) ) / (m_UCood.y  * 0.5f));
+
+
+			y += ( (w + zoomLevel) / fabs(m_UCood.y ) * ( (zoomLevel) / ( (zoomLevel / 2.5f) + fabs(m_UCood.y) ) ) );
+		}
+
+		if (!signbit(m_UCood.x))
+		{
+			if (m_UCood.x == 0)
+			{
+				x -= ((m_UCood.x + zoomLevel) );
+			}
+			else
+			{
+				x -= ((fabs(m_UCood.x) + zoomLevel) * (zoomLevel));
+			}
+		}
+		else
+		{
+			x -= (((zoomLevel + m_UCood.x) * (zoomLevel)) / (m_UCood.x * 0.5f));
+		}
+
+		maxX = (x + (m_Size.x * (200.0f / (zoomLevel * aspectRatio )) * 2.0f));
+		maxY = (y + (m_Size.y * (200.0f / (zoomLevel * aspectRatio )) * 2.0f));
+													
+		minX = (x - (m_Size.x * (200.0f / (zoomLevel * aspectRatio )) * 2.0f));
+		minY = (y - (m_Size.y * (200.0f / (zoomLevel * aspectRatio )) * 2.0f));
+
+#endif 																				 
 	}
 
 	void UIButton::Reload()

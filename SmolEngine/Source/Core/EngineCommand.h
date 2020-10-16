@@ -8,6 +8,12 @@ namespace SmolEngine
 	{
 	public:
 
+		EngineCommand() = default;
+
+		/// Main
+
 		static void LoadScene(uint32_t index);
+
+		static void CloseApp();
 	};
 }

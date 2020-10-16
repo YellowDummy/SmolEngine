@@ -19,6 +19,8 @@ namespace SmolEngine
 
 		~AudioEngine();
 
+		/// Main
+
 		void Init();
 
 		void Shutdown();
@@ -27,15 +29,29 @@ namespace SmolEngine
 
 		void Reset();
 
-		void LoadClip(const std::string& fileName, bool b3d, bool isLooping, bool bStream);
-
-		void DeleteClip(const std::string& keyName);
+		/// Setters
 
 		void StopClip(int channelID);
 
 		void SetClipPosition(int channelID, const glm::vec3& pos);
 
 		void SetClipVolume(int channelID, float volume);
+
+		void SetEventParameter(const std::string& eventKeyName, const std::string& parameterName, float fValue);
+
+		/// Getters
+
+		void GetEventParameter(const std::string& eventKeyName, const std::string& parameterName, float* parameter);
+
+		/// Clips
+
+		void LoadClip(const std::string& fileName, bool b3d, bool isLooping, bool bStream);
+
+		void DeleteClip(const std::string& keyName);
+
+		int PlayClip(const std::string& filePath, const glm::vec3& wordPos, float volume);
+
+		///  Events
 
 		void LoadBank(const std::string& filePath, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
 
@@ -45,13 +61,9 @@ namespace SmolEngine
 
 		void StopEvent(const std::string& keyName, bool immediate);
 
-		void GetEventParameter(const std::string& eventKeyName, const std::string& parameterName, float* parameter);
-
-		void SetEventParameter(const std::string& eventKeyName, const std::string& parameterName, float fValue);
+		///
 
 		bool IsEventPlaying(const std::string& keyName) const;
-
-		int PlayClip(const std::string& filePath, const glm::vec3& wordPos, float volume);
 
 		int ErrorCheck(FMOD_RESULT result) const;
 
@@ -64,14 +76,22 @@ namespace SmolEngine
 	private:
 
 		std::map<std::string, FMOD::Studio::EventInstance*> m_EventsMap;
+
 		std::map<std::string, FMOD::Sound*> m_SoundsMap;
+
 		std::map<int, FMOD::Channel*> m_ChannelsMap;
+
 		std::map<std::string, FMOD::Studio::Bank*> m_BanksMap;
+
+		///
 
 		std::vector<std::map<int, FMOD::Channel*>::iterator> m_InactiveChannels;
 
 		FMOD::System* m_System = nullptr;
+
 		FMOD::Studio::System* m_StudioSystem = nullptr;
+
+		///
 
 		bool m_IsInitialized = false;
 

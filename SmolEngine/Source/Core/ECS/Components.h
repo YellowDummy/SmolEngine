@@ -7,8 +7,8 @@
 #include "Core/Application.h"
 #include "Core/ECS/ScriptableObject.h"
 #include "Core/Scripting/Jinx.h"
-#include "Core/Physics2D/Rigidbody2D.h"
 #include "Core/Renderer/Light2D.h"
+#include "Core/Physics2D/Box2D/Body2D.h"
 #include "Core/Animation/Animation2D.h"
 #include "Core/Animation/Animation2DController.h"
 #include "Core/Audio/AudioSource.h"
@@ -62,7 +62,7 @@ namespace SmolEngine
 	private:
 
 		friend class cereal::access;
-		friend class Rigidbody2D;
+		friend class Body2D;
 		friend class Scene;
 		friend class EditorLayer;
 
@@ -156,25 +156,89 @@ namespace SmolEngine
 	struct Rigidbody2DComponent: public BaseComponent
 	{
 		Rigidbody2DComponent() = default;
+
+		Rigidbody2DComponent(Ref<Actor> actor, Body2DType type);
+
 		~Rigidbody2DComponent() = default;
 
-		Rigidbody2DComponent(Ref<Actor> actor, BodyType type)
-			:Rigidbody(std::make_shared<Rigidbody2D>(actor, type)) {}
+		/// Forces
 
 		void AddForce(const glm::vec2& force)
 		{
-			Rigidbody->GetBody()->ApplyForceToCenter({ force.x, force.y }, true);
+			Body->GetBody()->ApplyForceToCenter({ force.x, force.y }, true);
 		}
 
 		void AddForce(const glm::vec2& force, const glm::vec2& point)
 		{
-			Rigidbody->GetBody()->ApplyForce({ force.x, force.y }, { point.x, point.y }, true);
+			Body->GetBody()->ApplyForce({ force.x, force.y }, { point.x, point.y }, true);
 		}
+
+		/// Setters
+		
+		void SetAwake(bool value)
+		{
+			Body->GetBody()->SetAwake(value);
+		}
+
+		void SetGravity(float value)
+		{
+			Body->GetBody()->SetGravityScale(value);
+		}
+
+		/// Getters
+
+		Body2DType GetType()
+		{
+			return (Body2DType)Body->m_Type;
+		}
+
+		/// RayCasting
+
+		const RayCast2DHitInfo RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)
+		{
+			if (!Body->m_World)
+			{
+				RayCast2DHitInfo dummy;
+				return dummy;
+			}
+
+			return Body->RayCast(startPoisition, targerPosition);
+		}
+
+		const std::vector<RayCast2DHitInfo> CircleCast(const glm::vec2& startPoisition, float distance)
+		{
+			if (!Body->m_World)
+			{
+				std::vector<RayCast2DHitInfo> dummy;
+				return dummy;
+			}
+
+			return Body->CircleCast(startPoisition, distance);
+		}
+
+		/// Joints
+
+		bool BindJoint(Rigidbody2DComponent& body, JointType type, JointInfo* info)
+		{
+			if (!body.IsValid())
+			{
+				return false;
+			}
+
+			return Body->BindJoint(body.Body.get(), type, info);
+		}
+
+		/// Checks
+
+		bool IsValid() { return Body != nullptr; }
 
 	private:
 
+		Ref<Body2D> Body = nullptr;
+
+		size_t ActorID = 0;
+
 		bool ShowShape = true;
-		Ref<Rigidbody2D> Rigidbody = nullptr;
 
 	private:
 
@@ -185,8 +249,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive) 
 		{
-			archive(cereal::defer(Rigidbody), Enabled, ShowShape);
-			archive.serializeDeferments();
+			archive(Body, ActorID, Enabled, ShowShape);
 		}
 	};
 
@@ -306,11 +369,23 @@ namespace SmolEngine
 		{
 		}
 
+	private:
+
 		void OnUpdate(DeltaTime deltaTime);
+
 		void Start();
+
 		void OnDestroy();
 
-	private:
+		void OnCollisionContact(Actor* actor);
+
+		void OnCollisionExit(Actor* actor);
+
+		void OnTriggerContact(Actor* actor);
+
+		void OnTriggerExit(Actor* actor);
+
+
 
 		size_t ActorID = 0;
 		size_t SceneID = 0;
@@ -324,6 +399,7 @@ namespace SmolEngine
 		friend class EditorLayer;
 		friend class Scene;
 		friend class cereal::access;
+		friend class CollisionListener2D;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

@@ -2,6 +2,7 @@
 
 #include "Components.h"
 #include "Core/ECS/Actor.h"
+#include "Core/Window.h"
 
 namespace SmolEngine
 {
@@ -15,19 +16,62 @@ namespace SmolEngine
 
 	void ScriptObject::Start()
 	{
-		//TEMP
-		if (Script == nullptr) { NATIVE_ERROR("Invalid Script"); return; }
+		if (!Script) 
+		{
+			NATIVE_ERROR("Invalid Script"); return; 
+		}
 
-
-		Script->Start();
+		Script->OnBeginPlay();
 	}
 
 	void ScriptObject::OnDestroy()
 	{
-		//TEMP
-		if (Script == nullptr) { NATIVE_ERROR("Invalid Script"); return; }
+		if (!Script) 
+		{ 
+			NATIVE_ERROR("Invalid Script"); return; 
+		}
 
 		Script->OnDestroy();
+	}
+
+	void ScriptObject::OnCollisionContact(Actor* actor)
+	{
+		if (!Script)
+		{
+			NATIVE_ERROR("Invalid Script"); return;
+		}
+
+		Script->OnCollisionContact(actor);
+	}
+
+	void ScriptObject::OnCollisionExit(Actor* actor)
+	{
+		if (!Script)
+		{
+			NATIVE_ERROR("Invalid Script"); return;
+		}
+
+		Script->OnCollisionExit(actor);
+	}
+
+	void ScriptObject::OnTriggerContact(Actor* actor)
+	{
+		if (!Script)
+		{
+			NATIVE_ERROR("Invalid Script"); return;
+		}
+
+		Script->OnTriggerContact(actor);
+	}
+
+	void ScriptObject::OnTriggerExit(Actor* actor)
+	{
+		if (!Script)
+		{
+			NATIVE_ERROR("Invalid Script"); return;
+		}
+
+		Script->OnTriggerExit(actor);
 	}
 
 	void TransformComponent::operator=(const TransformComponent& other)
@@ -66,5 +110,12 @@ namespace SmolEngine
 		}
 
 		return nullptr;
+	}
+
+	Rigidbody2DComponent::Rigidbody2DComponent(Ref<Actor> actor, Body2DType type)
+		:
+		Body(std::make_shared<Body2D>(type))
+	{
+		ActorID = actor->GetID();
 	}
 }

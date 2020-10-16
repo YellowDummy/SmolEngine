@@ -3,6 +3,7 @@
 
 #include "Core/SLog.h"
 #include "Core/ECS/Scene.h"
+#include "Core/Application.h"
 
 namespace SmolEngine
 {
@@ -16,5 +17,10 @@ namespace SmolEngine
 		{
 			NATIVE_ERROR("Failed to load the scene, index: {}", index);
 		}
+	}
+
+	void EngineCommand::CloseApp()
+	{
+		Application::GetApplication().CloseApp();
 	}
 }

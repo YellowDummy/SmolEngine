@@ -93,9 +93,13 @@ public:
 	}
 
 private:
+
 	ToolLogger* m_Logger = nullptr;
+
 	std::chrono::time_point<std::chrono::steady_clock> m_StartTime;
+
 	const char* m_TimerName = "";
+
 	bool m_Stopped = false;
 };
 

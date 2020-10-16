@@ -17,6 +17,8 @@ namespace SmolEngine
 
 		UILayer() = default;
 
+		/// Overrides
+
 		void OnAttach() override;
 
 		void OnUpdate(DeltaTime deltaTime) override;
@@ -25,9 +27,13 @@ namespace SmolEngine
 
 		void OnDetach() override;
 
+		/// Canvas
+
 		void AddCanvas(Ref<UICanvas> canvas);
 
 		void DeleteCanvas(Ref<UICanvas> canvas);
+
+		///
 
 		void Clear();
 
@@ -38,6 +44,7 @@ namespace SmolEngine
 	private:
 
 		std::vector<Ref<UICanvas>> m_ActiveCanvases;
+
 		bool m_BlockEvents = false;
 
 		static UILayer* s_Instance;

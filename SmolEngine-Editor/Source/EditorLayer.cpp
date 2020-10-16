@@ -44,33 +44,33 @@ namespace SmolEngine
 
 		m_Scene = Scene::GetScene();
 		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene"), std::string("TestScene.smolscene"));
-
-		m_Texture = Texture2D::Create("Assets/Textures/Background.png");
-		m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
-
-		auto test2 = Texture2D::Create("Assets/Textures/7yWvW.png");
-
-
-		m_HouseSubTexture = SubTexture2D::GenerateFromCoods(m_SheetTexture, { 4.0f, 6.0f }, { 128.0f, 128.0f });
-		m_Scene->m_TestSub = SubTexture2D::GenerateFromCoods(test2, { 2.0f, 1.0f }, { 260, 513 }, { 1, 1 });
-
-		m_Actor = m_Scene->CreateActor("Actor_1", "Player");
-		m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
-		m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, BodyType::Dynamic);
-		m_Scene->AttachScript(std::string("CharMovementScript"), m_Actor);
-
-		m_CameraActor = m_Scene->CreateActor("Camera");
-		m_CameraActor->AddComponent<CameraComponent>();
-		m_Scene->AttachScript(std::string("CameraMovementScript"), m_CameraActor);
-
-		auto& ground = m_Scene->CreateActor("Ground","TestTag");
-		ground->GetComponent<TransformComponent>().SetTranform(1.0f, -2.0f);;
-		ground->AddComponent<Rigidbody2DComponent>(ground, BodyType::Static);
-
-		m_Scene->AddChild(m_Actor, ground);
-
-		auto nameActor = m_Scene->FindActorByName("Ground");
-		auto tagActor = m_Scene->FindActorByTag("TestTag");
+		//
+		//m_Texture = Texture2D::Create("Assets/Textures/Background.png");
+		//m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
+		//
+		//auto test2 = Texture2D::Create("Assets/Textures/7yWvW.png");
+		//
+		//
+		//m_HouseSubTexture = SubTexture2D::GenerateFromCoods(m_SheetTexture, { 4.0f, 6.0f }, { 128.0f, 128.0f });
+		//m_Scene->m_TestSub = SubTexture2D::GenerateFromCoods(test2, { 2.0f, 1.0f }, { 260, 513 }, { 1, 1 });
+		//
+		//m_Actor = m_Scene->CreateActor("Actor_1", "Player");
+		//m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
+		//m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, BodyType::Dynamic);
+		//m_Scene->AttachScript(std::string("CharMovementScript"), m_Actor);
+		//
+		//m_CameraActor = m_Scene->CreateActor("Camera");
+		//m_CameraActor->AddComponent<CameraComponent>();
+		//m_Scene->AttachScript(std::string("CameraMovementScript"), m_CameraActor);
+		//
+		//auto& ground = m_Scene->CreateActor("Ground","TestTag");
+		//ground->GetComponent<TransformComponent>().SetTranform(1.0f, -2.0f);;
+		//ground->AddComponent<Rigidbody2DComponent>(ground, BodyType::Static);
+		//
+		//m_Scene->AddChild(m_Actor, ground);
+		//
+		//auto nameActor = m_Scene->FindActorByName("Ground");
+		//auto tagActor = m_Scene->FindActorByTag("TestTag");
 	}
 
 	void EditorLayer::OnDetach()
@@ -579,7 +579,16 @@ namespace SmolEngine
 						static std::string name = m_SelectedActor->GetName();
 						if (ImGui::InputTextWithHint("Name", name.c_str(), &name, ImGuiInputTextFlags_EnterReturnsTrue))
 						{
-							m_SelectedActor->Name = name;
+							const auto lastName = m_SelectedActor->GetName();
+							if (m_Scene->UpdateIDSet(lastName, name))
+							{
+								m_SelectedActor->Name = name;
+								ImGui::CloseCurrentPopup();
+							}
+							else
+							{
+								CONSOLE_ERROR("Actor ID not found!");
+							}
 						}
 						ImGui::EndMenu();
 					}
@@ -590,6 +599,7 @@ namespace SmolEngine
 						if (ImGui::InputTextWithHint("Tag", tag.c_str(), &tag, ImGuiInputTextFlags_EnterReturnsTrue))
 						{
 							m_SelectedActor->Tag = tag;
+							ImGui::CloseCurrentPopup();
 						}
 
 
@@ -623,18 +633,23 @@ namespace SmolEngine
 			}
 			else
 			{
-				ImGui::Text(m_SelectedActor->GetName().c_str());
+				std::stringstream ss;
+				ss << "Name: " + m_SelectedActor->GetName() << " | Tag: " << m_SelectedActor->GetTag();
+
+				ImGui::Text(ss.str().c_str());
 				ImGui::Separator();
 
 				ImGui::PushID(m_SelectedActor->GetName().c_str());
 				if (ImGui::TreeNodeEx("Components", ImGuiTreeNodeFlags_Leaf))
 				{
+
 					if (ImGui::TreeNode("Transform"))
 					{
 						auto& tranfrom = m_SelectedActor->GetComponent<TransformComponent>();
 
 						static glm::vec3 pos = tranfrom.WorldPos;
 
+						ImGui::NewLine();
 						if (ImGui::InputFloat3("Transform", glm::value_ptr(pos)))
 						{
 							if (pos.z > 10)
@@ -649,6 +664,8 @@ namespace SmolEngine
 						ImGui::InputFloat2("Scale", glm::value_ptr(tranfrom.Scale));
 
 						ImGui::TreePop();
+
+						ImGui::NewLine();
 					}
 
 
@@ -658,39 +675,53 @@ namespace SmolEngine
 						{
 							auto& rb = m_SelectedActor->GetComponent<Rigidbody2DComponent>();
 							ImGui::NewLine();
-							ImGui::Combo("Body", &rb.Rigidbody->m_Type, "Static\0Kinematic\0Dynamic\0\0");
-							ImGui::Combo("Shape", &rb.Rigidbody->m_ShapeType, "Box\0Circle\0\0");
+							ImGui::Combo("Body", &rb.Body->m_Type, "Static\0Kinematic\0Dynamic\0\0");
+							ImGui::Combo("Shape", &rb.Body->m_ShapeType, "Box\0Circle\0\0");
+							ImGui::InputInt("Layer", &rb.Body->m_CollisionLayer);
 
-							if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Box)
+							if (rb.Body->m_ShapeType == (int)ShapeType::Box)
 							{
-								ImGui::InputFloat2("Size", glm::value_ptr(rb.Rigidbody->m_Shape), 3);
+								ImGui::InputFloat2("Size", glm::value_ptr(rb.Body->m_Shape), 3);
 							}
-							else if (rb.Rigidbody->m_ShapeType == (int)ShapeType::Cirlce)
+							else if (rb.Body->m_ShapeType == (int)ShapeType::Cirlce)
 							{
-								ImGui::InputFloat("Radius", &rb.Rigidbody->m_Radius);
-								ImGui::InputFloat2("Offset", glm::value_ptr(rb.Rigidbody->m_Offset));
-							}
-
-							if (rb.Rigidbody->m_Type == 2)
-							{
-								ImGui::InputFloat("Friction", &rb.Rigidbody->m_Friction);
-								ImGui::InputFloat("Density", &rb.Rigidbody->m_Density);
-								ImGui::InputFloat("Restitution", &rb.Rigidbody->m_Restitution);
-								ImGui::InputFloat("Gravity Scale", &rb.Rigidbody->m_GravityScale);
-								ImGui::Separator();
-								ImGui::Checkbox("Bullet Mode", &rb.Rigidbody->m_IsBullet);
+								ImGui::InputFloat("Radius", &rb.Body->m_Radius);
+								ImGui::InputFloat2("Offset", glm::value_ptr(rb.Body->m_Offset));
 							}
 
-							if (rb.Rigidbody->m_Type != 2)
+							if (rb.Body->m_Type == 2 || rb.Body->m_Type == 1)
 							{
 								ImGui::Separator();
+								ImGui::NewLine();
+								ImGui::InputFloat("Gravity Scale", &rb.Body->m_GravityScale);
+								ImGui::InputFloat("Mass", &rb.Body->m_Mass);
+								ImGui::InputFloat2("Mass Center", glm::value_ptr(rb.Body->m_MassCenter));
+								ImGui::InputFloat("Inertia Moment", &rb.Body->m_InertiaMoment);
+								ImGui::Separator();
+								ImGui::NewLine();
+
+								ImGui::InputFloat("Friction", &rb.Body->m_Friction);
+								ImGui::InputFloat("Density", &rb.Body->m_Density);
+								ImGui::InputFloat("Restitution", &rb.Body->m_Restitution);
+								ImGui::Checkbox("Bullet Mode", &rb.Body->m_IsBullet);
+								ImGui::Separator();
+								ImGui::NewLine();
 							}
 
+							if (rb.Body->m_Type == 0)
+							{
+								ImGui::Separator();
+								ImGui::NewLine();
+							}
+
+							ImGui::Checkbox("Trigger", &rb.Body->m_IsTrigger);
 							ImGui::Checkbox("Show Shape", &rb.ShowShape);
-							ImGui::Checkbox("Awake", &rb.Rigidbody->m_IsAwake);
-							ImGui::Checkbox("Allow Sleep", &rb.Rigidbody->m_canSleep);
+							ImGui::Checkbox("Awake", &rb.Body->m_IsAwake);
+							ImGui::Checkbox("Allow Sleep", &rb.Body->m_canSleep);
 
 							ImGui::TreePop();
+
+							ImGui::NewLine();
 						}
 
 						if (ImGui::IsItemClicked(1))
@@ -753,6 +784,8 @@ namespace SmolEngine
 							ImGui::Separator();
 							ImGui::ColorEdit3("Color", glm::value_ptr(comp.Color));
 							ImGui::TreePop();
+
+							ImGui::NewLine();
 						}
 
 						if (ImGui::IsItemClicked(1))
@@ -899,6 +932,8 @@ namespace SmolEngine
 								}
 
 								ImGui::TreePop();
+
+								ImGui::NewLine();
 							}
 
 							if (ImGui::IsItemClicked(1))
@@ -954,6 +989,8 @@ namespace SmolEngine
 							ImGui::Separator();
 							ImGui::ColorEdit3("Light Color", glm::value_ptr(light.Light->m_Color));
 							ImGui::TreePop();
+
+							ImGui::NewLine();
 						}
 
 						if (ImGui::IsItemClicked(1))
@@ -1007,6 +1044,7 @@ namespace SmolEngine
 							auto& ref = m_SelectedActor->GetComponent<ScriptObject>();
 
 							std::string typeName = "Type: " + ref.keyName;
+							ImGui::NewLine();
 							ImGui::Text(typeName.c_str());
 
 							for (auto val : m_SelectedActor->m_OutValues)
@@ -1041,6 +1079,8 @@ namespace SmolEngine
 
 							ImGui::Checkbox("C++ Script Enabled", &ref.Enabled);
 							ImGui::TreePop();
+
+							ImGui::NewLine();
 						}
 
 						if (ImGui::IsItemClicked(1))
@@ -1075,6 +1115,8 @@ namespace SmolEngine
 							ImGui::Separator();
 							ImGui::Checkbox("Camera Enabled", &comp.Enabled);
 							ImGui::TreePop();
+
+							ImGui::NewLine();
 						}
 
 						if (ImGui::IsItemClicked(1))
@@ -1144,6 +1186,7 @@ namespace SmolEngine
 								}
 
 								ImGui::TreePop();
+								ImGui::NewLine();
 							}
 
 							ImGui::NewLine();
@@ -1233,6 +1276,7 @@ namespace SmolEngine
 								}
 
 								ImGui::TreePop();
+								ImGui::NewLine();
 							}
 
 
@@ -1403,7 +1447,7 @@ namespace SmolEngine
 						{
 							if (!m_SelectedActor->HasComponent<Rigidbody2DComponent>())
 							{
-								m_SelectedActor->AddComponent<Rigidbody2DComponent>(m_SelectedActor, BodyType::Static);
+								m_SelectedActor->AddComponent<Rigidbody2DComponent>(m_SelectedActor, Body2DType::Static);
 
 							}
 							else

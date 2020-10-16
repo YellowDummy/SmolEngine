@@ -14,12 +14,14 @@ namespace SmolEngine
 	{
 		AnimationClip() = default;
 
-		uint32_t ClipIndex = 0;
 		Ref<Animation2D> Clip = nullptr;
+
+		uint32_t ClipIndex = 0;
 
 		bool IsDefaultClip = false;
 
 	private:
+
 		friend class cereal::access;
 
 		template<typename Archive>
@@ -41,6 +43,8 @@ namespace SmolEngine
 
 		Animation2DController();
 
+		///
+
 		void OnAwake();
 
 		void Play();
@@ -60,13 +64,17 @@ namespace SmolEngine
 		void LoadClip(const std::string& filePath);
 
 	private:
+
 		std::unordered_map<std::string, Ref<AnimationClip>> m_Clips;
+
 		Ref<AnimationClip> m_CurrentClip = nullptr;
 
 		bool m_PlayOnAwake = true;
+
 		Animation2DControllerState m_State = Animation2DControllerState::None;
 
 	private:
+
 		friend class cereal::access;
 		friend class EditorLayer;
 		friend class Scene;

@@ -20,8 +20,35 @@ namespace SmolEngine
 	class Actor
 	{
 	public:
+
 		Actor();
+
 		Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id, const size_t index);
+
+		/// Getters
+
+		std::string& GetName() { return Name; }
+
+		std::string& GetTag() { return Tag; }
+
+		const size_t GetID() { return ID; }
+
+		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
+
+		Ref<Actor> GetParent() { return Parent; }
+
+		Ref<Actor> GetChildByName(const std::string& name);
+
+		Ref<Actor> GetChildByTag(const std::string& tag);
+
+		entt::entity& GetEntity() { return Entity; }
+
+		/// Setters
+
+		void SetParent(Ref<Actor> parent) { Parent = parent; }
+
+
+		/// Templates
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
@@ -64,24 +91,6 @@ namespace SmolEngine
 		template<typename T>
 		bool HasComponent() { return Reg.has<T>(Entity); }
 
-		std::string& GetName() { return Name; }
-
-		std::string& GetTag() { return Tag; }
-
-		const size_t GetID() { return ID; }
-
-		void SetParent(Ref<Actor> parent) { Parent = parent; }
-
-		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
-
-		Ref<Actor> GetParent() { return Parent; }
-
-		Ref<Actor> GetChildByName(const std::string& name);
-
-		Ref<Actor> GetChildByTag(const std::string& tag);
-
-		entt::entity& GetEntity() { return Entity; }
-
 	public:
 
 		bool IsDisabled;
@@ -89,18 +98,32 @@ namespace SmolEngine
 	private:
 
 		entt::entity Entity;
+
 		entt::registry& Reg;
 
+		///
+
 		std::string Name;
+
 		std::string Tag;
 
+		///
+
 		size_t ID = 0;
+
 		size_t Index = 0;
 
+		///
+
 		std::vector<Ref<Actor>> Childs;
-		Ref<Actor> Parent;
 
 		std::vector<Ref<OutValue>> m_OutValues;
+
+		///
+
+		Ref<Actor> Parent;
+
+		///
 
 		bool m_showComponentUI = false;
 

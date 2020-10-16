@@ -45,7 +45,7 @@ namespace SmolEngine
 			{
 				auto& data = scene->GetSceneData();
 				scene->GetSceneData().m_Name = name;
-				scene->m_World = new b2World({ data.m_Gravity.x, data.m_Gravity.y });
+				scene->m_PhysicsEngine->Init(data.m_Gravity);
 
 				isOpened = false;
 			}

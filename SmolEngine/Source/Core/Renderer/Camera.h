@@ -77,9 +77,9 @@ namespace SmolEngine
 
 		const Ref<Framebuffer> GetFramebuffer() { return m_FrameBuffer; }
 
-	private:
-
 		void Reload();
+
+	private:
 
 		void OnResize(float width, float height);
 

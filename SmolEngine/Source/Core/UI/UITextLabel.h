@@ -33,17 +33,27 @@ namespace SmolEngine
 
 		void Reload() override;
 
+		/// Rendering
+
 		void Draw(const glm::vec3& cameraPos);
 
 	private:
 
 		glm::vec4 m_Color = glm::vec4(1.0f);
+
 		glm::vec2 m_Position = glm::vec3(1.0f);
+
 		glm::vec2 m_Size = glm::vec2(1.0f);
 
+		///
+
 		std::string m_FontFilePath = "";
+
 		std::string m_FontName = "";
+
 		std::string m_Text = "";
+
+		///
 
 		float m_Padding = 0.0f;
 

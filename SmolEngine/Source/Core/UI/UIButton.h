@@ -19,7 +19,11 @@ namespace SmolEngine
 
 		UIButton() = default;
 
+		/// Main
+
 		void Init(const std::string& filePath, const std::string& fileName);
+
+		/// Setters
 
 		void SetTexture(const Ref<Texture2D> texture);
 
@@ -27,17 +31,21 @@ namespace SmolEngine
 
 		void SetPosition(const glm::vec2& pos);
 
+		void SetOnClickCallback(std::function<void()> callback);
+
+		/// Events
+
 		void OnClick();
 
 		void OnHovered();
 
-		void SetOnClickCallback(std::function<void()> callback);
+		/// Rendering
 
 		void Draw(const glm::vec3& cameraPos);
 
 	private:
 
-		void CalculatePos(const glm::vec2& screenCenter);
+		void CalculatePos(const glm::vec2& screenCenter, const float zoomLevel);
 
 		void Reload() override;
 
@@ -46,20 +54,34 @@ namespace SmolEngine
 	private:
 
 		glm::vec3 m_CurrentColor = glm::vec3(1.0f);
+
 		glm::vec3 m_HoveredColor = glm::vec3(1.0f);
+
 		glm::vec3 m_PressedColor = glm::vec3(1.0f);
 
+		///
+
 		glm::vec2 m_Size = { 1, 1 };
+
 		glm::vec2 m_UCood = { 0, 0 };
 
+		///
+
 		std::string m_TexturePath = "";
+
 		std::string m_TetxureName = "";
 
 		uint32_t maxX = 0, maxY = 0, minX = 0, minY = 0;
 
+		///
+
 		bool m_isHovered = false;
+
 		bool m_isPressed = false;
+
 		bool m_PressedColorEnabled = false;
+
+		///
 
 		Ref<Texture2D> m_Texture = nullptr;
 

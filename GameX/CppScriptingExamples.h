@@ -1,6 +1,6 @@
 #pragma once
 
-// 04.10.2020
+// 16.10.2020
 //
 // Scripting using C++
 
@@ -13,71 +13,111 @@ class CharMovementScript : public ScriptableObject
 {
 public:
 
-	//Must be implemented by the user in order to register an external script in the engine
-	std::shared_ptr<ScriptableObject> Instantiate() override
+	std::shared_ptr<ScriptableObject> Instantiate() override 	// registers an external script in the engine
 	{
 		return std::make_shared<CharMovementScript>();
 	}
 
-	//Default constructor must be implemented
-	CharMovementScript()
+	CharMovementScript() 	// Default constructor must be implemented
 	{
-		//Exposes a property to the editor
-		OUT_FLOAT("Speed", &speed);
+		OUT_FLOAT("Speed", &speed); 		// Exposes a property to the editor
 		OUT_INT("SpeedMod", &speedMod);
 		OUT_STRING("Name", &name);
 	}
 
-	void Start() override
+	void OnBeginPlay() override
 	{
-		CONSOLE_WARN("Player name is: " + name);
+		CONSOLE_INFO("Player name is: " + name);
 
 		if (HasComponent<Rigidbody2DComponent>())
 		{
+			const TransformComponent& transform = GetComponent<TransformComponent>();
+
 			rb = &GetComponent<Rigidbody2DComponent>();
-		}
 
-		if (HasComponent<CanvasComponent>())
-		{
-			auto& canvas = GetComponent<CanvasComponent>();
-
-			if (canvas.IsValid())
+			// Raycasting
 			{
-				const auto button = canvas.GetButton(0); // 0 is index inside canvas component
-				if (button)
+				/// Point RayCast
+
+				const RayCast2DHitInfo hitInfo = rb->RayCast(transform.WorldPos, { 0.0f, -10.0f });
+
+				if (hitInfo.IsBodyHitted)
 				{
-					button->SetOnClickCallback(std::bind(&CharMovementScript::ButtonClickCallback, this));
+					CONSOLE_WARN("PointRayCast2D: actor " + hitInfo.Actor->GetName() + " hitted");
 				}
 
-				const auto text = canvas.GetTextLabel(1);
-				if (text)
+				/// Circle RayCast
+
+				const std::vector<RayCast2DHitInfo>& hitInfoList = rb->CircleCast(transform.WorldPos, 20.0f);
+
+				for (const auto& info : hitInfoList)
 				{
-					text->SetText("GAME STARTED");
-					text->SetColor({ 0.4f, 0.3f, 0.6f, 1.0f });
+					CONSOLE_WARN("CirlceCast2D: Acrtor " + info.Actor->GetName() + " hitted!");
+				}
+			}
+
+			// Joints
+			{
+				const Ref<Actor> testActor = FindActorByName("Player2");
+
+				if (testActor)
+				{
+					if (testActor->HasComponent<Rigidbody2DComponent>())
+					{
+						Rigidbody2DComponent& rigid = testActor->GetComponent<Rigidbody2DComponent>();
+
+						/// Rope Example
+
+						RopeJointInfo ropeDef;
+						ropeDef.MaxLength = 3.2f;
+						ropeDef.CollideConnected = true;
+
+						rb->BindJoint(rigid, JointType::Rope, &ropeDef);
+
+						/// Revolute Example
+
+						RevoluteJointInfo revoluteDef;
+						revoluteDef.ReferenceAngle = 30.0f;
+						revoluteDef.MotorSpeed = 1.0f;
+						revoluteDef.EnableMotor = true;
+						revoluteDef.UpperAngle = 2.5f;
+						revoluteDef.LowerAngle = 140.0f;
+						revoluteDef.MaxMotorTorque = 10.0f;
+						revoluteDef.LocalAnchorA = { 1.5f, 1.5f };
+
+						//rb->BindJoint(rigid, JointType::Revolute, &revoluteDef);
+
+						/// Prismatic Example
+
+						PrismaticJointInfo prismaticDef;
+						prismaticDef.ReferenceAngle = 30.0f;
+						prismaticDef.MotorSpeed = 1.0f;
+						prismaticDef.EnableMotor = true;
+						prismaticDef.UpperTranslation = 2.5f;
+						prismaticDef.LowerTranslation = -5.0f;
+						prismaticDef.MaxMotorForce = 10.0f;
+
+						//rb->BindJoint(rigid, JointType::Prismatic, &prismaticDef);
+					}
 				}
 			}
 		}
 
-		for (const auto obj : GetActorList())
+		for (const Ref<Actor> actor : GetActorListByTag("Default"))
 		{
-			CONSOLE_INFO(std::string("Actor found : ") + obj->GetName());
+			CONSOLE_INFO("IDs by tag <Default>: " + std::to_string(actor->GetID()));
 		}
 
-		for (const auto obj : GetActorListByTag("Default"))
-		{
-			CONSOLE_INFO(std::string("IDs by tag <Default>: ") + std::to_string(obj->GetID()));
-		}
-
-		const auto ground = FindChildByName("Ground");
+		const Ref<Actor> ground = FindChildByName("Ground");
 		if (ground)
 		{
-			CONSOLE_INFO(std::string("Child found : ") + ground->GetName());
+			CONSOLE_INFO("Child found : " + ground->GetName());
 		}
 	}
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
-		if (rb == nullptr) { return; }
+		if (!rb) { return; }
 
 		if (Input::IsKeyPressed(KeyCode::E))
 		{
@@ -95,16 +135,32 @@ public:
 		}
 	}
 
-	void OnDestroy() override
+	void OnCollisionContact(Actor* actor) override
+	{
+		CONSOLE_INFO(GetName() + " collided with " + actor->GetName());
+	}
+
+	void OnCollisionExit(Actor* actor) override
+	{
+		if (actor->GetTag() == "Default")
+		{
+			// Do something
+		}
+	}
+
+	void OnTriggerContact(Actor* actor) override
+	{
+		CONSOLE_INFO(GetName() + " entered in trigger " + actor->GetName());
+	}
+
+	void OnTriggerExit(Actor* actor) override
 	{
 
 	}
 
-	void ButtonClickCallback()
+	void OnDestroy() override
 	{
-		CONSOLE_INFO(std::string("Button Is Pressed!"));
-
-		EngineCommand::LoadScene(1);
+		
 	}
 
 private:
@@ -120,42 +176,45 @@ class CameraMovementScript : public ScriptableObject
 {
 public:
 
-	//Must be implemented by the user in order to register an external script in the engine!
-	std::shared_ptr<ScriptableObject> Instantiate() override
+	std::shared_ptr<ScriptableObject> Instantiate() override 	//Must be implemented by the user in order to register an external script in the engine
 	{
 		return std::make_shared<CameraMovementScript>();
 	}
 
-	//Default constructor must be implemented
-	CameraMovementScript() 
+	CameraMovementScript() 	//Default constructor must be implemented
 	{ 
-		OUT_FLOAT("CameraSpeed", &m_CameraSpeed); 
+		OUT_FLOAT("CameraSpeed", &m_DefaultCameraSpeed);
 	}
 
-	void Start() override
+	void OnBeginPlay() override
 	{
 		m_Player = FindActorByTag("Player");
+
+		if (m_Player)
+		{
+			m_PlayerTranform = &m_Player->GetComponent<TransformComponent>();
+		}
+
+		m_Tranform = &GetComponent<TransformComponent>();
 
 		if (!m_Player) { CONSOLE_ERROR("Player not found!"); }
 	}
 
 	void OnUpdate(DeltaTime deltaTime) override
 	{
-		if (!m_Player) { return; }
+		if (!m_Player || !m_Tranform || !m_PlayerTranform) { return; }
 
-		auto& playerPos = m_Player->GetComponent<TransformComponent>().WorldPos;
-		auto& cameraPos = GetComponent<TransformComponent>().WorldPos;
+		auto& playerPos = m_PlayerTranform->WorldPos;
+		auto& cameraPos = m_Tranform->WorldPos;
 
 		float distanceY = playerPos.y - cameraPos.y;
 		float distanceX = playerPos.x - cameraPos.x;
 
-		if (distanceY > 0.3 || distanceX > 0.3 || distanceY < -0.3f || distanceX < -0.3f)
+		m_CameraSpeed = m_DefaultCameraSpeed;
+
+		if (distanceY > 0.5f || distanceX > 0.5f || distanceY < -0.5f || distanceX < -0.5f)
 		{
-			m_CameraSpeed += 0.05f;
-		}
-		else
-		{
-			m_CameraSpeed = 0.05f;
+			m_CameraSpeed += 0.25f;
 		}
 
 		if (playerPos.x > cameraPos.x)
@@ -163,7 +222,7 @@ public:
 			cameraPos.x += m_CameraSpeed * deltaTime;
 		}
 
-		if (playerPos.x > cameraPos.x)
+		if (playerPos.x < cameraPos.x)
 		{
 			cameraPos.x -= m_CameraSpeed * deltaTime;
 		}
@@ -183,6 +242,53 @@ public:
 
 private:
 
+	TransformComponent* m_PlayerTranform = nullptr;
+	TransformComponent* m_Tranform = nullptr;
+
+	float m_DefaultCameraSpeed = 0.35f;
 	float m_CameraSpeed = 0.5f;
+
 	Ref<Actor> m_Player;
+};
+
+class MainMenuScript : public ScriptableObject
+{
+public:
+
+	std::shared_ptr<ScriptableObject> Instantiate() override
+	{
+		return std::make_shared<MainMenuScript>();
+	}
+
+	MainMenuScript() = default;
+
+	void OnBeginPlay() override
+	{
+		if (HasComponent<CanvasComponent>())
+		{
+			auto& canvas = GetComponent<CanvasComponent>();
+
+			const auto button = canvas.GetButton(0); // 0 is index inside canvas component
+			if (button)
+			{
+				button->SetOnClickCallback(std::bind(&MainMenuScript::OnStartButtonPressed, this));
+			}
+
+			const auto button2 = canvas.GetButton(1);
+			if (button2)
+			{
+				button2->SetOnClickCallback(std::bind(&MainMenuScript::OnQuitButtonPressed, this));
+			}
+		}
+	}
+
+	void OnStartButtonPressed()
+	{
+		EngineCommand::LoadScene(1); // 1 is scene index
+	}
+
+	void OnQuitButtonPressed()
+	{
+		EngineCommand::CloseApp();
+	}
 };

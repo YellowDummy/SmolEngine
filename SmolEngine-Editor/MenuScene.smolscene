@@ -1,0 +1,285 @@
+{
+    "value0": 3,
+    "value1": 0,
+    "value2": 1,
+    "value3": 2,
+    "value4": 0,
+    "value5": 1,
+    "value6": 0,
+    "value7": {
+        "value0": true,
+        "value1": 0.5296875238418579,
+        "value2": true,
+        "value3": {
+            "ptr_wrapper": {
+                "id": 2147483649,
+                "data": {
+                    "value0": 6.0,
+                    "value1": 1.460869550704956
+                }
+            }
+        }
+    },
+    "value8": 3,
+    "value9": 0,
+    "value10": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 0.0,
+        "value4": 0.0,
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
+    },
+    "value11": 1,
+    "value12": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
+    },
+    "value13": 2,
+    "value14": {
+        "value0": 0.0,
+        "value1": 23.0,
+        "value2": 12.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
+    },
+    "value15": 1,
+    "value16": 1,
+    "value17": {
+        "value0": true,
+        "value1": 11528682600657923057,
+        "value2": 12159670632177514218,
+        "value3": "MenuScript"
+    },
+    "value18": 1,
+    "value19": 2,
+    "value20": {
+        "value0": true,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\SummerBG.png",
+        "value6": "SummerBG.png"
+    },
+    "value21": 0,
+    "value22": 0,
+    "value23": 0,
+    "value24": 1,
+    "value25": 1,
+    "value26": {
+        "value0": true,
+        "value1": 0,
+        "value2": {
+            "ptr_wrapper": {
+                "id": 2147483650,
+                "data": {
+                    "value0": [
+                        {
+                            "key": 0,
+                            "value": {
+                                "polymorphic_id": 2147483649,
+                                "polymorphic_name": "SmolEngine::UIButton",
+                                "ptr_wrapper": {
+                                    "id": 2147483651,
+                                    "data": {
+                                        "value0": 0,
+                                        "value1": 2,
+                                        "value2": "Start_BTN.png",
+                                        "value3": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\Textures\\Start_BTN.png",
+                                        "value4": 4.0,
+                                        "value5": 1.2000000476837159,
+                                        "value6": 0.0,
+                                        "value7": 1.0,
+                                        "value8": 1070,
+                                        "value9": 442,
+                                        "value10": 670,
+                                        "value11": 322,
+                                        "value12": false,
+                                        "value13": false,
+                                        "value14": false,
+                                        "value15": 0.5180971026420593,
+                                        "value16": 0.9556451439857483,
+                                        "value17": 0.46240895986557009,
+                                        "value18": 1.0,
+                                        "value19": 1.0,
+                                        "value20": 1.0,
+                                        "value21": 1.0,
+                                        "value22": 1.0,
+                                        "value23": 1.0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "key": 1,
+                            "value": {
+                                "polymorphic_id": 1,
+                                "ptr_wrapper": {
+                                    "id": 2147483652,
+                                    "data": {
+                                        "value0": 1,
+                                        "value1": 2,
+                                        "value2": "Exit_BTN.png",
+                                        "value3": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\Textures\\Exit_BTN.png",
+                                        "value4": 4.0,
+                                        "value5": 1.2000000476837159,
+                                        "value6": 0.0,
+                                        "value7": -1.2000000476837159,
+                                        "value8": 1070,
+                                        "value9": 662,
+                                        "value10": 670,
+                                        "value11": 542,
+                                        "value12": false,
+                                        "value13": false,
+                                        "value14": false,
+                                        "value15": 0.5176470875740051,
+                                        "value16": 0.95686274766922,
+                                        "value17": 0.4627451002597809,
+                                        "value18": 1.0,
+                                        "value19": 1.0,
+                                        "value20": 1.0,
+                                        "value21": 1.0,
+                                        "value22": 1.0,
+                                        "value23": 1.0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "key": 2,
+                            "value": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "SmolEngine::UITextLabel",
+                                "ptr_wrapper": {
+                                    "id": 2147483653,
+                                    "data": {
+                                        "value0": 2,
+                                        "value1": 1,
+                                        "value2": 0.6969843506813049,
+                                        "value3": 0.9233871102333069,
+                                        "value4": 0.6813703179359436,
+                                        "value5": 1.0,
+                                        "value6": -2.299999952316284,
+                                        "value7": 4.0,
+                                        "value8": 1.2000000476837159,
+                                        "value9": 1.2000000476837159,
+                                        "value10": "C:\\Dev\\SmolEngine\\SmolEngine\\Assets\\Fonts\\Font1.ttf",
+                                        "value11": "Font1.ttf",
+                                        "value12": "HUNT",
+                                        "value13": 0.0
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}|{
+    "value0": [
+        {
+            "key": 653885095709141030,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483649,
+                    "data": {
+                        "value0": 653885095709141030,
+                        "value1": 2,
+                        "value2": false,
+                        "value3": 2,
+                        "value4": "BG",
+                        "value5": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value6": "Default",
+                        "value7": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value8": [],
+                        "value9": []
+                    }
+                }
+            }
+        },
+        {
+            "key": 6111862596534002478,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483650,
+                    "data": {
+                        "value0": 6111862596534002478,
+                        "value1": 0,
+                        "value2": false,
+                        "value3": 0,
+                        "value4": "Camera",
+                        "value5": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value6": "Default",
+                        "value7": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value8": [],
+                        "value9": []
+                    }
+                }
+            }
+        },
+        {
+            "key": 11528682600657923057,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483651,
+                    "data": {
+                        "value0": 11528682600657923057,
+                        "value1": 1,
+                        "value2": false,
+                        "value3": 1,
+                        "value4": "Canvas",
+                        "value5": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value6": "Default",
+                        "value7": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value8": [],
+                        "value9": []
+                    }
+                }
+            }
+        }
+    ],
+    "value1": 0.0,
+    "value2": -9.8100004196167,
+    "value3": 12159670632177514218,
+    "value4": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\MenuScene.smolscene",
+    "value5": "MenuScene.smolscene",
+    "value6": "",
+    "value7": 1.0
+}

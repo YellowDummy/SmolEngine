@@ -21,7 +21,7 @@ namespace SmolEngine
 		Data.m_eventHandler = eventHandler;
 		//--------------------------------------------------DATA---------------------------------------------//
 
-		WidnowInit(title, height, width);
+		WidnowInit(title, width, height);
 	}
 
 	void Window::OnUpdate()
@@ -53,7 +53,7 @@ namespace SmolEngine
 		return Data.Height;
 	}
 
-	void Window::WidnowInit(const std::string& title, const int& height, const int& width)
+	void Window::WidnowInit(const std::string& title, const int& width, const int& height)
 	{
 		glfwInit();
 		glfwSetErrorCallback([](int error, const char* description) { NATIVE_ERROR("GLFW Error ({0}): {1}", error, description); });
@@ -63,9 +63,13 @@ namespace SmolEngine
 		Data.Width = width;
 		Data.Height = height;
 
-		//const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+#ifndef SMOLENGINE_EDITOR
 
-		//glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+
+#endif // !SMOLEGNINE_EDITOR
 
 		if (!m_Window)
 		{
@@ -79,7 +83,7 @@ namespace SmolEngine
 		SetVSync(true);
 		//-----------------------------------------------CALLBACKS-----------------------------------------//
 
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int height, int width)
 		{
 				Data.Height = height;
 				Data.Width = width;

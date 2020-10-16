@@ -18,12 +18,16 @@ namespace SmolEngine
 		OutValue(const std::string& key, std::variant<float, int, std::string> val, OutValueType type)
 			: Key(key), Value(val), Type(type) {}
 
+		///
+
 		std::variant<float, int, std::string> Value;
 
 		std::string Key;
+
 		OutValueType Type;
 
 	private:
+
 		friend class cereal::access;
 		friend class EditorLayer;
 		friend class Scene;

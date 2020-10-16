@@ -1,206 +1,76 @@
 {
-    "value0": 3,
+    "value0": 2,
     "value1": 0,
     "value2": 1,
     "value3": 2,
-    "value4": 2,
-    "value5": 0,
-    "value6": {
-        "value0": true,
-        "value1": true,
-        "value2": {
+    "value4": 0,
+    "value5": {
+        "value0": {
             "ptr_wrapper": {
                 "id": 2147483649,
                 "data": {
                     "value0": true,
-                    "value1": {
-                        "ptr_wrapper": {
-                            "id": 2147483650,
-                            "data": {
-                                "value0": 8606991425209588650,
-                                "value1": 0,
-                                "value2": false,
-                                "value3": 0,
-                                "value4": "Actor_1",
-                                "value5": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value6": "Player",
-                                "value7": {
-                                    "ptr_wrapper": {
-                                        "id": 0
-                                    }
-                                },
-                                "value8": [
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483651,
-                                            "data": {
-                                                "value0": 11489088586242532446,
-                                                "value1": 2,
-                                                "value2": false,
-                                                "value3": 2,
-                                                "value4": "Ground",
-                                                "value5": {
-                                                    "ptr_wrapper": {
-                                                        "id": 2
-                                                    }
-                                                },
-                                                "value6": "TestTag",
-                                                "value7": {
-                                                    "ptr_wrapper": {
-                                                        "id": 2
-                                                    }
-                                                },
-                                                "value8": [],
-                                                "value9": [],
-                                                "value10": {
-                                                    "ptr_wrapper": {
-                                                        "id": 1
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                ],
-                                "value9": [
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483652,
-                                            "data": {
-                                                "value0": "Speed",
-                                                "value1": {
-                                                    "index": 0,
-                                                    "data": 1.0
-                                                },
-                                                "value2": 0
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483653,
-                                            "data": {
-                                                "value0": "SpeedMod",
-                                                "value1": {
-                                                    "index": 1,
-                                                    "data": 1
-                                                },
-                                                "value2": 1
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "ptr_wrapper": {
-                                            "id": 2147483654,
-                                            "data": {
-                                                "value0": "Name",
-                                                "value1": {
-                                                    "index": 2,
-                                                    "data": "Noob99"
-                                                },
-                                                "value2": 2
-                                            }
-                                        }
-                                    }
-                                ],
-                                "value10": {
-                                    "ptr_wrapper": {
-                                        "id": 1
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "value2": 1.0,
-                    "value3": 0.30000001192092898,
-                    "value4": 1.0,
-                    "value5": true,
-                    "value6": false,
-                    "value7": 0.0,
-                    "value8": 1.0,
-                    "value9": 1.0,
-                    "value10": 2,
-                    "value11": 0,
-                    "value12": 1.0,
-                    "value13": 0.0,
-                    "value14": 0.0,
-                    "value15": {
-                        "ptr_wrapper": {
-                            "id": 1
-                        }
-                    }
+                    "value1": 1.0,
+                    "value2": 0.30000001192092898,
+                    "value3": 0,
+                    "value4": 0.0,
+                    "value5": 1.0,
+                    "value6": 1.0,
+                    "value7": true,
+                    "value8": false,
+                    "value9": 0.0,
+                    "value10": 1.0,
+                    "value11": 1.0,
+                    "value12": 2,
+                    "value13": 0,
+                    "value14": 1.0,
+                    "value15": 0.0,
+                    "value16": 0.0,
+                    "value17": 0.0,
+                    "value18": 0.0
                 }
-            }
-        }
-    },
-    "value7": 2,
-    "value8": {
-        "value0": true,
-        "value1": true,
-        "value2": {
-            "ptr_wrapper": {
-                "id": 1
             }
         },
-        "value3": {
+        "value1": 0,
+        "value2": true,
+        "value3": true
+    },
+    "value6": 1,
+    "value7": {
+        "value0": {
             "ptr_wrapper": {
-                "id": 2147483655,
+                "id": 2147483650,
                 "data": {
                     "value0": true,
-                    "value1": {
-                        "ptr_wrapper": {
-                            "id": 3
-                        }
-                    },
-                    "value2": 1.0,
-                    "value3": 0.30000001192092898,
-                    "value4": 1.0,
-                    "value5": true,
-                    "value6": false,
-                    "value7": 0.0,
-                    "value8": 1.0,
-                    "value9": 1.0,
-                    "value10": 0,
-                    "value11": 0,
-                    "value12": 1.0,
-                    "value13": 0.0,
-                    "value14": 0.0,
-                    "value15": {
-                        "ptr_wrapper": {
-                            "id": 1
-                        }
-                    },
-                    "value16": {
-                        "ptr_wrapper": {
-                            "id": 7
-                        }
-                    }
+                    "value1": 1.0,
+                    "value2": 0.30000001192092898,
+                    "value3": 2,
+                    "value4": 0.0,
+                    "value5": 1.0,
+                    "value6": 1.0,
+                    "value7": true,
+                    "value8": false,
+                    "value9": 0.0,
+                    "value10": 5.0,
+                    "value11": 1.0,
+                    "value12": 0,
+                    "value13": 0,
+                    "value14": 1.0,
+                    "value15": 0.0,
+                    "value16": 0.0,
+                    "value17": 0.0,
+                    "value18": 0.0
                 }
             }
-        }
-    },
-    "value9": 1,
-    "value10": 1,
-    "value11": {
-        "value0": true,
-        "value1": 0.5625,
+        },
+        "value1": 1,
         "value2": true,
-        "value3": {
-            "ptr_wrapper": {
-                "id": 2147483656,
-                "data": {
-                    "value0": 4.0,
-                    "value1": 0.5625
-                }
-            }
-        }
+        "value3": true
     },
-    "value12": 3,
-    "value13": 1,
-    "value14": {
+    "value8": 0,
+    "value9": 2,
+    "value10": 0,
+    "value11": {
         "value0": 0.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -210,173 +80,63 @@
         "value6": 0,
         "value7": true
     },
+    "value12": 1,
+    "value13": {
+        "value0": 0.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": -4.0,
+        "value5": 1.0,
+        "value6": 0,
+        "value7": true
+    },
+    "value14": 1,
     "value15": 0,
     "value16": {
-        "value0": 0.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 0,
-        "value7": true
-    },
-    "value17": 2,
-    "value18": {
-        "value0": 0.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": -2.0,
-        "value5": 1.0,
-        "value6": 0,
-        "value7": true
-    },
-    "value19": 2,
-    "value20": 0,
-    "value21": {
         "value0": true,
-        "value1": 8606991425209588650,
+        "value1": 0,
         "value2": 2822656395751046258,
         "value3": "CharMovementScript"
     },
-    "value22": 1,
-    "value23": {
-        "value0": true,
-        "value1": 6111862596534002478,
-        "value2": 2822656395751046258,
-        "value3": "CameraMovementScript"
-    },
-    "value24": 1,
-    "value25": 0,
-    "value26": {
+    "value17": 2,
+    "value18": 0,
+    "value19": {
         "value0": true,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
-        "value5": "Assets/Textures/Background.png",
-        "value6": ""
+        "value5": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\Textures\\BG.png",
+        "value6": "BG.png"
     },
-    "value27": 0,
-    "value28": 0,
-    "value29": 0,
-    "value30": 0
+    "value20": 1,
+    "value21": {
+        "value0": true,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Assets\\Textures\\7yWvW.png",
+        "value6": "7yWvW.png"
+    },
+    "value22": 0,
+    "value23": 0,
+    "value24": 0,
+    "value25": 0
 }|{
     "value0": [
         {
-            "key": 11489088586242532446,
+            "key": 0,
             "value": {
                 "ptr_wrapper": {
                     "id": 2147483649,
                     "data": {
-                        "value0": 11489088586242532446,
-                        "value1": 2,
+                        "value0": 0,
+                        "value1": 0,
                         "value2": false,
-                        "value3": 2,
-                        "value4": "Ground",
-                        "value5": {
-                            "ptr_wrapper": {
-                                "id": 2147483650,
-                                "data": {
-                                    "value0": 8606991425209588650,
-                                    "value1": 0,
-                                    "value2": false,
-                                    "value3": 0,
-                                    "value4": "Actor_1",
-                                    "value5": {
-                                        "ptr_wrapper": {
-                                            "id": 0
-                                        }
-                                    },
-                                    "value6": "Player",
-                                    "value7": {
-                                        "ptr_wrapper": {
-                                            "id": 0
-                                        }
-                                    },
-                                    "value8": [
-                                        {
-                                            "ptr_wrapper": {
-                                                "id": 1
-                                            }
-                                        }
-                                    ],
-                                    "value9": [
-                                        {
-                                            "ptr_wrapper": {
-                                                "id": 2147483651,
-                                                "data": {
-                                                    "value0": "Speed",
-                                                    "value1": {
-                                                        "index": 0,
-                                                        "data": 1.0
-                                                    },
-                                                    "value2": 0
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "ptr_wrapper": {
-                                                "id": 2147483652,
-                                                "data": {
-                                                    "value0": "SpeedMod",
-                                                    "value1": {
-                                                        "index": 1,
-                                                        "data": 1
-                                                    },
-                                                    "value2": 1
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "ptr_wrapper": {
-                                                "id": 2147483653,
-                                                "data": {
-                                                    "value0": "Name",
-                                                    "value1": {
-                                                        "index": 2,
-                                                        "data": "Noob99"
-                                                    },
-                                                    "value2": 2
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "value6": "TestTag",
-                        "value7": {
-                            "ptr_wrapper": {
-                                "id": 2
-                            }
-                        },
-                        "value8": [],
-                        "value9": []
-                    }
-                }
-            }
-        },
-        {
-            "key": 8606991425209588650,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2
-                }
-            }
-        },
-        {
-            "key": 6111862596534002478,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483654,
-                    "data": {
-                        "value0": 6111862596534002478,
-                        "value1": 1,
-                        "value2": false,
-                        "value3": 1,
-                        "value4": "Camera",
+                        "value3": 0,
+                        "value4": "Default Actor",
                         "value5": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -392,18 +152,72 @@
                         "value9": [
                             {
                                 "ptr_wrapper": {
-                                    "id": 2147483655,
+                                    "id": 2147483650,
                                     "data": {
-                                        "value0": "CameraSpeed",
+                                        "value0": "Speed",
                                         "value1": {
                                             "index": 0,
-                                            "data": 0.5
+                                            "data": 1.0
                                         },
                                         "value2": 0
                                     }
                                 }
+                            },
+                            {
+                                "ptr_wrapper": {
+                                    "id": 2147483651,
+                                    "data": {
+                                        "value0": "SpeedMod",
+                                        "value1": {
+                                            "index": 1,
+                                            "data": 1
+                                        },
+                                        "value2": 1
+                                    }
+                                }
+                            },
+                            {
+                                "ptr_wrapper": {
+                                    "id": 2147483652,
+                                    "data": {
+                                        "value0": "Name",
+                                        "value1": {
+                                            "index": 2,
+                                            "data": "Noob99"
+                                        },
+                                        "value2": 2
+                                    }
+                                }
                             }
                         ]
+                    }
+                }
+            }
+        },
+        {
+            "key": 1,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483653,
+                    "data": {
+                        "value0": 1,
+                        "value1": 1,
+                        "value2": false,
+                        "value3": 1,
+                        "value4": "Default Actor2",
+                        "value5": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value6": "Default2",
+                        "value7": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value8": [],
+                        "value9": []
                     }
                 }
             }

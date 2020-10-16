@@ -33,9 +33,13 @@ namespace SmolEngine
 
 		UICanvas() = default;
 
+		/// Main
+
 		void OnUpdate();
 
 		void OnEvent(Event& e);
+
+		/// Elements
 
 		Ref<UIElement> AddElement(UIElementType type);
 
@@ -43,9 +47,9 @@ namespace SmolEngine
 
 		//Rendering
 
-		void DrawAllElements(const glm::vec3& cameraPos) const;
+		void DrawAllElements(const glm::vec3& cameraPos, const float zoomLevel) const;
 
-		void DrawElement(const size_t id, const glm::vec3& cameraPos) const;
+		void DrawElement(const size_t id, const glm::vec3& cameraPos, const float zoomLevel) const;
 
 		// Getters
 
@@ -56,6 +60,8 @@ namespace SmolEngine
 		Ref<UIElement> GetElement(const size_t index) const;
 
 	private:
+
+		/// Events
 
 		void ReloadElements();
 

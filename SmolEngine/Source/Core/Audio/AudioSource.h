@@ -17,6 +17,8 @@ namespace SmolEngine
 
 		AudioSource();
 
+		///
+
 		void OnAwake();
 
 		void PlayClip(const std::string& keyName, float volume, bool loop);
@@ -36,6 +38,7 @@ namespace SmolEngine
 	private:
 
 		std::map <std::string, Ref<AudioClip>> m_AudioClips;
+
 		AudioEngine* m_AudioEngine = nullptr;
 
 		bool m_PlayOnAwake = true;

@@ -29,11 +29,11 @@ namespace SmolEngine
 	{
 	public:
 
-		GLFWwindow* m_Window;
-
 		Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler);
 
 		virtual ~Window() {  }
+
+		/// Main
 
 		void OnUpdate();
 
@@ -41,13 +41,19 @@ namespace SmolEngine
 
 		void SetHeight(int);
 
+		void ShutDown();
+
+		/// Getters
+
 		unsigned int GetWidth() const;
 
 		unsigned int GetHeight() const;
 
 		GLFWwindow* GetNativeWindow() const { return m_Window; }
 
-		void ShutDown();
+	public:
+
+		GLFWwindow* m_Window;
 
 	private:
 

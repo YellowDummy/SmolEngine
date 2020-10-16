@@ -15,13 +15,23 @@ namespace SmolEngine
 	{
 		Animation2DFrameKey() = default;
 
+		///
+
 		glm::vec4 TextureColor = glm::vec4(1.0f);
+
 		glm::vec2 TextureScale = glm::vec2(1.0f);
 
+		///
+
 		std::string TexturePath = "";
+
 		std::string FileName = "";
 
+		///
+
 		float Speed = 100.0f;
+
+		///
 
 		Ref<Texture2D> Texture = nullptr;
 
@@ -43,6 +53,8 @@ namespace SmolEngine
 
 		~Animation2D() = default;
 
+		///
+
 		void Play();
 
 		void Update();
@@ -52,17 +64,26 @@ namespace SmolEngine
 		void Reset();
 
 	private:
+
 		std::unordered_map<int, Ref<Animation2DFrameKey>> m_Frames;
+
 		std::string m_ClipName = "";
+
 		ToolTimer m_Timer;
 
+		///
+
 		Ref<Texture2D> m_CurrentTexture = nullptr;
+
 		Ref<Animation2DFrameKey> m_CurrentFrameKey = nullptr;
 
+
 		bool m_IsActive = false;
+
 		int m_CurrentIndex = 0;
 
 	private:
+
 		friend class cereal::access;
 		friend class Scene;
 		friend class EditorLayer;

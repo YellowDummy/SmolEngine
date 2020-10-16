@@ -12,6 +12,7 @@
 
 #include "Core/Audio/AudioEngine.h"
 #include "Core/Application.h"
+#include "Core/Physics2D/PhysicsEngine.h"
 
 #include <string>
 #include <utility>
@@ -25,8 +26,14 @@
 namespace SmolEngine
 { 
 	class SubTexture2D;
+
+	class CollisionListener2D;
+
 	class UILayer;
+
 	struct BuildConfig;
+
+	///
 
 	class Scene
 	{
@@ -93,6 +100,8 @@ namespace SmolEngine
 
 		Ref<Actor> FindActorByID(size_t id);
 
+		/// Getters
+
 		std::vector<Ref<Actor>> GetActorListByTag(const std::string& tag);
 
 		std::unordered_map<size_t, Ref<Actor>>& GetActorPool();
@@ -101,7 +110,13 @@ namespace SmolEngine
 
 		std::vector <Ref<Actor>> GetSortedActorList();
 
-		//Scripting
+		static Ref<Scene> GetScene() { return s_Scene; }
+
+		entt::registry& GetRegistry() { return m_SceneData.m_Registry; }
+
+		SceneData& GetSceneData();
+
+		///Scripting
 
 		template<typename T>
 		void RegistryScript(const std::string& keyName)
@@ -119,7 +134,9 @@ namespace SmolEngine
 
 		bool AttachScript(const std::string& keyName, const Ref<Actor> actor);
 
-		//Internal needs
+		///Internal needs
+
+		bool UpdateIDSet(const std::string& lastName, const std::string& newName);
 
 		bool PathCheck(std::string& path, const std::string& fileName);
 
@@ -127,39 +144,45 @@ namespace SmolEngine
 
 		BuildConfig* LoadConfigFile();
 
-		static Ref<Scene> GetScene() { return s_Scene; }
-
-		b2World* GetWorld() { return m_World; }
-
-		entt::registry& GetRegistry() { return m_SceneData.m_Registry; }
-
-		SceneData& GetSceneData();
-
 	private:
 
 		bool ChangeFilePath(const std::string& fileName, std::string& pathToChange);
+
 		bool IsPathValid(const std::string& path);
 
 	private:
 
 		SceneData m_SceneData;
 
+		///
+
 		std::map<std::string, Ref<ScriptableObject>> m_ScriptRegistry;
+
 		std::unordered_map<std::string, size_t> m_IDSet;
+
 		std::vector<std::string> m_ScriptNameList;
+
+		///
 
 		static Ref<Scene> s_Scene;
 
 		AudioEngine* m_AudioEngine = nullptr;
+
 		UILayer* m_UILayer = nullptr;
 
 		Ref<SubTexture2D> m_TestSub = nullptr;
+
 		Ref<EditorCameraController> m_EditorCamera = nullptr;
 
-		bool m_InPlayMode = false;
-		b2World* m_World = nullptr;
+		std::unique_ptr<PhysicsEngine> m_PhysicsEngine = nullptr;
 
 		BuildConfig* m_BuildConfig = nullptr;
+
+		///
+
+		bool m_InPlayMode = false;
+
+		EngineType m_PhysicsEngineType = EngineType::Box2D;
 
 	private:
 

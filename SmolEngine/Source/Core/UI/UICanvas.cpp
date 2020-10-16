@@ -75,7 +75,7 @@ namespace SmolEngine
 		m_Elements.erase(id);
 	}
 
-	void UICanvas::DrawAllElements(const glm::vec3& cameraPos) const
+	void UICanvas::DrawAllElements(const glm::vec3& cameraPos, const float zoomLevel) const
 	{
 		float w = Application::GetApplication().GetWindowWidth();
 		float h = Application::GetApplication().GetWindowHeight();
@@ -105,7 +105,7 @@ namespace SmolEngine
 				{
 					if (button->m_Texture == nullptr) { break; }
 
-					button->CalculatePos(screenCenter);
+					button->CalculatePos(screenCenter, zoomLevel);
 					button->Draw(cameraPos);
 				}
 
@@ -121,7 +121,7 @@ namespace SmolEngine
 		}
 	}
 
-	void UICanvas::DrawElement(const size_t id, const glm::vec3& cameraPos) const
+	void UICanvas::DrawElement(const size_t id, const glm::vec3& cameraPos, const float zoomLevel) const
 	{
 
 		auto result = m_Elements.find(id);
@@ -136,7 +136,7 @@ namespace SmolEngine
 		float w = Application::GetApplication().GetWindowWidth();
 		float h = Application::GetApplication().GetWindowHeight();
 
-		glm::vec2 screenCenter = { w / 2.0f, h / 2.5f };
+		glm::vec2 screenCenter = { h / 2.0f, w / 2.5f };
 
 
 		switch (element->m_Type)
@@ -157,7 +157,7 @@ namespace SmolEngine
 
 			if (button->m_Texture == nullptr) { break; }
 
-			button->CalculatePos(screenCenter);
+			button->CalculatePos(screenCenter, zoomLevel);
 			button->Draw(cameraPos);
 
 			break;

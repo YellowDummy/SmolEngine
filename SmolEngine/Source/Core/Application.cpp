@@ -195,6 +195,7 @@ namespace SmolEngine
 		
 		Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
 		Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
+		Scene->RegistryScript<MainMenuScript>(std::string("MenuScript"));
 	}
 
 	bool Application::OnWindowClose(Event& e)

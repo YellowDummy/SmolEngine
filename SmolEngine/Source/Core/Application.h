@@ -11,8 +11,11 @@
 namespace SmolEngine
 {
 	class ImGuiLayer;
+
 	class Window;
+
 	struct DeltaTime;
+
 	class UIText;
 
 
@@ -26,9 +29,21 @@ namespace SmolEngine
 
 		virtual ~Application();
 
+		/// Main
+
 		void InitApp();
 
 		void CloseApp();
+
+		void RunApp();
+
+		void OnEvent(Event& event);
+
+		/// Overrides
+
+		virtual void ClientInit() = 0;
+
+		/// Layers
 
 		void PushLayer(Layer* layer);
 
@@ -36,12 +51,17 @@ namespace SmolEngine
 
 		void PopLayer();
 
+		/// Scripting
+
 		void InitializeScripts();
 
-		//Callbacks
+		///Callbacks
+
 		bool OnWindowClose(Event& e);
 
 		bool OnWindowResize(Event& e);
+
+		/// Getters
 
 		Window& GetWindow() { return *m_Window; }
 
@@ -55,24 +75,19 @@ namespace SmolEngine
 
 		ImGuiLayer* m_ImGuiLayer;
 
-		Ref<Window> m_Window;
+		///
 
+		Ref<Window> m_Window = nullptr;
 
-		Ref<LayerManager> m_LayerHandler;
+		Ref<LayerManager> m_LayerHandler = nullptr;
 
-		Ref<EventHandler> m_EventHandler;
-
-	private:
-
-		virtual void ClientInit() = 0;
-
-		void RunApp();
-
-		void OnEvent(Event& event);
-
-	private:
+		Ref<EventHandler> m_EventHandler = nullptr;
 
 		UIText* m_UIText = nullptr;
+
+	private:
+
+		///
 
 		static Application* s_Instance;
 
@@ -81,8 +96,7 @@ namespace SmolEngine
 		float m_LastFrameTime;
 	};
 
-	//client side 
-	Application* CreateApp();
+	Application* CreateApp(); 	//Client side 
 
 }
 

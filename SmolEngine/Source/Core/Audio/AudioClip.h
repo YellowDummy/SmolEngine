@@ -11,21 +11,35 @@ namespace SmolEngine
 	{
 		AudioClip();
 
+		///
+
 		glm::vec3 WorldPos = glm::vec3(0.0f);
 
+		///
+
 		std::string FilePath = "";
+
 		std::string FileName = "";
+
 		std::string ClipName = "";
+
+		///
 
 		float Volume = 1.0f;
 
-		bool isDefaultClip = false;
-		bool IsLooping = false;
-		bool B3D = false;
-		bool BStream = false;
-		bool HasWorldPosition = false;
-
 		int Channel = 0;
+
+		///
+
+		bool isDefaultClip = false;
+
+		bool IsLooping = false;
+
+		bool B3D = false;
+
+		bool BStream = false;
+
+		bool HasWorldPosition = false;
 
 	private:
 

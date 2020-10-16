@@ -76,6 +76,8 @@ namespace SmolEngine
 
 		~EditorLayer() {}
 
+		/// Overloads
+
 		void OnAttach() override;
 
 		void OnDetach() override;
@@ -93,31 +95,50 @@ namespace SmolEngine
 	private:
 
 		glm::vec2 m_GameViewSize = { 0.0f, 0.0f };
+
 		glm::vec2 m_SceneViewSize = { 0.0f, 0.0f };
 
 		glm::vec2 m_ViewPortSize = {0.0f, 0.0f};
+
 		glm::vec2 m_GameViewPortSize = { 0.0f, 0.0f };
 
+		///
+
 		std::string m_FilePath = "";
+
 		std::string m_FileName = "";
+
+		///
 
 		Ref<Scene> m_Scene;
 
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
+
 		SelectionFlags m_SelectionFlags = SelectionFlags::None;
+
+		///
 
 		size_t m_IDBuffer = 0;
 
 		bool isSceneViewFocused = false;
+
 		bool isGameViewFocused = false;
 
+		///
+
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
+
 		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
 		std::unique_ptr<BuildPanel> m_BuildPanel = nullptr;
+
 		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
+
 		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
+
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
+
+		///
 
 		//TEMP 
 		Ref<Actor> m_Actor = nullptr;
