@@ -21,11 +21,14 @@ namespace SmolEngine
 
 		virtual ~UIElement() = default;
 
+		///
+
 		virtual void Reload() = 0;
 
 	public:
 
 		size_t m_ID = 0;
+
 		UIElementType m_Type = UIElementType::None;
 	};
 }

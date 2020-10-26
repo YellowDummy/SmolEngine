@@ -6,14 +6,14 @@
                 "ptr_wrapper": {
                     "id": 2147483649,
                     "data": {
-                        "value0": "../GameX/Assets\\Textures\\skin1_idle_1.png",
+                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
                         "value1": "skin1_idle_1.png",
-                        "value2": 120.0,
-                        "value3": 0.8024193644523621,
-                        "value4": 0.9378577470779419,
-                        "value5": 1.0,
+                        "value2": 200.0,
+                        "value3": 0.8669354915618897,
+                        "value4": 0.3051413595676422,
+                        "value5": 0.12584546208381654,
                         "value6": 1.0,
-                        "value7": 1.0,
+                        "value7": 2.0,
                         "value8": 1.0
                     }
                 }
@@ -25,12 +25,12 @@
                 "ptr_wrapper": {
                     "id": 2147483650,
                     "data": {
-                        "value0": "../GameX/Assets\\Textures\\skin1_idle_2.png",
+                        "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
                         "value1": "skin1_idle_2.png",
-                        "value2": 130.0,
-                        "value3": 1.0,
-                        "value4": 1.0,
-                        "value5": 1.0,
+                        "value2": 150.0,
+                        "value3": 0.69998699426651,
+                        "value4": 0.9233871102333069,
+                        "value5": 0.7997191548347473,
                         "value6": 1.0,
                         "value7": 1.0,
                         "value8": 1.0
@@ -39,5 +39,6 @@
             }
         }
     ],
-    "value1": "PlayerIdle2"
+    "value1": "NoNameClip",
+    "value2": false
 }

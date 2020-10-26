@@ -102,5 +102,7 @@ namespace SmolEngine
 	private:
 
 		friend class AudioSource;
+
+		friend class AudioSystem;
 	};
 }

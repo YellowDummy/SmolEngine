@@ -24,12 +24,10 @@
 
 
 #include "../../SmolEngine/Source/Core/ECS/Scene.h"
-#include "../../SmolEngine/Source/Core/ECS/Components.h"
 #include "../../SmolEngine/Source/Core/ECS/Actor.h"
 #include "../../SmolEngine/Source/Core/ECS/ScriptableObject.h"
 
 #include "../../SmolEngine/Source/Core/Audio/AudioEngine.h"
-#include "../../SmolEngine/Source/Core/UI/UICanvas.h"
 
 #include "../../SmolEngine/Source/Core/Renderer/Renderer2D.h"
 #include "../../SmolEngine/Source/Core/Renderer/RendererAPI.h"
@@ -44,6 +42,20 @@
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglRendererAPI.h"
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglShader.h"
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglTexture.h"
+
+#include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
+#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
+#include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
+#include "Core/ECS/ComponentTuples/ResourceTuple.h"
+#include "Core/ECS/ComponentTuples/SingletonTuple.h"
+
+#include "Core/ECS/Systems/RendererSystem.h"
+#include "Core/ECS/Systems/Box2DPhysicsSystem.h"
+#include "Core/ECS/Systems/AudioSystem.h"
+#include "Core/ECS/Systems/Animation2DSystem.h"
+#include "Core/ECS/Systems/CameraSystem.h"
+#include "Core/ECS/Systems/CommandSystem.h"
+#include "Core/ECS/Systems/UISystem.h"
 
 #include "../../SmolEngine/Source/Core/Application.h"
 

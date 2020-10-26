@@ -10,13 +10,16 @@
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Renderer/Renderer.h"
 #include "Core/ECS/Scene.h"
-#include "Core/UI/UILayer.h"
 
 #include "../../GameX/CppScriptingExamples.h"
+
+#include "rttr/registration.h"
 
 
 namespace SmolEngine 
 {
+	struct MyStruct { MyStruct() {}; void func(double val) { NATIVE_ERROR(val); }; int data = 0; };
+
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
@@ -44,8 +47,33 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
+	RTTR_REGISTRATION
+	{
+		rttr::registration::class_<MyStruct>("MyStruct")
+			 .constructor<>()
+			 .property("data", &MyStruct::data)
+			 .method("func", &MyStruct::func);
+	}
+
 	void Application::InitApp()
 	{
+		rttr::type t = rttr::type::get_by_name("MyStruct");
+
+		rttr::variant res = t.create();
+		auto& result = res.get_value<MyStruct>();
+
+		if (res.is_valid())
+		{
+			auto& prob = rttr::type::get(result).get_property("data");
+			prob.set_value(result, 2);
+			int value = prob.get_value(result).to_int();
+			NATIVE_ERROR(value);
+		}
+
+		auto& prob = rttr::type::get(result).get_property("data");
+		prob.set_value(result, 4);
+		int value = prob.get_value(result).to_int();
+		NATIVE_ERROR(value);
 
 		NATIVE_INFO("Initializing a framework...");
 		NATIVE_INFO("State = Startup");
@@ -88,10 +116,6 @@ namespace SmolEngine
 		ClientInit();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
-
-		//Pushing UI Layer as Overlay
-		auto uiLayer = UILayer::GetSingleton();
-		PushOverlay(uiLayer);
 
 #ifdef SMOLENGINE_EDITOR
 

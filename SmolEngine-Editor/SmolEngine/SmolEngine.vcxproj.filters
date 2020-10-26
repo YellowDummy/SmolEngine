@@ -70,6 +70,9 @@
     <Filter Include="Source\Core\Physics2D">
       <UniqueIdentifier>{96656886-02D2-2381-CBC5-BBDE37F145E9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Physics2D\Box2D">
+      <UniqueIdentifier>{24688BFB-9075-B9E1-195C-B5CC85688598}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Renderer">
       <UniqueIdentifier>{D4D44230-C063-CCF9-6982-E0F455F0DC9F}</UniqueIdentifier>
     </Filter>
@@ -1359,7 +1362,25 @@
     <ClInclude Include="..\..\SmolEngine\Source\Core\Networking\NetworkManager.h">
       <Filter>Source\Core\Networking</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Rigidbody2D.h">
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\Body2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\Body2DDefs.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\Box2DEngine.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\CollisionFilter2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\CollisionListener2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\RayCast2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SmolEngine\Source\Core\Physics2D\PhysicsEngine.h">
       <Filter>Source\Core\Physics2D</Filter>
     </ClInclude>
     <ClInclude Include="..\..\SmolEngine\Source\Core\Renderer\Buffer.h">
@@ -1547,7 +1568,22 @@
     <ClCompile Include="..\..\SmolEngine\Source\Core\LayerManager.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Rigidbody2D.cpp">
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\Body2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\Box2DEngine.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\CollisionFilter2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\CollisionListener2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\Box2D\RayCast2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SmolEngine\Source\Core\Physics2D\PhysicsEngine.cpp">
       <Filter>Source\Core\Physics2D</Filter>
     </ClCompile>
     <ClCompile Include="..\..\SmolEngine\Source\Core\Renderer\Buffer.cpp">

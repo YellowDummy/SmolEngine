@@ -1,6 +1,6 @@
 # SmolEngine
 
-![SmolEngine](https://i.imgur.com/E5HLCy0.png)
+![SmolEngine](https://i.imgur.com/8i5hwhB.png)
 
 
 

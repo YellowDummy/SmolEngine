@@ -6,12 +6,8 @@
 #include "Core/ImGui/EditorPanels.h"
 #include "Core/ImGui/BuildPanel.h"
 
-#include "Core/ECS/Components.h"
-#include "Core/ECS/Scene.h"
-#include "Core/ECS/DefaultSystems.h"
-
 #include "Core/ImGui/AnimationPanel.h"
-#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/AnimationClip.h"
 
 #include <imgui/imgui.h>
 
@@ -19,6 +15,26 @@
 
 namespace SmolEngine
 {
+	struct TransformComponent;
+
+	struct Texture2DComponent;
+
+	struct HeadComponent;
+
+	struct Body2DComponent;
+
+	struct CameraComponent;
+
+	struct AudioSourceComponent;
+
+	struct Animation2DComponent;
+
+	struct CanvasComponent;
+
+	class Actor;
+
+	///
+
 	enum class FileBrowserFlags : uint16_t
 	{
 		None = 0,
@@ -30,7 +46,7 @@ namespace SmolEngine
 		//Animation
 
 		Load_Animation_Clip,
-		Load_Animation_Clip_Controller,
+		Load_Animation_Clip_Inspector,
 
 		//Audio
 
@@ -53,16 +69,11 @@ namespace SmolEngine
 		Canavas_TextLabel_Load_Font
 	};
 
-	enum class ComponentItem : char
-	{
-		None = 0, 
-		Tetxure2D, JinxScript, Rigidbody2D, CameraController, Light2D, Animation2DContoller, AudioSource, Canvas
-	};
-
 	enum class SelectionFlags: uint16_t
 	{
 		None = 0,
-		Inspector, Actions
+		Inspector,
+		Actions
 	};
 
 	class Framebuffer;
@@ -88,6 +99,26 @@ namespace SmolEngine
 
 		void OnImGuiRender() override;
 
+		/// Draw
+
+		void DrawInfo(HeadComponent* head);
+
+		void DrawTransform(TransformComponent* transform);
+
+		void DrawTexture(Texture2DComponent* texture);
+
+		void DrawBody2D(Body2DComponent* rb);
+
+		void DrawCamera(CameraComponent* camera);
+
+		void DrawAudioSource(AudioSourceComponent* audio);
+
+		void DrawAnimation2D(Animation2DComponent* anim);
+
+		void DrawCanvas(CanvasComponent* canvas);
+
+		///
+
 	private:
 
 		void ResetFileBrowser();
@@ -110,6 +141,10 @@ namespace SmolEngine
 
 		///
 
+		size_t m_IDBuffer = 0;
+
+		///
+
 		Ref<Scene> m_Scene;
 
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
@@ -117,8 +152,6 @@ namespace SmolEngine
 		SelectionFlags m_SelectionFlags = SelectionFlags::None;
 
 		///
-
-		size_t m_IDBuffer = 0;
 
 		bool isSceneViewFocused = false;
 
@@ -140,14 +173,26 @@ namespace SmolEngine
 
 		///
 
+		static std::string m_TempActorName;
+
+		static std::string m_TempActorTag;
+
+		static std::string m_TempString;
+
 		//TEMP 
+
 		Ref<Actor> m_Actor = nullptr;
+
 		Ref<Actor> m_CameraActor = nullptr;
-		Ref<Actor> m_SelectedActor = nullptr;
+
+		Actor* m_SelectedActor = nullptr;
 
 		Ref<Texture2D> m_Texture = nullptr;
+
 		Ref<Texture2D> m_SheetTexture = nullptr;
+
 		Ref<SubTexture2D> m_HouseSubTexture = nullptr;
+
 		Ref<SubTexture2D> m_FieldSubTexture = nullptr;
 	};
 }

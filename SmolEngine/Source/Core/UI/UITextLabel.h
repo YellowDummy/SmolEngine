@@ -15,7 +15,7 @@ namespace SmolEngine
 
 		void Init(const std::string& fontFilePath, const std::string& fontName);
 
-		//Setters
+		// Setters
 
 		void SetText(const std::string& text);
 
@@ -29,7 +29,7 @@ namespace SmolEngine
 
 	private:
 
-		//Internal needs
+		// Internal needs
 
 		void Reload() override;
 
@@ -62,8 +62,11 @@ namespace SmolEngine
 	private:
 
 		friend class cereal::access;
+
 		friend class Scene;
-		friend class UICanvas;
+
+		friend class UISystem;
+
 		friend class EditorLayer;
 
 		template<typename Archive>

@@ -23,11 +23,11 @@ namespace SmolEngine
 
 		void SetClearColor(const glm::vec4& color) override;
 
-		void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0) override;
+		void DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count = 0) override;
 
-		void DrawLine(const Ref<VertexArray>& vertexArray, uint32_t count = 0) override;
+		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0) override;
 
-		void DrawFan(const Ref<VertexArray>& vertexArray, uint32_t count = 0) override;
+		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0) override;
 
 		void DrawLight() override;
 

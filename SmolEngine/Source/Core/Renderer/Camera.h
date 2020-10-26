@@ -30,6 +30,7 @@ namespace SmolEngine
 
 		inline const float GetRotation() { return m_CameraRotation; }
 
+
 		inline const glm::vec3& GetPosistion() const { return m_CameraPos; }
 
 		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }

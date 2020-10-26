@@ -2,24 +2,32 @@
 #include "Actor.h"
 #include "Core/ECS/Scene.h"
 
+
+#include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
+#include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
+#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
+#include "Core/ECS/ComponentTuples/ResourceTuple.h"
+
+
 namespace SmolEngine
 {
 	Actor::Actor()
-		:Reg(Scene::GetScene()->GetRegistry())
+		: 
+		Parent(nullptr)
 	{
 
 	}
 
-	Actor::Actor(const entt::entity& entity, entt::registry& reg, const std::string& name, const std::string& tag, const size_t id, const size_t index)
+	Actor::Actor(const ActorBaseType baseType, entt::entity entity, size_t index)
 		:
-		ID(id),
-		Index(index),
+
 		Parent(nullptr),
+
+		ActorType(baseType),
+
 		Entity(entity),
-		Tag(tag),
-		Reg(reg),
-		Name(name),
-		IsDisabled(false)
+
+		Index(index)
 	{
 
 	}
@@ -31,28 +39,66 @@ namespace SmolEngine
 		auto set = Scene::GetScene()->GetIDSet();
 		size_t id = set[name];
 
-		for (auto child : Childs)
-		{
-			if (child->GetID() == id)
-			{
-				return child;
-			}
-		}
-
 		return nullptr;
 	}
 
 	Ref<Actor> Actor::GetChildByTag(const std::string& tag)
 	{
-		if (Childs.empty()) { return nullptr; }
-		for (auto child : Childs)
-		{
-			if (child->GetTag() == tag)
-			{
-				return child;
-			}
-		}
 
 		return nullptr;
+	}
+
+	std::string& Actor::GetName() const
+	{
+		return GetInfo()->Name;
+	}
+
+	std::string& Actor::GetTag() const
+	{
+		return GetInfo()->Tag;
+	}
+
+	const size_t Actor::GetID() const
+	{
+		return GetInfo()->ID;
+	}
+
+	DefaultBaseTuple* Actor::GetDefaultBaseTuple() const
+	{
+		return Scene::GetScene()->GetTuple<DefaultBaseTuple>(Entity);
+	}
+
+	PhysicsBaseTuple* Actor::GetPhysicsBaseTuple() const
+	{
+		return Scene::GetScene()->GetTuple<PhysicsBaseTuple>(Entity);
+	}
+
+	CameraBaseTuple* Actor::GetCameraBaseTuple() const
+	{
+		return Scene::GetScene()->GetTuple<CameraBaseTuple>(Entity);
+	}
+
+	HeadComponent* Actor::GetInfo() const
+	{
+		switch (ActorType)
+		{
+		case ActorBaseType::DefaultBase:
+		{
+			DefaultBaseTuple* defTuple = GetDefaultBaseTuple();
+			return &defTuple->Info;
+		}
+		case ActorBaseType::PhysicsBase:
+		{
+			PhysicsBaseTuple* phTuple = GetPhysicsBaseTuple();
+			return &phTuple->Info;
+		}
+		case ActorBaseType::CameraBase:
+		{
+			CameraBaseTuple* camTuple = GetCameraBaseTuple();
+			return &camTuple->Info;
+		}
+		default:
+			return nullptr;
+		}
 	}
 }

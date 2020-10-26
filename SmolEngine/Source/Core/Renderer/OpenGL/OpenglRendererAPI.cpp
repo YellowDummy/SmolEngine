@@ -46,7 +46,7 @@ namespace SmolEngine
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenglRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count)
+	void OpenglRendererAPI::DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count)
 	{
 		if (count == 0)
 		{
@@ -57,7 +57,7 @@ namespace SmolEngine
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void OpenglRendererAPI::DrawLine(const Ref<VertexArray>& vertexArray, uint32_t count)
+	void OpenglRendererAPI::DrawLine(const Ref<VertexArray> vertexArray, uint32_t count)
 	{
 		if (count == 0)
 		{
@@ -67,7 +67,7 @@ namespace SmolEngine
 		glDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_INT, nullptr);
 	}
 
-	void OpenglRendererAPI::DrawFan(const Ref<VertexArray>& vertexArray, uint32_t count)
+	void OpenglRendererAPI::DrawFan(const Ref<VertexArray> vertexArray, uint32_t count)
 	{
 		glDrawArrays(GL_LINE_LOOP, 1, 100);
 	}

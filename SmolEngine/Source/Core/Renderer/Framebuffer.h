@@ -7,9 +7,12 @@ namespace SmolEngine
 	struct FramebufferData
 	{
 		uint32_t Width;
+
 		uint32_t Height;
+
 		uint32_t Samples = 1;
-		bool SwapChainEnabled = false; //Vulkan support
+
+		bool SwapChainEnabled = false; // Vulkan
 	};
 
 	class Framebuffer

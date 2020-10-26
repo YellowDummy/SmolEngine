@@ -8,30 +8,50 @@
 
 namespace SmolEngine
 {
-	
 	class OrthographicCamera;
+
 	class Framebuffer;
+
+	///
 
 	enum class DrawableType : uint16_t
 	{
 		None = 0,
-		Sprite, Quad, Text, Animation, Light
+		Sprite,
+		Quad,
+		Text,
+		Animation,
+		Light
 	};
+
+	///
 
 	struct Drawable
 	{
 		glm::vec4 Color = glm::vec4(1.0f);
+
 		glm::vec3 Transform = glm::vec3(1.0f);
+
 		glm::vec2 Scale = glm::vec2(1.0f);
+
+		///
 
 		Ref<Texture2D> Texture = nullptr;
 
+		///
+
 		float Rotation = 0.0f;
+
 		float AmbientValue = 1.0f;
+
 		uint32_t Layer = 0;
+
+		///
 
 		DrawableType Type = DrawableType::None;
 	};
+
+	///
 
 	enum class DebugPrimitives
 	{
@@ -39,7 +59,10 @@ namespace SmolEngine
 		Quad, Circle
 	};
 
+	///
+
 	//TODO: Implement Batch Rendering
+
 	class Renderer2D
 	{
 	public:
@@ -48,7 +71,8 @@ namespace SmolEngine
 
 		static void Shutdown();
 
-		static void BeginScene(Ref<OrthographicCamera> camera, float ambientValue);
+		static void BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue);
+
 
 		static void EndScene();
 

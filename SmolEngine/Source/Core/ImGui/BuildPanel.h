@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/BuildConfig.h"
-
 #include <../../Libraries/imgui/imgui.h>
 #include "Core/ImGui/FileBrowser/imfilebrowser.h"
 
@@ -35,7 +33,6 @@ namespace SmolEngine
 
 		friend class EditorLayer;
 
-		BuildConfig m_CurrentBuildConfig;
 		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
 		float m_xOffset = 300.0f;

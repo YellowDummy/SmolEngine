@@ -1,17 +1,21 @@
 #include "stdafx.h"
 #include "EditorPanels.h"
 
+#include "Core/ECS/Scene.h"
+#include "Core/Application.h"
+#include "Core/SLog.h"
+
+#include "Core/ImGui/EditorConsole.h"
+#include "Core/ImGui/FileBrowser/imfilebrowser.h"
+#include "Core/ImGui/ImGuiExtension.h"
+
+#include "Core/Animation/AnimationClip.h"
+#include "Core/Renderer/Renderer2D.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <box2d/box2d.h>
 
-#include "Core/ECS/Scene.h"
-#include "Core/Application.h"
-#include "Core/SLog.h"
-#include "Core/ImGui/EditorConsole.h"
-#include "Core/ImGui/FileBrowser/imfilebrowser.h"
-#include "Core/Animation/Animation2D.h"
-#include "Core/Renderer/Renderer2D.h"
 
 namespace SmolEngine
 {
@@ -45,7 +49,6 @@ namespace SmolEngine
 			{
 				auto& data = scene->GetSceneData();
 				scene->GetSceneData().m_Name = name;
-				scene->m_PhysicsEngine->Init(data.m_Gravity);
 
 				isOpened = false;
 			}
@@ -58,32 +61,79 @@ namespace SmolEngine
 	{
 		if (isOpened)
 		{
-			ImGui::Begin("Create Actor", &isOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
-			ImGui::SetWindowSize("Create Actor", { 480, 200 });
+			ImGui::Begin("Actor Factory", &isOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
+			ImGui::SetWindowSize("Actor Factory", { 480, 220 });
 
-			static char name[128] = "Default Actor";
-			ImGui::NewLine();
-			ImGui::InputText("Name", name, IM_ARRAYSIZE(name));
-			ImGui::PushItemWidth(200);
-			ImGui::Separator();
-			ImGui::NewLine();
+			static std::string name = "";
+			static std::string tag = "";
+			static int comboValue = 0;
 
-			static char tag[128] = "Default";
-			ImGui::InputText("Tag", tag, IM_ARRAYSIZE(tag));
-			ImGui::PushItemWidth(200);
-			ImGui::Separator();
+			ImGui::BeginChild("Actor Data", { 480, 140 });
 			ImGui::NewLine();
 
-			if (ImGui::Button("Add", ImVec2{ 100, 25 }))
+			ImGui::PushID("ActorFactoryName");
+			ImGui::Extensions::InputRawString("Name", name, "Name", 130.0f, false);
+			ImGui::PopID();
+
+			ImGui::PushID("ActorFactoryTag");
+			ImGui::Extensions::InputRawString("Tag", tag, "Tag", 130.0f, false);
+			ImGui::PopID();
+
+			ImGui::Extensions::Combo("Base Type", "Default Actor\0Physics Actor\0Camera Actor\0\0", comboValue);
+
+			ImGui::NewLine();
+			ImGui::EndChild();
+
+			if (ImGui::Button("Create", { ImGui::GetWindowWidth() - 10.0f, 30.0f }))
 			{
-				auto ref = scene->CreateActor(name, tag);
-				if (!ref)
+				if (name.empty())
 				{
-					EditorConsole::GetConsole()->AddMessage(std::string("Actor was not created, it already exists"), LogLevel::Error);
+					CONSOLE_WARN("Actor was not created, name is empty");
+				}
+				else
+				{
+					if (tag.empty())
+					{
+						tag = "Default";
+					}
+
+					Ref<Scene> scene = Scene::GetScene();
+					Ref<Actor> actor = nullptr;
+
+					// Default
+
+					if (comboValue == 0)
+					{
+						actor = scene->CreateActor(ActorBaseType::DefaultBase, name, tag);
+					}
+
+					// Physics
+
+					if (comboValue == 1)
+					{
+						actor = scene->CreateActor(ActorBaseType::PhysicsBase, name, tag);
+					}
+
+					// Camera
+
+					if (comboValue == 2)
+					{
+						actor = scene->CreateActor(ActorBaseType::CameraBase, name, tag);
+					}
+
+					if (actor == nullptr)
+					{
+						CONSOLE_ERROR("Actor was not created, it already exists");
+					}
+
+					name = "";
+					tag = "";
+
+					isOpened = false;
 				}
 
-				isOpened = false;
 			}
+
 			ImGui::End();
 		}
 	}

@@ -14,9 +14,7 @@
 #include "Core/Events/MouseEvent.h"
 
 #include "Core/ECS/ScriptableObject.h"
-#include "Core/ECS/Components.h"
 #include "Core/ECS/Actor.h"
-#include "Core/ECS/DefaultSystems.h"
 
 #include "Core/ImGui/ImGuiLayer.h"
 #include "Core/ImGui/EditorConsole.h"

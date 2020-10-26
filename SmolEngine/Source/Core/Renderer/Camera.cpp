@@ -79,7 +79,6 @@ namespace SmolEngine
 		const float height = app.GetWindow().GetWidth();
 		float aspectRatio = height / width;
 
-		NATIVE_ERROR("{}, {}", height, width);
 
 		m_Camera = std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
@@ -178,7 +177,7 @@ namespace SmolEngine
 	bool EditorCameraController::IsWindowResized(Event& event)
 	{
 		auto& e = static_cast<WindowResizeEvent&>(event);
-		OnResize(e.GetHeight(), (float)e.GetWidth());
+		OnResize((float)e.GetHeight(), (float)e.GetWidth());
 
 		return false;
 	}

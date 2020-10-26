@@ -10,16 +10,6 @@ namespace SmolEngine
 
 	}
 
-	std::string& ScriptableObject::GetName()
-	{
-		return m_Actor->GetName();
-	}
-
-	const std::string& ScriptableObject::GetTag()
-	{
-		return m_Actor->GetTag();
-	}
-
 	Ref<Actor> ScriptableObject::GetParent()
 	{
 		return m_Actor->GetParent();
@@ -67,12 +57,12 @@ namespace SmolEngine
 
 	Ref<Actor> ScriptableObject::FindActorByName(const std::string& name)
 	{
-		return Scene::GetScene()->FindActorByName(name);
+		return nullptr;
 	}
 
 	Ref<Actor> ScriptableObject::FindActorByTag(const std::string& tag)
 	{
-		return Scene::GetScene()->FindActorByTag(tag);
+		return nullptr;
 	}
 
 	void ScriptableObject::PushOutVariable(const char* keyName, std::any val, OutValueType type)

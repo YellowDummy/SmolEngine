@@ -227,14 +227,14 @@ namespace SmolEngine
 		}
 	}
 
-	void Renderer2D::BeginScene(Ref<OrthographicCamera> camera, float ambientValue)
+	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue)
 	{
 		//TEMP
 		s_Data->DrawList.clear();
 		s_Data->DrawList.reserve(1000);
 
 		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetUniformMat4("u_ViewProjection", camera->GetViewProjectionMatrix());
+		s_Data->TextureShader->SetUniformMat4("u_ViewProjection", viewProjectionMatrix);
 		s_Data->TextureShader->SetUniformFloat("u_AmbientValue", ambientValue);
 	}
 
@@ -542,6 +542,8 @@ namespace SmolEngine
 				return true;
 			}
 		}
+
+		return false;
 	}
 
 }

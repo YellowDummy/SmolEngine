@@ -52,6 +52,18 @@
     <Filter Include="Source\Core\ECS">
       <UniqueIdentifier>{B890B921-241C-27E6-2D2D-AADA993783E6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\ECS\ComponentTuples">
+      <UniqueIdentifier>{B7E5A826-23C9-B766-2CCC-E5A2982E7EB7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\ECS\Components">
+      <UniqueIdentifier>{CD92B76C-B9A2-633D-225C-C85B0E8B52D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\ECS\Components\Singletons">
+      <UniqueIdentifier>{A20241BD-0EC7-3FAD-D72C-707743B0DBE2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\ECS\Systems">
+      <UniqueIdentifier>{BF1E95FB-2B56-DD92-3460-41B6A016048C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Events">
       <UniqueIdentifier>{92191B46-7EFD-DB9B-E75D-D6EED360C61D}</UniqueIdentifier>
     </Filter>
@@ -69,6 +81,9 @@
     </Filter>
     <Filter Include="Source\Core\Physics2D">
       <UniqueIdentifier>{96656886-02D2-2381-CBC5-BBDE37F145E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Physics2D\Box2D">
+      <UniqueIdentifier>{24688BFB-9075-B9E1-195C-B5CC85688598}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Core\Renderer">
       <UniqueIdentifier>{D4D44230-C063-CCF9-6982-E0F455F0DC9F}</UniqueIdentifier>
@@ -1260,10 +1275,10 @@
     <ClInclude Include="Lua\include\lualib.h">
       <Filter>Lua\include</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Animation\Animation2D.h">
+    <ClInclude Include="Source\Core\Animation\Animation2DFrameKey.h">
       <Filter>Source\Core\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Animation\Animation2DController.h">
+    <ClInclude Include="Source\Core\Animation\AnimationClip.h">
       <Filter>Source\Core\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Application.h">
@@ -1281,20 +1296,68 @@
     <ClInclude Include="Source\Core\Audio\AudioSource.h">
       <Filter>Source\Core\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\BuildConfig.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Actor.h">
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Components.h">
-      <Filter>Source\Core\ECS</Filter>
+    <ClInclude Include="Source\Core\ECS\ComponentTuples\BaseTuple.h">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\DefaultSystems.h">
-      <Filter>Source\Core\ECS</Filter>
+    <ClInclude Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.h">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.h">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.h">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\ComponentTuples\ResourceTuple.h">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\ComponentTuples\SingletonTuple.h">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Animation2DComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\AudioSourceComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\BehaviourComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Body2DComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\CameraComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\CanvasComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\HeadComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Singletons\AudioEngineSComponent.h">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Singletons\Box2DWorldSComponent.h">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Singletons\FramebufferSComponent.h">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Singletons\ProjectConfigSComponent.h">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Texture2DComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\TransformComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Scene.h">
       <Filter>Source\Core\ECS</Filter>
@@ -1304,6 +1367,27 @@
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\ScriptableObject.h">
       <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\Animation2DSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\AudioSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\Box2DPhysicsSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\CameraSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\CommandSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\RendererSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\UISystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\EngineCommand.h">
       <Filter>Source\Core</Filter>
@@ -1338,6 +1422,9 @@
     <ClInclude Include="Source\Core\ImGui\FileBrowser\imfilebrowser.h">
       <Filter>Source\Core\ImGui\FileBrowser</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ImGui\ImGuiExtension.h">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\ImGui\ImGuiLayer.h">
       <Filter>Source\Core\ImGui</Filter>
     </ClInclude>
@@ -1358,6 +1445,21 @@
     </ClInclude>
     <ClInclude Include="Source\Core\Networking\NetworkManager.h">
       <Filter>Source\Core\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\Body2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\Body2DDefs.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionFilter2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionListener2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Physics2D\Box2D\RayCast2D.h">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Buffer.h">
       <Filter>Source\Core\Renderer</Filter>
@@ -1443,13 +1545,7 @@
     <ClInclude Include="Source\Core\UI\UIButton.h">
       <Filter>Source\Core\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\UI\UICanvas.h">
-      <Filter>Source\Core\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\UI\UIElement.h">
-      <Filter>Source\Core\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\UI\UILayer.h">
       <Filter>Source\Core\UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\UI\UITextLabel.h">
@@ -1464,24 +1560,15 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Physics2D\Box2D\Body2D.h">
-      <Filter>Source\Core\Physics2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Physics2D\Box2D\Box2DEngine.h" />
-    <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionListener2D.h" />
-    <ClInclude Include="Source\Core\Physics2D\PhysicsEngine.h" />
-    <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionFilter2D.h" />
-    <ClInclude Include="Source\Core\Physics2D\Box2D\RayCast2D.h" />
-    <ClInclude Include="Source\Core\Physics2D\Box2D\Body2DDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
       <Filter>Libraries\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Animation\Animation2D.cpp">
+    <ClCompile Include="Source\Core\Animation\Animation2DFrameKey.cpp">
       <Filter>Source\Core\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Animation\Animation2DController.cpp">
+    <ClCompile Include="Source\Core\Animation\AnimationClip.cpp">
       <Filter>Source\Core\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Application.cpp">
@@ -1502,11 +1589,59 @@
     <ClCompile Include="Source\Core\ECS\Actor.cpp">
       <Filter>Source\Core\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ECS\Components.cpp">
-      <Filter>Source\Core\ECS</Filter>
+    <ClCompile Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.cpp">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ECS\DefaultSystems.cpp">
-      <Filter>Source\Core\ECS</Filter>
+    <ClCompile Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.cpp">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.cpp">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\ComponentTuples\ResourceTuple.cpp">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\ComponentTuples\SingletonTuple.cpp">
+      <Filter>Source\Core\ECS\ComponentTuples</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Animation2DComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\AudioSourceComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\BehaviourComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Body2DComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\CameraComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\CanvasComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\HeadComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Singletons\AudioEngineSComponent.cpp">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Singletons\FramebufferSComponent.cpp">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
+      <Filter>Source\Core\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Texture2DComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\TransformComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Scene.cpp">
       <Filter>Source\Core\ECS</Filter>
@@ -1516,6 +1651,30 @@
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp">
       <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\Animation2DSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\AudioSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\Box2DPhysicsSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\CameraSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\CommandSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\RendererSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\UISystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\EngineCommand.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EntryPoint.cpp">
       <Filter>Source\Core</Filter>
@@ -1538,6 +1697,9 @@
     <ClCompile Include="Source\Core\ImGui\ImGuiBuid.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ImGui\ImGuiExtension.cpp">
+      <Filter>Source\Core\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\ImGui\ImGuiLayer.cpp">
       <Filter>Source\Core\ImGui</Filter>
     </ClCompile>
@@ -1549,6 +1711,18 @@
     </ClCompile>
     <ClCompile Include="Source\Core\LayerManager.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Physics2D\Box2D\Body2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Physics2D\Box2D\CollisionFilter2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Physics2D\Box2D\CollisionListener2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Physics2D\Box2D\RayCast2D.cpp">
+      <Filter>Source\Core\Physics2D\Box2D</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Buffer.cpp">
       <Filter>Source\Core\Renderer</Filter>
@@ -1613,12 +1787,6 @@
     <ClCompile Include="Source\Core\UI\UIButton.cpp">
       <Filter>Source\Core\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\UI\UICanvas.cpp">
-      <Filter>Source\Core\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\UI\UILayer.cpp">
-      <Filter>Source\Core\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\UI\UITextLabel.cpp">
       <Filter>Source\Core\UI</Filter>
     </ClCompile>
@@ -1628,14 +1796,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\EngineCommand.cpp" />
-    <ClCompile Include="Source\Core\Physics2D\Box2D\Body2D.cpp">
-      <Filter>Source\Core\Physics2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Physics2D\Box2D\Box2DEngine.cpp" />
-    <ClCompile Include="Source\Core\Physics2D\Box2D\CollisionListener2D.cpp" />
-    <ClCompile Include="Source\Core\Physics2D\PhysicsEngine.cpp" />
-    <ClCompile Include="Source\Core\Physics2D\Box2D\CollisionFilter2D.cpp" />
-    <ClCompile Include="Source\Core\Physics2D\Box2D\RayCast2D.cpp" />
   </ItemGroup>
 </Project>

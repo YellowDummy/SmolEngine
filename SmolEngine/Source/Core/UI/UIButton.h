@@ -11,6 +11,7 @@
 namespace SmolEngine
 {
 	class Event;
+
 	class Texture2D;
 
 	class UIButton: public UIElement
@@ -53,11 +54,11 @@ namespace SmolEngine
 
 	private:
 
-		glm::vec3 m_CurrentColor = glm::vec3(1.0f);
+		glm::vec4 m_CurrentColor = glm::vec4(1.0f);
 
-		glm::vec3 m_HoveredColor = glm::vec3(1.0f);
+		glm::vec4 m_HoveredColor = glm::vec4(1.0f);
 
-		glm::vec3 m_PressedColor = glm::vec3(1.0f);
+		glm::vec4 m_PressedColor = glm::vec4(1.0f);
 
 		///
 
@@ -90,8 +91,11 @@ namespace SmolEngine
 	private:
 
 		friend class cereal::access;
+
 		friend class Scene;
-		friend class UICanvas;
+
+		friend class UISystem;
+
 		friend class EditorLayer;
 
 		template<typename Archive>

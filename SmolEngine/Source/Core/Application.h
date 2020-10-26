@@ -14,10 +14,11 @@ namespace SmolEngine
 
 	class Window;
 
-	struct DeltaTime;
-
 	class UIText;
 
+	struct DeltaTime;
+
+	///
 
 	class Application
 	{
@@ -96,7 +97,7 @@ namespace SmolEngine
 		float m_LastFrameTime;
 	};
 
-	Application* CreateApp(); 	//Client side 
+	Application* CreateApp(); 	// Client side 
 
 }
 

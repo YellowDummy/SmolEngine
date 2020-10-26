@@ -56,10 +56,6 @@ namespace SmolEngine
 
 		Ref<Actor> GetActor() { return m_Actor; }
 
-		std::string& GetName();
-
-		const std::string& GetTag();
-
 		/// Callbacks
 
 		virtual void OnBeginPlay() {  };

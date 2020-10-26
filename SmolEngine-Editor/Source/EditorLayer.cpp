@@ -2,18 +2,20 @@
 #include "../../GameX/CppScriptingExamples.h"
 
 #include "EditorLayer.h"
+#include "Core/ImGui/ImGuiExtension.h"
 #include "icon_font_cpp_headers/IconsFontAwesome5.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
 
 #include "Core/Renderer/Renderer2D.h"
-#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/AnimationClip.h"
 #include "Core/Scripting/Jinx.h"
+
 #include "Core/ECS/Scene.h"
+#include "Core/ECS/Actor.h"
 
 #include "Core/Audio/AudioClip.h"
 #include "Core/Audio/AudioSource.h"
 
-#include "Core/UI/UICanvas.h"
 #include "Core/UI/UIButton.h"
 #include "Core/UI/UITextLabel.h"
 #include "Core/Renderer/Text.h"
@@ -30,6 +32,13 @@
 
 namespace SmolEngine
 {
+	std::string EditorLayer::m_TempActorName = "";
+
+	std::string EditorLayer::m_TempActorTag = "";
+
+	std::string EditorLayer::m_TempString = "";
+
+	///
 
 	void EditorLayer::OnAttach()
 	{
@@ -44,33 +53,14 @@ namespace SmolEngine
 
 		m_Scene = Scene::GetScene();
 		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene"), std::string("TestScene.smolscene"));
-		//
-		//m_Texture = Texture2D::Create("Assets/Textures/Background.png");
-		//m_SheetTexture = Texture2D::Create("Assets/Textures/RPGpack_sheet_2X.png");
-		//
-		//auto test2 = Texture2D::Create("Assets/Textures/7yWvW.png");
-		//
-		//
-		//m_HouseSubTexture = SubTexture2D::GenerateFromCoods(m_SheetTexture, { 4.0f, 6.0f }, { 128.0f, 128.0f });
-		//m_Scene->m_TestSub = SubTexture2D::GenerateFromCoods(test2, { 2.0f, 1.0f }, { 260, 513 }, { 1, 1 });
-		//
-		//m_Actor = m_Scene->CreateActor("Actor_1", "Player");
-		//m_Actor->AddComponent<Texture2DComponent>("Assets/Textures/Background.png");
-		//m_Actor->AddComponent<Rigidbody2DComponent>(m_Actor, BodyType::Dynamic);
-		//m_Scene->AttachScript(std::string("CharMovementScript"), m_Actor);
-		//
-		//m_CameraActor = m_Scene->CreateActor("Camera");
-		//m_CameraActor->AddComponent<CameraComponent>();
-		//m_Scene->AttachScript(std::string("CameraMovementScript"), m_CameraActor);
-		//
-		//auto& ground = m_Scene->CreateActor("Ground","TestTag");
-		//ground->GetComponent<TransformComponent>().SetTranform(1.0f, -2.0f);;
-		//ground->AddComponent<Rigidbody2DComponent>(ground, BodyType::Static);
-		//
-		//m_Scene->AddChild(m_Actor, ground);
-		//
-		//auto nameActor = m_Scene->FindActorByName("Ground");
-		//auto tagActor = m_Scene->FindActorByTag("TestTag");
+
+		auto Texture = Texture2D::Create("Assets/Textures/Background.png");
+
+		auto camera = m_Scene->CreateActor(ActorBaseType::CameraBase, "Camera", "Default");
+
+		auto actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, "Pawn");
+
+	    m_Scene->AddTuple<ResourceTuple>(*actor);
 	}
 
 	void EditorLayer::OnDetach()
@@ -133,8 +123,6 @@ namespace SmolEngine
 		bool opt_fullscreen = opt_fullscreen_persistant;
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-		// because it would be confusing to have two docking targets within each others.
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 		if (opt_fullscreen)
 		{
@@ -148,16 +136,8 @@ namespace SmolEngine
 			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 		}
 
-		// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
-		// and handle the pass-thru hole, so we ask Begin() to not render a background.
 		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
-
-		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-		// all active windows docked into it will lose their parent and become undocked.
-		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("DockSpace Demo", &p_open, window_flags);
@@ -179,9 +159,6 @@ namespace SmolEngine
 		{
 			if (ImGui::BeginMenu("File")) 
 			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows,
-				// which we can't undo at the moment without finer window depth/z control.
-				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 				if (ImGui::MenuItem("Close"))
 				{
 					Application::GetApplication().CloseApp();
@@ -257,7 +234,7 @@ namespace SmolEngine
 				if (ImGui::MenuItem("New Clip"))
 				{
 					showAnimationPanel = true;
-					m_AnimationPanel->m_AnimationClip = std::make_unique<Animation2D>();
+					m_AnimationPanel->m_AnimationClip = std::make_unique<AnimationClip>();
 				}
 
 				if (ImGui::MenuItem("Load Clip"))
@@ -431,19 +408,12 @@ namespace SmolEngine
 					m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
 				}
 
-				auto camGroup = m_Scene->GetSceneData().m_Registry.view<CameraComponent>();
-
-				for (auto obj : camGroup)
+				auto framebuffer = FramebufferSComponent::Get()[0];
+				if (framebuffer)
 				{
-					auto& cameraComponent = camGroup.get<CameraComponent>(obj);
-					if (cameraComponent.isSelected)
-					{
-						size_t ImageTextureID = cameraComponent.Camera->m_FrameBuffer->GetColorAttachmentID();
-						ImGui::Image((void*)(intptr_t)ImageTextureID, ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-					}
+					ImGui::Image((void*)(intptr_t)framebuffer->GetColorAttachmentID(), 
+						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 				}
-
-
 			}
 
 			ImGui::End();
@@ -451,7 +421,8 @@ namespace SmolEngine
 
 		}
 
-		//TEMP
+		// TEMP
+
 		if (showNodeEditorTest)
 		{
 			if (ImGui::Begin("Node Editor Test"), &showNodeEditorTest)
@@ -500,43 +471,24 @@ namespace SmolEngine
 
 			ImGui::BeginChild("Scene");
 			{
+
 				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					for (auto actor : m_Scene->GetSortedActorList())
+					for (const auto& actor : m_Scene->GetSortedActorList())
 					{
-						if (actor->IsDisabled) { continue; }
-
-						auto result = actor->GetName().find(name);
-						if (result == std::string::npos)
-						{
-							continue;
-						}
-
 						if (ImGui::TreeNodeEx(actor->GetName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
 						{
-							if (ImGui::TreeNodeEx("Childs"))
-							{
-								if (actor->GetChilds().empty())
-								{
-									ImGui::BulletText("Empty");
-								}
-								else
-								{
-									for (auto obj : actor->GetChilds())
-									{
-										ImGui::BulletText(obj->GetName().c_str());
-									}
-								}
-
-								ImGui::TreePop();
-							}
 
 							ImGui::TreePop();
 						}
 
+
 						if (ImGui::IsItemClicked(1))
 						{
 							m_SelectionFlags = SelectionFlags::Actions;
+
+							m_TempActorTag = "";
+							m_TempActorName = "";
 
 							m_SelectedActor = nullptr;
 							m_SelectedActor = actor;
@@ -551,6 +503,9 @@ namespace SmolEngine
 								m_SelectedActor = nullptr;
 							}
 
+							m_TempActorTag = "";
+							m_TempActorName = "";
+
 							m_SelectedActor = actor;
 						}
 
@@ -558,7 +513,6 @@ namespace SmolEngine
 
 					ImGui::TreePop();
 				}
-
 
 				if (m_SelectionFlags == SelectionFlags::Actions)
 				{
@@ -574,46 +528,15 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Save")) {}
 					if (ImGui::MenuItem("Save as", "Ctrl+O")) {}
 
-					if (ImGui::BeginMenu("Rename"))
-					{
-						static std::string name = m_SelectedActor->GetName();
-						if (ImGui::InputTextWithHint("Name", name.c_str(), &name, ImGuiInputTextFlags_EnterReturnsTrue))
-						{
-							const auto lastName = m_SelectedActor->GetName();
-							if (m_Scene->UpdateIDSet(lastName, name))
-							{
-								m_SelectedActor->Name = name;
-								ImGui::CloseCurrentPopup();
-							}
-							else
-							{
-								CONSOLE_ERROR("Actor ID not found!");
-							}
-						}
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Change Tag"))
-					{
-						static std::string tag = m_SelectedActor->GetTag();
-						if (ImGui::InputTextWithHint("Tag", tag.c_str(), &tag, ImGuiInputTextFlags_EnterReturnsTrue))
-						{
-							m_SelectedActor->Tag = tag;
-							ImGui::CloseCurrentPopup();
-						}
-
-
-						ImGui::EndMenu();
-					}
 
 					if (ImGui::MenuItem("Dublicate", "Ctrl+C"))
 					{
-						m_Scene->DuplicateActor(m_SelectedActor);
+
 					}
 
 					if (ImGui::MenuItem("Delete"))
 					{
-						m_Scene->DeleteActor(m_SelectedActor);
+
 					}
 
 					ImGui::EndPopup();
@@ -634,688 +557,198 @@ namespace SmolEngine
 			else
 			{
 				std::stringstream ss;
-				ss << "Name: " + m_SelectedActor->GetName() << " | Tag: " << m_SelectedActor->GetTag();
 
-				ImGui::Text(ss.str().c_str());
-				ImGui::Separator();
-
-				ImGui::PushID(m_SelectedActor->GetName().c_str());
-				if (ImGui::TreeNodeEx("Components", ImGuiTreeNodeFlags_Leaf))
+				switch (m_SelectedActor->ActorType)
 				{
+				case ActorBaseType::DefaultBase:
+				{
+					ss << "Default Actor";
 
-					if (ImGui::TreeNode("Transform"))
+					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+					ImGui::TextUnformatted(ss.str().c_str());
+
+					auto ref = m_SelectedActor->GetDefaultBaseTuple();
+
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					// Head
+
+					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& tranfrom = m_SelectedActor->GetComponent<TransformComponent>();
-
-						static glm::vec3 pos = tranfrom.WorldPos;
-
 						ImGui::NewLine();
-						if (ImGui::InputFloat3("Transform", glm::value_ptr(pos)))
+
 						{
-							if (pos.z > 10)
-							{
-								pos.z = 10;
-							}
-
-							tranfrom.WorldPos = pos;
+							DrawInfo(&ref->Info);
 						}
+					}
 
-						ImGui::InputFloat("Rotation", &tranfrom.Rotation);
-						ImGui::InputFloat2("Scale", glm::value_ptr(tranfrom.Scale));
+					ImGui::NewLine();
 
-						ImGui::TreePop();
+					// Transform 
 
+					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
+					{
 						ImGui::NewLine();
+						DrawTransform(&ref->Transform);
 					}
 
+					ImGui::NewLine();
 
-					if (m_SelectedActor->HasComponent<Rigidbody2DComponent>())
+					// Texture2D
+
+					if (ImGui::CollapsingHeader("Texture2D", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						if (ImGui::TreeNode("Rigidbody2D"))
-						{
-							auto& rb = m_SelectedActor->GetComponent<Rigidbody2DComponent>();
-							ImGui::NewLine();
-							ImGui::Combo("Body", &rb.Body->m_Type, "Static\0Kinematic\0Dynamic\0\0");
-							ImGui::Combo("Shape", &rb.Body->m_ShapeType, "Box\0Circle\0\0");
-							ImGui::InputInt("Layer", &rb.Body->m_CollisionLayer);
+						ImGui::NewLine();
 
-							if (rb.Body->m_ShapeType == (int)ShapeType::Box)
-							{
-								ImGui::InputFloat2("Size", glm::value_ptr(rb.Body->m_Shape), 3);
-							}
-							else if (rb.Body->m_ShapeType == (int)ShapeType::Cirlce)
-							{
-								ImGui::InputFloat("Radius", &rb.Body->m_Radius);
-								ImGui::InputFloat2("Offset", glm::value_ptr(rb.Body->m_Offset));
-							}
-
-							if (rb.Body->m_Type == 2 || rb.Body->m_Type == 1)
-							{
-								ImGui::Separator();
-								ImGui::NewLine();
-								ImGui::InputFloat("Gravity Scale", &rb.Body->m_GravityScale);
-								ImGui::InputFloat("Mass", &rb.Body->m_Mass);
-								ImGui::InputFloat2("Mass Center", glm::value_ptr(rb.Body->m_MassCenter));
-								ImGui::InputFloat("Inertia Moment", &rb.Body->m_InertiaMoment);
-								ImGui::Separator();
-								ImGui::NewLine();
-
-								ImGui::InputFloat("Friction", &rb.Body->m_Friction);
-								ImGui::InputFloat("Density", &rb.Body->m_Density);
-								ImGui::InputFloat("Restitution", &rb.Body->m_Restitution);
-								ImGui::Checkbox("Bullet Mode", &rb.Body->m_IsBullet);
-								ImGui::Separator();
-								ImGui::NewLine();
-							}
-
-							if (rb.Body->m_Type == 0)
-							{
-								ImGui::Separator();
-								ImGui::NewLine();
-							}
-
-							ImGui::Checkbox("Trigger", &rb.Body->m_IsTrigger);
-							ImGui::Checkbox("Show Shape", &rb.ShowShape);
-							ImGui::Checkbox("Awake", &rb.Body->m_IsAwake);
-							ImGui::Checkbox("Allow Sleep", &rb.Body->m_canSleep);
-
-							ImGui::TreePop();
-
-							ImGui::NewLine();
-						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("RbPopup");
-
-						}
-
-						if (ImGui::BeginPopup("RbPopup"))
-						{
-							ImGui::MenuItem("Rigidbody2D", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<Rigidbody2DComponent>();
-							}
-
-							ImGui::EndPopup();
-						}
+						DrawTexture(&ref->Texture);
 					}
 
-					if (m_SelectedActor->HasComponent<Texture2DComponent>())
+					ImGui::NewLine();
+
+					break;
+				}
+				case ActorBaseType::PhysicsBase:
+				{
+					ss << "Physics Actor";
+
+					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+					ImGui::TextUnformatted(ss.str().c_str());
+
+					auto ref = m_SelectedActor->GetPhysicsBaseTuple();
+
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					// Head
+
+					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& comp = m_SelectedActor->GetComponent<Texture2DComponent>();
+						ImGui::NewLine();
 
-						if (ImGui::TreeNode("Texture2D"))
 						{
-							if (comp.Texture != nullptr)
-							{
-								ImGui::Separator();
-								ImGui::NewLine();
-								ImGui::Image((void*)(intptr_t)comp.Texture->GetID(), ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-								ImGui::SameLine();
-
-								if (ImGui::Button("Change"))
-								{
-									m_FileBrowserState = FileBrowserFlags::Load_Texture2D;
-									m_FileBrowser->SetTitle("Select a texture");
-									m_FileBrowser->SetTypeFilters({ ".png" });
-									m_FileBrowser->Open();
-								}
-
-								ImGui::SameLine();
-								ImGui::Checkbox("Texture2D Enabled", &comp.Enabled);
-							}
-							else
-							{
-								ImGui::NewLine();
-								ImGui::Separator();
-
-								if (ImGui::Button("New Texture2D"))
-								{
-									m_FileBrowserState = FileBrowserFlags::Load_Texture2D;
-									m_FileBrowser->SetTitle("Select a texture");
-									m_FileBrowser->SetTypeFilters({ ".png" });
-									m_FileBrowser->Open();
-								}
-							}
-
-							ImGui::NewLine();
-							ImGui::Separator();
-							ImGui::ColorEdit3("Color", glm::value_ptr(comp.Color));
-							ImGui::TreePop();
-
-							ImGui::NewLine();
-						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("TexturePopup");
-
-						}
-
-						if (ImGui::BeginPopup("TexturePopup"))
-						{
-							ImGui::MenuItem("Texture2D", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<Texture2DComponent>();
-							}
-
-							ImGui::EndPopup();
+							DrawInfo(&ref->Info);
 						}
 					}
 
-					if (m_SelectedActor->HasComponent<CanvasComponent>())
+					ImGui::NewLine();
+
+					// Transform 
+
+					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& canvas = m_SelectedActor->GetComponent<CanvasComponent>();
-
-						if (ImGui::TreeNode("Canvas"))
-						{
-							if (ImGui::TreeNodeEx("UI Elements", ImGuiTreeNodeFlags_DefaultOpen))
-							{
-								for (auto pair : canvas.Canvas->m_Elements)
-								{
-									auto& [key, element] = pair;
-									std::stringstream ss;
-
-									switch (element->m_Type)
-									{
-									case SmolEngine::UIElementType::TextLabel:
-									{
-										ss << "TextLabel #" << element->m_ID << " (index)";
-
-										if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
-										{
-											auto text = std::static_pointer_cast<UITextLabel>(element);
-
-											static std::string textStr = text->m_Text;
-											if (ImGui::InputText("Text", &textStr, ImGuiInputTextFlags_EnterReturnsTrue))
-											{
-												text->SetText(textStr);
-											}
-
-											static glm::vec2 pos = text->m_Position;
-											if (ImGui::InputFloat2("Position", glm::value_ptr(pos)))
-											{
-												text->SetPosition(pos);
-											}
-
-											static glm::vec2 scale = text->m_Size;
-											if (ImGui::InputFloat2("Size", glm::value_ptr(scale)))
-											{
-												text->SetSize(scale);
-											}
-
-											ImGui::InputFloat("Padding", &text->m_Padding);
-
-											ImGui::ColorEdit3("Color", glm::value_ptr(text->m_Color));
-
-											ImGui::NewLine();
-
-											ss.clear();
-											ss << "Current Font: " << text->m_FontName;
-											ImGui::Text(ss.str().c_str());
-											if (ImGui::Button("Change"))
-											{
-												m_IDBuffer = text->m_ID;
-												m_FileBrowserState = FileBrowserFlags::Canavas_TextLabel_Load_Font;
-												m_FileBrowser->SetTitle("Select a font");
-												m_FileBrowser->SetTypeFilters({ ".ttf" });
-												m_FileBrowser->Open();
-											}
-
-											ImGui::TreePop();
-										}
-
-										break;
-									}
-									case SmolEngine::UIElementType::Button:
-									{
-										ss << "Button #" << element->m_ID << " (index)";
-
-										if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
-										{
-											auto button = std::static_pointer_cast<UIButton>(element);
-
-											if (button->m_Texture != nullptr)
-											{
-												ImGui::Separator();
-												ImGui::NewLine();
-												ImGui::Image((void*)(intptr_t)button->m_Texture->GetID(), ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-												ImGui::SameLine();
-
-												if (ImGui::Button("Change"))
-												{
-													m_IDBuffer = element->m_ID;
-
-													m_FileBrowserState = FileBrowserFlags::Canvas_Chanage_Button_Texture;
-													m_FileBrowser->SetTitle("Select a texture");
-													m_FileBrowser->SetTypeFilters({ ".png" });
-													m_FileBrowser->Open();
-												}
-
-												ImGui::NewLine();
-												ImGui::Separator();
-												ImGui::ColorEdit3("Hovered Color", glm::value_ptr(button->m_HoveredColor));
-												ImGui::NewLine();
-											}
-											else
-											{
-												if (ImGui::Button("Add Texture"))
-												{
-													m_IDBuffer = element->m_ID;
-
-													m_FileBrowserState = FileBrowserFlags::Canvas_Chanage_Button_Texture;
-													m_FileBrowser->SetTitle("Select a texture");
-													m_FileBrowser->SetTypeFilters({ ".png" });
-													m_FileBrowser->Open();
-												}
-												ImGui::NewLine();
-											}
-
-											ImGui::InputFloat2("Size", glm::value_ptr(button->m_Size));
-											ImGui::InputFloat2("Position", glm::value_ptr(button->m_UCood));
-
-											ImGui::TreePop();
-										}
-
-										break;
-									}
-									case SmolEngine::UIElementType::TextBox:
-									{
-										break;
-									}
-									default:
-										break;
-									}
-								}
-
-								ImGui::TreePop();
-
-								ImGui::NewLine();
-							}
-
-							if (ImGui::IsItemClicked(1))
-							{
-								ImGui::OpenPopup("CanvasPopup");
-
-							}
-
-							if (ImGui::BeginPopup("CanvasPopup"))
-							{
-								ImGui::MenuItem("Light2D", NULL, false, false);
-								if (ImGui::MenuItem("Delete"))
-								{
-									m_SelectedActor->DeleteComponent<CanvasComponent>();
-								}
-
-								ImGui::EndPopup();
-							}
-
-
-							ImGui::NewLine();
-
-							if (ImGui::Button("Add Button"))
-							{
-								canvas.Canvas->AddElement(UIElementType::Button);
-							}
-
-							ImGui::SameLine();
-
-							if (ImGui::Button("Add Text"))
-							{
-								m_FileBrowserState = FileBrowserFlags::Canavas_Create_TextLabel;
-								m_FileBrowser->SetTitle("Select a font");
-								m_FileBrowser->SetTypeFilters({ ".ttf" });
-								m_FileBrowser->Open();
-							}
-
-							ImGui::TreePop();
-						}
+						ImGui::NewLine();
+						DrawTransform(&ref->Transform);
 					}
 
+					ImGui::NewLine();
 
-					if (m_SelectedActor->HasComponent<Light2DComponent>())
+					// Texture2D
+
+					if (ImGui::CollapsingHeader("Texture2D", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& light = m_SelectedActor->GetComponent<Light2DComponent>();
+						ImGui::NewLine();
 
-						if (ImGui::TreeNode("Light2D"))
-						{
-							ImGui::InputFloat2("Size", glm::value_ptr(light.Light->m_Shape));
-							ImGui::Separator();
-							ImGui::InputFloat("Intensity", &light.Light->intensity);
-							if (light.Light->intensity > 1.0f) { light.Light->intensity = 1.0f; };
-							ImGui::Separator();
-							ImGui::ColorEdit3("Light Color", glm::value_ptr(light.Light->m_Color));
-							ImGui::TreePop();
-
-							ImGui::NewLine();
-						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("LightPopup");
-
-						}
-
-						if (ImGui::BeginPopup("LightPopup"))
-						{
-							ImGui::MenuItem("Light2D", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<Light2DComponent>();
-							}
-
-							ImGui::EndPopup();
-						}
+						DrawTexture(&ref->Texture);
 					}
 
-					if (m_SelectedActor->HasComponent<JinxScriptComponent>())
+					ImGui::NewLine();
+
+					// Body2D
+
+					if (ImGui::CollapsingHeader("Rigidbody2D", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						if (ImGui::TreeNode("Jinx Script"))
-						{
-							ImGui::Checkbox("JinxScript Enabled", &m_SelectedActor->GetComponent<JinxScriptComponent>().Enabled);
-							ImGui::TreePop();
-						}
+						ImGui::NewLine();
 
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("JinxScriptPopup");
+						DrawBody2D(&ref->Body);
 
-						}
-
-						if (ImGui::BeginPopup("JinxScriptPopup"))
-						{
-							ImGui::MenuItem("Jinx Script", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<JinxScriptComponent>();
-							}
-
-							ImGui::EndPopup();
-						}
 					}
 
-					if (m_SelectedActor->HasComponent<ScriptObject>())
+					ImGui::NewLine();
+
+					break;
+				}
+				case ActorBaseType::CameraBase:
+				{
+					ss << "Camera Actor";
+
+					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+					ImGui::TextUnformatted(ss.str().c_str());
+
+					auto ref = m_SelectedActor->GetCameraBaseTuple();
+
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					// Head
+
+					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						if (ImGui::TreeNode("C++ Script"))
+						ImGui::NewLine();
+
 						{
-							auto& ref = m_SelectedActor->GetComponent<ScriptObject>();
-
-							std::string typeName = "Type: " + ref.keyName;
-							ImGui::NewLine();
-							ImGui::Text(typeName.c_str());
-
-							for (auto val : m_SelectedActor->m_OutValues)
-							{
-								switch (val->Value.index())
-								{
-
-								case (uint32_t)OutValueType::Float:
-								{
-									ImGui::InputFloat(val->Key.c_str(), &std::get<float>(val->Value));
-									break;
-								}
-								case (uint32_t)OutValueType::Int:
-								{
-									ImGui::InputInt(val->Key.c_str(), &std::get<int>(val->Value));
-									break;
-								}
-								case (uint32_t)OutValueType::String:
-								{
-									ImGui::InputText(val->Key.c_str(), val->stringBuffer, IM_ARRAYSIZE(val->stringBuffer));
-									if (std::get<std::string>(val->Value).c_str() != val->stringBuffer)
-									{
-										std::get<std::string>(val->Value) = val->stringBuffer;
-									}
-
-									break;
-								}
-								default:
-									break;
-								}
-							}
-
-							ImGui::Checkbox("C++ Script Enabled", &ref.Enabled);
-							ImGui::TreePop();
-
-							ImGui::NewLine();
+							DrawInfo(&ref->Info);
 						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("CppScriptPopup");
-
-						}
-
-						if (ImGui::BeginPopup("CppScriptPopup"))
-						{
-							ImGui::MenuItem("C++ Script", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<ScriptObject>();
-							}
-
-							ImGui::EndPopup();
-						}
-
 					}
 
-					if (m_SelectedActor->HasComponent<CameraComponent>())
+					ImGui::NewLine();
+
+					// Transform 
+
+					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& comp = m_SelectedActor->GetComponent<CameraComponent>();
-						auto& transform = m_SelectedActor->GetComponent<TransformComponent>();
-
-						if (ImGui::TreeNode("Camera Controller"))
-						{
-							ImGui::InputFloat("Zoom Level", &comp.Camera->m_ZoomLevel);
-							ImGui::Separator();
-							ImGui::Checkbox("Main Camera", &comp.isSelected);
-							ImGui::Separator();
-							ImGui::Checkbox("Camera Enabled", &comp.Enabled);
-							ImGui::TreePop();
-
-							ImGui::NewLine();
-						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("CameraPopup");
-
-						}
-
-						if (ImGui::BeginPopup("CameraPopup"))
-						{
-							ImGui::MenuItem("Camera Controller", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<CameraComponent>();
-							}
-
-							ImGui::EndPopup();
-						}
+						ImGui::NewLine();
+						DrawTransform(&ref->Transform);
 					}
 
-					if (m_SelectedActor->HasComponent<Animation2DControllerComponent>())
+					ImGui::NewLine();
+
+					// Camera
+
+					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& controller = m_SelectedActor->GetComponent<Animation2DControllerComponent>();
+						ImGui::NewLine();
 
-						if (ImGui::TreeNode("Animation2D Controller"))
-						{
-							if (ImGui::TreeNodeEx("Animation Clips", ImGuiTreeNodeFlags_DefaultOpen))
-							{
-								if (controller.AnimationController->m_Clips.size() == 0)
-								{
-									ImGui::BulletText("Empty");
-								}
-
-								for (auto& pair : controller.AnimationController->m_Clips)
-								{
-									auto& [key, clip] = pair;
-
-									std::stringstream ss;
-									ss << "Clip #" << clip->Clip->m_ClipName;
-
-									if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
-									{
-										static std::string name = clip->Clip->m_ClipName;
-
-										if (ImGui::InputText("Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))
-										{
-											clip->Clip->m_ClipName = name;
-										}
-
-										ImGui::Checkbox("Default Clip", &clip->IsDefaultClip);
-
-										ImGui::SameLine();
-										if (ImGui::SmallButton("Play"))
-										{
-											controller.AnimationController->Reset();
-											controller.AnimationController->PlayClip(clip->Clip->m_ClipName);
-										}
-
-										ImGui::SameLine();
-										if (ImGui::SmallButton("Stop"))
-										{
-											controller.AnimationController->Reset();
-										}
-
-										ImGui::TreePop();
-									}
-								}
-
-								ImGui::TreePop();
-								ImGui::NewLine();
-							}
-
-							ImGui::NewLine();
-							if (ImGui::Button("Load Clip"))
-							{
-								m_FileBrowserState = FileBrowserFlags::Load_Animation_Clip_Controller;
-								m_FileBrowser->SetTitle("Select Clip");
-								m_FileBrowser->SetTypeFilters({ ".smolanim" });
-								m_FileBrowser->Open();
-							}
-
-							ImGui::TreePop();
-						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("AnimationPopUp");
-						}
-
-						if (ImGui::BeginPopup("AnimationPopUp"))
-						{
-							ImGui::MenuItem("Animation 2D Controller", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<Animation2DControllerComponent>();
-							}
-
-							ImGui::EndPopup();
-						}
-
+						DrawCamera(&ref->Camera);
 					}
 
-					if (m_SelectedActor->HasComponent<AudioSourceComponent>())
+					ImGui::NewLine();
+
+					// Canvas
+
+					if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						auto& as = m_SelectedActor->GetComponent<AudioSourceComponent>();
+						ImGui::NewLine();
 
-						if (ImGui::TreeNode("Audio Source"))
-						{
-
-							if (ImGui::TreeNodeEx("Audio Clips", ImGuiTreeNodeFlags_DefaultOpen))
-							{
-								if (as.AS->m_AudioClips.size() == 0)
-								{
-									ImGui::BulletText("Empty");
-								}
-								else
-								{
-									for (auto pair : as.AS->m_AudioClips)
-									{
-										auto& [key, clip] = pair;
-
-										std::stringstream ss;
-										ss << "Clip #" << clip->ClipName;
-
-										if (ImGui::TreeNodeEx(ss.str().c_str(), ImGuiTreeNodeFlags_Bullet))
-										{
-											static std::string name = clip->ClipName;
-											if (ImGui::InputText("Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))
-											{
-												clip->ClipName = name;
-											}
-
-											ImGui::InputFloat("Volume", &clip->Volume);
-
-											if (clip->HasWorldPosition)
-											{
-												ImGui::InputFloat3("Position", glm::value_ptr(clip->WorldPos));
-											}
-
-											if (ImGui::Button("Play"))
-											{
-												as.AS->DebugPlay(clip);
-											}
-											ImGui::SameLine();
-											if (ImGui::Button("Stop"))
-											{
-												as.AS->DebugStop(clip);
-											}
-
-											ImGui::Checkbox("Looping", &clip->IsLooping);
-											ImGui::Checkbox("Default Clip", &clip->isDefaultClip);
-											ImGui::Checkbox("3D Space", &clip->HasWorldPosition);
-
-											ImGui::TreePop();
-										}
-									}
-								}
-
-								ImGui::TreePop();
-								ImGui::NewLine();
-							}
-
-
-							ImGui::NewLine();
-							if (ImGui::Button("Load Clip"))
-							{
-								m_FileBrowserState = FileBrowserFlags::Load_Audio_Clip;
-								m_FileBrowser->SetTitle("Select a sound");
-								m_FileBrowser->SetTypeFilters({ ".wav" });
-								m_FileBrowser->Open();
-							}
-
-							ImGui::SameLine();
-							ImGui::Checkbox("Play On Awake", &as.AS->m_PlayOnAwake);
-
-							ImGui::TreePop();
-						}
-
-						if (ImGui::IsItemClicked(1))
-						{
-							ImGui::OpenPopup("ASPopup");
-
-						}
-
-						if (ImGui::BeginPopup("ASPopup"))
-						{
-							ImGui::MenuItem("Audio Source", NULL, false, false);
-							if (ImGui::MenuItem("Delete"))
-							{
-								m_SelectedActor->DeleteComponent<AudioSourceComponent>();
-							}
-
-							ImGui::EndPopup();
-						}
+						DrawCanvas(&ref->Canvas);
 					}
 
+					ImGui::NewLine();
 
-					ImGui::TreePop();
-					ImGui::PopID();
+					break;
+				}
+				default:
+					break;
+				}
+
+				if (m_Scene->HasTuple<ResourceTuple>(*m_SelectedActor))
+				{
+					auto reTuple = m_Scene->GetTuple<ResourceTuple>(*m_SelectedActor);
+
+					if (ImGui::CollapsingHeader("Animation 2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						DrawAnimation2D(&reTuple->Animation2D);
+
+					}
+
+					ImGui::NewLine();
+
+					if (ImGui::CollapsingHeader("Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						DrawAudioSource(&reTuple->AudioSource);
+					}
+
+					ImGui::NewLine();
 				}
 
 				ImGui::Separator();
@@ -1323,10 +756,11 @@ namespace SmolEngine
 
 				if (!m_SelectedActor->m_showComponentUI)
 				{
-					if (ImGui::Button("Add Component", { ImGui::GetWindowSize().x - 10.0f, 30 }))
+					if (ImGui::Button("Add System", { ImGui::GetWindowSize().x - 10.0f, 30 }))
 					{
 						m_SelectedActor->m_showComponentUI = true;
 					}
+
 				}
 				else
 				{
@@ -1377,132 +811,19 @@ namespace SmolEngine
 
 					if (ImGui::Button("Add", { ImGui::GetWindowSize().x - 10.0f, 30 }))
 					{
-						if (name == "AudioSource")
-						{
-							if (!m_SelectedActor->HasComponent<AudioSourceComponent>())
-							{
-								auto& ref = m_SelectedActor->AddComponent<AudioSourceComponent>();
-								ref.AS = std::make_shared<AudioSource>();
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has AudioSource component");
-							}
-						}
-						if (name == "Canvas")
-						{
-							if (!m_SelectedActor->HasComponent<CanvasComponent>())
-							{
-								auto& ref = m_SelectedActor->AddComponent<CanvasComponent>();
-								ref.Canvas = std::make_shared<UICanvas>();
-							}
-							else
-							{
-
-								CONSOLE_WARN("Actor already has Canvas component");
-							}
-						}
-						if (name == "Texture2D")
-						{
-							if (!m_SelectedActor->HasComponent<Texture2DComponent>())
-							{
-								m_SelectedActor->AddComponent<Texture2DComponent>();
-								m_FileBrowserState = FileBrowserFlags::Load_Texture2D;
-								m_FileBrowser->SetTitle("Select a texture");
-								m_FileBrowser->SetTypeFilters({ ".png" });
-								m_FileBrowser->Open();
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has Tetxure2D component");
-							}
-						}
-						if (name == "Animation2DContoller")
-						{
-							if (!m_SelectedActor->HasComponent<Animation2DControllerComponent>())
-							{
-								auto& ref = m_SelectedActor->AddComponent<Animation2DControllerComponent>();
-								ref.AnimationController = std::make_shared<Animation2DController>();
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has Animation2DContoller component");
-							}
-						}
-						if (name == "JinxScript")
-						{
-							if (!m_SelectedActor->HasComponent<JinxScriptComponent>())
-							{
-								m_FileBrowserState = FileBrowserFlags::Load_Jinx_Script;
-								m_FileBrowser->SetTitle("Select a Jinx script");
-								m_FileBrowser->SetTypeFilters({ ".jinx" });
-								m_FileBrowser->Open();
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has JinxScript component");
-							}
-						}
-						if (name == "Rigidbody2D")
-						{
-							if (!m_SelectedActor->HasComponent<Rigidbody2DComponent>())
-							{
-								m_SelectedActor->AddComponent<Rigidbody2DComponent>(m_SelectedActor, Body2DType::Static);
-
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has Rigidbody2D component");
-							}
-						}
-						if (name == "CameraController")
-						{
-							if (!m_SelectedActor->HasComponent<CameraComponent>())
-							{
-								m_SelectedActor->AddComponent<CameraComponent>();
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has CameraController component");
-							}
-						}
-						if (name == "Light2D")
-						{
-							if (!m_SelectedActor->HasComponent<Light2DComponent>())
-							{
-								m_SelectedActor->AddComponent<Light2DComponent>();
-							}
-							else
-							{
-								CONSOLE_WARN("Actor already has Light2D component");
-							}
-						}
-
-						for (auto scriptName : m_Scene->m_ScriptNameList)
-						{
-							if (name == scriptName)
-							{
-								if (!m_SelectedActor->HasComponent<ScriptObject>())
-								{
-									m_Scene->AttachScript(name, m_SelectedActor);
-								}
-								else
-								{
-									CONSOLE_WARN("Actor already has C++ Script component");
-								}
-
-								break;
-							}
-						}
-
 						name.clear();
 						m_SelectedActor->m_showComponentUI = false;
 					}
 
 				}
 			}
+
+			ImGui::NewLine();
+			ImGui::NewLine();
+
 			ImGui::EndChild();
 		}
+
 		ImGui::End();
 
 		m_FileBrowser->Display();
@@ -1516,25 +837,54 @@ namespace SmolEngine
 			{
 			case FileBrowserFlags::Load_Jinx_Script:
 
-				//m_SelectedActor->AddComponent<JinxScriptComponent>(m_Actor, m_Scene->GetJinxRuntime(), m_FilePath);
 				ResetFileBrowser();
 				break;
 
 			case FileBrowserFlags::Load_Texture2D:
 			{
-				auto& texture = m_SelectedActor->GetComponent<Texture2DComponent>();
-				
-				texture.TexturePath = m_FilePath;
-				texture.FileName = m_FileName;
-				texture.Texture = Texture2D::Create(m_FilePath);
+				switch (m_SelectedActor->ActorType)
+				{
+				case ActorBaseType::DefaultBase:
+				{
+					auto ref = m_SelectedActor->GetDefaultBaseTuple();
+
+					m_Scene->DeleteAsset(ref->Texture.FileName);
+
+					ref->Texture.FileName = m_FileName;
+					ref->Texture.Texture = Texture2D::Create(m_FilePath);
+
+					m_Scene->AddAsset(m_FileName, m_FilePath);
+
+					break;
+				}
+				case ActorBaseType::PhysicsBase:
+				{
+					auto ref = m_SelectedActor->GetPhysicsBaseTuple();
+
+					m_Scene->DeleteAsset(ref->Texture.FileName);
+
+					ref->Texture.FileName = m_FileName;
+					ref->Texture.Texture = Texture2D::Create(m_FilePath);
+
+					m_Scene->AddAsset(m_FileName, m_FilePath);
+
+					break;
+				}
+				default:
+
+					break;
+				}
+
 				ResetFileBrowser();
 				break;
 			}
 			case FileBrowserFlags::Scene_Create:
 			{
 				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+
 				m_SelectedActor = nullptr;
 				m_Scene->CreateScene(m_FilePath, m_FileName);
+
 				ResetFileBrowser();
 				break;
 			}
@@ -1544,8 +894,8 @@ namespace SmolEngine
 
 				m_Scene->GetSceneData().m_filePath = m_FilePath;
 				m_Scene->GetSceneData().m_fileName = m_FileName;
-
 				m_Scene->Save(m_FilePath);
+
 				ResetFileBrowser();
 				break;
 			}
@@ -1554,6 +904,7 @@ namespace SmolEngine
 				m_SelectedActor = nullptr;
 
 				m_Scene->Load(m_FilePath);
+
 				ResetFileBrowser();
 				break;
 			}
@@ -1562,63 +913,97 @@ namespace SmolEngine
 				m_AnimationPanel->Load(m_FilePath);
 				ResetFileBrowser();
 				showAnimationPanel = true;
+
 				break;
 			}
 			case FileBrowserFlags::Load_Audio_Clip:
 			{
-				auto& ac = m_SelectedActor->GetComponent<AudioSourceComponent>();
 				auto clip = std::make_shared<AudioClip>();
+				auto tuple = m_Scene->GetTuple<ResourceTuple>(*m_SelectedActor);
 
-				std::stringstream ss;
-				ss << "New Audio Clip #" << ac.AS->m_AudioClips.size();
+				if (tuple != nullptr)
+				{
+					std::stringstream ss;
+					ss << "New Audio Clip #" << tuple->AudioSource.AudioClips.size();
 
-				clip->FileName = m_FileName;
-				clip->FilePath = m_FilePath;
-				clip->ClipName = ss.str();
+					clip->FileName = m_FileName;
+					clip->FilePath = m_FilePath;
+					clip->ClipName = ss.str();
 
-				ac.AS->AddClip(clip);
+					if (AudioSystem::AddClip(tuple->AudioSource, clip))
+					{
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+					}
+				}
+
 				ResetFileBrowser();
 				break;
 			}
 			case FileBrowserFlags::Canvas_Chanage_Button_Texture:
 			{
-				auto& canvas = m_SelectedActor->GetComponent<CanvasComponent>();
+				auto camera = m_SelectedActor->GetCameraBaseTuple();
+				if (camera != nullptr)
+				{
+					auto button = UISystem::GetButton(camera->Canvas, m_IDBuffer);
+					if (button != nullptr)
+					{
+						m_Scene->DeleteAsset(button->m_TetxureName);
 
-				auto elemenet = canvas.Canvas->GetElement(m_IDBuffer);
-				auto button = std::static_pointer_cast<UIButton>(elemenet);
-
-				button->Init(m_FilePath, m_FileName);
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+						button->Init(m_FilePath, m_FileName);
+					}
+				}
 
 				ResetFileBrowser();
 				break;
 			}
 			case FileBrowserFlags::Canavas_Create_TextLabel:
 			{
-				auto& canvas = m_SelectedActor->GetComponent<CanvasComponent>();
-				auto element = canvas.Canvas->AddElement(UIElementType::TextLabel);
-				auto textLabel = std::static_pointer_cast<UITextLabel>(element);
+				auto camera = m_SelectedActor->GetCameraBaseTuple();
+				if (camera != nullptr)
+				{
+					auto element = UISystem::AddElement(camera->Canvas, UIElementType::TextLabel);
+					auto textLabel = std::static_pointer_cast<UITextLabel>(element);
 
-				textLabel->Init(m_FilePath, m_FileName);
+					m_Scene->AddAsset(m_FileName, m_FilePath);
+					textLabel->Init(m_FilePath, m_FileName);
+				}
 
 				ResetFileBrowser();
 				break;
 			}
 			case FileBrowserFlags::Canavas_TextLabel_Load_Font:
 			{
-				auto& canvas = m_SelectedActor->GetComponent<CanvasComponent>();
-				auto text = canvas.Canvas->GetTextLabel(m_IDBuffer);
+				auto camera = m_SelectedActor->GetCameraBaseTuple();
+				if (camera != nullptr)
+				{
+					auto text = UISystem::GetTextLabel(camera->Canvas, m_IDBuffer);
+					if (text != nullptr)
+					{
+						m_Scene->DeleteAsset(text->m_FontName);
 
-				text->m_FontFilePath = m_FilePath;
-				text->m_FontName = m_FileName;
-				text->SetFont(m_FilePath);
+						text->m_FontFilePath = m_FilePath;
+						text->m_FontName = m_FileName;
+						text->SetFont(m_FilePath);
+
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+					}
+				}
 
 				ResetFileBrowser();
 				break;
 			}
-			case FileBrowserFlags::Load_Animation_Clip_Controller:
+			case FileBrowserFlags::Load_Animation_Clip_Inspector:
 			{
-				auto& controller = m_SelectedActor->GetComponent<Animation2DControllerComponent>();
-				controller.AnimationController->LoadClip(m_FilePath);
+				auto resRef = m_Scene->GetTuple<ResourceTuple>(m_SelectedActor->Entity);
+				if (resRef)
+				{
+					if (Animation2DSystem::LoadClip(resRef->Animation2D, m_FilePath))
+					{
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+					}
+				}
+
 				ResetFileBrowser();
 				break;
 			}
@@ -1630,6 +1015,396 @@ namespace SmolEngine
 
 		ImGui::End();
 
+	}
+
+	void EditorLayer::DrawInfo(HeadComponent* head)
+	{
+		m_TempActorName = head->Name;
+		m_TempActorTag = head->Tag;
+
+		ImGui::Extensions::InputString("Name", head->Name, m_TempActorName);
+		ImGui::Extensions::InputString("Tag", head->Tag, m_TempActorTag);
+	}
+
+	void EditorLayer::DrawTransform(TransformComponent* transform)
+	{
+		ImGui::Extensions::TransformComponent(transform->WorldPos, transform->Scale, transform->Rotation);
+	}
+
+	void EditorLayer::DrawTexture(Texture2DComponent* texture)
+	{
+		if (texture->Texture != nullptr)
+		{
+			ImGui::Extensions::Texture("Texture", texture->Texture->GetID());
+
+			ImGui::NewLine();
+			ImGui::Extensions::ColorInput3("Color", texture->Color);
+
+			ImGui::NewLine();
+			ImGui::Extensions::CheckBox("Enabled?", texture->Enabled);
+
+			ImGui::NewLine();
+			if (ImGui::Button("Change", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+			{
+				m_FileBrowserState = FileBrowserFlags::Load_Texture2D;
+				m_FileBrowser->SetTitle("Select a texture");
+				m_FileBrowser->SetTypeFilters({ ".png" });
+				m_FileBrowser->Open();
+			}
+		}
+		else
+		{
+			ImGui::NewLine();
+
+			if (ImGui::Button("New texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+			{
+				m_FileBrowserState = FileBrowserFlags::Load_Texture2D;
+				m_FileBrowser->SetTitle("Select a texture");
+				m_FileBrowser->SetTypeFilters({ ".png" });
+				m_FileBrowser->Open();
+			}
+		}
+
+	}
+
+	void EditorLayer::DrawBody2D(Body2DComponent* rb)
+	{
+		ImGui::Extensions::Combo("Type", "Static\0Kinematic\0Dynamic\0\0", rb->Body.m_Type);
+		ImGui::Extensions::Combo("Shape", "Box\0Circle\0\0", rb->Body.m_ShapeType);
+		ImGui::Extensions::InputInt("Layer", rb->Body.m_CollisionLayer);
+
+		ImGui::NewLine();
+
+		if (rb->Body.m_ShapeType == (int)ShapeType::Box)
+		{
+			ImGui::Extensions::InputFloat2("Size", rb->Body.m_Shape, 1.0f);
+
+			ImGui::NewLine();
+		}
+
+		if (rb->Body.m_ShapeType == (int)ShapeType::Cirlce)
+		{
+			ImGui::Extensions::InputFloat("Radius", rb->Body.m_Radius);
+			ImGui::Extensions::InputFloat2("Offset", rb->Body.m_Shape, 1.0f);
+
+			ImGui::NewLine();
+		}
+
+
+		if (rb->Body.m_Type == 2 || rb->Body.m_Type == 1)
+		{
+			ImGui::Extensions::InputFloat("Inertia Moment", rb->Body.m_InertiaMoment);
+			ImGui::Extensions::InputFloat("Gravity", rb->Body.m_GravityScale);
+			ImGui::Extensions::InputFloat("Mass", rb->Body.m_Mass);
+			ImGui::Extensions::InputFloat2("Mass Center", rb->Body.m_MassCenter);
+
+			ImGui::NewLine();
+
+			ImGui::Extensions::InputFloat("Restitution", rb->Body.m_Restitution);
+			ImGui::Extensions::InputFloat("Friction", rb->Body.m_Friction);
+			ImGui::Extensions::InputFloat("Density", rb->Body.m_Density);
+			ImGui::Extensions::CheckBox("Is Bullet?", rb->Body.m_IsBullet);
+
+			ImGui::NewLine();
+
+		}
+
+		ImGui::Extensions::CheckBox("Is Trigger?", rb->Body.m_IsTrigger);
+		ImGui::Extensions::CheckBox("Is Awake?", rb->Body.m_IsAwake);
+		ImGui::Extensions::CheckBox("Allow Sleep?", rb->Body.m_canSleep);
+		ImGui::Extensions::CheckBox("Draw Shape?", rb->ShowShape);
+
+	}
+
+	void EditorLayer::DrawCamera(CameraComponent* camera)
+	{
+		ImGui::Extensions::InputFloat("Zoom", camera->ZoomLevel);
+		ImGui::Extensions::InputFloat("Near", camera->zNear);
+		ImGui::Extensions::InputFloat("Far", camera->zFar);
+
+		ImGui::NewLine();
+
+		ImGui::Extensions::CheckBox("Is Primary?", camera->isPrimaryCamera);
+		ImGui::Extensions::CheckBox("Is Enabled?", camera->isEnabled);
+	}
+
+	void EditorLayer::DrawAudioSource(AudioSourceComponent* audio)
+	{
+		for (auto& pair: audio->AudioClips)
+		{
+			auto& [key, clip] = pair;
+
+			// Label
+
+			//ImGui::NewLine();
+			//ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+			//ImGui::TextUnformatted("Audio Clips");
+			//ImGui::Separator();
+
+			// Tree
+
+			ImGui::NewLine();
+			std::stringstream ss;
+			ss << "Audio Clip #" << clip->ClipName;
+
+			if (ImGui::TreeNodeEx(ss.str().c_str()))
+			{
+				ImGui::NewLine();
+
+				if (ImGui::Extensions::InputRawString("Key Name", m_TempString))
+				{
+					if (!m_TempString.empty())
+					{
+						AudioSystem::RenameClip(*audio, clip->ClipName, m_TempString);
+					}
+
+					ImGui::TreePop();
+					break;
+				}
+
+				ImGui::NewLine();
+
+				ImGui::Extensions::InputFloat("Volume", clip->Volume);
+
+				ImGui::NewLine();
+
+				ImGui::Extensions::CheckBox("Default Clip?", clip->isDefaultClip);
+				ImGui::Extensions::CheckBox("Is Looping?", clip->IsLooping);
+				ImGui::Extensions::CheckBox("Is 3D?", clip->B3D);
+
+				ImGui::NewLine();
+
+				if (ImGui::Extensions::SmallButton("Debug", "Play"))
+				{
+					AudioSystem::DebugPlay(clip, AudioEngineSComponent::Get()->Engine);
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::SmallButton("Stop"))
+				{
+					AudioSystem::DebugStop(clip, AudioEngineSComponent::Get()->Engine);
+				}
+
+				ImGui::TreePop();
+			}
+
+			ImGui::Separator();
+			m_TempString = "";
+
+		}
+
+		ImGui::NewLine();
+		ImGui::NewLine();
+
+		if (ImGui::Button("New Audio Clip", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+		{
+			m_FileBrowserState = FileBrowserFlags::Load_Audio_Clip;
+			m_FileBrowser->SetTitle("Select audio clip");
+			m_FileBrowser->SetTypeFilters({ ".wav" });
+			m_FileBrowser->Open();
+		}
+	}
+
+	void EditorLayer::DrawAnimation2D(Animation2DComponent* anim)
+	{
+		for (auto& pair : anim->m_Clips)
+		{
+			auto& [key, clip] = pair;
+
+			// Label
+
+			//ImGui::NewLine();
+			//ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.8f);
+			//ImGui::TextUnformatted("Animation Clips");
+			//ImGui::Separator();
+
+			// Tree
+
+			ImGui::NewLine();
+			std::stringstream ss;
+			ss << "Animation Clip #" << clip->m_ClipName;
+
+			if(ImGui::TreeNodeEx(ss.str().c_str()))
+			{
+				ImGui::NewLine();
+
+				if (ImGui::Extensions::InputRawString("Key Name", m_TempString))
+				{
+					if (!m_TempString.empty())
+					{
+						Animation2DSystem::RenameClip(*anim, clip->m_ClipName, m_TempString);
+					}
+
+					ImGui::TreePop();
+					break;
+				}
+
+				ImGui::Extensions::CheckBox("Default Clip?", clip->m_IsDefaultClip);
+
+				ImGui::NewLine();
+				
+				if (ImGui::Extensions::SmallButton("Debug", "Play"))
+				{
+					Animation2DSystem::Play(clip->m_ClipName, *anim);
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::SmallButton("Stop"))
+				{
+					Animation2DSystem::Stop(clip->m_ClipName, *anim);
+				}
+
+				ImGui::TreePop();
+			}
+
+			ImGui::Separator();
+			m_TempString = "";
+		}
+
+		ImGui::NewLine();
+		ImGui::NewLine();
+
+		if (ImGui::Button("New Animation Clip", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+		{
+			m_FileBrowserState = FileBrowserFlags::Load_Animation_Clip_Inspector;
+			m_FileBrowser->SetTitle("Select Animation2D File");
+			m_FileBrowser->SetTypeFilters({ ".smolanim" });
+			m_FileBrowser->Open();
+		}
+	}
+
+	void EditorLayer::DrawCanvas(CanvasComponent* canvas)
+	{
+		for (const auto& pair : canvas->Elements)
+		{
+			const auto& [key, element] = pair;
+
+			ImGui::NewLine();
+			std::stringstream ss;
+			
+			switch (element->m_Type)
+			{
+			case UIElementType::TextLabel:
+			{
+				ss << "TextLabel #" << element->m_ID;
+
+				if (ImGui::TreeNodeEx(ss.str().c_str()))
+				{
+					ImGui::NewLine();
+
+					Ref<UITextLabel> textLabel = std::static_pointer_cast<UITextLabel>(element);
+
+					if (ImGui::Extensions::InputRawString("Text", textLabel->m_Text, "Text"))
+					{
+						textLabel->SetText(textLabel->m_Text);
+					}
+
+					ImGui::NewLine();
+
+					ImGui::Extensions::InputFloat2Base("Position", textLabel->m_Position);
+					ImGui::Extensions::InputFloat2Base("Size", textLabel->m_Size);
+
+					ImGui::Extensions::ColorInput3("Color", textLabel->m_Color);
+					ImGui::Extensions::InputFloat("Padding", textLabel->m_Padding);
+
+					ImGui::NewLine();
+
+					if (ImGui::Button("New Font", { ImGui::GetWindowWidth() - 60.0f, 30.0f }))
+					{
+						m_IDBuffer = textLabel->m_ID;
+
+						m_FileBrowserState = FileBrowserFlags::Canavas_TextLabel_Load_Font;
+						m_FileBrowser->SetTitle("Select a font");
+						m_FileBrowser->SetTypeFilters({ ".ttf" });
+						m_FileBrowser->Open();
+					}
+
+					ImGui::NewLine();
+					ImGui::Separator();
+					ImGui::TreePop();
+				}
+
+
+				break;
+			}
+			case UIElementType::Button:
+			{
+				ss << "Button #" << element->m_ID;
+
+				if (ImGui::TreeNodeEx(ss.str().c_str()))
+				{
+					ImGui::NewLine();
+
+					Ref<UIButton> button = std::static_pointer_cast<UIButton>(element);
+
+					if (button->m_Texture != nullptr)
+					{
+						ImGui::Extensions::Texture("Texture", button->m_Texture->GetID());
+
+						ImGui::Extensions::ColorInput3("Normal Color", button->m_CurrentColor);
+						ImGui::Extensions::ColorInput3("Hovered Color", button->m_HoveredColor);
+						ImGui::Extensions::ColorInput3("Pressed Color", button->m_PressedColor);
+
+						ImGui::NewLine();
+
+						ImGui::Extensions::InputFloat2Base("Position", button->m_UCood);
+						ImGui::Extensions::InputFloat2Base("Size", button->m_Size);
+
+						ImGui::NewLine();
+
+						if (ImGui::Button("New Texture", { ImGui::GetWindowWidth() - 60.0f, 30.0f }))
+						{
+							m_IDBuffer = element->m_ID;
+
+							m_FileBrowserState = FileBrowserFlags::Canvas_Chanage_Button_Texture;
+							m_FileBrowser->SetTitle("Select a texture");
+							m_FileBrowser->SetTypeFilters({ ".png" });
+							m_FileBrowser->Open();
+						}
+					}
+					else
+					{
+						if (ImGui::Button("Set Button Texture", { ImGui::GetWindowWidth() - 60.0f, 30.0f }))
+						{
+							m_IDBuffer = element->m_ID;
+
+							m_FileBrowserState = FileBrowserFlags::Canvas_Chanage_Button_Texture;
+							m_FileBrowser->SetTitle("Select a texture");
+							m_FileBrowser->SetTypeFilters({ ".png" });
+							m_FileBrowser->Open();
+						}
+					}
+
+					ImGui::NewLine();
+					ImGui::Separator();
+					ImGui::TreePop();
+				}
+
+				break;
+			}
+			default:
+				break;
+			}
+		}
+
+		ImGui::NewLine();
+
+		if (ImGui::Extensions::SmallButton("Create", "TextLabel"))
+		{
+			m_FileBrowserState = FileBrowserFlags::Canavas_Create_TextLabel;
+			m_FileBrowser->SetTitle("Select a font");
+			m_FileBrowser->SetTypeFilters({ ".ttf" });
+			m_FileBrowser->Open();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::SmallButton("Button"))
+		{
+			UISystem::AddElement(*canvas, UIElementType::Button);
+		}
 	}
 
 	void EditorLayer::ResetFileBrowser()

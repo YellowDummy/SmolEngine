@@ -3,6 +3,7 @@
 
 #include "Core/Renderer/Text.h"
 #include "Core/ECS/Scene.h"
+#include "Core/SLog.h"
 
 namespace SmolEngine
 {
@@ -55,13 +56,18 @@ namespace SmolEngine
     void UITextLabel::Reload()
     {
         m_TextLabel = nullptr;
-        auto scene = Scene::GetScene();
 
-        if(scene->PathCheck(m_FontFilePath, m_FontName))
+        auto& assetMap = Scene::GetScene()->GetAssetMap();
+
+        auto& result = assetMap.find(m_FontName);
+        if (result != assetMap.end())
         {
-            m_TextLabel = Text::Create(m_FontFilePath);
+            m_TextLabel = Text::Create(result->second);
             m_TextLabel->SetText(m_Text);
+            return;
         }
+
+        NATIVE_ERROR("TextLabel: font file not found, path: {}", m_FontFilePath);
     }
 
     void UITextLabel::Draw(const glm::vec3& cameraPos)

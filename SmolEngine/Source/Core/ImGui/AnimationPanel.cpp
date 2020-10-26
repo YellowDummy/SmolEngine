@@ -7,14 +7,19 @@
 #include <../../imgui/imgui_internal.h>
 
 #include "Core/SLog.h"
-#include "Core/Animation/Animation2D.h"
+#include "Core/Application.h"
+
+#include "Core/Animation/AnimationClip.h"
+
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Renderer/Renderer.h"
 #include "Core/Renderer/Camera.h"
 #include "Core/Renderer/Texture.h"
+
 #include "Core/ImGui/EditorConsole.h"
+
+#include "Core/ECS/Systems/Animation2DSystem.h"
 #include "Core/ECS/Scene.h"
-#include "Core/Application.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
@@ -33,7 +38,6 @@ namespace SmolEngine
 
 	void AnimationPanel::Update(bool& isOpened)
 	{
-
 		if (isOpened && m_AnimationClip != nullptr)
 		{
 			static bool showPreview = false;
@@ -60,7 +64,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Clear"))
 					{
-						m_AnimationClip->ResetAllFrames();
+						Animation2DSystem::DebugResetAllFrames(m_AnimationClip.get());
 					}
 
 					if (ImGui::MenuItem("Preview"))
@@ -71,7 +75,7 @@ namespace SmolEngine
 							m_AnimationClip->m_IsActive = false;
 						}
 
-						m_AnimationClip->Play();
+						Animation2DSystem::DebugPlay(m_AnimationClip.get());
 					}
 
 					if (ImGui::MenuItem("Save As"))
@@ -104,10 +108,9 @@ namespace SmolEngine
 						ImGui::EndMenu();
 					}
 
-
 					if (ImGui::MenuItem("Help"))
 					{
-						m_AnimationClip->Reset();
+
 					}
 
 				}
@@ -190,7 +193,7 @@ namespace SmolEngine
 						{
 							if (m_AnimationClip->m_IsActive)
 							{
-								m_AnimationClip->Update();
+								Animation2DSystem::DebugUpdate(m_AnimationClip.get());
 							}
 
 							m_Camera->GetFramebuffer()->Bind();
@@ -349,7 +352,7 @@ namespace SmolEngine
 			return;
 		}
 
-		m_AnimationClip = std::make_unique<Animation2D>();
+		m_AnimationClip = std::make_unique<AnimationClip>();
 
 		{
 			cereal::JSONInputArchive sceneDataInput{ storage };

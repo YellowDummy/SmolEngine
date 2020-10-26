@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CollisionFilter2D.h"
 
+#include <box2d\b2_fixture.h>
+
 namespace SmolEngine
 {
 	bool CollisionFilter2D::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)

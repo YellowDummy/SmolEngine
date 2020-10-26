@@ -13,14 +13,14 @@ namespace SmolEngine
 		if (IsValid(actorB))
 		{
 			const auto actorA = static_cast<Actor*>(dataA);
-			auto& script = actorB->GetComponent<ScriptObject>();
-			if (contact->GetFixtureA()->IsSensor())
-			{
-				script.OnTriggerContact(actorA);
-				return;
-			}
+			//auto& script = actorB->GetComponent<ScriptObject>();
+			//if (contact->GetFixtureA()->IsSensor())
+			//{
+			//	script.OnTriggerContact(actorA);
+			//	return;
+			//}
 
-			script.OnCollisionContact(actorA);
+			//script.OnCollisionContact(actorA);
 		}
 
 	}
@@ -34,14 +34,14 @@ namespace SmolEngine
 		if (IsValid(actorB))
 		{
 			const auto actorA = static_cast<Actor*>(dataA);
-			auto& script = actorB->GetComponent<ScriptObject>();
-			if (contact->GetFixtureA()->IsSensor())
-			{
-				script.OnTriggerExit(actorA);
-				return;
-			}
+			//auto& script = actorB->GetComponent<ScriptObject>();
+			//if (contact->GetFixtureA()->IsSensor())
+			//{
+			//	script.OnTriggerExit(actorA);
+			//	return;
+			//}
 
-			script.OnCollisionExit(actorA);
+			//script.OnCollisionExit(actorA);
 		}
 	}
 
@@ -57,6 +57,6 @@ namespace SmolEngine
 
 	bool CollisionListener2D::IsValid(Actor* actor) const
 	{
-		return actor->HasComponent<ScriptObject>();
+		return false;
 	}
 }

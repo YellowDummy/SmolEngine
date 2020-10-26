@@ -57,7 +57,7 @@ namespace SmolEngine
 
 	void UIButton::Draw(const glm::vec3& cameraPos)
 	{
-		Renderer2D::DrawSprite({ cameraPos.x + m_UCood.x, cameraPos.y + m_UCood.y, cameraPos.z }, m_Size, 0, m_Texture, 1.0f, { m_CurrentColor, 1.0f });
+		Renderer2D::DrawSprite({ cameraPos.x + m_UCood.x, cameraPos.y + m_UCood.y, cameraPos.z }, m_Size, 0, m_Texture, 1.0f, m_CurrentColor);
 	}
 
 	void UIButton::CalculatePos(const glm::vec2& screenCenter, const float zoomLevel)
@@ -133,17 +133,21 @@ namespace SmolEngine
 
 	void UIButton::Reload()
 	{
-		auto scene = Scene::GetScene();
+		auto& assetMap = Scene::GetScene()->GetAssetMap();
 
-		if (scene->PathCheck(m_TexturePath, m_TetxureName))
+		auto& result = assetMap.find(m_TetxureName);
+		if (result != assetMap.end())
 		{
-			m_Texture = Texture2D::Create(m_TexturePath);
+			m_Texture = Texture2D::Create(result->second);
+			return;
 		}
+
+		NATIVE_ERROR("Button: texture not found, path: {}", m_TexturePath);
 	}
 
 	void UIButton::Reset()
 	{
-		m_CurrentColor = glm::vec3(1.0f);
+		m_CurrentColor = glm::vec4(1.0f);
 
 		m_isHovered = false;
 	}

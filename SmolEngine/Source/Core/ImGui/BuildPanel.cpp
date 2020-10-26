@@ -54,7 +54,11 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Clear"))
 					{
-						m_CurrentBuildConfig.m_Scenes.clear();
+						ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
+						if (ref != nullptr)
+						{
+							ref->m_Scenes.clear();
+						}
 					}
 
 				}
@@ -72,20 +76,25 @@ namespace SmolEngine
 
 				ImGui::BeginChild("Scene Index", { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 200.0f });
 				{
+					ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
 
-					for (const auto& pair : m_CurrentBuildConfig.m_Scenes)
+					if (ref != nullptr)
 					{
-						const auto& [key, scene] = pair;
-						if (key == 0)
+						for (const auto& pair : ref->m_Scenes)
 						{
+							const auto& [key, scene] = pair;
+							if (key == 0)
+							{
+								ImGui::NewLine();
+							}
+
+							ImGui::SetCursorPosX(50.0f);
+							ImGui::Text(scene.FileName.c_str());
+							ImGui::SameLine();
+							ImGui::SetCursorPosX(ImGui::GetWindowSize().x - m_xOffset + 120.0f);
+							ImGui::Text(std::to_string(key).c_str());
 							ImGui::NewLine();
 						}
-						ImGui::SetCursorPosX(50.0f);
-						ImGui::Text(scene.FileName.c_str());
-						ImGui::SameLine();
-						ImGui::SetCursorPosX(ImGui::GetWindowSize().x - m_xOffset + 120.0f);
-						ImGui::Text(std::to_string(key).c_str());
-						ImGui::NewLine();
 					}
 				}
 				ImGui::EndChild();
@@ -118,14 +127,17 @@ namespace SmolEngine
 				{
 				case BuildPanelFileBrowserState::Add_Scene:
 				{
-					SceneConfigData temp;
-					temp.FileName = fileName;
-					temp.FilePath = filePath;
+					ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
+					if (ref != nullptr)
+					{
+						SceneConfigData temp;
+						temp.FileName = fileName;
+						temp.FilePath = filePath;
 
-					auto& m_Scenes = m_CurrentBuildConfig.m_Scenes;
+						ref->m_Scenes[ref->m_Scenes.size()] = temp;
+						ResetFileBrowser();
+					}
 
-					m_Scenes[m_Scenes.size()] = temp;
-					ResetFileBrowser();
 					break;
 				}
 				case BuildPanelFileBrowserState::Save_Config:
@@ -149,7 +161,7 @@ namespace SmolEngine
 
 	void BuildPanel::Clear()
 	{
-		m_CurrentBuildConfig = BuildConfig();
+
 	}
 
 	void BuildPanel::ResetFileBrowser()
@@ -160,11 +172,17 @@ namespace SmolEngine
 
 	bool BuildPanel::Save(const std::string& filePath)
 	{
+		ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
+		if (ref == nullptr)
+		{
+			return false;
+		}
+
 		std::stringstream storage;
 
 		{
 			cereal::JSONOutputArchive output{ storage };
-			m_CurrentBuildConfig.serialize(output);
+			ref->serialize(output);
 		}
 
 		std::ofstream myfile(filePath);
@@ -182,6 +200,12 @@ namespace SmolEngine
 
 	bool BuildPanel::Load(const std::string& filePath)
 	{
+		ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
+		if (ref == nullptr)
+		{
+			return false;
+		}
+
 		std::stringstream storage;
 		std::ifstream file(filePath);
 
@@ -194,15 +218,14 @@ namespace SmolEngine
 		storage << file.rdbuf();
 		file.close();
 
-		BuildConfig temp;
 		const auto scene = Scene::GetScene();
 
 		{
 			cereal::JSONInputArchive dataInput{ storage };
-			dataInput(temp.m_Scenes);
+			dataInput(ref->m_Scenes, ref->m_AssetFolder);
 		}
 
-		for (auto& pair: temp.m_Scenes)
+		for (auto& pair: ref->m_Scenes)
 		{
 			auto& [key, data] = pair;
 
@@ -212,8 +235,6 @@ namespace SmolEngine
 				return false;
 			}
 		}
-
-		m_CurrentBuildConfig = temp;
 
 		return true;
 	}

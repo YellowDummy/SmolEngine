@@ -23,50 +23,6 @@ namespace SmolEngine
 
 		Body2D(int type);
 
-		/// Body Factory
-
-		void CreateBody(b2World* world, Ref<Actor> actor);
-
-		void DeleteBody();
-
-		/// Joint Factory
-
-		const bool BindJoint(Body2D* body, JointType type, JointInfo* info);
-
-		const bool DeleteJoint();
-
-		/// Raycating
-
-		const RayCast2DHitInfo& RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition);
-
-		const std::vector<RayCast2DHitInfo> CircleCast(const glm::vec2& startPoisition, float distance);
-
-		/// Internal
-
-		b2Body* GetBody() const { return m_Body; }
-
-		b2BodyType FindType(uint16_t type);
-
-	private:
-
-		/// Body Types
-
-		void CreateStatic();
-
-		void CreateKinematic();
-
-		void CreateDynamic();
-
-		/// Joint Types
-
-		bool CreateDistanceJoint(Body2D* body, DistanceJointInfo* info);
-
-		bool CreateRevoluteJoint(Body2D* body, RevoluteJointInfo* info);
-
-		bool CreatePrismaticJoint(Body2D* body, PrismaticJointInfo* info);
-
-		bool CreateRopeJoint(Body2D* body, RopeJointInfo* info);
-
 	public:
 
 		int m_Type = (int)Body2DType::Static; // imgui support
@@ -111,8 +67,6 @@ namespace SmolEngine
 
 		///
 
-		b2World* m_World = nullptr;
-
 		b2Body* m_Body = nullptr;
 
 		b2Fixture* m_Fixture = nullptr;
@@ -122,7 +76,9 @@ namespace SmolEngine
 	private:
 
 		friend class cereal::access;
+
 		friend class Scene;
+
 		friend class Rigidbody2DComponent;
 
 		template<typename Archive>
