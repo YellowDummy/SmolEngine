@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CollisionListener2D.h"
 #include "Core/ECS/Actor.h"
+#include "Core/ECS/WorldAdmin.h"
 
 namespace SmolEngine
 {
@@ -10,17 +11,31 @@ namespace SmolEngine
 		void* dataB = contact->GetFixtureB()->GetBody()->GetUserData();
 
 		const auto actorB = static_cast<Actor*>(dataB);
+
 		if (IsValid(actorB))
 		{
 			const auto actorA = static_cast<Actor*>(dataA);
-			//auto& script = actorB->GetComponent<ScriptObject>();
-			//if (contact->GetFixtureA()->IsSensor())
-			//{
-			//	script.OnTriggerContact(actorA);
-			//	return;
-			//}
+			Ref<WorldAdmin> worldAdmin = WorldAdmin::GetScene();
+			BehaviourComponent* behaviour = worldAdmin->GetTuple<BehaviourComponent>(*actorB);
 
-			//script.OnCollisionContact(actorA);
+			if (behaviour == nullptr)
+			{
+				NATIVE_ERROR("CollisionListener2D:: Actor dosent have behaviour component");
+				return;
+			}
+
+			auto& sysMap = worldAdmin->GetSystemMap();
+			auto& sysRef = sysMap[behaviour->SystemName];
+
+			worldAdmin->PrepareSystem(*behaviour, sysRef);
+
+			if (contact->GetFixtureA()->IsSensor())
+			{
+				sysRef.type.invoke("OnCollisionContact", sysRef.variant, { actorA, true });
+				return;
+			}
+
+			sysRef.type.invoke("OnCollisionContact", sysRef.variant, { actorA, false });
 		}
 
 	}
@@ -31,17 +46,26 @@ namespace SmolEngine
 		void* dataB = contact->GetFixtureB()->GetBody()->GetUserData();
 
 		const auto actorB = static_cast<Actor*>(dataB);
+
 		if (IsValid(actorB))
 		{
 			const auto actorA = static_cast<Actor*>(dataA);
-			//auto& script = actorB->GetComponent<ScriptObject>();
-			//if (contact->GetFixtureA()->IsSensor())
-			//{
-			//	script.OnTriggerExit(actorA);
-			//	return;
-			//}
 
-			//script.OnCollisionExit(actorA);
+			Ref<WorldAdmin> worldAdmin = WorldAdmin::GetScene();
+			auto& sysMap = worldAdmin->GetSystemMap();
+			BehaviourComponent* behaviour = worldAdmin->GetTuple<BehaviourComponent>(*actorB);
+
+			auto& sysRef = sysMap[behaviour->SystemName];
+			auto& primitive = sysRef.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+			primitive.m_Actor = behaviour->Actor;
+
+			if (contact->GetFixtureA()->IsSensor())
+			{
+				sysRef.type.invoke("OnCollisionExit", sysRef.variant, { actorA, true });
+				return;
+			}
+
+			sysRef.type.invoke("OnCollisionExit", sysRef.variant, { actorA, false });
 		}
 	}
 
@@ -57,6 +81,6 @@ namespace SmolEngine
 
 	bool CollisionListener2D::IsValid(Actor* actor) const
 	{
-		return false;
+		return actor != nullptr;
 	}
 }

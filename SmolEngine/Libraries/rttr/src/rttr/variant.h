@@ -486,6 +486,9 @@ class RTTR_API variant
         template<typename T>
         const T& get_wrapped_value() const;
 
+        template<typename T>
+        T& get_wrapped_value_non_const() const;
+
         /*!
          * \brief Extracts the wrapped value and copies its content into a new variant.
          *

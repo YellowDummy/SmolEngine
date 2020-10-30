@@ -9,16 +9,14 @@
 #include "ImGui/ImGuiLayer.h" 
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Renderer/Renderer.h"
-#include "Core/ECS/Scene.h"
 
-#include "../../GameX/CppScriptingExamples.h"
-
-#include "rttr/registration.h"
-
+#include "../../../GameX/CppScriptingExamples.h"
 
 namespace SmolEngine 
 {
-	struct MyStruct { MyStruct() {}; void func(double val) { NATIVE_ERROR(val); }; int data = 0; };
+	struct MyStruct: public PhysicsTupleBehaviour {
+		MyStruct() {}; void func(double val) { NATIVE_ERROR(val); }; int data = 0; void Update(float b) {} void Process() { NATIVE_ERROR("???"); }
+	};
 
 	Application* Application::s_Instance = nullptr;
 
@@ -47,34 +45,8 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
-	RTTR_REGISTRATION
-	{
-		rttr::registration::class_<MyStruct>("MyStruct")
-			 .constructor<>()
-			 .property("data", &MyStruct::data)
-			 .method("func", &MyStruct::func);
-	}
-
 	void Application::InitApp()
 	{
-		rttr::type t = rttr::type::get_by_name("MyStruct");
-
-		rttr::variant res = t.create();
-		auto& result = res.get_value<MyStruct>();
-
-		if (res.is_valid())
-		{
-			auto& prob = rttr::type::get(result).get_property("data");
-			prob.set_value(result, 2);
-			int value = prob.get_value(result).to_int();
-			NATIVE_ERROR(value);
-		}
-
-		auto& prob = rttr::type::get(result).get_property("data");
-		prob.set_value(result, 4);
-		int value = prob.get_value(result).to_int();
-		NATIVE_ERROR(value);
-
 		NATIVE_INFO("Initializing a framework...");
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
@@ -106,7 +78,7 @@ namespace SmolEngine
 		RendererCommand::Init();
 
 		//Initializing Scene Handler
-		Scene::GetScene()->Init();
+		WorldAdmin::GetScene()->Init();
 
 		//Initializing external scripts
 		InitializeScripts();
@@ -124,7 +96,7 @@ namespace SmolEngine
 
 #else
 		//Loading a scene with index 0 and starting the game
-		Scene::GetScene()->StartGame();
+		WorldAdmin::GetScene()->StartGame();
 
 #endif
 
@@ -140,7 +112,7 @@ namespace SmolEngine
 		NATIVE_INFO("State : Shutdown");
 
 		m_Running = false;
-		Scene::GetScene()->ShutDown();
+		WorldAdmin::GetScene()->ShutDown();
 		m_Window->ShutDown();
 
 		exit(0);
@@ -215,11 +187,7 @@ namespace SmolEngine
 
 	void Application::InitializeScripts()
 	{
-		const auto Scene = Scene::GetScene();
-		
-		Scene->RegistryScript<CharMovementScript>(std::string("CharMovementScript"));
-		Scene->RegistryScript<CameraMovementScript>(std::string("CameraMovementScript"));
-		Scene->RegistryScript<MainMenuScript>(std::string("MenuScript"));
+
 	}
 
 	bool Application::OnWindowClose(Event& e)

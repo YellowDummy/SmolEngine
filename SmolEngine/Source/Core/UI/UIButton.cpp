@@ -2,7 +2,7 @@
 #include "UIButton.h"
 
 #include "Core/Renderer/Renderer2D.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 #include "Core/Application.h"
 #include "Core/Window.h"
 
@@ -133,7 +133,7 @@ namespace SmolEngine
 
 	void UIButton::Reload()
 	{
-		auto& assetMap = Scene::GetScene()->GetAssetMap();
+		auto& assetMap = WorldAdmin::GetScene()->GetAssetMap();
 
 		auto& result = assetMap.find(m_TetxureName);
 		if (result != assetMap.end())

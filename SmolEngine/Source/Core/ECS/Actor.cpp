@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Actor.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 
 
 #include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
@@ -36,7 +36,7 @@ namespace SmolEngine
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{
 		if (Childs.empty()) { return nullptr; }
-		auto set = Scene::GetScene()->GetIDSet();
+		auto set = WorldAdmin::GetScene()->GetIDSet();
 		size_t id = set[name];
 
 		return nullptr;
@@ -48,12 +48,12 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	std::string& Actor::GetName() const
+	const std::string& Actor::GetName() const
 	{
 		return GetInfo()->Name;
 	}
 
-	std::string& Actor::GetTag() const
+	const std::string& Actor::GetTag() const
 	{
 		return GetInfo()->Tag;
 	}
@@ -65,20 +65,20 @@ namespace SmolEngine
 
 	DefaultBaseTuple* Actor::GetDefaultBaseTuple() const
 	{
-		return Scene::GetScene()->GetTuple<DefaultBaseTuple>(Entity);
+		return WorldAdmin::GetScene()->GetTuple<DefaultBaseTuple>(Entity);
 	}
 
 	PhysicsBaseTuple* Actor::GetPhysicsBaseTuple() const
 	{
-		return Scene::GetScene()->GetTuple<PhysicsBaseTuple>(Entity);
+		return WorldAdmin::GetScene()->GetTuple<PhysicsBaseTuple>(Entity);
 	}
 
 	CameraBaseTuple* Actor::GetCameraBaseTuple() const
 	{
-		return Scene::GetScene()->GetTuple<CameraBaseTuple>(Entity);
+		return WorldAdmin::GetScene()->GetTuple<CameraBaseTuple>(Entity);
 	}
 
-	HeadComponent* Actor::GetInfo() const
+	const HeadComponent* Actor::GetInfo() const
 	{
 		switch (ActorType)
 		{
@@ -90,12 +90,12 @@ namespace SmolEngine
 		case ActorBaseType::PhysicsBase:
 		{
 			PhysicsBaseTuple* phTuple = GetPhysicsBaseTuple();
-			return &phTuple->Info;
+			return &phTuple->GetInfo();
 		}
 		case ActorBaseType::CameraBase:
 		{
 			CameraBaseTuple* camTuple = GetCameraBaseTuple();
-			return &camTuple->Info;
+			return &camTuple->GetInfo();
 		}
 		default:
 			return nullptr;

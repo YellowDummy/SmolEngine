@@ -15,6 +15,10 @@ namespace ImGui
 		static void TransformComponent(glm::vec3& wordPos, glm::vec3& scale, glm::vec3& rotation);
 
 
+		/// Text
+
+		static void Text(const std::string& label, const std::string& text, float pos = 130.0f);
+
 		/// Float
 
 		static void InputFloat(const std::string& label, float& value, float pos = 130.0f);
@@ -28,6 +32,7 @@ namespace ImGui
 			float width = 130.0f, bool enableButtons = true);
 
 		static void InputFloat2Base(const std::string& label, glm::vec2& vec2, float pos = 130.0f);
+
 
 		static void InputFloat3Base(const std::string& label, glm::vec3& vec3, float pos = 130.0f);
 

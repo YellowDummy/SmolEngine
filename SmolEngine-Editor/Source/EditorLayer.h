@@ -31,6 +31,8 @@ namespace SmolEngine
 
 	struct CanvasComponent;
 
+	struct BehaviourComponent;
+
 	class Actor;
 
 	///
@@ -117,6 +119,8 @@ namespace SmolEngine
 
 		void DrawCanvas(CanvasComponent* canvas);
 
+		void DrawBehaviorComponent(BehaviourComponent* behaviour);
+
 		///
 
 	private:
@@ -145,7 +149,7 @@ namespace SmolEngine
 
 		///
 
-		Ref<Scene> m_Scene;
+		Ref<WorldAdmin> m_Scene;
 
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
 
@@ -185,7 +189,7 @@ namespace SmolEngine
 
 		Ref<Actor> m_CameraActor = nullptr;
 
-		Actor* m_SelectedActor = nullptr;
+		Ref<Actor> m_SelectedActor = nullptr;
 
 		Ref<Texture2D> m_Texture = nullptr;
 

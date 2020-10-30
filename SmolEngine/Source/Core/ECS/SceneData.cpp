@@ -6,6 +6,7 @@ namespace SmolEngine
 	void SceneData::operator=(const SceneData& other)
 	{
 		m_ActorPool = other.m_ActorPool;
+		m_AssetMap = other.m_AssetMap;
 		m_Entity = other.m_Entity;
 		m_Gravity.x = other.m_Gravity.x;
 		m_Gravity.y = other.m_Gravity.y;

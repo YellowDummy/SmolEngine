@@ -15,6 +15,18 @@ namespace SmolEngine
 	{
 		PhysicsBaseTuple();
 
+		/// Accessors
+
+		const HeadComponent& GetInfo() const  { return Info; }
+											  
+		TransformComponent& GetTransform()    { return Transform; }
+											  
+		Texture2DComponent& GetTexture()      { return Texture; }
+											  
+		Body2DComponent& GetBody2D()          { return Body; }
+
+	private:
+
 		/// Components
 
 		TransformComponent Transform;
@@ -27,9 +39,13 @@ namespace SmolEngine
 
 	private:
 
+		friend class Box2DPhysicsSystem;
+
+		friend class RendererSystem;
+
 		friend class EditorLayer;
 
-		friend class Scene;
+		friend class WorldAdmin;
 
 		friend class cereal::access;
 

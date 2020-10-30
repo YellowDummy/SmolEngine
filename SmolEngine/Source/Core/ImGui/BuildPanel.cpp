@@ -3,7 +3,7 @@
 #include "Core/SLog.h"
 
 #include "Core/ImGui/EditorConsole.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 
 #include <cereal/archives/json.hpp>
 #include <cstdlib>
@@ -218,7 +218,7 @@ namespace SmolEngine
 		storage << file.rdbuf();
 		file.close();
 
-		const auto scene = Scene::GetScene();
+		const auto scene = WorldAdmin::GetScene();
 
 		{
 			cereal::JSONInputArchive dataInput{ storage };

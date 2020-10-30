@@ -8,9 +8,7 @@
 
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Animation/AnimationClip.h"
-#include "Core/Scripting/Jinx.h"
-
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 #include "Core/ECS/Actor.h"
 
 #include "Core/Audio/AudioClip.h"
@@ -51,7 +49,7 @@ namespace SmolEngine
 
 		m_EditorConsole = EditorConsole::GetConsole();
 
-		m_Scene = Scene::GetScene();
+		m_Scene = WorldAdmin::GetScene();
 		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene"), std::string("TestScene.smolscene"));
 
 		auto Texture = Texture2D::Create("Assets/Textures/Background.png");
@@ -211,18 +209,13 @@ namespace SmolEngine
 			}
 
 
-			if (ImGui::BeginMenu("Actors & Systems"))
+			if (ImGui::BeginMenu("Create"))
 			{
 				if (!m_Scene->m_InPlayMode)
 				{
 					if (ImGui::MenuItem("New Actor"))
 					{
 						showActorCreationWindow = true;
-					}
-
-					if (ImGui::MenuItem("New System"))
-					{
-
 					}
 				}
 
@@ -751,6 +744,24 @@ namespace SmolEngine
 					ImGui::NewLine();
 				}
 
+				if (m_Scene->HasTuple<BehaviourComponent>(*m_SelectedActor))
+				{
+					auto behaviourRef = m_Scene->GetTuple<BehaviourComponent>(*m_SelectedActor);
+
+					if (ImGui::CollapsingHeader(behaviourRef->SystemName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						ImGui::Extensions::Text("System Type:", "C++ Script");
+
+						ImGui::NewLine();
+
+						DrawBehaviorComponent(behaviourRef);
+					}
+
+					ImGui::NewLine();
+				}
+
 				ImGui::Separator();
 				ImGui::NewLine();
 
@@ -764,26 +775,28 @@ namespace SmolEngine
 				}
 				else
 				{
-					std::vector<std::string> list =
+					std::vector<std::string> list;
+
+					uint16_t actorType = (uint16_t)m_SelectedActor->ActorType;
+
+					if (m_SelectedActor->ActorType != ActorBaseType::CameraBase)
 					{
+						list.push_back("Resource System");
+					}
 
-					"Texture2D", "JinxScript", "Rigidbody2D",
-
-					"CameraController", "Light2D", "Animation2DContoller",
-
-					"AudioSource", "Canvas"
-
-					};
-
-					for (auto scriptName : m_Scene->m_ScriptNameList)
+					for (const auto& pair : SystemRegistry::Get()->m_SystemMap)
 					{
-						list.push_back(scriptName);
+						const auto& [name, type] = pair;
+						if (actorType == type)
+						{
+							list.push_back(name);
+						}
 					}
 
 					static std::string name;
-					ImGui::InputTextWithHint("Search", "Component", &name);
+					ImGui::InputTextWithHint("Search", "System", &name);
 
-					ImGui::BeginChild("ComponentText", { ImGui::GetWindowSize().x - 10.0f, 100 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+					ImGui::BeginChild("SystemText", { ImGui::GetWindowSize().x - 10.0f, 100 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 					for (auto str : list)
 					{
 						auto result = str.find(name);
@@ -811,7 +824,16 @@ namespace SmolEngine
 
 					if (ImGui::Button("Add", { ImGui::GetWindowSize().x - 10.0f, 30 }))
 					{
-						name.clear();
+						if (name == "Resource System")
+						{
+							m_Scene->AddTuple<ResourceTuple>(*m_SelectedActor);
+						}
+						else
+						{
+							m_Scene->AddBehaviour(name, m_SelectedActor);
+						}
+
+						name = "";
 						m_SelectedActor->m_showComponentUI = false;
 					}
 
@@ -1022,8 +1044,17 @@ namespace SmolEngine
 		m_TempActorName = head->Name;
 		m_TempActorTag = head->Tag;
 
-		ImGui::Extensions::InputString("Name", head->Name, m_TempActorName);
+		if (ImGui::Extensions::InputRawString("Name", m_TempActorName))
+		{
+			if (m_Scene->OnActorNameChanged(head->Name, m_TempActorName))
+			{
+				head->Name = m_TempActorName;
+			}
+		}
+
 		ImGui::Extensions::InputString("Tag", head->Tag, m_TempActorTag);
+
+		ImGui::Extensions::CheckBox("Is Enabled?", head->IsEnabled);
 	}
 
 	void EditorLayer::DrawTransform(TransformComponent* transform)
@@ -1077,7 +1108,7 @@ namespace SmolEngine
 
 		if (rb->Body.m_ShapeType == (int)ShapeType::Box)
 		{
-			ImGui::Extensions::InputFloat2("Size", rb->Body.m_Shape, 1.0f);
+			ImGui::Extensions::InputFloat2Base("Size", rb->Body.m_Shape);
 
 			ImGui::NewLine();
 		}
@@ -1085,7 +1116,7 @@ namespace SmolEngine
 		if (rb->Body.m_ShapeType == (int)ShapeType::Cirlce)
 		{
 			ImGui::Extensions::InputFloat("Radius", rb->Body.m_Radius);
-			ImGui::Extensions::InputFloat2("Offset", rb->Body.m_Shape, 1.0f);
+			ImGui::Extensions::InputFloat2Base("Offset", rb->Body.m_Shape);
 
 			ImGui::NewLine();
 		}
@@ -1096,7 +1127,7 @@ namespace SmolEngine
 			ImGui::Extensions::InputFloat("Inertia Moment", rb->Body.m_InertiaMoment);
 			ImGui::Extensions::InputFloat("Gravity", rb->Body.m_GravityScale);
 			ImGui::Extensions::InputFloat("Mass", rb->Body.m_Mass);
-			ImGui::Extensions::InputFloat2("Mass Center", rb->Body.m_MassCenter);
+			ImGui::Extensions::InputFloat2Base("Mass Center", rb->Body.m_MassCenter);
 
 			ImGui::NewLine();
 
@@ -1124,8 +1155,25 @@ namespace SmolEngine
 
 		ImGui::NewLine();
 
-		ImGui::Extensions::CheckBox("Is Primary?", camera->isPrimaryCamera);
+		if(ImGui::Extensions::CheckBox("Is Primary?", camera->isPrimaryCamera))
+		{
+			if (camera->isPrimaryCamera)
+			{
+				const size_t id = m_SelectedActor->GetID();
+
+				m_Scene->m_SceneData.m_Registry.view<CameraBaseTuple>().each([&](CameraBaseTuple& tuple)
+				{
+					if (tuple.Info.ID != id)
+					{
+						tuple.Camera.isPrimaryCamera = false;
+					}
+				});
+			}
+		}
+
 		ImGui::Extensions::CheckBox("Is Enabled?", camera->isEnabled);
+
+		ImGui::Extensions::CheckBox("Show Shape?", camera->ShowCanvasShape);
 	}
 
 	void EditorLayer::DrawAudioSource(AudioSourceComponent* audio)
@@ -1133,13 +1181,6 @@ namespace SmolEngine
 		for (auto& pair: audio->AudioClips)
 		{
 			auto& [key, clip] = pair;
-
-			// Label
-
-			//ImGui::NewLine();
-			//ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
-			//ImGui::TextUnformatted("Audio Clips");
-			//ImGui::Separator();
 
 			// Tree
 
@@ -1211,13 +1252,6 @@ namespace SmolEngine
 		for (auto& pair : anim->m_Clips)
 		{
 			auto& [key, clip] = pair;
-
-			// Label
-
-			//ImGui::NewLine();
-			//ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.8f);
-			//ImGui::TextUnformatted("Animation Clips");
-			//ImGui::Separator();
 
 			// Tree
 
@@ -1404,6 +1438,37 @@ namespace SmolEngine
 		if (ImGui::SmallButton("Button"))
 		{
 			UISystem::AddElement(*canvas, UIElementType::Button);
+		}
+	}
+
+	void EditorLayer::DrawBehaviorComponent(BehaviourComponent* behaviour)
+	{
+		for (auto& val : behaviour->OutValues)
+		{
+			switch (val.Value.index())
+			{
+
+			case (uint32_t)OutValueType::Float:
+			{
+				ImGui::Extensions::InputFloat(val.Key.c_str(), std::get<float>(val.Value));
+
+				break;
+			}
+			case (uint32_t)OutValueType::Int:
+			{
+				ImGui::Extensions::InputInt(val.Key.c_str(), std::get<int>(val.Value));
+
+				break;
+			}
+			case (uint32_t)OutValueType::String:
+			{
+				ImGui::Extensions::InputRawString(val.Key.c_str(), std::get<std::string>(val.Value), val.Key.c_str());
+
+				break;
+			}
+			default:
+				break;
+			}
 		}
 	}
 

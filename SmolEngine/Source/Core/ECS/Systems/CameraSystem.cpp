@@ -3,7 +3,6 @@
 #include "Core/EventHandler.h"
 #include "Core/Events/ApplicationEvent.h"
 
-#include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
 #include "Core/ECS/Components/Singletons/FramebufferSComponent.h"
 
 #include <glm/glm.hpp>

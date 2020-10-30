@@ -77,7 +77,7 @@ namespace SmolEngine
 
 		friend class cereal::access;
 
-		friend class Scene;
+		friend class WorldAdmin;
 
 		friend class Rigidbody2DComponent;
 

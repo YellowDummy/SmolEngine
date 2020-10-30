@@ -28,11 +28,15 @@ namespace SmolEngine
 
 	private:
 
-		friend class cereal::access;
-		friend class EditorLayer;
-		friend class Scene;
-
 		char stringBuffer[128] = "";
+
+		///
+
+		friend class cereal::access;
+
+		friend class EditorLayer;
+
+		friend class WorldAdmin;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

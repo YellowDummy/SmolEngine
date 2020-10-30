@@ -10,6 +10,7 @@
 #include "Core/EventHandler.h"
 
 #include "Core/ECS/ComponentTuples/BaseTuple.h"
+#include "Core/Scripting/SystemRegistry.h"
 
 #include "Core/Audio/AudioEngine.h"
 #include "Core/Application.h"
@@ -30,15 +31,19 @@ namespace SmolEngine
 
 	struct CameraBaseTuple;
 
+	struct BehaviourComponent;
+
+	struct SystemInstance;
+
 	///
 
-	class Scene
+	class WorldAdmin
 	{
 	public:
 
-		Scene()  = default;
+		WorldAdmin()  = default;
 
-	    ~Scene() = default;
+	    ~WorldAdmin() = default;
 
 	    /// Initialization
 
@@ -47,6 +52,8 @@ namespace SmolEngine
 		void ShutDown();
 
 		void Init();
+
+		void InitSystems();
 
 		/// Simulation
 
@@ -59,6 +66,14 @@ namespace SmolEngine
 		void OnUpdate(DeltaTime deltaTime);
 
 		void OnEvent(Event& e);
+
+		/// Systems Processing
+
+		void OnSystemBegin();
+
+		void OnSystemsTick(DeltaTime deltaTime);
+
+		void PrepareSystem(const BehaviourComponent& behaviour, const SystemInstance& sysRef);
 
 		/// Rendering
 
@@ -100,15 +115,17 @@ namespace SmolEngine
 
 		Ref<Actor> CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag = std::string("Default"));
 
+		BehaviourComponent* AddBehaviour(const std::string& systemName, const Ref<Actor> actor);
+
 		void RemoveChild(Ref<Actor> parent, Ref<Actor> child);
 
 		void AddChild(Ref<Actor> parent, Ref<Actor> child);
 
-		Actor* FindActorByName(const std::string& name);
-
-		Actor* FindActorByTag(const std::string& tag);
-
-		Actor* FindActorByID(const uint32_t id);
+		Ref<Actor> FindActorByName(const std::string& name);
+		
+		Ref<Actor> FindActorByTag(const std::string& tag);
+		
+		Ref<Actor> FindActorByID(const uint32_t id);
 
 		void DuplicateActor(Ref<Actor> actor);
 
@@ -116,6 +133,8 @@ namespace SmolEngine
 
 		/// Getters
 		
+		std::unordered_map<std::string, SystemInstance>& GetSystemMap() { return m_SystemMap; }
+
 		const std::unordered_map<std::string, std::string>& GetAssetMap();
 
 		std::vector<Ref<Actor>> GetActorListByTag(const std::string& tag);
@@ -124,40 +143,15 @@ namespace SmolEngine
 
 		std::unordered_map<size_t, Ref<Actor>>& GetActorPool();
 
-		static Ref<Scene> GetScene() { return s_Scene; }
+		static Ref<WorldAdmin> GetScene() { return s_Scene; }
 
 		std::vector <Ref<Actor>> GetActorList();
 
-		std::vector<Actor*> GetSortedActorList();
+		std::vector<Ref<Actor>> GetSortedActorList();
 
 		SceneData& GetSceneData();
 
 		/// Templates
-		
-		template<typename T>
-		void ForEachTuple(std::function< void(T&) > callback)
-		{
-			const auto& view = m_SceneData.m_Registry.view<T>();
-			for (const auto& entity : view)
-			{
-				auto& tuple = view.get<T>(entity);
-				callback(tuple);
-			}
-		}
-
-		template<typename T>
-		void RegistryScript(const std::string& keyName)
-		{
-			auto result = m_ScriptRegistry.find(keyName);
-			if (result != m_ScriptRegistry.end())
-			{
-				NATIVE_ERROR("<{}> script is already registered!", keyName); return;
-			}
-
-			std::shared_ptr<ScriptableObject> obj = std::make_shared<T>();
-			m_ScriptNameList.push_back(keyName);
-			m_ScriptRegistry[keyName] = obj;
-		}
 
 		template<typename T>
 		T* AddTuple(Actor& actor)
@@ -177,7 +171,10 @@ namespace SmolEngine
 
 			if (std::is_same<T, ResourceTuple>::value)
 			{
-				//
+				if (HasTuple<CameraBaseTuple>(actor))
+				{
+					return nullptr;
+				}
 			}
 
 			auto& component = m_SceneData.m_Registry.emplace<T>(actor);
@@ -211,7 +208,7 @@ namespace SmolEngine
 		
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
 
-		bool UpdateIDSet(const std::string& lastName, const std::string& newName);
+		bool OnActorNameChanged(const std::string& lastName, const std::string& newName);
 
 		bool PathCheck(std::string& path, const std::string& fileName);
 
@@ -235,11 +232,9 @@ namespace SmolEngine
 
 		///
 
-		std::map<std::string, Ref<ScriptableObject>> m_ScriptRegistry;
+		std::unordered_map<std::string, SystemInstance> m_SystemMap;
 
 		std::unordered_map<std::string, size_t> m_IDSet;
-
-		std::vector<std::string> m_ScriptNameList;
 
 		///
 
@@ -247,7 +242,7 @@ namespace SmolEngine
 
 		Ref<SubTexture2D> m_TestSub = nullptr;
 
-		static Ref<Scene> s_Scene;
+		static Ref<WorldAdmin> s_Scene;
 
 		///
 

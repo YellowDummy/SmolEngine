@@ -1359,13 +1359,7 @@
     <ClInclude Include="Source\Core\ECS\Components\TransformComponent.h">
       <Filter>Source\Core\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Scene.h">
-      <Filter>Source\Core\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\ECS\SceneData.h">
-      <Filter>Source\Core\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\ECS\ScriptableObject.h">
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Systems\Animation2DSystem.h">
@@ -1527,12 +1521,6 @@
     <ClInclude Include="Source\Core\SLog.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\Jinx.h">
-      <Filter>Source\Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\Lua.h">
-      <Filter>Source\Core\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Scripting\OutValues.h">
       <Filter>Source\Core\Scripting</Filter>
     </ClInclude>
@@ -1560,6 +1548,14 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h" />
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.h" />
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.h" />
+    <ClInclude Include="Source\Core\Scripting\SystemRegistry.h" />
+    <ClInclude Include="Source\Core\ECS\WorldAdmin.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1643,13 +1639,7 @@
     <ClCompile Include="Source\Core\ECS\Components\TransformComponent.cpp">
       <Filter>Source\Core\ECS\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ECS\Scene.cpp">
-      <Filter>Source\Core\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\ECS\SceneData.cpp">
-      <Filter>Source\Core\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\ECS\ScriptableObject.cpp">
       <Filter>Source\Core\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Systems\Animation2DSystem.cpp">
@@ -1796,5 +1786,13 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp" />
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.cpp" />
+    <ClCompile Include="Source\Core\ECS\WorldAdmin.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp" />
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.cpp" />
   </ItemGroup>
 </Project>

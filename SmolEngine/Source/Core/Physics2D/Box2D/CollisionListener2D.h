@@ -32,6 +32,6 @@ namespace SmolEngine
 
 	private:
 
-		friend class Scene;
+		friend class WorldAdmin;
 	};
 }

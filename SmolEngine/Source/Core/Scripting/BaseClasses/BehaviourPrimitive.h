@@ -1,0 +1,90 @@
+#pragma once
+
+#include "Core/Scripting/OutValues.h"
+
+#include <string>
+#include <any>
+#include <rttr/registration_friend>
+
+namespace SmolEngine
+{
+	class Actor;
+
+	///
+
+	//Note:
+	//Base class for all script-systems
+
+	class BehaviourPrimitive
+	{
+	public:
+
+		BehaviourPrimitive() = default;
+
+		virtual ~BehaviourPrimitive() = default;
+
+		/// Getters
+
+		const std::string& GetName();
+
+		const std::string& GetTag();
+
+		const size_t GetID();
+
+		/// Search
+
+		Ref<Actor> FindActorByName(const std::string& name);
+
+		Ref<Actor> FindActorByTag(const std::string& tag);
+
+		Ref<Actor> FindActorByID(size_t id);
+
+		/// Out-Properties
+
+		void PushOutPropertie(const char* keyName, std::any val, OutValueType type);
+
+		/// Defines
+
+#define OUT_FLOAT(name, value) PushOutPropertie(name, value, OutValueType::Float)
+
+#define OUT_INT(name, value) PushOutPropertie(name, value, OutValueType::Int)
+
+#define OUT_STRING(name, value) PushOutPropertie(name, value, OutValueType::String)
+
+		///
+
+	private:
+
+		Ref<Actor> m_Actor = nullptr;
+
+		///
+
+		std::unordered_map<const char*, float*> m_OutFloatVariables;
+
+		std::unordered_map<const char*, int*> m_OutIntVariables;
+
+		std::unordered_map<const char*, std::string*> m_OutStringVariables;
+
+	private:
+
+		/// Friends
+
+		friend class SystemRegistry;
+
+		friend class PhysicsTupleBehaviour;
+
+		friend class CameraTupleBehaviour;
+
+		friend class BaseTupleBehaviour;
+
+		friend class CollisionListener2D;
+
+		friend class WorldAdmin;
+
+		/// RTTR
+
+		RTTR_ENABLE()
+
+		RTTR_REGISTRATION_FRIEND
+	};
+}

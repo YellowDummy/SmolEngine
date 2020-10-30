@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Scene.h"
+#include "WorldAdmin.h"
 
 #include "Core/ImGui/EditorConsole.h"
 #include "Core/Events/MouseEvent.h"
@@ -8,6 +8,7 @@
 #include "Core/Physics2D/Box2D/CollisionListener2D.h"
 
 #include "Core/Animation/AnimationClip.h"
+#include "rttr/registration.h"
 
 #include <filesystem>
 #include <glm/glm.hpp>
@@ -16,14 +17,17 @@
 #include <Core\Events\ApplicationEvent.h>
 
 
+
 namespace SmolEngine
 {
-	Ref<Scene> Scene::s_Scene = std::make_shared<Scene>();
+	Ref<WorldAdmin> WorldAdmin::s_Scene = std::make_shared<WorldAdmin>();
 
-	void Scene::Init()
+	void WorldAdmin::Init()
 	{
 		m_SceneData.m_Registry = entt::registry();
 		m_SceneData.m_Entity = m_SceneData.m_Registry.create();
+
+		InitSystems();
 
 		m_InPlayMode = false;
 
@@ -38,7 +42,21 @@ namespace SmolEngine
 
 	}
 
-	void Scene::StartGame()
+	void WorldAdmin::InitSystems()
+	{
+		for (const auto& pair: SystemRegistry::Get()->m_SystemMap)
+		{
+			const auto& [name, type] = pair;
+
+			SystemInstance instance;
+			instance.type = rttr::type::get_by_name(name.c_str());
+			instance.variant = instance.type.create();
+
+			m_SystemMap[name] = instance;
+		}
+	}
+
+	void WorldAdmin::StartGame()
 	{
 		if (LoadProjectConfig())
 		{
@@ -50,12 +68,12 @@ namespace SmolEngine
 		}
 	}
 
-	void Scene::ShutDown()
+	void WorldAdmin::ShutDown()
 	{
 
 	}
 
-	void Scene::OnPlay()
+	void WorldAdmin::OnPlay()
 	{
 
 #ifdef SMOLENGINE_EDITOR
@@ -71,52 +89,44 @@ namespace SmolEngine
 		Save(m_SceneData.m_filePath);
 #endif
 
+		// Setting Box2D Callbacks
+
 		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
-		Box2DPhysicsSystem::OnPlay(world);
 
-		// Creating rigidbodies & binding joints
+		Box2DPhysicsSystem::OnBegin(world);
 
-		{
-
-			const auto& physicsGroup = m_SceneData.m_Registry.view<PhysicsBaseTuple>();
-			for (const auto& entity : physicsGroup)
-			{
-				auto& physicsTuple = physicsGroup.get<PhysicsBaseTuple>(entity);
-
-				Box2DPhysicsSystem::CreateBody(physicsTuple, world->World);
-			}
-		}
-
-		// Updating UI Layer
+		// Creating rigidbodies and joints
 
 		{
+			const auto& view = m_SceneData.m_Registry.view<PhysicsBaseTuple>();
 
-			const auto& cameraGroup = m_SceneData.m_Registry.view<CameraBaseTuple>();
-			for (const auto& entity : cameraGroup)
+			view.each([&](PhysicsBaseTuple& tuple)
 			{
-				auto& cameraTuple = cameraGroup.get<CameraBaseTuple>(entity);
-
-
-			}
+				Box2DPhysicsSystem::CreateBody(tuple, world->World, FindActorByID(tuple.GetInfo().ID));
+			});
 		}
 
 		// Finding which animation / audio clip should play on awake
 
 		{
-			const auto& resourceGroup = m_SceneData.m_Registry.view<ResourceTuple>();
-			for (const auto& entity : resourceGroup)
-			{
-				auto& resourceTuple = resourceGroup.get<ResourceTuple>(entity);
+			const auto& view = m_SceneData.m_Registry.view<ResourceTuple>();
 
-				AudioSystem::OnAwake(resourceTuple.AudioSource, AudioEngineSComponent::Get()->Engine);
-				Animation2DSystem::OnAwake(resourceTuple.Animation2D);
-			}
+			view.each([&](ResourceTuple& tuple)
+			{
+				AudioSystem::OnAwake(tuple.AudioSource, AudioEngineSComponent::Get()->Engine);
+
+				Animation2DSystem::OnAwake(tuple.Animation2D);
+			});
 		}
+
+		// Sending start callback to all systems (scripts)
+
+		OnSystemBegin();
 
 		m_InPlayMode = true;
 	}
 
-	void Scene::OnEndPlay()
+	void WorldAdmin::OnEndPlay()
 	{
 		m_InPlayMode = false;
 
@@ -125,26 +135,25 @@ namespace SmolEngine
 		{
 			auto world = Box2DWorldSComponent::Get()->World;
 
-			const auto& physicsGroup = m_SceneData.m_Registry.view<PhysicsBaseTuple>();
-			for (const auto& entity : physicsGroup)
-			{
-				auto& physicsTuple = physicsGroup.get<PhysicsBaseTuple>(entity);
+			const auto& view = m_SceneData.m_Registry.view<PhysicsBaseTuple>();
 
-				Box2DPhysicsSystem::DeleteBody(&physicsTuple.Body, world);
-			}
+			view.each([&](PhysicsBaseTuple& tuple)
+			{
+				Box2DPhysicsSystem::DeleteBody(&tuple.Body, world);
+			});
 		}
 
 		// Resetting Animation / Audio clips
 
 		{
-			const auto& resourceGroup = m_SceneData.m_Registry.view<ResourceTuple>();
-			for (const auto& entity : resourceGroup)
-			{
-				auto& resourceTuple = resourceGroup.get<ResourceTuple>(entity);
+			const auto& view = m_SceneData.m_Registry.view<ResourceTuple>();
 
-				AudioSystem::OnReset(resourceTuple.AudioSource, AudioEngineSComponent::Get()->Engine);
-				Animation2DSystem::OnReset(resourceTuple.Animation2D);
-			}
+			view.each([&](ResourceTuple& tuple)
+			{
+				AudioSystem::OnReset(tuple.AudioSource, AudioEngineSComponent::Get()->Engine);
+
+				Animation2DSystem::OnReset(tuple.Animation2D);
+			});
 		}
 
 		AudioEngineSComponent::Get()->Engine->Reset();
@@ -157,7 +166,7 @@ namespace SmolEngine
 
 	// TODO: Implement Double Buffering
 
-	void Scene::OnUpdate(DeltaTime deltaTime)
+	void WorldAdmin::OnUpdate(DeltaTime deltaTime)
 	{
 		// Updating Phycics
 
@@ -172,6 +181,8 @@ namespace SmolEngine
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 
 #endif
+
+		OnSystemsTick(deltaTime);
 
 		// Binding Framebuffer
 
@@ -220,13 +231,185 @@ namespace SmolEngine
 #endif
 	}
 
+	void WorldAdmin::OnSystemBegin()
+	{
+		// DefaultBase
+
+		{
+			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple, BehaviourComponent>();
+
+			view.each([&](DefaultBaseTuple& tuple, BehaviourComponent& behaviour)
+			{
+				const auto& sysRef = m_SystemMap[behaviour.SystemName];
+
+				PrepareSystem(behaviour, sysRef);
+
+				sysRef.type.invoke("OnBegin", sysRef.variant, { tuple });
+			});
+		}
+
+		// PhysicsBase
+
+		{
+			const auto& view = m_SceneData.m_Registry.view<PhysicsBaseTuple, BehaviourComponent>();
+
+			view.each([&](PhysicsBaseTuple& tuple, BehaviourComponent& behaviour)
+			{
+				const auto& sysRef = m_SystemMap[behaviour.SystemName];
+
+				PrepareSystem(behaviour, sysRef);
+
+				sysRef.type.invoke("OnBegin", sysRef.variant, { tuple });
+			});
+		}
+
+		// CameraBase
+
+		{
+			const auto& group = m_SceneData.m_Registry.view<CameraBaseTuple, BehaviourComponent>();
+			for (const auto& entity : group)
+			{
+				auto& [tuple, behaviour] = group.get<CameraBaseTuple, BehaviourComponent>(entity);
+				const auto& sysRef = m_SystemMap[behaviour.SystemName];
+
+				PrepareSystem(behaviour, sysRef);
+
+				sysRef.type.invoke("OnBegin", sysRef.variant, { tuple });
+			}
+		}
+	}
+
+	void WorldAdmin::OnSystemsTick(DeltaTime deltaTime)
+	{
+
+#ifdef SMOLENGINE_EDITOR
+
+		if (!m_InPlayMode) { return; }
+#endif
+
+		// DefaultBase
+
+		{
+			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple, BehaviourComponent>();
+
+			view.each([&](DefaultBaseTuple& tuple, BehaviourComponent& behaviour)
+			{
+				const auto& sysRef = m_SystemMap[behaviour.SystemName];
+
+				PrepareSystem(behaviour, sysRef);
+
+				sysRef.type.invoke("OnProcess", sysRef.variant, { deltaTime, tuple });
+			});
+		}
+
+		// PhysicsBase
+
+		{
+			const auto& view = m_SceneData.m_Registry.view<PhysicsBaseTuple, BehaviourComponent>();
+
+			view.each([&](PhysicsBaseTuple& tuple, BehaviourComponent& behaviour)
+			{
+				const auto& sysRef = m_SystemMap[behaviour.SystemName];
+
+				PrepareSystem(behaviour, sysRef);
+
+				sysRef.type.invoke("OnProcess", sysRef.variant, { deltaTime, tuple });
+			});
+		}
+
+		// CameraBase
+
+		{
+			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple, BehaviourComponent>();
+
+			view.each([&](CameraBaseTuple& tuple, BehaviourComponent& behaviour)
+			{
+				const auto& sysRef = m_SystemMap[behaviour.SystemName];
+
+				PrepareSystem(behaviour, sysRef);
+
+				sysRef.type.invoke("OnProcess", sysRef.variant, { deltaTime, tuple });
+			});
+		}
+	}
+
+	void WorldAdmin::PrepareSystem(const BehaviourComponent& behaviour, const SystemInstance& sysRef)
+	{
+		auto& primitive = sysRef.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+
+		// Setting Actor
+
+		primitive.m_Actor = behaviour.Actor;
+
+		// Setting Out-Properties
+
+		for (const auto& value: behaviour.OutValues)
+		{
+			switch (value.Value.index())
+			{
+
+			case (uint32_t)OutValueType::Float:
+			{
+				for (const auto& pair : primitive.m_OutFloatVariables)
+				{
+					auto [varName, varValue] = pair;
+
+					if (value.Key == varName)
+					{
+						*varValue = std::get<float>(value.Value);
+						break;
+					}
+				}
+
+				break;
+			}
+			case (uint32_t)OutValueType::Int:
+			{
+				for (const auto& pair : primitive.m_OutIntVariables)
+				{
+					auto [varName, varValue] = pair;
+
+					if (value.Key == varName)
+					{
+						*varValue = std::get<int>(value.Value);
+						break;
+					}
+				}
+
+				break;
+			}
+			case (uint32_t)OutValueType::String:
+			{
+				for (const auto& pair : primitive.m_OutStringVariables)
+				{
+					auto& [varName, varValue] = pair;
+
+					if (value.Key == varName)
+					{
+						*varValue = std::get<std::string>(value.Value);
+						break;
+					}
+				}
+
+				break;
+			}
+			default:
+
+				break;
+			}
+				
+		}
+	}
+
 	// TODO: Fix this event mess
 
-	void Scene::OnEvent(Event& e)
+	void WorldAdmin::OnEvent(Event& e)
 	{
 		if (e.m_EventType == (int)EventType::S_WINDOW_RESIZE)
 		{
-			ForEachTuple<CameraBaseTuple>([&](CameraBaseTuple& tuple)
+			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
+
+			view.each([&](CameraBaseTuple& tuple)
 			{
 				CameraSystem::OnEvent(tuple, e);
 			});
@@ -249,7 +432,9 @@ namespace SmolEngine
 
 		if (e.m_EventType == (int)EventType::S_MOUSE_PRESS)
 		{
-			ForEachTuple<CameraBaseTuple>([&](CameraBaseTuple& tuple)
+			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
+
+			view.each([&](CameraBaseTuple& tuple)
 			{
 				UISystem::OnMouseClick(tuple.Canvas, e);
 			});
@@ -257,14 +442,17 @@ namespace SmolEngine
 
 		if (e.m_EventType == (int)EventType::S_MOUSE_MOVE)
 		{
-			ForEachTuple<CameraBaseTuple>([&](CameraBaseTuple& tuple)
+			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
+
+			view.each([&](CameraBaseTuple& tuple)
 			{
 				UISystem::OnMouseMove(tuple.Canvas, e);
 			});
+
 		}
 	}
 
-	void Scene::RenderScene(const glm::mat4& viewProjectionMatrix, CameraBaseTuple* target)
+	void WorldAdmin::RenderScene(const glm::mat4& viewProjectionMatrix, CameraBaseTuple* target)
 	{
 		// Initializing new DrawList
 
@@ -300,7 +488,6 @@ namespace SmolEngine
 				Box2DPhysicsSystem::SetTransfrom(physicsTuple);
 
 #endif
-
 				RendererSystem::RenderPhysicsTuple(physicsTuple);
 			}
 
@@ -313,6 +500,7 @@ namespace SmolEngine
 					auto& [baseTuple, resourceTuple] = defGroup.get<DefaultBaseTuple, ResourceTuple>(entity);
 
 					Animation2DSystem::Update(resourceTuple.Animation2D);
+
 					RendererSystem::RenderAnimation2D(resourceTuple.Animation2D, baseTuple.Transform);
 				}
 
@@ -322,6 +510,7 @@ namespace SmolEngine
 					auto& [phTuple, resourceTuple] = phGroup.get<PhysicsBaseTuple, ResourceTuple>(entity);
 
 					Animation2DSystem::Update(resourceTuple.Animation2D);
+
 					RendererSystem::RenderAnimation2D(resourceTuple.Animation2D, phTuple.Transform);
 				}
 			}
@@ -339,7 +528,7 @@ namespace SmolEngine
 		Renderer2D::EndScene();
 	}
 
-	void Scene::ReloadAssets()
+	void WorldAdmin::ReloadAssets()
 	{
 		m_IDSet.clear();
 		auto& assetMap = m_SceneData.m_AssetMap;
@@ -355,79 +544,112 @@ namespace SmolEngine
 
 		// Extracting Default Tuples
 
-		ForEachTuple<DefaultBaseTuple>([&](DefaultBaseTuple& tuple)
 		{
-			auto search = assetMap.find(tuple.Texture.FileName);
-			if (search != assetMap.end())
+			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple>();
+
+			view.each([&](DefaultBaseTuple& tuple)
 			{
-				tuple.Texture.Texture = Texture2D::Create(search->second);
-			}
+				auto search = assetMap.find(tuple.Texture.FileName);
+				if (search != assetMap.end())
+				{
+					tuple.Texture.Texture = Texture2D::Create(search->second);
+				}
 
-			// Updating ID Set
+				// Updating ID Set
 
-			m_IDSet[tuple.Info.Name] = tuple.Info.ID;
-		});
+				m_IDSet[tuple.Info.Name] = tuple.Info.ID;
+
+			});
+		}
 
 
 		// Extracting Physics Tuples
 
-		ForEachTuple<PhysicsBaseTuple>([&](PhysicsBaseTuple& tuple)
 		{
-			auto search = assetMap.find(tuple.Texture.FileName);
-			if (search != assetMap.end())
+			const auto& view = m_SceneData.m_Registry.view<PhysicsBaseTuple>();
+
+			view.each([&](PhysicsBaseTuple& tuple)
 			{
-				tuple.Texture.Texture = Texture2D::Create(search->second);
-			}
+				auto search = assetMap.find(tuple.Texture.FileName);
+				if (search != assetMap.end())
+				{
+					tuple.Texture.Texture = Texture2D::Create(search->second);
+				}
 
-			// Updating ID Set
+				// Updating ID Set
 
-			m_IDSet[tuple.Info.Name] = tuple.Info.ID;
-		});
+				m_IDSet[tuple.Info.Name] = tuple.Info.ID;
+
+			});
+		}
+
 
 		// Extracting Resource Tuples
 
-		ForEachTuple<ResourceTuple>([&](ResourceTuple& tuple)
 		{
-			// Relaoding Audio Clips
+			const auto& view = m_SceneData.m_Registry.view<ResourceTuple>();
 
-			AudioSystem::ReloadAllClips(tuple.AudioSource, AudioEngineSComponent::Get()->Engine);
-
-			// Reloading Animation2D Frames
-
-			for (const auto& pair : tuple.Animation2D.m_Clips)
+			view.each([&](ResourceTuple& tuple)
 			{
-				auto& [key, clip] = pair;
+				// Relaoding Audio Clips
 
-				for (const auto& framePair : clip->m_Frames)
+				AudioSystem::ReloadAllClips(tuple.AudioSource, AudioEngineSComponent::Get()->Engine);
+
+				// Reloading Animation2D Frames
+
+				for (const auto& pair : tuple.Animation2D.m_Clips)
 				{
-					const auto& [key, frame] = framePair;
+					auto& [key, clip] = pair;
 
-					if (!PathCheck(frame->TexturePath, frame->FileName))
+					for (const auto& framePair : clip->m_Frames)
 					{
-						NATIVE_ERROR("Animation2D reload: texture not found, path: {}!", frame->FileName.c_str());
-						continue;
-					}
+						const auto& [key, frame] = framePair;
 
-					frame->Texture = Texture2D::Create(frame->TexturePath);
+						if (!PathCheck(frame->TexturePath, frame->FileName))
+						{
+							NATIVE_ERROR("Animation2D reload: texture not found, path: {}!", frame->FileName.c_str());
+							continue;
+						}
+
+						frame->Texture = Texture2D::Create(frame->TexturePath);
+					}
 				}
-			}
-		});
+
+			});
+		}
 
 		// Extracting Camera Tuples
 
-		ForEachTuple<CameraBaseTuple>([&](CameraBaseTuple& tuple) 
 		{
+			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
+
+			view.each([&](CameraBaseTuple& tuple)
+			{
 				UISystem::ReloadElements(tuple.Canvas);
 				m_IDSet[tuple.Info.Name] = tuple.Info.ID;
+
+			});
+		}
+	}
+
+	void WorldAdmin::ReloadScripts()
+	{
+		const auto& view = m_SceneData.m_Registry.view<BehaviourComponent>();
+
+		view.each([&](BehaviourComponent& behaviour)
+		{
+			Ref<Actor> result = FindActorByID(behaviour.ID);
+			if (result == nullptr)
+			{
+				NATIVE_ERROR("ReloadScripts:: Actor <{}> not found!", behaviour.ID);
+			}
+
+			behaviour.Actor = result;
+
 		});
 	}
 
-	void Scene::ReloadScripts()
-	{
-
-	}
-
-	bool Scene::AddAsset(const std::string& fileName, const std::string& filePath)
+	bool WorldAdmin::AddAsset(const std::string& fileName, const std::string& filePath)
 	{
 		const auto& result = m_SceneData.m_AssetMap.find(fileName);
 
@@ -442,7 +664,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool Scene::DeleteAsset(const std::string& fileName)
+	bool WorldAdmin::DeleteAsset(const std::string& fileName)
 	{
 		if (fileName == "")
 		{
@@ -452,7 +674,7 @@ namespace SmolEngine
 		return m_SceneData.m_AssetMap.erase(fileName);
 	}
 
-	void Scene::UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize)
+	void WorldAdmin::UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize)
 	{
 		m_EditorCamera->m_FrameBuffer->Bind();
 
@@ -481,18 +703,28 @@ namespace SmolEngine
 					res = gameViewSize;
 				}
 
-				ForEachTuple<PhysicsBaseTuple>([&](PhysicsBaseTuple& tuple)
 				{
-					RendererSystem::DebugDraw(tuple);
-				});
+					const auto& view = m_SceneData.m_Registry.view<const PhysicsBaseTuple>();
 
-				ForEachTuple<CameraBaseTuple>([&](CameraBaseTuple& tuple)
+					view.each([&](const PhysicsBaseTuple& tuple)
+					{
+						RendererSystem::DebugDraw(tuple);
+					});
+				}
+
 				{
-						Renderer2D::DebugDraw(DebugPrimitives::Quad, { tuple.Transform.WorldPos.x, tuple.Transform.WorldPos.y, 1.0f },
-							{ (res.x / 100.f), (res.y / 100.f) },
-							0.0f, { 1.0f, 1.0f, 1.0f, 1.0f });
-				});
+					const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
 
+					view.each([&](CameraBaseTuple& tuple)
+					{
+						if (tuple.GetCamera().ShowCanvasShape)
+						{
+							Renderer2D::DebugDraw(DebugPrimitives::Quad, { tuple.Transform.WorldPos.x, tuple.Transform.WorldPos.y, 1.0f },
+								{ (res.x / 100.f), (res.y / 100.f) },
+								0.0f, { 1.0f, 1.0f, 1.0f, 1.0f });
+						}
+					});
+				}
 			}
 			Renderer2D::EndDebug();
 		}
@@ -500,13 +732,13 @@ namespace SmolEngine
 		m_EditorCamera->m_FrameBuffer->UnBind();
 	}
 
-	void Scene::OnSceneViewResize(float width, float height)
+	void WorldAdmin::OnSceneViewResize(float width, float height)
 	{
 		m_EditorCamera->m_FrameBuffer->OnResize(width, height);
 		m_EditorCamera->OnResize(width, height);
 	}
 
-	void Scene::OnGameViewResize(float width, float height)
+	void WorldAdmin::OnGameViewResize(float width, float height)
 	{
 		for (const auto pair : FramebufferSComponent::Get())
 		{
@@ -525,13 +757,13 @@ namespace SmolEngine
 		}
 	}
 
-	bool Scene::AttachScript(const std::string& keyName, const Ref<Actor> actor)
+	bool WorldAdmin::AttachScript(const std::string& keyName, const Ref<Actor> actor)
 	{
 
 		return true;
 	}
 
-	Ref<Actor> Scene::CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag)
+	Ref<Actor> WorldAdmin::CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag)
 	{
 		if (m_SceneData.m_ID == 0)
 		{
@@ -600,29 +832,97 @@ namespace SmolEngine
 		return actorRef;
 	}
 
-	void Scene::DeleteActor(Ref<Actor> actor)
+	void WorldAdmin::DeleteActor(Ref<Actor> actor)
 	{
 		
 	}
 
-	void Scene::DuplicateActor(Ref<Actor> actor)
+	void WorldAdmin::DuplicateActor(Ref<Actor> actor)
 	{
 
 	}
 
-	void Scene::AddChild(Ref<Actor> parent, Ref<Actor> child)
+	void WorldAdmin::AddChild(Ref<Actor> parent, Ref<Actor> child)
 	{
 		parent->GetChilds().push_back(child);
 		child->SetParent(parent);
 	}
 
-	void Scene::RemoveChild(Ref<Actor> parent, Ref<Actor> child)
+	BehaviourComponent* WorldAdmin::AddBehaviour(const std::string& systemName, const Ref<Actor> actor)
+	{
+		if (m_SceneData.m_Registry.has<BehaviourComponent>(*actor))
+		{
+			NATIVE_ERROR("Actor already have behaviour!");
+			return nullptr;
+		}
+
+		auto& systemMap = SystemRegistry::Get()->m_SystemMap;
+
+		const auto& result = systemMap.find(systemName);
+		if (result == systemMap.end())
+		{
+			NATIVE_ERROR("System <{}> not found!", systemName);
+			return nullptr;
+		}
+
+		if (result->second != (uint16_t)actor->ActorType)
+		{
+			NATIVE_ERROR("Actor base type does not match the system type");
+			return nullptr;
+		}
+
+		auto& behaviour = m_SceneData.m_Registry.emplace<BehaviourComponent>(*actor);
+
+		// 
+
+		behaviour.Actor = actor;
+		behaviour.ID = actor->GetID();
+		behaviour.SystemName = systemName;
+
+		// Creating out-variables 
+
+		{
+			auto type = rttr::type::get_by_name(systemName.c_str());
+			auto variant = type.create();
+
+			const auto& primitive = variant.get_wrapped_value<BehaviourPrimitive>();
+
+			for (const auto& pair : primitive.m_OutFloatVariables)
+			{
+				const auto& [varName, varValue] = pair;
+
+				OutValue value = OutValue(varName, *varValue, OutValueType::Float);
+				behaviour.OutValues.push_back(value);
+			}
+
+			for (const auto& pair : primitive.m_OutIntVariables)
+			{
+				const auto& [varName, varValue] = pair;
+
+				OutValue value = OutValue(varName, *varValue, OutValueType::Int);
+				behaviour.OutValues.push_back(value);
+			}
+
+			for (const auto& pair : primitive.m_OutStringVariables)
+			{
+				const auto& [varName, varValue] = pair;
+
+				OutValue value = OutValue(varName, *varValue, OutValueType::String);
+				strcpy(value.stringBuffer, varValue->data());
+				behaviour.OutValues.push_back(value);
+			}
+		}
+
+		return &behaviour;
+	}
+
+	void WorldAdmin::RemoveChild(Ref<Actor> parent, Ref<Actor> child)
 	{
 		child->SetParent(nullptr);
 		parent->GetChilds().erase(std::remove(parent->GetChilds().begin(), parent->GetChilds().end(), child), parent->GetChilds().end());
 	}
 
-	Actor* Scene::FindActorByName(const std::string& name)
+	Ref<Actor> WorldAdmin::FindActorByName(const std::string& name)
 	{
 		auto& result = m_IDSet.find(name);
 		if (result == m_IDSet.end())
@@ -633,50 +933,50 @@ namespace SmolEngine
 		return FindActorByID(result->second);
 	}
 
-	Actor* Scene::FindActorByTag(const std::string& tag)
+	Ref<Actor> WorldAdmin::FindActorByTag(const std::string& tag)
 	{
 		return nullptr;
 	}
 
-	Actor* Scene::FindActorByID(const uint32_t id)
+	Ref<Actor> WorldAdmin::FindActorByID(const uint32_t id)
 	{
 		auto& result = m_SceneData.m_ActorPool.find(id);
 
 		if (result != m_SceneData.m_ActorPool.end())
 		{
-			return result->second.get();
+			return result->second;
 		}
 
 		return nullptr;
 	}
 
-	const std::unordered_map<std::string, std::string>& Scene::GetAssetMap()
+	const std::unordered_map<std::string, std::string>& WorldAdmin::GetAssetMap()
 	{
 		return m_SceneData.m_AssetMap;
 	}
 
-	std::vector<Ref<Actor>> Scene::GetActorListByTag(const std::string& tag)
+	std::vector<Ref<Actor>> WorldAdmin::GetActorListByTag(const std::string& tag)
 	{
 		std::vector<Ref<Actor>> temp;
 
 		return temp;
 	}
 
-	std::unordered_map<size_t, Ref<Actor>>& Scene::GetActorPool()
+	std::unordered_map<size_t, Ref<Actor>>& WorldAdmin::GetActorPool()
 	{
 		return m_SceneData.m_ActorPool;
 	}
 
-	std::vector<Ref<Actor>> Scene::GetActorList()
+	std::vector<Ref<Actor>> WorldAdmin::GetActorList()
 	{
 		std::vector<Ref<Actor>> buffer;
 
 		return buffer;
 	}
 
-	std::vector<Actor*> Scene::GetSortedActorList()
+	std::vector<Ref<Actor>> WorldAdmin::GetSortedActorList()
 	{
-		std::vector<Actor*> temp;
+		std::vector<Ref<Actor>> temp;
 
 		for (uint32_t i = 0; i < m_SceneData.m_ActorPool.size(); ++i)
 		{
@@ -686,7 +986,7 @@ namespace SmolEngine
 
 				if (actor->Index == i)
 				{
-					temp.push_back(actor.get());
+					temp.push_back(actor);
 				}
 			}
 		}
@@ -694,7 +994,7 @@ namespace SmolEngine
 		return temp;
 	}
 
-	bool Scene::Save(const std::string& filePath)
+	bool WorldAdmin::Save(const std::string& filePath)
 	{
 		std::stringstream storageRegistry;
 		std::stringstream storageSceneData;
@@ -704,7 +1004,7 @@ namespace SmolEngine
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<DefaultBaseTuple, PhysicsBaseTuple,
-				CameraBaseTuple, ResourceTuple>(output);
+				CameraBaseTuple, ResourceTuple, BehaviourComponent>(output);
 		}
 
 		// Serializing scene data
@@ -734,7 +1034,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool Scene::Load(const std::string& filePath)
+	bool WorldAdmin::Load(const std::string& filePath)
 	{
 		std::ifstream file(filePath);
 		std::stringstream buffer;
@@ -802,7 +1102,7 @@ namespace SmolEngine
 			cereal::JSONInputArchive regisrtyInput{ regisrtyStorage };
 
 			entt::snapshot_loader{ m_SceneData.m_Registry }.entities(regisrtyInput).component<DefaultBaseTuple, PhysicsBaseTuple,
-				CameraBaseTuple, ResourceTuple>(regisrtyInput);
+				CameraBaseTuple, ResourceTuple, BehaviourComponent>(regisrtyInput);
 		}
 
 		// Loading Singletons-Components
@@ -821,7 +1121,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	bool Scene::SaveCurrentScene()
+	bool WorldAdmin::SaveCurrentScene()
 	{
 		// Searching for a file in assets folders if absolute path is not valid and replace old path if file found
 
@@ -833,7 +1133,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	void Scene::CreateScene(const std::string& filePath, const std::string& fileName)
+	void WorldAdmin::CreateScene(const std::string& filePath, const std::string& fileName)
 	{
 		m_SceneData.m_Registry.clear();
 
@@ -850,7 +1150,7 @@ namespace SmolEngine
 		LoadSingletons();
 	}
 
-	bool Scene::LoadSceneRuntime(uint32_t index)
+	bool WorldAdmin::LoadSceneRuntime(uint32_t index)
 	{
 		auto ref = ProjectConfigSComponent::Get();
 
@@ -881,7 +1181,7 @@ namespace SmolEngine
 
 	// TODO: Assets folder should be defined by the user (via settings window)
 
-	bool Scene::ChangeFilePath(const std::string& fileName, std::string& pathToChange)
+	bool WorldAdmin::ChangeFilePath(const std::string& fileName, std::string& pathToChange)
 	{
 		using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
@@ -928,16 +1228,17 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool Scene::IsPathValid(const std::string& path)
+	bool WorldAdmin::IsPathValid(const std::string& path)
 	{
 		return std::filesystem::exists(path);
 	}
 
-	bool Scene::UpdateIDSet(const std::string& lastName, const std::string& newName)
+	bool WorldAdmin::OnActorNameChanged(const std::string& lastName, const std::string& newName)
 	{
 		auto resultNew = m_IDSet.find(newName);
 		if (resultNew != m_IDSet.end())
 		{
+			CONSOLE_ERROR("Actor with name " + newName + " already exist!");
 			return false;
 		}
 
@@ -954,7 +1255,7 @@ namespace SmolEngine
 
 	// Return true if path is valid
 
-	bool Scene::PathCheck(std::string& path, const std::string& fileName) 
+	bool WorldAdmin::PathCheck(std::string& path, const std::string& fileName) 
 	{
 		if (path.empty() || fileName.empty())
 		{
@@ -974,18 +1275,18 @@ namespace SmolEngine
 		return true;
 	}
 
-	void Scene::LoadSingletons()
+	void WorldAdmin::LoadSingletons()
 	{
 		m_SceneData.m_Registry.emplace_or_replace<SingletonTuple>(m_SceneData.m_Entity);
 	}
 
-	void Scene::DeleteSingletons()
+	void WorldAdmin::DeleteSingletons()
 	{
 		m_SceneData.m_Registry.remove_if_exists<SingletonTuple>(m_SceneData.m_Entity);
 	}
 
 
-	bool Scene::LoadProjectConfig()
+	bool WorldAdmin::LoadProjectConfig()
 	{
 		ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
 		if (ref == nullptr)
@@ -1019,7 +1320,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	SceneData& Scene::GetSceneData()
+	SceneData& WorldAdmin::GetSceneData()
 	{
 		return m_SceneData;
 	}

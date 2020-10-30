@@ -35,18 +35,20 @@ namespace SmolEngine
 
 		bool isEnabled = true;
 
+		bool ShowCanvasShape = true;
+
 	private:
 
 		friend class EditorLayer;
 
-		friend class Scene;
+		friend class WorldAdmin;
 
 		friend class cereal::access;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(AspectRatio, ZoomLevel, isPrimaryCamera, isEnabled, zNear, zFar);
+			archive(AspectRatio, ZoomLevel, isPrimaryCamera, isEnabled, zNear, zFar, ShowCanvasShape);
 		}
 	};
 }

@@ -3,7 +3,6 @@
 #include "Core/Time.h"
 
 #include "Core/ECS/Components/Singletons/Box2DWorldSComponent.h"
-#include "Core/Physics2D/Box2D/Body2DDefs.h"
 
 #include <box2d/box2d.h>
 #include <vector>
@@ -19,7 +18,20 @@ namespace SmolEngine
 
 	struct Box2DWorldSComponent;
 
+	struct DistanceJointInfo;
+
+	struct RevoluteJointInfo;
+
+	struct PrismaticJointInfo;
+
+	struct RopeJointInfo;
+
+	struct JointInfo;
+
 	class Body2D;
+
+	enum class JointType: uint16_t;
+
 
 	///
 
@@ -33,13 +45,13 @@ namespace SmolEngine
 
 	private:
 
-		static void OnPlay(Box2DWorldSComponent* data);
+		static void OnBegin(Box2DWorldSComponent* data);
 
 		static void OnUpdate(DeltaTime delta, uint32_t velocityIterations, uint32_t positionIterations, Box2DWorldSComponent* data);
 
 		/// Body Factory
 
-		static void CreateBody(PhysicsBaseTuple& tuple, b2World* world);
+		static void CreateBody(PhysicsBaseTuple& tuple, b2World* world, Ref<Actor> actor);
 
 		static void DeleteBody(Body2DComponent* body, b2World* world);
 
@@ -48,12 +60,6 @@ namespace SmolEngine
 		static const bool BindJoint(Body2DComponent* bodyA, Body2DComponent* bodyB, JointType type, JointInfo* info, b2World* world);
 
 		static const bool DeleteJoint(Body2DComponent* body, b2World* word);
-
-		/// Raycating
-
-		static const RayCast2DHitInfo& RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition, b2World* world);
-
-		static const std::vector<RayCast2DHitInfo> CircleCast(const glm::vec2& startPoisition, float distance, b2World* world);
 
 		/// Internal
 
@@ -79,14 +85,30 @@ namespace SmolEngine
 
 		static bool CreateRopeJoint(Body2D* bodyA, Body2D* bodyB, RopeJointInfo* info, b2World* world);
 
-		/// 
+		/// Setters
 
 		static void SetTransfrom(PhysicsBaseTuple& tuple);
+
+	public:
+
+		/// Forces
+		
+		static void AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, bool wakeBody = true);
+
+		static void AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, const glm::vec2& point, bool wakeBody = true);
+
+
+		/// RayCasting
+
+		static const RayCast2DHitInfo RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition);
+
+		static const std::vector<RayCast2DHitInfo> CircleCast(const glm::vec2& startPoisition, const float distance);
+
 
 	private:
 
 		friend class EditorLayer;
 
-		friend class Scene;
+		friend class WorldAdmin;
 	};
 }

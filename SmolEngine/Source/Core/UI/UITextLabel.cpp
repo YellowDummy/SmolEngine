@@ -2,7 +2,7 @@
 #include "UITextLabel.h"
 
 #include "Core/Renderer/Text.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 #include "Core/SLog.h"
 
 namespace SmolEngine
@@ -57,7 +57,7 @@ namespace SmolEngine
     {
         m_TextLabel = nullptr;
 
-        auto& assetMap = Scene::GetScene()->GetAssetMap();
+        auto& assetMap = WorldAdmin::GetScene()->GetAssetMap();
 
         auto& result = assetMap.find(m_FontName);
         if (result != assetMap.end())

@@ -21,7 +21,7 @@ namespace SmolEngine
 		return fraction;
 	}
 
-	const RayCast2DHitInfo& RayCast2D::GetInfo()
+	const RayCast2DHitInfo& RayCast2D::GetHitInfo()
 	{
 		return m_Info;
 	}

@@ -32,7 +32,9 @@ namespace SmolEngine
 	enum class ActorBaseType : uint16_t
 	{
 		DefaultBase,
+
 		PhysicsBase,
+
 		CameraBase
 	};
 
@@ -60,9 +62,9 @@ namespace SmolEngine
 
 		Ref<Actor> GetParent() { return Parent; }
 
-		std::string& GetName() const;
+		const std::string& GetName() const;
 
-		std::string& GetTag() const;
+		const std::string& GetTag() const;
 
 		const size_t GetID() const;
 
@@ -78,7 +80,7 @@ namespace SmolEngine
 
 		CameraBaseTuple*  GetCameraBaseTuple() const;
 
-		HeadComponent* GetInfo() const;
+		const HeadComponent* GetInfo() const;
 
 	private:
 
@@ -91,8 +93,6 @@ namespace SmolEngine
 		///
 
 		std::vector<Ref<Actor>> Childs;
-
-		std::vector<Ref<OutValue>> m_OutValues;
 
 		///
 
@@ -110,14 +110,14 @@ namespace SmolEngine
 
 		friend struct ScriptableObject;
 
-		friend class Scene;
+		friend class WorldAdmin;
 
 		friend class EditorLayer;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Entity, ActorType, Parent, Childs, m_OutValues, Index);
+			archive(Entity, ActorType, Parent, Childs, Index);
 		}
 
 	};

@@ -13,11 +13,20 @@
 #include "Core/Events/InputEvent.h"
 #include "Core/Events/MouseEvent.h"
 
-#include "Core/ECS/ScriptableObject.h"
 #include "Core/ECS/Actor.h"
 
 #include "Core/ImGui/ImGuiLayer.h"
 #include "Core/ImGui/EditorConsole.h"
+
+#include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
+#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
+#include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
+#include "Core/ECS/ComponentTuples/ResourceTuple.h"
+#include "Core/ECS/ComponentTuples/SingletonTuple.h"
+
+#include "Core/Scripting/BaseClasses/BaseTupleBehaviour.h"
+#include "Core/Scripting/BaseClasses/CameraTupleBehaviour.h"
+#include "Core/Scripting/BaseClasses/PhysicsTupleBehaviour.h"
 
 #include "Core/Renderer/Renderer.h"
 #include "Core/Renderer/Texture.h"

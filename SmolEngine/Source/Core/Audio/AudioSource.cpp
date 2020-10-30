@@ -3,7 +3,7 @@
 
 #include "Core/Audio/AudioEngine.h"
 #include "Core/Audio/AudioClip.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 #include "Core/SLog.h"
 
 namespace SmolEngine

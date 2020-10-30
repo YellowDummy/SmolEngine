@@ -210,7 +210,7 @@ project "GameX"
 
 	filter "configurations:Release"
 		defines "SE_RELEASE"
-		buildoptions "/MDd"
+		buildoptions "/MD"
 		buildoptions "/bigobj"
 		optimize "on"
 

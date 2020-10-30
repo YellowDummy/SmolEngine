@@ -1,6 +1,6 @@
 #pragma once
 
-// 16.10.2020
+// 29.10.2020
 //
 // Scripting using C++
 
@@ -9,125 +9,99 @@
 
 using namespace SmolEngine;
 
-class CharMovementScript : public ScriptableObject
+/// Type: Physics
+
+class CharMovementSystem : public PhysicsTupleBehaviour
 {
 public:
 
-	std::shared_ptr<ScriptableObject> Instantiate() override 	// registers an external script in the engine
+	CharMovementSystem()
 	{
-		return std::make_shared<CharMovementScript>();
+		OUT_FLOAT("Player Speed", &m_Speed);
+		OUT_STRING("Player Name", &m_PlayerName);
 	}
 
-	CharMovementScript() 	// Default constructor must be implemented
+	// Main
+
+	void OnBegin(PhysicsBaseTuple& tuple)
 	{
-		OUT_FLOAT("Speed", &speed); 		// Exposes a property to the editor
-		OUT_INT("SpeedMod", &speedMod);
-		OUT_STRING("Name", &name);
+		CONSOLE_WARN("Actor name is: " + tuple.GetInfo().Name);
+
+		CONSOLE_WARN("m_PlayerName is: " + m_PlayerName);
 	}
 
-	void OnBeginPlay() override
+	void OnProcess(DeltaTime deltTime, PhysicsBaseTuple& tuple)
 	{
-		CONSOLE_INFO("Player name is: " + name);
-
-	}
-
-	void OnUpdate(DeltaTime deltaTime) override
-	{
-
-	}
-
-	void OnCollisionContact(Actor* actor) override
-	{
-
-	}
-
-	void OnCollisionExit(Actor* actor) override
-	{
-		if (actor->GetTag() == "Default")
+		if (Input::IsKeyPressed(KeyCode::E))
 		{
-			// Do something
+			AddForce(tuple, { m_Speed, 0.0f });
+		}
+
+		if (Input::IsKeyPressed(KeyCode::Q))
+		{
+			AddForce(tuple, { -m_Speed, 0.0f });
+		}
+
+		if (Input::IsKeyPressed(KeyCode::Space))
+		{
+			AddForce(tuple, { 0.0f, m_Speed });
 		}
 	}
 
-	void OnTriggerContact(Actor* actor) override
-	{
+	// Callbacks
 
-	}
+	void OnCollisionContact(Actor* actor, bool isTrigger) { CONSOLE_ERROR("CollisonContact: " + actor->GetName()); }
 
-	void OnTriggerExit(Actor* actor) override
-	{
+	void OnCollisionExit(Actor* actor, bool isTrigger) { CONSOLE_ERROR("CollisonExit: " + actor->GetName()); }
 
-	}
-
-	void OnDestroy() override
-	{
-		
-	}
+	void OnDestroy() {}
 
 private:
 
-	std::string name = "Noob99";
-	float speed = 1.0f;
-	int speedMod = 1;
+	std::string m_PlayerName = "Player_0";
+
+	float m_Speed = 25.0f;
 };
 
-class CameraMovementScript : public ScriptableObject
+/// Type: Camera
+
+class CameraMovementSystem : public CameraTupleBehaviour
 {
 public:
 
-	std::shared_ptr<ScriptableObject> Instantiate() override 	//Must be implemented by the user in order to register an external script in the engine
+	void OnBegin(CameraBaseTuple& tuple)
 	{
-		return std::make_shared<CameraMovementScript>();
+		CONSOLE_ERROR("Camera name is: " + tuple.GetInfo().Name);
 	}
 
-	CameraMovementScript() 	//Default constructor must be implemented
-	{ 
-		OUT_FLOAT("CameraSpeed", &m_DefaultCameraSpeed);
-	}
+	void OnProcess(DeltaTime deltTime, CameraBaseTuple& tuple) {}
 
-	void OnBeginPlay() override
-	{
+	void OnDestroy() {}
 
-	}
-
-	void OnUpdate(DeltaTime deltaTime) override
-	{
-		
-	}
-
-	void OnDestroy() override  {}
-
-private:
-
-	float m_DefaultCameraSpeed = 0.35f;
-	float m_CameraSpeed = 0.5f;
-
-	Ref<Actor> m_Player;
 };
 
-class MainMenuScript : public ScriptableObject
+/// Type: Camera
+
+class MainMenuSystem : public CameraTupleBehaviour
 {
 public:
 
-	std::shared_ptr<ScriptableObject> Instantiate() override
-	{
-		return std::make_shared<MainMenuScript>();
-	}
+	void OnBegin(CameraBaseTuple& tuple) {}
 
-	MainMenuScript() = default;
+	void OnProcess(DeltaTime deltTime, CameraBaseTuple& tuple) {}
 
-	void OnBeginPlay() override
-	{
+	void OnDestroy() {}
+};
 
-	}
+/// Type: Base
 
-	void OnStartButtonPressed()
-	{
-		EngineCommand::LoadScene(1); // 1 is scene index
-	}
+class DummyActorSystem : public BaseTupleBehaviour
+{
+public:
 
-	void OnQuitButtonPressed()
-	{
-		EngineCommand::CloseApp();
-	}
+	void OnBegin(DefaultBaseTuple& tuple) {}
+
+	void OnProcess(DeltaTime deltTime, DefaultBaseTuple& tuple) {}
+
+	void OnDestroy() {}
 };

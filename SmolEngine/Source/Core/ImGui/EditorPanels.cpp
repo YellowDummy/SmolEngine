@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "EditorPanels.h"
 
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 #include "Core/Application.h"
 #include "Core/SLog.h"
 
@@ -19,7 +19,7 @@
 
 namespace SmolEngine
 {
-	void SettingsWindow::Update(bool& isOpened, Ref<Scene> scene)
+	void SettingsWindow::Update(bool& isOpened, Ref<WorldAdmin> scene)
 	{
 		if (isOpened)
 		{
@@ -57,7 +57,7 @@ namespace SmolEngine
 		}
 	}
 
-	void ActorCreationWindow::Update(bool& isOpened, Ref<Scene> scene)
+	void ActorCreationWindow::Update(bool& isOpened, Ref<WorldAdmin> scene)
 	{
 		if (isOpened)
 		{
@@ -97,7 +97,7 @@ namespace SmolEngine
 						tag = "Default";
 					}
 
-					Ref<Scene> scene = Scene::GetScene();
+					Ref<WorldAdmin> scene = WorldAdmin::GetScene();
 					Ref<Actor> actor = nullptr;
 
 					// Default
@@ -128,6 +128,7 @@ namespace SmolEngine
 
 					name = "";
 					tag = "";
+					comboValue = 0;
 
 					isOpened = false;
 				}

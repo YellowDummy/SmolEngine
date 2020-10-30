@@ -157,6 +157,19 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
+	void Extensions::Text(const std::string& label, const std::string& text, float pos)
+	{
+		ImGui::PushID(label.c_str());
+
+		ImGui::SetCursorPosX(6);
+		ImGui::TextUnformatted(label.c_str());
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(pos);
+		ImGui::TextUnformatted(text.c_str());
+
+		ImGui::PopID();
+	}
+
 	void Extensions::InputFloat(const std::string& label, float& value, float pos)
 	{
 		ImGui::PushID(label.c_str());

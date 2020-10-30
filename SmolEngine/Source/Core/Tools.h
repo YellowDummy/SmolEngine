@@ -45,7 +45,7 @@ public:
 	ToolTimer(const char* TimerName)
 		:m_TimerName(TimerName), 
 		m_Stopped(false), m_resultTime(0), 
-		m_Logger(new ToolLogger("SmolEngine Timer Tool"))
+		m_Logger(new ToolLogger(TimerName))
 	{
 
 	}

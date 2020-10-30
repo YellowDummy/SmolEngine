@@ -19,7 +19,7 @@
 #include "Core/ImGui/EditorConsole.h"
 
 #include "Core/ECS/Systems/Animation2DSystem.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
@@ -359,7 +359,7 @@ namespace SmolEngine
 			sceneDataInput(m_AnimationClip->m_Frames, m_AnimationClip->m_ClipName);
 		}
 
-		auto scene = Scene::GetScene();
+		auto scene = WorldAdmin::GetScene();
 
 		for (auto pair: m_AnimationClip->m_Frames)
 		{

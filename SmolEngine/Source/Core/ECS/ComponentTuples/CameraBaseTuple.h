@@ -16,6 +16,18 @@ namespace SmolEngine
 	{
 		CameraBaseTuple();
 
+		/// Accessors
+
+		const HeadComponent& GetInfo() const { return Info; }
+
+		TransformComponent& GetTransform() { return Transform; }
+
+		CameraComponent& GetCamera() { return Camera; }
+
+		CanvasComponent& GetCanvas() { return Canvas; }
+
+	private:
+
 		/// Components
 
 		TransformComponent Transform;
@@ -28,11 +40,15 @@ namespace SmolEngine
 
 	private:
 
-		friend class EditorLayer;
-
-		friend class Scene;
+		friend class RendererSystem;
 
 		friend class cereal::access;
+
+		friend class CameraSystem;
+
+		friend class EditorLayer;
+
+		friend class WorldAdmin;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

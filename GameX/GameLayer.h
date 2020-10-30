@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 #include "Core/Layer.h"
 #include "Core/Application.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 
 class GameLayer : public SmolEngine::Layer
 {
@@ -20,5 +20,5 @@ public:
 
 private:
 
-	SmolEngine::Ref<SmolEngine::Scene> m_Scene = nullptr;
+	SmolEngine::Ref<SmolEngine::WorldAdmin> m_Scene = nullptr;
 };

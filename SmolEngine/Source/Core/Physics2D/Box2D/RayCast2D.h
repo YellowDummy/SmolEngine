@@ -31,7 +31,7 @@ namespace SmolEngine
 		virtual float ReportFixture(b2Fixture* fixture, const b2Vec2& point,
 			const b2Vec2& normal, float fraction) override;
 
-		const RayCast2DHitInfo& GetInfo();
+		const RayCast2DHitInfo& GetHitInfo();
 
 	private:
 

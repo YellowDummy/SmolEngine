@@ -2,14 +2,14 @@
 #include "EngineCommand.h"
 
 #include "Core/SLog.h"
-#include "Core/ECS/Scene.h"
+#include "Core/ECS/WorldAdmin.h"
 #include "Core/Application.h"
 
 namespace SmolEngine
 {
 	void EngineCommand::LoadScene(uint32_t index)
 	{
-		const auto scene = Scene::GetScene();
+		const auto scene = WorldAdmin::GetScene();
 
 		scene->OnEndPlay();
 

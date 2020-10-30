@@ -26,7 +26,7 @@ namespace SmolEngine
 
 		friend class EditorLayer;
 
-		friend class Scene;
+		friend class WorldAdmin;
 
 		friend class cereal::access;
 

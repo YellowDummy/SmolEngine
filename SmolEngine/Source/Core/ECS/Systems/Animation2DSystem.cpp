@@ -4,8 +4,6 @@
 #include "Core/ECS/Components/Animation2DComponent.h"
 #include "Core/Animation/AnimationClip.h"
 
-#include "Core/ECS/Scene.h"
-
 #include "Core/SLog.h"
 
 namespace SmolEngine
@@ -162,7 +160,7 @@ namespace SmolEngine
 			dataInput(Clip->m_Frames, Clip->m_ClipName);
 		}
 
-		const auto assetMap = Scene::GetScene()->GetAssetMap();
+		const auto assetMap = WorldAdmin::GetScene()->GetAssetMap();
 
 		// Loading Textures
 
@@ -178,7 +176,7 @@ namespace SmolEngine
 				continue;
 			}
 
-			if (Scene::GetScene()->PathCheck(frame->TexturePath, frame->FileName))
+			if (WorldAdmin::GetScene()->PathCheck(frame->TexturePath, frame->FileName))
 			{
 				frame->Texture = Texture2D::Create(frame->TexturePath);
 			}

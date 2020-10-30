@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "RendererSystem.h"
 
-#include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
-#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
-#include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
-#include "Core/ECS/ComponentTuples/ResourceTuple.h"
-
 #include "Core/Animation/AnimationClip.h"
 
 #include "Core/Renderer/Renderer2D.h"

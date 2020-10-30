@@ -53,7 +53,7 @@ namespace SmolEngine
 		float m_CameraRotation = 0;
 
 		friend class cereal::access;
-		friend class Scene;
+		friend class WorldAdmin;
 	};
 
 	class CameraController
@@ -98,7 +98,7 @@ namespace SmolEngine
 
 	private:
 
-		friend class Scene;
+		friend class WorldAdmin;
 		friend class EditorLayer;
 		friend class AnimationPanel;
 		friend class cereal::access;
@@ -153,7 +153,7 @@ namespace SmolEngine
 
 	private:
 
-		friend class Scene;
+		friend class WorldAdmin;
 		friend class EditorLayer;
 	};
 

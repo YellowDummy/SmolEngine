@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Box2DPhysicsSystem.h"
 
+#include "Core/ECS/Actor.h"
+#include "Core/Physics2D/Box2D/Body2DDefs.h"
 #include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
 #include "Core/ECS/Components/Singletons/Box2DWorldSComponent.h"
 #include "Core/Physics2D/Box2D/RayCast2D.h"
@@ -11,7 +13,7 @@
 
 namespace SmolEngine
 {
-	void Box2DPhysicsSystem::OnPlay(Box2DWorldSComponent* data)
+	void Box2DPhysicsSystem::OnBegin(Box2DWorldSComponent* data)
 	{
 		//Setting Box2D Filtering
 
@@ -27,7 +29,7 @@ namespace SmolEngine
 		data->World->Step(delta, velocityIterations, positionIterations);
 	}
 
-	void Box2DPhysicsSystem::CreateBody(PhysicsBaseTuple& tuple, b2World* world)
+	void Box2DPhysicsSystem::CreateBody(PhysicsBaseTuple& tuple, b2World* world, Ref<Actor> actor)
 	{
 		auto& body = tuple.Body.Body;
 		{
@@ -38,7 +40,7 @@ namespace SmolEngine
 			bodyDef.awake = body.m_IsAwake;
 			bodyDef.allowSleep = body.m_canSleep;
 			bodyDef.angle = tuple.Transform.Rotation.x;
-			//bodyDef.userData = actor.get();
+			bodyDef.userData = actor.get();
 
 			bodyDef.position.Set(tuple.Transform.WorldPos.x, tuple.Transform.WorldPos.y);
 			body.m_Body = world->CreateBody(&bodyDef);
@@ -153,46 +155,6 @@ namespace SmolEngine
 	{
 		world->DestroyJoint(body->Body.m_Joint);
 		return true;
-	}
-
-	const RayCast2DHitInfo& Box2DPhysicsSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition, b2World* world)
-	{
-		RayCast2D ray;
-		world->RayCast(&ray, { startPoisition.x, startPoisition.y }, { targerPosition.x, targerPosition.y });
-		return ray.GetInfo();
-	}
-
-	const std::vector<RayCast2DHitInfo> Box2DPhysicsSystem::CircleCast(const glm::vec2& startPoisition, float distance, b2World* world)
-	{
-		std::vector<RayCast2DHitInfo> infoList;
-		std::vector<size_t> idList;
-
-		glm::vec2 output = glm::vec2(1.0f);
-		output = glm::normalize(output);
-
-		for (float r = 0; r < 360; ++r)
-		{
-			output = glm::rotate(output, glm::radians(r));
-			output *= distance;
-			output += startPoisition;
-
-			RayCast2D ray;
-			world->RayCast(&ray, { startPoisition.x, startPoisition.y }, { output.x, output.y });
-			const auto info = ray.GetInfo();
-			if (info.IsBodyHitted)
-			{
-				//size_t tempID = info.Actor->GetID();
-				size_t tempID = 0;
-
-				if (std::find(idList.begin(), idList.end(), tempID) == idList.end())
-				{
-					idList.push_back(tempID);
-					infoList.push_back(info);
-				}
-			}
-		}
-
-		return infoList;
 	}
 
 	b2BodyType Box2DPhysicsSystem::FindType(uint16_t type)
@@ -440,5 +402,57 @@ namespace SmolEngine
 
 		tuple.Transform.WorldPos = { b2Pos.p.x, b2Pos.p.y, tuple.Transform.WorldPos.z };
 		tuple.Transform.Rotation = { b2Pos.q.GetAngle(), tuple.Transform.Rotation.y, tuple.Transform.Rotation.z };
+	}
+
+	void Box2DPhysicsSystem::AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, bool wakeBody)
+	{
+		tuple.Body.Body.m_Body->ApplyForceToCenter({ force.x, force.y }, wakeBody);
+	}
+
+	void Box2DPhysicsSystem::AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
+	{
+		tuple.Body.Body.m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, wakeBody);
+	}
+
+	const RayCast2DHitInfo Box2DPhysicsSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)
+	{
+		RayCast2D ray2D;
+		Box2DWorldSComponent::Get()->World->RayCast(&ray2D, { startPoisition.x, startPoisition.y }, { targerPosition.x, targerPosition.y });
+		
+		return ray2D.GetHitInfo();
+	}
+
+	const std::vector<RayCast2DHitInfo> Box2DPhysicsSystem::CircleCast(const glm::vec2& startPoisition, const float distance)
+	{
+		std::vector<RayCast2DHitInfo> infoList;
+		std::vector<size_t> idList;
+
+		b2World* world = Box2DWorldSComponent::Get()->World;
+
+		for (float r = 0; r < 360; ++r)
+		{
+			glm::vec2 output = glm::vec2(1.0f);
+			output = glm::normalize(output);
+
+			output = glm::rotate(output, glm::radians(r));
+			output *= distance;
+			output += startPoisition;
+
+			RayCast2D ray2D;
+			world->RayCast(&ray2D, { startPoisition.x, startPoisition.y }, { output.x, output.y });
+			const auto& info = ray2D.GetHitInfo();
+
+			if (info.IsBodyHitted)
+			{
+				size_t tempID = info.Actor->GetID();
+				if (std::find(idList.begin(), idList.end(), tempID) == idList.end())
+				{
+					idList.push_back(tempID);
+					infoList.push_back(info);
+				}
+			}
+		}
+
+		return infoList;
 	}
 }

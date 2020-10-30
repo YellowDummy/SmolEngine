@@ -23,9 +23,8 @@
 #include <stack>
 
 
-#include "../../SmolEngine/Source/Core/ECS/Scene.h"
+#include "../../SmolEngine/Source/Core/ECS/WorldAdmin.h"
 #include "../../SmolEngine/Source/Core/ECS/Actor.h"
-#include "../../SmolEngine/Source/Core/ECS/ScriptableObject.h"
 
 #include "../../SmolEngine/Source/Core/Audio/AudioEngine.h"
 
@@ -43,6 +42,8 @@
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglShader.h"
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglTexture.h"
 
+#include "Core/ECS/Components/BehaviourComponent.h"
+
 #include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
 #include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
 #include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
@@ -58,6 +59,8 @@
 #include "Core/ECS/Systems/UISystem.h"
 
 #include "../../SmolEngine/Source/Core/Application.h"
+
+#include "Core/Scripting/SystemRegistry.h"
 
 #include "../../SmolEngine/Source/Core/ImGui/AnimationPanel.h"
 #include "../../SmolEngine/Source/Core/ImGui/BuildPanel.h"
