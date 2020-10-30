@@ -41,15 +41,15 @@ namespace SmolEngine
 
 		/// Out-Properties
 
-		void PushOutPropertie(const char* keyName, std::any val, OutValueType type);
+		void PushOutProperty(const char* keyName, std::any val, OutValueType type);
 
 		/// Defines
 
-#define OUT_FLOAT(name, value) PushOutPropertie(name, value, OutValueType::Float)
+#define OUT_FLOAT(name, value) PushOutProperty(name, value, OutValueType::Float)
 
-#define OUT_INT(name, value) PushOutPropertie(name, value, OutValueType::Int)
+#define OUT_INT(name, value) PushOutProperty(name, value, OutValueType::Int)
 
-#define OUT_STRING(name, value) PushOutPropertie(name, value, OutValueType::String)
+#define OUT_STRING(name, value) PushOutProperty(name, value, OutValueType::String)
 
 		///
 

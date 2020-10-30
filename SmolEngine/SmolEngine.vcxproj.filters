@@ -97,6 +97,9 @@
     <Filter Include="Source\Core\Scripting">
       <UniqueIdentifier>{F02BF114-5C98-AC0F-258C-446D91B7CE77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Scripting\BaseClasses">
+      <UniqueIdentifier>{C88A1FFF-34F9-747E-7DE2-2F7EE98F6A1A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\UI">
       <UniqueIdentifier>{DB99E684-C767-DA8A-B0FB-4AB19C68B6EF}</UniqueIdentifier>
     </Filter>
@@ -1383,6 +1386,9 @@
     <ClInclude Include="Source\Core\ECS\Systems\UISystem.h">
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ECS\WorldAdmin.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\EngineCommand.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1521,7 +1527,22 @@
     <ClInclude Include="Source\Core\SLog.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.h">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.h">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Scripting\OutValues.h">
+      <Filter>Source\Core\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scripting\SystemRegistry.h">
       <Filter>Source\Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Time.h">
@@ -1548,14 +1569,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h" />
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.h" />
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.h" />
-    <ClInclude Include="Source\Core\Scripting\SystemRegistry.h" />
-    <ClInclude Include="Source\Core\ECS\WorldAdmin.h">
-      <Filter>Source\Core\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1662,6 +1675,9 @@
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Systems\UISystem.cpp">
       <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\WorldAdmin.cpp">
+      <Filter>Source\Core\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EngineCommand.cpp">
       <Filter>Source\Core</Filter>
@@ -1774,6 +1790,21 @@
     <ClCompile Include="Source\Core\SLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.cpp">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.cpp">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp">
+      <Filter>Source\Core\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\UI\UIButton.cpp">
       <Filter>Source\Core\UI</Filter>
     </ClCompile>
@@ -1786,13 +1817,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.cpp" />
-    <ClCompile Include="Source\Core\ECS\WorldAdmin.cpp">
-      <Filter>Source\Core\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.cpp" />
   </ItemGroup>
 </Project>

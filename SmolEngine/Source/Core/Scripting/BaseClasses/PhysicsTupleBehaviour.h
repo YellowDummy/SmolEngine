@@ -20,7 +20,7 @@ namespace SmolEngine
 		/// 
 		/// void OnBegin(PhysicsBaseTuple& tuple)
 		///
-		/// void OnProcess(DeltaTime deltTime, PhysicsBaseTuple& tuple)
+		/// void OnProcess(DeltaTime deltaTime, PhysicsBaseTuple& tuple)
 		/// 
 		/// void OnDestroy()
 		/// 

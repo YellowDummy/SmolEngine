@@ -1,5 +1,5 @@
 {
-    "value0": 7,
+    "value0": 8,
     "value1": 0,
     "value2": 1,
     "value3": 2,
@@ -7,9 +7,10 @@
     "value5": 4,
     "value6": 5,
     "value7": 6,
-    "value8": 1,
-    "value9": 2,
-    "value10": {
+    "value8": 7,
+    "value9": 1,
+    "value10": 2,
+    "value11": {
         "value0": {
             "value0": 2,
             "value1": "Pawn",
@@ -37,9 +38,9 @@
             "value6": true
         }
     },
-    "value11": 4,
-    "value12": 3,
-    "value13": {
+    "value12": 5,
+    "value13": 3,
+    "value14": {
         "value0": {
             "value0": 3,
             "value1": "Player",
@@ -58,7 +59,7 @@
                 "value7": true,
                 "value8": false,
                 "value9": false,
-                "value10": 0.5,
+                "value10": 0.8999999761581421,
                 "value11": 1.0,
                 "value12": 1.0,
                 "value13": 2,
@@ -93,8 +94,8 @@
             "value6": true
         }
     },
-    "value14": 4,
-    "value15": {
+    "value15": 4,
+    "value16": {
         "value0": {
             "value0": 4,
             "value1": "GroundCollider",
@@ -148,8 +149,8 @@
             "value6": true
         }
     },
-    "value16": 5,
-    "value17": {
+    "value17": 5,
+    "value18": {
         "value0": {
             "value0": 5,
             "value1": "Wall_0",
@@ -203,8 +204,8 @@
             "value6": true
         }
     },
-    "value18": 6,
-    "value19": {
+    "value19": 6,
+    "value20": {
         "value0": {
             "value0": 6,
             "value1": "Wall_1",
@@ -258,9 +259,64 @@
             "value6": true
         }
     },
-    "value20": 1,
-    "value21": 1,
+    "value21": 7,
     "value22": {
+        "value0": {
+            "value0": 7,
+            "value1": "Player_1",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": {
+                "value0": true,
+                "value1": 1.0,
+                "value2": 0.30000001192092898,
+                "value3": 0,
+                "value4": 0.0,
+                "value5": 1.0,
+                "value6": 1.0,
+                "value7": true,
+                "value8": false,
+                "value9": false,
+                "value10": 0.0,
+                "value11": 1.0,
+                "value12": 1.0,
+                "value13": 2,
+                "value14": 1,
+                "value15": 0.5,
+                "value16": 0.0,
+                "value17": 0.0,
+                "value18": 0.0,
+                "value19": 0.0
+            },
+            "value1": 0,
+            "value2": true
+        },
+        "value2": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 5.0,
+            "value7": 4.0,
+            "value8": 0.0
+        },
+        "value3": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": "",
+            "value5": "Ball.png",
+            "value6": true
+        }
+    },
+    "value23": 1,
+    "value24": 1,
+    "value25": {
         "value0": {
             "value0": 1,
             "value1": "Camera",
@@ -268,9 +324,9 @@
             "value3": true
         },
         "value1": {
-            "value0": 1.1877636909484864,
+            "value0": 1.8879055976867676,
             "value1": 6.0,
-            "value2": true,
+            "value2": false,
             "value3": true,
             "value4": -1.0,
             "value5": 1.0,
@@ -291,9 +347,9 @@
             "value0": []
         }
     },
-    "value23": 1,
-    "value24": 2,
-    "value25": {
+    "value26": 1,
+    "value27": 2,
+    "value28": {
         "value0": {
             "value0": [],
             "value1": true
@@ -307,9 +363,9 @@
             }
         }
     },
-    "value26": 1,
-    "value27": 3,
-    "value28": {
+    "value29": 2,
+    "value30": 3,
+    "value31": {
         "value0": 3,
         "value1": "CharMovementSystem",
         "value2": [
@@ -318,6 +374,29 @@
                 "value1": {
                     "index": 0,
                     "data": 25.0
+                },
+                "value2": 0
+            },
+            {
+                "value0": "Player Name",
+                "value1": {
+                    "index": 2,
+                    "data": "Player_0"
+                },
+                "value2": 2
+            }
+        ]
+    },
+    "value32": 7,
+    "value33": {
+        "value0": 7,
+        "value1": "CharMovementSystem",
+        "value2": [
+            {
+                "value0": "Player Speed",
+                "value1": {
+                    "index": 0,
+                    "data": 55.0
                 },
                 "value2": 0
             },
@@ -443,6 +522,25 @@
                         },
                         "value3": [],
                         "value4": 5
+                    }
+                }
+            }
+        },
+        {
+            "key": 7,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483655,
+                    "data": {
+                        "value0": 7,
+                        "value1": 1,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 6
                     }
                 }
             }

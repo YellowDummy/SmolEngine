@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -101,7 +101,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -129,7 +129,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\jinx\Include;Libraries\jinx;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -571,7 +571,6 @@
     <ClInclude Include="Source\Core\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\TransformComponent.h" />
-    <ClInclude Include="Source\Core\ECS\WorldAdmin.h" />
     <ClInclude Include="Source\Core\ECS\SceneData.h" />
     <ClInclude Include="Source\Core\ECS\Systems\Animation2DSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\AudioSystem.h" />
@@ -580,6 +579,7 @@
     <ClInclude Include="Source\Core\ECS\Systems\CommandSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\RendererSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\UISystem.h" />
+    <ClInclude Include="Source\Core\ECS\WorldAdmin.h" />
     <ClInclude Include="Source\Core\EngineCommand.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
     <ClInclude Include="Source\Core\EventHandler.h" />
@@ -625,13 +625,13 @@
     <ClInclude Include="Source\Core\Renderer\Text.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="Source\Core\SLog.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.h" />
-    <ClInclude Include="Source\Core\Scripting\SystemRegistry.h" />
-    <ClInclude Include="Source\Core\SLog.h" />
     <ClInclude Include="Source\Core\Scripting\OutValues.h" />
+    <ClInclude Include="Source\Core\Scripting\SystemRegistry.h" />
     <ClInclude Include="Source\Core\Time.h" />
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\UI\UIButton.h" />
@@ -669,7 +669,6 @@
     <ClCompile Include="Source\Core\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Texture2DComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\TransformComponent.cpp" />
-    <ClCompile Include="Source\Core\ECS\WorldAdmin.cpp" />
     <ClCompile Include="Source\Core\ECS\SceneData.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\Animation2DSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\AudioSystem.cpp" />
@@ -678,6 +677,7 @@
     <ClCompile Include="Source\Core\ECS\Systems\CommandSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\RendererSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\UISystem.cpp" />
+    <ClCompile Include="Source\Core\ECS\WorldAdmin.cpp" />
     <ClCompile Include="Source\Core\EngineCommand.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
@@ -714,12 +714,12 @@
     <ClCompile Include="Source\Core\Renderer\Text.cpp" />
     <ClCompile Include="Source\Core\Renderer\Texture.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
+    <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp" />
-    <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\UI\UIButton.cpp" />
     <ClCompile Include="Source\Core\UI\UITextLabel.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />

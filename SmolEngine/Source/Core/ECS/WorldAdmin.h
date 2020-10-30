@@ -1,15 +1,10 @@
 #pragma once
 
 #include "Core/ECS/SceneData.h"
-#include "Core/ECS/Actor.h"
-
-#include "Core/Renderer/Framebuffer.h"
-#include "Core/Renderer/Renderer2D.h"
-#include "Core/Renderer/Renderer.h"
-#include "Core/Renderer/Camera.h"
 #include "Core/EventHandler.h"
 
 #include "Core/ECS/ComponentTuples/BaseTuple.h"
+#include "Core/ECS/Actor.h"
 #include "Core/Scripting/SystemRegistry.h"
 
 #include "Core/Audio/AudioEngine.h"
@@ -28,6 +23,8 @@
 namespace SmolEngine
 { 
 	class SubTexture2D;
+
+	class EditorCameraController;
 
 	struct CameraBaseTuple;
 
@@ -71,7 +68,7 @@ namespace SmolEngine
 
 		void OnSystemBegin();
 
-		void OnSystemsTick(DeltaTime deltaTime);
+		void OnSystemTick(DeltaTime deltaTime);
 
 		void PrepareSystem(const BehaviourComponent& behaviour, const SystemInstance& sysRef);
 

@@ -16,7 +16,7 @@ namespace SmolEngine
 		/// 
 		/// void OnBegin(CameraBaseTuple& tuple)
 		///
-		/// void OnProcess(DeltaTime deltTime, CameraBaseTuple& tuple)
+		/// void OnProcess(DeltaTime deltaTime, CameraBaseTuple& tuple)
 		/// 
 		/// void OnDestroy()
 		/// 

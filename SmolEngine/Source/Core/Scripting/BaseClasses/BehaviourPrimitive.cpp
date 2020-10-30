@@ -33,7 +33,7 @@ namespace SmolEngine
 		return WorldAdmin::GetScene()->FindActorByID(id);
 	}
 
-	void BehaviourPrimitive::PushOutPropertie(const char* keyName, std::any val, OutValueType type)
+	void BehaviourPrimitive::PushOutProperty(const char* keyName, std::any val, OutValueType type)
 	{
 		switch (type)
 		{

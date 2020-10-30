@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\jinx\Include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Libraries\jinx;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\jinx\Include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Libraries\jinx;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -119,7 +119,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\jinx\Include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Libraries\jinx;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

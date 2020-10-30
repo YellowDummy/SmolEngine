@@ -110,6 +110,7 @@ namespace SmolEngine
 		static bool showAnimationPanel = false;
 
 		//TEMP
+
 		static bool showNodeEditorTest = false;
 
 		static bool showTestGameView = false;
@@ -145,6 +146,7 @@ namespace SmolEngine
 			ImGui::PopStyleVar(2);
 
 		// DockSpace
+
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
@@ -752,7 +754,7 @@ namespace SmolEngine
 					{
 						ImGui::NewLine();
 
-						ImGui::Extensions::Text("System Type:", "C++ Script");
+						ImGui::Extensions::Text("System Type", "C++ Script");
 
 						ImGui::NewLine();
 
@@ -794,9 +796,12 @@ namespace SmolEngine
 					}
 
 					static std::string name;
-					ImGui::InputTextWithHint("Search", "System", &name);
+					ImGui::PushID("SystemSearch");
+					ImGui::Extensions::InputRawString("Search", name, "System");
+					ImGui::PopID();
+					ImGui::NewLine();
 
-					ImGui::BeginChild("SystemText", { ImGui::GetWindowSize().x - 10.0f, 100 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+					ImGui::BeginChild("SystemText", { ImGui::GetWindowSize().x - 30.0f, 200 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 					for (auto str : list)
 					{
 						auto result = str.find(name);
@@ -822,7 +827,7 @@ namespace SmolEngine
 
 					ImGui::NewLine();
 
-					if (ImGui::Button("Add", { ImGui::GetWindowSize().x - 10.0f, 30 }))
+					if (ImGui::Button("Add", { ImGui::GetWindowSize().x - 30.0f, 30 }))
 					{
 						if (name == "Resource System")
 						{

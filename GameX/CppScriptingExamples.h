@@ -30,7 +30,7 @@ public:
 		CONSOLE_WARN("m_PlayerName is: " + m_PlayerName);
 	}
 
-	void OnProcess(DeltaTime deltTime, PhysicsBaseTuple& tuple)
+	void OnProcess(DeltaTime deltaTime, PhysicsBaseTuple& tuple)
 	{
 		if (Input::IsKeyPressed(KeyCode::E))
 		{

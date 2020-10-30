@@ -1,20 +1,25 @@
 #include "stdafx.h"
 #include "WorldAdmin.h"
 
+#include "Core/Renderer/Framebuffer.h"
+#include "Core/Renderer/Renderer2D.h"
+#include "Core/Renderer/Renderer.h"
+#include "Core/Renderer/Camera.h"
+#include "Core/Renderer/Text.h"
+
 #include "Core/ImGui/EditorConsole.h"
 #include "Core/Events/MouseEvent.h"
 #include "Core/UI/UIButton.h"
-#include "Core/Renderer/Text.h"
+#include "Core/Events/ApplicationEvent.h"
 #include "Core/Physics2D/Box2D/CollisionListener2D.h"
 
 #include "Core/Animation/AnimationClip.h"
-#include "rttr/registration.h"
 
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
-#include <Core\Events\ApplicationEvent.h>
+#include <rttr/registration.h>
 
 
 
@@ -24,8 +29,12 @@ namespace SmolEngine
 
 	void WorldAdmin::Init()
 	{
+		// Creating entt registry and parent entity
+
 		m_SceneData.m_Registry = entt::registry();
 		m_SceneData.m_Entity = m_SceneData.m_Registry.create();
+
+		// Initializing user's systems
 
 		InitSystems();
 
@@ -50,7 +59,7 @@ namespace SmolEngine
 
 			SystemInstance instance;
 			instance.type = rttr::type::get_by_name(name.c_str());
-			instance.variant = instance.type.create();
+			instance.variant = instance.type.create(); // instance
 
 			m_SystemMap[name] = instance;
 		}
@@ -84,14 +93,15 @@ namespace SmolEngine
 			return;
 		}
 
-		// SceneData must be saved before the simulation starts
+		// We save the current scene before starting the simulation
 
 		Save(m_SceneData.m_filePath);
 #endif
 
-		// Setting Box2D Callbacks
 
 		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
+
+		// Setting Box2D Callbacks
 
 		Box2DPhysicsSystem::OnBegin(world);
 
@@ -119,7 +129,7 @@ namespace SmolEngine
 			});
 		}
 
-		// Sending start callback to all systems (scripts)
+		// Sending start callback to all systems-scripts
 
 		OnSystemBegin();
 
@@ -181,8 +191,9 @@ namespace SmolEngine
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 
 #endif
+		// Sending OnProcess callback
 
-		OnSystemsTick(deltaTime);
+		OnSystemTick(deltaTime);
 
 		// Binding Framebuffer
 
@@ -279,7 +290,7 @@ namespace SmolEngine
 		}
 	}
 
-	void WorldAdmin::OnSystemsTick(DeltaTime deltaTime)
+	void WorldAdmin::OnSystemTick(DeltaTime deltaTime)
 	{
 
 #ifdef SMOLENGINE_EDITOR
@@ -341,6 +352,7 @@ namespace SmolEngine
 
 		primitive.m_Actor = behaviour.Actor;
 
+		// Temp
 		// Setting Out-Properties
 
 		for (const auto& value: behaviour.OutValues)
@@ -889,7 +901,7 @@ namespace SmolEngine
 
 			for (const auto& pair : primitive.m_OutFloatVariables)
 			{
-				const auto& [varName, varValue] = pair;
+				const auto [varName, varValue] = pair;
 
 				OutValue value = OutValue(varName, *varValue, OutValueType::Float);
 				behaviour.OutValues.push_back(value);
@@ -897,7 +909,7 @@ namespace SmolEngine
 
 			for (const auto& pair : primitive.m_OutIntVariables)
 			{
-				const auto& [varName, varValue] = pair;
+				const auto [varName, varValue] = pair;
 
 				OutValue value = OutValue(varName, *varValue, OutValueType::Int);
 				behaviour.OutValues.push_back(value);
