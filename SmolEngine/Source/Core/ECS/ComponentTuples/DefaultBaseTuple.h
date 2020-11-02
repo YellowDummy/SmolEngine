@@ -5,6 +5,7 @@
 #include "Core/ECS/Components/HeadComponent.h"
 #include "Core/ECS/Components/Texture2DComponent.h"
 #include "Core/ECS/Components/TransformComponent.h"
+#include "Core/ECS/Components/Light2DSourceComponent.h"
 
 #include <cereal/cereal.hpp>
 
@@ -17,6 +18,8 @@ namespace SmolEngine
 		/// Components
 
 		TransformComponent Transform;
+
+		Light2DSourceComponent Light2D;
 
 		HeadComponent Info;
 
@@ -33,7 +36,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Info, Transform, Texture);
+			archive(Info, Transform, Texture, Light2D);
 		}
 	};
 }

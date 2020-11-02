@@ -17,11 +17,14 @@ namespace SmolEngine
 	enum class DrawableType : uint16_t
 	{
 		None = 0,
+
 		Sprite,
+
 		Quad,
+
 		Text,
-		Animation,
-		Light
+
+		Animation
 	};
 
 	///
@@ -52,11 +55,37 @@ namespace SmolEngine
 	};
 
 	///
+	
+	struct Light2DBuffer
+	{
+		Light2DBuffer() = default;
+
+		Light2DBuffer(const glm::vec4 color, const glm::vec3 pos, float r, float intensity)
+			:
+			Color(color), Offset(pos), Radius(r), Intensity(intensity) {}
+
+		///
+
+		glm::vec3 Color = glm::vec3(1.0f);
+
+		glm::vec3 Offset = glm::vec3(1.0f);
+
+		///
+
+		float Radius = 1.0f;
+
+		float Intensity = 1.0f;
+	};
+
+	///
 
 	enum class DebugPrimitives
 	{
 		None = 0,
-		Quad, Circle
+
+		Quad,
+
+		Circle
 	};
 
 	///
@@ -94,7 +123,7 @@ float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DebugDraw(DebugPrimitives type, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
 		//Light
-		static void DrawLight2D(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color, const float lightIntensity, Ref<OrthographicCamera> camera);
+		static void DrawLight2D(const glm::vec3& offset, const float radius, const glm::vec4& color, const float lightIntensity);
 
 		//Animation
 		static void DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,

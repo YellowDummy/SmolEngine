@@ -6,6 +6,7 @@
 #include "Core/ECS/Components/Body2DComponent.h"
 #include "Core/ECS/Components/TransformComponent.h"
 #include "Core/ECS/Components/Texture2DComponent.h"
+#include "Core/ECS/Components/Light2DSourceComponent.h"
 
 #include <cereal/cereal.hpp>
 
@@ -25,11 +26,15 @@ namespace SmolEngine
 											  
 		Body2DComponent& GetBody2D()          { return Body; }
 
+		Light2DSourceComponent& GetLight2D()  { return Light2D; }
+
 	private:
 
 		/// Components
 
 		TransformComponent Transform;
+
+		Light2DSourceComponent Light2D;
 
 		HeadComponent Info;
 
@@ -52,7 +57,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Info, Body, Transform, Texture);
+			archive(Info, Body, Transform, Texture, Light2D);
 		}
 	};
 }

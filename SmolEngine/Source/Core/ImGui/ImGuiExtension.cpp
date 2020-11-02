@@ -15,9 +15,9 @@ namespace ImGui
 		InputFloat3("Scale", scale, 1.0f);
 	}
 
-	void Extensions::InputFloat3(const std::string& label, glm::vec3& vec3, float resetValue, float width, bool enableButtons)
+	void Extensions::InputFloat3(const std::string& label, glm::vec3& vec3, float resetValue, float width, bool enableButtons, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 6, 18 });
 
 		ImGui::Columns(2, label.c_str());
@@ -118,9 +118,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::InputFloat2Base(const std::string& label, glm::vec2& vec2, float pos)
+	void Extensions::InputFloat2Base(const std::string& label, glm::vec2& vec2, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -131,7 +131,7 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::InputFloat3Base(const std::string& label, glm::vec3& vec3, float pos)
+	void Extensions::InputFloat3Base(const std::string& label, glm::vec3& vec3, float pos, const std::string& additionalID)
 	{
 		ImGui::PushID(label.c_str());
 
@@ -144,9 +144,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::InputInt(const std::string& label, int& value, float pos)
+	void Extensions::InputInt(const std::string& label, int& value, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -157,9 +157,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::Text(const std::string& label, const std::string& text, float pos)
+	void Extensions::Text(const std::string& label, const std::string& text, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -170,9 +170,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::InputFloat(const std::string& label, float& value, float pos)
+	void Extensions::InputFloat(const std::string& label, float& value, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -183,9 +183,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::InputFloat2(const std::string& label, glm::vec2& vec2, float resetValue, float width, bool enableButtons)
+	void Extensions::InputFloat2(const std::string& label, glm::vec2& vec2, float resetValue, float width, bool enableButtons, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 6, 25 });
 		ImGui::Columns(2);
 		{
@@ -260,9 +260,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::InputString(const std::string& label, std::string& output, std::string& dummyStr, const std::string& hint, float pos)
+	void Extensions::InputString(const std::string& label, std::string& output, std::string& dummyStr, const std::string& hint, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -278,7 +278,7 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	bool Extensions::InputRawString(const std::string& label, std::string& string, const std::string& hint, float pos, bool enterReturnsTrue)
+	bool Extensions::InputRawString(const std::string& label, std::string& string, const std::string& hint, float pos, bool enterReturnsTrue, const std::string& additionalID)
 	{
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -292,9 +292,9 @@ namespace ImGui
 		return ImGui::InputTextWithHint("##N", hint.c_str(), &string);
 	}
 
-	void Extensions::ColorInput3(const std::string& label, glm::vec4& color, float pos)
+	void Extensions::ColorInput3(const std::string& label, glm::vec4& color, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -305,9 +305,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::Texture(const std::string& label, uint32_t textureID, float pos)
+	void Extensions::Texture(const std::string& label, uint32_t textureID, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -318,9 +318,9 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	bool Extensions::CheckBox(const std::string& label, bool& value, float pos)
+	bool Extensions::CheckBox(const std::string& label, bool& value, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -332,9 +332,9 @@ namespace ImGui
 		return result;
 	}
 
-	void Extensions::Combo(const std::string& label, const char* comboText, int& value, float pos)
+	void Extensions::Combo(const std::string& label, const char* comboText, int& value, float pos, const std::string& additionalID)
 	{
-		ImGui::PushID(label.c_str());
+		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
@@ -345,7 +345,7 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	bool Extensions::SmallButton(const std::string& label, const std::string& buttonText, float pos)
+	bool Extensions::SmallButton(const std::string& label, const std::string& buttonText, float pos, const std::string& additionalID)
 	{
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());

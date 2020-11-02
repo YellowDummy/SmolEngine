@@ -1569,6 +1569,7 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Light2DSourceComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1817,5 +1818,6 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Light2DSourceComponent.cpp" />
   </ItemGroup>
 </Project>

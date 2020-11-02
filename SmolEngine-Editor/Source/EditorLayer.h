@@ -33,6 +33,8 @@ namespace SmolEngine
 
 	struct BehaviourComponent;
 
+	struct Light2DSourceComponent;
+
 	class Actor;
 
 	///
@@ -120,6 +122,8 @@ namespace SmolEngine
 		void DrawCanvas(CanvasComponent* canvas);
 
 		void DrawBehaviorComponent(BehaviourComponent* behaviour);
+
+		void DrawLight2D(Light2DSourceComponent* light);
 
 		///
 

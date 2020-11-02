@@ -417,16 +417,18 @@ namespace SmolEngine
 
 	void WorldAdmin::OnEvent(Event& e)
 	{
+
+#ifndef  SMOLENGINE_EDITOR
+
 		if (e.m_EventType == (int)EventType::S_WINDOW_RESIZE)
 		{
+
 			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
 
 			view.each([&](CameraBaseTuple& tuple)
-			{
-				CameraSystem::OnEvent(tuple, e);
-			});
-
-#ifndef  SMOLENGINE_EDITOR
+				{
+					CameraSystem::OnEvent(tuple, e);
+				});
 
 			auto& winResize = static_cast<WindowResizeEvent&>(e);
 
@@ -436,9 +438,8 @@ namespace SmolEngine
 
 				framebuffer->OnResize(winResize.GetWidth(), winResize.GetHeight());
 			}
+	     }
 #endif 
-
-		}
 
 		if (!m_InPlayMode) { return; }
 
@@ -658,6 +659,89 @@ namespace SmolEngine
 
 			behaviour.Actor = result;
 
+			// Updating out-variables 
+
+			{
+				auto type = rttr::type::get_by_name(behaviour.SystemName.c_str());
+				auto variant = type.create();
+
+				auto& primitive = variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+
+				// TOFIX: remove values from std::vector
+				// Float
+
+				for (const auto& pair : primitive.m_OutFloatVariables)
+				{
+					const auto [varName, varValue] = pair;
+
+					bool isPresent = false;
+
+					for (const auto& val : behaviour.OutValues)
+					{
+						if (val.Key == varName)
+						{
+							isPresent = true;
+							break;
+						}
+					}
+
+					if (!isPresent)
+					{
+						OutValue value = OutValue(varName, *varValue, OutValueType::Float);
+						behaviour.OutValues.push_back(value);
+					}
+				}
+
+				// Int
+
+				for (const auto& pair : primitive.m_OutIntVariables)
+				{
+					const auto [varName, varValue] = pair;
+
+					bool isPresent = false;
+
+					for (const auto& val : behaviour.OutValues)
+					{
+						if (val.Key == varName)
+						{
+							isPresent = true;
+							break;
+						}
+					}
+
+					if (!isPresent)
+					{
+						OutValue value = OutValue(varName, *varValue, OutValueType::Int);
+						behaviour.OutValues.push_back(value);
+					}
+				}
+
+				// String
+
+				for (const auto& pair : primitive.m_OutStringVariables)
+				{
+					const auto& [varName, varValue] = pair;
+
+					bool isPresent = false;
+
+					for (const auto& val : behaviour.OutValues)
+					{
+						if (val.Key == varName)
+						{
+							isPresent = true;
+							break;
+						}
+					}
+
+					if (!isPresent)
+					{
+						OutValue value = OutValue(varName, *varValue, OutValueType::String);
+						strcpy(value.stringBuffer, varValue->data());
+						behaviour.OutValues.push_back(value);
+					}
+				}
+			}
+
 		});
 	}
 
@@ -846,7 +930,16 @@ namespace SmolEngine
 
 	void WorldAdmin::DeleteActor(Ref<Actor> actor)
 	{
-		
+		bool result_id = m_IDSet.erase(actor->GetName());
+		bool result_pool = m_SceneData.m_ActorPool.erase(actor->GetID());
+
+		m_SceneData.m_Registry.remove_if_exists<DefaultBaseTuple>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<PhysicsBaseTuple>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<CameraBaseTuple>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<ResourceTuple>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<BehaviourComponent>(*actor);
+
+		actor = nullptr;
 	}
 
 	void WorldAdmin::DuplicateActor(Ref<Actor> actor)
@@ -1186,9 +1279,9 @@ namespace SmolEngine
 					return true;
 				}
 			}
-
-			return false;
 		}
+
+		return false;
 	}
 
 	// TODO: Assets folder should be defined by the user (via settings window)

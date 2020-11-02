@@ -50,9 +50,9 @@ public:
 
 	// Callbacks
 
-	void OnCollisionContact(Actor* actor, bool isTrigger) { CONSOLE_ERROR("CollisonContact: " + actor->GetName()); }
+	void OnCollisionContact(Actor* actor, bool isTrigger) { CONSOLE_WARN("CollisonContact: actor name is " + actor->GetName()); }
 
-	void OnCollisionExit(Actor* actor, bool isTrigger) { CONSOLE_ERROR("CollisonExit: " + actor->GetName()); }
+	void OnCollisionExit(Actor* actor, bool isTrigger) { CONSOLE_WARN("CollisonExit: actor name is " + actor->GetName()); }
 
 	void OnDestroy() {}
 
@@ -101,7 +101,13 @@ public:
 
 	void OnBegin(DefaultBaseTuple& tuple) {}
 
-	void OnProcess(DeltaTime deltTime, DefaultBaseTuple& tuple) {}
+	void OnProcess(DeltaTime deltTime, DefaultBaseTuple& tuple) 
+	{
+
+	}
 
 	void OnDestroy() {}
+
+private:
+
 };

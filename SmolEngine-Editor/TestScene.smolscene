@@ -1,15 +1,12 @@
 {
-    "value0": 7,
+    "value0": 4,
     "value1": 0,
     "value2": 1,
     "value3": 2,
     "value4": 3,
-    "value5": 4,
-    "value6": 5,
-    "value7": 6,
-    "value8": 1,
-    "value9": 2,
-    "value10": {
+    "value5": 1,
+    "value6": 2,
+    "value7": {
         "value0": {
             "value0": 2,
             "value1": "Pawn",
@@ -33,71 +30,27 @@
             "value2": 1.0,
             "value3": 1.0,
             "value4": "",
-            "value5": "",
-            "value6": true
-        }
-    },
-    "value11": 4,
-    "value12": 3,
-    "value13": {
-        "value0": {
-            "value0": 3,
-            "value1": "Player",
-            "value2": "Player",
-            "value3": true
-        },
-        "value1": {
-            "value0": {
-                "value0": true,
-                "value1": 1.0,
-                "value2": 0.30000001192092898,
-                "value3": 0,
-                "value4": 0.0,
-                "value5": 1.0,
-                "value6": 1.0,
-                "value7": true,
-                "value8": false,
-                "value9": false,
-                "value10": 0.0,
-                "value11": 1.0,
-                "value12": 1.0,
-                "value13": 0,
-                "value14": 1,
-                "value15": 0.49000000953674319,
-                "value16": 0.0,
-                "value17": 0.0,
-                "value18": 0.0,
-                "value19": 0.0
-            },
-            "value1": 0,
-            "value2": true
-        },
-        "value2": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 0.0,
-            "value7": 0.0,
-            "value8": 0.0
-        },
-        "value3": {
-            "value0": 0.9999959468841553,
-            "value1": 1.0,
-            "value2": 0.9999899864196777,
-            "value3": 1.0,
-            "value4": "",
             "value5": "Ball.png",
             "value6": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.9999979138374329,
+            "value3": 1.0,
+            "value4": 0.9999899864196777,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": true
         }
     },
-    "value14": 4,
-    "value15": {
+    "value8": 1,
+    "value9": 3,
+    "value10": {
         "value0": {
-            "value0": 4,
-            "value1": "GroundCollider",
+            "value0": 3,
+            "value1": "AA",
             "value2": "Default",
             "value3": true
         },
@@ -114,9 +67,9 @@
                 "value8": false,
                 "value9": false,
                 "value10": 0.0,
-                "value11": 10.0,
+                "value11": 1.0,
                 "value12": 1.0,
-                "value13": 0,
+                "value13": 2,
                 "value14": 0,
                 "value15": 1.0,
                 "value16": 0.0,
@@ -135,7 +88,7 @@
             "value4": 1.0,
             "value5": 1.0,
             "value6": 0.0,
-            "value7": -10.0,
+            "value7": 2.0,
             "value8": 0.0
         },
         "value3": {
@@ -144,123 +97,24 @@
             "value2": 1.0,
             "value3": 1.0,
             "value4": "",
-            "value5": "",
+            "value5": "dungeons_and_flagons8.png",
             "value6": true
-        }
-    },
-    "value16": 5,
-    "value17": {
-        "value0": {
-            "value0": 5,
-            "value1": "Wall_0",
-            "value2": "Default",
-            "value3": true
         },
-        "value1": {
-            "value0": {
-                "value0": true,
-                "value1": 1.0,
-                "value2": 0.30000001192092898,
-                "value3": 0,
-                "value4": 0.0,
-                "value5": 1.0,
-                "value6": 1.0,
-                "value7": true,
-                "value8": false,
-                "value9": false,
-                "value10": 0.0,
-                "value11": 1.0,
-                "value12": 4.0,
-                "value13": 0,
-                "value14": 0,
-                "value15": 1.0,
-                "value16": 0.0,
-                "value17": 0.0,
-                "value18": 0.0,
-                "value19": 0.0
-            },
-            "value1": 0,
-            "value2": true
-        },
-        "value2": {
+        "value4": {
             "value0": 0.0,
             "value1": 0.0,
-            "value2": 0.0,
+            "value2": 1.0,
             "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
-            "value6": 9.0,
-            "value7": -5.0,
-            "value8": 0.0
-        },
-        "value3": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "",
-            "value6": true
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
         }
     },
-    "value18": 6,
-    "value19": {
-        "value0": {
-            "value0": 6,
-            "value1": "Wall_1",
-            "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": {
-                "value0": true,
-                "value1": 1.0,
-                "value2": 0.30000001192092898,
-                "value3": 0,
-                "value4": 0.0,
-                "value5": 1.0,
-                "value6": 1.0,
-                "value7": true,
-                "value8": false,
-                "value9": false,
-                "value10": 0.0,
-                "value11": 1.0,
-                "value12": 4.0,
-                "value13": 0,
-                "value14": 0,
-                "value15": 1.0,
-                "value16": 0.0,
-                "value17": 0.0,
-                "value18": 0.0,
-                "value19": 0.0
-            },
-            "value1": 0,
-            "value2": true
-        },
-        "value2": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": -9.0,
-            "value7": -5.0,
-            "value8": 0.0
-        },
-        "value3": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "",
-            "value6": true
-        }
-    },
-    "value20": 1,
-    "value21": 1,
-    "value22": {
+    "value11": 1,
+    "value12": 1,
+    "value13": {
         "value0": {
             "value0": 1,
             "value1": "Camera",
@@ -268,13 +122,13 @@
             "value3": true
         },
         "value1": {
-            "value0": 1.8879055976867676,
+            "value0": 1.7777777910232545,
             "value1": 6.0,
             "value2": false,
             "value3": true,
             "value4": -1.0,
             "value5": 1.0,
-            "value6": false
+            "value6": true
         },
         "value2": {
             "value0": 0.0,
@@ -291,9 +145,9 @@
             "value0": []
         }
     },
-    "value23": 1,
-    "value24": 2,
-    "value25": {
+    "value14": 1,
+    "value15": 2,
+    "value16": {
         "value0": {
             "value0": [],
             "value1": true
@@ -307,9 +161,9 @@
             }
         }
     },
-    "value26": 1,
-    "value27": 3,
-    "value28": {
+    "value17": 2,
+    "value18": 3,
+    "value19": {
         "value0": 3,
         "value1": "CharMovementSystem",
         "value2": [
@@ -330,6 +184,12 @@
                 "value2": 2
             }
         ]
+    },
+    "value20": 2,
+    "value21": {
+        "value0": 2,
+        "value1": "DummyActorSystem",
+        "value2": []
     }
 }|{
     "value0": [
@@ -389,77 +249,24 @@
                     }
                 }
             }
-        },
-        {
-            "key": 4,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483652,
-                    "data": {
-                        "value0": 4,
-                        "value1": 1,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 3
-                    }
-                }
-            }
-        },
-        {
-            "key": 5,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483653,
-                    "data": {
-                        "value0": 5,
-                        "value1": 1,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 4
-                    }
-                }
-            }
-        },
-        {
-            "key": 6,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483654,
-                    "data": {
-                        "value0": 6,
-                        "value1": 1,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 5
-                    }
-                }
-            }
         }
     ],
     "value1": [
         {
             "key": "Ball.png",
             "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png"
+        },
+        {
+            "key": "dungeons_and_flagons8.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\dungeons_and_flagons8.png"
         }
     ],
     "value2": 0,
     "value3": 0.0,
     "value4": -9.8100004196167,
     "value5": 2822656395751046258,
-    "value6": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\TestScene.smolscene",
+    "value6": "C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene",
     "value7": "TestScene.smolscene",
-    "value8": "PhysicsTest",
+    "value8": "",
     "value9": 1.0
 }

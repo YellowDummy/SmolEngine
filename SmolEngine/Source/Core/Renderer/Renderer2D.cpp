@@ -34,12 +34,24 @@ namespace SmolEngine
 
 		//---------------------------------------------------------------------------------------------------------
 
+		///
+		
 		Ref<Shader> Light2DShader;
 
 		Ref<Shader> FrameBufferShader;
 		Ref<VertexArray> FrameBufferVertexArray;
 
+		///
+
 		std::vector<Ref<Drawable>> DrawList;
+
+		Light2DBuffer Light2DBuffer[300];
+
+		///
+
+		int Light2DBufferSize = 0;
+
+		const int Light2DBufferMaxSize = 250;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -230,16 +242,47 @@ namespace SmolEngine
 	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue)
 	{
 		//TEMP
+
 		s_Data->DrawList.clear();
 		s_Data->DrawList.reserve(1000);
+
+		//
 
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetUniformMat4("u_ViewProjection", viewProjectionMatrix);
 		s_Data->TextureShader->SetUniformFloat("u_AmbientValue", ambientValue);
+		s_Data->TextureShader->SetUniformInt("u_Ligh2DBufferSize", s_Data->Light2DBufferSize);
+
+		//
+
+		s_Data->Light2DBufferSize = 0;
 	}
 
 	void Renderer2D::EndScene()
 	{
+
+		for (uint32_t i = 0; i < s_Data->Light2DBufferSize; ++i)
+		{
+			auto& ref = s_Data->Light2DBuffer[i];
+
+			//
+
+			s_Data->TextureShader->SetUniformFloat3("LightData[" + std::to_string(i) + "].LightColor", ref.Color);
+			s_Data->TextureShader->SetUniformFloat3("LightData[" + std::to_string(i) + "].Position", ref.Offset);
+			s_Data->TextureShader->SetUniformFloat("LightData[" + std::to_string(i) + "].Radius", ref.Radius);
+			s_Data->TextureShader->SetUniformFloat("LightData[" + std::to_string(i) + "].Intensity", ref.Intensity);
+
+
+			//
+
+			ref.Color = glm::vec4(1.0f);
+			ref.Intensity = 1.0f;
+			ref.Offset = glm::vec4(1.0f);
+			ref.Radius = 1.0f;
+		}
+
+		//
+
 		int currentLayer = 0;
 
 		for (uint32_t i = 0; i < 11; ++i)
@@ -254,7 +297,6 @@ namespace SmolEngine
 				{
 					s_Data->TextureShader->SetUniformFloat4("u_Color", drawable->Color);
 					s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
-					s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 					s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 					drawable->Texture->Bind();
 
@@ -284,7 +326,6 @@ namespace SmolEngine
 					s_Data->TextureShader->Bind();
 					s_Data->TextureShader->SetUniformFloat4("u_Color", drawable->Color);
 					s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
-					s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 					s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 					drawable->Texture->Bind();
 
@@ -313,7 +354,6 @@ namespace SmolEngine
 				{
 					s_Data->TextureShader->SetUniformFloat4("u_Color", drawable->Color);
 					s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
-					s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 					s_Data->TextureShader->SetUniformInt("u_TextMode", true);
 					drawable->Texture->Bind();
 
@@ -341,7 +381,6 @@ namespace SmolEngine
 	{
 		s_Data->TextureShader->SetUniformFloat4("u_Color", color);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
-		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		s_Data->WhiteTexture->Bind();
 
@@ -388,7 +427,6 @@ namespace SmolEngine
 	{
 		s_Data->TextureShader->SetUniformFloat4("u_Color", color);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", 1.0f);
-		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		s_Data->WhiteTexture->Bind();
 
@@ -460,20 +498,13 @@ namespace SmolEngine
 		}
 	}
 
-	void Renderer2D::DrawLight2D(const glm::vec3& worldPos, const glm::vec2& scale, const glm::vec4& color, const float lightIntensity, Ref<OrthographicCamera> camera)
+	void Renderer2D::DrawLight2D(const glm::vec3& offset, const float radius, const glm::vec4& color, const float lightIntensity)
 	{
-		s_Data->Light2DShader->Bind();
-		s_Data->Light2DShader->SetUniformMat4("u_ViewProjection", camera->GetViewProjectionMatrix());
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), worldPos)
-			* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-
-		s_Data->Light2DShader->SetUniformMat4("u_Transform", transform);
-		s_Data->Light2DShader->SetUniformFloat4("u_Color", color);
-		s_Data->Light2DShader->SetUniformFloat("u_LightIntensity", lightIntensity);
-
-		s_Data->DebugCircleVertexArray->Bind();
-		RendererCommand::DrawLight();
+		if (s_Data->Light2DBufferSize < s_Data->Light2DBufferMaxSize)
+		{
+			s_Data->Light2DBuffer[s_Data->Light2DBufferSize] = Light2DBuffer(color, offset, radius, lightIntensity);
+			s_Data->Light2DBufferSize++;
+		}
 	}
 
 	void Renderer2D::DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture, float repeatValue, const glm::vec4& tintColor)
@@ -483,7 +514,6 @@ namespace SmolEngine
 		s_Data->TextureShader->SetUniformFloat("u_AmbientValue", ambientValue);
 		s_Data->TextureShader->SetUniformFloat4("u_Color", tintColor);
 		s_Data->TextureShader->SetUniformFloat("u_TilingFactor", repeatValue);
-		s_Data->TextureShader->SetUniformFloat2("u_TexCoord", { -1.0f, -1.0f });
 		s_Data->TextureShader->SetUniformInt("u_TextMode", false);
 		texture->Bind();
 

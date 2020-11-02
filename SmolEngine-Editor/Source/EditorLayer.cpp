@@ -58,6 +58,10 @@ namespace SmolEngine
 
 		auto actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, "Pawn");
 
+		actor->GetDefaultBaseTuple()->Light2D.isEnabled = true;
+		actor->GetDefaultBaseTuple()->Light2D.Color = { 0.8f, 0.6f, 0.4f, 1.0f };
+
+
 	    m_Scene->AddTuple<ResourceTuple>(*actor);
 	}
 
@@ -531,7 +535,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Delete"))
 					{
-
+						m_Scene->DeleteActor(m_SelectedActor);
 					}
 
 					ImGui::EndPopup();
@@ -601,6 +605,17 @@ namespace SmolEngine
 
 					ImGui::NewLine();
 
+					// Light2D
+
+					if (ImGui::CollapsingHeader("Light 2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawLight2D(&ref->Light2D);
+					}
+
+					ImGui::NewLine();
+
 					break;
 				}
 				case ActorBaseType::PhysicsBase:
@@ -645,6 +660,17 @@ namespace SmolEngine
 						ImGui::NewLine();
 
 						DrawTexture(&ref->Texture);
+					}
+
+					ImGui::NewLine();
+
+					// Light2D
+
+					if (ImGui::CollapsingHeader("Light 2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawLight2D(&ref->Light2D);
 					}
 
 					ImGui::NewLine();
@@ -1121,7 +1147,7 @@ namespace SmolEngine
 		if (rb->Body.m_ShapeType == (int)ShapeType::Cirlce)
 		{
 			ImGui::Extensions::InputFloat("Radius", rb->Body.m_Radius);
-			ImGui::Extensions::InputFloat2Base("Offset", rb->Body.m_Shape);
+			ImGui::Extensions::InputFloat2Base("Offset", rb->Body.m_Offset);
 
 			ImGui::NewLine();
 		}
@@ -1475,6 +1501,18 @@ namespace SmolEngine
 				break;
 			}
 		}
+	}
+
+	void EditorLayer::DrawLight2D(Light2DSourceComponent* light)
+	{
+		ImGui::Extensions::InputFloat2Base("Offset", light->Position, 130.0f, "2DLightPanel");
+		ImGui::Extensions::InputFloat("Intensity", light->Intensity, 130.0f, "2DLightPanel");
+		ImGui::Extensions::InputFloat("Radius", light->Radius, 130.0f, "2DLightPanel");
+		ImGui::Extensions::ColorInput3("Color", light->Color, 130.0f, "2DLightPanel");
+
+		ImGui::NewLine();
+
+		ImGui::Extensions::CheckBox("Is Enabled?", light->isEnabled, 130.0f, "2DLightPanel");
 	}
 
 	void EditorLayer::ResetFileBrowser()

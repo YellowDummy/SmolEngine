@@ -138,6 +138,14 @@ namespace SmolEngine
 				std::vector<GLchar> infoLog(maxLength);
 				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
 
+				std::stringstream ss;
+
+				for (const char c: infoLog)
+				{
+					ss << c;
+				}
+
+				NATIVE_ERROR(ss.str());
 				glDeleteShader(shader);
 				break;
 			}
@@ -162,6 +170,15 @@ namespace SmolEngine
 			// The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+
+			std::stringstream ss;
+
+			for (const char c : infoLog)
+			{
+				ss << c;
+			}
+
+			NATIVE_ERROR(ss.str());
 
 			// We don't need the program anymore.
 			glDeleteProgram(program);

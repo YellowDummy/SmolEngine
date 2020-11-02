@@ -43,6 +43,7 @@
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglTexture.h"
 
 #include "Core/ECS/Components/BehaviourComponent.h"
+#include "Core/ECS/Components/Light2DSourceComponent.h"
 
 #include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
 #include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
