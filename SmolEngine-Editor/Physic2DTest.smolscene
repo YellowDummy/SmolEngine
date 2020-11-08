@@ -11,12 +11,12 @@
     "value9": 8,
     "value10": 9,
     "value11": 10,
-    "value12": 4,
+    "value12": 8,
     "value13": 2,
     "value14": {
         "value0": {
             "value0": 2,
-            "value1": "Background",
+            "value1": "Bg_1",
             "value2": "Default",
             "value3": true
         },
@@ -24,8 +24,8 @@
             "value0": 0.0,
             "value1": 0.0,
             "value2": 0.0,
-            "value3": 15.0,
-            "value4": 15.0,
+            "value3": 10.0,
+            "value4": 10.0,
             "value5": 1.0,
             "value6": 0.0,
             "value7": 0.0,
@@ -36,27 +36,28 @@
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
-            "value5": "dungeons_and_flagons8.png",
-            "value6": true
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
         },
         "value3": {
             "value0": 0.0,
             "value1": 0.0,
-            "value2": 0.800000011920929,
-            "value3": 0.6000000238418579,
-            "value4": 0.4000000059604645,
+            "value2": 1.0,
+            "value3": 0.9999949932098389,
+            "value4": 0.9999899864196777,
             "value5": 1.0,
             "value6": 1.0,
             "value7": 1.0,
             "value8": false
         }
     },
-    "value15": 6,
+    "value15": 3,
     "value16": {
         "value0": {
-            "value0": 6,
-            "value1": "BG",
+            "value0": 3,
+            "value1": "Bg_2",
             "value2": "Default",
             "value3": true
         },
@@ -64,10 +65,10 @@
             "value0": 0.0,
             "value1": 0.0,
             "value2": 0.0,
-            "value3": 15.0,
-            "value4": 15.0,
+            "value3": 10.0,
+            "value4": 10.0,
             "value5": 1.0,
-            "value6": 15.0,
+            "value6": 10.0,
             "value7": 0.0,
             "value8": 0.0
         },
@@ -76,174 +77,275 @@
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
-            "value5": "dungeons_and_flagons8.png",
-            "value6": true
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
         },
         "value3": {
-            "value0": -6.0,
-            "value1": -2.0,
-            "value2": 0.8356167674064636,
-            "value3": 0.9314516186714172,
-            "value4": 0.0826287493109703,
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
             "value5": 1.0,
-            "value6": 0.5,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value17": 4,
+    "value18": {
+        "value0": {
+            "value0": 4,
+            "value1": "Bg_3",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": -10.0,
+            "value7": 0.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value19": 5,
+    "value20": {
+        "value0": {
+            "value0": 5,
+            "value1": "Bg_4",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": 0.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value21": 6,
+    "value22": {
+        "value0": {
+            "value0": 6,
+            "value1": "Bg_5",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": 10.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value23": 7,
+    "value24": {
+        "value0": {
+            "value0": 7,
+            "value1": "Bg_6",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": -10.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value25": 9,
+    "value26": {
+        "value0": {
+            "value0": 9,
+            "value1": "Light_2D",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 0.0,
+            "value7": 0.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "",
+            "value7": true
+        },
+        "value3": {
+            "value0": 7.0,
+            "value1": 10.0,
+            "value2": 0.19758063554763795,
+            "value3": 0.8252795934677124,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
             "value7": 2.0,
             "value8": true
         }
     },
-    "value17": 5,
-    "value18": {
-        "value0": {
-            "value0": 5,
-            "value1": "Light_2",
-            "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 0.0,
-            "value7": 0.0,
-            "value8": 0.0
-        },
-        "value2": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "",
-            "value6": true
-        },
-        "value3": {
-            "value0": 0.0,
-            "value1": -2.0,
-            "value2": 0.7701612710952759,
-            "value3": 0.18943482637405396,
-            "value4": 0.3439832925796509,
-            "value5": 1.0,
-            "value6": 0.5,
-            "value7": 3.0,
-            "value8": true
-        }
-    },
-    "value19": 8,
-    "value20": {
-        "value0": {
-            "value0": 8,
-            "value1": "Light_1",
-            "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 0.0,
-            "value7": 0.0,
-            "value8": 0.0
-        },
-        "value2": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "",
-            "value6": true
-        },
-        "value3": {
-            "value0": 5.0,
-            "value1": 0.0,
-            "value2": 0.10483872890472412,
-            "value3": 0.22037464380264283,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 0.5,
-            "value7": 3.0,
-            "value8": true
-        }
-    },
-    "value21": 3,
-    "value22": 10,
-    "value23": {
+    "value27": 10,
+    "value28": {
         "value0": {
             "value0": 10,
-            "value1": "DummyPlayer",
+            "value1": "Light2D_1",
             "value2": "Default",
             "value3": true
         },
         "value1": {
-            "value0": {
-                "value0": true,
-                "value1": 1.0,
-                "value2": 0.30000001192092898,
-                "value3": 0,
-                "value4": 0.0,
-                "value5": 1.0,
-                "value6": 1.0,
-                "value7": true,
-                "value8": false,
-                "value9": false,
-                "value10": 0.0,
-                "value11": 0.5,
-                "value12": 0.5,
-                "value13": 2,
-                "value14": 0,
-                "value15": 1.0,
-                "value16": 0.0,
-                "value17": 0.0,
-                "value18": 0.0,
-                "value19": 0.0
-            },
-            "value1": 0,
-            "value2": true
-        },
-        "value2": {
             "value0": 0.0,
             "value1": 0.0,
             "value2": 0.0,
             "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
-            "value6": 6.0,
+            "value6": 0.0,
             "value7": 0.0,
             "value8": 0.0
         },
-        "value3": {
+        "value2": {
             "value0": 1.0,
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
+            "value4": 0,
             "value5": "",
-            "value6": true
+            "value6": "",
+            "value7": true
         },
-        "value4": {
-            "value0": 0.0,
+        "value3": {
+            "value0": 7.0,
             "value1": 0.0,
             "value2": 1.0,
-            "value3": 1.0,
-            "value4": 1.0,
+            "value3": 0.05241936445236206,
+            "value4": 0.05247628688812256,
             "value5": 1.0,
             "value6": 1.0,
-            "value7": 0.10000000149011612,
+            "value7": 2.0,
             "value8": true
         }
     },
-    "value24": 7,
-    "value25": {
+    "value29": 1,
+    "value30": 8,
+    "value31": {
         "value0": {
-            "value0": 7,
-            "value1": "Collider",
+            "value0": 8,
+            "value1": "Player",
             "value2": "Default",
             "value3": true
         },
@@ -260,72 +362,6 @@
                 "value8": false,
                 "value9": false,
                 "value10": 0.0,
-                "value11": 22.5,
-                "value12": 0.5,
-                "value13": 0,
-                "value14": 0,
-                "value15": 1.0,
-                "value16": 0.0,
-                "value17": 0.0,
-                "value18": 0.0,
-                "value19": 0.0
-            },
-            "value1": 0,
-            "value2": true
-        },
-        "value2": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 45.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 15.0,
-            "value7": -7.5,
-            "value8": 0.0
-        },
-        "value3": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "more_rough_wood_6 (2).png",
-            "value6": true
-        },
-        "value4": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": 1.0,
-            "value8": false
-        }
-    },
-    "value26": 3,
-    "value27": {
-        "value0": {
-            "value0": 3,
-            "value1": "Player",
-            "value2": "Player",
-            "value3": true
-        },
-        "value1": {
-            "value0": {
-                "value0": true,
-                "value1": 1.0,
-                "value2": 0.30000001192092898,
-                "value3": 0,
-                "value4": 0.0,
-                "value5": 1.0,
-                "value6": 1.0,
-                "value7": true,
-                "value8": false,
-                "value9": false,
-                "value10": 0.4000000059604645,
                 "value11": 1.0,
                 "value12": 1.0,
                 "value13": 2,
@@ -337,7 +373,7 @@
                 "value19": 0.0
             },
             "value1": 0,
-            "value2": false
+            "value2": true
         },
         "value2": {
             "value0": 0.0,
@@ -346,34 +382,35 @@
             "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
-            "value6": 0.0,
-            "value7": 7.0,
-            "value8": 2.0
+            "value6": -10.0,
+            "value7": 10.0,
+            "value8": 0.0
         },
         "value3": {
             "value0": 1.0,
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
-            "value5": "Ball.png",
-            "value6": true
+            "value4": 0,
+            "value5": "",
+            "value6": "Ball.png",
+            "value7": true
         },
         "value4": {
             "value0": 0.0,
             "value1": 0.0,
-            "value2": 0.5898635983467102,
-            "value3": 0.6088709831237793,
-            "value4": 0.1374870091676712,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
             "value5": 1.0,
-            "value6": 1.0,
-            "value7": 2.0,
+            "value6": 0.5,
+            "value7": 1.0,
             "value8": true
         }
     },
-    "value28": 1,
-    "value29": 1,
-    "value30": {
+    "value32": 1,
+    "value33": 1,
+    "value34": {
         "value0": {
             "value0": 1,
             "value1": "Camera",
@@ -381,9 +418,9 @@
             "value3": true
         },
         "value1": {
-            "value0": 1.1137487888336182,
-            "value1": 12.0,
-            "value2": true,
+            "value0": 1.7777777910232545,
+            "value1": 6.0,
+            "value2": false,
             "value3": true,
             "value4": -1.0,
             "value5": 1.0,
@@ -396,7 +433,7 @@
             "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
-            "value6": 5.0,
+            "value6": 0.0,
             "value7": 0.0,
             "value8": 0.0
         },
@@ -404,120 +441,24 @@
             "value0": []
         }
     },
-    "value31": 2,
-    "value32": 2,
-    "value33": {
-        "value0": {
-            "value0": [],
-            "value1": true
-        },
-        "value1": {
-            "value0": [],
-            "value1": {
-                "ptr_wrapper": {
-                    "id": 0
-                }
-            }
-        }
-    },
-    "value34": 10,
-    "value35": {
-        "value0": {
-            "value0": [],
-            "value1": true
-        },
-        "value1": {
-            "value0": [
-                {
-                    "key": "NoNameClip",
-                    "value": {
-                        "ptr_wrapper": {
-                            "id": 2147483649,
-                            "data": {
-                                "value0": [
-                                    {
-                                        "key": 0,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483650,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
-                                                    "value1": "skin1_idle_1.png",
-                                                    "value2": 149.0,
-                                                    "value3": 0.6707693934440613,
-                                                    "value4": 0.899193525314331,
-                                                    "value5": 0.8660351037979126,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 1,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483651,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
-                                                    "value1": "skin1_idle_2.png",
-                                                    "value2": 150.0,
-                                                    "value3": 0.69998699426651,
-                                                    "value4": 0.9233871102333069,
-                                                    "value5": 0.7997191548347473,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    }
-                                ],
-                                "value1": "NoNameClip",
-                                "value2": true
-                            }
-                        }
-                    }
-                }
-            ],
-            "value1": {
-                "ptr_wrapper": {
-                    "id": 0
-                }
-            }
-        }
-    },
+    "value35": 1,
     "value36": 2,
-    "value37": 3,
-    "value38": {
-        "value0": 3,
-        "value1": "CharMovementSystem",
-        "value2": [
-            {
-                "value0": "Player Speed",
-                "value1": {
-                    "index": 0,
-                    "data": 25.0
-                },
-                "value2": 0
+    "value37": {
+        "value0": {
+            "value0": [],
+            "value1": true
+        },
+        "value1": {
+            "value0": [],
+            "value1": {
+                "ptr_wrapper": {
+                    "id": 0
+                }
             },
-            {
-                "value0": "Player Name",
-                "value1": {
-                    "index": 2,
-                    "data": "Player_0"
-                },
-                "value2": 2
-            }
-        ]
+            "value2": 0
+        }
     },
-    "value39": 6,
-    "value40": {
-        "value0": 6,
-        "value1": "DummyActorSystem",
-        "value2": []
-    }
+    "value38": 0
 }|{
     "value0": [
         {
@@ -565,7 +506,7 @@
                     "id": 2147483651,
                     "data": {
                         "value0": 3,
-                        "value1": 1,
+                        "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -578,10 +519,29 @@
             }
         },
         {
-            "key": 5,
+            "key": 4,
             "value": {
                 "ptr_wrapper": {
                     "id": 2147483652,
+                    "data": {
+                        "value0": 4,
+                        "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 3
+                    }
+                }
+            }
+        },
+        {
+            "key": 5,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483653,
                     "data": {
                         "value0": 5,
                         "value1": 0,
@@ -600,7 +560,7 @@
             "key": 6,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483653,
+                    "id": 2147483654,
                     "data": {
                         "value0": 6,
                         "value1": 0,
@@ -619,10 +579,10 @@
             "key": 7,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483654,
+                    "id": 2147483655,
                     "data": {
                         "value0": 7,
-                        "value1": 1,
+                        "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -638,9 +598,28 @@
             "key": 8,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483655,
+                    "id": 2147483656,
                     "data": {
                         "value0": 8,
+                        "value1": 1,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 7
+                    }
+                }
+            }
+        },
+        {
+            "key": 9,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483657,
+                    "data": {
+                        "value0": 9,
                         "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
@@ -648,7 +627,7 @@
                             }
                         },
                         "value3": [],
-                        "value4": 6
+                        "value4": 8
                     }
                 }
             }
@@ -657,17 +636,17 @@
             "key": 10,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483656,
+                    "id": 2147483658,
                     "data": {
                         "value0": 10,
-                        "value1": 1,
+                        "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
                             }
                         },
                         "value3": [],
-                        "value4": 8
+                        "value4": 9
                     }
                 }
             }
@@ -681,14 +660,6 @@
         {
             "key": "Ball.png",
             "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png"
-        },
-        {
-            "key": "more_rough_wood_6 (2).png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\more_rough_wood_6 (2).png"
-        },
-        {
-            "key": "playerIdle.smolanim",
-            "value": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\playerIdle.smolanim"
         }
     ],
     "value2": 0,

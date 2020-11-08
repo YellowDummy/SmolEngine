@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <fstream>
 
+#include "Core/Renderer/Buffer.h"
 #include "OpenglShader.h"
 #include "Core/SLog.h"
 #include "glad/glad.h"
@@ -48,6 +49,21 @@ namespace SmolEngine
 		glDeleteProgram(m_RendererID);
 	}
 
+	void OpenglShader::CreateUniformMap(const std::vector<std::string>& list)
+	{
+		for (const auto& pair: list)
+		{
+			if (m_UniformMap.find(pair) != m_UniformMap.end())
+			{
+				NATIVE_ERROR("Uniform Map: variable already exists!"); 
+				continue;
+			}
+
+			GLint location = glGetUniformLocation(m_RendererID, pair.c_str());
+			m_UniformMap[pair] = location;
+		}
+	}
+
 	void OpenglShader::Bind() const
 	{
 		glUseProgram(m_RendererID);
@@ -60,49 +76,49 @@ namespace SmolEngine
 
 	void OpenglShader::SetUniformMat4(const std::string& name, const glm::mat4& mat4)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
 	}
 
 	void OpenglShader::SetUniformFloat3(const std::string& name, const glm::vec3& vec3)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniform3f(location, vec3.x, vec3.y, vec3.z);
 	}
 
 	void OpenglShader::SetUniformFloat4(const std::string& name, const glm::vec4& vec4)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
 	}
 
 	void OpenglShader::SetUniformInt(const std::string& name, const int value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniform1i(location, value);
 	}
 
 	void OpenglShader::SetUniformIntArray(const std::string& name, int* values, uint32_t count)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniform1iv(location, count, values);
 	}
 
 	void OpenglShader::SetUniformFloat(const std::string& name, const float value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniform1f(location, value);
 	}
 
 	void OpenglShader::SetUniformFloat2(const std::string& name, const glm::vec2& float2)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniform2f(location, float2.x, float2.y);
 	}
 
 	void OpenglShader::UploadUniformMatrix3(const std::string& name, const glm::mat3& matrix)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = m_UniformMap[name.c_str()];
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 

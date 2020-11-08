@@ -16,6 +16,12 @@ namespace SmolEngine
 		
 		std::unordered_map<std::string, Ref<AnimationClip>> m_Clips;
 
+		/// 
+		
+		int IndexLayer = 0;
+
+		///
+
 		Ref<AnimationClip> CurrentClip = nullptr;
 
 	private:
@@ -29,7 +35,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive & archive)
 		{
-			archive(m_Clips, CurrentClip);
+			archive(m_Clips, CurrentClip, IndexLayer);
 		}
 	};
 }

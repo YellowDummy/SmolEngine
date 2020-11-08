@@ -1,6 +1,6 @@
 # SmolEngine
 
-![SmolEngine](https://i.imgur.com/92I6kmf.png)
+![SmolEngine](https://i.imgur.com/zjhaORe.png)
 
 
 
@@ -8,7 +8,7 @@ SmolEngine is an open-source 2D/3D game engine that is developed primarily by on
 
 Features :
 -
-- 2D Renderer (OpenGL)
+- 2D Batch Renderer (OpenGL)
 - Level Editor
 - Data-Oriented Entity Component System (ECS)
 - Scripting in C++

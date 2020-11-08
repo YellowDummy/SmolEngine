@@ -23,7 +23,7 @@ namespace SmolEngine
 
 		~OpenglText();
 
-		//Setters
+		/// Setters
 
 		void SetText(const std::string& text) override;
 
@@ -31,7 +31,7 @@ namespace SmolEngine
 
 	private:
 
-		//Rendering
+		/// Rendering
 
 		void Render(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color, float padding) override;
 

@@ -21,6 +21,7 @@ namespace SmolEngine
 
 		OrthographicCamera(float zoomLevel, float aspectRation);
 
+		/// Setters
 
 		void SetPosition(const glm::vec3& position) { m_CameraPos = position; RecalculateViewMatrix(); }
 
@@ -28,8 +29,10 @@ namespace SmolEngine
 
 		void SetProjection(float left, float right, float buttom, float top, float zNear = -1.0f, float zFar = 1.0f);
 
-		inline const float GetRotation() { return m_CameraRotation; }
 
+		/// Getters
+
+		inline const float GetRotation() { return m_CameraRotation; }
 
 		inline const glm::vec3& GetPosistion() const { return m_CameraPos; }
 
@@ -46,13 +49,19 @@ namespace SmolEngine
 	private:
 
 		glm::mat4 m_ViewProjectionMatrix = glm::mat4(1.0f);
+
 		glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
+
 		glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
+
 		glm::vec3 m_CameraPos = { 0.0f, 0.0f, 0.0f };
 
 		float m_CameraRotation = 0;
 
+	private:
+
 		friend class cereal::access;
+
 		friend class WorldAdmin;
 	};
 
@@ -66,17 +75,23 @@ namespace SmolEngine
 
 		~CameraController() = default;
 
-		void CalculateView();
+		/// Setters
 
 		void SetZoom(const float value) { m_ZoomLevel = value; CalculateView(); }
 
 		void SetTransform(const glm::vec3& wolrdPos);
 
+		/// Getters
+		
 		const float GetZoom() { return m_ZoomLevel; }
 
-		Ref<OrthographicCamera> GetCamera() {return m_Camera;}
+		Ref<OrthographicCamera> GetCamera() { return m_Camera; }
 
 		const Ref<Framebuffer> GetFramebuffer() { return m_FrameBuffer; }
+
+		///
+		
+		void CalculateView();
 
 		void Reload();
 

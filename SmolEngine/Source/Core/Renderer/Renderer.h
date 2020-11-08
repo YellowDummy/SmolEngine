@@ -115,6 +115,7 @@ namespace SmolEngine
 		}
 
 	private:
+
 		static RendererAPI* s_RendererAPI;
 	};
 

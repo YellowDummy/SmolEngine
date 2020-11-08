@@ -13,6 +13,8 @@ namespace SmolEngine
 
 		OpenglRendererAPI();
 
+		///
+		
 		void Clear() override;
 
 		void Init() override;

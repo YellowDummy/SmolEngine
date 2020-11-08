@@ -2,27 +2,39 @@
 #version 330 core
 
 layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec2 a_TexCoord;
+layout(location = 1) in vec4 a_Color;
+layout(location = 2) in vec2 a_TexCoord;
+layout(location = 3) in float a_TexIndex;
 
 uniform mat4 u_ViewProjection;
 uniform float u_AmbientValue;
-uniform mat4 u_Transform;
 
-out OutData
+// Batch
+
+out BatchData
 {
 	vec4 position;
+
+	vec4 color;
+
 	vec2 uv;
+
 	float ambientValue;
+
+	float textureID;
 
 } v_Data;
 
 void main()
 {
-	gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 
-	v_Data.position = u_Transform * vec4(a_Position, 1.0);
+	v_Data.position = vec4(a_Position, 1.0);
+	v_Data.color = a_Color;
 	v_Data.uv = a_TexCoord;
 	v_Data.ambientValue = u_AmbientValue;
+	v_Data.textureID = a_TexIndex;
+
+	gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type fragment
@@ -43,33 +55,38 @@ struct Light2DBuffer
 	float Intensity;
 };
 
-uniform Light2DBuffer LightData[250];
+uniform Light2DBuffer LightData[100];
 
 uniform int u_Ligh2DBufferSize;
 
-in OutData
+// Batch
+
+in BatchData
 {
 	vec4 position;
+
+	vec4 color;
+
 	vec2 uv;
+
 	float ambientValue;
+	
+	float textureID;
 
 } v_Data;
 
-uniform vec4 u_Color;
-
-uniform float u_TilingFactor;
-
-uniform sampler2D u_Texture;
 uniform bool u_TextMode;
+
+uniform sampler2D u_Textures[32];
 
 void main()
 {
-	vec4 ambient = (u_Color * v_Data.ambientValue);
-	vec4 result = texture(u_Texture, v_Data.uv * u_TilingFactor);
+	vec4 ambient = vec4(v_Data.color * v_Data.ambientValue);
+	vec4 result = texture(u_Textures[int(v_Data.textureID)], v_Data.uv);
 
 	if(u_TextMode)
 	{
-		result = vec4(ambient.rgb, texture(u_Texture, v_Data.uv * u_TilingFactor).r);
+		result = vec4(v_Data.color.rgb, texture(u_Textures[int(v_Data.textureID)], v_Data.uv).r);
 	}
 	else
 	{

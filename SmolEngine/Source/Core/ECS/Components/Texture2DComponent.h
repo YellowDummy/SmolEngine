@@ -19,6 +19,10 @@ namespace SmolEngine
 		glm::vec4 Color = glm::vec4(1.0f);
 
 		///
+		
+		int LayerIndex = 0;
+
+		///
 
 		Ref<Texture2D> Texture = nullptr;
 
@@ -44,7 +48,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive & archive)
 		{
-			archive(Color.r, Color.g, Color.b, Color.a, TexturePath, FileName, Enabled);
+			archive(Color.r, Color.g, Color.b, Color.a, LayerIndex, TexturePath, FileName, Enabled);
 		}
 	};
 }

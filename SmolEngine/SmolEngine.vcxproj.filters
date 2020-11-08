@@ -1473,9 +1473,6 @@
     <ClInclude Include="Source\Core\Renderer\GraphicsContext.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Renderer\Light2D.h">
-      <Filter>Source\Core\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglBuffer.h">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClInclude>
@@ -1570,6 +1567,7 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Components\Light2DSourceComponent.h" />
+    <ClInclude Include="Source\Core\Renderer\Renderer2DData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">

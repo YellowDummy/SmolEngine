@@ -112,11 +112,11 @@ namespace SmolEngine
 
 		Ref<Actor> CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag = std::string("Default"));
 
-		BehaviourComponent* AddBehaviour(const std::string& systemName, const Ref<Actor> actor);
+		BehaviourComponent* AddBehaviour(const std::string& systemName, const Ref<Actor>& actor);
 
-		void RemoveChild(Ref<Actor> parent, Ref<Actor> child);
+		void RemoveChild(Ref<Actor>& parent, Ref<Actor>& child);
 
-		void AddChild(Ref<Actor> parent, Ref<Actor> child);
+		void AddChild(Ref<Actor>& parent, Ref<Actor>& child);
 
 		Ref<Actor> FindActorByName(const std::string& name);
 		
@@ -124,9 +124,9 @@ namespace SmolEngine
 		
 		Ref<Actor> FindActorByID(const uint32_t id);
 
-		void DuplicateActor(Ref<Actor> actor);
+		void DuplicateActor(Ref<Actor>& actor);
 
-		void DeleteActor(Ref<Actor> actor);
+		void DeleteActor(Ref<Actor>& actor);
 
 		/// Getters
 		
@@ -196,10 +196,6 @@ namespace SmolEngine
 			auto& component = m_SceneData.m_Registry.get<T>(entity);
 			return &component;
 		}
-
-		/// Scripting
-
-		bool AttachScript(const std::string& keyName, const Ref<Actor> actor);
 
 		/// Internal needs
 		

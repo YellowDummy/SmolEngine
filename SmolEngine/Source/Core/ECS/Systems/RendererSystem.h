@@ -15,6 +15,7 @@ namespace SmolEngine
 
 	struct TransformComponent;
 
+	struct Texture2DComponent;
 
 	///
 
@@ -40,7 +41,11 @@ namespace SmolEngine
 
 		static void RenderAnimation2D(const Animation2DComponent& anim, const TransformComponent& transform);
 
-		/// Debug
+		// Helpers
+
+		static void CheckLayerIndex(Texture2DComponent& texture);
+
+		// Debug
 
 		static void DebugDraw(const PhysicsBaseTuple& tuple);
 

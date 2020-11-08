@@ -609,7 +609,6 @@
     <ClInclude Include="Source\Core\Renderer\Camera.h" />
     <ClInclude Include="Source\Core\Renderer\Framebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\GraphicsContext.h" />
-    <ClInclude Include="Source\Core\Renderer\Light2D.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglContext.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.h" />
@@ -620,6 +619,7 @@
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="Source\Core\Renderer\Renderer.h" />
     <ClInclude Include="Source\Core\Renderer\Renderer2D.h" />
+    <ClInclude Include="Source\Core\Renderer\Renderer2DData.h" />
     <ClInclude Include="Source\Core\Renderer\RendererAPI.h" />
     <ClInclude Include="Source\Core\Renderer\Shader.h" />
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />

@@ -15,17 +15,17 @@ namespace SmolEngine
 
 		virtual ~Text() = default;
 
-		//Setters
+		/// Setters
 
 		virtual void SetText(const std::string& text) {}
 
 		virtual void SetFont(const std::string& fontFilePath) {};
 
-		//Rendering
+		/// Rendering
 
 		virtual void Render(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color, float padding) {}
 
-		//Factory
+		/// Factory
 
 		//ttf-format
 		static Ref<Text> Create(const std::string& fontFilePath);

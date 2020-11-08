@@ -117,8 +117,6 @@ namespace SmolEngine
 
 		static bool showNodeEditorTest = false;
 
-		static bool showTestGameView = false;
-
 		//---------------------------------------WINDOW-STATES----------------------------------------//
 
 		static bool p_open = true;
@@ -324,11 +322,6 @@ namespace SmolEngine
 					showConsole = true;
 				}
 
-				if (ImGui::MenuItem("Test Game View"))
-				{
-					showTestGameView = true;
-				}
-
 				if (ImGui::MenuItem("Game View"))
 				{
 					showGameView = true;
@@ -355,6 +348,19 @@ namespace SmolEngine
 		{
 			if (ImGui::Begin("Renderer2D: Stats", &showRenderer2Dstats))
 			{
+				ImGui::Extensions::Text("Squares", std::to_string(Renderer2D::Stats->QuadCount));
+
+				ImGui::Extensions::Text("Vertices", std::to_string(Renderer2D::Stats->GetTotalVertexCount()));
+
+				ImGui::Extensions::Text("Indices", std::to_string(Renderer2D::Stats->GetTotalIndexCount()));
+
+				ImGui::Extensions::Text("Textures", std::to_string(Renderer2D::Stats->TexturesInUse));
+
+				ImGui::Extensions::Text("Layers", std::to_string(Renderer2D::Stats->LayersInUse) + " / 10");
+
+				ImGui::NewLine();
+
+				ImGui::Extensions::Text("Draw Calls", std::to_string(Renderer2D::Stats->DrawCalls));
 
 				ImGui::End();
 			}
@@ -1085,7 +1091,8 @@ namespace SmolEngine
 
 		ImGui::Extensions::InputString("Tag", head->Tag, m_TempActorTag);
 
-		ImGui::Extensions::CheckBox("Is Enabled?", head->IsEnabled);
+		ImGui::NewLine();
+		ImGui::Extensions::CheckBox("Is Enabled?", head->IsEnabled, 130.0f, "HeadPanel");
 	}
 
 	void EditorLayer::DrawTransform(TransformComponent* transform)
@@ -1102,8 +1109,10 @@ namespace SmolEngine
 			ImGui::NewLine();
 			ImGui::Extensions::ColorInput3("Color", texture->Color);
 
+			ImGui::Extensions::InputInt("Layer", texture->LayerIndex, 130.0f, "TexturePanel");
+
 			ImGui::NewLine();
-			ImGui::Extensions::CheckBox("Enabled?", texture->Enabled);
+			ImGui::Extensions::CheckBox("Enabled?", texture->Enabled, 130.0f, "TexturePanel");
 
 			ImGui::NewLine();
 			if (ImGui::Button("Change", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
@@ -1287,8 +1296,14 @@ namespace SmolEngine
 			// Tree
 
 			ImGui::NewLine();
+
+			ImGui::Extensions::InputInt("Layer", anim->IndexLayer, 130.0f, "AnimationPanel");
+
+			ImGui::NewLine();
+
 			std::stringstream ss;
 			ss << "Animation Clip #" << clip->m_ClipName;
+
 
 			if(ImGui::TreeNodeEx(ss.str().c_str()))
 			{

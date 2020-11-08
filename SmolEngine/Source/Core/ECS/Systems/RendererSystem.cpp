@@ -12,14 +12,13 @@ namespace SmolEngine
 	{
 		if (tuple.Light2D.isEnabled)
 		{
-			Renderer2D::DrawLight2D(glm::vec3(tuple.Light2D.Position.x, tuple.Light2D.Position.y, 0.0f) + tuple.Transform.WorldPos,
+			Renderer2D::SubmitLight2D(glm::vec3(tuple.Light2D.Position.x, tuple.Light2D.Position.y, 0.0f) + tuple.Transform.WorldPos,
 				tuple.Light2D.Radius, tuple.Light2D.Color, tuple.Light2D.Intensity);
 		}
 
 		if (tuple.Texture.Enabled && tuple.Texture.Texture != nullptr)
 		{
-
-			Renderer2D::DrawSprite(tuple.Transform.WorldPos, tuple.Transform.Scale, tuple.Transform.Rotation.x,
+			Renderer2D::SubmitSprite(tuple.Transform.WorldPos, tuple.Texture.LayerIndex, tuple.Transform.Scale, tuple.Transform.Rotation.x,
 				tuple.Texture.Texture, 1.0f, tuple.Texture.Color);
 		}
 	}
@@ -28,14 +27,13 @@ namespace SmolEngine
 	{
 		if (tuple.Light2D.isEnabled)
 		{
-			Renderer2D::DrawLight2D(glm::vec3(tuple.Light2D.Position.x, tuple.Light2D.Position.y, 0.0f) + tuple.Transform.WorldPos,
+			Renderer2D::SubmitLight2D(glm::vec3(tuple.Light2D.Position.x, tuple.Light2D.Position.y, 0.0f) + tuple.Transform.WorldPos,
 				tuple.Light2D.Radius, tuple.Light2D.Color, tuple.Light2D.Intensity);
 		}
 
 		if (tuple.Texture.Enabled && tuple.Texture.Texture != nullptr)
 		{
-
-			Renderer2D::DrawSprite(tuple.Transform.WorldPos, tuple.Transform.Scale, tuple.Transform.Rotation.x,
+			Renderer2D::SubmitSprite(tuple.Transform.WorldPos, tuple.Texture.LayerIndex, tuple.Transform.Scale, tuple.Transform.Rotation.x,
 				tuple.Texture.Texture, 1.0f, tuple.Texture.Color);
 		}
 	}
@@ -54,9 +52,22 @@ namespace SmolEngine
 			const auto frameKey = anim.CurrentClip->m_CurrentFrameKey;
 			if (frameKey != nullptr)
 			{
-				Renderer2D::DrawAnimation2D(transform.WorldPos, transform.Scale, transform.Rotation.x, 
+				Renderer2D::SubmitSprite(transform.WorldPos, anim.IndexLayer, transform.Scale, transform.Rotation.x,
 					frameKey->Texture, 1.0f, frameKey->TextureColor);
 			}
+		}
+	}
+
+	void RendererSystem::CheckLayerIndex(Texture2DComponent& texture)
+	{
+		if (texture.LayerIndex > 10)
+		{
+			texture.LayerIndex = 10;
+		}
+
+		if (texture.LayerIndex < 0)
+		{
+			texture.LayerIndex = 0;
 		}
 	}
 

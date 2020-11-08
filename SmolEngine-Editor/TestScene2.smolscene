@@ -1,5 +1,5 @@
 {
-    "value0": 14,
+    "value0": 11,
     "value1": 0,
     "value2": 1,
     "value3": 2,
@@ -11,15 +11,12 @@
     "value9": 8,
     "value10": 9,
     "value11": 10,
-    "value12": 11,
-    "value13": 12,
-    "value14": 13,
-    "value15": 5,
-    "value16": 2,
-    "value17": {
+    "value12": 8,
+    "value13": 2,
+    "value14": {
         "value0": {
             "value0": 2,
-            "value1": "Background",
+            "value1": "Bg_1",
             "value2": "Default",
             "value3": true
         },
@@ -27,8 +24,8 @@
             "value0": 0.0,
             "value1": 0.0,
             "value2": 0.0,
-            "value3": 25.0,
-            "value4": 15.0,
+            "value3": 10.0,
+            "value4": 10.0,
             "value5": 1.0,
             "value6": 0.0,
             "value7": 0.0,
@@ -39,27 +36,28 @@
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
-            "value5": "bulkhead-wallsx3.png",
-            "value6": true
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
         },
         "value3": {
             "value0": 0.0,
             "value1": 0.0,
-            "value2": 0.800000011920929,
-            "value3": 0.6000000238418579,
-            "value4": 0.4000000059604645,
+            "value2": 1.0,
+            "value3": 0.9999949932098389,
+            "value4": 0.9999899864196777,
             "value5": 1.0,
             "value6": 1.0,
             "value7": 1.0,
             "value8": false
         }
     },
-    "value18": 13,
-    "value19": {
+    "value15": 3,
+    "value16": {
         "value0": {
-            "value0": 13,
-            "value1": "AnimatedObj",
+            "value0": 3,
+            "value1": "Bg_2",
             "value2": "Default",
             "value3": true
         },
@@ -67,11 +65,11 @@
             "value0": 0.0,
             "value1": 0.0,
             "value2": 0.0,
-            "value3": 5.0,
-            "value4": 5.0,
+            "value3": 10.0,
+            "value4": 10.0,
             "value5": 1.0,
-            "value6": -12.0,
-            "value7": -2.0,
+            "value6": 10.0,
+            "value7": 0.0,
             "value8": 0.0
         },
         "value2": {
@@ -79,27 +77,192 @@
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
+            "value4": 0,
             "value5": "",
-            "value6": true
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
         },
         "value3": {
             "value0": 0.0,
             "value1": 0.0,
-            "value2": 0.774193525314331,
+            "value2": 1.0,
             "value3": 1.0,
-            "value4": 0.961758553981781,
+            "value4": 1.0,
             "value5": 1.0,
-            "value6": 2.0,
-            "value7": 0.6000000238418579,
-            "value8": true
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
         }
     },
-    "value20": 4,
-    "value21": {
+    "value17": 4,
+    "value18": {
         "value0": {
             "value0": 4,
-            "value1": "Light2D_2",
+            "value1": "Bg_3",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": -10.0,
+            "value7": 0.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value19": 5,
+    "value20": {
+        "value0": {
+            "value0": 5,
+            "value1": "Bg_4",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": 0.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value21": 6,
+    "value22": {
+        "value0": {
+            "value0": 6,
+            "value1": "Bg_5",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": 10.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value23": 7,
+    "value24": {
+        "value0": {
+            "value0": 7,
+            "value1": "Bg_6",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": -10.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "dungeons_and_flagons8.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": false
+        }
+    },
+    "value25": 9,
+    "value26": {
+        "value0": {
+            "value0": 9,
+            "value1": "Light_2D",
             "value2": "Default",
             "value3": true
         },
@@ -110,7 +273,7 @@
             "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
-            "value6": 5.0,
+            "value6": 0.0,
             "value7": 0.0,
             "value8": 0.0
         },
@@ -119,26 +282,27 @@
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
+            "value4": 0,
             "value5": "",
-            "value6": true
+            "value6": "",
+            "value7": true
         },
         "value3": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.3759569823741913,
-            "value3": 0.19042663276195527,
-            "value4": 0.9838709831237793,
+            "value0": 7.0,
+            "value1": 10.0,
+            "value2": 0.19758063554763795,
+            "value3": 0.8252795934677124,
+            "value4": 1.0,
             "value5": 1.0,
-            "value6": 5.0,
+            "value6": 1.0,
             "value7": 2.0,
             "value8": true
         }
     },
-    "value22": 3,
-    "value23": {
+    "value27": 10,
+    "value28": {
         "value0": {
-            "value0": 3,
+            "value0": 10,
             "value1": "Light2D_1",
             "value2": "Default",
             "value3": true
@@ -150,7 +314,7 @@
             "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
-            "value6": -5.0,
+            "value6": 0.0,
             "value7": 0.0,
             "value8": 0.0
         },
@@ -159,133 +323,28 @@
             "value1": 1.0,
             "value2": 1.0,
             "value3": 1.0,
-            "value4": "",
+            "value4": 0,
             "value5": "",
-            "value6": true
+            "value6": "",
+            "value7": true
         },
         "value3": {
-            "value0": 0.0,
+            "value0": 7.0,
             "value1": 0.0,
-            "value2": 0.9112903475761414,
-            "value3": 0.15065689384937287,
-            "value4": 0.150702565908432,
+            "value2": 1.0,
+            "value3": 0.05241936445236206,
+            "value4": 0.05247628688812256,
             "value5": 1.0,
-            "value6": 2.0,
-            "value7": 5.0,
+            "value6": 1.0,
+            "value7": 2.0,
             "value8": true
         }
     },
-    "value24": 11,
-    "value25": {
+    "value29": 1,
+    "value30": 8,
+    "value31": {
         "value0": {
-            "value0": 11,
-            "value1": "Bg_2",
-            "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 25.0,
-            "value4": 15.0,
-            "value5": 1.0,
-            "value6": -25.0,
-            "value7": 0.0,
-            "value8": 0.0
-        },
-        "value2": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "bulkhead-wallsx3.png",
-            "value6": true
-        },
-        "value3": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": 1.0,
-            "value8": false
-        }
-    },
-    "value26": 2,
-    "value27": 5,
-    "value28": {
-        "value0": {
-            "value0": 5,
-            "value1": "GroundCollider",
-            "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": {
-                "value0": true,
-                "value1": 1.0,
-                "value2": 0.30000001192092898,
-                "value3": 0,
-                "value4": 0.0,
-                "value5": 1.0,
-                "value6": 1.0,
-                "value7": true,
-                "value8": false,
-                "value9": false,
-                "value10": 0.0,
-                "value11": 25.0,
-                "value12": 0.20000000298023225,
-                "value13": 0,
-                "value14": 0,
-                "value15": 1.0,
-                "value16": 0.0,
-                "value17": 0.0,
-                "value18": 0.0,
-                "value19": 0.0
-            },
-            "value1": 0,
-            "value2": true
-        },
-        "value2": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": -12.5,
-            "value7": -5.300000190734863,
-            "value8": 0.0
-        },
-        "value3": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "",
-            "value6": true
-        },
-        "value4": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": 1.0,
-            "value8": false
-        }
-    },
-    "value29": 6,
-    "value30": {
-        "value0": {
-            "value0": 6,
+            "value0": 8,
             "value1": "Player",
             "value2": "Default",
             "value3": true
@@ -302,7 +361,7 @@
                 "value7": true,
                 "value8": false,
                 "value9": false,
-                "value10": 0.4000000059604645,
+                "value10": 0.0,
                 "value11": 1.0,
                 "value12": 1.0,
                 "value13": 2,
@@ -314,7 +373,58 @@
                 "value19": 0.0
             },
             "value1": 0,
-            "value2": false
+            "value2": true
+        },
+        "value2": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": -10.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value3": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "Ball.png",
+            "value7": true
+        },
+        "value4": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 0.5,
+            "value7": 1.0,
+            "value8": true
+        }
+    },
+    "value32": 1,
+    "value33": 1,
+    "value34": {
+        "value0": {
+            "value0": 1,
+            "value1": "Camera",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 1.7777777910232545,
+            "value1": 6.0,
+            "value2": false,
+            "value3": true,
+            "value4": -1.0,
+            "value5": 1.0,
+            "value6": false
         },
         "value2": {
             "value0": 0.0,
@@ -328,62 +438,12 @@
             "value8": 0.0
         },
         "value3": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": "",
-            "value5": "Ball.png",
-            "value6": true
-        },
-        "value4": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.6330645084381104,
-            "value3": 0.8490830659866333,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": 1.0,
-            "value8": true
-        }
-    },
-    "value31": 1,
-    "value32": 1,
-    "value33": {
-        "value0": {
-            "value0": 1,
-            "value1": "Camera",
-            "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": 1.1137487888336182,
-            "value1": 23.0,
-            "value2": true,
-            "value3": true,
-            "value4": -1.0,
-            "value5": 1.0,
-            "value6": false
-        },
-        "value2": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": -12.5,
-            "value7": 0.0,
-            "value8": 0.0
-        },
-        "value3": {
             "value0": []
         }
     },
-    "value34": 2,
-    "value35": 2,
-    "value36": {
+    "value35": 1,
+    "value36": 2,
+    "value37": {
         "value0": {
             "value0": [],
             "value1": true
@@ -394,139 +454,11 @@
                 "ptr_wrapper": {
                     "id": 0
                 }
-            }
-        }
-    },
-    "value37": 13,
-    "value38": {
-        "value0": {
-            "value0": [],
-            "value1": true
-        },
-        "value1": {
-            "value0": [
-                {
-                    "key": "EnemyIdle",
-                    "value": {
-                        "ptr_wrapper": {
-                            "id": 2147483649,
-                            "data": {
-                                "value0": [
-                                    {
-                                        "key": 0,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483650,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-1.png",
-                                                    "value1": "idle-1.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 1,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483651,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-2.png",
-                                                    "value1": "idle-2.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 2,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483652,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-3.png",
-                                                    "value1": "idle-3.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 3,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483653,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-4.png",
-                                                    "value1": "idle-4.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    }
-                                ],
-                                "value1": "EnemyIdle",
-                                "value2": true
-                            }
-                        }
-                    }
-                }
-            ],
-            "value1": {
-                "ptr_wrapper": {
-                    "id": 1
-                }
-            }
-        }
-    },
-    "value39": 1,
-    "value40": 6,
-    "value41": {
-        "value0": 6,
-        "value1": "CharMovementSystem",
-        "value2": [
-            {
-                "value0": "Player Speed",
-                "value1": {
-                    "index": 0,
-                    "data": 25.0
-                },
-                "value2": 0
             },
-            {
-                "value0": "Player Name",
-                "value1": {
-                    "index": 2,
-                    "data": "Player_0"
-                },
-                "value2": 2
-            }
-        ]
-    }
+            "value2": 0
+        }
+    },
+    "value38": 0
 }|{
     "value0": [
         {
@@ -568,29 +500,10 @@
             }
         },
         {
-            "key": 11,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483651,
-                    "data": {
-                        "value0": 11,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 7
-                    }
-                }
-            }
-        },
-        {
             "key": 3,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483652,
+                    "id": 2147483651,
                     "data": {
                         "value0": 3,
                         "value1": 0,
@@ -609,7 +522,7 @@
             "key": 4,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483653,
+                    "id": 2147483652,
                     "data": {
                         "value0": 4,
                         "value1": 0,
@@ -628,10 +541,10 @@
             "key": 5,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483654,
+                    "id": 2147483653,
                     "data": {
                         "value0": 5,
-                        "value1": 1,
+                        "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -644,13 +557,51 @@
             }
         },
         {
-            "key": 13,
+            "key": 6,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483654,
+                    "data": {
+                        "value0": 6,
+                        "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 5
+                    }
+                }
+            }
+        },
+        {
+            "key": 7,
             "value": {
                 "ptr_wrapper": {
                     "id": 2147483655,
                     "data": {
-                        "value0": 13,
+                        "value0": 7,
                         "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 6
+                    }
+                }
+            }
+        },
+        {
+            "key": 8,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483656,
+                    "data": {
+                        "value0": 8,
+                        "value1": 1,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -663,20 +614,39 @@
             }
         },
         {
-            "key": 6,
+            "key": 9,
             "value": {
                 "ptr_wrapper": {
-                    "id": 2147483656,
+                    "id": 2147483657,
                     "data": {
-                        "value0": 6,
-                        "value1": 1,
+                        "value0": 9,
+                        "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
                             }
                         },
                         "value3": [],
-                        "value4": 5
+                        "value4": 8
+                    }
+                }
+            }
+        },
+        {
+            "key": 10,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483658,
+                    "data": {
+                        "value0": 10,
+                        "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 9
                     }
                 }
             }
@@ -684,20 +654,12 @@
     ],
     "value1": [
         {
-            "key": "bulkhead-wallsx3.png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\bulkhead-wallsx3.png"
+            "key": "dungeons_and_flagons8.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\dungeons_and_flagons8.png"
         },
         {
             "key": "Ball.png",
             "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png"
-        },
-        {
-            "key": "EnemyAttack.smolanim",
-            "value": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\EnemyAttack.smolanim"
-        },
-        {
-            "key": "testAnim.smolanim",
-            "value": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\testAnim.smolanim"
         }
     ],
     "value2": 0,

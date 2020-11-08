@@ -12,13 +12,19 @@ namespace SmolEngine
 
 		virtual ~Shader() = default;
 
+		//
+
+		virtual void CreateUniformMap(const std::vector<std::string>& list) {}
+
+		// Binding
+
 		virtual void Bind() const = 0;
 
 		virtual void UnBind() const = 0;
 
-		virtual void SetUniformMat4(const std::string& name, const glm::mat4& mat4) = 0;
+		// Uniforms
 
-		virtual void SetUniformFloat(const std::string& name, const float value) = 0;
+		virtual void SetUniformIntArray(const std::string& name, int* values, uint32_t count) = 0;
 
 		virtual void SetUniformFloat2(const std::string& name, const glm::vec2& vec3) = 0;
 
@@ -26,19 +32,24 @@ namespace SmolEngine
 
 		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& vec4) = 0;
 
+		virtual void SetUniformMat4(const std::string& name, const glm::mat4& mat4) = 0;
+
+		virtual void SetUniformFloat(const std::string& name, const float value) = 0;
+
 		virtual void SetUniformInt(const std::string& name, const int value) = 0;
 
-		virtual void SetUniformIntArray(const std::string& name, int* values, uint32_t count) = 0;
+
+		// Getters
 
 		virtual uint32_t GetProgramID() = 0;
 
 		virtual const std::string& GetName() { return std::string(""); }
 
+		// Factory
+
 		static Ref<Shader> Create(const std::string& filePath);
 
 		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName = 0);
-
-	private:
 
 	};
 
@@ -50,9 +61,15 @@ namespace SmolEngine
 
 		ShaderLib(const ShaderLib&) = delete;
 
+		//
+
 		void AddElement(const Ref<Shader>& element);
 
+		//
+
 		Ref<Shader> GetElement(const std::string& shaderName);
+
+		//
 
 		Ref<Shader> Load(const std::string& filePath);
 
@@ -65,6 +82,7 @@ namespace SmolEngine
 	private:
 
 		std::unordered_map<std::string, Ref<Shader>> m_ShaderMap;
+
 		std::unordered_map<std::string, Ref<Shader>>::iterator it = m_ShaderMap.begin();
 	};
 }

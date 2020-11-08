@@ -11,9 +11,13 @@ namespace SmolEngine
 
 		OpenglContext(GLFWwindow* window);
 
+		///
+
 		void Setup() override;
 
 		void SwapBuffers() override;
+
+		/// Getters
 
 		inline GLFWwindow* GetWindow() { return m_Window; }
 

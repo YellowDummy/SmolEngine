@@ -63,7 +63,7 @@ namespace SmolEngine
 		Data.Width = width;
 		Data.Height = height;
 
-#ifdef SMOLENGINE_EDITOR
+#ifndef SMOLENGINE_EDITOR
 
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 

@@ -57,7 +57,7 @@ namespace SmolEngine
 
 	void UIButton::Draw(const glm::vec3& cameraPos)
 	{
-		Renderer2D::DrawSprite({ cameraPos.x + m_UCood.x, cameraPos.y + m_UCood.y, cameraPos.z }, m_Size, 0, m_Texture, 1.0f, m_CurrentColor);
+		Renderer2D::SubmitSprite({ cameraPos.x + m_UCood.x, cameraPos.y + m_UCood.y, cameraPos.z }, 11, m_Size, 0, m_Texture, 1.0f, m_CurrentColor);
 	}
 
 	void UIButton::CalculatePos(const glm::vec2& screenCenter, const float zoomLevel)

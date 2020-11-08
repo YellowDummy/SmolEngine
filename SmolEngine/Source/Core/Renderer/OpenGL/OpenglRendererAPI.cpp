@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "OpenglRendererAPI.h"
-#include "../Renderer.h"
-#include "../Camera.h"
+#include "Core/Renderer/Renderer.h"
+#include "Core/Renderer/Camera.h"
+#include "Core/SLog.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,9 +10,27 @@
 
 namespace SmolEngine
 {
+
+	void OpenGLMessageCallback(
+		unsigned source,
+		unsigned type,
+		unsigned id,
+		unsigned severity,
+		int length,
+		const char* message,
+		const void* userParam)
+	{
+		switch (severity)
+		{
+		case GL_DEBUG_SEVERITY_HIGH:         NATIVE_ERROR(message); return;
+		case GL_DEBUG_SEVERITY_MEDIUM:       NATIVE_ERROR(message); return;
+		case GL_DEBUG_SEVERITY_LOW:          NATIVE_WARN(message); return;
+		case GL_DEBUG_SEVERITY_NOTIFICATION: NATIVE_INFO(message); return;
+		}
+	}
+
 	OpenglRendererAPI::OpenglRendererAPI()
 	{
-
 	}
 
 	void OpenglRendererAPI::Clear()
@@ -21,14 +40,27 @@ namespace SmolEngine
 
 	void OpenglRendererAPI::Init()
 	{
-		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
-
 		glEnable(GL_ALPHA_TEST);
 
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glDisable(GL_DEPTH_TEST);
+
+
+		static bool debugInit = false;
+
+		if (!debugInit)
+		{
+			glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			glDebugMessageCallback(OpenGLMessageCallback, nullptr);
+
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+
+			debugInit = true;
+		}
 	}
 
 	void OpenglRendererAPI::DisableDepth()
@@ -48,12 +80,9 @@ namespace SmolEngine
 
 	void OpenglRendererAPI::DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count)
 	{
-		if (count == 0)
-		{
-			count = vertexArray->GetIndexBuffer()->GetCount();
-		}
+		uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
 
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, count_t, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
@@ -74,11 +103,7 @@ namespace SmolEngine
 
 	void OpenglRendererAPI::DrawLight()
 	{
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-		glDrawArrays(GL_TRIANGLE_FAN, 2, 100);
-
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	void OpenglRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

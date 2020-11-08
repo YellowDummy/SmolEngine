@@ -477,7 +477,9 @@ namespace SmolEngine
 			const auto& defaultGroup = m_SceneData.m_Registry.view<DefaultBaseTuple>();
 			for (const auto& entity : defaultGroup)
 			{
-				const auto& baseTuple = defaultGroup.get<DefaultBaseTuple>(entity);
+				auto& baseTuple = defaultGroup.get<DefaultBaseTuple>(entity);
+
+				RendererSystem::CheckLayerIndex(baseTuple.Texture);
 
 				RendererSystem::RenderDefaultTuple(baseTuple);
 			}
@@ -501,6 +503,8 @@ namespace SmolEngine
 				Box2DPhysicsSystem::SetTransfrom(physicsTuple);
 
 #endif
+				RendererSystem::CheckLayerIndex(physicsTuple.Texture);
+
 				RendererSystem::RenderPhysicsTuple(physicsTuple);
 			}
 
@@ -747,6 +751,7 @@ namespace SmolEngine
 
 	bool WorldAdmin::AddAsset(const std::string& fileName, const std::string& filePath)
 	{
+
 		const auto& result = m_SceneData.m_AssetMap.find(fileName);
 
 		if (result == m_SceneData.m_AssetMap.end())
@@ -853,12 +858,6 @@ namespace SmolEngine
 		}
 	}
 
-	bool WorldAdmin::AttachScript(const std::string& keyName, const Ref<Actor> actor)
-	{
-
-		return true;
-	}
-
 	Ref<Actor> WorldAdmin::CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag)
 	{
 		if (m_SceneData.m_ID == 0)
@@ -928,7 +927,7 @@ namespace SmolEngine
 		return actorRef;
 	}
 
-	void WorldAdmin::DeleteActor(Ref<Actor> actor)
+	void WorldAdmin::DeleteActor(Ref<Actor>& actor)
 	{
 		bool result_id = m_IDSet.erase(actor->GetName());
 		bool result_pool = m_SceneData.m_ActorPool.erase(actor->GetID());
@@ -942,18 +941,18 @@ namespace SmolEngine
 		actor = nullptr;
 	}
 
-	void WorldAdmin::DuplicateActor(Ref<Actor> actor)
+	void WorldAdmin::DuplicateActor(Ref<Actor>& actor)
 	{
 
 	}
 
-	void WorldAdmin::AddChild(Ref<Actor> parent, Ref<Actor> child)
+	void WorldAdmin::AddChild(Ref<Actor>& parent, Ref<Actor>& child)
 	{
 		parent->GetChilds().push_back(child);
 		child->SetParent(parent);
 	}
 
-	BehaviourComponent* WorldAdmin::AddBehaviour(const std::string& systemName, const Ref<Actor> actor)
+	BehaviourComponent* WorldAdmin::AddBehaviour(const std::string& systemName, const Ref<Actor>& actor)
 	{
 		if (m_SceneData.m_Registry.has<BehaviourComponent>(*actor))
 		{
@@ -1021,7 +1020,7 @@ namespace SmolEngine
 		return &behaviour;
 	}
 
-	void WorldAdmin::RemoveChild(Ref<Actor> parent, Ref<Actor> child)
+	void WorldAdmin::RemoveChild(Ref<Actor>& parent, Ref<Actor>& child)
 	{
 		child->SetParent(nullptr);
 		parent->GetChilds().erase(std::remove(parent->GetChilds().begin(), parent->GetChilds().end(), child), parent->GetChilds().end());

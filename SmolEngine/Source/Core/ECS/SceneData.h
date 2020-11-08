@@ -42,9 +42,9 @@ namespace SmolEngine
 
 	private:
 
-		std::string m_filePath;
+		std::string m_filePath = "";
 
-		std::string m_fileName;
+		std::string m_fileName = "";
 
 		std::string m_Name = std::string("");
 

@@ -15,13 +15,21 @@ namespace SmolEngine
 
 		virtual ~OpenglVertexBuffer();
 
+		/// Binding
+
 		void Bind() const override;
 
 		void UnBind() const override;
 
+		///
+
 		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0) const override;
 
+		/// Getters
+
 		const BufferLayout& GetLayout() const override { return m_Layout; }
+
+		/// Setters
 
 		void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
 
@@ -39,15 +47,20 @@ namespace SmolEngine
 
 		virtual ~OpenglIndexBuffer();
 
+		/// Binding
+
 		void Bind() const override;
 
 		void UnBind() const override;
+
+		/// Getters
 
 		uint32_t GetCount() const override { return m_Count; };
 
 	private:
 
 		uint32_t m_Count;
+
 		uint32_t m_RendererID;
 	};
 }
