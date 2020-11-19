@@ -1344,6 +1344,9 @@
     <ClInclude Include="Source\Core\ECS\Components\HeadComponent.h">
       <Filter>Source\Core\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Components\Light2DSourceComponent.h">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\ECS\Components\Singletons\AudioEngineSComponent.h">
       <Filter>Source\Core\ECS\Components\Singletons</Filter>
     </ClInclude>
@@ -1464,6 +1467,12 @@
     <ClInclude Include="Source\Core\Renderer\Buffer.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\BufferElement.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\BufferLayout.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Camera.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
@@ -1488,9 +1497,6 @@
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglShader.h">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglText.h">
-      <Filter>Source\Core\Renderer\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglTexture.h">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClInclude>
@@ -1501,6 +1507,9 @@
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Renderer2D.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Renderer2DData.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\RendererAPI.h">
@@ -1518,7 +1527,16 @@
     <ClInclude Include="Source\Core\Renderer\Texture.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanCommandPool.h">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDevice.h">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.h">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\SLog.h">
@@ -1566,8 +1584,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Components\Light2DSourceComponent.h" />
-    <ClInclude Include="Source\Core\Renderer\Renderer2DData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1631,6 +1647,9 @@
       <Filter>Source\Core\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Components\HeadComponent.cpp">
+      <Filter>Source\Core\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\Light2DSourceComponent.cpp">
       <Filter>Source\Core\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Components\Singletons\AudioEngineSComponent.cpp">
@@ -1738,6 +1757,9 @@
     <ClCompile Include="Source\Core\Renderer\Framebuffer.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\GraphicsContext.cpp">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglBuffer.cpp">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClCompile>
@@ -1751,9 +1773,6 @@
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglShader.cpp">
-      <Filter>Source\Core\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglText.cpp">
       <Filter>Source\Core\Renderer\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglTexture.cpp">
@@ -1783,7 +1802,16 @@
     <ClCompile Include="Source\Core\Renderer\Texture.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanCommandPool.cpp">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDevice.cpp">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp">
+      <Filter>Source\Core\Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.cpp">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\SLog.cpp">
@@ -1816,6 +1844,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ECS\Components\Light2DSourceComponent.cpp" />
   </ItemGroup>
 </Project>

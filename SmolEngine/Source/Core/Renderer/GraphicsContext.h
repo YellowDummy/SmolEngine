@@ -1,4 +1,7 @@
 #pragma once
+#include "Core/Core.h"
+
+#include "Core/Renderer/OpenGL/OpenglContext.h"
 
 namespace SmolEngine 
 {
@@ -6,8 +9,18 @@ namespace SmolEngine
 	{
 	public:
 
-		virtual void Setup() = 0;
+		void Setup(GLFWwindow* window);
 
-		virtual void SwapBuffers() = 0;
+		void SwapBuffers();
+
+	private:
+
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
+		OpenglContext m_OpenglContext = {};
+#else
+
+#endif
+
 	};
 }

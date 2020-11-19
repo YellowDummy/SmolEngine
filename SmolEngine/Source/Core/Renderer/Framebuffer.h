@@ -2,6 +2,8 @@
 #include "Core/Core.h"
 #include <cereal/cereal.hpp>
 
+#include "Core/Renderer/OpenGL/OpenglFramebuffer.h"
+
 namespace SmolEngine
 {
 	struct FramebufferData
@@ -19,30 +21,49 @@ namespace SmolEngine
 	{
 	public:
 
-		virtual ~Framebuffer() {}
+		Framebuffer() = default;
 
+		~Framebuffer() = default;
+
+		/// 
 		/// Binding
+		/// 
 
-		virtual void Bind() = 0;
+		void Bind();
 
-		virtual void BindColorAttachment(uint32_t slot = 0) = 0;
+		void BindColorAttachment(uint32_t slot = 0);
 
-		virtual void UnBind() = 0;
+		void UnBind();
 
+		/// 
 		/// Events
+		/// 
 
-		virtual void OnResize(const uint32_t width, const uint32_t height) = 0;
+		void OnResize(const uint32_t width, const uint32_t height);
 
-		/// Getters
+		///
+		///  Getters
+		/// 
 
-		virtual const FramebufferData& GetData() const = 0;
+		const FramebufferData& GetData() const;
 
-		virtual uint32_t GetColorAttachmentID() const = 0;
+		uint32_t GetColorAttachmentID() const;
 
-		virtual uint32_t GetRendererID() const = 0;
+		uint32_t GetRendererID() const;
 
+		/// 
 		/// Factory
+		/// 
 
 		static Ref<Framebuffer> Create(const FramebufferData& data);
+
+	private:
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		OpenglFramebuffer m_OpenglFramebuffer;
+#else
+
+#endif
 	};
 }

@@ -7,23 +7,27 @@ namespace SmolEngine
 {
 	//----------------------------VERTEX-BUFFER-------------------------//
 
-	OpenglVertexBuffer::OpenglVertexBuffer(uint32_t size)
+	OpenglVertexBuffer::OpenglVertexBuffer()
+	{
+	}
+
+	OpenglVertexBuffer::~OpenglVertexBuffer()
+	{
+		glDeleteBuffers(1, &m_RendererID);
+	}
+
+	void OpenglVertexBuffer::Init(uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW); // note: we use dynamic draw!
 	}
 
-	OpenglVertexBuffer::OpenglVertexBuffer(float* vertices, uint32_t size)
+	void OpenglVertexBuffer::Init(float* vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
-	}
-
-	OpenglVertexBuffer::~OpenglVertexBuffer()
-	{
-		glDeleteBuffers(1, &m_RendererID);
 	}
 
 	void OpenglVertexBuffer::Bind() const
@@ -48,17 +52,22 @@ namespace SmolEngine
 
 	//----------------------------INDEX-BUFFER-------------------------//
 
-	OpenglIndexBuffer::OpenglIndexBuffer(uint32_t* indices, uint32_t count)
-		:m_Count(count)
+	OpenglIndexBuffer::OpenglIndexBuffer()
 	{
-		glCreateBuffers(1, &m_RendererID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 
 	OpenglIndexBuffer::~OpenglIndexBuffer()
 	{
 		glDeleteBuffers(1, &m_RendererID);
+	}
+
+	void OpenglIndexBuffer::Init(uint32_t* indices, uint32_t count)
+	{
+		m_Count = count;
+
+		glCreateBuffers(1, &m_RendererID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 
 	void OpenglIndexBuffer::Bind() const

@@ -1,61 +1,86 @@
 #pragma once
-#include "Core/Renderer/Buffer.h"
+
+#include "Core/Renderer/BufferLayout.h"
 
 namespace SmolEngine
 {
-	class BufferLayout;
-
-	class OpenglVertexBuffer: public VertexBuffer
+	class OpenglVertexBuffer
 	{
 	public:
 
-		OpenglVertexBuffer(uint32_t size);
+		OpenglVertexBuffer();
 
-		OpenglVertexBuffer(float* vertices, uint32_t size);
-
-		virtual ~OpenglVertexBuffer();
-
-		/// Binding
-
-		void Bind() const override;
-
-		void UnBind() const override;
+		~OpenglVertexBuffer();
 
 		///
+		/// Init
+		/// 
 
-		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0) const override;
+		void Init(uint32_t size);
 
+		void Init(float* vertices, uint32_t size);
+
+		/// 
+		/// Binding
+		/// 
+
+		void Bind() const;
+
+		void UnBind() const;
+
+		///
+		/// Data
+		/// 
+
+		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0) const;
+
+		/// 
 		/// Getters
+		/// 
 
-		const BufferLayout& GetLayout() const override { return m_Layout; }
+		const BufferLayout& GetLayout() const { return m_Layout; }
 
+		/// 
 		/// Setters
+		/// 
 
-		void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
+		void SetLayout(const BufferLayout& layout) { m_Layout = layout; }
+
 
 	private:
 
 		uint32_t m_RendererID;
+
 		BufferLayout m_Layout;
 	};
 
-	class OpenglIndexBuffer : public IndexBuffer
+	class OpenglIndexBuffer
 	{
 	public:
 
-		OpenglIndexBuffer(uint32_t* indices, uint32_t size);
+		OpenglIndexBuffer();
 
-		virtual ~OpenglIndexBuffer();
+		~OpenglIndexBuffer();
 
+		///
+		/// Init
+		///
+		
+		void Init(uint32_t* indices, uint32_t count);
+
+		/// 
 		/// Binding
+		/// 
 
-		void Bind() const override;
+		void Bind() const;
 
-		void UnBind() const override;
+		void UnBind() const;
 
+		/// 
 		/// Getters
+		/// 
 
-		uint32_t GetCount() const override { return m_Count; };
+		uint32_t GetCount() const { return m_Count; };
 
 	private:
 

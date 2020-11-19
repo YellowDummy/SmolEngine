@@ -12,6 +12,8 @@
 
 #include "../../../GameX/CppScriptingExamples.h"
 
+#include "Core/Renderer/Vulkan/VulkanRendererAPI.h"
+
 namespace SmolEngine 
 {
 	struct MyStruct: public PhysicsTupleBehaviour {
@@ -54,6 +56,15 @@ namespace SmolEngine
 		//Creating Startup Timer
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
+
+		/// <TEST VULKAN>
+		
+		VulkanRendererAPI vulkan = {};
+
+		vulkan.Init();
+
+		/// <TEST VULKAN>
+		
 
 		//Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();

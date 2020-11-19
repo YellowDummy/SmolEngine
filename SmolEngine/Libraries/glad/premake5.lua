@@ -21,10 +21,23 @@ project "Glad"
     filter "system:windows"
         systemversion "latest"
 
-    filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
+	--------------------------------------- Debug
 
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"
+	filter "configurations:Debug (Vulkan)"
+	buildoptions "/MDd"
+	symbols "on"
+
+	filter "configurations:Debug (OpenGL)"
+	buildoptions "/MDd"
+	symbols "on"
+
+	--------------------------------------- Release
+
+	filter "configurations:Release (Vulkan)"
+	buildoptions "/MD"
+	optimize "on"
+
+	filter "configurations:Release (OpenGL)"
+	buildoptions "/MD"
+	optimize "on"
+

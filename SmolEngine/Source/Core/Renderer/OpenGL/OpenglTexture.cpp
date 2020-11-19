@@ -6,9 +6,20 @@
 
 namespace SmolEngine
 {
-	OpenglTexture2D::OpenglTexture2D(const std::string& filePath)
-		:m_FilePath(filePath)
+	OpenglTexture2D::OpenglTexture2D()
 	{
+
+	}
+
+	OpenglTexture2D::~OpenglTexture2D()
+	{
+		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenglTexture2D::Init(const std::string& filePath)
+	{
+		m_FilePath = filePath;
+
 		int height, width, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
@@ -61,9 +72,11 @@ namespace SmolEngine
 		stbi_image_free(data);
 	}
 
-	OpenglTexture2D::OpenglTexture2D(const uint32_t width, const uint32_t height)
-		:m_Width(width), m_Height(height), m_Channels(0)
+	void OpenglTexture2D::Init(const uint32_t width, const uint32_t height)
 	{
+		m_Width = width;
+		m_Height = height;
+		m_Channels = 0;
 		m_InternalFormat = GL_RGBA8, m_DataFromat = GL_RGBA;
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
@@ -74,10 +87,9 @@ namespace SmolEngine
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
 	}
 
-	OpenglTexture2D::OpenglTexture2D(FT_Bitmap* bitmap)
+	void OpenglTexture2D::Init(FT_Bitmap* bitmap)
 	{
 		m_Width = bitmap->width;
 		m_Height = bitmap->rows;
@@ -97,12 +109,6 @@ namespace SmolEngine
 		//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_Width, m_Height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap->buffer);
-
-	}
-
-	OpenglTexture2D::~OpenglTexture2D()
-	{
-		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenglTexture2D::SetData(void* data, uint32_t size)

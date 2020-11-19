@@ -37,6 +37,7 @@ bld/
 #wwwroot/
 
 Config/
+SmolEngine/Libraries/vulkan/libs/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/

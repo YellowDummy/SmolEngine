@@ -123,17 +123,15 @@ namespace SmolEngine
 
 		// Resetting all layers
 
-		for (auto& vertextBuffer : s_Data->Layers)
+		for (auto& layer : s_Data->Layers)
 		{
-			auto& layer = vertextBuffer;
-
 			ResetLayer(layer);
 		}
 	}
 
 	void Renderer2D::FlushAllLayers()
 	{
-		// if true there is nothing to draw
+		// If true there is nothing to draw
 
 		if (s_Data->TotalQuadIndexCount == 0)
 		{
@@ -178,7 +176,7 @@ namespace SmolEngine
 
 		DrawLayer(layer);
 
-		// Resseting Data
+		// Resetting Data
 
 		ResetLayer(layer);
 	}

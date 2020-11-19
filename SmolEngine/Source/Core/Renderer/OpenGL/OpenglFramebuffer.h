@@ -1,43 +1,54 @@
 #pragma once
-#include "Core/Renderer/Framebuffer.h"
 
 namespace SmolEngine
 {
-	class OpenglFramebuffer: public Framebuffer
+	struct FramebufferData;
+
+	class OpenglFramebuffer
 	{
 	public:
 
-		OpenglFramebuffer(const FramebufferData& data);
+		OpenglFramebuffer();
 
 		~OpenglFramebuffer();
 
-		///
+		/// 
+		/// Init
+		/// 
+
+		void Init(const FramebufferData& data);
 
 		void Recreate();
 
+		/// 
 		/// Binding
+		/// 
 		
-		void Bind() override;
+		void Bind();
 
-		void UnBind() override;
+		void UnBind();
 
-		void BindColorAttachment(uint32_t slot = 0) override;
+		void BindColorAttachment(uint32_t slot = 0);
 
-		/// Events
+		///
+		///  Events
+		/// 
 
-		void OnResize(const uint32_t width, const uint32_t height) override;
+		void OnResize(const uint32_t width, const uint32_t height);
 
+		/// 
 		/// Getters
+		/// 
 
-		const FramebufferData& GetData() const override { return m_Data; }
+		const FramebufferData& GetData() const;
 
-		uint32_t GetColorAttachmentID() const override { return m_ColorAttachment; }
+		uint32_t GetColorAttachmentID() const;
 
-		uint32_t GetRendererID() const override { return m_RendererID; }
+		uint32_t GetRendererID() const;
 
 	private:
 
-		FramebufferData m_Data;
+		FramebufferData* m_Data = nullptr;
 
 		uint32_t m_RendererID = 0, m_ColorAttachment = 0, m_DepthAttachment = 0;
 

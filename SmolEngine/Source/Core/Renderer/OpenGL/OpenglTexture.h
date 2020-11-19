@@ -1,42 +1,54 @@
 #pragma once
-#include "Core/Renderer/Texture.h"
+#include "Core/Core.h"
+
+extern "C" {
+#include <ft2build.h>
+#include FT_FREETYPE_H
+}
 
 namespace SmolEngine
 {
-	class OpenglTexture2D: public Texture2D
+	class OpenglTexture2D
 	{
 	public:
 
-		OpenglTexture2D(const std::string& filePath);
-
-		OpenglTexture2D(const uint32_t width, const uint32_t height);
-
-		OpenglTexture2D(FT_Bitmap* bitmap);
+		OpenglTexture2D();
 
 		~OpenglTexture2D();
 
-		/// Binding
-
-		void Bind(uint32_t slot = 0) const override;
-
-		void UnBind() const override;
-
-		/// Getters
-
-		virtual const uint32_t GetID() const override { return m_RendererID; }
-
-		inline uint32_t GetHeight() const override { return m_Height; }
-
-		inline uint32_t GetWidth() const override { return m_Width; }
-
-
-		/// Setters
-
-		virtual void SetData(void* data, uint32_t size) override;
-
 		///
+		///  Main
+		/// 
 
-		bool operator==(const Texture& other) const override { return m_RendererID == other.GetID(); }
+		void Init(const std::string& filePath);
+
+		void Init(const uint32_t width, const uint32_t height);
+
+		void Init(FT_Bitmap* bitmap);
+
+		/// 
+		/// Binding
+		/// 
+
+		void Bind(uint32_t slot = 0) const;
+
+		void UnBind() const;
+
+		/// 
+		/// Getters
+		/// 
+
+		const uint32_t GetID() const { return m_RendererID; }
+
+		inline uint32_t GetHeight() const { return m_Height; }
+
+		inline uint32_t GetWidth() const { return m_Width; }
+
+		/// 
+		/// Setters
+		/// 
+
+		void SetData(void* data, uint32_t size);
 
 	private:
 

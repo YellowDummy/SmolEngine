@@ -10,7 +10,6 @@
 
 namespace SmolEngine
 {
-
 	void OpenGLMessageCallback(
 		unsigned source,
 		unsigned type,
@@ -30,6 +29,10 @@ namespace SmolEngine
 	}
 
 	OpenglRendererAPI::OpenglRendererAPI()
+	{
+	}
+
+	OpenglRendererAPI::~OpenglRendererAPI()
 	{
 	}
 

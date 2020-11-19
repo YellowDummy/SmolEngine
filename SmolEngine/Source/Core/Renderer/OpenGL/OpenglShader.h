@@ -17,62 +17,66 @@ namespace SmolEngine
 	};
 
 
-	class OpenglShader: public Shader
+	class OpenglShader
 	{
 	public:
 
-		OpenglShader(const std::string& filepath);
-
-		OpenglShader(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName);
+		OpenglShader();
 
 		~OpenglShader();
 
+		// Init
+
+		void Init(const std::string& filepath);
+
+		void Init(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName);
+
 		// Binding
 
-		void Bind() const override;
+		void Bind() const;
 
-		void UnBind() const override;
+		void UnBind() const;
 
 		// Uniforms
 
-		void CreateUniformMap(const std::vector<std::string>& list) override;
+		void CreateUniformMap(const std::vector<std::string>& list);
 
-		void SetUniformIntArray(const std::string& name, int* values, uint32_t count) override;
+		void SetUniformIntArray(const std::string& name, int* values, uint32_t count);
 
-		void SetUniformFloat2(const std::string& name, const glm::vec2& float2) override;
+		void SetUniformFloat2(const std::string& name, const glm::vec2& float2);
 
-		void SetUniformFloat3(const std::string& name, const glm::vec3& vec3) override;
+		void SetUniformFloat3(const std::string& name, const glm::vec3& vec3);
 
-		void SetUniformFloat4(const std::string& name, const glm::vec4& vec4) override;
+		void SetUniformFloat4(const std::string& name, const glm::vec4& vec4);
 
-		void SetUniformMat4(const std::string& name, const glm::mat4& mat4) override;
+		void SetUniformMat4(const std::string& name, const glm::mat4& mat4);
 
-		void SetUniformInt(const std::string& name, const int value) override;
+		void SetUniformInt(const std::string& name, const int value);
 
-		void SetUniformFloat(const std::string& name, const float value) override;
+		void SetUniformFloat(const std::string& name, const float value);
 
 		void UploadUniformMatrix3(const std::string& name, const glm::mat3& matrix);
 
 		/// Getters
 
-		inline const std::string& GetName() override { return m_Name; }
+		inline const std::string& GetName()  { return m_Name; }
 
-		uint32_t GetProgramID() override { return m_RendererID; }
+		uint32_t GetProgramID() { return m_RendererID; }
 
 	private:
 
 		void CompileShader(const std::unordered_map<GLenum, std::string>& shaderSources);
 
-	private:
-
 		std::unordered_map<GLenum, std::string> OpenglShader::PreProcess(const std::string& source);
+
+	private:
 
 		std::unordered_map<std::string, GLenum> m_UniformMap;
 
 		std::string ReadFile(const std::string& file);
 
-		std::string m_Name;
+		std::string m_Name = "None";
 
-		uint32_t m_RendererID;
+		uint32_t m_RendererID = -1;
 	};
 }

@@ -1,16 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
+    <ProjectConfiguration Include="Debug (Vulkan)|x64">
+      <Configuration>Debug (Vulkan)</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
+    <ProjectConfiguration Include="Release (Vulkan)|x64">
+      <Configuration>Release (Vulkan)</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Dist|x64">
-      <Configuration>Dist</Configuration>
+    <ProjectConfiguration Include="Debug (OpenGL)|x64">
+      <Configuration>Debug (OpenGL)</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (OpenGL)|x64">
+      <Configuration>Release (OpenGL)</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -22,19 +26,25 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
@@ -43,45 +53,54 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\bin\Debug-windows-x86_64\SmolEngine\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86_64\SmolEngine\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'">
+    <OutDir>..\bin\Debug (Vulkan)-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\bin-int\Debug (Vulkan)-windows-x86_64\SmolEngine\</IntDir>
     <TargetName>SmolEngine</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\bin\Release-windows-x86_64\SmolEngine\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86_64\SmolEngine\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
+    <OutDir>..\bin\Release (Vulkan)-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\bin-int\Release (Vulkan)-windows-x86_64\SmolEngine\</IntDir>
     <TargetName>SmolEngine</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <OutDir>..\bin\Dist-windows-x86_64\SmolEngine\</OutDir>
-    <IntDir>..\bin-int\Dist-windows-x86_64\SmolEngine\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
+    <OutDir>..\bin\Debug (OpenGL)-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\bin-int\Debug (OpenGL)-windows-x86_64\SmolEngine\</IntDir>
     <TargetName>SmolEngine</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
+    <OutDir>..\bin\Release (OpenGL)-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\bin-int\Release (OpenGL)-windows-x86_64\SmolEngine\</IntDir>
+    <TargetName>SmolEngine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\shaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/MDd /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MDd /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -89,26 +108,26 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Debug-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Debug-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Debug (Vulkan)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug (Vulkan)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug (Vulkan)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug (Vulkan)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Debug (Vulkan)-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype_d.lib;Libraries\vulkan\libs\shaderc_d.lib;Libraries\vulkan\libs\shaderc_util_d.lib;Libraries\vulkan\libs\glslang_d.lib;Libraries\vulkan\libs\SPIRV_d.lib;Libraries\vulkan\libs\SPIRV-Tools_d.lib;Libraries\vulkan\libs\SPIRV-Tools-opt_d.lib;Libraries\vulkan\libs\machineIndependent_d.lib;Libraries\vulkan\libs\genericCodeGen_d.lib;Libraries\vulkan\libs\OGLCompiler_d.lib;Libraries\vulkan\libs\OSDependent_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\shaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MD /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -117,26 +136,50 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Release-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Release-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Release (Vulkan)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release (Vulkan)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release (Vulkan)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release (Vulkan)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Release (Vulkan)-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;Libraries\vulkan\libs\shaderc.lib;Libraries\vulkan\libs\shaderc_util.lib;Libraries\vulkan\libs\glslang.lib;Libraries\vulkan\libs\SPIRV.lib;Libraries\vulkan\libs\SPIRV-Tools.lib;Libraries\vulkan\libs\SPIRV-Tools-opt.lib;Libraries\vulkan\libs\machineIndependent.lib;Libraries\vulkan\libs\genericCodeGen.lib;Libraries\vulkan\libs\OGLCompiler.lib;Libraries\vulkan\libs\OSDependent.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\shaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Libraries\glfw\bin\Debug (OpenGL)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug (OpenGL)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug (OpenGL)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug (OpenGL)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Debug (OpenGL)-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype_d.lib;Libraries\vulkan\libs\shaderc_d.lib;Libraries\vulkan\libs\shaderc_util_d.lib;Libraries\vulkan\libs\glslang_d.lib;Libraries\vulkan\libs\SPIRV_d.lib;Libraries\vulkan\libs\SPIRV-Tools_d.lib;Libraries\vulkan\libs\SPIRV-Tools-opt_d.lib;Libraries\vulkan\libs\machineIndependent_d.lib;Libraries\vulkan\libs\genericCodeGen_d.lib;Libraries\vulkan\libs\OGLCompiler_d.lib;Libraries\vulkan\libs\OSDependent_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\shaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MD /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -145,7 +188,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Dist-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Dist-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Dist-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Dist-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Dist-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\glfw\bin\Release (OpenGL)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release (OpenGL)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release (OpenGL)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release (OpenGL)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Release (OpenGL)-windows-x86_64\RTTR\RTTR.lib;opengl32.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;Libraries\vulkan\libs\shaderc.lib;Libraries\vulkan\libs\shaderc_util.lib;Libraries\vulkan\libs\glslang.lib;Libraries\vulkan\libs\SPIRV.lib;Libraries\vulkan\libs\SPIRV-Tools.lib;Libraries\vulkan\libs\SPIRV-Tools-opt.lib;Libraries\vulkan\libs\machineIndependent.lib;Libraries\vulkan\libs\genericCodeGen.lib;Libraries\vulkan\libs\OGLCompiler.lib;Libraries\vulkan\libs\OSDependent.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -552,7 +595,6 @@
     <ClInclude Include="Source\Core\Audio\AudioSource.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\ECS\Actor.h" />
-    <ClInclude Include="Source\Core\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\BaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.h" />
@@ -566,6 +608,7 @@
     <ClInclude Include="Source\Core\ECS\Components\CameraComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\CanvasComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\HeadComponent.h" />
+    <ClInclude Include="Source\Core\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\Singletons\AudioEngineSComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\Singletons\Box2DWorldSComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\Singletons\FramebufferSComponent.h" />
@@ -606,6 +649,8 @@
     <ClInclude Include="Source\Core\Physics2D\Box2D\CollisionListener2D.h" />
     <ClInclude Include="Source\Core\Physics2D\Box2D\RayCast2D.h" />
     <ClInclude Include="Source\Core\Renderer\Buffer.h" />
+    <ClInclude Include="Source\Core\Renderer\BufferElement.h" />
+    <ClInclude Include="Source\Core\Renderer\BufferLayout.h" />
     <ClInclude Include="Source\Core\Renderer\Camera.h" />
     <ClInclude Include="Source\Core\Renderer\Framebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\GraphicsContext.h" />
@@ -614,7 +659,6 @@
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglRendererAPI.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglShader.h" />
-    <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglText.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglTexture.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="Source\Core\Renderer\Renderer.h" />
@@ -625,7 +669,10 @@
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Core\Renderer\Text.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanCommandPool.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDevice.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.h" />
     <ClInclude Include="Source\Core\SLog.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
@@ -652,7 +699,6 @@
     <ClCompile Include="Source\Core\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Core\Audio\AudioSource.cpp" />
     <ClCompile Include="Source\Core\ECS\Actor.cpp" />
-    <ClCompile Include="Source\Core\ECS\Components\Light2DSourceComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.cpp" />
@@ -665,6 +711,7 @@
     <ClCompile Include="Source\Core\ECS\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\CanvasComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\HeadComponent.cpp" />
+    <ClCompile Include="Source\Core\ECS\Components\Light2DSourceComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Singletons\FramebufferSComponent.cpp" />
@@ -700,12 +747,12 @@
     <ClCompile Include="Source\Core\Renderer\Buffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\Camera.cpp" />
     <ClCompile Include="Source\Core\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="Source\Core\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglBuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglContext.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglRendererAPI.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglShader.cpp" />
-    <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglText.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglTexture.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglVertexArray.cpp" />
     <ClCompile Include="Source\Core\Renderer\Renderer.cpp" />
@@ -715,7 +762,10 @@
     <ClCompile Include="Source\Core\Renderer\SubTexture.cpp" />
     <ClCompile Include="Source\Core\Renderer\Text.cpp" />
     <ClCompile Include="Source\Core\Renderer\Texture.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanCommandPool.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDevice.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />

@@ -19,29 +19,8 @@ namespace SmolEngine
 		abort();
 	}
 
-	OpenglShader::OpenglShader(const std::string& filePath)
-		:m_RendererID(0), m_Name("Default")
+	OpenglShader::OpenglShader()
 	{
-		std::string source = ReadFile(filePath);
-		auto shaderSources = PreProcess(source);
-		CompileShader(shaderSources);
-
-		auto lastSlash = filePath.find_last_of("\//");
-		auto lastDot = filePath.rfind('.');
-		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash: lastDot - lastSlash;
-
-		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		m_Name = filePath.substr(lastSlash, count);
-		m_Name = m_Name.substr(0, m_Name.size() - 1);
-	}
-
-	OpenglShader::OpenglShader(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName)
-		:m_Name(shaderName), m_RendererID(-1)
-	{
-		std::unordered_map<GLenum, std::string> sources;
-		sources[GL_VERTEX_SHADER] = vertexSource;
-		sources[GL_FRAGMENT_SHADER] = fragmentSource;
-		CompileShader(sources);
 	}
 
 	OpenglShader::~OpenglShader()
@@ -62,6 +41,31 @@ namespace SmolEngine
 			GLint location = glGetUniformLocation(m_RendererID, pair.c_str());
 			m_UniformMap[pair] = location;
 		}
+	}
+
+	void OpenglShader::Init(const std::string& filePath)
+	{
+		std::string source = ReadFile(filePath);
+		auto shaderSources = PreProcess(source);
+		CompileShader(shaderSources);
+
+		auto lastSlash = filePath.find_last_of("\//");
+		auto lastDot = filePath.rfind('.');
+		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
+
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		m_Name = filePath.substr(lastSlash, count);
+		m_Name = m_Name.substr(0, m_Name.size() - 1);
+	}
+
+	void OpenglShader::Init(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName)
+	{
+		m_Name = shaderName;
+
+		std::unordered_map<GLenum, std::string> sources;
+		sources[GL_VERTEX_SHADER] = vertexSource;
+		sources[GL_FRAGMENT_SHADER] = fragmentSource;
+		CompileShader(sources);
 	}
 
 	void OpenglShader::Bind() const

@@ -1,8 +1,9 @@
-
-
 project "Yojimbo"
     kind "StaticLib"
     language "C++"
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
     platforms { "x64" }
 
     yojimbo_version = "1.0"
@@ -13,12 +14,13 @@ project "Yojimbo"
         libdirs { "./windows" }
     else
         includedirs { ".", "/usr/local/include", "netcode.io", "reliable.io" }
-        targetdir "bin/"  
     end
 
     filter "system:windows"
     systemversion "latest"
     staticruntime "On"
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
     links { libs }
     warnings "Extra"
     floatingpoint "Fast"
@@ -32,22 +34,24 @@ project "Yojimbo"
         "_CRT_SECURE_NO_WARNINGS"
     }
 
-    filter "configurations:Debug"
-    defines "SE_DEBUG"
+    --------------------------------------- Debug
+
+	filter "configurations:Debug (Vulkan)"
     buildoptions "/MDd"
-    buildoptions "/bigobj"
     symbols "on"
 
-filter "configurations:Release"
-    defines "SE_RELEASE"
+	filter "configurations:Debug (OpenGL)"
+    buildoptions "/MDd"
+    symbols "on"
+
+	--------------------------------------- Release
+
+	filter "configurations:Release (Vulkan)"
     defines { "NDEBUG" }
     buildoptions "/MD"
-    buildoptions "/bigobj"
     optimize "on"
 
-filter "configurations:Dist"
-    defines "SE_DIST"
+	filter "configurations:Release (OpenGL)"
     defines { "NDEBUG" }
     buildoptions "/MD"
-    buildoptions "/bigobj"
     optimize "on"

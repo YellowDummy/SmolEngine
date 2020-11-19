@@ -77,11 +77,12 @@ namespace SmolEngine
 			return;
 		}
 
-		m_Context = new OpenglContext(m_Window);
-		m_Context->Setup();
+		m_Context = new GraphicsContext();
+		m_Context->Setup(m_Window);
 
 		SetVSync(true);
-		//-----------------------------------------------CALLBACKS-----------------------------------------//
+
+		// Callbacks
 
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int height, int width)
 		{
@@ -156,8 +157,6 @@ namespace SmolEngine
 				MouseMoveEvent mouseEvent(xPos, yPos);
 				Data.m_eventHandler->SendEvent(mouseEvent, EventType::S_MOUSE_MOVE, EventCategory::S_EVENT_MOUSE);
 		});
-
-		//-----------------------------------------------CALLBACKS-----------------------------------------//
 
 	}
 

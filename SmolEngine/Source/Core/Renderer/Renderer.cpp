@@ -11,7 +11,8 @@
 
 namespace SmolEngine
 {
-	RendererAPI* RendererCommand::s_RendererAPI = new OpenglRendererAPI;
+	RendererAPI* RendererCommand::s_RendererAPI = new RendererAPI();
+
 	Renderer::SceneData* Renderer::m_SceneData = new SceneData;
 
 	void Renderer::Init()

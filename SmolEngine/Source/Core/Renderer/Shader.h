@@ -4,52 +4,78 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#include "Core/Renderer/OpenGL/OpenglShader.h"
+
 namespace SmolEngine
 {
 	class Shader
 	{
 	public:
 
-		virtual ~Shader() = default;
+		Shader();
 
-		//
+		~Shader();
 
-		virtual void CreateUniformMap(const std::vector<std::string>& list) {}
+		/// 
+		/// Main
+		/// 
+		
 
-		// Binding
+		///
+		///  Binding
+		/// 
 
-		virtual void Bind() const = 0;
+		void Bind() const;
 
-		virtual void UnBind() const = 0;
+		void UnBind() const;
 
-		// Uniforms
+		///
+		///  Uniforms
+		/// 
 
-		virtual void SetUniformIntArray(const std::string& name, int* values, uint32_t count) = 0;
+		void SetUniformIntArray(const std::string& name, int* values, uint32_t count);
 
-		virtual void SetUniformFloat2(const std::string& name, const glm::vec2& vec3) = 0;
+		void SetUniformFloat2(const std::string& name, const glm::vec2& vec3);
 
-		virtual void SetUniformFloat3(const std::string& name, const glm::vec3& vec3) = 0;
+		void SetUniformFloat3(const std::string& name, const glm::vec3& vec3);
 
-		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& vec4) = 0;
+		void SetUniformFloat4(const std::string& name, const glm::vec4& vec4);
 
-		virtual void SetUniformMat4(const std::string& name, const glm::mat4& mat4) = 0;
+		void SetUniformMat4(const std::string& name, const glm::mat4& mat4);
 
-		virtual void SetUniformFloat(const std::string& name, const float value) = 0;
+		void SetUniformFloat(const std::string& name, const float value);
 
-		virtual void SetUniformInt(const std::string& name, const int value) = 0;
+		void SetUniformInt(const std::string& name, const int value);
 
 
-		// Getters
+		void CreateUniformMap(const std::vector<std::string>& list);
 
-		virtual uint32_t GetProgramID() = 0;
+		///
+		/// Getters
+		/// 
 
-		virtual const std::string& GetName() { return std::string(""); }
+		uint32_t GetProgramID();
 
-		// Factory
+		const std::string& GetName();
+
+		///
+		/// Factory
+		/// 
 
 		static Ref<Shader> Create(const std::string& filePath);
 
 		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName = 0);
+
+	private:
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		OpenglShader m_OpenglShader = {};
+#else
+
+
+#endif // SMOLENGINE_OPENGL_IMPL
+
 
 	};
 
@@ -61,15 +87,22 @@ namespace SmolEngine
 
 		ShaderLib(const ShaderLib&) = delete;
 
-		//
+		///
+		/// Main
+		/// 
 
 		void AddElement(const Ref<Shader>& element);
 
-		//
+		///
+		/// Getters
+		/// 
+
 
 		Ref<Shader> GetElement(const std::string& shaderName);
 
-		//
+		///
+		/// Load
+		/// 
 
 		Ref<Shader> Load(const std::string& filePath);
 

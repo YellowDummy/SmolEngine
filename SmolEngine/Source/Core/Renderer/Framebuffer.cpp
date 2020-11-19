@@ -8,13 +8,102 @@ namespace SmolEngine
 {
 	Ref<Framebuffer> Framebuffer::Create(const FramebufferData& data)
 	{
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::None: NATIVE_ERROR("No renderer API specified."); return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenglFramebuffer>(data);
-		case RendererAPI::API::Vulkan: return nullptr;
+		Ref<Framebuffer> framebuffer = std::make_shared<Framebuffer>();
 
-		default: NATIVE_ERROR("Unknow Renderer API"); return nullptr;
-		}
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		framebuffer->m_OpenglFramebuffer.Init(data);
+#else
+
+		// Vulkan
+
+		return nullptr;
+#endif
+
+		return framebuffer;
+	}
+
+	void Framebuffer::Bind()
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		m_OpenglFramebuffer.Bind();
+#else
+
+#endif
+
+	}
+
+	void Framebuffer::BindColorAttachment(uint32_t slot)
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		m_OpenglFramebuffer.BindColorAttachment(slot);
+#else
+
+#endif
+
+	}
+
+	void Framebuffer::UnBind()
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		m_OpenglFramebuffer.UnBind();
+#else
+
+#endif
+
+	}
+
+	void Framebuffer::OnResize(const uint32_t width, const uint32_t height)
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		m_OpenglFramebuffer.OnResize(width, height);
+#else
+
+#endif
+
+	}
+
+	const FramebufferData& Framebuffer::GetData() const
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		return m_OpenglFramebuffer.GetData();
+#else
+
+#endif
+
+	}
+
+	uint32_t Framebuffer::GetColorAttachmentID() const
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		return m_OpenglFramebuffer.GetColorAttachmentID();
+#else
+
+#endif
+
+	}
+
+	uint32_t Framebuffer::GetRendererID() const
+	{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		return m_OpenglFramebuffer.GetRendererID();
+#else
+
+#endif
+
 	}
 }

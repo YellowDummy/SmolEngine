@@ -28,20 +28,23 @@ project "RTTR"
 		}
 
 
-		filter "configurations:Debug"
-		defines "SE_DEBUG"
-		buildoptions "/MDd"
-		buildoptions "/bigobj"
-		symbols "on"
+	--------------------------------------- Debug
 
-	filter "configurations:Release"
-		defines "SE_RELEASE"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	filter "configurations:Debug (Vulkan)"
+	buildoptions "/MDd"
+	symbols "on"
 
-	filter "configurations:Dist"
-		defines "SE_DIST"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	filter "configurations:Debug (OpenGL)"
+	buildoptions "/MDd"
+	symbols "on"
+
+	--------------------------------------- Release
+
+	filter "configurations:Release (Vulkan)"
+	buildoptions "/MD"
+	optimize "on"
+
+	filter "configurations:Release (OpenGL)"
+	buildoptions "/MD"
+	optimize "on"
+

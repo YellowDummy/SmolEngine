@@ -33,7 +33,9 @@ namespace SmolEngine
 
 		virtual ~Window() {  }
 
+		/// 
 		/// Main
+		/// 
 
 		void OnUpdate();
 
@@ -43,7 +45,9 @@ namespace SmolEngine
 
 		void ShutDown();
 
+		/// 
 		/// Getters
+		/// 
 
 		unsigned int GetWidth() const;
 

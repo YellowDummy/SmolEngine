@@ -4,9 +4,10 @@ workspace "SmolEngine"
 
 	configurations
 	{
-		"Debug",
-		"Release",
-		"Dist"
+		"Debug (Vulkan)",
+		"Release (Vulkan)",
+		"Debug (OpenGL)",
+		"Release (OpenGL)",
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -20,7 +21,9 @@ IncludeDir["glm"] = "SmolEngine/Libraries/glm"
 IncludeDir["stb"] = "SmolEngine/Libraries/stb_image"
 IncludeDir["entt"] = "SmolEngine/Libraries/entt"
 IncludeDir["yojimbo"] = "SmolEngine/Libraries/yojimbo"
-IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src/"
+IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src"
+IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
+IncludeDir["shaderc"] = "SmolEngine/Libraries/shaderc/include"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -76,7 +79,9 @@ project "SmolEngine"
 		"%{IncludeDir.stb}",
         "%{IncludeDir.entt}",
 		"%{IncludeDir.yojimbo}",
-		"%{IncludeDir.rttr}"
+		"%{IncludeDir.rttr}",
+		"%{IncludeDir.vulkan}",
+		"%{IncludeDir.shaderc}"
 	}
 
 	links 
@@ -88,6 +93,7 @@ project "SmolEngine"
 		"Box2D",
 		"RTTR",
 		"opengl32.lib",
+		"SmolEngine/Libraries/vulkan/libs/vulkan-1.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}
@@ -110,38 +116,104 @@ project "SmolEngine"
 			"GLFW_INCLUDE_NONE"
 		}
 
-	filter "configurations:Debug"
+	filter "configurations:Debug (Vulkan)"
 		defines "SE_DEBUG"
 		buildoptions "/MDd"
 		buildoptions "/bigobj"
+		buildoptions "/Zm500"
 		symbols "on"
 
 		links 
 		{ 
-			"SmolEngine/Libraries/freetype/libs/freetype_d.lib"
+			"SmolEngine/Libraries/freetype/libs/freetype_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/glslang_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/SPIRV_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/machineIndependent_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/genericCodeGen_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/OGLCompiler_d.lib",
+			"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib"
 		}
 
-	filter "configurations:Release"
+	filter "configurations:Debug (OpenGL)"
+	defines "SE_DEBUG"
+	buildoptions "/MDd"
+	buildoptions "/bigobj"
+	buildoptions "/Zm500"
+	symbols "on"
+
+	links 
+	{ 
+		"SmolEngine/Libraries/freetype/libs/freetype_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/glslang_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/SPIRV_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/machineIndependent_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/genericCodeGen_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/OGLCompiler_d.lib",
+		"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib"
+	}
+
+	defines
+	{
+		"SMOLENGINE_OPENGL_IMPL"
+	}
+
+	filter "configurations:Release (Vulkan)"
 		defines "SE_RELEASE"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
+		buildoptions "/Zm500"
 		optimize "on"
 
 		links 
 		{ 
-			"SmolEngine/Libraries/freetype/libs/freetype.lib"
+			"SmolEngine/Libraries/freetype/libs/freetype.lib",
+			"SmolEngine/Libraries/vulkan/libs/shaderc.lib",
+			"SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
+			"SmolEngine/Libraries/vulkan/libs/glslang.lib",
+			"SmolEngine/Libraries/vulkan/libs/SPIRV.lib",
+			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools.lib",
+			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt.lib",
+			"SmolEngine/Libraries/vulkan/libs/machineIndependent.lib",
+			"SmolEngine/Libraries/vulkan/libs/genericCodeGen.lib",
+			"SmolEngine/Libraries/vulkan/libs/OGLCompiler.lib",
+			"SmolEngine/Libraries/vulkan/libs/OSDependent.lib"
 		}
 
-	filter "configurations:Dist"
-		defines "SE_DIST"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	filter "configurations:Release (OpenGL)"
+	defines "SE_RELEASE"
+	buildoptions "/MD"
+	buildoptions "/bigobj"
+	buildoptions "/Zm500"
+	optimize "on"
 
-		links 
-		{ 
-			"SmolEngine/Libraries/freetype/libs/freetype.lib"
-		}
+	   links 
+	   { 
+		 "SmolEngine/Libraries/freetype/libs/freetype.lib",
+		 "SmolEngine/Libraries/vulkan/libs/shaderc.lib",
+		 "SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
+		 "SmolEngine/Libraries/vulkan/libs/glslang.lib",
+		 "SmolEngine/Libraries/vulkan/libs/SPIRV.lib",
+		 "SmolEngine/Libraries/vulkan/libs/SPIRV-Tools.lib",
+		 "SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt.lib",
+		 "SmolEngine/Libraries/vulkan/libs/machineIndependent.lib",
+		 "SmolEngine/Libraries/vulkan/libs/genericCodeGen.lib",
+		 "SmolEngine/Libraries/vulkan/libs/OGLCompiler.lib",
+		 "SmolEngine/Libraries/vulkan/libs/OSDependent.lib"
+	   }
+
+	    defines
+	   {
+		 "SMOLENGINE_OPENGL_IMPL"
+	   }
+
 
 
 project "GameX"
@@ -178,7 +250,9 @@ project "GameX"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}",
-		"%{IncludeDir.rttr}"
+		"%{IncludeDir.rttr}",
+		"%{IncludeDir.vulkan}",
+		"%{IncludeDir.shaderc}"
 	}
 
 	links
@@ -198,24 +272,34 @@ project "GameX"
 			"PLATFORM_WIN"
 		}
 
-	filter "configurations:Debug"
-		defines "SE_DEBUG"
-		buildoptions "/MDd"
-		buildoptions "/bigobj"
-		symbols "on"
 
-	filter "configurations:Release"
-		defines "SE_RELEASE"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	--------------------------------------- Debug
 
-	filter "configurations:Dist"
-		defines "SE_DIST"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	filter "configurations:Debug (Vulkan)"
+	defines "SE_DEBUG"
+	buildoptions "/MDd"
+	buildoptions "/bigobj"
+	symbols "on"
 
+	filter "configurations:Debug (OpenGL)"
+	defines "SE_DEBUG"
+	buildoptions "/MDd"
+	buildoptions "/bigobj"
+	symbols "on"
+
+	--------------------------------------- Release
+
+	filter "configurations:Release (Vulkan)"
+	defines "SE_RELEASE"
+	buildoptions "/MD"
+	buildoptions "/bigobj"
+	optimize "on"
+
+	filter "configurations:Release (OpenGL)"
+	defines "SE_RELEASE"
+	buildoptions "/MD"
+	buildoptions "/bigobj"
+	optimize "on"
 
 	
 	project "SmolEngine-Editor"
@@ -253,7 +337,9 @@ project "GameX"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}",
-		"%{IncludeDir.rttr}"
+		"%{IncludeDir.rttr}",
+		"%{IncludeDir.vulkan}",
+		"%{IncludeDir.shaderc}"
 	}
 
 	links
@@ -273,22 +359,30 @@ project "GameX"
 			"PLATFORM_WIN"
 		}
 
-	filter "configurations:Debug"
-		defines "SE_DEBUG"
-		buildoptions "/MDd"
-		buildoptions "/bigobj"
-		symbols "on"
+	--------------------------------------- Debug
 
+	filter "configurations:Debug (Vulkan)"
+	defines "SE_DEBUG"
+	buildoptions "/MDd"
+	buildoptions "/bigobj"
+	symbols "on"
 
-	filter "configurations:Release"
-		defines "SE_RELEASE"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	filter "configurations:Debug (OpenGL)"
+	defines "SE_DEBUG"
+	buildoptions "/MDd"
+	buildoptions "/bigobj"
+	symbols "on"
 
+	--------------------------------------- Release
 
-	filter "configurations:Dist"
-		defines "SE_DIST"
-		buildoptions "/MD"
-		buildoptions "/bigobj"
-		optimize "on"
+	filter "configurations:Release (Vulkan)"
+	defines "SE_RELEASE"
+	buildoptions "/MD"
+	buildoptions "/bigobj"
+	optimize "on"
+
+	filter "configurations:Release (OpenGL)"
+	defines "SE_RELEASE"
+	buildoptions "/MD"
+	buildoptions "/bigobj"
+	optimize "on"

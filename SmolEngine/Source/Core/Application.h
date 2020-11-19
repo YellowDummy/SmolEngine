@@ -30,7 +30,9 @@ namespace SmolEngine
 
 		virtual ~Application();
 
+		/// 
 		/// Main
+		/// 
 
 		void InitApp();
 
@@ -40,11 +42,16 @@ namespace SmolEngine
 
 		void OnEvent(Event& event);
 
+		/// 
 		/// Overrides
+		/// 
 
 		virtual void ClientInit() = 0;
 
+
+		/// 
 		/// Layers
+		/// 
 
 		void PushLayer(Layer* layer);
 
@@ -52,17 +59,24 @@ namespace SmolEngine
 
 		void PopLayer();
 
+		/// 
 		/// Scripting
+		/// 
 
 		void InitializeScripts();
 
-		///Callbacks
+
+		/// 
+		/// Callbacks
+		/// 
 
 		bool OnWindowClose(Event& e);
 
 		bool OnWindowResize(Event& e);
 
+		/// 
 		/// Getters
+		/// 
 
 		Window& GetWindow() { return *m_Window; }
 

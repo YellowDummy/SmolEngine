@@ -1,23 +1,24 @@
 #pragma once
-#include "Core/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
 namespace SmolEngine 
 {
-	class OpenglContext: public GraphicsContext
+	class OpenglContext
 	{
 	public:
 
-		OpenglContext(GLFWwindow* window);
+		/// 
+		/// Main
+		/// 
 
-		///
+		void Setup(GLFWwindow* window);
 
-		void Setup() override;
+		void SwapBuffers();
 
-		void SwapBuffers() override;
-
+		/// 
 		/// Getters
+		/// 
 
 		inline GLFWwindow* GetWindow() { return m_Window; }
 

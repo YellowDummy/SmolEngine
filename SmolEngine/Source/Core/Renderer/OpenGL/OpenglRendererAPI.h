@@ -1,38 +1,56 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Renderer/RendererAPI.h"
 
 namespace SmolEngine
 {
 	class OrthographicCamera;
 
-	class OpenglRendererAPI: public RendererAPI
+	class VertexArray;
+
+	///
+	
+	class OpenglRendererAPI
 	{
 	public:
 
 		OpenglRendererAPI();
 
-		///
+		~OpenglRendererAPI();
+
+		/// 
+		/// Main
+		/// 
 		
-		void Clear() override;
+		void Clear();
 
-		void Init() override;
+		void Init();
 
-		void DisableDepth() override;
+		/// 
+		/// Setters
+		/// 
 
-		void BindTexture(uint32_t id) override;
+		void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
 
-		void SetClearColor(const glm::vec4& color) override;
+		void SetClearColor(const glm::vec4& color);
 
-		void DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count = 0) override;
+		/// 
+		/// Commands
+		/// 
 
-		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0) override;
+		// Draw
 
-		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0) override;
+		void DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count = 0);
 
-		void DrawLight() override;
+		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0);
 
-		void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
+		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0);
+
+		void DrawLight();
+
+
+		void DisableDepth();
+
+		void BindTexture(uint32_t id);
 	};
 }

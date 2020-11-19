@@ -1,11 +1,17 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Renderer/Buffer.h"
+
+#include <vector>
+
 
 namespace SmolEngine
 {
-	class OpenglVertexArray : public VertexArray
+	class VertexBuffer;
+
+	class IndexBuffer;
+
+	class OpenglVertexArray
 	{
 	public:
 
@@ -13,21 +19,28 @@ namespace SmolEngine
 
 		~OpenglVertexArray();
 
+		/// 
 		/// Binding
+		/// 
 
-		void Bind() const override;
+		void Bind() const;
 
-		void UnBind() const override;
+		void UnBind() const;
 
+
+		/// 
 		/// Setters
+		/// 
 
-		void SetVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) override;
+		void SetVertexBuffer(const Ref<VertexBuffer>& vertexBuffer);
 
-		void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)  override;
+		void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
 
+		/// 
 		/// Getters
+		/// 
 
-		Ref<IndexBuffer> GetIndexBuffer() const override { return m_IndexBuffer; }
+		Ref<IndexBuffer> GetIndexBuffer() const { return m_IndexBuffer; }
 
 	private:
 
