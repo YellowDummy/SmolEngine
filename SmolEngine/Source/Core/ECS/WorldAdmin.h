@@ -42,7 +42,9 @@ namespace SmolEngine
 
 	    ~WorldAdmin() = default;
 
-	    /// Initialization
+	    /// 
+		/// Initialization
+		/// 
 
 		void StartGame();
 
@@ -52,19 +54,25 @@ namespace SmolEngine
 
 		void InitSystems();
 
+		/// 
 		/// Simulation
+		/// 
 
 		void OnEndPlay();
 
 		void OnPlay();
 
+		/// 
 		/// Update-Loop
+		/// 
 
 		void OnUpdate(DeltaTime deltaTime);
 
 		void OnEvent(Event& e);
 
+		/// 
 		/// Systems Processing
+		/// 
 
 		void OnSystemBegin();
 
@@ -72,11 +80,15 @@ namespace SmolEngine
 
 		void PrepareSystem(const BehaviourComponent& behaviour, const SystemInstance& sysRef);
 
+		/// 
 		/// Rendering
+		/// 
 
 		void RenderScene(const glm::mat4& viewProjectionMatrix, CameraBaseTuple* target = nullptr);
 
+		/// 
 		/// Assets
+		/// 
 
 		bool AddAsset(const std::string& fileName, const std::string& filePath);
 
@@ -86,7 +98,9 @@ namespace SmolEngine
 
 		void ReloadScripts();
 
+		/// 
 		/// Scene handling
+		/// 
 
 		void CreateScene(const std::string& filePath, const std::string& fileName);
 
@@ -100,7 +114,9 @@ namespace SmolEngine
 
 		bool SaveCurrentScene();
 
+		/// 
 		/// Camera handling
+		/// 
 		
 		void UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize);
 
@@ -108,7 +124,9 @@ namespace SmolEngine
 
 		void OnGameViewResize(float width, float height);
 
+		/// 
 		/// Operations with actors
+		/// 
 
 		Ref<Actor> CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag = std::string("Default"));
 
@@ -128,7 +146,9 @@ namespace SmolEngine
 
 		void DeleteActor(Ref<Actor>& actor);
 
+		/// 
 		/// Getters
+		/// 
 		
 		std::unordered_map<std::string, SystemInstance>& GetSystemMap() { return m_SystemMap; }
 
@@ -148,7 +168,9 @@ namespace SmolEngine
 
 		SceneData& GetSceneData();
 
+		/// 
 		/// Templates
+		/// 
 
 		template<typename T>
 		T* AddTuple(Actor& actor)
@@ -197,7 +219,9 @@ namespace SmolEngine
 			return &component;
 		}
 
+		/// 
 		/// Internal needs
+		/// 
 		
 		const std::unordered_map<std::string, size_t>& GetIDSet() { return m_IDSet; }
 

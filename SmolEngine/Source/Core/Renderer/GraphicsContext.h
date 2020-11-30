@@ -1,7 +1,15 @@
 #pragma once
 #include "Core/Core.h"
 
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
 #include "Core/Renderer/OpenGL/OpenglContext.h"
+
+#else
+
+#include "Core/Renderer/Vulkan/VulkanContext.h"
+
+#endif
 
 namespace SmolEngine 
 {
@@ -19,7 +27,7 @@ namespace SmolEngine
 
 		OpenglContext m_OpenglContext = {};
 #else
-
+		VulkanContext m_VulkanContext = {};
 #endif
 
 	};

@@ -46,6 +46,8 @@ namespace SmolEngine
 
 		uint32_t GetQueueFamilyIndex() const;
 
+		const VkQueue* GetQueue() const;
+
 	private:
 
 		/// 
@@ -68,11 +70,12 @@ namespace SmolEngine
 
 		VkPhysicalDeviceMemoryProperties m_VkMemoryProperties = {};
 
-		//
+
+		VkQueue m_Queue = nullptr;
+
 
 		uint32_t m_DeviceQueueFamilyIndex = 0;
 
-		//
 
 		std::vector<const char*> m_ExtensionsList;
 

@@ -17,7 +17,6 @@ namespace SmolEngine
 
 		// Vulkan
 
-		return nullptr;
 #endif
 
 		return framebuffer;
@@ -78,7 +77,9 @@ namespace SmolEngine
 
 		return m_OpenglFramebuffer.GetData();
 #else
+		FramebufferData dummy;
 
+		return dummy;
 #endif
 
 	}
@@ -90,7 +91,7 @@ namespace SmolEngine
 
 		return m_OpenglFramebuffer.GetColorAttachmentID();
 #else
-
+		return 0;
 #endif
 
 	}
@@ -102,7 +103,7 @@ namespace SmolEngine
 
 		return m_OpenglFramebuffer.GetRendererID();
 #else
-
+		return 0;
 #endif
 
 	}

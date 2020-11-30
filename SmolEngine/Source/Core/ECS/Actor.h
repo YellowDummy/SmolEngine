@@ -48,11 +48,15 @@ namespace SmolEngine
 
 		Actor(const ActorBaseType baseType, entt::entity entity, size_t index);
 
+		/// 
 		/// Operators
+		/// 
 
 		operator entt::entity() const { return Entity; }
 
+		/// 
 		/// Getters
+		/// 
 
 		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
 
@@ -68,11 +72,15 @@ namespace SmolEngine
 
 		const size_t GetID() const;
 
+		/// 
 		/// Setters
+		/// 
 
 		void SetParent(Ref<Actor> parent) { Parent = parent; }
 
+		/// 
 		/// Casting
+		/// 
 
 		DefaultBaseTuple* GetDefaultBaseTuple() const;
 

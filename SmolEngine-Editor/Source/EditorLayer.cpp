@@ -101,8 +101,6 @@ namespace SmolEngine
 
 	void EditorLayer::OnImGuiRender()
 	{
-		const GLubyte* renderer = glGetString(GL_RENDERER);
-
 		//---------------------------------------WINDOW-STATES----------------------------------------//
 
 		static bool showActorCreationWindow;

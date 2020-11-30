@@ -20,7 +20,16 @@ namespace SmolEngine
 	{
 		if (SetupPhysicalDevice(instance))
 		{
-			return SetupLogicalDevice();
+			NATIVE_INFO("Vulkan Info:\n\n                   Vulkan API Version: {}\n                   Selected Device: {}\n                   Driver Version: {}\n\n",
+				m_VkDeviceProperties.apiVersion, std::string(m_VkDeviceProperties.deviceName), m_VkDeviceProperties.driverVersion);
+
+			bool setup_result = SetupLogicalDevice();
+			if (setup_result)
+			{
+				vkGetDeviceQueue(m_VkLogicalDevice, m_DeviceQueueFamilyIndex, 0, &m_Queue);
+			}
+
+			return setup_result;
 		}
 
 		return false;
@@ -148,6 +157,7 @@ namespace SmolEngine
 
 	bool VulkanDevice::GetFamilyQueue(const VkPhysicalDevice& device, VkQueueFlags flags, uint32_t& outQueueIndex)
 	{
+
 		uint32_t queueCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueCount, nullptr);
 
@@ -163,6 +173,7 @@ namespace SmolEngine
 				if ((families[i].queueFlags & flags) == flags)
 				{
 					outQueueIndex = i;
+
 					return true;
 				}
 			}
@@ -199,5 +210,10 @@ namespace SmolEngine
 	uint32_t VulkanDevice::GetQueueFamilyIndex() const
 	{
 		return m_DeviceQueueFamilyIndex;
+	}
+
+	const VkQueue* VulkanDevice::GetQueue() const
+	{
+		return &m_Queue;
 	}
 }

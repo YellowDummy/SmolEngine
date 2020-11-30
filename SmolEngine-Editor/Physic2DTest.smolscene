@@ -30,7 +30,7 @@
             "value3": 1.0,
             "value4": 0,
             "value5": "",
-            "value6": "",
+            "value6": "bulkhead-wallsx3.png",
             "value7": true
         },
         "value3": {
@@ -138,7 +138,12 @@
             }
         }
     ],
-    "value1": [],
+    "value1": [
+        {
+            "key": "bulkhead-wallsx3.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\bulkhead-wallsx3.png"
+        }
+    ],
     "value2": 0,
     "value3": 0.0,
     "value4": -9.8100004196167,

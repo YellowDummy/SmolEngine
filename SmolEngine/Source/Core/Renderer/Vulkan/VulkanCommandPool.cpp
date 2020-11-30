@@ -45,7 +45,7 @@ namespace SmolEngine
 		return result == VK_SUCCESS;
 	}
 
-	const VkCommandPool* VulkanCommandPool::GetCommandPool()
+	const VkCommandPool* VulkanCommandPool::GetCommandPool() const
 	{
 		return &m_VkCommandPool;
 	}

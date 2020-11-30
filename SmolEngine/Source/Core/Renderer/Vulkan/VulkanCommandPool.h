@@ -31,7 +31,7 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
-		const VkCommandPool* GetCommandPool();
+		const VkCommandPool* GetCommandPool() const;
 
 	private:
 

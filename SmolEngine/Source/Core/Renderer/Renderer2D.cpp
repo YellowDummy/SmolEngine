@@ -59,7 +59,7 @@ namespace SmolEngine
 
 		/// Count-track
 
-		uint32_t Light2DBufferSize = 0;
+		int32_t Light2DBufferSize = 0;
 
 		uint32_t TotalQuadCount = 0;
 
@@ -98,10 +98,28 @@ namespace SmolEngine
 	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue)
 	{
 		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetUniformMat4("u_ViewProjection", viewProjectionMatrix);
-		s_Data->TextureShader->SetUniformFloat("u_AmbientValue", ambientValue);
 
-		s_Data->TextureShader->SetUniformInt("u_TextMode", false); // temp
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		s_Data->TextureShader->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
+		s_Data->TextureShader->SumbitUniform<float>("u_AmbientValue", &ambientValue);
+#else
+
+		struct SceneData
+		{
+			glm::mat4 cameraPos;
+			float ambientValue;
+		};
+
+		SceneData data = {};
+		{
+			data.cameraPos = viewProjectionMatrix;
+			data.ambientValue = ambientValue;
+		}
+
+		s_Data->TextureShader->SumbitUniformBuffer("SceneData", &data, sizeof(SceneData));
+
+#endif // SMOLENGINE_OPENGL_IMPL
 
 		StartNewBatch();
 
@@ -202,6 +220,8 @@ namespace SmolEngine
 			return;
 		}
 
+		s_Data->TextureShader->Bind();
+
 		// Binding textures
 
 		for (uint32_t i = 0; i < layer.TextureSlotIndex; i++)
@@ -228,16 +248,18 @@ namespace SmolEngine
 
 	void Renderer2D::UploadLightUniforms()
 	{
-		s_Data->TextureShader->SetUniformInt("u_Ligh2DBufferSize", s_Data->Light2DBufferSize);
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		s_Data->TextureShader->SumbitUniform<int>("u_Ligh2DBufferSize", &s_Data->Light2DBufferSize);
 
 		for (uint32_t i = 0; i < s_Data->Light2DBufferSize; i++)
 		{
 			auto& ref = s_Data->Light2DBuffer[i];
 
-			s_Data->TextureShader->SetUniformFloat3("LightData[" + std::to_string(i) + "].LightColor", ref.Color);
-			s_Data->TextureShader->SetUniformFloat3("LightData[" + std::to_string(i) + "].Position", ref.Offset);
-			s_Data->TextureShader->SetUniformFloat("LightData[" + std::to_string(i) + "].Radius", ref.Radius);
-			s_Data->TextureShader->SetUniformFloat("LightData[" + std::to_string(i) + "].Intensity", ref.Intensity);
+			s_Data->TextureShader->SumbitUniform<glm::vec4>("LightData[" + std::to_string(i) + "].LightColor", &ref.Color);
+			s_Data->TextureShader->SumbitUniform<glm::vec4>("LightData[" + std::to_string(i) + "].Position", &ref.Offset);
+			s_Data->TextureShader->SumbitUniform<float>("LightData[" + std::to_string(i) + "].Radius", &ref.Radius);
+			s_Data->TextureShader->SumbitUniform<float>("LightData[" + std::to_string(i) + "].Intensity", &ref.Intensity);
 
 			// Debug Values
 
@@ -246,6 +268,12 @@ namespace SmolEngine
 			ref.Offset = glm::vec4(1.0f);
 			ref.Radius = 1.0f;
 		}
+
+#else
+		s_Data->TextureShader->SumbitUniformBuffer("LightBuffer", &s_Data->Light2DBuffer, sizeof(Light2DBuffer) * s_Data->Light2DBufferSize);
+		s_Data->TextureShader->SumbitUniformBuffer("LighCount", &s_Data->Light2DBufferSize, sizeof(int32_t));
+
+#endif // SMOLENGINE_OPENGL_IMPL
 	}
 
 	void Renderer2D::SubmitSprite(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
@@ -317,6 +345,7 @@ namespace SmolEngine
 			layer.BasePtr->Color = tintColor;
 			layer.BasePtr->TextureCood = textureCoords[i];
 			layer.BasePtr->TextureID = textureIndex;
+			layer.BasePtr->TextMode = 0;
 			layer.BasePtr++;
 		}
 
@@ -377,6 +406,7 @@ namespace SmolEngine
 			layer.BasePtr->Color = color;
 			layer.BasePtr->TextureCood = textureCoords[i];
 			layer.BasePtr->TextureID = textureIndex;
+			layer.BasePtr->TextMode = 0;
 			layer.BasePtr++;
 		}
 
@@ -394,7 +424,7 @@ namespace SmolEngine
 	void Renderer2D::BeginDebug(Ref<OrthographicCamera> camera)
 	{
 		s_Data->DebugTextureShader->Bind();
-		s_Data->DebugTextureShader->SetUniformMat4("u_ViewProjection", camera->GetViewProjectionMatrix());
+		s_Data->DebugTextureShader->SumbitUniform<glm::mat4>("u_ViewProjection", &camera->GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndDebug()
@@ -421,8 +451,8 @@ namespace SmolEngine
 		{
 		case DebugPrimitives::Quad:
 		{
-			s_Data->DebugTextureShader->SetUniformFloat4("u_Color", color);
-			s_Data->DebugTextureShader->SetUniformMat4("u_Transform", transform);
+			s_Data->DebugTextureShader->SumbitUniform<glm::vec4>("u_Color", &color);
+			s_Data->DebugTextureShader->SumbitUniform<glm::mat4>("u_Transform", &transform);
 
 			s_Data->DebugQuadVertexArray->Bind();
 
@@ -432,8 +462,8 @@ namespace SmolEngine
 		case DebugPrimitives::Circle:
 		{
 
-			s_Data->DebugTextureShader->SetUniformFloat4("u_Color", color);
-			s_Data->DebugTextureShader->SetUniformMat4("u_Transform", transform);
+			s_Data->DebugTextureShader->SumbitUniform<glm::vec4>("u_Color", &color);
+			s_Data->DebugTextureShader->SumbitUniform<glm::mat4>("u_Transform", &transform);
 
 			s_Data->DebugCircleVertexArray->Bind();
 
@@ -449,7 +479,7 @@ namespace SmolEngine
 	{
 		if (s_Data->Light2DBufferSize < s_Data->Light2DBufferMaxSize)
 		{
-			s_Data->Light2DBuffer[s_Data->Light2DBufferSize] = Light2DBuffer(color, offset, radius, lightIntensity);
+			s_Data->Light2DBuffer[s_Data->Light2DBufferSize] = Light2DBuffer(color, { offset, 0 }, radius, lightIntensity);
 			s_Data->Light2DBufferSize++;
 		}
 	}
@@ -488,9 +518,17 @@ namespace SmolEngine
 	{
 #ifdef SMOLENGINE_EDITOR
 
-		s_Data->TextureShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/BaseShader.glsl");
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		s_Data->TextureShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/BaseShader2D_OpenGL.glsl");
+
 #else
-		std::string path = "../../SmolEngine/Assets/Shaders/BaseShader.glsl";
+
+
+#endif
+
+#else
+		std::string path = "../../SmolEngine/Assets/Shaders/BaseShader2D_OpenGL.glsl";
 		std::string name = "BaseShader.glsl";
 
 		if (FindShader(path, name))
@@ -500,13 +538,14 @@ namespace SmolEngine
 #endif
 		// Creating Uniform Map
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		std::vector<std::string> buffer;
 
 		buffer.push_back("u_Ligh2DBufferSize");
 		buffer.push_back("u_ViewProjection");
 		buffer.push_back("u_AmbientValue");
 		buffer.push_back("u_Textures");
-		buffer.push_back("u_TextMode");
 
 		for (size_t i = 0; i < s_Data->Light2DBufferMaxSize; i++)
 		{
@@ -522,6 +561,9 @@ namespace SmolEngine
 		}
 
 		s_Data->TextureShader->CreateUniformMap(buffer);
+
+#endif // SMOLENGINE_OPENGL_IMPL
+
 
 		// Creating white texture
 
@@ -544,7 +586,9 @@ namespace SmolEngine
 
 				{ ShaderDataType::Float2, "a_TexCoord" },
 
-				{ ShaderDataType::Float, "a_TextureIndex"}, // layout(location = 3)
+				{ShaderDataType::Int, "a_TextMode"},
+
+				{ ShaderDataType::Float, "a_TextureIndex"} // layout(location = 4)
 			}
 		);
 
@@ -552,7 +596,7 @@ namespace SmolEngine
 
 		// Creating Layers
 
-		for (auto& layer: s_Data->Layers)
+		for (auto& layer : s_Data->Layers)
 		{
 			layer.Base = new QuadVertex[s_Data->MaxVertices];
 
@@ -587,7 +631,10 @@ namespace SmolEngine
 		s_Data->QuadVertexArray->SetIndexBuffer(squareIB);
 		delete[] quadIndices;
 
-		// 
+
+		// Loading samplers
+
+#ifdef SMOLENGINE_OPENGL_IMPL
 
 		int32_t samplers[LayerDataBuffer::MaxTextureSlot];
 		for (uint32_t i = 0; i < LayerDataBuffer::MaxTextureSlot; ++i)
@@ -596,7 +643,9 @@ namespace SmolEngine
 		}
 
 		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetUniformIntArray("u_Textures", samplers, LayerDataBuffer::MaxTextureSlot);
+		s_Data->TextureShader->SumbitUniform<int*>("u_Textures", samplers, LayerDataBuffer::MaxTextureSlot);
+
+#endif // SMOLENGINE_OPENGL_IMPL
 
 		//
 

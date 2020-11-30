@@ -2,6 +2,7 @@
 #include "Core/EntryPoint.h"
 
 #include "EditorLayer.h"
+#include "VulkanTestLayer.h"
 
 
 namespace SmolEngine
@@ -16,11 +17,21 @@ namespace SmolEngine
 
 	}
 
-
 	void Editor::ClientInit()
 	{
+
 		auto& app = Application::GetApplication();
+
+		// TEMP
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		app.PushLayer(new EditorLayer);
+
+#else
+		
+		app.PushLayer(new VulkanTestLayer);
+#endif
 
 		EDITOR_INFO("Initialized successfully");
 	}

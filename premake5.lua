@@ -23,7 +23,6 @@ IncludeDir["entt"] = "SmolEngine/Libraries/entt"
 IncludeDir["yojimbo"] = "SmolEngine/Libraries/yojimbo"
 IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src"
 IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
-IncludeDir["shaderc"] = "SmolEngine/Libraries/shaderc/include"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -32,6 +31,7 @@ include "SmolEngine/Libraries/imgui"
 include "SmolEngine/Libraries/yojimbo"
 include "SmolEngine/Libraries/box2d"
 include "SmolEngine/Libraries/rttr"
+include "SmolEngine/Libraries/spir_v_cross"
 group ""
 
 
@@ -80,8 +80,7 @@ project "SmolEngine"
         "%{IncludeDir.entt}",
 		"%{IncludeDir.yojimbo}",
 		"%{IncludeDir.rttr}",
-		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.shaderc}"
+		"%{IncludeDir.vulkan}"
 	}
 
 	links 
@@ -92,8 +91,10 @@ project "SmolEngine"
 		"Yojimbo",
 		"Box2D",
 		"RTTR",
-		"opengl32.lib",
+		"SPIRV-Cross",
+		
 		"SmolEngine/Libraries/vulkan/libs/vulkan-1.lib",
+		"SmolEngine/Libraries/vulkan/libs/VkLayer_utils.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}
@@ -138,6 +139,11 @@ project "SmolEngine"
 			"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib"
 		}
 
+		defines
+		{
+			"SMOLENGINE_DEBUG"
+		}
+
 	filter "configurations:Debug (OpenGL)"
 	defines "SE_DEBUG"
 	buildoptions "/MDd"
@@ -147,6 +153,7 @@ project "SmolEngine"
 
 	links 
 	{ 
+		"opengl32.lib",
 		"SmolEngine/Libraries/freetype/libs/freetype_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
@@ -162,7 +169,8 @@ project "SmolEngine"
 
 	defines
 	{
-		"SMOLENGINE_OPENGL_IMPL"
+		"SMOLENGINE_OPENGL_IMPL",
+		"SMOLENGINE_DEBUG"
 	}
 
 	filter "configurations:Release (Vulkan)"
@@ -196,6 +204,7 @@ project "SmolEngine"
 
 	   links 
 	   { 
+		"opengl32.lib",
 		 "SmolEngine/Libraries/freetype/libs/freetype.lib",
 		 "SmolEngine/Libraries/vulkan/libs/shaderc.lib",
 		 "SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
@@ -251,8 +260,7 @@ project "GameX"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}",
 		"%{IncludeDir.rttr}",
-		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.shaderc}"
+		"%{IncludeDir.vulkan}"
 	}
 
 	links
@@ -287,6 +295,11 @@ project "GameX"
 	buildoptions "/bigobj"
 	symbols "on"
 
+	defines
+	{
+		"SMOLENGINE_OPENGL_IMPL"
+	}
+
 	--------------------------------------- Release
 
 	filter "configurations:Release (Vulkan)"
@@ -300,6 +313,11 @@ project "GameX"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
+
+	defines
+	{
+		"SMOLENGINE_OPENGL_IMPL"
+	}
 
 	
 	project "SmolEngine-Editor"
@@ -338,8 +356,7 @@ project "GameX"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}",
 		"%{IncludeDir.rttr}",
-		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.shaderc}"
+		"%{IncludeDir.vulkan}"
 	}
 
 	links
@@ -373,6 +390,11 @@ project "GameX"
 	buildoptions "/bigobj"
 	symbols "on"
 
+	defines
+	{
+		"SMOLENGINE_OPENGL_IMPL"
+	}
+
 	--------------------------------------- Release
 
 	filter "configurations:Release (Vulkan)"
@@ -386,3 +408,8 @@ project "GameX"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
+
+	defines
+	{
+		"SMOLENGINE_OPENGL_IMPL"
+	}

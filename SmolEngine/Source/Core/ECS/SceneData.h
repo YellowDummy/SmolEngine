@@ -23,32 +23,20 @@ namespace SmolEngine
 	public:
 
 		std::unordered_map<size_t, Ref<Actor>> m_ActorPool;
-
 		std::unordered_map<std::string, std::string> m_AssetMap;
-
-		///
 
 		glm::vec2 m_Gravity = glm::vec2(0.0f, -9.81f);
 
-		///
-
 		entt::registry m_Registry;
-
 		entt::entity m_Entity;
-
-		///
 
 		float m_AmbientStrength = 1.0f;
 
 	private:
 
 		std::string m_filePath = "";
-
 		std::string m_fileName = "";
-
 		std::string m_Name = std::string("");
-
-		///
 
 		size_t m_ID = 0;
 

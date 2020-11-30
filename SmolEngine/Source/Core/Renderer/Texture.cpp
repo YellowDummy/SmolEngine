@@ -41,6 +41,7 @@ namespace SmolEngine
 		return m_OpenglTexture2D.GetHeight();
 #else
 
+		return 0;
 #endif
 
 	}
@@ -52,7 +53,7 @@ namespace SmolEngine
 
 		return m_OpenglTexture2D.GetWidth();
 #else
-
+		return 0;
 #endif
 
 	}
@@ -65,6 +66,7 @@ namespace SmolEngine
 		return m_OpenglTexture2D.GetID();
 #else
 
+		return 0;
 #endif
 
 	}

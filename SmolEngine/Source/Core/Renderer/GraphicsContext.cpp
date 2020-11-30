@@ -10,7 +10,7 @@ namespace SmolEngine
 
 		m_OpenglContext.Setup(window);
 #else
-
+		m_VulkanContext.Setup(window);
 #endif
 
 	}
@@ -23,6 +23,7 @@ namespace SmolEngine
 		m_OpenglContext.SwapBuffers();
 #else
 
+		m_VulkanContext.SwapBuffers();
 #endif
 
 	}

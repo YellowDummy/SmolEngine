@@ -24,7 +24,7 @@ namespace SmolEngine
 
 	private:
 
-		GLFWwindow* m_Window;
+		GLFWwindow* m_Window =  nullptr;
 	};
 }
 

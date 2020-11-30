@@ -35,11 +35,11 @@ namespace SmolEngine
 		shader->Bind();
 		if (color != glm::vec4(1.0f))
 		{
-			shader->SetUniformFloat4("u_Color", color);
+			shader->SumbitUniform<glm::vec4>("u_Color", &color);
 		}
 
-		shader->SetUniformMat4("u_Transform", transform);
-		shader->SetUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		shader->SumbitUniform<glm::mat4>("u_Transform", &transform);
+		shader->SumbitUniform<glm::mat4>("u_ViewProjection", &m_SceneData->ViewProjectionMatrix);
 
 		vertexArray->Bind();
 		RendererCommand::DrawIndexed(vertexArray);

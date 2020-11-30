@@ -12,7 +12,8 @@
 
 #include "../../../GameX/CppScriptingExamples.h"
 
-#include "Core/Renderer/Vulkan/VulkanRendererAPI.h"
+#include "Core/Renderer/Vulkan/VulkanInstance.h"
+#include "Core/Renderer/Vulkan/VulkanDevice.h"
 
 namespace SmolEngine 
 {
@@ -43,6 +44,7 @@ namespace SmolEngine
 	Application::~Application()
 	{
 		NATIVE_INFO("State : Shutdown");
+
 		m_Running = false;
 		delete m_ImGuiLayer;
 	}
@@ -57,15 +59,6 @@ namespace SmolEngine
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
 
-		/// <TEST VULKAN>
-		
-		VulkanRendererAPI vulkan = {};
-
-		vulkan.Init();
-
-		/// <TEST VULKAN>
-		
-
 		//Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();
 
@@ -75,13 +68,41 @@ namespace SmolEngine
 		//Initializing LayerManager and Related Classes
 		m_LayerHandler = std::make_shared<LayerManager>();
 
-		//Creating New Window Using GLFW
-		m_Window = std::make_shared<Window>(std::string("SmolEngine Editor - v0.1"), 1080, 1920, m_EventHandler);
+		std::string appName;
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+#ifdef SMOLENGINE_DEBUG
+
+		appName = "SmolEngine Editor - Debug x64 (OpenGL)";
+#else
+		appName = "SmolEngine Editor - Release x64 (OpenGL)";
+#endif
+
+#else
+
+#ifdef SMOLENGINE_DEBUG
+
+		appName = "SmolEngine Editor - Debug x64 (Vulkan)";
+#else
+		appName = "SmolEngine Editor - Release x64 (Vulkan)";
+#endif
+
+#endif // SMOLENGINE_OPENGL_IMPL
+
+		//Creating New GLFW Window
+
+		m_Window = std::make_shared<Window>(appName, 1080, 1920, m_EventHandler);
 
 #ifdef SMOLENGINE_EDITOR
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		//Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
+
+#endif // SMOLENGINE_OPENGL_IMPL
+
 
 #endif
 
@@ -102,8 +123,11 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_EDITOR
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		//Pushing Dear ImGui Layer
 		PushLayer(m_ImGuiLayer);
+#endif
 
 #else
 		//Loading a scene with index 0 and starting the game

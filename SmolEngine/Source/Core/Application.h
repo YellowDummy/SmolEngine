@@ -18,29 +18,29 @@ namespace SmolEngine
 
 	struct DeltaTime;
 
-	///
 
 	class Application
 	{
 	public:
 
-		Application();
-
 		Application(const Application&) = delete;
 
 		virtual ~Application();
+
+		Application();
+
 
 		/// 
 		/// Main
 		/// 
 
-		void InitApp();
+		void OnEvent(Event& event);
 
 		void CloseApp();
 
-		void RunApp();
+		void InitApp();
 
-		void OnEvent(Event& event);
+		void RunApp();
 
 		/// 
 		/// Overrides
@@ -48,14 +48,13 @@ namespace SmolEngine
 
 		virtual void ClientInit() = 0;
 
-
 		/// 
 		/// Layers
 		/// 
 
-		void PushLayer(Layer* layer);
-
 		void PushOverlay(Layer* layer);
+
+		void PushLayer(Layer* layer);
 
 		void PopLayer();
 
@@ -65,22 +64,21 @@ namespace SmolEngine
 
 		void InitializeScripts();
 
-
 		/// 
 		/// Callbacks
 		/// 
 
-		bool OnWindowClose(Event& e);
-
 		bool OnWindowResize(Event& e);
+
+		bool OnWindowClose(Event& e);
 
 		/// 
 		/// Getters
 		/// 
 
-		Window& GetWindow() { return *m_Window; }
-
 		static Application& GetApplication() { return *s_Instance; }
+
+		Window& GetWindow() { return *m_Window; }
 
 		const uint32_t GetWindowHeight();
 
@@ -90,7 +88,6 @@ namespace SmolEngine
 
 		ImGuiLayer* m_ImGuiLayer;
 
-		///
 
 		Ref<Window> m_Window = nullptr;
 
@@ -101,8 +98,6 @@ namespace SmolEngine
 		UIText* m_UIText = nullptr;
 
 	private:
-
-		///
 
 		static Application* s_Instance;
 

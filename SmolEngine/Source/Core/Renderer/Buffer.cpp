@@ -34,7 +34,6 @@ namespace SmolEngine
 
 		// Vulkan
 
-		return nullptr;
 #endif
 
 		return buffer;
@@ -52,8 +51,6 @@ namespace SmolEngine
 #else
 
 		// Vulkan
-
-		return nullptr;
 
 #endif
 
@@ -96,9 +93,9 @@ namespace SmolEngine
 
 		return m_OpenglIndexBuffer.GetCount();
 #else
-
 		// Vulkan
 
+		return 0;
 #endif
 
 	}
@@ -115,7 +112,6 @@ namespace SmolEngine
 
 		// Vulkan
 
-		return nullptr;
 #endif
 
 		return buffer;
@@ -181,8 +177,9 @@ namespace SmolEngine
 
 		return m_OpenglVertexArray.GetIndexBuffer();
 #else
-
 		// Vulkan
+
+		return std::make_shared<IndexBuffer>();
 #endif
 
 	}
@@ -239,6 +236,10 @@ namespace SmolEngine
 		return m_OpenglVertexBuffer.GetLayout();
 #else
 		// Vulkan
+
+		BufferLayout dummy;
+
+		return dummy;
 #endif
 
 	}

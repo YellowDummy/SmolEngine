@@ -1,7 +1,5 @@
 #pragma once
-
 #include <memory>
-
 
 #ifdef PLATFORM_WIN
 #if SE_STATIC_LINK

@@ -2,20 +2,13 @@
 #include "Core/Renderer/Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include <shaderc/shaderc.hpp>
+
+#include "Core/Renderer/UniformBuffer.h"
 
 namespace SmolEngine
 {
 	typedef unsigned int GLenum;
-
-	enum class ShaderType
-	{
-		None = 0,
-		
-		Vertex,
-		
-		Fragment
-	};
-
 
 	class OpenglShader
 	{
@@ -25,23 +18,39 @@ namespace SmolEngine
 
 		~OpenglShader();
 
-		// Init
+		///
+		///  Main
+		/// 
+
+		void Init(const shaderc::SpvCompilationResult* vertex, const shaderc::SpvCompilationResult* frag, const shaderc::SpvCompilationResult* compute = nullptr);
 
 		void Init(const std::string& filepath);
 
 		void Init(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName);
 
-		// Binding
+	private:
+
+		void Link();
+
+		void Reflect(const std::unordered_map<uint32_t, std::vector<uint32_t>>& binaryData);
+
+	public:
+
+		///
+		///  Binding
+		/// 
 
 		void Bind() const;
 
 		void UnBind() const;
 
-		// Uniforms
+		///
+		///  Uniforms
+		/// 
 
 		void CreateUniformMap(const std::vector<std::string>& list);
 
-		void SetUniformIntArray(const std::string& name, int* values, uint32_t count);
+		void SetUniformIntArray(const std::string& name, const int* values, uint32_t count);
 
 		void SetUniformFloat2(const std::string& name, const glm::vec2& float2);
 
@@ -57,7 +66,11 @@ namespace SmolEngine
 
 		void UploadUniformMatrix3(const std::string& name, const glm::mat3& matrix);
 
-		/// Getters
+		void SumbitUniformBuffer(const std::string& name, const void* data, uint32_t size);
+
+		///
+		///  Getters
+		/// 
 
 		inline const std::string& GetName()  { return m_Name; }
 
@@ -72,11 +85,19 @@ namespace SmolEngine
 	private:
 
 		std::unordered_map<std::string, GLenum> m_UniformMap;
+		std::unordered_map<std::string, UniformBuffer> m_UniformBuffers;
+		std::unordered_map<std::string, UniformResource> m_UniformResources;
+
+		std::array<int, 3> m_ShaderIDs = {};
 
 		std::string ReadFile(const std::string& file);
 
 		std::string m_Name = "None";
 
-		uint32_t m_RendererID = -1;
+		uint32_t m_RendererID = 0;
+
+	private:
+
+		friend class Shader;
 	};
 }

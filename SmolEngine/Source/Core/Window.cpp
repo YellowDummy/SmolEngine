@@ -58,29 +58,54 @@ namespace SmolEngine
 		glfwInit();
 		glfwSetErrorCallback([](int error, const char* description) { NATIVE_ERROR("GLFW Error ({0}): {1}", error, description); });
 
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		// No need to create OpenGL window automatically
+
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+#endif //!SMOLENGINE_OPENGL_IMPL
+
+		// Create Window
+
 		m_Window = glfwCreateWindow((int)width, (int)height, title.c_str(), nullptr, nullptr);
+		if (!m_Window)
+		{
+
+			NATIVE_ERROR("Failed to create window!");
+			assert(m_Window);
+			abort();
+		}
+
+		// Create Graphics Context
+
+		m_Context = new GraphicsContext();
+		m_Context->Setup(m_Window);
 
 		Data.Width = width;
 		Data.Height = height;
 
 #ifndef SMOLENGINE_EDITOR
 
+		// Setting Fullscreen
+
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 		glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 
-#endif // !SMOLEGNINE_EDITOR
+#else
+		glfwMaximizeWindow(m_Window);
 
-		if (!m_Window)
-		{
-			NATIVE_ERROR("Failed to create window!");
-			return;
-		}
+#endif // SMOLENGINE_OPENGL_IMPL
 
-		m_Context = new GraphicsContext();
-		m_Context->Setup(m_Window);
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		// Setting VSync
 
 		SetVSync(true);
+
+#endif //SMOLENGINE_OPENGL_IMPL
 
 		// Callbacks
 
