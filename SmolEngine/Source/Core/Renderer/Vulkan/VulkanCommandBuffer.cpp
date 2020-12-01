@@ -14,10 +14,10 @@ namespace SmolEngine
 
 	VulkanCommandBuffer::~VulkanCommandBuffer()
 	{
-
+		vkFreeCommandBuffers(*m_Device->GetLogicalDevice(), *m_CommandPool->GetCommandPool(), static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
 	}
 
-	bool VulkanCommandBuffer::Init(const VulkanDevice* device, const VulkanCommandPool* commandPool, const VulkanSwapchain* targetSwapchain)
+	bool VulkanCommandBuffer::Init(VulkanDevice* device, VulkanCommandPool* commandPool, VulkanSwapchain* targetSwapchain)
 	{
 		m_CommandBuffers.resize(targetSwapchain->m_ImageCount);
 
@@ -33,10 +33,35 @@ namespace SmolEngine
 
 			if (result == VK_SUCCESS)
 			{
+				m_CommandPool = commandPool;
+				m_Device = device;
+				m_TargetSwapchain = targetSwapchain;
+
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	bool VulkanCommandBuffer::Recrate()
+	{
+		if (!m_Device || !m_CommandPool || !m_TargetSwapchain)
+		{
+			return false;
+		}
+
+		vkFreeCommandBuffers(*m_Device->GetLogicalDevice(), *m_CommandPool->GetCommandPool(), static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
+		return Init(m_Device, m_CommandPool, m_TargetSwapchain);
+	}
+
+	const std::vector<VkCommandBuffer>& VulkanCommandBuffer::GetCommandBuffer() const
+	{
+		return m_CommandBuffers;
+	}
+
+	size_t VulkanCommandBuffer::GetBufferSize() const
+	{
+		return m_CommandBuffers.size();
 	}
 }

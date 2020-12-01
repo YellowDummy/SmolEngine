@@ -186,7 +186,14 @@ namespace SmolEngine
 
 	Ref<VertexArray> VertexArray::Create()
 	{
-		return std::make_shared<VertexArray>();
+		auto vertexArray = std::make_shared<VertexArray>();
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		vertexArray->m_OpenglVertexArray.Init();
+#endif
+
+		return vertexArray;
 	}
 
 	void VertexBuffer::Bind() const

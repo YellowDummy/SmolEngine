@@ -107,7 +107,7 @@ namespace SmolEngine
 #endif
 
 		//Initializing Platform Specific Renderer
-		RendererCommand::Init();
+		//RendererCommand::Init();
 
 		//Initializing Scene Handler
 		WorldAdmin::GetScene()->Init();
@@ -174,12 +174,13 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_EDITOR
 
-			m_ImGuiLayer->OnBegin();
-			for (Layer* layer : *m_LayerHandler)
-			{
-				layer->OnImGuiRender();
-			}
-			m_ImGuiLayer->OnEnd();
+			
+			//m_ImGuiLayer->OnBegin();
+			//for (Layer* layer : *m_LayerHandler)
+			//{
+			//	layer->OnImGuiRender();
+			//}
+			//m_ImGuiLayer->OnEnd();
 #endif
 			m_Window->OnUpdate();
 		}
@@ -240,7 +241,11 @@ namespace SmolEngine
 		}
 
 		m_WindowMinimized = false; 
+
+		m_Window->ResizeContext(e.GetWidth(), e.GetHeight());
 		Renderer::OnWidowResize(e.GetHeight(), e.GetWidth());
+
+		// No need to block this event
 		return false;
 	}
 

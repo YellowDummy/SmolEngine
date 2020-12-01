@@ -15,6 +15,17 @@ namespace SmolEngine
 
 	}
 
+	void GraphicsContext::OnResize(uint32_t width, uint32_t height)
+	{
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
+
+#else
+
+		m_VulkanContext.OnResize(width, height);
+#endif
+	}
+
 	void GraphicsContext::SwapBuffers()
 	{
 

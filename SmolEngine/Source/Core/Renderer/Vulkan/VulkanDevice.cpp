@@ -114,10 +114,10 @@ namespace SmolEngine
 			deviceInfo.ppEnabledExtensionNames = m_ExtensionsList.data();
 		}
 
-		VkResult result = vkCreateDevice(m_VkPhysicalDevice, &deviceInfo, nullptr, &m_VkLogicalDevice);
-		assert(result == VK_SUCCESS);
+VkResult result = vkCreateDevice(m_VkPhysicalDevice, &deviceInfo, nullptr, &m_VkLogicalDevice);
+assert(result == VK_SUCCESS);
 
-		return result == VK_SUCCESS;
+return result == VK_SUCCESS;
 	}
 
 	bool VulkanDevice::HasRequiredExtensions(const VkPhysicalDevice& device, const std::vector<const char*>& extensionsList)
@@ -137,7 +137,7 @@ namespace SmolEngine
 			for (uint32_t i = 0; i < extCount; ++i)
 			{
 				// Note:
-                // The return value from strcmp is 0 if the two strings are equal
+				// The return value from strcmp is 0 if the two strings are equal
 
 				if (strcmp(extensions[i].extensionName, name) == 0)
 				{
@@ -205,6 +205,25 @@ namespace SmolEngine
 	const VkDevice* const VulkanDevice::GetLogicalDevice() const
 	{
 		return &m_VkLogicalDevice;
+	}
+
+	uint32_t VulkanDevice::GetMemoryTypeIndex(uint32_t typeBits, VkMemoryPropertyFlags memFlags) const
+	{
+		for (uint32_t i = 0; i < m_VkMemoryProperties.memoryTypeCount; ++i)
+		{
+			if ((typeBits & 1) == 1)
+			{
+				if ((m_VkMemoryProperties.memoryTypes[i].propertyFlags & memFlags) == memFlags)
+				{
+					return i;
+				}
+			}
+
+			typeBits >>= 1;
+		}
+
+		NATIVE_ERROR("Could not find a suitable memory type!");
+		abort();
 	}
 
 	uint32_t VulkanDevice::GetQueueFamilyIndex() const

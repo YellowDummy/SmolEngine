@@ -90,9 +90,13 @@ namespace SmolEngine
 
 		CreateBatchData();
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		CreateDebugData();
 
 		CreateFramebufferData();
+#endif
+
 	}
 
 	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue)

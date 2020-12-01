@@ -681,6 +681,7 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanShader.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanSwapchain.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanTexture.h" />
@@ -783,6 +784,7 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanShader.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanSwapchain.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanTexture.cpp" />

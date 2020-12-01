@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "VulkanSwapchain.h"
+#include "Core/Renderer/Vulkan/VulkanContext.h"
 #include "Core/Renderer/Vulkan/VulkanInstance.h"
 #include "Core/Renderer/Vulkan/VulkanDevice.h"
+#include "Core/Renderer/Vulkan/VulkanCommandBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanCommandPool.h"
+#include "Core/Renderer/Vulkan/VulkanMemoryAllocator.h"
 
 #include <GLFW/glfw3.h>
 
@@ -21,6 +25,7 @@ namespace SmolEngine
     {
 
     }
+
     VulkanSwapchain::~VulkanSwapchain()
     {
 
@@ -42,13 +47,19 @@ namespace SmolEngine
         fpAcquireNextImageKHR = reinterpret_cast<PFN_vkAcquireNextImageKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkAcquireNextImageKHR"));
         fpQueuePresentKHR = reinterpret_cast<PFN_vkQueuePresentKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkQueuePresentKHR"));
 
-		if (InitSurface(window) == VK_SUCCESS)
-		{
-			return true;
-		}
-
-		return false;
+		return InitSurface(window) == VK_SUCCESS;
     }
+
+	bool VulkanSwapchain::Prepare()
+	{
+		VkResult result = VK_ERROR_UNKNOWN;
+
+		result = CreateDepthStencil();
+		result = CreateRenderPass();
+		result = CreateFramebuffer(m_Width, m_Height);
+
+		return result == VK_SUCCESS;
+	}
 
 	void VulkanSwapchain::Create(uint32_t* width, uint32_t* height, bool vSync)
 	{
@@ -90,6 +101,8 @@ namespace SmolEngine
 			*height = surfCaps.currentExtent.height;
 		}
 
+		m_Width = *width;
+		m_Height = *height;
 
 		// Select a present mode for the swapchain
 
@@ -235,6 +248,31 @@ namespace SmolEngine
 		}
 	}
 
+	void VulkanSwapchain::OnResize(uint32_t width, uint32_t height, VulkanCommandBuffer* commandBuffer)
+	{
+		const auto& device = *m_Device->GetLogicalDevice();
+
+		vkDeviceWaitIdle(device);
+
+		{
+			Create(&width, &height);
+
+			vkDestroyImageView(device, m_DepthStencil.ImageView, nullptr);
+			vkDestroyImage(device, m_DepthStencil.Image, nullptr);
+			vkFreeMemory(device, m_DepthStencil.DeviceMemory, nullptr);
+
+			m_Framebuffer.Clear();
+
+			Prepare();
+
+			assert(commandBuffer->Recrate() == true);
+
+			VulkanContext::GetSingleton()->BuildTestCommandBuffer();
+		}
+
+		vkDeviceWaitIdle(device);
+	}
+
 	void VulkanSwapchain::CleanUp()
 	{
 		if (m_Device == nullptr || m_Instance == nullptr)
@@ -309,91 +347,230 @@ namespace SmolEngine
 		VkResult result = glfwCreateWindowSurface(*m_Instance->GetInstance(), window, nullptr, &m_Surface);
 		VK_CHECK_RESULT(result);
 
-#if 0
-        // Create surface
-        VkWin32SurfaceCreateInfoKHR surfaceCreateInfo = {};
-        {
-            surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-            surfaceCreateInfo.hinstance = (HINSTANCE)platformHandle;
-            surfaceCreateInfo.hwnd = (HWND)platformWindow;
-            VkResult result = vkCreateWin32SurfaceKHR(*m_Instance->GetInstance(), &surfaceCreateInfo, nullptr, &m_Surface);
+		VkBool32 supported;
+		vkGetPhysicalDeviceSurfaceSupportKHR(*m_Device->GetPhysicalDevice(), m_Device->GetQueueFamilyIndex(), m_Surface, &supported);
+		assert(supported == 1);
 
-            assert(result == VK_SUCCESS);
-        }
-
-		// Get available queue family properties
-		uint32_t queueCount;
-		vkGetPhysicalDeviceQueueFamilyProperties(*m_Device->GetPhysicalDevice(), &queueCount, NULL);
-		assert(queueCount >= 1);
-
-		std::vector<VkQueueFamilyProperties> queueProps(queueCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(*m_Device->GetPhysicalDevice(), &queueCount, queueProps.data());
-
-		// Iterate over each queue to learn whether it supports presenting:
-		// Find a queue with present support
-		// Will be used to present the swap chain images to the windowing system
-		std::vector<VkBool32> supportsPresent(queueCount);
-		for (uint32_t i = 0; i < queueCount; i++)
-		{
-			fpGetPhysicalDeviceSurfaceSupportKHR(*m_Device->GetPhysicalDevice(), i, m_Surface, &supportsPresent[i]);
-		}
-
-		// Search for a graphics and a present queue in the array of queue
-		// families, try to find one that supports both
-		uint32_t graphicsQueueNodeIndex = UINT32_MAX;
-		uint32_t presentQueueNodeIndex = UINT32_MAX;
-		for (uint32_t i = 0; i < queueCount; i++)
-		{
-			if ((queueProps[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0)
-			{
-				if (graphicsQueueNodeIndex == UINT32_MAX)
-				{
-					graphicsQueueNodeIndex = i;
-				}
-
-				if (supportsPresent[i] == VK_TRUE)
-				{
-					graphicsQueueNodeIndex = i;
-					presentQueueNodeIndex = i;
-					break;
-				}
-			}
-		}
-		if (presentQueueNodeIndex == UINT32_MAX)
-		{
-			// If there's no queue that supports both present and graphics
-			// try to find a separate present queue
-			for (uint32_t i = 0; i < queueCount; ++i)
-			{
-				if (supportsPresent[i] == VK_TRUE)
-				{
-					presentQueueNodeIndex = i;
-					break;
-				}
-			}
-		}
-
-		// Exit if either a graphics or a presenting queue hasn't been found
-		if (graphicsQueueNodeIndex == UINT32_MAX || presentQueueNodeIndex == UINT32_MAX)
-		{
-			NATIVE_ERROR("Could not find a graphics and/or presenting queue!");
-			abort();
-		}
-
-		// todo : Add support for separate graphics and presenting queue
-		if (graphicsQueueNodeIndex != presentQueueNodeIndex)
-		{
-			NATIVE_ERROR("Separate graphics and presenting queues are not supported yet!");
-			abort();
-		}
-
-		m_QueueNodeIndex = graphicsQueueNodeIndex;
-
-#endif
 		FindColorSpaceFormat();
 
 		return result;
     }
+
+	const VulkanFramebuffer& VulkanSwapchain::GetFramebuffer() const
+	{
+		return m_Framebuffer;
+	}
+
+	const VkRenderPass VulkanSwapchain::GetRenderPass() const
+	{
+		return m_RenderPass;
+	}
+
+	uint32_t VulkanSwapchain::GetWidth() const
+	{
+		return m_Width;
+	}
+
+	uint32_t VulkanSwapchain::GetHeight() const
+	{
+		return m_Height;
+	}
+
+	VkResult VulkanSwapchain::CreateFramebuffer(uint32_t width, uint32_t height)
+	{
+		m_Framebuffer = {};
+		return m_Framebuffer.Init(this, width, height);
+	}
+
+	VkResult VulkanSwapchain::CreateRenderPass()
+	{
+		std::array<VkAttachmentDescription, 2> attachments = {};
+
+		// color attachment
+		{
+			attachments[0].format = m_ColorFormat;
+			attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		}
+
+
+		// depth attachment
+		{
+			attachments[1].format = m_DepthBufferFormat;
+			attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		}
+
+		VkAttachmentReference colorRef = {};
+		{
+			colorRef.attachment = 0;
+			colorRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		}
+
+		VkAttachmentReference depthRef = {};
+		{
+			depthRef.attachment = 1;
+			depthRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		}
+
+		VkSubpassDescription subpassDes = {};
+		{
+			subpassDes.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+			subpassDes.colorAttachmentCount = 1;
+			subpassDes.pColorAttachments = &colorRef;
+			subpassDes.pDepthStencilAttachment = &depthRef;
+			subpassDes.inputAttachmentCount = 0;
+			subpassDes.pInputAttachments = nullptr;
+			subpassDes.preserveAttachmentCount = 0;
+			subpassDes.pPreserveAttachments = nullptr;
+			subpassDes.pResolveAttachments = nullptr;
+		}
+
+		VkSubpassDependency subpassDependency = {};
+		{
+			subpassDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+			subpassDependency.dstSubpass = 0;
+			subpassDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			subpassDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			subpassDependency.srcAccessMask = 0;
+			subpassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		}
+
+		VkRenderPassCreateInfo renderPassCI = {};
+		{
+			renderPassCI.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+			renderPassCI.attachmentCount = static_cast<uint32_t>(attachments.size());
+			renderPassCI.pAttachments = attachments.data();
+			renderPassCI.subpassCount = 1;
+			renderPassCI.pSubpasses = &subpassDes;
+			renderPassCI.dependencyCount = 1;
+			renderPassCI.pDependencies = &subpassDependency;
+		}
+
+		VkResult result = VK_ERROR_UNKNOWN;
+
+		result = vkCreateRenderPass(*m_Device->GetLogicalDevice(), &renderPassCI, nullptr, &m_RenderPass);
+		VK_CHECK_RESULT(result);
+
+		VkPipelineCacheCreateInfo pipelineCacheCI = {};
+		{
+			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+		}
+
+		result = vkCreatePipelineCache(*m_Device->GetLogicalDevice(), &pipelineCacheCI, nullptr, &m_PipelineCash);
+		VK_CHECK_RESULT(result);
+
+		return result;
+	}
+
+	VkResult VulkanSwapchain::CreateDepthStencil()
+	{
+		if (m_Device == nullptr || m_Instance == nullptr)
+		{
+			NATIVE_ERROR("VulkanDevice or VulkanInstance is nullptr");
+			assert(m_Device != nullptr || m_Instance != nullptr);
+			return VK_ERROR_UNKNOWN;
+		}
+
+		VkResult result = VK_ERROR_UNKNOWN;
+		std::vector<VkFormat> depthFormats =
+		{
+			VK_FORMAT_D32_SFLOAT_S8_UINT,
+			VK_FORMAT_D32_SFLOAT,
+			VK_FORMAT_D24_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM
+		};
+
+		//TODO: Move to VulkanDevice
+
+		bool formatFound = false;
+		for (auto& format : depthFormats)
+		{
+			VkFormatProperties formatProbs;
+			vkGetPhysicalDeviceFormatProperties(*m_Device->GetPhysicalDevice(), format, &formatProbs);
+
+			if (formatProbs.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+			{
+				m_DepthBufferFormat = format;
+				formatFound = true;
+				break;
+			}
+		}
+
+		if (formatFound == false)
+		{
+			NATIVE_ERROR("VulkanSwapchain::CreateDepthStencil: DepthBufferFormat is not found!");
+			assert(formatFound == true);
+
+			abort();
+		}
+
+		VkImageCreateInfo imageCI = {};
+		{
+			imageCI.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			imageCI.imageType = VK_IMAGE_TYPE_2D;
+			imageCI.format = m_DepthBufferFormat;
+			imageCI.extent = { m_Width, m_Height, 1 };
+			imageCI.mipLevels = 1;
+			imageCI.arrayLayers = 1;
+			imageCI.samples = VK_SAMPLE_COUNT_1_BIT;
+			imageCI.tiling = VK_IMAGE_TILING_OPTIMAL;
+			imageCI.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+			result = vkCreateImage(*m_Device->GetLogicalDevice(), &imageCI, nullptr, &m_DepthStencil.Image);
+			VK_CHECK_RESULT(result);
+
+			VkMemoryRequirements memReqs{};
+			vkGetImageMemoryRequirements(*m_Device->GetLogicalDevice(), m_DepthStencil.Image, &memReqs);
+
+			VkMemoryAllocateInfo memAllloc{};
+			{
+				memAllloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+				memAllloc.allocationSize = memReqs.size;
+				memAllloc.memoryTypeIndex = m_Device->GetMemoryTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+			}
+
+			result = vkAllocateMemory(*m_Device->GetLogicalDevice(), &memAllloc, nullptr, &m_DepthStencil.DeviceMemory);
+			VK_CHECK_RESULT(result);
+
+			result = vkBindImageMemory(*m_Device->GetLogicalDevice(), m_DepthStencil.Image, m_DepthStencil.DeviceMemory, 0);
+			VK_CHECK_RESULT(result);
+		}
+
+		VkImageViewCreateInfo imageViewCI = {};
+		{
+			imageViewCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			imageViewCI.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			imageViewCI.image = m_DepthStencil.Image;
+			imageViewCI.format = m_DepthBufferFormat;
+			imageViewCI.subresourceRange.baseMipLevel = 0;
+			imageViewCI.subresourceRange.levelCount = 1;
+			imageViewCI.subresourceRange.baseArrayLayer = 0;
+			imageViewCI.subresourceRange.layerCount = 1;
+			imageViewCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+
+			if (m_DepthBufferFormat >= VK_FORMAT_D16_UNORM_S8_UINT)
+			{
+				imageViewCI.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
+			}
+
+			result = vkCreateImageView(*m_Device->GetLogicalDevice(), &imageViewCI, nullptr, &m_DepthStencil.ImageView);
+			VK_CHECK_RESULT(result);
+		}
+
+		return result;
+	}
 
 	void VulkanSwapchain::FindColorSpaceFormat()
 	{

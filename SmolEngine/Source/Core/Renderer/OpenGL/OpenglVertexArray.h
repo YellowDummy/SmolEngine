@@ -20,13 +20,18 @@ namespace SmolEngine
 		~OpenglVertexArray();
 
 		/// 
+		/// Main
+		/// 
+
+		void Init();
+
+		/// 
 		/// Binding
 		/// 
 
 		void Bind() const;
 
 		void UnBind() const;
-
 
 		/// 
 		/// Setters
@@ -46,8 +51,10 @@ namespace SmolEngine
 
 		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
 
-		Ref<IndexBuffer> m_IndexBuffer;
+		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
-		uint32_t m_RendererID;
+		uint32_t m_RendererID = UINT32_MAX;
+
+		bool m_IsInitialized = false;
 	};
 }

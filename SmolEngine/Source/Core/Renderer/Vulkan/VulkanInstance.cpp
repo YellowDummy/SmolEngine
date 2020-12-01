@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <vector>
 
+#define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
+
 namespace SmolEngine
 {
 	VulkanInstance::VulkanInstance()
@@ -48,8 +50,15 @@ namespace SmolEngine
 
 	bool VulkanInstance::CreateInstance(const VkApplicationInfo& appInfo)
 	{
-		const std::vector<const char*> instanceLayers = { "VK_LAYER_KHRONOS_validation" };
-		const std::vector<const char*> instanceExt = { "VK_EXT_debug_report" };
+		std::vector<const char*> instanceLayers = { "VK_LAYER_KHRONOS_validation" };
+		std::vector<const char*> instanceExt = { "VK_EXT_debug_report", VK_KHR_SURFACE_EXTENSION_NAME};
+
+#ifdef _WIN32
+
+		instanceExt.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+		
+#endif // _WIN32
+
 
 		VkInstanceCreateInfo instanceInfo = {};
 		{

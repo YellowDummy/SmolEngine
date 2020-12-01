@@ -21,6 +21,8 @@ namespace SmolEngine
 		
 		void Init(VulkanDevice* device);
 
+		void Reset();
+
 	private:
 
 		bool SetupCommandPool(const VulkanDevice* device);

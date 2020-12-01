@@ -22,10 +22,27 @@ namespace SmolEngine
 		/// Main
 		/// 
 		
-		bool Init(const VulkanDevice* device, const VulkanCommandPool* commandPool, const VulkanSwapchain* targetSwapchain);
+		bool Init(VulkanDevice* device, VulkanCommandPool* commandPool, VulkanSwapchain* targetSwapchain);
+
+		bool Recrate();
+
+		/// 
+		/// Getters
+		/// 
+
+		const std::vector<VkCommandBuffer>& GetCommandBuffer() const;
+
+		size_t GetBufferSize() const;
 
 	private:
 
 		std::vector<VkCommandBuffer> m_CommandBuffers;
+
+
+		VulkanSwapchain* m_TargetSwapchain = nullptr;
+
+		VulkanCommandPool* m_CommandPool = nullptr;
+
+		VulkanDevice* m_Device = nullptr;
 	};
 }

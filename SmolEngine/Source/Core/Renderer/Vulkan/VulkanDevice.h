@@ -34,6 +34,8 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
+		uint32_t GetMemoryTypeIndex(uint32_t typeBits, VkMemoryPropertyFlags memFlags) const;
+
 		const VkPhysicalDeviceMemoryProperties* const GetMemoryProperties() const;
 
 		const VkPhysicalDeviceProperties* const GetDeviceProperties() const;
@@ -75,7 +77,6 @@ namespace SmolEngine
 
 
 		uint32_t m_DeviceQueueFamilyIndex = 0;
-
 
 		std::vector<const char*> m_ExtensionsList;
 

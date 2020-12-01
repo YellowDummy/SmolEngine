@@ -37,11 +37,9 @@ namespace SmolEngine
 		/// Main
 		/// 
 
+		void ResizeContext(uint32_t width, uint32_t height);
+
 		void OnUpdate();
-
-		void SetWidth(int);
-
-		void SetHeight(int);
 
 		void ShutDown();
 
@@ -49,11 +47,19 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
-		unsigned int GetWidth() const;
+		GLFWwindow* GetNativeWindow() const;
 
-		unsigned int GetHeight() const;
+		uint32_t GetWidth() const;
 
-		GLFWwindow* GetNativeWindow() const { return m_Window; }
+		uint32_t GetHeight() const;
+
+		/// 
+		/// Setters
+		/// 
+
+		void SetWidth(uint32_t value);
+
+		void SetHeight(uint32_t value);
 
 	public:
 

@@ -29,12 +29,22 @@ namespace SmolEngine
 
 	OpenglVertexArray::OpenglVertexArray()
 	{
-		glCreateVertexArrays(1, &m_RendererID);
+
 	}
 
 	OpenglVertexArray::~OpenglVertexArray()
 	{
-		glDeleteVertexArrays(1, &m_RendererID);
+		if (m_IsInitialized)
+		{
+			glDeleteVertexArrays(1, &m_RendererID);
+		}
+	}
+
+	void OpenglVertexArray::Init()
+	{
+		glCreateVertexArrays(1, &m_RendererID);
+
+		m_IsInitialized = true;
 	}
 
 	void OpenglVertexArray::Bind() const

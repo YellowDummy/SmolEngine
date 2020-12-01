@@ -24,6 +24,14 @@ namespace SmolEngine
 		WidnowInit(title, width, height);
 	}
 
+	void Window::ResizeContext(uint32_t width, uint32_t height)
+	{
+		if (m_Context != nullptr)
+		{
+			m_Context->OnResize(width, height);
+		}
+	}
+
 	void Window::OnUpdate()
 	{
 		if (!glfwWindowShouldClose(m_Window))
@@ -33,22 +41,27 @@ namespace SmolEngine
 		}
 	}
 
-	void Window::SetWidth(int value)
+	void Window::SetWidth(uint32_t value)
 	{
 		Data.Width = value;
 	}
 
-	void Window::SetHeight(int value)
+	void Window::SetHeight(uint32_t value)
 	{
 		Data.Height = value;
 	}
 
-	unsigned int Window::GetWidth() const
+	GLFWwindow* Window::GetNativeWindow() const
+	{
+		return m_Window;
+	}
+
+	uint32_t Window::GetWidth() const
 	{
 		return Data.Width;
 	}
 
-	unsigned int Window::GetHeight() const
+	uint32_t Window::GetHeight() const
 	{
 		return Data.Height;
 	}
@@ -94,7 +107,7 @@ namespace SmolEngine
 		glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 
 #else
-		glfwMaximizeWindow(m_Window);
+		//glfwMaximizeWindow(m_Window);
 
 #endif // SMOLENGINE_OPENGL_IMPL
 

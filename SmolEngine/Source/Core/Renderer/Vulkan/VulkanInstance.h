@@ -2,7 +2,7 @@
 
 #include "Core/Core.h"
 
-#include <vulkan/vulkan.h>
+#include "Core/Renderer/Vulkan/Vulkan.h"
 
 namespace SmolEngine
 {
