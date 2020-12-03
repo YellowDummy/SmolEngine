@@ -38,4 +38,15 @@ namespace SmolEngine
 #endif
 
 	}
+
+	void GraphicsContext::BeginFrame()
+	{
+
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
+#else
+		m_VulkanContext.BeginFrame();
+#endif
+
+	}
 }

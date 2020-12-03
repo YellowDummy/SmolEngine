@@ -2,6 +2,9 @@
 
 #include "SmolEngineCore.h"
 
+#include "Core/Renderer/Shader.h"
+#include "Core/Renderer/Vulkan/VulkanPipeline.h"
+
 namespace SmolEngine
 {
 	class VulkanTestLayer : public Layer
@@ -26,5 +29,14 @@ namespace SmolEngine
 		void OnAttach() override;
 
 		void OnDetach() override;
+
+
+		void BuildTestCommandBuffer();
+
+	private:
+
+		VulkanPipeline m_Pipeline = {};
+
+		Ref<Shader> m_Shader = nullptr;
 	};
 }

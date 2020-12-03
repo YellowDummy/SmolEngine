@@ -1612,6 +1612,8 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\Vulkan.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanPipeline.h" />
+    <ClInclude Include="Source\Core\Renderer\ShaderTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1896,5 +1898,6 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanPipeline.cpp" />
   </ItemGroup>
 </Project>

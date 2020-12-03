@@ -24,27 +24,28 @@ namespace SmolEngine
 
 		void Setup(GLFWwindow* window);
 
+		void BeginFrame();
+
 		void SwapBuffers();
-
-		// TEMP
-		
-		void BuildTestCommandBuffer();
-
-		void Render();
 
 		/// 
 		/// Getters
 		/// 
 
+		inline static VulkanContext* GetSingleton() { return s_ContextInstance; }
+
+		inline GLFWwindow* GetWindow() { return m_Window; }
+
+
+		inline static VulkanCommandBuffer& GetCommandBuffer() { return m_CommandBuffer; }
+
 		inline static VulkanCommandPool& GetCommandPool() { return m_CommandPool; }
 
-		inline static VulkanContext* GetSingleton() { return s_ContextInstance; }
+		inline static VulkanSwapchain& GetSwapchain() { return m_Swapchain; }
 
 		inline static VulkanInstance& GetInstance() { return m_Instance; }
 
 		inline static VulkanDevice& GetDevice() { return m_Device; }
-
-		inline GLFWwindow* GetWindow() { return m_Window; }
 
 	private:
 
@@ -65,8 +66,6 @@ namespace SmolEngine
 
 
 		GLFWwindow* m_Window = nullptr;
-
-		uint32_t m_CurrentBuffer = 0;
 
 
 		bool m_IsInitialized = false;

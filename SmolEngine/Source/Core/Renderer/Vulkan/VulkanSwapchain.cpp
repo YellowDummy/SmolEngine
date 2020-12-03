@@ -266,8 +266,6 @@ namespace SmolEngine
 			Prepare();
 
 			assert(commandBuffer->Recrate() == true);
-
-			VulkanContext::GetSingleton()->BuildTestCommandBuffer();
 		}
 
 		vkDeviceWaitIdle(device);
@@ -300,7 +298,7 @@ namespace SmolEngine
 		m_Swapchain = VK_NULL_HANDLE;
 	}
 
-	VkResult VulkanSwapchain::AcquireNextImage(VkSemaphore presentCompleteSemaphore, uint32_t* imageIndex)
+	VkResult VulkanSwapchain::AcquireNextImage(VkSemaphore presentCompleteSemaphore)
 	{
 		if (m_Device == nullptr || m_Instance == nullptr)
 		{
@@ -311,10 +309,10 @@ namespace SmolEngine
 
 		// By setting timeout to UINT64_MAX we will always wait until the next image has been acquired or an actual error is thrown
 		// With that we don't have to handle VK_NOT_READY
-		return fpAcquireNextImageKHR(*m_Device->GetLogicalDevice(), m_Swapchain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, imageIndex);
+		return fpAcquireNextImageKHR(*m_Device->GetLogicalDevice(), m_Swapchain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, &m_CurrentBufferIndex);
 	}
 
-	VkResult VulkanSwapchain::QueuePresent(VkQueue queue, uint32_t imageIndex, VkSemaphore waitSemaphore)
+	VkResult VulkanSwapchain::QueuePresent(VkQueue queue, VkSemaphore waitSemaphore)
 	{
 		if (m_Device == nullptr || m_Instance == nullptr)
 		{
@@ -329,7 +327,7 @@ namespace SmolEngine
 			presentInfo.pNext = NULL;
 			presentInfo.swapchainCount = 1;
 			presentInfo.pSwapchains = &m_Swapchain;
-			presentInfo.pImageIndices = &imageIndex;
+			presentInfo.pImageIndices = &m_CurrentBufferIndex;
 
 			// Check if a wait semaphore has been specified to wait for before presenting the image
 			if (waitSemaphore != VK_NULL_HANDLE)
@@ -369,6 +367,11 @@ namespace SmolEngine
 	uint32_t VulkanSwapchain::GetWidth() const
 	{
 		return m_Width;
+	}
+
+	uint32_t VulkanSwapchain::GetCurrentBufferIndex() const
+	{
+		return m_CurrentBufferIndex;
 	}
 
 	uint32_t VulkanSwapchain::GetHeight() const

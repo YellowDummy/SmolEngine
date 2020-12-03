@@ -67,60 +67,6 @@ namespace SmolEngine
 		CompileShader(sources);
 	}
 
-	void OpenglShader::Init(const shaderc::SpvCompilationResult* vertex, const shaderc::SpvCompilationResult* frag, const shaderc::SpvCompilationResult* compute)
-	{
-		m_RendererID = glCreateProgram();
-
-		NATIVE_ERROR(m_RendererID);
-
-		//Vertex
-		{
-			const uint8_t* begin = (const uint8_t*)vertex->cbegin();
-			const uint8_t* end = (const uint8_t*)vertex->cend();
-			const ptrdiff_t size = end - begin; // note: pointer can have a negative value
-
-			GLuint shaderID = glCreateShader(GL_VERTEX_SHADER);
-			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, begin, size);
-			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
-			glAttachShader(m_RendererID, shaderID);
-
-			m_ShaderIDs[0] = shaderID;
-		}
-
-		// Fragment
-		{
-			const uint8_t* begin = (const uint8_t*)frag->cbegin();
-			const uint8_t* end = (const uint8_t*)frag->cend();
-			const ptrdiff_t size = end - begin; // note: pointer can have a negative value
-
-			GLuint shaderID = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, begin, size);
-			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
-			glAttachShader(m_RendererID, shaderID);
-
-			m_ShaderIDs[1] = shaderID;
-		}
-
-		if (compute == nullptr)
-		{
-			return;
-		}
-
-		// Compute
-		{
-			const uint8_t* begin = (const uint8_t*)compute->cbegin();
-			const uint8_t* end = (const uint8_t*)compute->cend();
-			const ptrdiff_t size = end - begin; // note: pointer can have a negative value
-
-			GLuint shaderID = glCreateShader(GL_COMPUTE_SHADER);
-			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, begin, size);
-			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
-			glAttachShader(m_RendererID, shaderID);
-
-			m_ShaderIDs[2] = shaderID;
-		}
-	}
-
 
 	void OpenglShader::Link()
 	{
@@ -161,96 +107,6 @@ namespace SmolEngine
 			NATIVE_ERROR("Shader Link Error!");
 		}
 
-	}
-
-	void OpenglShader::Reflect(const std::unordered_map<uint32_t, std::vector<uint32_t>>& binaryData)
-	{
-		glUseProgram(m_RendererID);
-
-		for (const auto& info : binaryData)
-		{
-			const auto& [key, data] = info;
-
-			spirv_cross::Compiler compiler(data);
-			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
-			uint32_t bufferIndex = 0;
-			for (const auto& res : resources.uniform_buffers)
-			{
-				auto& type = compiler.get_type(res.base_type_id);
-				int bufferElements = type.member_types.size();
-
-				UniformBuffer buffer = {};
-				{
-					buffer.BindingPoint = compiler.get_decoration(res.id, spv::DecorationBinding);
-					buffer.Size = compiler.get_declared_struct_size(type);
-					buffer.Index = bufferIndex;
-
-					buffer.Uniforms.reserve(bufferElements);
-				}
-
-				for (uint32_t i = 0; i < bufferElements; ++i)
-				{
-					Uniform uniform = {};
-					{
-						uniform.Name = compiler.get_member_name(type.self, i);
-						uniform.Type = compiler.get_type(type.member_types[i]);
-						uniform.Size = compiler.get_declared_struct_member_size(type, i);
-						uniform.Offset = compiler.type_struct_member_offset(type, i);
-					}
-
-					buffer.Uniforms.push_back(uniform);
-				}
-
-				glCreateBuffers(1, &buffer.RendererID);
-				glBindBuffer(GL_UNIFORM_BUFFER, buffer.RendererID);
-				glBufferData(GL_UNIFORM_BUFFER, buffer.Size, nullptr, GL_DYNAMIC_DRAW);
-				glBindBufferBase(GL_UNIFORM_BUFFER, buffer.BindingPoint, buffer.RendererID);
-
-				m_UniformBuffers[res.name] = std::move(buffer);
-
-				bufferIndex++;
-			}
-
-			int32_t sampler = 0;
-			for (const auto& res : resources.sampled_images)
-			{
-				UniformResource resBuffer = {};
-				{
-					resBuffer.Type = compiler.get_type(res.type_id);
-					resBuffer.Location = compiler.get_decoration(res.id, spv::DecorationLocation);
-					resBuffer.Dimension = resBuffer.Type.image.dim;
-					resBuffer.Sampler = sampler;
-					resBuffer.ArraySize = resBuffer.Type.array[0];
-				}
-
-				int32_t samplers[LayerDataBuffer::MaxTextureSlot];
-				for (uint32_t i = 0; i < LayerDataBuffer::MaxTextureSlot; i++)
-				{
-					samplers[i] = i;
-				}
-
-				glUniform1iv(resBuffer.Location, LayerDataBuffer::MaxTextureSlot, samplers);
-
-				m_UniformResources[res.name] = std::move(resBuffer);
-				sampler++;
-
-			}
-		}
-
-		// Temp
-
-		for (const auto& info : m_UniformBuffers)
-		{
-			const auto& [name, res] = info;
-			NATIVE_WARN("UniformBuffer\nMembers: {}, Name: {}, Binding: {}", res.Uniforms.size(), name, res.BindingPoint);
-		}
-
-		for (const auto& info : m_UniformResources)
-		{
-			const auto& [name, res] = info;
-			NATIVE_WARN("UniformResource\nSampler: {}, Location: {}, Dim: {}, Name: {}", res.Sampler, res.Location, res.Dimension, name);
-		}
 	}
 
 	void OpenglShader::Bind() const
@@ -313,15 +169,7 @@ namespace SmolEngine
 
 	void OpenglShader::SumbitUniformBuffer(const std::string& name, const void* data, uint32_t size)
 	{
-		const auto& result = m_UniformBuffers.find(name);
-		if (result != m_UniformBuffers.end())
-		{
-			uint8_t* buffer = new uint8_t[size];
-			memcpy(buffer, data, size);
 
-			glNamedBufferSubData(result->second.RendererID, 0, size, buffer);
-			delete[] buffer;
-		}
 	}
 
 	void OpenglShader::CompileShader(const std::unordered_map<GLenum, std::string>& shaderSources)

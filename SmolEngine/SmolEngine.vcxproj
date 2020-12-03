@@ -666,6 +666,7 @@
     <ClInclude Include="Source\Core\Renderer\Renderer2DData.h" />
     <ClInclude Include="Source\Core\Renderer\RendererAPI.h" />
     <ClInclude Include="Source\Core\Renderer\Shader.h" />
+    <ClInclude Include="Source\Core\Renderer\ShaderTypes.h" />
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Core\Renderer\Text.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
@@ -680,6 +681,7 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanFramebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanPipeline.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanShader.h" />
@@ -783,6 +785,7 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanFramebuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanPipeline.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanRendererAPI.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanShader.cpp" />

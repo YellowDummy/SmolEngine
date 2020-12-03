@@ -17,11 +17,26 @@ namespace SmolEngine
 	{
 	public:
 
-		void Setup(GLFWwindow* window);
-
+		/// 
+		/// Main
+		/// 
+		
 		void OnResize(uint32_t width, uint32_t height);
 
+		void Setup(GLFWwindow* window);
+
 		void SwapBuffers();
+
+		void BeginFrame();
+
+		/// 
+		/// Getters
+		/// 
+
+#ifndef  SMOLENGINE_OPENGL_IMPL
+
+		VulkanContext& GetVulkanContext() { return m_VulkanContext; }
+#endif
 
 	private:
 

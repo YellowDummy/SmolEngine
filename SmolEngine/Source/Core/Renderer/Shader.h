@@ -8,26 +8,13 @@
 #include <shaderc/shaderc.hpp>
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 #include "Core/Renderer/OpenGL/OpenglShader.h"
-
 #else
-
+#include "Core/Renderer/Vulkan/VulkanShader.h"
 #endif
 
 namespace SmolEngine
 {
-	enum class ShaderType : uint32_t
-	{
-		Vertex,
-
-		Fragment,
-
-		Compute,
-
-		Geometry
-	};
-
 	class Shader
 	{
 	public:
@@ -43,13 +30,6 @@ namespace SmolEngine
 		void Bind() const;
 
 		void UnBind() const;
-
-		/// 
-		/// Compilation
-		/// 
-		
-		const shaderc::SpvCompilationResult CompileToSPIRV(const shaderc::Compiler& comp, const shaderc::CompileOptions& options,
-			const std::string& source, shaderc_shader_kind type, const std::string& shaderName) const;
 
 		///
 		///  Uniforms
@@ -139,11 +119,12 @@ namespace SmolEngine
 
 		const std::string& GetName();
 
-		/// 
-		/// Helpers
-		/// 
 
-		static const std::string LoadShader(const std::string& filePath);
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+#else
+		VulkanShader* GetVulkanShader() { return &m_VulkanShader; }
+#endif
 
 		///
 		/// Factory
@@ -151,7 +132,7 @@ namespace SmolEngine
 
 		static Ref<Shader> Create(const std::string& filePath);
 
-		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName = "base", bool optimize = false);
+		static Ref<Shader> Create(const std::string& vertexPath, const std::string& fragmentPath, bool optimize = false, const std::string& computePath = "");
 
 	private:
 
@@ -159,12 +140,9 @@ namespace SmolEngine
 
 		OpenglShader m_OpenglShader = {};
 #else
-
+		VulkanShader m_VulkanShader = {};
 
 #endif // SMOLENGINE_OPENGL_IMPL
-
-		std::unordered_map<uint32_t, std::vector<uint32_t>> m_BinaryData;
-
 	};
 
 	class ShaderLib
@@ -193,7 +171,7 @@ namespace SmolEngine
 
 		Ref<Shader> Load(const std::string& filePath);
 
-		Ref<Shader> Load(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName);
+		Ref<Shader> Load(const std::string& vertexPath, const std::string& fragmentPath, bool optimize = false, const std::string& computePath = "");
 
 	private:
 

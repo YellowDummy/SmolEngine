@@ -15,7 +15,10 @@ namespace SmolEngine
 
 	VulkanCommandPool::~VulkanCommandPool()
 	{
-
+		if (m_Device != nullptr)
+		{
+			vkDestroyCommandPool(m_Device->m_VkLogicalDevice, m_VkCommandPool, nullptr);
+		}
 	}
 
 	void VulkanCommandPool::Init(VulkanDevice* device)

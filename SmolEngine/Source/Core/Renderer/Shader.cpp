@@ -28,45 +28,16 @@ namespace SmolEngine
 		return shader;
 	}
 
-	Ref<Shader> Shader::Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName, bool optimize)
+	Ref<Shader> Shader::Create(const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
 	{
 		Ref<Shader> shader = std::make_shared<Shader>();
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		shader->m_OpenglShader.Init(vertexSource, fragmentSource, shaderName);
+		shader->m_OpenglShader.Init(vertexPath, fragmentPath, vertexPath);
 #else
-		// Vulkan
-
-		const std::string& vertex = LoadShader(vertexSource);
-		const std::string& frag = LoadShader(fragmentSource);
-
-		shaderc::Compiler compiler;
-		shaderc::CompileOptions options;
-
-		auto& binaryData = shader->m_BinaryData;
-
-		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
-
-		if (optimize)
-			options.SetOptimizationLevel(shaderc_optimization_level_performance);
-
-		// Vertex
-
-		const shaderc::SpvCompilationResult result_vertex = shader->CompileToSPIRV(compiler, options, vertex, shaderc_shader_kind::shaderc_vertex_shader, shaderName);
-
-		// Fragment
-
-		const shaderc::SpvCompilationResult result_fragment = shader->CompileToSPIRV(compiler, options, frag, shaderc_shader_kind::shaderc_fragment_shader, shaderName);
-
-		binaryData.emplace((uint32_t)ShaderType::Vertex, std::vector<uint32_t>(result_vertex.cbegin(), result_vertex.cend()));
-		binaryData.emplace((uint32_t)ShaderType::Fragment, std::vector<uint32_t>(result_fragment.cbegin(), result_fragment.cend()));
-
-		// Init
-
-		// Link
-
-		// Reflect
+		bool precompiled = false; // temp
+		assert(shader->m_VulkanShader.Init(vertexPath, fragmentPath, precompiled, optimize, computePath) == true);
 #endif
 
 		return shader;
@@ -264,36 +235,6 @@ namespace SmolEngine
 
 	}
 
-	const std::string Shader::LoadShader(const std::string& filePath)
-	{
-		std::ifstream file(filePath);
-		std::stringstream buffer;
-
-		if (!file)
-		{
-			NATIVE_ERROR("Could not open the file: {}", filePath);
-			assert(file);
-		}
-
-		buffer << file.rdbuf();
-		file.close();
-
-		return buffer.str();
-	}
-
-	const shaderc::SpvCompilationResult Shader::CompileToSPIRV(const shaderc::Compiler& comp, const shaderc::CompileOptions& options,
-		const std::string& source, shaderc_shader_kind type, const std::string& shaderName) const
-	{
-		auto result = comp.CompileGlslToSpv(source, type, shaderName.c_str(), options);
-		if (result.GetCompilationStatus() != shaderc_compilation_status_success)
-		{
-			NATIVE_ERROR(result.GetErrorMessage());
-			abort();
-		}
-
-		return result;
-	}
-
 	void ShaderLib::AddElement(const Ref<Shader>& element)
 	{
 		auto name = element->GetName();
@@ -321,10 +262,11 @@ namespace SmolEngine
 		return shader;
 	}
 
-	Ref<Shader> ShaderLib::Load(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName)
+	Ref<Shader> ShaderLib::Load(const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
 	{
-		auto shader = Shader::Create(vertexSource, fragmentSource, shaderName);
+		auto& shader = Shader::Create(vertexPath, fragmentPath, optimize, computePath);
 		AddElement(shader);
+
 		return shader;
 	}
 

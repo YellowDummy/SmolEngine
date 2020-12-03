@@ -32,12 +32,21 @@ namespace SmolEngine
 		}
 	}
 
-	void Window::OnUpdate()
+	void Window::BeginFrame()
+	{
+		m_Context->BeginFrame();
+	}
+
+	void Window::SwapBuffers()
+	{
+		m_Context->SwapBuffers();
+	}
+
+	void Window::ProcessEvents()
 	{
 		if (!glfwWindowShouldClose(m_Window))
 		{
 			glfwPollEvents();
-			m_Context->SwapBuffers();
 		}
 	}
 
@@ -54,6 +63,11 @@ namespace SmolEngine
 	GLFWwindow* Window::GetNativeWindow() const
 	{
 		return m_Window;
+	}
+
+	GraphicsContext* Window::GetContext() const
+	{
+		return m_Context;
 	}
 
 	uint32_t Window::GetWidth() const

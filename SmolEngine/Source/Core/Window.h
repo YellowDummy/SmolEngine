@@ -31,7 +31,7 @@ namespace SmolEngine
 
 		Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler);
 
-		virtual ~Window() {  }
+		~Window() {  }
 
 		/// 
 		/// Main
@@ -39,7 +39,11 @@ namespace SmolEngine
 
 		void ResizeContext(uint32_t width, uint32_t height);
 
-		void OnUpdate();
+		void ProcessEvents();
+
+		void SwapBuffers();
+
+		void BeginFrame();
 
 		void ShutDown();
 
@@ -48,6 +52,8 @@ namespace SmolEngine
 		/// 
 
 		GLFWwindow* GetNativeWindow() const;
+
+		GraphicsContext* GetContext() const;
 
 		uint32_t GetWidth() const;
 

@@ -51,21 +51,20 @@ namespace SmolEngine
 
 	void Application::InitApp()
 	{
-		NATIVE_INFO("Initializing a framework...");
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
 
-		//Creating Startup Timer
+		// Creating Startup Timer
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
 
-		//Initializing Event Dispatcher
+		// Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();
 
-		//Binding Callbacks
+		// Binding Callbacks
 		m_EventHandler->OnEventFn = std::bind(&Application::OnEvent, this, std::placeholders::_1);
 
-		//Initializing LayerManager and Related Classes
+		// Initializing LayerManager and Related Classes
 		m_LayerHandler = std::make_shared<LayerManager>();
 
 		std::string appName;
@@ -90,7 +89,7 @@ namespace SmolEngine
 
 #endif // SMOLENGINE_OPENGL_IMPL
 
-		//Creating New GLFW Window
+		// Creating New GLFW Window
 
 		m_Window = std::make_shared<Window>(appName, 1080, 1920, m_EventHandler);
 
@@ -98,7 +97,7 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		//Initializing Dear ImGui
+		// Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
 
 #endif // SMOLENGINE_OPENGL_IMPL
@@ -106,10 +105,10 @@ namespace SmolEngine
 
 #endif
 
-		//Initializing Platform Specific Renderer
+		// Initializing Platform Specific Renderer
 		//RendererCommand::Init();
 
-		//Initializing Scene Handler
+		// Initializing Scene Handler
 		WorldAdmin::GetScene()->Init();
 
 		//Initializing external scripts
@@ -125,12 +124,12 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		//Pushing Dear ImGui Layer
+		// Pushing Dear ImGui Layer
 		PushLayer(m_ImGuiLayer);
 #endif
 
 #else
-		//Loading a scene with index 0 and starting the game
+		// Loading a scene with index 0 and starting the game
 		WorldAdmin::GetScene()->StartGame();
 
 #endif
@@ -138,7 +137,7 @@ namespace SmolEngine
 		timer.StopTimer();
 		NATIVE_INFO("Initialized successfully");
 
-		//Starting Main Loop
+		// Starting Main Loop
 		RunApp();
 	}
 
@@ -147,6 +146,7 @@ namespace SmolEngine
 		NATIVE_INFO("State : Shutdown");
 
 		m_Running = false;
+
 		WorldAdmin::GetScene()->ShutDown();
 		m_Window->ShutDown();
 
@@ -158,12 +158,18 @@ namespace SmolEngine
 		NATIVE_INFO("State = Runtime");
 		while (m_Running)
 		{
-			//Calculating DeltaTime
+			// Process glfw events
+			m_Window->ProcessEvents();
+
+			// Calculating DeltaTime
 			float time = (float)glfwGetTime();
 			DeltaTime deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			//Updating Layer Logic
+			// Begin New Frame
+			m_Window->BeginFrame();
+
+			// Updating Layers
 			if (!m_WindowMinimized)
 			{
 				for (Layer* layer : *m_LayerHandler)
@@ -173,29 +179,32 @@ namespace SmolEngine
 			}
 
 #ifdef SMOLENGINE_EDITOR
+#ifdef SMOLENGINE_OPENGL_IMPL
 
-			
-			//m_ImGuiLayer->OnBegin();
-			//for (Layer* layer : *m_LayerHandler)
-			//{
-			//	layer->OnImGuiRender();
-			//}
-			//m_ImGuiLayer->OnEnd();
+			m_ImGuiLayer->OnBegin();
+			for (Layer* layer : *m_LayerHandler)
+			{
+				layer->OnImGuiRender();
+			}
+			m_ImGuiLayer->OnEnd();
+
+#endif // SMOLENGINE_OPENGL_IMPL
 #endif
-			m_Window->OnUpdate();
+
+			m_Window->SwapBuffers();
 		}
 	}
 
 	void Application::OnEvent(SmolEngine::Event& event)
 	{
-		//Setting Event Hooks - Functions Must Always Return Boolean: True If Event Should Be Blocked, False If Not
+		// Setting Event Hooks - Functions Must Always Return Boolean: True If Event Should Be Blocked, False If Not
 
 		//S_BIND_EVENT_CATEGORY(Application, OnWindowClose, EventCategory::S_EVENT_APPLICATION, event);
 
 		S_BIND_EVENT_TYPE(Application, OnWindowClose, EventType::S_WINDOW_CLOSE, event);
 		S_BIND_EVENT_TYPE(Application, OnWindowResize, EventType::S_WINDOW_RESIZE, event);
 
-		//Sending Events To The Layer Stack
+		// Sending Events To The Layer Stack
 		for (auto result = m_LayerHandler->end(); result != m_LayerHandler->begin();)
 		{
 			(*--result)->OnEvent(event);
@@ -229,6 +238,7 @@ namespace SmolEngine
 	bool Application::OnWindowClose(Event& e)
 	{
 		CloseApp();
+
 		return true;
 	}
 

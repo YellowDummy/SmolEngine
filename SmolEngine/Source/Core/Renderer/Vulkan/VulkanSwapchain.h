@@ -53,9 +53,9 @@ namespace SmolEngine
 		void CleanUp();
 
 
-		VkResult AcquireNextImage(VkSemaphore presentCompleteSemaphore, uint32_t* imageIndex);
+		VkResult AcquireNextImage(VkSemaphore presentCompleteSemaphore);
 
-		VkResult QueuePresent(VkQueue queue, uint32_t imageIndex, VkSemaphore waitSemaphore = VK_NULL_HANDLE);
+		VkResult QueuePresent(VkQueue queue, VkSemaphore waitSemaphore = VK_NULL_HANDLE);
 
 		/// 
 		/// Getters
@@ -65,10 +65,12 @@ namespace SmolEngine
 
 		const VkRenderPass GetRenderPass() const;
 
-		uint32_t GetWidth() const;
+
+		uint32_t GetCurrentBufferIndex() const;
 
 		uint32_t GetHeight() const;
 
+		uint32_t GetWidth() const;
 
 
 	private:
@@ -113,6 +115,7 @@ namespace SmolEngine
 		uint32_t m_ImageCount = 0;
 		uint32_t m_Width = 0, m_Height = 0;
 		uint32_t m_QueueNodeIndex = UINT32_MAX;
+		uint32_t m_CurrentBufferIndex = 0;
 
 	private:
 

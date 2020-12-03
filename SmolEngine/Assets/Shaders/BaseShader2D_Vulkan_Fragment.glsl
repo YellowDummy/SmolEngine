@@ -19,9 +19,12 @@ layout(std140, binding = 1) uniform LightBuffer
 	Light2DBuffer[100] LightData;
 };
 
-layout(location = 100) uniform int Ligh2DCount;
+layout(std140, binding = 2) uniform LightDataBuffer
+{
+	int Ligh2DCount;
+};
 
-layout(location = 0) uniform sampler2D u_Textures[32]; // note: no need to put textures inside uniform buffer
+layout(binding = 3) uniform sampler2D u_Textures[32]; // note: no need to put textures inside uniform buffer
 
 // Batch Buffer
 

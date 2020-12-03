@@ -2,8 +2,6 @@
 #include "Core/Renderer/Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include <shaderc/shaderc.hpp>
-
 #include "Core/Renderer/UniformBuffer.h"
 
 namespace SmolEngine
@@ -22,8 +20,6 @@ namespace SmolEngine
 		///  Main
 		/// 
 
-		void Init(const shaderc::SpvCompilationResult* vertex, const shaderc::SpvCompilationResult* frag, const shaderc::SpvCompilationResult* compute = nullptr);
-
 		void Init(const std::string& filepath);
 
 		void Init(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName);
@@ -31,8 +27,6 @@ namespace SmolEngine
 	private:
 
 		void Link();
-
-		void Reflect(const std::unordered_map<uint32_t, std::vector<uint32_t>>& binaryData);
 
 	public:
 
@@ -85,8 +79,6 @@ namespace SmolEngine
 	private:
 
 		std::unordered_map<std::string, GLenum> m_UniformMap;
-		std::unordered_map<std::string, UniformBuffer> m_UniformBuffers;
-		std::unordered_map<std::string, UniformResource> m_UniformResources;
 
 		std::array<int, 3> m_ShaderIDs = {};
 

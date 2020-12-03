@@ -89,11 +89,12 @@ namespace SmolEngine
 		ImGuiLayer* m_ImGuiLayer;
 
 
-		Ref<Window> m_Window = nullptr;
-
 		Ref<LayerManager> m_LayerHandler = nullptr;
 
 		Ref<EventHandler> m_EventHandler = nullptr;
+
+		Ref<Window> m_Window = nullptr;
+
 
 		UIText* m_UIText = nullptr;
 

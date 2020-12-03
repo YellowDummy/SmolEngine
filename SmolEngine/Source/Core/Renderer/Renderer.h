@@ -104,9 +104,9 @@ namespace SmolEngine
 			return AssetManager::GetShaderLib()->Load(filePath);
 		}
 
-		inline static Ref<Shader> LoadShader(const std::string& vertexSource, const std::string& fragmentSource, const std::string& shaderName)
+		inline static Ref<Shader> LoadShader(const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
 		{
-			return AssetManager::GetShaderLib()->Load(vertexSource, fragmentSource, shaderName);
+			return AssetManager::GetShaderLib()->Load(vertexPath, fragmentPath, optimize, computePath);
 		}
 
 		inline static Ref<Shader> GetShader(const std::string& shaderName)
