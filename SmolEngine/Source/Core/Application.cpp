@@ -95,18 +95,17 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_EDITOR
 
-#ifdef SMOLENGINE_OPENGL_IMPL
-
 		// Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
-
-#endif // SMOLENGINE_OPENGL_IMPL
 
 
 #endif
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		// Initializing Platform Specific Renderer
-		//RendererCommand::Init();
+		RendererCommand::Init();
+#endif
 
 		// Initializing Scene Handler
 		WorldAdmin::GetScene()->Init();
@@ -122,11 +121,8 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_EDITOR
 
-#ifdef SMOLENGINE_OPENGL_IMPL
-
 		// Pushing Dear ImGui Layer
-		PushLayer(m_ImGuiLayer);
-#endif
+		//PushLayer(m_ImGuiLayer);
 
 #else
 		// Loading a scene with index 0 and starting the game
@@ -179,16 +175,13 @@ namespace SmolEngine
 			}
 
 #ifdef SMOLENGINE_EDITOR
-#ifdef SMOLENGINE_OPENGL_IMPL
 
-			m_ImGuiLayer->OnBegin();
-			for (Layer* layer : *m_LayerHandler)
-			{
-				layer->OnImGuiRender();
-			}
-			m_ImGuiLayer->OnEnd();
-
-#endif // SMOLENGINE_OPENGL_IMPL
+			//m_ImGuiLayer->OnBegin();
+			//for (Layer* layer : *m_LayerHandler)
+			//{
+			//	layer->OnImGuiRender();
+			//}
+			//m_ImGuiLayer->OnEnd();
 #endif
 
 			m_Window->SwapBuffers();

@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "VulkanPipeline.h"
 
-#include "Core/Renderer/Vulkan/VulkanDevice.h"
-#include "Core/Renderer/Vulkan/VulkanSwapchain.h"
-#include "Core/Renderer/Vulkan/VulkanShader.h"
+#include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
 
 namespace SmolEngine
 {
@@ -17,26 +15,23 @@ namespace SmolEngine
 
 	}
 
-	bool VulkanPipeline::Invalidate(const VulkanSwapchain* swapchain, const VulkanDevice* _device, const std::vector<VulkanShader*>& shaders)
+	bool VulkanPipeline::Invalidate(const VulkanPipelineSpecification* pipelineSpec)
 	{
-		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
-		shaderStages.resize(shaders.size() * 2);
-		const auto& device = *_device->GetLogicalDevice();
-
-		for (const auto& shader : shaders)
+		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain)
 		{
-			for (const auto& stage : shader->GetVkPipelineShaderStages())
-			{
-				shaderStages.push_back(stage);
-			}
+			return false;
 		}
+
+		const auto& shader = pipelineSpec->Shader;
+		const auto& swapchain = pipelineSpec->TargetSwapchain;
+		const auto& device = *pipelineSpec->Device->GetLogicalDevice();
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCI = {};
 		{
 			pipelineLayoutCI.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 			pipelineLayoutCI.pNext = nullptr;
-			pipelineLayoutCI.setLayoutCount = 0;
-			pipelineLayoutCI.pSetLayouts = nullptr;
+			pipelineLayoutCI.setLayoutCount = static_cast<uint32_t>(shader->GetVkDescriptorSetLayout().size());
+			pipelineLayoutCI.pSetLayouts = shader->GetVkDescriptorSetLayout().data();
 
 			VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &m_PipelineLayout));
 		}
@@ -130,7 +125,7 @@ namespace SmolEngine
 		struct ExsVertex
 		{
 			glm::vec3 Pos;
-			glm::vec2 Color;
+			glm::vec4 Color;
 
 		};
 
@@ -169,8 +164,8 @@ namespace SmolEngine
 
 
 		// Set pipeline shader stage info
-		pipelineCreateInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
-		pipelineCreateInfo.pStages = shaderStages.data();
+		pipelineCreateInfo.stageCount = static_cast<uint32_t>(shader->GetVkPipelineShaderStages().size());
+		pipelineCreateInfo.pStages = shader->GetVkPipelineShaderStages().data();
 
 		// Assign the pipeline states to the pipeline creation info structure
 		pipelineCreateInfo.pVertexInputState = &vertexInputState;
@@ -202,8 +197,13 @@ namespace SmolEngine
 		return true;
 	}
 
-	const VkPipeline& VulkanPipeline::GetVkPipeline()
+	const VkPipeline& VulkanPipeline::GetVkPipeline() const
 	{
 		return m_Pipeline;
+	}
+
+	const VkPipelineLayout& VulkanPipeline::GetVkPipelineLayot() const
+	{
+		return m_PipelineLayout;
 	}
 }

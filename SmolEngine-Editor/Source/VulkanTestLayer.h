@@ -4,6 +4,10 @@
 
 #include "Core/Renderer/Shader.h"
 #include "Core/Renderer/Vulkan/VulkanPipeline.h"
+#include "Core/Renderer/Vulkan/VulkanIndexBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanVertexBuffer.h"
+
+#include "Core/Renderer/Camera.h"
 
 namespace SmolEngine
 {
@@ -37,6 +41,11 @@ namespace SmolEngine
 
 		VulkanPipeline m_Pipeline = {};
 
+		VulkanIndexBuffer m_IndexBuffer = {};
+		VulkanVertexBuffer m_VertexBuffer = {};
+
 		Ref<Shader> m_Shader = nullptr;
+
+		Ref<EditorCameraController> m_EditorCamera = nullptr;
 	};
 }

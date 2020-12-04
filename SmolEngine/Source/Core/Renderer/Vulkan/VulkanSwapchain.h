@@ -68,9 +68,16 @@ namespace SmolEngine
 
 		uint32_t GetCurrentBufferIndex() const;
 
+		uint32_t& GetCurrentBufferIndexRef();
+
 		uint32_t GetHeight() const;
 
 		uint32_t GetWidth() const;
+
+
+		const VkFormat& GetColorFormat() const;
+
+		const VkSwapchainKHR& GetVkSwapchain() const;
 
 
 	private:

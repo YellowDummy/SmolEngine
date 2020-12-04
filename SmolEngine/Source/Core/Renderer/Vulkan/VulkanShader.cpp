@@ -19,7 +19,6 @@ namespace SmolEngine
     {
         shaderc::Compiler compiler;
         shaderc::CompileOptions options;
-        m_PipelineShaderStages.resize(2);
         std::unordered_map<ShaderType, VkShaderModule> shaderModules;
         std::unordered_map<ShaderType, std::vector<uint32_t>> binaryData;
 
@@ -71,16 +70,18 @@ namespace SmolEngine
                     assert(pipelineShaderStageCI.module != VK_NULL_HANDLE);
                 }
 
-                m_PipelineShaderStages.push_back(std::move(pipelineShaderStageCI));
+                m_PipelineShaderStages.emplace_back(std::move(pipelineShaderStageCI));
 
                 // Reflection
 
-                Reflect(data);
+                Reflect(data, type);
             }
         }
-
+        
+        BuildDescriptors();
         m_IsPrecompiled = usePrecompiledBinaries;
         m_Optimize = optimize;
+
         return true;
     }
 
@@ -94,9 +95,72 @@ namespace SmolEngine
         return false;
     }
 
-    void VulkanShader::SetUniformBuffer(const std::string& name, const void* data)
+    void VulkanShader::SetUniformBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset)
     {
+        const auto& result = m_UniformBuffers.find(bindingPoint);
+        if (result != m_UniformBuffers.end())
+        {
+            auto& buffer = result->second;
+            buffer.VkBuffer.SetData(data, size, offset);
+            return;
+        }
 
+        NATIVE_ERROR("UBO not found, binding point: {}", bindingPoint);
+        abort(); // temp
+    }
+
+    void VulkanShader::BuildDescriptors()
+    {
+        m_Descriptors.resize(m_UniformBuffers.size());
+        m_VkDescriptors.resize(m_UniformBuffers.size());
+        m_VkDescriptorSetLayout.reserve(m_UniformBuffers.size());
+        const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+
+        // UBO's
+        uint32_t index = 0;
+        for (auto& uboInfo : m_UniformBuffers)
+        {
+            auto& [bindingPoint, buffer] = uboInfo;
+
+            VkDescriptorSetLayoutBinding layoutBinding = {};
+            {
+                layoutBinding.binding = buffer.BindingPoint;
+                layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                layoutBinding.descriptorCount = 1;
+                layoutBinding.stageFlags = buffer.StageFlags;
+            }
+
+            buffer.VkBuffer.Create(buffer.Size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+            buffer.DesriptorBufferInfo.buffer = buffer.VkBuffer.GetBuffer();
+            buffer.DesriptorBufferInfo.offset = 0;
+            buffer.DesriptorBufferInfo.range = buffer.VkBuffer.GetSize();
+
+            VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+            {
+                layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+                layoutInfo.bindingCount = 1;
+                layoutInfo.pBindings = &layoutBinding;
+
+                VkDescriptorSetLayout temp = nullptr;
+                VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &temp));
+                m_VkDescriptorSetLayout.push_back(temp);
+
+                auto& vkDescriptor = m_VkDescriptors[index];
+                auto& descriptor = m_Descriptors[index];
+
+                vkDescriptor = descriptor.Init(temp, buffer.BindingPoint, &buffer.DesriptorBufferInfo);
+            }
+
+            NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
+            index++;
+        }
+
+        // Samplers
+        for (const auto& info : m_UniformResources)
+        {
+            const auto& [bindingPoint, res] = info;
+            NATIVE_WARN("UniformResource\nSampler: {}, Location: {}, Dim: {}, Name: {}, Binding: {}", res.Sampler, res.Location, res.Dimension, bindingPoint);
+        }
     }
 
     bool VulkanShader::SaveSPIRVBinaries(const std::string& filePath, const std::vector<uint32_t>& data)
@@ -136,8 +200,9 @@ namespace SmolEngine
        return std::vector<uint32_t>();
     }
 
-    void VulkanShader::Reflect(const std::vector<uint32_t>& data)
+    void VulkanShader::Reflect(const std::vector<uint32_t>& data, ShaderType shaderType)
     {
+        const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
         spirv_cross::Compiler compiler(data);
         spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
@@ -149,9 +214,11 @@ namespace SmolEngine
 
             UniformBuffer buffer = {};
             {
+                buffer.Name = res.name;
                 buffer.BindingPoint = compiler.get_decoration(res.id, spv::DecorationBinding);
                 buffer.Size = compiler.get_declared_struct_size(type);
                 buffer.Index = bufferIndex;
+                buffer.StageFlags = GetVkShaderStage(shaderType);
 
                 buffer.Uniforms.reserve(bufferElements);
             }
@@ -169,9 +236,7 @@ namespace SmolEngine
                 buffer.Uniforms.push_back(uniform);
             }
 
-            /// Create Vulkan UBO
-
-            m_UniformBuffers[res.name] = std::move(buffer);
+            m_UniformBuffers[buffer.BindingPoint] = std::move(buffer);
 
             bufferIndex++;
         }
@@ -196,23 +261,9 @@ namespace SmolEngine
 
             /// Upload vulkan samples
 
-            m_UniformResources[res.name] = std::move(resBuffer);
+            m_UniformResources[compiler.get_decoration(res.id, spv::DecorationBinding)] = std::move(resBuffer);
             sampler++;
 
-        }
-
-        // Temp
-
-        for (const auto& info : m_UniformBuffers)
-        {
-            const auto& [name, res] = info;
-            NATIVE_WARN("UniformBuffer\nMembers: {}, Name: {}, Binding: {}", res.Uniforms.size(), name, res.BindingPoint);
-        }
-
-        for (const auto& info : m_UniformResources)
-        {
-            const auto& [name, res] = info;
-            NATIVE_WARN("UniformResource\nSampler: {}, Location: {}, Dim: {}, Name: {}", res.Sampler, res.Location, res.Dimension, name);
         }
     }
 
@@ -343,8 +394,23 @@ namespace SmolEngine
         }
     }
 
-    const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::GetVkPipelineShaderStages()
+    const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::GetVkPipelineShaderStages() const
     {
         return m_PipelineShaderStages;
+    }
+
+    const std::vector<VkDescriptorSetLayout>& VulkanShader::GetVkDescriptorSetLayout() const
+    {
+        return m_VkDescriptorSetLayout;
+    }
+
+    const std::vector<VulkanDescriptor>& VulkanShader::GetDescriptors() const
+    {
+        return m_Descriptors;
+    }
+
+    const std::vector<VkDescriptorSet>& VulkanShader::GetVkDescriptors() const
+    {
+        return m_VkDescriptors;
     }
 }

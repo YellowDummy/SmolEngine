@@ -5,6 +5,9 @@
 #include <vector>
 #include <spirv_cross/spirv_cross.hpp>
 
+#include "Core/Renderer/Vulkan/VulkanBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanDescriptor.h"
+
 
 namespace SmolEngine
 {
@@ -20,13 +23,18 @@ namespace SmolEngine
 
 	struct UniformBuffer
 	{
+		std::string Name = "";
+
+		VulkanBuffer VkBuffer = {};
+		VkDescriptorBufferInfo DesriptorBufferInfo;
+		VkShaderStageFlags StageFlags;
+
 		std::vector<Uniform> Uniforms;
 
 		size_t Size = 0;
 		size_t Index = 0;
 
 		uint32_t BindingPoint = 0;
-		uint32_t RendererID = 0;
 	};
 
 	struct UniformResource

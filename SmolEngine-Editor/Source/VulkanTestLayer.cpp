@@ -7,17 +7,58 @@
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Renderer/Vulkan/Vulkan.h"
 #include "Core/Renderer/Vulkan/VulkanContext.h"
+#include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
 
 namespace SmolEngine
 {
 	void VulkanTestLayer::OnAttach()
 	{
+		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
+		m_EditorCamera = std::make_shared<EditorCameraController>(aspectRatio);
+		m_EditorCamera->SetZoom(4.0f);
+
 		m_Shader = Shader::Create("../SmolEngine/Assets/Shaders/VulkanTriangle_Vertex.glsl",
 			"../SmolEngine/Assets/Shaders/VulkanTriangle_Fragment.glsl");
 
-		std::vector<VulkanShader*> shaders = { m_Shader->GetVulkanShader() };
+		struct Vertex
+		{
+			glm::vec3 Pos;
+			glm::vec4 Color;
+		};
 
-		m_Pipeline.Invalidate(&VulkanContext::GetSwapchain(), &VulkanContext::GetDevice(), shaders);
+		Vertex verticies[3] =
+		{
+			// pos                     // color
+			{ { -0.5f, -0.5,  0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f } },
+			{ {  0.5f, -0.5,  0.0f },  { 0.2f, 1.0f, 0.0f, 1.0f } },
+			{ {  0.0f,  0.5f, 0.0f },  { 0.5f, 0.0f, 1.0f, 1.0f } }
+		};
+		m_VertexBuffer.Create(verticies, sizeof(verticies));
+
+		uint32_t indices[3] = { 0, 1, 2 };
+		m_IndexBuffer.Create(indices, sizeof(indices));
+
+		uint32_t width = VulkanContext::GetSwapchain().GetWidth();
+		uint32_t height = VulkanContext::GetSwapchain().GetHeight();
+
+		//glm::mat4 proj = glm::perspectiveFov(45.0f, (float)width, (float)height, 0.0001f, 1000.0f);
+		//glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, -5.0f });
+		//glm::mat viewProj = proj * view;
+		//uint32_t bindingPoint = 0;
+		//m_Shader->SumbitUniformBuffer(bindingPoint, &viewProj, sizeof(glm::mat4));
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		VulkanPipelineSpecification pipelineSpecCI = {};
+		{
+			pipelineSpecCI.Device = &VulkanContext::GetDevice();
+			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
+			pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
+		}
+
+		m_Pipeline.Invalidate(&pipelineSpecCI);
+
+#endif // !SMOLENGINE_OPENGL_IMPL
 	}
 
 	void VulkanTestLayer::OnDetach()
@@ -27,12 +68,17 @@ namespace SmolEngine
 
 	void VulkanTestLayer::OnUpdate(DeltaTime deltaTime)
 	{
+		m_EditorCamera->OnUpdate(deltaTime);
+
+		uint32_t bindingPoint = 0;
+		m_Shader->SumbitUniformBuffer(bindingPoint, &m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), sizeof(glm::mat4));
+
 		BuildTestCommandBuffer();
 	}
 
 	void VulkanTestLayer::OnEvent(Event& event)
 	{
-
+		m_EditorCamera->OnEvent(event);
 	}
 
 	void VulkanTestLayer::OnImGuiRender()
@@ -43,7 +89,7 @@ namespace SmolEngine
 	void VulkanTestLayer::BuildTestCommandBuffer()
 	{
 		auto& framebuffers = VulkanContext::GetSwapchain().GetFramebuffer().GetVkFramebuffers();
-		auto& drawCmdBuffers = VulkanContext::GetCommandBuffer().GetCommandBuffer();
+		auto& drawCmdBuffers = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
 		uint32_t width = VulkanContext::GetSwapchain().GetWidth();
 		uint32_t height = VulkanContext::GetSwapchain().GetHeight();
 		uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
@@ -55,7 +101,7 @@ namespace SmolEngine
 		// Set clear values for all framebuffer attachments with loadOp set to clear
 		// We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
 		VkClearValue clearValues[2];
-		clearValues[0].color = { { 1.0f, 0.5f, 0.2f, 1.0f } };
+		clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
@@ -73,19 +119,21 @@ namespace SmolEngine
 
 		renderPassBeginInfo.framebuffer = framebuffers[index];
 
-		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[index], &cmdBufInfo));
+		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers, &cmdBufInfo));
 
 		// Start the first sub pass specified in our default render pass setup by the base class
 		// This will clear the color and depth attachment
-		vkCmdBeginRenderPass(drawCmdBuffers[index], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(drawCmdBuffers, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		// Update dynamic viewport state
 		VkViewport viewport = {};
-		viewport.height = (float)height;
+		viewport.x = 0;
+		viewport.y = (float)height;
+		viewport.height = -(float)height;
 		viewport.width = (float)width;
 		viewport.minDepth = (float)0.0f;
 		viewport.maxDepth = (float)1.0f;
-		vkCmdSetViewport(drawCmdBuffers[index], 0, 1, &viewport);
+		vkCmdSetViewport(drawCmdBuffers, 0, 1, &viewport);
 
 		// Update dynamic scissor state
 		VkRect2D scissor = {};
@@ -93,31 +141,38 @@ namespace SmolEngine
 		scissor.extent.height = height;
 		scissor.offset.x = 0;
 		scissor.offset.y = 0;
-		vkCmdSetScissor(drawCmdBuffers[index], 0, 1, &scissor);
+		vkCmdSetScissor(drawCmdBuffers, 0, 1, &scissor);
 
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		const auto& descriptors = m_Shader->GetVulkanShader()->GetVkDescriptors();
 		// Bind descriptor sets describing shader binding points
-		//vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
+		vkCmdBindDescriptorSets(drawCmdBuffers, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline.GetVkPipelineLayot(), 0, descriptors.size(),
+			descriptors.data(), 0, nullptr);
+
+#endif // !SMOLENGINE_OPENGL_IMPL
 
 		// Bind the rendering pipeline
 		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
 
-		vkCmdBindPipeline(drawCmdBuffers[index], VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline.GetVkPipeline());
+		vkCmdBindPipeline(drawCmdBuffers, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline.GetVkPipeline());
 
 		// Bind triangle vertex buffer (contains position and colors)
-		//VkDeviceSize offsets[1] = { 0 };
-		//vkCmdBindVertexBuffers(drawCmdBuffers[i], 0, 1, &vertices.buffer, offsets);
+
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(drawCmdBuffers, 0, 1, &m_VertexBuffer.GetBuffer(), offsets);
 
 		// Bind triangle index buffer
-		//vkCmdBindIndexBuffer(drawCmdBuffers[i], indices.buffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindIndexBuffer(drawCmdBuffers, m_IndexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 		// Draw indexed triangle
-		//vkCmdDrawIndexed(drawCmdBuffers[i], indices.count, 1, 0, 0, 1);
+		vkCmdDrawIndexed(drawCmdBuffers, 3, 1, 0, 0, 1);
 
-		vkCmdEndRenderPass(drawCmdBuffers[index]);
+		vkCmdEndRenderPass(drawCmdBuffers);
 
 		// Ending the render pass will add an implicit barrier transitioning the frame buffer color attachment to
 		// VK_IMAGE_LAYOUT_PRESENT_SRC_KHR for presenting it to the windowing system
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[index]));
+		VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers));
 	}
 }

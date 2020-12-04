@@ -86,11 +86,11 @@ namespace SmolEngine
 	{
 		s_Data = new Renderer2DStorage();
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 		// Create geometry, load shaders, generate uniform maps
 
 		CreateBatchData();
-
-#ifdef SMOLENGINE_OPENGL_IMPL
 
 		CreateDebugData();
 
@@ -121,7 +121,7 @@ namespace SmolEngine
 			data.ambientValue = ambientValue;
 		}
 
-		s_Data->TextureShader->SumbitUniformBuffer("SceneData", &data, sizeof(SceneData));
+		//s_Data->TextureShader->SumbitUniformBuffer("SceneData", &data, sizeof(SceneData));
 
 #endif // SMOLENGINE_OPENGL_IMPL
 
@@ -274,8 +274,8 @@ namespace SmolEngine
 		}
 
 #else
-		s_Data->TextureShader->SumbitUniformBuffer("LightBuffer", &s_Data->Light2DBuffer, sizeof(Light2DBuffer) * s_Data->Light2DBufferSize);
-		s_Data->TextureShader->SumbitUniformBuffer("LighCount", &s_Data->Light2DBufferSize, sizeof(int32_t));
+		//s_Data->TextureShader->SumbitUniformBuffer("LightBuffer", &s_Data->Light2DBuffer, sizeof(Light2DBuffer) * s_Data->Light2DBufferSize);
+		//s_Data->TextureShader->SumbitUniformBuffer("LighCount", &s_Data->Light2DBufferSize, sizeof(int32_t));
 
 #endif // SMOLENGINE_OPENGL_IMPL
 	}

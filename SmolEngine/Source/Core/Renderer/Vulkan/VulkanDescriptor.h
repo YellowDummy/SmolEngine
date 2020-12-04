@@ -1,11 +1,15 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <vulkan/vulkan.h>
+#include "Core/Renderer/Vulkan/Vulkan.h"
+
+#include <vector>
 
 namespace SmolEngine
 {
-	class VulkanBuffer;
+	class VulkanDevice;
+
+	class VulkanShader;
 
 	class VulkanDescriptor
 	{
@@ -15,18 +19,25 @@ namespace SmolEngine
 
 		~VulkanDescriptor();
 
-		/// 
-		/// Factory
+		///
+		///  Main
 		/// 
 		
-		static Ref<VulkanDescriptor> Create(const Ref<VulkanBuffer>& buffer, VkDescriptorType type, VkShaderStageFlagBits shaderStage, uint32_t maxSets, uint32_t binding, uint32_t offset = 0);
+		VkDescriptorSet Init(const VkDescriptorSetLayout& descriptorSetLayout, uint32_t binding, VkDescriptorBufferInfo* descriptorBufferInfo,
+			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+
+		/// 
+		/// Getter
+		/// 
+
+
 
 	private:
 
-		VkDescriptorPool m_DescriptorPool = nullptr;
-		VkDescriptorSetLayout m_SetLayot = nullptr;
-		VkDescriptorSet m_Set = nullptr;
-
 		VkWriteDescriptorSet m_WriteSet = {};
+
+		VkDescriptorPool m_DescriptorPool = nullptr;
+
+		VulkanDevice* m_Device;
 	};
 }

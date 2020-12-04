@@ -1,10 +1,12 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <vulkan/vulkan.h>
+#include "Core/Renderer/Vulkan/Vulkan.h"
 
 namespace SmolEngine
 {
+	class VulkanDevice;
+
 	class VulkanBuffer
 	{
 	public:
@@ -14,11 +16,20 @@ namespace SmolEngine
 		~VulkanBuffer();
 
 		/// 
-		/// Factory
+		/// Main
 		/// 
 		
-		static Ref<VulkanBuffer> Create(const void* data, size_t size, VkMemoryPropertyFlags memFlags, VkBufferUsageFlags usageFlags, uint32_t offset = 0,
+		void Create(const void* data, size_t size, VkMemoryPropertyFlags memFlags, VkBufferUsageFlags usageFlags, uint32_t offset = 0,
 			VkSharingMode shareMode = VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
+
+		void Create(size_t size, VkMemoryPropertyFlags memFlags, VkBufferUsageFlags usageFlags, uint32_t offset = 0,
+			VkSharingMode shareMode = VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
+
+		void SetData(const void* data, size_t size, uint32_t offset = 0);
+
+		void* MapMemory();
+
+		void UnMapMemory();
 
 		/// 
 		/// Getters
@@ -32,16 +43,17 @@ namespace SmolEngine
 
 	private:
 
-		static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memFlags);
+		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memFlags);
 
 	private:
 
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_DeviceMemory = VK_NULL_HANDLE;
+		VkDeviceSize m_MemoryRequirementsSize = 0;
 
 		uint32_t m_MemoryType = UINT32_MAX;
 		uint32_t m_Size = UINT32_MAX;
 
-		void* mappedMemory = nullptr;
+		VulkanDevice* m_Device = nullptr;
 	};
 }

@@ -30,7 +30,7 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
-		const std::vector<VkCommandBuffer>& GetCommandBuffer() const;
+		const VkCommandBuffer& GetVkCommandBuffer() const;
 
 		size_t GetBufferSize() const;
 

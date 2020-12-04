@@ -74,8 +74,6 @@ namespace SmolEngine
 		VK_CHECK_RESULT(vkWaitForFences(*m_Device.GetLogicalDevice(), 1, &m_Semaphore.GetVkFences()[m_Swapchain.GetCurrentBufferIndex()], VK_TRUE, UINT64_MAX));
 		VK_CHECK_RESULT(vkResetFences(*m_Device.GetLogicalDevice(), 1, &m_Semaphore.GetVkFences()[m_Swapchain.GetCurrentBufferIndex()]));
 
-		// Build Command Buffer
-
 		//BuildTestCommandBuffer(m_CurrentBuffer);
 
 		// Pipeline stage at which the queue submission will wait (via pWaitSemaphores)
@@ -90,7 +88,7 @@ namespace SmolEngine
 			submitInfo.waitSemaphoreCount = 1;                           // One wait semaphore
 			submitInfo.pSignalSemaphores = &render_ref;     // Semaphore(s) to be signaled when command buffers have completed
 			submitInfo.signalSemaphoreCount = 1;                         // One signal semaphore
-			submitInfo.pCommandBuffers = &m_CommandBuffer.GetCommandBuffer()[m_Swapchain.GetCurrentBufferIndex()]; // Command buffers(s) to execute in this batch (submission)
+			submitInfo.pCommandBuffers = &m_CommandBuffer.GetVkCommandBuffer(); // Command buffers(s) to execute in this batch (submission)
 			submitInfo.commandBufferCount = 1;                           // One command buffer
 		}
 

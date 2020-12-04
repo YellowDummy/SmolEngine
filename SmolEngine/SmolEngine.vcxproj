@@ -654,6 +654,7 @@
     <ClInclude Include="Source\Core\Renderer\Camera.h" />
     <ClInclude Include="Source\Core\Renderer\Framebuffer.h" />
     <ClInclude Include="Source\Core\Renderer\GraphicsContext.h" />
+    <ClInclude Include="Source\Core\Renderer\Mesh.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglContext.h" />
     <ClInclude Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.h" />
@@ -670,15 +671,17 @@
     <ClInclude Include="Source\Core\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Core\Renderer\Text.h" />
     <ClInclude Include="Source\Core\Renderer\Texture.h" />
-    <ClInclude Include="Source\Core\Renderer\UniformBuffer.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanPipelineSpecification.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanUniformBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\Vulkan.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanCommandPool.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanContext.h" />
-    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDevice.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanFramebuffer.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanIndexBuffer.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanInstance.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanPipeline.h" />
@@ -687,6 +690,7 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanShader.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanSwapchain.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanTexture.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Core\SLog.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
@@ -762,6 +766,7 @@
     <ClCompile Include="Source\Core\Renderer\Camera.cpp" />
     <ClCompile Include="Source\Core\Renderer\Framebuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\GraphicsContext.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Mesh.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglBuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglContext.cpp" />
     <ClCompile Include="Source\Core\Renderer\OpenGL\OpenglFramebuffer.cpp" />
@@ -783,6 +788,7 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDevice.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanFramebuffer.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanIndexBuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanMemoryAllocator.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanPipeline.cpp" />
@@ -791,6 +797,7 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanShader.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanSwapchain.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanTexture.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />

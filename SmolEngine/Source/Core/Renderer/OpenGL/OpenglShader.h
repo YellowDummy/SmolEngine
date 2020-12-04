@@ -2,8 +2,6 @@
 #include "Core/Renderer/Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Core/Renderer/UniformBuffer.h"
-
 namespace SmolEngine
 {
 	typedef unsigned int GLenum;

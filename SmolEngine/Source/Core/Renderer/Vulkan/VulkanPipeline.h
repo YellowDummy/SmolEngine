@@ -4,12 +4,7 @@
 
 namespace SmolEngine
 {
-	class VulkanShader;
-
-	class VulkanDevice;
-
-	class VulkanSwapchain;
-
+	struct VulkanPipelineSpecification;
 
 	class VulkanPipeline
 	{
@@ -23,13 +18,15 @@ namespace SmolEngine
 		/// Main
 		/// 
 		
-		bool Invalidate(const VulkanSwapchain* swapchain, const VulkanDevice* _device, const std::vector<VulkanShader*>& shaders);
+		bool Invalidate(const VulkanPipelineSpecification* pipelineSpec);
 
 		/// 
 		/// Getters
 		/// 
 
-		const VkPipeline& GetVkPipeline();
+		const VkPipeline& GetVkPipeline() const;
+
+		const VkPipelineLayout& GetVkPipelineLayot() const;
 
 	private:
 

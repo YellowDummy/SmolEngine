@@ -35,7 +35,7 @@ namespace SmolEngine
 		///  Uniforms
 		/// 
 
-		void SumbitUniformBuffer(const std::string& name, const void* data, uint32_t size);
+		void SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset = 0);
 
 		template<typename T>
 		void SumbitUniform(const std::string& name, const void* data, uint32_t count = 0, uint32_t size = 0)
@@ -119,6 +119,16 @@ namespace SmolEngine
 
 		const std::string& GetName();
 
+		/// 
+		/// Operators
+		/// 
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		operator OpenglShader() const { return m_OpenglShader; }
+#else
+		operator  VulkanShader() const { return m_VulkanShader; }
+#endif
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 

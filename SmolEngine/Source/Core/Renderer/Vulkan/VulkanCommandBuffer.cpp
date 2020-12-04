@@ -55,9 +55,9 @@ namespace SmolEngine
 		return Init(m_Device, m_CommandPool, m_TargetSwapchain);
 	}
 
-	const std::vector<VkCommandBuffer>& VulkanCommandBuffer::GetCommandBuffer() const
+	const VkCommandBuffer& VulkanCommandBuffer::GetVkCommandBuffer() const
 	{
-		return m_CommandBuffers;
+		return m_CommandBuffers[m_TargetSwapchain->GetCurrentBufferIndex()];
 	}
 
 	size_t VulkanCommandBuffer::GetBufferSize() const

@@ -1527,9 +1527,6 @@
     <ClInclude Include="Source\Core\Renderer\Texture.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Renderer\UniformBuffer.h">
-      <Filter>Source\Core\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanBuffer.h">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1537,9 +1534,6 @@
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanContext.h">
-      <Filter>Source\Core\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.h">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDevice.h">
@@ -1614,6 +1608,14 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanPipeline.h" />
     <ClInclude Include="Source\Core\Renderer\ShaderTypes.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanIndexBuffer.h" />
+    <ClInclude Include="Source\Core\Renderer\Mesh.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanUniformBuffer.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.h" />
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanPipelineSpecification.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1841,9 +1843,6 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanContext.cpp">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.cpp">
-      <Filter>Source\Core\Renderer\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDevice.cpp">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1899,5 +1898,9 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanSemaphore.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanPipeline.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanIndexBuffer.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Mesh.cpp" />
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanDescriptor.cpp" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "ImGuiLayer.h"
 
+#define GLFW_INCLUDE_VULKAN
+#define IMGUI_VULKAN_DEBUG_REPORT
+
 #include <../Libraries/imgui/imgui.h>
 #include "../Libraries/imgui/imgui_internal.h"
 #include <../Libraries/imgui/examples/imgui_impl_glfw.h>
 #include <../Libraries/imgui/examples/imgui_impl_opengl3.h>
+#include <../Libraries/imgui/examples/imgui_impl_vulkan.h>
 
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
@@ -102,7 +106,7 @@ namespace SmolEngine
 			style.Colors[ImGuiCol_Header] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
 			style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
 			style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
-			
+
 			//style.Colors[ImGuiCol_Column] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
 			//style.Colors[ImGuiCol_ColumnHovered] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
 			//style.Colors[ImGuiCol_ColumnActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
@@ -132,33 +136,149 @@ namespace SmolEngine
 #endif
 
 		Application& app = Application::GetApplication();
-
 		GLFWwindow* EditorWindow = app.GetWindow().GetNativeWindow();
+
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
 
 		ImGui_ImplGlfw_InitForOpenGL(EditorWindow, true);
 
 		ImGui_ImplOpenGL3_Init("#version 410");
+#else
+		ImGui_ImplGlfw_InitForVulkan(EditorWindow, true);
+
+		VkDescriptorPoolSize pool_sizes[] =
+		{
+			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+		};
+
+		VkDescriptorPoolCreateInfo descriptorPoolInfo = {};
+		{
+			descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			descriptorPoolInfo.pNext = nullptr;
+			descriptorPoolInfo.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+			descriptorPoolInfo.pPoolSizes = pool_sizes;
+			descriptorPoolInfo.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
+
+			VK_CHECK_RESULT(vkCreateDescriptorPool(*VulkanContext::GetDevice().GetLogicalDevice(), &descriptorPoolInfo, nullptr, &m_DescriptorPool));
+		}
+
+		VkPipelineCacheCreateInfo pipelineCacheCI = {};
+		{
+			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+
+			VK_CHECK_RESULT(vkCreatePipelineCache(*VulkanContext::GetDevice().GetLogicalDevice(), &pipelineCacheCI, nullptr, &m_PipelineCache));
+		}
+
+		VkAttachmentDescription attachment = {};
+		{
+			attachment.format = VulkanContext::GetSwapchain().GetColorFormat();
+			attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+			attachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+			attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		}
+
+		VkAttachmentReference color_attachment = {};
+		{
+			color_attachment.attachment = 0;
+			color_attachment.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		}
+
+		VkSubpassDescription subpass = {};
+		{
+			subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+			subpass.colorAttachmentCount = 1;
+			subpass.pColorAttachments = &color_attachment;
+		}
+
+		VkSubpassDependency dependency = {};
+		{
+			dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+			dependency.dstSubpass = 0;
+			dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			dependency.srcAccessMask = 0;  // or VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		}
+
+		VkRenderPassCreateInfo info = {};
+		{
+			info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+			info.attachmentCount = 1;
+			info.pAttachments = &attachment;
+			info.subpassCount = 1;
+			info.pSubpasses = &subpass;
+			info.dependencyCount = 1;
+			info.pDependencies = &dependency;
+
+			VK_CHECK_RESULT(vkCreateRenderPass(*VulkanContext::GetDevice().GetLogicalDevice(), &info, nullptr, &m_RenderPass));
+		}
+
+		ImGui_ImplVulkan_InitInfo init_info = {};
+		{
+			init_info.Instance = *VulkanContext::GetInstance().GetInstance();
+			init_info.PhysicalDevice = *VulkanContext::GetDevice().GetPhysicalDevice();
+			init_info.Device = *VulkanContext::GetDevice().GetLogicalDevice();
+			init_info.QueueFamily = VulkanContext::GetDevice().GetQueueFamilyIndex();
+			init_info.Queue = *VulkanContext::GetDevice().GetQueue();
+			init_info.DescriptorPool = m_DescriptorPool;
+			init_info.PipelineCache = m_PipelineCache;
+			init_info.Allocator = nullptr;
+			init_info.MinImageCount = 2; // temp
+			init_info.ImageCount = 3; // temp
+		}
+
+		ImGui_ImplVulkan_Init(&init_info, m_RenderPass);
+
+		ImGui_ImplVulkan_CreateFontsTexture(VulkanContext::GetCommandBuffer().GetVkCommandBuffer());
+
+#endif //  SMOLENGINE_OPENGL_IMPL
 	}
 
 	void ImGuiLayer::OnDetach()
 	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
+#ifdef  SMOLENGINE_OPENGL_IMPL
 
+		ImGui_ImplOpenGL3_Shutdown();
+#else
+
+		ImGui_ImplVulkan_Shutdown();
+
+#endif
+
+		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 		imnodes::Shutdown();
 	}
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		//static bool show = true;
-		//ImGui::ShowDemoWindow(&show);
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 	}
 
 	void ImGuiLayer::OnBegin()
 	{
+#ifdef  SMOLENGINE_OPENGL_IMPL
 
 		ImGui_ImplOpenGL3_NewFrame();
+#else
+		ImGui_ImplVulkan_NewFrame();
+#endif
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
@@ -170,7 +290,13 @@ namespace SmolEngine
 		io.DisplaySize = ImVec2((float)Data.Width, (float)Data.Height);
 
 		ImGui::Render();
+
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#else
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), VulkanContext::GetCommandBuffer().GetVkCommandBuffer());
+#endif
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -180,5 +306,105 @@ namespace SmolEngine
 			glfwMakeContextCurrent(backup_current_context);
 		}
 	}
+
+#ifndef SMOLENIGNE_OPENGL_IMPL
+
+#if 0
+	void ImGuiLayer::FrameRender(VulkanSwapchain* wd, ImDrawData* draw_data, VulkanSemaphore* semaphore)
+	{
+		VkResult err;
+
+		VkSemaphore image_acquired_semaphore = semaphore->GetPresentCompleteSemaphore();
+		VkSemaphore render_complete_semaphore = semaphore->GetRenderCompleteSemaphore();
+		err = vkAcquireNextImageKHR(*VulkanContext::GetDevice().GetLogicalDevice(), wd->GetVkSwapchain(), UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE, &wd->GetCurrentBufferIndexRef());
+		if (err == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			m_SwapChainRebuild = true;
+			return;
+		}
+
+		ImGui_ImplVulkanH_Window;
+
+		VK_CHECK_RESULT(err);
+
+		ImGui_ImplVulkanH_Frame* fd = &wd->Frames[wd->FrameIndex];
+		{
+			err = vkWaitForFences(*VulkanContext::GetDevice().GetLogicalDevice(), 1, &fd->Fence, VK_TRUE, UINT64_MAX);    // wait indefinitely instead of periodically checking
+			VK_CHECK_RESULT(err);
+
+			err = vkResetFences(*VulkanContext::GetDevice().GetLogicalDevice(), 1, &fd->Fence);
+			VK_CHECK_RESULT(err);
+		}
+		{
+			err = vkResetCommandPool(*VulkanContext::GetDevice().GetLogicalDevice(), fd->CommandPool, 0);
+			VK_CHECK_RESULT(err);
+			VkCommandBufferBeginInfo info = {};
+			info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+			err = vkBeginCommandBuffer(fd->CommandBuffer, &info);
+			VK_CHECK_RESULT(err);
+		}
+		{
+			VkRenderPassBeginInfo info = {};
+			info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			info.renderPass = wd->RenderPass;
+			info.framebuffer = fd->Framebuffer;
+			info.renderArea.extent.width = wd->Width;
+			info.renderArea.extent.height = wd->Height;
+			info.clearValueCount = 1;
+			info.pClearValues = &wd->ClearValue;
+			vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
+		}
+
+		// Record dear imgui primitives into command buffer
+		ImGui_ImplVulkan_RenderDrawData(draw_data, fd->CommandBuffer);
+
+		// Submit command buffer
+		vkCmdEndRenderPass(fd->CommandBuffer);
+		{
+			VkPipelineStageFlags wait_stage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			VkSubmitInfo info = {};
+			info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			info.waitSemaphoreCount = 1;
+			info.pWaitSemaphores = &image_acquired_semaphore;
+			info.pWaitDstStageMask = &wait_stage;
+			info.commandBufferCount = 1;
+			info.pCommandBuffers = &fd->CommandBuffer;
+			info.signalSemaphoreCount = 1;
+			info.pSignalSemaphores = &render_complete_semaphore;
+
+			err = vkEndCommandBuffer(fd->CommandBuffer);
+			VK_CHECK_RESULT(err);
+			err = vkQueueSubmit(*VulkanContext::GetDevice().GetQueue(), 1, &info, fd->Fence);
+			VK_CHECK_RESULT(err);
+		}
+	}
+
+	void ImGuiLayer::FramePresent(VulkanSwapchain* wd, VulkanSemaphore* semaphore)
+	{
+		if (m_SwapChainRebuild)
+			return;
+		VkSemaphore render_complete_semaphore = wd->Ger;
+		VkPresentInfoKHR info = {};
+		info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+		info.waitSemaphoreCount = 1;
+		info.pWaitSemaphores = &render_complete_semaphore;
+		info.swapchainCount = 1;
+		info.pSwapchains = &wd->Swapchain;
+		info.pImageIndices = &wd->FrameIndex;
+		VkResult err = vkQueuePresentKHR(*VulkanContext::GetDevice().GetQueue(), &info);
+		if (err == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			m_SwapChainRebuild = true;
+			return;
+		}
+
+		VK_CHECK_RESULT(err);
+		wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount; // Now we can use the next set of semaphores
+	}
+
+#endif
+
+#endif
 
 }

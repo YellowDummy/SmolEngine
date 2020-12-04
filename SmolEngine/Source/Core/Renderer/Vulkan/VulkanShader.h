@@ -1,8 +1,9 @@
 #pragma once
 #include "Core/Core.h"
-#include "Core/Renderer/Vulkan/Vulkan.h"
 #include "Core/Renderer/ShaderTypes.h"
-#include "Core/Renderer/UniformBuffer.h"
+#include "Core/Renderer/Vulkan/Vulkan.h"
+#include "Core/Renderer/Vulkan/VulkanUniformBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanDescriptor.h"
 
 #include <string>
 #include <unordered_map>
@@ -30,9 +31,11 @@ namespace SmolEngine
 		/// Uniforms
 		/// 
 		
-		void SetUniformBuffer(const std::string& name, const void* data);
+		void SetUniformBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset = 0);
 
 	private:
+
+		void BuildDescriptors();
 
 		/// 
 		/// Compilation
@@ -44,7 +47,7 @@ namespace SmolEngine
 		const shaderc::SpvCompilationResult CompileToSPIRV(const shaderc::Compiler& comp, const shaderc::CompileOptions& options,
 			const std::string& source, shaderc_shader_kind type, const std::string& shaderName) const;
 
-		void Reflect(const std::vector<uint32_t>& binaryData);
+		void Reflect(const std::vector<uint32_t>& binaryData, ShaderType shaderType);
 
 		/// 
 		/// Helpers
@@ -69,13 +72,23 @@ namespace SmolEngine
 
 	public:
 
-		const std::vector<VkPipelineShaderStageCreateInfo>& GetVkPipelineShaderStages();
+		const std::vector<VkPipelineShaderStageCreateInfo>& GetVkPipelineShaderStages() const;
+
+		const std::vector<VkDescriptorSetLayout>& GetVkDescriptorSetLayout() const;
+
+		const std::vector<VulkanDescriptor>& GetDescriptors() const;
+
+		const std::vector<VkDescriptorSet>& GetVkDescriptors() const;
 
 	private:
 
-		std::unordered_map<std::string, UniformResource> m_UniformResources;
+		std::vector<VkDescriptorSetLayout> m_VkDescriptorSetLayout;
+		std::vector<VkDescriptorSet> m_VkDescriptors;
+		std::vector<VulkanDescriptor> m_Descriptors;
+
+		std::unordered_map<size_t, UniformResource> m_UniformResources;
 		std::vector<VkPipelineShaderStageCreateInfo> m_PipelineShaderStages;
-		std::unordered_map<std::string, UniformBuffer> m_UniformBuffers;
+		std::unordered_map<size_t, UniformBuffer> m_UniformBuffers;
 		std::unordered_map<ShaderType, std::string> m_FilePaths;
 
 		bool m_Optimize = false;

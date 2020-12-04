@@ -369,7 +369,22 @@ namespace SmolEngine
 		return m_Width;
 	}
 
+	const VkFormat& VulkanSwapchain::GetColorFormat() const
+	{
+		return m_ColorFormat;
+	}
+
+	const VkSwapchainKHR& VulkanSwapchain::GetVkSwapchain() const
+	{
+		return m_Swapchain;
+	}
+
 	uint32_t VulkanSwapchain::GetCurrentBufferIndex() const
+	{
+		return m_CurrentBufferIndex;
+	}
+
+	uint32_t& VulkanSwapchain::GetCurrentBufferIndexRef()
 	{
 		return m_CurrentBufferIndex;
 	}

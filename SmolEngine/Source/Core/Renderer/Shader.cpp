@@ -193,14 +193,14 @@ namespace SmolEngine
 
 	}
 
-	void Shader::SumbitUniformBuffer(const std::string& name, const void* data, uint32_t size)
+	void Shader::SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		m_OpenglShader.SumbitUniformBuffer(name, data, size);
+		//m_OpenglShader.SumbitUniformBuffer(name, data, size);
 
 #else
-		// Vulkan
+		m_VulkanShader.SetUniformBuffer(bindPoint, data, size, offset);
 
 #endif
 	}
