@@ -1,2 +1,0 @@
-C:\Dev\SmolEngine\SmolEngine\Libraries\rttr\bin\Debug-windows-x86_64\RTTR\RTTR.pdb
-C:\Dev\SmolEngine\SmolEngine\Libraries\rttr\bin-int\Debug-windows-x86_64\RTTR\RTTR.pdb

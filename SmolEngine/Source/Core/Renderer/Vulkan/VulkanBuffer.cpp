@@ -139,6 +139,13 @@ namespace SmolEngine
 		vkUnmapMemory(device, m_DeviceMemory);
 	}
 
+	void VulkanBuffer::Destroy()
+	{
+		const auto& device = *m_Device->GetLogicalDevice();
+		vkUnmapMemory(device, m_DeviceMemory);
+		vkDestroyBuffer(device, m_Buffer, nullptr);
+	}
+
 	uint32_t VulkanBuffer::GetSize() const
 	{
 		return m_Size;

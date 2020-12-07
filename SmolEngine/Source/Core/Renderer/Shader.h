@@ -31,6 +31,8 @@ namespace SmolEngine
 
 		void UnBind() const;
 
+		void Realod();
+
 		///
 		///  Uniforms
 		/// 

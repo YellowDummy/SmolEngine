@@ -74,6 +74,8 @@ namespace SmolEngine
 
 		uint32_t GetWidth() const;
 
+		const VkSurfaceKHR GetVkSurface() const;
+
 
 		const VkFormat& GetColorFormat() const;
 

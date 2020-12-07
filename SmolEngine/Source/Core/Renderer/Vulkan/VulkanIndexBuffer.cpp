@@ -17,12 +17,32 @@ namespace SmolEngine
 
 	void VulkanIndexBuffer::Create(const void* data, uint64_t size)
 	{
-		SetData(data, size);
+		m_IndexBuffer.Create(data, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+	}
+
+	void VulkanIndexBuffer::Create(uint64_t size)
+	{
+		m_IndexBuffer.Create(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 	}
 
 	void VulkanIndexBuffer::SetData(const void* data, uint64_t size, uint32_t offset)
 	{
-		m_IndexBuffer.Create(data, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, offset);
+		m_IndexBuffer.SetData(data, size, offset);
+	}
+
+	void* VulkanIndexBuffer::MapMemory()
+	{
+		return m_IndexBuffer.MapMemory();
+	}
+
+	void VulkanIndexBuffer::UnMapMemory()
+	{
+		m_IndexBuffer.UnMapMemory();
+	}
+
+	void VulkanIndexBuffer::Destroy()
+	{
+		m_IndexBuffer.Destroy();
 	}
 
 	uint32_t VulkanIndexBuffer::GetSize() const

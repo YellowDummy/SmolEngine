@@ -47,5 +47,7 @@ namespace SmolEngine
 		Ref<Shader> m_Shader = nullptr;
 
 		Ref<EditorCameraController> m_EditorCamera = nullptr;
+
+		glm::vec3 m_AddColor = glm::vec3(1);
 	};
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "VulkanDescriptor.h"
 
-#include "Core/Renderer/Vulkan/VulkanUniformBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanShaderResources.h"
 #include "Core/Renderer/Vulkan/VulkanContext.h"
 
 SmolEngine::VulkanDescriptor::VulkanDescriptor()

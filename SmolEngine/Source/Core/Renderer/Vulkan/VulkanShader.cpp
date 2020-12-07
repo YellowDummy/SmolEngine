@@ -87,6 +87,13 @@ namespace SmolEngine
 
     bool VulkanShader::Reload()
     {
+        m_UniformBuffers.clear();
+        m_UniformResources.clear();
+        m_VkDescriptorSetLayout.clear();
+        m_VkDescriptors.clear();
+        m_Descriptors.clear();
+        m_PipelineShaderStages.clear();
+
         if (!m_FilePaths.empty())
         {
             return Init(m_FilePaths[ShaderType::Vertex], m_FilePaths[ShaderType::Fragment], false, m_Optimize, m_FilePaths[ShaderType::Compute]);
@@ -239,6 +246,20 @@ namespace SmolEngine
             m_UniformBuffers[buffer.BindingPoint] = std::move(buffer);
 
             bufferIndex++;
+        }
+
+        for (const auto& res : resources.push_constant_buffers)
+        {
+            auto& type = compiler.get_type(res.base_type_id);
+
+            VkPushConstantRange range = {};
+            {
+                range.offset = 0;
+                range.size = compiler.get_declared_struct_size(type);
+                range.stageFlags = GetVkShaderStage(shaderType);
+            }
+
+            m_VkPushConstantRanges.emplace_back(range);
         }
 
         int32_t sampler = 0;

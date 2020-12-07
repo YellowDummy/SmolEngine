@@ -1,2 +1,0 @@
-C:\Dev\SmolEngine\bin\Debug-windows-x86_64\SmolEngine\SmolEngine.pdb
-C:\Dev\SmolEngine\bin-int\Debug-windows-x86_64\SmolEngine\SmolEngine.pdb

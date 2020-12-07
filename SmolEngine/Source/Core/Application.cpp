@@ -122,7 +122,7 @@ namespace SmolEngine
 #ifdef SMOLENGINE_EDITOR
 
 		// Pushing Dear ImGui Layer
-		//PushLayer(m_ImGuiLayer);
+		PushLayer(m_ImGuiLayer);
 
 #else
 		// Loading a scene with index 0 and starting the game
@@ -162,27 +162,31 @@ namespace SmolEngine
 			DeltaTime deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
+			if (m_WindowMinimized)
+			{
+				continue;
+			}
+
 			// Begin New Frame
 			m_Window->BeginFrame();
 
-			// Updating Layers
-			if (!m_WindowMinimized)
-			{
-				for (Layer* layer : *m_LayerHandler)
-				{
-					layer->OnUpdate(deltaTime);
-				}
-			}
-
 #ifdef SMOLENGINE_EDITOR
 
-			//m_ImGuiLayer->OnBegin();
-			//for (Layer* layer : *m_LayerHandler)
-			//{
-			//	layer->OnImGuiRender();
-			//}
-			//m_ImGuiLayer->OnEnd();
+			// Updating ImGui
+			m_ImGuiLayer->OnBegin();
+			for (Layer* layer : *m_LayerHandler)
+			{
+				layer->OnImGuiRender();
+			}
+			m_ImGuiLayer->OnEnd();
 #endif
+
+			// Updating Layers
+
+			for (Layer* layer : *m_LayerHandler)
+			{
+				layer->OnUpdate(deltaTime);
+			}
 
 			m_Window->SwapBuffers();
 		}

@@ -2,6 +2,7 @@
 #include "VulkanPipeline.h"
 
 #include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
+#include "Core/Renderer/Vulkan/VulkanContext.h"
 
 namespace SmolEngine
 {
@@ -12,7 +13,6 @@ namespace SmolEngine
 
 	VulkanPipeline::~VulkanPipeline()
 	{
-
 	}
 
 	bool VulkanPipeline::Invalidate(const VulkanPipelineSpecification* pipelineSpec)
@@ -32,6 +32,8 @@ namespace SmolEngine
 			pipelineLayoutCI.pNext = nullptr;
 			pipelineLayoutCI.setLayoutCount = static_cast<uint32_t>(shader->GetVkDescriptorSetLayout().size());
 			pipelineLayoutCI.pSetLayouts = shader->GetVkDescriptorSetLayout().data();
+			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(shader->m_VkPushConstantRanges.size());
+			pipelineLayoutCI.pPushConstantRanges = shader->m_VkPushConstantRanges.data();
 
 			VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &m_PipelineLayout));
 		}
@@ -195,6 +197,14 @@ namespace SmolEngine
 
 
 		return true;
+	}
+
+	void VulkanPipeline::Destroy()
+	{
+		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+		vkDestroyPipelineCache(device, m_PipelineCache, nullptr);
+		vkDestroyPipeline(device, m_Pipeline, nullptr);
 	}
 
 	const VkPipeline& VulkanPipeline::GetVkPipeline() const

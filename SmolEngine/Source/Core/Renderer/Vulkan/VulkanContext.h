@@ -69,5 +69,9 @@ namespace SmolEngine
 
 
 		bool m_IsInitialized = false;
+
+	private:
+
+		friend class ImGuiVulkanImpl;
 	};
 }

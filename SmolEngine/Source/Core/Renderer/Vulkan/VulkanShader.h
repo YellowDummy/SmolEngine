@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 #include "Core/Renderer/ShaderTypes.h"
 #include "Core/Renderer/Vulkan/Vulkan.h"
-#include "Core/Renderer/Vulkan/VulkanUniformBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanShaderResources.h"
 #include "Core/Renderer/Vulkan/VulkanDescriptor.h"
 
 #include <string>
@@ -83,7 +83,9 @@ namespace SmolEngine
 	private:
 
 		std::vector<VkDescriptorSetLayout> m_VkDescriptorSetLayout;
+		std::vector<VkPushConstantRange> m_VkPushConstantRanges;
 		std::vector<VkDescriptorSet> m_VkDescriptors;
+
 		std::vector<VulkanDescriptor> m_Descriptors;
 
 		std::unordered_map<size_t, UniformResource> m_UniformResources;
@@ -93,5 +95,9 @@ namespace SmolEngine
 
 		bool m_Optimize = false;
 		bool m_IsPrecompiled = false;
+
+	private:
+
+		friend class VulkanPipeline;
 	};
 }

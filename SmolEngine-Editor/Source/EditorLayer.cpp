@@ -77,9 +77,9 @@ namespace SmolEngine
 			m_Scene->m_EditorCamera->OnUpdate(deltaTime);
 		}
 
-		m_Scene->UpdateEditorCamera(m_GameViewPortSize, m_SceneViewSize);
+		//m_Scene->UpdateEditorCamera(m_GameViewPortSize, m_SceneViewSize);
 
-		m_Scene->OnUpdate(deltaTime);
+		//m_Scene->OnUpdate(deltaTime);
 	}
 
 	void EditorLayer::OnEvent(Event& event)

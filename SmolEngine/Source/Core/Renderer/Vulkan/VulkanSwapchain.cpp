@@ -69,7 +69,7 @@ namespace SmolEngine
 			assert(m_Device != nullptr || m_Instance != nullptr);
 			return;
 		}
-
+		
 		VkSwapchainKHR oldSwapchain = m_Swapchain;
 
 		// Get physical device surface properties and formats
@@ -367,6 +367,11 @@ namespace SmolEngine
 	uint32_t VulkanSwapchain::GetWidth() const
 	{
 		return m_Width;
+	}
+
+	const VkSurfaceKHR VulkanSwapchain::GetVkSurface() const
+	{
+		return m_Surface;
 	}
 
 	const VkFormat& VulkanSwapchain::GetColorFormat() const

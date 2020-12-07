@@ -91,9 +91,9 @@ Global
 		{30B15D9A-9C66-D68F-255B-D066910FCD93}.Release (Vulkan)|x64.Build.0 = Release (Vulkan)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (OpenGL)|x64.ActiveCfg = Debug (OpenGL)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (Vulkan)|x64.ActiveCfg = Debug (Vulkan)|x64
+		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (Vulkan)|x64.Build.0 = Debug (Vulkan)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Release (OpenGL)|x64.ActiveCfg = Release (OpenGL)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Release (Vulkan)|x64.ActiveCfg = Release (Vulkan)|x64
-		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Release (Vulkan)|x64.Build.0 = Release (Vulkan)|x64
 		{B7D93A0D-23EE-62BE-EC6F-061E58435FEF}.Debug (OpenGL)|x64.ActiveCfg = Debug (OpenGL)|x64
 		{B7D93A0D-23EE-62BE-EC6F-061E58435FEF}.Debug (OpenGL)|x64.Build.0 = Debug (OpenGL)|x64
 		{B7D93A0D-23EE-62BE-EC6F-061E58435FEF}.Debug (Vulkan)|x64.ActiveCfg = Debug (Vulkan)|x64
@@ -124,6 +124,6 @@ Global
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE} = {53E47842-3FC8-3998-A828-34EB942B241A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {07866FB6-11BB-4406-8C0C-5838007A0BD6}
+		SolutionGuid = {5A9F14A2-580A-43D0-8754-1A8135195C6F}
 	EndGlobalSection
 EndGlobal

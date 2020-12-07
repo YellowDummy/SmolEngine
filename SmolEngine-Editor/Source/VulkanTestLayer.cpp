@@ -9,6 +9,8 @@
 #include "Core/Renderer/Vulkan/VulkanContext.h"
 #include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
 
+#include <../Libraries/imgui/examples/imgui_impl_vulkan.h>
+
 namespace SmolEngine
 {
 	void VulkanTestLayer::OnAttach()
@@ -83,7 +85,26 @@ namespace SmolEngine
 
 	void VulkanTestLayer::OnImGuiRender()
 	{
+		ImGui::Begin("Shader Settings");
+		{
+			if (ImGui::Button("Reload Shader"))
+			{
+				m_Shader->Realod();
+				m_Pipeline.Destroy();
 
+				VulkanPipelineSpecification pipelineSpecCI = {};
+				{
+					pipelineSpecCI.Device = &VulkanContext::GetDevice();
+					pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
+					pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
+				}
+
+				m_Pipeline.Invalidate(&pipelineSpecCI);
+			}
+
+			ImGui::ColorPicker4("Add Color", glm::value_ptr(m_AddColor));
+		}
+		ImGui::End();
 	}
 
 	void VulkanTestLayer::BuildTestCommandBuffer()
@@ -165,8 +186,15 @@ namespace SmolEngine
 		// Bind triangle index buffer
 		vkCmdBindIndexBuffer(drawCmdBuffers, m_IndexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
+		// Submit Push Constant
+
+		vkCmdPushConstants(drawCmdBuffers, m_Pipeline.GetVkPipelineLayot(), VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::vec3), &m_AddColor);
+
 		// Draw indexed triangle
 		vkCmdDrawIndexed(drawCmdBuffers, 3, 1, 0, 0, 1);
+
+		// Draw Imgui
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), drawCmdBuffers);
 
 		vkCmdEndRenderPass(drawCmdBuffers);
 

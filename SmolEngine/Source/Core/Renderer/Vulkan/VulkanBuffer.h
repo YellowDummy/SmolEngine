@@ -31,6 +31,8 @@ namespace SmolEngine
 
 		void UnMapMemory();
 
+		void Destroy();
+
 		/// 
 		/// Getters
 		/// 

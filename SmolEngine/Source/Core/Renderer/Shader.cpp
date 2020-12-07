@@ -95,6 +95,17 @@ namespace SmolEngine
 
 	}
 
+	void Shader::Realod()
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+
+#else
+		m_VulkanShader.Reload();
+
+#endif
+	}
+
 	void Shader::SetUniformIntArray(const std::string& name, const int* values, uint32_t count)
 	{
 

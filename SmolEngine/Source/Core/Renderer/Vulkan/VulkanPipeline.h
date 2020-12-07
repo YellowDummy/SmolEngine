@@ -20,6 +20,8 @@ namespace SmolEngine
 		
 		bool Invalidate(const VulkanPipelineSpecification* pipelineSpec);
 
+		void Destroy();
+
 		/// 
 		/// Getters
 		/// 

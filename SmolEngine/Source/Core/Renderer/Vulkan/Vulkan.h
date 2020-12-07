@@ -13,3 +13,9 @@
 		assert(res == VK_SUCCESS);													\
 	}																				\
 }
+
+
+namespace SmolEngine
+{
+
+}
