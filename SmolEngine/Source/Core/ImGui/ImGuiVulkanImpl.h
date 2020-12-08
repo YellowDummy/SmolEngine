@@ -30,10 +30,6 @@ namespace SmolEngine
 
 	private:
 
-		VkCommandBuffer BeginSingleTimeCommand();
-
-	private:
-
 		VkDevice g_Device;
 		VkPipelineCache  g_PipelineCache = VK_NULL_HANDLE;
 		VkDescriptorPool g_DescriptorPool = VK_NULL_HANDLE;

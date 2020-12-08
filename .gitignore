@@ -38,8 +38,6 @@ bld/
 
 Config/
 SmolEngine/Libraries/vulkan/libs/
-bin/
-bin-init/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/

@@ -15,29 +15,15 @@ namespace SmolEngine
 	{
 	public:
 
-		VulkanDescriptor();
-
-		~VulkanDescriptor();
-
 		///
 		///  Main
 		/// 
 		
-		VkDescriptorSet Init(const VkDescriptorSetLayout& descriptorSetLayout, uint32_t binding, VkDescriptorBufferInfo* descriptorBufferInfo,
+		static VkWriteDescriptorSet Create(VkDescriptorSet descriptorSet, uint32_t binding, VkDescriptorBufferInfo* descriptorBufferInfo,
 			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
 
-		/// 
-		/// Getter
-		/// 
+		static VkWriteDescriptorSet Create(VkDescriptorSet descriptorSet, uint32_t binding, VkDescriptorImageInfo* imageInfo,
+			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
-
-
-	private:
-
-		VkWriteDescriptorSet m_WriteSet = {};
-
-		VkDescriptorPool m_DescriptorPool = nullptr;
-
-		VulkanDevice* m_Device;
 	};
 }

@@ -2,8 +2,9 @@
 
 layout(location = 0) out vec4 color;
 
-layout(location = 0) in vec4 v_Color;
-layout(location = 2) in vec4 v_Pos;
+layout(location = 3) in vec4 v_Color;
+layout(location = 4) in vec4 v_Pos;
+layout(location = 5) in vec2 v_TextCood;
 
 // only one push_constant block allowed per stage
 // max size is 128 bytes
@@ -11,6 +12,8 @@ layout(push_constant) uniform TestData
 {
     vec3 value;
 };
+
+layout(binding = 1) uniform sampler2D myTex;
 
 void main()
 {
@@ -25,5 +28,6 @@ void main()
     //tempColor.rgb += (LightColor.rgb * intensity);
    // float value = atan(1.0, sqrt(length(v_Pos.xy * v_Color.xy)));
     
-    color = vec4(v_Color.rgb * value, v_Color.a);
+    vec4 textureColor = texture(myTex, v_TextCood);
+    color = vec4(textureColor.rgb * value, textureColor.a);
 }

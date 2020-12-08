@@ -22,22 +22,28 @@ namespace SmolEngine
 		m_Shader = Shader::Create("../SmolEngine/Assets/Shaders/VulkanTriangle_Vertex.glsl",
 			"../SmolEngine/Assets/Shaders/VulkanTriangle_Fragment.glsl");
 
+		m_TestTexture.CreateTexture2D("../GameX/Assets/Textures/SummerBG.png");
+
 		struct Vertex
 		{
 			glm::vec3 Pos;
 			glm::vec4 Color;
+			glm::vec2 TexCood;
 		};
 
-		Vertex verticies[3] =
+		Vertex verticies[4] =
 		{
-			// pos                     // color
-			{ { -0.5f, -0.5,  0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f } },
-			{ {  0.5f, -0.5,  0.0f },  { 0.2f, 1.0f, 0.0f, 1.0f } },
-			{ {  0.0f,  0.5f, 0.0f },  { 0.5f, 0.0f, 1.0f, 1.0f } }
+			// pos                       // color                    // texCood
+			{ { -0.5f, 0.5, 0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f },  { 0.0f, 1.0f },},
+			{ { 0.5f, 0.5f, 0.0f },  { 0.2f, 1.0f, 0.0f, 1.0f },  { 1.0f, 1.0f},},
+			{ {  0.5f, -0.5, 0.0f},  { 0.5f, 0.0f, 1.0f, 1.0f },  { 1.0f, 0.0f },},
+			{ { -0.5f, -0.5, 0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f },  { 0.0f, 0.0f } },
 		};
+
+
 		m_VertexBuffer.Create(verticies, sizeof(verticies));
 
-		uint32_t indices[3] = { 0, 1, 2 };
+		uint32_t indices[6] = { 0, 1, 2,  2, 3, 0 };
 		m_IndexBuffer.Create(indices, sizeof(indices));
 
 		uint32_t width = VulkanContext::GetSwapchain().GetWidth();
@@ -56,6 +62,7 @@ namespace SmolEngine
 			pipelineSpecCI.Device = &VulkanContext::GetDevice();
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
+			pipelineSpecCI.Texture = &m_TestTexture;
 		}
 
 		m_Pipeline.Invalidate(&pipelineSpecCI);
@@ -95,14 +102,21 @@ namespace SmolEngine
 				VulkanPipelineSpecification pipelineSpecCI = {};
 				{
 					pipelineSpecCI.Device = &VulkanContext::GetDevice();
+#ifndef SMOLENGINE_OPENGL_IMPL
 					pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
+#endif
 					pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
 				}
 
 				m_Pipeline.Invalidate(&pipelineSpecCI);
 			}
 
+
 			ImGui::ColorPicker4("Add Color", glm::value_ptr(m_AddColor));
+
+			ImGui::NewLine();
+
+			ImGui::Image((ImTextureID)(intptr_t)m_TestTexture.m_Image, ImVec2{ 50, 50 }, ImVec2(0, 1), ImVec2(1, 0));
 		}
 		ImGui::End();
 	}
@@ -110,7 +124,7 @@ namespace SmolEngine
 	void VulkanTestLayer::BuildTestCommandBuffer()
 	{
 		auto& framebuffers = VulkanContext::GetSwapchain().GetFramebuffer().GetVkFramebuffers();
-		auto& drawCmdBuffers = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
+		auto drawCmdBuffers = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
 		uint32_t width = VulkanContext::GetSwapchain().GetWidth();
 		uint32_t height = VulkanContext::GetSwapchain().GetHeight();
 		uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
@@ -166,10 +180,10 @@ namespace SmolEngine
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		const auto& descriptors = m_Shader->GetVulkanShader()->GetVkDescriptors();
+		const auto& descriptorsSet = m_Pipeline.GetVkDescriptorSet();
 		// Bind descriptor sets describing shader binding points
-		vkCmdBindDescriptorSets(drawCmdBuffers, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline.GetVkPipelineLayot(), 0, descriptors.size(),
-			descriptors.data(), 0, nullptr);
+		vkCmdBindDescriptorSets(drawCmdBuffers, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline.GetVkPipelineLayot(), 0, 1,
+			&descriptorsSet, 0, nullptr);
 
 #endif // !SMOLENGINE_OPENGL_IMPL
 
@@ -191,7 +205,7 @@ namespace SmolEngine
 		vkCmdPushConstants(drawCmdBuffers, m_Pipeline.GetVkPipelineLayot(), VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::vec3), &m_AddColor);
 
 		// Draw indexed triangle
-		vkCmdDrawIndexed(drawCmdBuffers, 3, 1, 0, 0, 1);
+		vkCmdDrawIndexed(drawCmdBuffers, 6, 1, 0, 0, 0);
 
 		// Draw Imgui
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), drawCmdBuffers);

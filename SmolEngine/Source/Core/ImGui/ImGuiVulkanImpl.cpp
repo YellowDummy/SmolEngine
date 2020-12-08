@@ -64,45 +64,13 @@ namespace SmolEngine
 
 	}
 
-	VkCommandBuffer ImGuiVulkanImpl::BeginSingleTimeCommand()
-	{
-		VkCommandBufferAllocateInfo allocInfo = {};
-		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandPool = *VulkanContext::GetCommandPool().GetCommandPool();
-		allocInfo.commandBufferCount = 1;
-
-		VkCommandBuffer commandBuffer;
-		vkAllocateCommandBuffers(*VulkanContext::GetDevice().GetLogicalDevice(), &allocInfo, &commandBuffer);
-
-		VkCommandBufferBeginInfo beginInfo = {};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-		return commandBuffer;
-	}
-
 	void ImGuiVulkanImpl::InitResources()
 	{
-		auto tempCommandBuffer = BeginSingleTimeCommand();
-		ImGui_ImplVulkan_CreateFontsTexture(tempCommandBuffer);
-		// End Command Buffer
+		VkCommandBuffer copyCmd = VulkanContext::GetCommandBuffer().CreateSingleCommandBuffer();
 		{
-			vkEndCommandBuffer(tempCommandBuffer);
-
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &tempCommandBuffer;
-
-			VkQueue q = *VulkanContext::GetDevice().GetQueue();
-			vkQueueSubmit(q, 1, &submitInfo, VK_NULL_HANDLE);
-			vkQueueWaitIdle(q);
-			vkFreeCommandBuffers(*VulkanContext::GetDevice().GetLogicalDevice(), *VulkanContext::GetCommandPool().GetCommandPool(), 1, &tempCommandBuffer);
+			ImGui_ImplVulkan_CreateFontsTexture(copyCmd);
 		}
-
+		VulkanContext::GetCommandBuffer().EndSingleCommandBuffer(copyCmd);
 
 		ImGui_ImplVulkan_DestroyFontUploadObjects();
 	}

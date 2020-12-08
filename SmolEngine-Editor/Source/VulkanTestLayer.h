@@ -7,6 +7,8 @@
 #include "Core/Renderer/Vulkan/VulkanIndexBuffer.h"
 #include "Core/Renderer/Vulkan/VulkanVertexBuffer.h"
 
+#include "Core/Renderer/Vulkan/VulkanTexture.h"
+
 #include "Core/Renderer/Camera.h"
 
 namespace SmolEngine
@@ -40,6 +42,7 @@ namespace SmolEngine
 	private:
 
 		VulkanPipeline m_Pipeline = {};
+		VulkanTexture m_TestTexture = {};
 
 		VulkanIndexBuffer m_IndexBuffer = {};
 		VulkanVertexBuffer m_VertexBuffer = {};

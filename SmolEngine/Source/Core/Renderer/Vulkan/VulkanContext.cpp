@@ -81,6 +81,7 @@ namespace SmolEngine
 		// The submit info structure specifies a command buffer queue submission batch
 		VkSubmitInfo submitInfo = {};
 		{
+			VkCommandBuffer cmdBuffer = m_CommandBuffer.GetVkCommandBuffer();
 
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 			submitInfo.pWaitDstStageMask = &waitStageMask;               // Pointer to the list of pipeline stages that the semaphore waits will occur at
@@ -88,7 +89,7 @@ namespace SmolEngine
 			submitInfo.waitSemaphoreCount = 1;                           // One wait semaphore
 			submitInfo.pSignalSemaphores = &render_ref;     // Semaphore(s) to be signaled when command buffers have completed
 			submitInfo.signalSemaphoreCount = 1;                         // One signal semaphore
-			submitInfo.pCommandBuffers = &m_CommandBuffer.GetVkCommandBuffer(); // Command buffers(s) to execute in this batch (submission)
+			submitInfo.pCommandBuffers = &cmdBuffer; // Command buffers(s) to execute in this batch (submission)
 			submitInfo.commandBufferCount = 1;                           // One command buffer
 		}
 

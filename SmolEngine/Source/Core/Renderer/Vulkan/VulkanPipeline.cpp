@@ -22,6 +22,9 @@ namespace SmolEngine
 			return false;
 		}
 
+		m_WriteDescriptorSets.clear();
+		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Texture);
+
 		const auto& shader = pipelineSpec->Shader;
 		const auto& swapchain = pipelineSpec->TargetSwapchain;
 		const auto& device = *pipelineSpec->Device->GetLogicalDevice();
@@ -30,8 +33,8 @@ namespace SmolEngine
 		{
 			pipelineLayoutCI.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 			pipelineLayoutCI.pNext = nullptr;
-			pipelineLayoutCI.setLayoutCount = static_cast<uint32_t>(shader->GetVkDescriptorSetLayout().size());
-			pipelineLayoutCI.pSetLayouts = shader->GetVkDescriptorSetLayout().data();
+			pipelineLayoutCI.setLayoutCount = 1;
+			pipelineLayoutCI.pSetLayouts = &m_DescriptorSetLayout;
 			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(shader->m_VkPushConstantRanges.size());
 			pipelineLayoutCI.pPushConstantRanges = shader->m_VkPushConstantRanges.data();
 
@@ -128,7 +131,7 @@ namespace SmolEngine
 		{
 			glm::vec3 Pos;
 			glm::vec4 Color;
-
+			glm::vec2 TexCood;
 		};
 
 		// Vertex input binding
@@ -139,7 +142,7 @@ namespace SmolEngine
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		// Input attribute bindings describe shader attribute locations and memory layouts
-		std::array<VkVertexInputAttributeDescription, 2> vertexInputAttributs;
+		std::array<VkVertexInputAttributeDescription, 3> vertexInputAttributs;
 		// These match the following shader layout (see triangle.vert):
 		//	layout (location = 0) in vec3 inPos;
 		//	layout (location = 1) in vec3 inColor;
@@ -149,6 +152,7 @@ namespace SmolEngine
 		// Position attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
 		vertexInputAttributs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 		vertexInputAttributs[0].offset = offsetof(ExsVertex, Pos);
+
 		// Attribute location 1: Color
 		vertexInputAttributs[1].binding = 0;
 		vertexInputAttributs[1].location = 1;
@@ -156,12 +160,18 @@ namespace SmolEngine
 		vertexInputAttributs[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 		vertexInputAttributs[1].offset = offsetof(ExsVertex, Color);
 
+		vertexInputAttributs[2].binding = 0;
+		vertexInputAttributs[2].location = 2;
+		// Color attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
+		vertexInputAttributs[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+		vertexInputAttributs[2].offset = offsetof(ExsVertex, TexCood);
+
 		// Vertex input state used for pipeline creation
 		VkPipelineVertexInputStateCreateInfo vertexInputState = {};
 		vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputState.vertexBindingDescriptionCount = 1;
 		vertexInputState.pVertexBindingDescriptions = &vertexInputBinding;
-		vertexInputState.vertexAttributeDescriptionCount = 2;
+		vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
 		vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
 
 
@@ -215,5 +225,176 @@ namespace SmolEngine
 	const VkPipelineLayout& VulkanPipeline::GetVkPipelineLayot() const
 	{
 		return m_PipelineLayout;
+	}
+
+	const VkDescriptorSet VulkanPipeline::GetVkDescriptorSet() const
+	{
+		return m_DesciptorSet;
+	}
+
+	const VkDescriptorSetLayout VulkanPipeline::GetVkDescriptorSetLayout() const
+	{
+		return m_DescriptorSetLayout;
+	}
+
+	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, VulkanTexture* texture)
+	{
+		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes;
+		std::vector< VkDescriptorSetLayoutBinding> DescriptorSetLayoutBinding;
+
+		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+		uint32_t unformsBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
+		uint32_t resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformResources.size());;
+
+		// Uniform Buffer PoolSize
+		if (!shader->m_UniformBuffers.empty())
+		{
+			VkDescriptorPoolSize tempPoolSize = {};
+			{
+				tempPoolSize.descriptorCount = unformsBufferSize;
+				tempPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			}
+
+			DescriptorPoolSizes.push_back(tempPoolSize);
+		}
+
+		// Resources Buffer PoolSize
+		if (!shader->m_UniformResources.empty())
+		{
+			VkDescriptorPoolSize tempPoolSize = {};
+			{
+				tempPoolSize.descriptorCount = resourcesBufferSize;
+				tempPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			}
+
+			DescriptorPoolSizes.push_back(tempPoolSize);
+		}
+
+		VkDescriptorPoolCreateInfo descriptorPoolInfo = {};
+		{
+			descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			descriptorPoolInfo.pNext = nullptr;
+			descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(DescriptorPoolSizes.size());
+			descriptorPoolInfo.pPoolSizes = DescriptorPoolSizes.data();
+			descriptorPoolInfo.maxSets = static_cast<uint32_t>(DescriptorPoolSizes.size());
+
+			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &m_DescriptorPool));
+		}
+
+		// UBO's
+
+		if (!shader->m_UniformBuffers.empty())
+		{
+			for (auto& uboInfo : shader->m_UniformBuffers)
+			{
+				auto& [bindingPoint, buffer] = uboInfo;
+
+				VkDescriptorSetLayoutBinding layoutBinding = {};
+				{
+					layoutBinding.binding = buffer.BindingPoint;
+					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+					layoutBinding.descriptorCount = unformsBufferSize;
+					layoutBinding.stageFlags = buffer.StageFlags;
+				}
+
+				DescriptorSetLayoutBinding.push_back(layoutBinding);
+
+				buffer.VkBuffer.Create(buffer.Size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+				buffer.DesriptorBufferInfo.buffer = buffer.VkBuffer.GetBuffer();
+				buffer.DesriptorBufferInfo.offset = 0;
+				buffer.DesriptorBufferInfo.range = buffer.VkBuffer.GetSize();
+			}
+
+		}
+
+		// Samplers
+
+		if (!shader->m_UniformResources.empty())
+		{
+
+			for (auto& info : shader->m_UniformResources)
+			{
+				auto& [bindingPoint, res] = info;
+
+				VkDescriptorSetLayoutBinding layoutBinding = {};
+				{
+					layoutBinding.binding = res.BindingPoint;
+					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+					layoutBinding.descriptorCount = resourcesBufferSize;
+					layoutBinding.stageFlags = res.StageFlags;
+
+					DescriptorSetLayoutBinding.push_back(layoutBinding);
+				}
+			}
+		}
+
+		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+		{
+			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			layoutInfo.bindingCount = static_cast<uint32_t>(DescriptorSetLayoutBinding.size());
+			layoutInfo.pBindings = DescriptorSetLayoutBinding.data();
+
+			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayout));
+		}
+
+		VkDescriptorSetAllocateInfo allocateInfo = {};
+		{
+			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			allocateInfo.descriptorPool = m_DescriptorPool;
+			allocateInfo.descriptorSetCount = 1;
+			allocateInfo.pSetLayouts = &m_DescriptorSetLayout;
+
+			VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocateInfo, &m_DesciptorSet));
+		}
+		
+		/// Maybe move somewhere else
+		/// Seconds Pass
+		{
+			/// UBO
+
+			if (!shader->m_UniformBuffers.empty())
+			{
+				for (auto& uboInfo : shader->m_UniformBuffers)
+				{
+					auto& [bindingPoint, buffer] = uboInfo;
+
+					m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
+						buffer.BindingPoint, &buffer.DesriptorBufferInfo));
+
+					NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
+				}
+			}
+
+			/// Samplers
+
+			if (!shader->m_UniformResources.empty()) 
+			{
+				for (auto& info : shader->m_UniformResources)
+				{
+					auto& [bindingPoint, res] = info;
+
+					if (texture != nullptr)
+					{
+						if (texture->IsActive())
+						{
+							VkDescriptorImageInfo imageDescriptorCI = {};
+							{
+								imageDescriptorCI.imageLayout = texture->m_ImageLayout;
+								imageDescriptorCI.imageView = texture->m_ImageView;
+								imageDescriptorCI.sampler = texture->m_Samper;
+							}
+
+							m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
+								res.BindingPoint, &imageDescriptorCI, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+						}
+					}
+
+					NATIVE_WARN("UniformResource\nSampler: {}, Location: {}, Dim: {}, Binding: {}", res.Sampler, res.Location, res.Dimension, res.BindingPoint);
+				}
+			}
+		}
+
+
+		vkUpdateDescriptorSets(device, static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
 	}
 }

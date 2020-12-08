@@ -74,19 +74,9 @@ namespace SmolEngine
 
 		const std::vector<VkPipelineShaderStageCreateInfo>& GetVkPipelineShaderStages() const;
 
-		const std::vector<VkDescriptorSetLayout>& GetVkDescriptorSetLayout() const;
-
-		const std::vector<VulkanDescriptor>& GetDescriptors() const;
-
-		const std::vector<VkDescriptorSet>& GetVkDescriptors() const;
-
 	private:
 
-		std::vector<VkDescriptorSetLayout> m_VkDescriptorSetLayout;
 		std::vector<VkPushConstantRange> m_VkPushConstantRanges;
-		std::vector<VkDescriptorSet> m_VkDescriptors;
-
-		std::vector<VulkanDescriptor> m_Descriptors;
 
 		std::unordered_map<size_t, UniformResource> m_UniformResources;
 		std::vector<VkPipelineShaderStageCreateInfo> m_PipelineShaderStages;

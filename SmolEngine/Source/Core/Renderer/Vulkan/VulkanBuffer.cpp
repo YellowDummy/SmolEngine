@@ -119,7 +119,9 @@ namespace SmolEngine
 
 	void VulkanBuffer::SetData(const void* data, size_t size, uint32_t offset)
 	{
-		void* dest = MapMemory();
+		uint8_t* dest = nullptr;
+		const auto& device = *m_Device->GetLogicalDevice();
+		VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&dest));
 		memcpy(dest, data, size);
 		UnMapMemory();
 		m_Size = size;
@@ -142,7 +144,6 @@ namespace SmolEngine
 	void VulkanBuffer::Destroy()
 	{
 		const auto& device = *m_Device->GetLogicalDevice();
-		vkUnmapMemory(device, m_DeviceMemory);
 		vkDestroyBuffer(device, m_Buffer, nullptr);
 	}
 

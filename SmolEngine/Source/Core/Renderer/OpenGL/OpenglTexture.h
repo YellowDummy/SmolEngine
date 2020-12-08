@@ -52,18 +52,13 @@ namespace SmolEngine
 
 	private:
 
-		uint32_t m_Width = 0;
+		uint32_t         m_Width = 0;
+		uint32_t         m_Height = 0;
+		uint32_t         m_Channels = 0;
+		uint32_t         m_RendererID = 0;
+		uint32_t         m_DataFromat = 0;
+		uint32_t	     m_InternalFormat = 0;
 
-		uint32_t m_Height = 0;
-
-		uint32_t m_Channels = 0;
-
-		uint32_t m_RendererID = 0;
-
-		uint32_t m_DataFromat = 0, m_InternalFormat = 0;
-
-		///
-
-		std::string m_FilePath = "";
+		std::string      m_FilePath = "";
 	};
 }

@@ -1644,6 +1644,7 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanShaderResources.h">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanUniformBufferPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1952,5 +1953,6 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanUniformBufferPool.cpp" />
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 
 namespace SmolEngine
 {
-	bool VulkanMemoryAllocator::Allocate(const VkDevice& device, const VkMemoryRequirements& memRequirements, VkDeviceMemory* dest, uint32_t memoryTypeIndex)
+	bool VulkanMemoryAllocator::Allocate(VkDevice device, const VkMemoryRequirements& memRequirements, VkDeviceMemory* dest, uint32_t memoryTypeIndex)
 	{
 		VkMemoryAllocateInfo memAllocateInfo = {};
 		{

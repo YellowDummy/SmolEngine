@@ -39,11 +39,12 @@ namespace SmolEngine
 
 	struct UniformResource
 	{
-		spirv_cross::SPIRType Type;
-
 		uint32_t Location = 0;
+		uint32_t BindingPoint = 0;
 		uint32_t Dimension = 0;
 		uint32_t Sampler = 0;
 		uint32_t ArraySize = 0;
+
+		VkShaderStageFlags StageFlags;
 	};
 }
