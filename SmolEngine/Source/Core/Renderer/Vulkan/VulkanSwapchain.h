@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 
 #include "Core/Renderer/Vulkan/Vulkan.h"
-#include "Core/Renderer/Vulkan/VulkanFramebuffer.h"
+#include "Core/Renderer/Vulkan/VulkanSwapchainFramebuffer.h"
 
 #include <vector>
 
@@ -61,7 +61,7 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
-		const VulkanFramebuffer& GetFramebuffer() const;
+		const VulkanSwapchainFramebuffer& GetSwapchainFramebuffer() const;
 
 		const VkRenderPass GetRenderPass() const;
 
@@ -100,7 +100,7 @@ namespace SmolEngine
 		std::vector<VkImage> m_Images;
 		std::vector<SwapchainBuffer> m_Buffers;
 
-		VulkanFramebuffer m_Framebuffer = {};
+		VulkanSwapchainFramebuffer m_Framebuffer = {};
 		DepthStencil m_DepthStencil = {};
 
 		VkRenderPass m_RenderPass = VK_NULL_HANDLE;
@@ -130,6 +130,6 @@ namespace SmolEngine
 
 		friend class VulkanCommandBuffer;
 
-		friend class VulkanFramebuffer;
+		friend class VulkanSwapchainFramebuffer;
 	};
 }

@@ -6,6 +6,8 @@
 #include "Core/Renderer/Vulkan/VulkanStagingBuffer.h"
 #include "Core/Renderer/Vulkan/VulkanMemoryAllocator.h"
 
+#include "../Libraries/imgui/examples/imgui_impl_vulkan.h"
+
 namespace SmolEngine
 {
 	VulkanTexture::VulkanTexture()
@@ -184,6 +186,17 @@ namespace SmolEngine
 		m_Height = height;
 		m_FilePath = filePath;
 		m_IsCreated = true;
+
+		m_DescriptorImageInfo = {};
+		m_DescriptorImageInfo.imageLayout = m_ImageLayout;
+		m_DescriptorImageInfo.imageView = m_ImageView;
+		m_DescriptorImageInfo.sampler = m_Samper;
+
+#ifdef SMOLENGINE_EDITOR
+
+		m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_DescriptorImageInfo);
+
+#endif // SMOLENGINE_EDITOR
 
 		stbi_image_free(data);
 	}

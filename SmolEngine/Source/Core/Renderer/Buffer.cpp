@@ -11,15 +11,12 @@ namespace SmolEngine
 {
 	void VertexBuffer::SetLayout(const BufferLayout& layout)
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexBuffer.SetLayout(layout);
 #else
 
-
 #endif
-
 	}
 
 	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
@@ -28,74 +25,65 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-
 		buffer->m_OpenglVertexBuffer.Init(size);
 #else
-
-		// Vulkan
-
+		buffer->m_VulkanVextexBuffer.Create(size);
 #endif
-
 		return buffer;
 	}
 
 
-	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(void* vertices, uint32_t size)
 	{
 		Ref<VertexBuffer> buffer = std::make_shared<VertexBuffer>();
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-
 		buffer->m_OpenglVertexBuffer.Init(vertices, size);
 #else
-
-		// Vulkan
+		buffer->m_VulkanVextexBuffer.Create(vertices, size);
 
 #endif
-
 		return buffer;
 	}
 
 
 	void IndexBuffer::Bind() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglIndexBuffer.Bind();
-#else
-
-		// Vulkan
-
 #endif
 
 	}
 
 	void IndexBuffer::UnBind() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglIndexBuffer.UnBind();
-#else
-
-		// Vulkan
-
 #endif
 
 	}
 
+	void IndexBuffer::Destory()
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		m_OpenglIndexBuffer.Destroy();
+
+#else
+		m_VulkanIndexBuffer.Destroy();
+#endif
+	}
+
 	uint32_t IndexBuffer::GetCount() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		return m_OpenglIndexBuffer.GetCount();
 #else
-		// Vulkan
-
-		return 0;
+		return m_VulkanIndexBuffer.GetCount();
 #endif
 
 	}
@@ -106,54 +94,36 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-
 		buffer->m_OpenglIndexBuffer.Init(indices, count);
 #else
-
-		// Vulkan
-
+		buffer->m_VulkanIndexBuffer.Create(indices, count);
 #endif
-
 		return buffer;
 	}
 
 	void VertexArray::Bind() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexArray.Bind();
-#else
-
-		// Vulkan
-
 #endif
-
 	}
 
 	void VertexArray::UnBind() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexArray.UnBind();
-#else
-
-		// Vulkan
-
 #endif
-
 	}
 
 	void VertexArray::SetVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexArray.SetVertexBuffer(vertexBuffer);
 #else
-
-		// Vulkan
+		
 #endif
 	}
 
@@ -179,7 +149,7 @@ namespace SmolEngine
 #else
 		// Vulkan
 
-		return std::make_shared<IndexBuffer>();
+		return nullptr;
 #endif
 
 	}
@@ -198,39 +168,38 @@ namespace SmolEngine
 
 	void VertexBuffer::Bind() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexBuffer.Bind();
-#else
-
-		// Vulkan
 #endif
-
 	}
 
 	void VertexBuffer::UnBind() const
 	{
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexBuffer.UnBind();
-#else
-
-		// Vulkan
 #endif
-
 	}
 
-	void VertexBuffer::UploadData(const void* data, const uint32_t size, const uint32_t offset) const
+	void VertexBuffer::Destory()
 	{
+#ifdef SMOLENGINE_OPENGL_IMPL
 
+		m_OpenglVertexBuffer.Destroy();
+#else
+		m_VulkanVextexBuffer.Destroy();
+#endif
+	}
+
+	void VertexBuffer::UploadData(const void* data, const uint32_t size, const uint32_t offset)
+	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglVertexBuffer.UploadData(data, size, offset);
 #else
 
-		// Vulkan
+		m_VulkanVextexBuffer.SetData(data, size, offset);
 #endif
 
 	}

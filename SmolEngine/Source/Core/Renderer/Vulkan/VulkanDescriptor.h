@@ -8,7 +8,7 @@
 namespace SmolEngine
 {
 	class VulkanDevice;
-
+	class VulkanTexture;
 	class VulkanShader;
 
 	class VulkanDescriptor
@@ -23,6 +23,9 @@ namespace SmolEngine
 			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
 
 		static VkWriteDescriptorSet Create(VkDescriptorSet descriptorSet, uint32_t binding, VkDescriptorImageInfo* imageInfo,
+			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+
+		static VkWriteDescriptorSet Create(VkDescriptorSet descriptorSet, uint32_t binding, const std::vector<VkDescriptorImageInfo>& descriptorimageInfos,
 			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
 	};

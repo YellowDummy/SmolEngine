@@ -15,9 +15,10 @@ namespace SmolEngine
 
 	}
 
-	void VulkanIndexBuffer::Create(const void* data, uint64_t size)
+	void VulkanIndexBuffer::Create(const uint32_t* data, uint64_t count)
 	{
-		m_IndexBuffer.Create(data, size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+		m_ElementsCount = count;
+		m_IndexBuffer.Create(data, sizeof(uint32_t) * count, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 	}
 
 	void VulkanIndexBuffer::Create(uint64_t size)
@@ -25,9 +26,10 @@ namespace SmolEngine
 		m_IndexBuffer.Create(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 	}
 
-	void VulkanIndexBuffer::SetData(const void* data, uint64_t size, uint32_t offset)
+	void VulkanIndexBuffer::SetData(const uint32_t* data, uint64_t count)
 	{
-		m_IndexBuffer.SetData(data, size, offset);
+		m_ElementsCount = count;
+		m_IndexBuffer.SetData(data, sizeof(uint32_t) * count);
 	}
 
 	void* VulkanIndexBuffer::MapMemory()
@@ -48,6 +50,11 @@ namespace SmolEngine
 	uint32_t VulkanIndexBuffer::GetSize() const
 	{
 		return m_IndexBuffer.GetSize();
+	}
+
+	uint32_t VulkanIndexBuffer::GetCount() const
+	{
+		return m_ElementsCount;
 	}
 
 	const VkBuffer& VulkanIndexBuffer::GetBuffer() const

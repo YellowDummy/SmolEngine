@@ -20,6 +20,8 @@ namespace SmolEngine
 
 		void Init(float* vertices, uint32_t size);
 
+		void Destroy();
+
 		/// 
 		/// Binding
 		/// 
@@ -67,6 +69,8 @@ namespace SmolEngine
 		///
 		
 		void Init(uint32_t* indices, uint32_t count);
+
+		void Destroy();
 
 		/// 
 		/// Binding

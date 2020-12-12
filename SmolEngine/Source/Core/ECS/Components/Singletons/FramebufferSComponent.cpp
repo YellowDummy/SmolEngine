@@ -9,10 +9,10 @@ namespace SmolEngine
 
 	FramebufferSComponent::FramebufferSComponent()
 	{
-		FramebufferData m_FramebufferData;
-		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
-		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
-		auto frameBuffer = Framebuffer::Create(m_FramebufferData);
+		FramebufferSpecification spec;
+		spec.Width = Application::GetApplication().GetWindowWidth();
+		spec.Height = Application::GetApplication().GetWindowHeight();
+		auto frameBuffer = Framebuffer::Create(spec);
 
 		Framebuffers[0] = frameBuffer;
 		Instance = this;

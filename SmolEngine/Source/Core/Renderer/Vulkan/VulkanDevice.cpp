@@ -79,6 +79,8 @@ namespace SmolEngine
 						m_VkDeviceFeatures = deviceFeatures;
 						m_VkMemoryProperties = memoryProperties;
 
+						m_VkDeviceFeatures.shaderSampledImageArrayDynamicIndexing = VK_TRUE;
+
 						m_VkPhysicalDevice = current_device;
 						m_DeviceQueueFamilyIndex = familyIndex;
 					}

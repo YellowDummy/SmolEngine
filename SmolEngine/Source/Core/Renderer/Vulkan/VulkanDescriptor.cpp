@@ -2,6 +2,7 @@
 #include "VulkanDescriptor.h"
 
 #include "Core/Renderer/Vulkan/VulkanShaderResources.h"
+#include "Core/Renderer/Vulkan/VulkanTexture.h"
 #include "Core/Renderer/Vulkan/VulkanContext.h"
 
 VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descriptorSet,
@@ -26,6 +27,23 @@ VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descri
 VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descriptorSet, uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType descriptorType)
 {
 	const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+	VkWriteDescriptorSet writeSet = {};
+	{
+		writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writeSet.dstSet = descriptorSet;
+		writeSet.descriptorType = descriptorType;
+		writeSet.descriptorCount = 1;
+		writeSet.dstArrayElement = 0;
+		writeSet.dstBinding = binding;
+		writeSet.pImageInfo = imageInfo;
+	}
+
+	return writeSet;
+}
+
+VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descriptorSet, uint32_t binding, const std::vector<VkDescriptorImageInfo>& descriptorimageInfos, VkDescriptorType descriptorType)
+{
+	const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
 
 	VkWriteDescriptorSet writeSet = {};
 	{
@@ -33,8 +51,9 @@ VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descri
 		writeSet.dstSet = descriptorSet;
 		writeSet.descriptorType = descriptorType;
 		writeSet.dstBinding = binding;
-		writeSet.pImageInfo = imageInfo;
-		writeSet.descriptorCount = 1;
+		writeSet.dstArrayElement = 0;
+		writeSet.descriptorCount = static_cast<uint32_t>(descriptorimageInfos.size());
+		writeSet.pImageInfo = descriptorimageInfos.data();
 	}
 
 	return writeSet;

@@ -33,6 +33,7 @@ namespace SmolEngine
 			VkResult result = vkAllocateMemory(*device->GetLogicalDevice(), &memAllocateInfo, nullptr, dest);
 			assert(result == VK_SUCCESS);
 
+			NATIVE_INFO("VulkanMemoryAllocator allocated {} bytes of memory", memRequirements.size);
 			return result == VK_SUCCESS;
 		}
 	}

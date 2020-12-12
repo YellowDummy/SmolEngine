@@ -2,21 +2,12 @@
 #include "Core/Core.h"
 #include <cereal/cereal.hpp>
 
+#include "Core/Renderer/FramebufferSpecification.h"
 #include "Core/Renderer/OpenGL/OpenglFramebuffer.h"
+#include "Core/Renderer/Vulkan/VulkanFramebuffer.h"
 
 namespace SmolEngine
 {
-	struct FramebufferData
-	{
-		uint32_t Width;
-
-		uint32_t Height;
-
-		uint32_t Samples = 1;
-
-		bool SwapChainEnabled = false; // Vulkan
-	};
-
 	class Framebuffer
 	{
 	public:
@@ -45,17 +36,24 @@ namespace SmolEngine
 		///  Getters
 		/// 
 
-		const FramebufferData& GetData() const;
+		const FramebufferSpecification& GetSpecification() const;
 
 		uint32_t GetColorAttachmentID() const;
 
+		void* GetImGuiTextureID() const;
+
 		uint32_t GetRendererID() const;
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		const VulkanFramebuffer& GetVulkanFramebuffer() const { return m_VulkanFrameBuffer; }
+#endif
 
 		/// 
 		/// Factory
 		/// 
 
-		static Ref<Framebuffer> Create(const FramebufferData& data);
+		static Ref<Framebuffer> Create(const FramebufferSpecification& data);
 
 	private:
 
@@ -63,7 +61,7 @@ namespace SmolEngine
 
 		OpenglFramebuffer m_OpenglFramebuffer;
 #else
-
+		VulkanFramebuffer m_VulkanFrameBuffer;
 #endif
 	};
 }

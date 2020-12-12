@@ -59,12 +59,6 @@ namespace SmolEngine
 		void PopLayer();
 
 		/// 
-		/// Scripting
-		/// 
-
-		void InitializeScripts();
-
-		/// 
 		/// Callbacks
 		/// 
 

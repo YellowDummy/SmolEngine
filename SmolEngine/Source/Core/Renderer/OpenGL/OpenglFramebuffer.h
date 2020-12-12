@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Renderer/FramebufferSpecification.h"
+
 namespace SmolEngine
 {
 	struct FramebufferData;
@@ -16,7 +18,7 @@ namespace SmolEngine
 		/// Init
 		/// 
 
-		void Init(const FramebufferData& data);
+		void Init(const FramebufferSpecification& data);
 
 		void Recreate();
 
@@ -40,7 +42,7 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
-		const FramebufferData& GetData() const;
+		const FramebufferSpecification& GetSpecification() const;
 
 		uint32_t GetColorAttachmentID() const;
 
@@ -48,10 +50,8 @@ namespace SmolEngine
 
 	private:
 
-		FramebufferData* m_Data = nullptr;
-
+		FramebufferSpecification m_Data = {};
 		uint32_t m_RendererID = 0, m_ColorAttachment = 0, m_DepthAttachment = 0;
-
 		const uint32_t m_MaxSize = 8192;
 	};
 }

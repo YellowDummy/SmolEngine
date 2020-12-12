@@ -97,8 +97,6 @@ namespace SmolEngine
 
 		// Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
-
-
 #endif
 
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -107,27 +105,25 @@ namespace SmolEngine
 		RendererCommand::Init();
 #endif
 
-		// Initializing Scene Handler
-		WorldAdmin::GetScene()->Init();
+#ifdef SMOLENGINE_EDITOR
 
-		//Initializing external scripts
-		InitializeScripts();
+		// Pushing Dear ImGui Layer
+		PushLayer(m_ImGuiLayer);
 
+#endif
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
 		ClientInit();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
-#ifdef SMOLENGINE_EDITOR
+		// Initializing Scene Handler
+		WorldAdmin::GetScene()->Init();
 
-		// Pushing Dear ImGui Layer
-		PushLayer(m_ImGuiLayer);
+#ifndef SMOLENGINE_EDITOR
 
-#else
 		// Loading a scene with index 0 and starting the game
 		WorldAdmin::GetScene()->StartGame();
-
 #endif
 
 		timer.StopTimer();
@@ -223,11 +219,6 @@ namespace SmolEngine
 	}
 
 	void Application::PopLayer()
-	{
-
-	}
-
-	void Application::InitializeScripts()
 	{
 
 	}

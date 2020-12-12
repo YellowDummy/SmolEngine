@@ -11,7 +11,7 @@ namespace SmolEngine
 {
 	OpenglFramebuffer::OpenglFramebuffer()
 	{
-		m_Data = new FramebufferData();
+
 	}
 
 	OpenglFramebuffer::~OpenglFramebuffer()
@@ -19,14 +19,11 @@ namespace SmolEngine
 		glDeleteFramebuffers(1, &m_RendererID);
 		glDeleteTextures(1, &m_ColorAttachment);
 		glDeleteTextures(1, &m_DepthAttachment);
-
-		delete m_Data;
 	}
 
-	void OpenglFramebuffer::Init(const FramebufferData& data)
+	void OpenglFramebuffer::Init(const FramebufferSpecification& data)
 	{
-		memcpy(m_Data, &data, sizeof(FramebufferData));
-
+		m_Data = data;
 		Recreate();
 	}
 
@@ -44,7 +41,7 @@ namespace SmolEngine
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Data->Width, m_Data->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Data.Width, m_Data.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -53,7 +50,7 @@ namespace SmolEngine
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Data->Width, m_Data->Height);
+		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Data.Width, m_Data.Height);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 
 		if (!glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
@@ -68,7 +65,7 @@ namespace SmolEngine
 	void OpenglFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		glViewport(0, 0, m_Data->Width, m_Data->Height);
+		glViewport(0, 0, m_Data.Width, m_Data.Height);
 	}
 
 	void OpenglFramebuffer::BindColorAttachment(uint32_t slot)
@@ -85,13 +82,13 @@ namespace SmolEngine
 	{
 		if (width == 0 || height == 0 || width > m_MaxSize || height > m_MaxSize) { NATIVE_WARN("Framebuffer: invalid value"); return; }
 
-		m_Data->Width = width; m_Data->Height = height;
+		m_Data.Width = width; m_Data.Height = height;
 		Recreate();
 	}
 
-	const FramebufferData& OpenglFramebuffer::GetData() const
+	const FramebufferSpecification& OpenglFramebuffer::GetSpecification() const
 	{
-		return *m_Data;
+		return m_Data;
 	}
 
 	uint32_t OpenglFramebuffer::GetColorAttachmentID() const

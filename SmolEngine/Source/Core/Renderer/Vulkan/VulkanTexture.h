@@ -32,13 +32,15 @@ namespace SmolEngine
 
 		bool IsActive() const;
 
-
+		VkDescriptorImageInfo m_DescriptorImageInfo;
 		VkImage m_Image;
 
 		VkDevice m_Device;
 		VkSampler m_Samper;
 		VkImageView m_ImageView;
 		VkImageLayout m_ImageLayout;
+
+		void* m_ImGuiTextureID = nullptr;
 
 	private:
 

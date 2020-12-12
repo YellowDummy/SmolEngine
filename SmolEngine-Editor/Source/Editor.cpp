@@ -29,6 +29,7 @@ namespace SmolEngine
 		app.PushLayer(new EditorLayer);
 
 #else
+
 		app.PushLayer(new VulkanTestLayer);
 #endif
 

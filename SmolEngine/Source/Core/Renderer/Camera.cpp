@@ -4,6 +4,7 @@
 #include "Core/SLog.h"
 #include "Core/Events/MouseEvent.h"
 #include "Core/Events/ApplicationEvent.h"
+#include "Core/Renderer/FramebufferSpecification.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -36,29 +37,27 @@ namespace SmolEngine
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
-
-
-	///----------------------------------------------------------------CAMERA-CONTROLLER--------------------------------------------------------------------------------------------//
+	/// Camera Controls
 
 	CameraController::CameraController()
 	{
 		float aspectRatio = (float)Application::GetApplication().GetWindowHeight() / (float)Application::GetApplication().GetWindowWidth();
 		m_Camera = std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
-		FramebufferData m_FramebufferData;
-		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
-		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
-		m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+		FramebufferSpecification spec;
+		spec.Width = Application::GetApplication().GetWindowWidth();
+		spec.Height = Application::GetApplication().GetWindowHeight();
+		m_FrameBuffer = Framebuffer::Create(spec);
 	}
 
 	CameraController::CameraController(float aspectRatio, bool roatationEnabled)
 		:m_Camera(std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)),
 		m_AspectRatio(aspectRatio)
 	{
-		FramebufferData m_FramebufferData;
-		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
-		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
-		m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+		FramebufferSpecification spec;
+		spec.Width = Application::GetApplication().GetWindowWidth();
+		spec.Height = Application::GetApplication().GetWindowHeight();
+		m_FrameBuffer = Framebuffer::Create(spec);
 	}
 
 	void CameraController::CalculateView()
@@ -82,10 +81,10 @@ namespace SmolEngine
 
 		m_Camera = std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
-		FramebufferData m_FramebufferData;
-		m_FramebufferData.Width = height;
-		m_FramebufferData.Height = width;
-		m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+		FramebufferSpecification spec;
+		spec.Width = height;
+		spec.Height = width;
+		m_FrameBuffer = Framebuffer::Create(spec);
 
 		OnResize(height, width);
 	}
@@ -109,8 +108,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	
-///--------------------------------------------------------------------------------EDITOR-CAMERA-CONTROLLER--------------------------------------------------------------------------------------------//
+	/// Editor Camera
 
 	EditorCameraController::EditorCameraController(float aspectRatio, bool rotationEnabled)
 		:m_Camera(std::make_shared<OrthographicCamera>(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)),
@@ -118,10 +116,10 @@ namespace SmolEngine
 		m_RoatationEnabled(rotationEnabled),
 		m_WorldPos(glm::vec3(0.0f))
 	{
-		FramebufferData m_FramebufferData;
-		m_FramebufferData.Width = Application::GetApplication().GetWindowWidth();
-		m_FramebufferData.Height = Application::GetApplication().GetWindowHeight();
-		m_FrameBuffer = Framebuffer::Create(m_FramebufferData);
+		FramebufferSpecification spec;
+		spec.Width = Application::GetApplication().GetWindowWidth();
+		spec.Height = Application::GetApplication().GetWindowHeight();
+		m_FrameBuffer = Framebuffer::Create(spec);
 	}
 
 	void EditorCameraController::CalculateView()

@@ -1,9 +1,10 @@
 #pragma once
+
 #include "Core/Renderer/OpenGL/OpenglTexture.h"
+#include "Core/Renderer/Vulkan/VulkanTexture.h"
 
 #include <glm/glm.hpp>
 #include <string>
-
 
 namespace SmolEngine
 {
@@ -33,6 +34,10 @@ namespace SmolEngine
 
 		const uint32_t GetID() const;
 
+#ifndef  SMOLENGINE_OPENGL_IMPL
+
+		VulkanTexture* GetVulkanTexture() { return &m_VulkanTexture; }
+#endif
 		/// 
 		/// Setters
 		/// 
@@ -61,6 +66,7 @@ namespace SmolEngine
 
 		OpenglTexture2D m_OpenglTexture2D = {};
 #else
+		VulkanTexture m_VulkanTexture = {};
 
 #endif //  SMOLENGINE_OPENGL_IMPL
 

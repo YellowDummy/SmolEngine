@@ -61,10 +61,11 @@ namespace SmolEngine
 
 		const std::string GetCachedPath(const std::string& filePath);
 
+	public:
 
-		ShaderType GetShaderType(shaderc_shader_kind shadercType);
+		static ShaderType GetShaderType(shaderc_shader_kind shadercType);
 
-		VkShaderStageFlagBits GetVkShaderStage(ShaderType type);
+		static VkShaderStageFlagBits GetVkShaderStage(ShaderType type);
 
 		/// 
 		/// Getters

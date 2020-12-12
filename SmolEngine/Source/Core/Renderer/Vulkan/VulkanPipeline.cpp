@@ -8,22 +8,24 @@ namespace SmolEngine
 {
 	VulkanPipeline::VulkanPipeline()
 	{
-
+		m_VulkanPipelineSpecification = new VulkanPipelineSpecification();
 	}
 
 	VulkanPipeline::~VulkanPipeline()
 	{
+		delete m_VulkanPipelineSpecification;
 	}
 
 	bool VulkanPipeline::Invalidate(const VulkanPipelineSpecification* pipelineSpec)
 	{
-		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain)
+		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain || !pipelineSpec->BufferLayout)
 		{
+			assert(false);
 			return false;
 		}
 
-		m_WriteDescriptorSets.clear();
-		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Texture);
+		memcpy(m_VulkanPipelineSpecification, pipelineSpec, sizeof(VulkanPipelineSpecification));
+		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Textures);
 
 		const auto& shader = pipelineSpec->Shader;
 		const auto& swapchain = pipelineSpec->TargetSwapchain;
@@ -135,36 +137,25 @@ namespace SmolEngine
 		};
 
 		// Vertex input binding
-		// This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
+        // This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
 		VkVertexInputBindingDescription vertexInputBinding = {};
 		vertexInputBinding.binding = 0;
 		vertexInputBinding.stride = sizeof(ExsVertex);
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		// Input attribute bindings describe shader attribute locations and memory layouts
-		std::array<VkVertexInputAttributeDescription, 3> vertexInputAttributs;
-		// These match the following shader layout (see triangle.vert):
-		//	layout (location = 0) in vec3 inPos;
-		//	layout (location = 1) in vec3 inColor;
-		// Attribute location 0: Position
-		vertexInputAttributs[0].binding = 0;
-		vertexInputAttributs[0].location = 0;
-		// Position attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
-		vertexInputAttributs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-		vertexInputAttributs[0].offset = offsetof(ExsVertex, Pos);
+		uint32_t index = 0;
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(pipelineSpec->BufferLayout->GetElements().size());
+		for (const auto& element: pipelineSpec->BufferLayout->GetElements())
+		{
 
-		// Attribute location 1: Color
-		vertexInputAttributs[1].binding = 0;
-		vertexInputAttributs[1].location = 1;
-		// Color attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
-		vertexInputAttributs[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-		vertexInputAttributs[1].offset = offsetof(ExsVertex, Color);
+			// Attribute location 0: Position
+			vertexInputAttributs[index].binding = 0;
+			vertexInputAttributs[index].location = index;
+			vertexInputAttributs[index].format = VK_FORMAT_R32G32B32_SFLOAT;
+			vertexInputAttributs[index].offset = element.offset;
 
-		vertexInputAttributs[2].binding = 0;
-		vertexInputAttributs[2].location = 2;
-		// Color attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
-		vertexInputAttributs[2].format = VK_FORMAT_R32G32B32_SFLOAT;
-		vertexInputAttributs[2].offset = offsetof(ExsVertex, TexCood);
+			index++;
+		}
 
 		// Vertex input state used for pipeline creation
 		VkPipelineVertexInputStateCreateInfo vertexInputState = {};
@@ -209,12 +200,61 @@ namespace SmolEngine
 		return true;
 	}
 
+	bool VulkanPipeline::ReCreate()
+	{
+		if (m_VulkanPipelineSpecification != nullptr)
+		{
+			Destroy();
+			return Invalidate(m_VulkanPipelineSpecification);
+		}
+
+		return false;
+	}
+
 	void VulkanPipeline::Destroy()
 	{
 		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 		vkDestroyPipelineCache(device, m_PipelineCache, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
+	}
+
+	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures)
+	{
+		std::vector< VkDescriptorImageInfo> descriptorImageInfos(textures.size());
+		uint32_t index = 0;
+		for (auto& image : textures)
+		{
+			if (!image->IsActive())
+			{
+				NATIVE_ERROR("VulkanTexture is not initialized!");
+				assert(image->IsActive() == true);
+			}
+
+			descriptorImageInfos[index] = image->m_DescriptorImageInfo;
+			index++;
+		}
+
+		VkWriteDescriptorSet* samplerSet = nullptr;
+		for (auto& writeSet : m_WriteDescriptorSets)
+		{
+			if (writeSet.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+			{
+				samplerSet = &writeSet;
+				break;
+			}
+		}
+
+		if (samplerSet != nullptr)
+		{
+			uint32_t bindingPoint = samplerSet->dstBinding;
+
+			*samplerSet = VulkanDescriptor::Create(m_DesciptorSet,
+				bindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+
+			vkUpdateDescriptorSets(*VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
+		}
+
 	}
 
 	const VkPipeline& VulkanPipeline::GetVkPipeline() const
@@ -237,12 +277,22 @@ namespace SmolEngine
 		return m_DescriptorSetLayout;
 	}
 
-	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, VulkanTexture* texture)
+	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures)
 	{
+		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+
+		m_WriteDescriptorSets.clear();
+		if (m_DescriptorSetLayout != VK_NULL_HANDLE)
+		{
+			vkDestroyDescriptorSetLayout(device, m_DescriptorSetLayout, nullptr);
+		}
+		if (m_DescriptorPool != VK_NULL_HANDLE)
+		{
+			vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);
+		}
+
 		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes;
 		std::vector< VkDescriptorSetLayoutBinding> DescriptorSetLayoutBinding;
-
-		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
 		uint32_t unformsBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
 		uint32_t resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformResources.size());;
 
@@ -293,7 +343,7 @@ namespace SmolEngine
 				{
 					layoutBinding.binding = buffer.BindingPoint;
 					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-					layoutBinding.descriptorCount = unformsBufferSize;
+					layoutBinding.descriptorCount = static_cast<uint32_t>(buffer.Uniforms.size());
 					layoutBinding.stageFlags = buffer.StageFlags;
 				}
 
@@ -320,7 +370,7 @@ namespace SmolEngine
 				{
 					layoutBinding.binding = res.BindingPoint;
 					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					layoutBinding.descriptorCount = resourcesBufferSize;
+					layoutBinding.descriptorCount = res.ArraySize;
 					layoutBinding.stageFlags = res.StageFlags;
 
 					DescriptorSetLayoutBinding.push_back(layoutBinding);
@@ -367,34 +417,45 @@ namespace SmolEngine
 
 			/// Samplers
 
+			std::vector< VkDescriptorImageInfo> descriptorImageInfos;
 			if (!shader->m_UniformResources.empty()) 
 			{
-				for (auto& info : shader->m_UniformResources)
+				for (auto& [bindingPoint, res] : shader->m_UniformResources)
 				{
-					auto& [bindingPoint, res] = info;
-
-					if (texture != nullptr)
+					if (res.ArraySize > 0)
 					{
-						if (texture->IsActive())
+						descriptorImageInfos.reserve(textures.size());
+						for (auto& image : textures)
 						{
-							VkDescriptorImageInfo imageDescriptorCI = {};
+							if (!image->IsActive())
 							{
-								imageDescriptorCI.imageLayout = texture->m_ImageLayout;
-								imageDescriptorCI.imageView = texture->m_ImageView;
-								imageDescriptorCI.sampler = texture->m_Samper;
+								NATIVE_ERROR("VulkanTexture is not initialized!");
+								assert(image->IsActive() == true);
 							}
 
-							m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-								res.BindingPoint, &imageDescriptorCI, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+							descriptorImageInfos.emplace_back(image->m_DescriptorImageInfo);
 						}
-					}
 
-					NATIVE_WARN("UniformResource\nSampler: {}, Location: {}, Dim: {}, Binding: {}", res.Sampler, res.Location, res.Dimension, res.BindingPoint);
+						m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
+							res.BindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+
+						NATIVE_WARN("UniformResource: BindingPoint: {}, ArraySize: {}", res.BindingPoint, res.ArraySize);
+					}
+					else
+					{
+						auto& texture = *textures[0];
+						if (texture.IsActive())
+						{
+							m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
+								res.BindingPoint, &texture.m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+						}
+
+						NATIVE_WARN("UniformResource: BindingPoint: {}, ArraySize: {}", res.BindingPoint, res.ArraySize);
+					}
 				}
 			}
+
+			vkUpdateDescriptorSets(device, static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
 		}
-
-
-		vkUpdateDescriptorSets(device, static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
 	}
 }

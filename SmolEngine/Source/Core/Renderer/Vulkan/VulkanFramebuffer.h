@@ -1,11 +1,29 @@
 #pragma once
 #include "Core/Core.h"
 
+#include "Core/Renderer/FramebufferSpecification.h"
 #include "Core/Renderer/Vulkan/Vulkan.h"
 
 namespace SmolEngine
 {
-	class VulkanSwapchain;
+	struct FrameBufferAttachment 
+	{
+		VkImage image;
+		VkDeviceMemory mem;
+		VkImageView view;
+	};
+
+	struct OffscreenPass
+	{
+		VkFramebuffer frameBuffer;
+		FrameBufferAttachment color, depth;
+
+		VkSampler sampler;
+		VkDescriptorImageInfo descriptor;
+		void* ImGuiTextureID = nullptr;
+
+		VkRenderPass renderPass;
+	};
 
 	class VulkanFramebuffer
 	{
@@ -19,23 +37,31 @@ namespace SmolEngine
 		///  Main
 		/// 
 		
-		VkResult Init(VulkanSwapchain* swapchain, uint32_t width, uint32_t height);
+		bool Init(const FramebufferSpecification& data);
 
-		VkResult Create(uint32_t width, uint32_t height);
+		void OnResize(uint32_t width, uint32_t height);
 
+	private:
 
-		void Clear();
+		bool Create(uint32_t width, uint32_t height);
+
+		void FreeResources();
+
+	public:
 
 		/// 
 		/// Getters
 		/// 
 
-		const std::vector<VkFramebuffer>& GetVkFramebuffers() const;
+		const FramebufferSpecification& GetSpecification() const;
+
+		const OffscreenPass& GetOffscreenPass() const;
+
+		void* GetImGuiTextureID() const;
 
 	private:
 
-		std::vector<VkFramebuffer> m_Framebuffers;
-
-		VulkanSwapchain* m_Swapchain = nullptr;
+		FramebufferSpecification m_Specification = {};
+		OffscreenPass m_OffscreenPass = {};
 	};
 }

@@ -13,7 +13,7 @@ layout(push_constant) uniform TestData
     vec3 value;
 };
 
-layout(binding = 1) uniform sampler2D myTex;
+layout(binding = 1) uniform sampler2D myTex[2];
 
 void main()
 {
@@ -28,6 +28,6 @@ void main()
     //tempColor.rgb += (LightColor.rgb * intensity);
    // float value = atan(1.0, sqrt(length(v_Pos.xy * v_Color.xy)));
     
-    vec4 textureColor = texture(myTex, v_TextCood);
+    vec4 textureColor = texture(myTex[1], v_TextCood);
     color = vec4(textureColor.rgb * value, textureColor.a);
 }

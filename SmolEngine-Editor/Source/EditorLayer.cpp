@@ -383,8 +383,8 @@ namespace SmolEngine
 					m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
 				}
 
-				size_t textureID = m_FrameBuffer->GetColorAttachmentID();
-				ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
+				//size_t textureID = m_FrameBuffer->GetColorAttachmentID();
+				//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
 
 			}
 			ImGui::End();
@@ -414,8 +414,8 @@ namespace SmolEngine
 				auto framebuffer = FramebufferSComponent::Get()[0];
 				if (framebuffer)
 				{
-					ImGui::Image((void*)(intptr_t)framebuffer->GetColorAttachmentID(), 
-						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+					//ImGui::Image((void*)(intptr_t)framebuffer->GetColorAttachmentID(), 
+					//	ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 				}
 			}
 

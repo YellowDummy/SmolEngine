@@ -2,14 +2,12 @@
 
 #include "SmolEngineCore.h"
 
+#include "Core/Renderer/Texture.h"
 #include "Core/Renderer/Shader.h"
-#include "Core/Renderer/Vulkan/VulkanPipeline.h"
-#include "Core/Renderer/Vulkan/VulkanIndexBuffer.h"
-#include "Core/Renderer/Vulkan/VulkanVertexBuffer.h"
-
-#include "Core/Renderer/Vulkan/VulkanTexture.h"
+#include "Core/Renderer/Framebuffer.h"
 
 #include "Core/Renderer/Camera.h"
+#include "Core/Renderer/GraphicsPipeline.h"
 
 namespace SmolEngine
 {
@@ -41,13 +39,11 @@ namespace SmolEngine
 
 	private:
 
-		VulkanPipeline m_Pipeline = {};
-		VulkanTexture m_TestTexture = {};
+		Ref<Texture2D> m_Tetxure1;
+		Ref<Texture2D> m_Tetxure2;
 
-		VulkanIndexBuffer m_IndexBuffer = {};
-		VulkanVertexBuffer m_VertexBuffer = {};
-
-		Ref<Shader> m_Shader = nullptr;
+		GraphicsPipeline m_GraphicsPipeline;
+		Ref<Framebuffer> m_FrameBuffer;
 
 		Ref<EditorCameraController> m_EditorCamera = nullptr;
 

@@ -354,7 +354,7 @@ namespace SmolEngine
 		return result;
     }
 
-	const VulkanFramebuffer& VulkanSwapchain::GetFramebuffer() const
+	const VulkanSwapchainFramebuffer& VulkanSwapchain::GetSwapchainFramebuffer() const
 	{
 		return m_Framebuffer;
 	}

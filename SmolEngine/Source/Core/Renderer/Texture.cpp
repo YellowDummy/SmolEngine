@@ -11,24 +11,18 @@ namespace SmolEngine
 {
 	void Texture2D::Bind(uint32_t slot) const
 	{
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglTexture2D.Bind(slot);
-#else
-
 #endif
 
 	}
 
 	void Texture2D::UnBind() const
 	{
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglTexture2D.UnBind();
-#else
-
 #endif
 
 	}
@@ -41,7 +35,7 @@ namespace SmolEngine
 		return m_OpenglTexture2D.GetHeight();
 #else
 
-		return 0;
+		return m_VulkanTexture.GetHeight();
 #endif
 
 	}
@@ -53,14 +47,13 @@ namespace SmolEngine
 
 		return m_OpenglTexture2D.GetWidth();
 #else
-		return 0;
+		return m_VulkanTexture.GetWidth();
 #endif
 
 	}
 
 	const uint32_t Texture2D::GetID() const
 	{
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 		return m_OpenglTexture2D.GetID();
@@ -68,19 +61,16 @@ namespace SmolEngine
 
 		return 0;
 #endif
-
 	}
 
 	void Texture2D::SetData(void* data, uint32_t size)
 	{
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 		m_OpenglTexture2D.SetData(data, size);
 #else
 
 #endif
-
 	}
 
 	bool Texture2D::operator==(const Texture2D& other) const
@@ -109,7 +99,7 @@ namespace SmolEngine
 
 		texture->m_OpenglTexture2D.Init(filePath);
 #else
-
+		texture->m_VulkanTexture.CreateTexture2D(filePath);
 #endif
 		return texture;
 	}

@@ -30,6 +30,11 @@ namespace SmolEngine
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
 
+	void OpenglVertexBuffer::Destroy()
+	{
+		glDeleteBuffers(1, &m_RendererID);
+	}
+
 	void OpenglVertexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
@@ -68,6 +73,11 @@ namespace SmolEngine
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+	}
+
+	void OpenglIndexBuffer::Destroy()
+	{
+		glDeleteBuffers(1, &m_RendererID);
 	}
 
 	void OpenglIndexBuffer::Bind() const

@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Core/Renderer/Framebuffer.h"
+#include "Core/Renderer/FramebufferSpecification.h"
 
 #include <unordered_map>
 

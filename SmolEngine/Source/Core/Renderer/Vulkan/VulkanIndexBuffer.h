@@ -16,11 +16,11 @@ namespace SmolEngine
 		/// Main
 		/// 
 
-		void Create(const void* data, uint64_t size);
+		void Create(const uint32_t* data, uint64_t count);
 
 		void Create(uint64_t size);
 
-		void SetData(const void* data, uint64_t size, uint32_t offset = 0);
+		void SetData(const uint32_t* data, uint64_t count);
 
 
 		void* MapMemory();
@@ -35,9 +35,13 @@ namespace SmolEngine
 
 		uint32_t GetSize() const;
 
+		uint32_t GetCount() const;
+
 		const VkBuffer& GetBuffer() const;
 
 	private:
+
+		uint32_t m_ElementsCount = 0;
 
 		VulkanBuffer m_IndexBuffer = {};
 

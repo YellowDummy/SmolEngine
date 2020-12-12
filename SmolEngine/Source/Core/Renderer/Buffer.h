@@ -5,9 +5,19 @@
 #include <string>
 #include <memory>
 
+#include "Core/Renderer/BufferLayout.h"
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
 #include "Core/Renderer/OpenGL/OpenglBuffer.h"
 #include "Core/Renderer/OpenGL/OpenglVertexArray.h"
 
+#else
+
+#include "Core/Renderer/Vulkan/VulkanVertexBuffer.h"
+#include "Core/Renderer/Vulkan/VulkanIndexBuffer.h"
+
+#endif
 
 namespace SmolEngine
 {
@@ -31,17 +41,24 @@ namespace SmolEngine
 
 		void UnBind() const;
 
+		void Destory();
+
 		///
 		/// Data
 		/// 
 
-		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0) const;
+		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0);
 
 		/// 
 		/// Getters
 		/// 
 
 		const BufferLayout& GetLayout() const;
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		const VulkanVertexBuffer& GetVulkanVertexBuffer() const { return m_VulkanVextexBuffer; }
+#endif
 
 		/// 
 		/// Setters
@@ -55,17 +72,14 @@ namespace SmolEngine
 
 		static Ref<VertexBuffer> Create(uint32_t size);
 
-		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> Create(void* vertices, uint32_t size);
 
 	private:
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		OpenglVertexBuffer m_OpenglVertexBuffer = {};
-
 #else
-		// Vulkan
-
+		VulkanVertexBuffer m_VulkanVextexBuffer = {};
 #endif
 
 	};
@@ -90,11 +104,18 @@ namespace SmolEngine
 
 		void UnBind() const;
 
+		void Destory();
+
 		///
 		///  Getters
 		/// 
 
 		uint32_t GetCount() const;
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		const VulkanIndexBuffer& GetVulkanIndexBuffer() const { return m_VulkanIndexBuffer; };
+#endif
 
 		/// 
 		/// Factory
@@ -108,9 +129,7 @@ namespace SmolEngine
 
 		OpenglIndexBuffer m_OpenglIndexBuffer = {};
 #else
-
-		// Vulkan
-
+		VulkanIndexBuffer m_VulkanIndexBuffer = {};
 #endif
 	};
 
@@ -152,7 +171,11 @@ namespace SmolEngine
 
 	private:
 
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
 		OpenglVertexArray m_OpenglVertexArray = {};
+
+#endif
 
 	};
 }
