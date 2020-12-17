@@ -14,6 +14,8 @@ namespace SmolEngine
 		VulkanDevice* Device = nullptr;
 		VulkanShader* Shader = nullptr;
 
+		uint32_t Stride = 0;
+
 		std::vector<VulkanTexture*> Textures;
 	};
 }

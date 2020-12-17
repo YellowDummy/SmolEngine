@@ -134,73 +134,44 @@ namespace SmolEngine
 	private:
 
 		glm::vec2 m_GameViewSize = { 0.0f, 0.0f };
-
 		glm::vec2 m_SceneViewSize = { 0.0f, 0.0f };
-
 		glm::vec2 m_ViewPortSize = {0.0f, 0.0f};
-
 		glm::vec2 m_GameViewPortSize = { 0.0f, 0.0f };
 
-		///
-
 		std::string m_FilePath = "";
-
 		std::string m_FileName = "";
-
-		///
 
 		size_t m_IDBuffer = 0;
 
-		///
-
 		Ref<WorldAdmin> m_Scene;
-
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
-
 		SelectionFlags m_SelectionFlags = SelectionFlags::None;
 
-		///
-
 		bool isSceneViewFocused = false;
-
 		bool isGameViewFocused = false;
 
-		///
-
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
-
 		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
 		std::unique_ptr<BuildPanel> m_BuildPanel = nullptr;
-
 		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
-
 		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
-
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
 
-		///
-
 		static std::string m_TempActorName;
-
 		static std::string m_TempActorTag;
-
 		static std::string m_TempString;
 
 		//TEMP 
 
 		Ref<Actor> m_Actor = nullptr;
-
 		Ref<Actor> m_CameraActor = nullptr;
-
 		Ref<Actor> m_SelectedActor = nullptr;
 
 		Ref<Texture2D> m_Texture = nullptr;
-
 		Ref<Texture2D> m_SheetTexture = nullptr;
 
 		Ref<SubTexture2D> m_HouseSubTexture = nullptr;
-
 		Ref<SubTexture2D> m_FieldSubTexture = nullptr;
 	};
 }

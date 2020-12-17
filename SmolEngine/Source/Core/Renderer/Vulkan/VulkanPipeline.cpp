@@ -129,18 +129,11 @@ namespace SmolEngine
 		// Vertex input descriptions
 		// Specifies the vertex input parameters for a pipeline
 
-		struct ExsVertex
-		{
-			glm::vec3 Pos;
-			glm::vec4 Color;
-			glm::vec2 TexCood;
-		};
-
 		// Vertex input binding
         // This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
 		VkVertexInputBindingDescription vertexInputBinding = {};
 		vertexInputBinding.binding = 0;
-		vertexInputBinding.stride = sizeof(ExsVertex);
+		vertexInputBinding.stride = pipelineSpec->Stride;
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		uint32_t index = 0;
@@ -181,7 +174,6 @@ namespace SmolEngine
 		pipelineCreateInfo.renderPass = swapchain->GetRenderPass();
 		pipelineCreateInfo.pDynamicState = &dynamicState;
 
-
 		VkPipelineCacheCreateInfo pipelineCacheCI = {};
 		{
 			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
@@ -221,17 +213,22 @@ namespace SmolEngine
 
 	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures)
 	{
-		std::vector< VkDescriptorImageInfo> descriptorImageInfos(textures.size());
+		std::vector< VkDescriptorImageInfo> descriptorImageInfos;
 		uint32_t index = 0;
 		for (auto& image : textures)
 		{
+			if (image == nullptr)
+			{
+				break;
+			}
+
 			if (!image->IsActive())
 			{
 				NATIVE_ERROR("VulkanTexture is not initialized!");
 				assert(image->IsActive() == true);
 			}
 
-			descriptorImageInfos[index] = image->m_DescriptorImageInfo;
+			descriptorImageInfos.push_back(image->m_DescriptorImageInfo);
 			index++;
 		}
 
@@ -248,11 +245,25 @@ namespace SmolEngine
 		if (samplerSet != nullptr)
 		{
 			uint32_t bindingPoint = samplerSet->dstBinding;
+			if (index < m_ReservedTextures.size())
+			{
+				uint32_t maxSize = m_ReservedTextures.size();
+				descriptorImageInfos.reserve(maxSize - index);
+
+				for (uint32_t i = 0; i < maxSize - index; ++i)
+				{
+					descriptorImageInfos.emplace_back(m_ReservedTextures[i].m_DescriptorImageInfo);
+				}
+			}
 
 			*samplerSet = VulkanDescriptor::Create(m_DesciptorSet,
 				bindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
 			vkUpdateDescriptorSets(*VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
+			const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
+			// Bind descriptor sets describing shader binding points
+			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1,
+				&m_DesciptorSet, 0, nullptr);
 		}
 
 	}
@@ -370,7 +381,14 @@ namespace SmolEngine
 				{
 					layoutBinding.binding = res.BindingPoint;
 					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					layoutBinding.descriptorCount = res.ArraySize;
+					if (res.ArraySize > 0)
+					{
+						layoutBinding.descriptorCount = res.ArraySize;
+					}
+					else
+					{
+						layoutBinding.descriptorCount = 1;
+					}
 					layoutBinding.stageFlags = res.StageFlags;
 
 					DescriptorSetLayoutBinding.push_back(layoutBinding);
@@ -425,6 +443,7 @@ namespace SmolEngine
 					if (res.ArraySize > 0)
 					{
 						descriptorImageInfos.reserve(textures.size());
+						uint32_t index = 0;
 						for (auto& image : textures)
 						{
 							if (!image->IsActive())
@@ -434,6 +453,19 @@ namespace SmolEngine
 							}
 
 							descriptorImageInfos.emplace_back(image->m_DescriptorImageInfo);
+							index++;
+						}
+
+						if (index < res.ArraySize)
+						{
+							uint32_t count = 0;
+							m_ReservedTextures.resize(res.ArraySize - index);
+							for (uint32_t i = index; i < res.ArraySize; ++i)
+							{
+								m_ReservedTextures[count].CreateWhiteTetxure2D(1, 1);
+								descriptorImageInfos.emplace_back(m_ReservedTextures[count].m_DescriptorImageInfo);
+								count++;
+							}
 						}
 
 						m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
@@ -443,11 +475,23 @@ namespace SmolEngine
 					}
 					else
 					{
-						auto& texture = *textures[0];
-						if (texture.IsActive())
+						if (textures.size() > 0)
 						{
+							auto& texture = *textures[0];
+							if (texture.IsActive())
+							{
+								m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
+									res.BindingPoint, &texture.m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+							}
+						}
+						else
+						{
+							m_ReservedTextures.resize(1);
+							m_ReservedTextures[0].CreateWhiteTetxure2D(1, 1);
+
 							m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-								res.BindingPoint, &texture.m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+								res.BindingPoint, &m_ReservedTextures[0].m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+
 						}
 
 						NATIVE_WARN("UniformResource: BindingPoint: {}, ArraySize: {}", res.BindingPoint, res.ArraySize);

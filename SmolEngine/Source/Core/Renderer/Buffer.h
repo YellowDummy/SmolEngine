@@ -57,7 +57,7 @@ namespace SmolEngine
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		const VulkanVertexBuffer& GetVulkanVertexBuffer() const { return m_VulkanVextexBuffer; }
+		VulkanVertexBuffer& GetVulkanVertexBuffer() { return m_VulkanVextexBuffer; }
 #endif
 
 		/// 
@@ -114,7 +114,7 @@ namespace SmolEngine
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		const VulkanIndexBuffer& GetVulkanIndexBuffer() const { return m_VulkanIndexBuffer; };
+		VulkanIndexBuffer& GetVulkanIndexBuffer() { return m_VulkanIndexBuffer; };
 #endif
 
 		/// 

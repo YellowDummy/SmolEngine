@@ -198,8 +198,9 @@ namespace SmolEngine
 
 		m_OpenglVertexBuffer.UploadData(data, size, offset);
 #else
-
-		m_VulkanVextexBuffer.SetData(data, size, offset);
+		
+		
+		m_VulkanVextexBuffer.UploadData(data, size, offset);
 #endif
 
 	}

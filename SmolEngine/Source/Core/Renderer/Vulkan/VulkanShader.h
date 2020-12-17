@@ -35,8 +35,6 @@ namespace SmolEngine
 
 	private:
 
-		void BuildDescriptors();
-
 		/// 
 		/// Compilation
 		/// 
@@ -86,9 +84,11 @@ namespace SmolEngine
 
 		bool m_Optimize = false;
 		bool m_IsPrecompiled = false;
+		size_t m_MinUboAlignment = 0;
 
 	private:
 
 		friend class VulkanPipeline;
+		friend class GraphicsPipeline;
 	};
 }

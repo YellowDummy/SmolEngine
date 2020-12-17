@@ -41,6 +41,7 @@ namespace SmolEngine
 
 		Ref<Texture2D> m_Tetxure1;
 		Ref<Texture2D> m_Tetxure2;
+		Ref<Texture2D> m_Tetxure3;
 
 		GraphicsPipeline m_GraphicsPipeline;
 		Ref<Framebuffer> m_FrameBuffer;

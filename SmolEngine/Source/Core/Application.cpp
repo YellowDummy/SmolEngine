@@ -99,11 +99,8 @@ namespace SmolEngine
 		m_ImGuiLayer = new ImGuiLayer();
 #endif
 
-#ifdef SMOLENGINE_OPENGL_IMPL
-
-		// Initializing Platform Specific Renderer
-		RendererCommand::Init();
-#endif
+		// Initializing Scene Handler
+		WorldAdmin::GetScene()->Init();
 
 #ifdef SMOLENGINE_EDITOR
 
@@ -111,14 +108,16 @@ namespace SmolEngine
 		PushLayer(m_ImGuiLayer);
 
 #endif
+		// Initializing Platform Specific Renderer
+		RendererCommand::Init();
+
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
 		ClientInit();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
-		// Initializing Scene Handler
-		WorldAdmin::GetScene()->Init();
+		WorldAdmin::GetScene()->InitSystems();
 
 #ifndef SMOLENGINE_EDITOR
 

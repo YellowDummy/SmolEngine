@@ -85,15 +85,8 @@ namespace SmolEngine
 			{
 				SetUniformInt(name, *static_cast<const int*>(data));
 			}
-#else
-
-			// Vulkan
 #endif
-
-
 		}
-
-		void CreateUniformMap(const std::vector<std::string>& list);
 
 	private:
 

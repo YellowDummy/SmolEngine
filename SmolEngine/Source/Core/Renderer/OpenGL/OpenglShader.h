@@ -40,8 +40,6 @@ namespace SmolEngine
 		///  Uniforms
 		/// 
 
-		void CreateUniformMap(const std::vector<std::string>& list);
-
 		void SetUniformIntArray(const std::string& name, const int* values, uint32_t count);
 
 		void SetUniformFloat2(const std::string& name, const glm::vec2& float2);
@@ -75,8 +73,6 @@ namespace SmolEngine
 		std::unordered_map<GLenum, std::string> OpenglShader::PreProcess(const std::string& source);
 
 	private:
-
-		std::unordered_map<std::string, GLenum> m_UniformMap;
 
 		std::array<int, 3> m_ShaderIDs = {};
 

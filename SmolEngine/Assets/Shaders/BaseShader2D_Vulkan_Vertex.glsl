@@ -3,7 +3,7 @@
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec2 a_TexCoord;
-layout(location = 3) in int a_TextMode;
+layout(location = 3) in float a_TextMode;
 layout(location = 4) in float a_TexIndex;
 
 // Batch Buffer
@@ -15,17 +15,15 @@ struct BatchData
 	vec4 uv;
 	float ambientValue;
 	float textureID;
-	int textMode;
+	float textMode;
 };
 
-layout(location = 22) out flat BatchData v_Data;
 
-// Scene Uniform buffer
+layout(location = 22) out BatchData v_Data;
 
-layout (std140, binding = 0) uniform SceneData
+layout (std140, binding = 0) uniform CameraData
 {
 	mat4 u_ViewProjection;
-	float u_AmbientValue; 
 };
 
 void main()
@@ -33,9 +31,9 @@ void main()
 	v_Data.position = vec4(a_Position, 1.0);
 	v_Data.color = a_Color;
 	v_Data.uv = vec4(a_TexCoord, 1, 1);
-	v_Data.ambientValue = u_AmbientValue;
+	v_Data.ambientValue = 1.0;
 	v_Data.textureID = a_TexIndex;
 	v_Data.textMode = a_TextMode;
 
-	gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+	gl_Position = u_ViewProjection * vec4(a_Position, 1);
 }

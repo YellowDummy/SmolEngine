@@ -4,7 +4,7 @@
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec2 a_TexCoord;
-layout(location = 3) in int a_TextMode;
+layout(location = 3) in float a_TextMode;
 layout(location = 4) in float a_TexIndex;
 
 uniform mat4 u_ViewProjection;
@@ -31,7 +31,7 @@ void main()
 	v_Data.uv = a_TexCoord;
 	v_Data.ambientValue = u_AmbientValue;
 	v_Data.textureID = a_TexIndex;
-	v_Data.textMode = a_TextMode;
+	v_Data.textMode = int(a_TextMode);
 
 	gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }

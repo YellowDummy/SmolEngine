@@ -136,7 +136,6 @@ namespace SmolEngine
 
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
-
 		ImGui_ImplGlfw_InitForOpenGL(EditorWindow, true);
 
 		ImGui_ImplOpenGL3_Init("#version 410");

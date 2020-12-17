@@ -64,7 +64,6 @@ namespace SmolEngine
 
 		inline static VulkanDevice m_Device = {};
 
-
 		GLFWwindow* m_Window = nullptr;
 
 

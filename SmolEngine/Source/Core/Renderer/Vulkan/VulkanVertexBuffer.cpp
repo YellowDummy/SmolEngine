@@ -20,12 +20,17 @@ namespace SmolEngine
 
 	void VulkanVertexBuffer::Create(uint64_t size)
 	{
-		m_VertexBuffer.Create(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+		m_VertexBuffer.Create(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
 	}
 
 	void VulkanVertexBuffer::SetData(const void* data, uint64_t size, uint32_t offset)
 	{
 		m_VertexBuffer.SetData(data, size, offset);
+	}
+
+	void VulkanVertexBuffer::UploadData(const void* data, uint64_t size, uint32_t offset)
+	{
+		m_VertexBuffer.UpdateData(data, size, offset);
 	}
 
 	void* VulkanVertexBuffer::MapMemory()

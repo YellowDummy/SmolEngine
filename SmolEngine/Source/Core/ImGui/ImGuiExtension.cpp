@@ -305,7 +305,7 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::Texture(const std::string& label, uint32_t textureID, float pos, const std::string& additionalID)
+	void Extensions::Texture(const std::string& label, void* textureID, float pos, const std::string& additionalID)
 	{
 		ImGui::PushID(std::string(label + additionalID).c_str());
 
@@ -313,7 +313,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::Image((void*)(intptr_t)textureID, ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		ImGui::Image(textureID, ImVec2{ 100, 100 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 		ImGui::PopID();
 	}

@@ -42,7 +42,7 @@
             "value5": 1.0,
             "value6": 1.0,
             "value7": 1.0,
-            "value8": true
+            "value8": false
         }
     },
     "value7": 0,
@@ -147,7 +147,7 @@
     "value2": 0,
     "value3": 0.0,
     "value4": -9.8100004196167,
-    "value5": 2822656395751046258,
+    "value5": 13919735291189809570,
     "value6": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Physic2DTest.smolscene",
     "value7": "Physic2DTest.smolscene",
     "value8": "",

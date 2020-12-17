@@ -18,6 +18,8 @@ namespace SmolEngine
 		
 		void CreateTexture2D(uint32_t width, uint32_t height);
 
+		void CreateWhiteTetxure2D(uint32_t width, uint32_t height);
+
 		void CreateTexture2D(const std::string& filePath);
 
 		void CreateCubeTexture();
@@ -30,7 +32,17 @@ namespace SmolEngine
 
 		uint32_t GetWidth() const;
 
+		void* GetImGuiTextureID() const;
+
 		bool IsActive() const;
+
+	private:
+
+		void CreateTexture(uint32_t width, uint32_t height, void* data);
+
+		void CreateSamplerAndImageView(VkFormat format);
+
+	private:
 
 		VkDescriptorImageInfo m_DescriptorImageInfo;
 		VkImage m_Image;
@@ -39,18 +51,18 @@ namespace SmolEngine
 		VkSampler m_Samper;
 		VkImageView m_ImageView;
 		VkImageLayout m_ImageLayout;
+		VkDeviceMemory m_DeviceMemory;
+
+		std::string  m_FilePath = "";
 
 		void* m_ImGuiTextureID = nullptr;
-
-	private:
-
-		VkDeviceMemory m_DeviceMemory;
+		bool m_IsCreated = false;
 
 		uint32_t m_Height = 0;
 		uint32_t m_Width = 0;
 
-		std::string  m_FilePath = "";
+	private:
 
-		bool m_IsCreated = false;
+		friend class VulkanPipeline;
 	};
 }

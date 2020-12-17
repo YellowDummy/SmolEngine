@@ -2,6 +2,7 @@
 #include "VulkanContext.h"
 
 #include <GLFW/glfw3.h>
+#include <../Libraries/imgui/examples/imgui_impl_vulkan.h>
 
 namespace SmolEngine
 {
@@ -60,10 +61,80 @@ namespace SmolEngine
 	{
 		// Get next image in the swap chain (back/front buffer)
 		VK_CHECK_RESULT(m_Swapchain.AcquireNextImage(m_Semaphore.GetPresentCompleteSemaphore()));
+
+		const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
+		VkCommandBufferBeginInfo cmdBufInfo = {};
+		{
+			cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			cmdBufInfo.pNext = nullptr;
+		}
+
+		VK_CHECK_RESULT(vkBeginCommandBuffer(cmdBuffer, &cmdBufInfo));
 	}
 
 	void VulkanContext::SwapBuffers()
 	{
+		const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
+
+		// Second Render Pass - ImGui
+		{
+			auto& framebuffers = VulkanContext::GetSwapchain().GetSwapchainFramebuffer().GetVkFramebuffers();
+			uint32_t width = VulkanContext::GetSwapchain().GetWidth();
+			uint32_t height = VulkanContext::GetSwapchain().GetHeight();
+			uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
+
+			// Set clear values for all framebuffer attachments with loadOp set to clear
+			// We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
+			VkClearValue clearValues[2];
+			clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
+			clearValues[1].depthStencil = { 1.0f, 0 };
+
+			VkRenderPassBeginInfo renderPassBeginInfo = {};
+			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			renderPassBeginInfo.pNext = nullptr;
+			renderPassBeginInfo.renderPass = VulkanContext::GetSwapchain().GetRenderPass();
+			renderPassBeginInfo.renderArea.offset.x = 0;
+			renderPassBeginInfo.renderArea.offset.y = 0;
+			renderPassBeginInfo.renderArea.extent.width = width;
+			renderPassBeginInfo.renderArea.extent.height = height;
+			renderPassBeginInfo.clearValueCount = 2;
+			renderPassBeginInfo.pClearValues = clearValues;
+
+			// Set target frame buffer
+			renderPassBeginInfo.framebuffer = framebuffers[index];
+
+			// Start the first sub pass specified in our default render pass setup by the base class
+			// This will clear the color and depth attachment
+			vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+			// Update dynamic viewport state
+			VkViewport viewport = {};
+			viewport.x = 0;
+			viewport.y = (float)height;
+			viewport.height = -(float)height;
+			viewport.width = (float)width;
+			viewport.minDepth = (float)0.0f;
+			viewport.maxDepth = (float)1.0f;
+			vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
+
+			// Update dynamic scissor state
+			VkRect2D scissor = {};
+			scissor.extent.width = width;
+			scissor.extent.height = height;
+			scissor.offset.x = 0;
+			scissor.offset.y = 0;
+			vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
+
+			// Draw Imgui
+			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmdBuffer);
+
+			vkCmdEndRenderPass(cmdBuffer);
+		}
+
+		// Ending the render pass will add an implicit barrier transitioning the frame buffer color attachment to
+		// VK_IMAGE_LAYOUT_PRESENT_SRC_KHR for presenting it to the windowing system
+		VK_CHECK_RESULT(vkEndCommandBuffer(cmdBuffer));
+
 		const auto& present_ref = m_Semaphore.GetPresentCompleteSemaphore();
 		const auto& render_ref = m_Semaphore.GetRenderCompleteSemaphore();
 

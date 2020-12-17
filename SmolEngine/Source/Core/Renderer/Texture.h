@@ -34,6 +34,8 @@ namespace SmolEngine
 
 		const uint32_t GetID() const;
 
+		void* GetImGuiTexture() const;
+
 #ifndef  SMOLENGINE_OPENGL_IMPL
 
 		VulkanTexture* GetVulkanTexture() { return &m_VulkanTexture; }
@@ -49,6 +51,8 @@ namespace SmolEngine
 		/// 
 
 		static Ref<Texture2D> Create(const uint32_t width, const uint32_t height);
+
+		static Ref<Texture2D> CreateWhiteTexture();
 
 		static Ref<Texture2D> Create(const std::string& filePath);
 

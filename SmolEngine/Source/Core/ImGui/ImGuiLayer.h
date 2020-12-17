@@ -35,7 +35,7 @@ namespace SmolEngine
 
 	private:
 
-#ifndef SMOLENIGNE_OPENGL_IMPL
+#ifndef SMOLENGINE_OPENGL_IMPL
 
 		ImGuiVulkanImpl m_VulkanImpl = {};
 #endif

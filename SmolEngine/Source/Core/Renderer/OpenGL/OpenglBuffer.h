@@ -18,7 +18,7 @@ namespace SmolEngine
 
 		void Init(uint32_t size);
 
-		void Init(float* vertices, uint32_t size);
+		void Init(void* vertices, uint32_t size);
 
 		void Destroy();
 

@@ -53,7 +53,7 @@ namespace SmolEngine
 	const FramebufferSpecification& Framebuffer::GetSpecification() const
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		return m_OpenglFramebuffer.GetData();
+		return m_OpenglFramebuffer.GetSpecification();
 #else
 		return m_VulkanFrameBuffer.GetSpecification();
 #endif
@@ -71,7 +71,8 @@ namespace SmolEngine
 	void* Framebuffer::GetImGuiTextureID() const
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		return (void*)(intptr_t)m_OpenglFramebuffer.GetColorAttachmentID();
+
+		return reinterpret_cast<void*>(m_OpenglFramebuffer.GetColorAttachmentID());
 #else
 		return m_VulkanFrameBuffer.GetImGuiTextureID();
 #endif

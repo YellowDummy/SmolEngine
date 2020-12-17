@@ -26,6 +26,8 @@ namespace SmolEngine
 
 	class EditorCameraController;
 
+	class Framebuffer;
+
 	struct CameraBaseTuple;
 
 	struct BehaviourComponent;
@@ -84,7 +86,7 @@ namespace SmolEngine
 		/// Rendering
 		/// 
 
-		void RenderScene(const glm::mat4& viewProjectionMatrix, CameraBaseTuple* target = nullptr);
+		void RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, CameraBaseTuple* target = nullptr);
 
 		/// 
 		/// Assets

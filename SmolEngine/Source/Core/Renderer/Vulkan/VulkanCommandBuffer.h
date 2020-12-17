@@ -42,9 +42,9 @@ namespace SmolEngine
 
 		size_t GetBufferSize() const;
 
-	private:
-
 		std::vector<VkCommandBuffer> m_CommandBuffers;
+
+	private:
 
 
 		VulkanSwapchain* m_TargetSwapchain = nullptr;

@@ -31,6 +31,16 @@ namespace SmolEngine
 
 	}
 
+	void VulkanTexture::CreateWhiteTetxure2D(uint32_t width, uint32_t height)
+	{
+		uint32_t whiteTextureData = 0xffffffff;
+		CreateTexture(width, height, &whiteTextureData);
+
+		m_Width = width;
+		m_Height = height;
+		m_IsCreated = true;
+	}
+
 	void VulkanTexture::CreateTexture2D(const std::string& filePath)
 	{
 		int height, width, channels;
@@ -47,24 +57,46 @@ namespace SmolEngine
 
 		assert(channels == 4);
 
+		CreateTexture(width, height, data);
+
+		m_Width = width;
+		m_Height = height;
+		m_FilePath = filePath;
+		m_IsCreated = true;
+
+		stbi_image_free(data);
+	}
+
+	void VulkanTexture::CreateCubeTexture()
+	{
+
+	}
+
+	uint32_t VulkanTexture::GetHeight() const
+	{
+		return m_Height;
+	}
+
+	uint32_t VulkanTexture::GetWidth() const
+	{
+		return m_Width;
+	}
+
+	void* VulkanTexture::GetImGuiTextureID() const
+	{
+		return m_ImGuiTextureID;
+	}
+
+	bool VulkanTexture::IsActive() const
+	{
+		return m_IsCreated;
+	}
+
+	void VulkanTexture::CreateTexture(uint32_t width, uint32_t height, void* data)
+	{
 		VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
-		VkDeviceSize size = width * height * 4;
-
-		VulkanStagingBuffer stagingBuffer;
-		stagingBuffer.Create(size);
-		stagingBuffer.SetData(data, size);
-
-		VkBufferImageCopy bufferImageCopy = {};
-		{
-			bufferImageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			bufferImageCopy.imageSubresource.mipLevel = 0;
-			bufferImageCopy.imageSubresource.baseArrayLayer = 0;
-			bufferImageCopy.imageSubresource.layerCount = 1;
-			bufferImageCopy.imageExtent.width = width;
-			bufferImageCopy.imageExtent.height = height;
-			bufferImageCopy.imageExtent.depth = 1;
-			bufferImageCopy.bufferOffset = 0;
-		}
+		VkDeviceSize size;
+		size = width * height * 4;
 
 		VkImageCreateInfo imageCI = {};
 		{
@@ -83,13 +115,27 @@ namespace SmolEngine
 			VK_CHECK_RESULT(vkCreateImage(m_Device, &imageCI, nullptr, &m_Image));
 		}
 
-
 		VkMemoryRequirements memReqs;
 		vkGetImageMemoryRequirements(m_Device, m_Image, &memReqs);
 		uint32_t typeIndex = VulkanContext::GetDevice().GetMemoryTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 		VulkanMemoryAllocator::Allocate(m_Device, memReqs, &m_DeviceMemory, typeIndex);
 		VK_CHECK_RESULT(vkBindImageMemory(m_Device, m_Image, m_DeviceMemory, 0));
 
+		VulkanStagingBuffer stagingBuffer;
+		stagingBuffer.Create(size);
+		stagingBuffer.SetData(data, size);
+
+		VkBufferImageCopy bufferImageCopy = {};
+		{
+			bufferImageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			bufferImageCopy.imageSubresource.mipLevel = 0;
+			bufferImageCopy.imageSubresource.baseArrayLayer = 0;
+			bufferImageCopy.imageSubresource.layerCount = 1;
+			bufferImageCopy.imageExtent.width = width;
+			bufferImageCopy.imageExtent.height = height;
+			bufferImageCopy.imageExtent.depth = 1;
+			bufferImageCopy.bufferOffset = 0;
+		}
 
 		VkImageSubresourceRange subResRange = {};
 		{
@@ -120,7 +166,7 @@ namespace SmolEngine
 			vkCmdPipelineBarrier(copyCmd, srcStage, dstStage,
 				0,
 				0, nullptr,
-				0, nullptr, 
+				0, nullptr,
 				1, &imageMemBarries);
 
 			vkCmdCopyBufferToImage(copyCmd, stagingBuffer.GetBuffer(), m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferImageCopy);
@@ -134,13 +180,23 @@ namespace SmolEngine
 			vkCmdPipelineBarrier(copyCmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemBarries);
 		}
 
-		m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		vulkanCmdBuffer.FlushCommandBuffer(copyCmd);
 		stagingBuffer.Destroy();
 
+		m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		CreateSamplerAndImageView(format);
 
+#ifdef SMOLENGINE_EDITOR
+
+		m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_DescriptorImageInfo);
+
+#endif // SMOLENGINE_EDITOR
+	}
+
+	void VulkanTexture::CreateSamplerAndImageView(VkFormat format)
+	{
 		/// Samplers
-		/// https://vulkan-tutorial.com/Texture_mapping/Image_view_and_sampler
+	/// https://vulkan-tutorial.com/Texture_mapping/Image_view_and_sampler
 
 		VkSamplerCreateInfo samplerCI = {};
 		{
@@ -182,42 +238,9 @@ namespace SmolEngine
 			VK_CHECK_RESULT(vkCreateImageView(m_Device, &imageViewCI, nullptr, &m_ImageView));
 		}
 
-		m_Width = width;
-		m_Height = height;
-		m_FilePath = filePath;
-		m_IsCreated = true;
-
 		m_DescriptorImageInfo = {};
 		m_DescriptorImageInfo.imageLayout = m_ImageLayout;
 		m_DescriptorImageInfo.imageView = m_ImageView;
 		m_DescriptorImageInfo.sampler = m_Samper;
-
-#ifdef SMOLENGINE_EDITOR
-
-		m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_DescriptorImageInfo);
-
-#endif // SMOLENGINE_EDITOR
-
-		stbi_image_free(data);
-	}
-
-	void VulkanTexture::CreateCubeTexture()
-	{
-
-	}
-
-	uint32_t VulkanTexture::GetHeight() const
-	{
-		return m_Height;
-	}
-
-	uint32_t VulkanTexture::GetWidth() const
-	{
-		return m_Width;
-	}
-
-	bool VulkanTexture::IsActive() const
-	{
-		return m_IsCreated;
 	}
 }

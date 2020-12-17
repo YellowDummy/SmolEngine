@@ -25,13 +25,11 @@ namespace SmolEngine
 		// TEMP
 
 #ifdef SMOLENGINE_OPENGL_IMPL
+#else
+		//app.PushLayer(new VulkanTestLayer);
+#endif
 
 		app.PushLayer(new EditorLayer);
-
-#else
-
-		app.PushLayer(new VulkanTestLayer);
-#endif
 
 		EDITOR_INFO("Initialized successfully");
 	}

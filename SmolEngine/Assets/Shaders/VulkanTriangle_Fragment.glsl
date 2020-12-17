@@ -13,7 +13,7 @@ layout(push_constant) uniform TestData
     vec3 value;
 };
 
-layout(binding = 1) uniform sampler2D myTex[2];
+layout(binding = 1) uniform sampler2D myTex[3];
 
 void main()
 {

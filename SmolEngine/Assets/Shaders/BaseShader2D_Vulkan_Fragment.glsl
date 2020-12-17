@@ -8,8 +8,7 @@ struct Light2DBuffer
 {
 	vec4 LightColor;
 	vec4 Position;
-	float Radius;
-	float Intensity;
+	vec4 Attributes; // r = radius, g = intensity
 };
 
 // Scene Environment Uniforms
@@ -19,12 +18,12 @@ layout(std140, binding = 1) uniform LightBuffer
 	Light2DBuffer[100] LightData;
 };
 
-layout(std140, binding = 2) uniform LightDataBuffer
-{
-	int Ligh2DCount;
-};
+layout(binding = 2) uniform sampler2D u_Textures[32]; // note: no need to put textures inside uniform buffer
 
-layout(binding = 3) uniform sampler2D u_Textures[32]; // note: no need to put textures inside uniform buffer
+layout(push_constant) uniform LightEnvironment
+{
+	int LightSources;
+};
 
 // Batch Buffer
 
@@ -35,19 +34,17 @@ struct BatchData
 	vec4 uv;
 	float ambientValue;
 	float textureID;
-	int textMode;
+	float textMode;
 };
 
-layout (location = 22) in flat BatchData v_Data; // note: must have "flat" flag
+layout (location = 22) in BatchData v_Data;
 
 void main()
 {
 	vec4 ambient = vec4(v_Data.color * v_Data.ambientValue);
 	vec4 result = texture(u_Textures[int(v_Data.textureID)], v_Data.uv.xy);
 
-	color = result;
-
-	if(v_Data.textMode == 1)
+	if(v_Data.textMode == 1.0)
 	{
 		result = vec4(v_Data.color.rgb, texture(u_Textures[int(v_Data.textureID)], v_Data.uv.xy).r);
 	}
@@ -57,22 +54,21 @@ void main()
 
 		vec3 tempColor = vec3(0.0, 0.0, 0.0);
 		
-
-		for(int i = 0; i < Ligh2DCount; ++i)
+		for(int i = 0; i < LightSources; ++i)
 		{
-			float intensity = ( LightData[i].Radius / length(v_Data.position.xy - LightData[i].Position.xy) ) * LightData[i].Intensity;
+			float intensity = ( LightData[i].Attributes.r / length(v_Data.position.xy - LightData[i].Position.xy) ) * LightData[i].Attributes.g;
 			intensity = atan(intensity, sqrt(length(v_Data.position.xy - LightData[i].Position.xy)));
 
 			tempColor.rgb += (LightData[i].LightColor.rgb * intensity);
 			
-			for(int x = 0; x < Ligh2DCount; ++x)
+			for(int x = 0; x < LightSources; ++x)
 			{
 				if(x == i)
 				{
 					continue;
 				}
 
-				float intensity_new = ( LightData[x].Radius / length(v_Data.position.xy - LightData[x].Position.xy) ) * LightData[x].Intensity;
+				float intensity_new = ( LightData[x].Attributes.r / length(v_Data.position.xy - LightData[x].Position.xy) ) * LightData[x].Attributes.g;
 				intensity_new = atan(intensity_new, sqrt(length(v_Data.position.xy - LightData[x].Position.xy)));
 
 				tempColor.rgb += (LightData[x].LightColor.rgb * (intensity_new) - (LightData[i].LightColor.rgb * intensity));
@@ -82,5 +78,5 @@ void main()
 		result.rgb *= tempColor;
 	}
 
-	// color = result;
+	color = result;
 }

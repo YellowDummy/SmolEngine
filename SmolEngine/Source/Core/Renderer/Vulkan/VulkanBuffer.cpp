@@ -113,18 +113,27 @@ namespace SmolEngine
 
 		VkResult bind_result = vkBindBufferMemory(device, m_Buffer, m_DeviceMemory, offset);
 		assert(bind_result == VK_SUCCESS);
-
 		m_Size = size;
 	}
 
 	void VulkanBuffer::SetData(const void* data, size_t size, uint32_t offset)
 	{
-		uint8_t* dest = nullptr;
-		const auto& device = *m_Device->GetLogicalDevice();
-		VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&dest));
-		memcpy(dest, data, size);
-		UnMapMemory();
-		m_Size = size;
+		if (m_Mapped == nullptr)
+		{
+			uint8_t* dest = nullptr;
+			const auto& device = *m_Device->GetLogicalDevice();
+			VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&dest));
+			memcpy(dest, data, size);
+			UnMapMemory();
+			return;
+		}
+
+		memcpy(m_Mapped, data, size);
+	}
+
+	void VulkanBuffer::UpdateData(const void* data, size_t size, uint32_t offset)
+	{
+		SetData(data, size, offset);
 	}
 
 	void* VulkanBuffer::MapMemory()
@@ -132,6 +141,7 @@ namespace SmolEngine
 		uint8_t* data;
 		const auto& device = *m_Device->GetLogicalDevice();
 		VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&data));
+		m_Mapped = data;
 		return data;
 	}
 
@@ -139,6 +149,7 @@ namespace SmolEngine
 	{
 		const auto& device = *m_Device->GetLogicalDevice();
 		vkUnmapMemory(device, m_DeviceMemory);
+		m_Mapped = nullptr;
 	}
 
 	void VulkanBuffer::Destroy()

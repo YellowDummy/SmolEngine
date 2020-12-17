@@ -23,7 +23,7 @@ namespace SmolEngine
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW); // note: we use dynamic draw!
 	}
 
-	void OpenglVertexBuffer::Init(float* vertices, uint32_t size)
+	void OpenglVertexBuffer::Init(void* vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);

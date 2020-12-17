@@ -53,20 +53,6 @@ namespace SmolEngine
 
 	}
 
-	void Shader::CreateUniformMap(const std::vector<std::string>& list)
-	{
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-
-		m_OpenglShader.CreateUniformMap(list);
-
-#else
-		// Vulkan
-
-#endif
-
-	}
-
 	void Shader::Bind() const
 	{
 

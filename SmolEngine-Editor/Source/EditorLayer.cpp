@@ -28,6 +28,13 @@
 #include "Core/ImGui/NodeEditor/imnodes.h"
 
 
+#ifndef SMOLENGINE_OPENGL_IMPL
+#include "Core/Renderer/Vulkan/Vulkan.h"
+#include "Core/Renderer/Vulkan/VulkanContext.h"
+#include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
+#endif
+
+
 namespace SmolEngine
 {
 	std::string EditorLayer::m_TempActorName = "";
@@ -50,19 +57,19 @@ namespace SmolEngine
 		m_EditorConsole = EditorConsole::GetConsole();
 
 		m_Scene = WorldAdmin::GetScene();
-		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene.smolscene"), std::string("TestScene.smolscene"));
+		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene2.smolscene"), std::string("TestScene.smolscene"));
 
-		auto Texture = Texture2D::Create("Assets/Textures/Background.png");
+		auto Texture = Texture2D::Create("../GameX/Assets/Textures/bulkhead-wallsx3.png");
 
 		auto camera = m_Scene->CreateActor(ActorBaseType::CameraBase, "Camera", "Default");
 
-		auto actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, "Pawn");
+		auto actor = m_Scene->CreateActor(ActorBaseType::PhysicsBase, "Pawn");
 
-		actor->GetDefaultBaseTuple()->Light2D.isEnabled = true;
-		actor->GetDefaultBaseTuple()->Light2D.Color = { 0.8f, 0.6f, 0.4f, 1.0f };
+		//actor->GetDefaultBaseTuple()->Light2D.isEnabled = true;
+		//actor->GetDefaultBaseTuple()->Light2D.Color = { 0.8f, 0.6f, 0.4f, 1.0f };
 
 
-	    m_Scene->AddTuple<ResourceTuple>(*actor);
+	   // m_Scene->AddTuple<ResourceTuple>(*actor);
 	}
 
 	void EditorLayer::OnDetach()
@@ -76,10 +83,8 @@ namespace SmolEngine
 		{
 			m_Scene->m_EditorCamera->OnUpdate(deltaTime);
 		}
-
-		//m_Scene->UpdateEditorCamera(m_GameViewPortSize, m_SceneViewSize);
-
-		//m_Scene->OnUpdate(deltaTime);
+		m_Scene->UpdateEditorCamera(m_GameViewPortSize, m_SceneViewSize);
+		m_Scene->OnUpdate(deltaTime);
 	}
 
 	void EditorLayer::OnEvent(Event& event)
@@ -374,7 +379,7 @@ namespace SmolEngine
 
 				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
 
-				auto& m_FrameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
+				auto& frameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
 				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
@@ -383,8 +388,12 @@ namespace SmolEngine
 					m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
 				}
 
-				//size_t textureID = m_FrameBuffer->GetColorAttachmentID();
-				//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
+#else
+				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
+#endif // SMOLENGINE_OPENGL_IMPL
 
 			}
 			ImGui::End();
@@ -414,8 +423,14 @@ namespace SmolEngine
 				auto framebuffer = FramebufferSComponent::Get()[0];
 				if (framebuffer)
 				{
-					//ImGui::Image((void*)(intptr_t)framebuffer->GetColorAttachmentID(), 
-					//	ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+					ImGui::Image(framebuffer->GetImGuiTextureID(),
+						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+#else
+					ImGui::Image(framebuffer->GetImGuiTextureID(),
+						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y });
+#endif
 				}
 			}
 
@@ -1102,7 +1117,7 @@ namespace SmolEngine
 	{
 		if (texture->Texture != nullptr)
 		{
-			ImGui::Extensions::Texture("Texture", texture->Texture->GetID());
+			ImGui::Extensions::Texture("Texture", texture->Texture->GetImGuiTexture());
 
 			ImGui::NewLine();
 			ImGui::Extensions::ColorInput3("Color", texture->Color);
@@ -1110,7 +1125,7 @@ namespace SmolEngine
 			ImGui::Extensions::InputInt("Layer", texture->LayerIndex, 130.0f, "TexturePanel");
 
 			ImGui::NewLine();
-			ImGui::Extensions::CheckBox("Enabled?", texture->Enabled, 130.0f, "TexturePanel");
+			if (ImGui::Extensions::CheckBox("Enabled?", texture->Enabled, 130.0f, "TexturePanel")) 
 
 			ImGui::NewLine();
 			if (ImGui::Button("Change", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
@@ -1419,7 +1434,7 @@ namespace SmolEngine
 
 					if (button->m_Texture != nullptr)
 					{
-						ImGui::Extensions::Texture("Texture", button->m_Texture->GetID());
+						ImGui::Extensions::Texture("Texture", button->m_Texture->GetImGuiTexture());
 
 						ImGui::Extensions::ColorInput3("Normal Color", button->m_CurrentColor);
 						ImGui::Extensions::ColorInput3("Hovered Color", button->m_HoveredColor);

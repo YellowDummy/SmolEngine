@@ -33,11 +33,10 @@ namespace SmolEngine
 
 		m_SceneData.m_Registry = entt::registry();
 		m_SceneData.m_Entity = m_SceneData.m_Registry.create();
+	}
 
-		// Initializing user's systems
-
-		InitSystems();
-
+	void WorldAdmin::InitSystems()
+	{
 		m_InPlayMode = false;
 
 #ifdef SMOLENGINE_EDITOR
@@ -48,11 +47,8 @@ namespace SmolEngine
 		m_EditorCamera->SetZoom(4.0f);
 
 #endif
+		// Initializing user's systems
 
-	}
-
-	void WorldAdmin::InitSystems()
-	{
 		for (const auto& pair: SystemRegistry::Get()->m_SystemMap)
 		{
 			const auto& [name, type] = pair;
@@ -222,7 +218,7 @@ namespace SmolEngine
 
 			// Rendering scene to target framebuffer
 
-			RenderScene(cameraTuple.Camera.ViewProjectionMatrix, &cameraTuple);
+			RenderScene(cameraTuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0],  &cameraTuple);
 
 			// At the moment we support only one viewport
 
@@ -465,11 +461,11 @@ namespace SmolEngine
 		}
 	}
 
-	void WorldAdmin::RenderScene(const glm::mat4& viewProjectionMatrix, CameraBaseTuple* target)
+	void WorldAdmin::RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, CameraBaseTuple* target)
 	{
 		// Initializing new DrawList
 
-		Renderer2D::BeginScene(viewProjectionMatrix, m_SceneData.m_AmbientStrength);
+		Renderer2D::BeginScene(viewProjectionMatrix, m_SceneData.m_AmbientStrength, framebuffer);
 
 		{
 			// Default Tuple
@@ -787,8 +783,9 @@ namespace SmolEngine
 
 		// Rendering scene to the target framebuffer
 
-		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix());
+		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), m_EditorCamera->m_FrameBuffer);
 
+#if 0
 		// Rendering debug shapes
 
 		{
@@ -830,6 +827,7 @@ namespace SmolEngine
 			Renderer2D::EndDebug();
 		}
 
+#endif
 		m_EditorCamera->m_FrameBuffer->UnBind();
 	}
 

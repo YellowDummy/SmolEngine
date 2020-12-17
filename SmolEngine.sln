@@ -90,6 +90,7 @@ Global
 		{30B15D9A-9C66-D68F-255B-D066910FCD93}.Release (Vulkan)|x64.ActiveCfg = Release (Vulkan)|x64
 		{30B15D9A-9C66-D68F-255B-D066910FCD93}.Release (Vulkan)|x64.Build.0 = Release (Vulkan)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (OpenGL)|x64.ActiveCfg = Debug (OpenGL)|x64
+		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (OpenGL)|x64.Build.0 = Debug (OpenGL)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (Vulkan)|x64.ActiveCfg = Debug (Vulkan)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Debug (Vulkan)|x64.Build.0 = Debug (Vulkan)|x64
 		{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}.Release (OpenGL)|x64.ActiveCfg = Release (OpenGL)|x64

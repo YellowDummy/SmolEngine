@@ -27,6 +27,8 @@ namespace SmolEngine
 
 		void SetData(const void* data, size_t size, uint32_t offset = 0);
 
+		void UpdateData(const void* data, size_t size, uint32_t offset = 0);
+
 		void* MapMemory();
 
 		void UnMapMemory();
@@ -56,6 +58,7 @@ namespace SmolEngine
 		uint32_t m_MemoryType = UINT32_MAX;
 		uint32_t m_Size = UINT32_MAX;
 
+		void* m_Mapped = nullptr;
 		VulkanDevice* m_Device = nullptr;
 	};
 }

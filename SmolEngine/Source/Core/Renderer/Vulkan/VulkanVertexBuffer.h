@@ -22,6 +22,8 @@ namespace SmolEngine
 
 		void SetData(const void* data, uint64_t size, uint32_t offset = 0);
 
+		void UploadData(const void* data, uint64_t size, uint32_t offset = 0);
+
 		void* MapMemory();
 
 		void UnMapMemory();

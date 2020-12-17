@@ -24,17 +24,19 @@ namespace SmolEngine
 
 		//
 
-		static void BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue);
+		static void BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer);
 
 		static void EndScene();
 
 		// Batch
 		
-		static void DrawLayer(const LayerDataBuffer& layer);
+		static void DrawLayer(LayerDataBuffer& layer);
 
 		static void FlushLayer(LayerDataBuffer& layer);
 
 		static void ResetLayer(LayerDataBuffer& layer);
+
+		static void DrawImGuiLayer();
 
 
 		static void StartNewBatch();
@@ -82,6 +84,8 @@ namespace SmolEngine
 		// Framebuffer
 
 		static void DrawFrameBuffer(const uint32_t colorAttachmentID);
+
+		static const uint32_t MaxTextureSlot = 32; // TODO: get TMU (Texture Mapping Units) at initialization
 
 	private:
 

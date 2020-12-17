@@ -21,6 +21,7 @@ namespace SmolEngine
         shaderc::CompileOptions options;
         std::unordered_map<ShaderType, VkShaderModule> shaderModules;
         std::unordered_map<ShaderType, std::vector<uint32_t>> binaryData;
+        m_MinUboAlignment = VulkanContext::GetDevice().GetDeviceProperties()->limits.minUniformBufferOffsetAlignment;
 
         options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
 
@@ -104,6 +105,12 @@ namespace SmolEngine
         const auto& result = m_UniformBuffers.find(bindingPoint);
         if (result != m_UniformBuffers.end())
         {
+            size_t dynamicAlignment = size;
+            if (size > 0)
+            {
+                dynamicAlignment = (dynamicAlignment + m_MinUboAlignment - 1) & ~(m_MinUboAlignment - 1);
+            }
+
             auto& buffer = result->second;
             buffer.VkBuffer.SetData(data, size, offset);
             return;
@@ -194,7 +201,6 @@ namespace SmolEngine
         for (const auto& res : resources.push_constant_buffers)
         {
             auto& type = compiler.get_type(res.base_type_id);
-
             VkPushConstantRange range = {};
             {
                 range.offset = 0;
@@ -221,17 +227,14 @@ namespace SmolEngine
 
             }
 
-            int32_t samplers[LayerDataBuffer::MaxTextureSlot];
-            for (uint32_t i = 0; i < LayerDataBuffer::MaxTextureSlot; i++)
+            int32_t samplers[Renderer2D::MaxTextureSlot];
+            for (uint32_t i = 0; i < Renderer2D::MaxTextureSlot; i++)
             {
                 samplers[i] = i;
             }
 
-            /// Upload vulkan samples
-
             m_UniformResources[compiler.get_decoration(res.id, spv::DecorationBinding)] = std::move(resBuffer);
             sampler++;
-
         }
     }
 

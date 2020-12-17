@@ -12,24 +12,19 @@ namespace SmolEngine
 	void Texture2D::Bind(uint32_t slot) const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
-
 		m_OpenglTexture2D.Bind(slot);
 #endif
-
 	}
 
 	void Texture2D::UnBind() const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
-
 		m_OpenglTexture2D.UnBind();
 #endif
-
 	}
 
 	uint32_t Texture2D::GetHeight() const
 	{
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 		return m_OpenglTexture2D.GetHeight();
@@ -37,19 +32,16 @@ namespace SmolEngine
 
 		return m_VulkanTexture.GetHeight();
 #endif
-
 	}
 
 	uint32_t Texture2D::GetWidth() const
 	{
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 		return m_OpenglTexture2D.GetWidth();
 #else
 		return m_VulkanTexture.GetWidth();
 #endif
-
 	}
 
 	const uint32_t Texture2D::GetID() const
@@ -58,8 +50,17 @@ namespace SmolEngine
 
 		return m_OpenglTexture2D.GetID();
 #else
-
 		return 0;
+#endif
+	}
+
+	void* Texture2D::GetImGuiTexture() const
+	{
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
+		return reinterpret_cast<void*>(m_OpenglTexture2D.GetID());
+#else
+		return m_VulkanTexture.GetImGuiTextureID();
 #endif
 	}
 
@@ -86,7 +87,22 @@ namespace SmolEngine
 
 		texture->m_OpenglTexture2D.Init(width, height);
 #else
+		texture->Create(width, height);
+#endif
+		return texture;
+	}
 
+	Ref<Texture2D> Texture2D::CreateWhiteTexture()
+	{
+		Ref<Texture2D> texture = std::make_shared<Texture2D>();
+
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
+		uint32_t whiteTextureData = 0xffffffff;
+		texture->m_OpenglTexture2D.Init(1, 1);
+		texture->m_OpenglTexture2D.SetData(&whiteTextureData, sizeof(uint32_t));
+#else
+		texture->m_VulkanTexture.CreateWhiteTetxure2D(1, 1);
 #endif
 		return texture;
 	}
