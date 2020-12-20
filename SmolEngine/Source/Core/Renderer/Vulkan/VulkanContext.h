@@ -26,7 +26,7 @@ namespace SmolEngine
 
 		void BeginFrame();
 
-		void SwapBuffers();
+		void SwapBuffers(bool skip = false);
 
 		/// 
 		/// Getters
@@ -50,7 +50,6 @@ namespace SmolEngine
 	private:
 
 		inline static VulkanContext* s_ContextInstance = nullptr;
-
 
 		inline static VulkanCommandBuffer m_CommandBuffer = {};
 

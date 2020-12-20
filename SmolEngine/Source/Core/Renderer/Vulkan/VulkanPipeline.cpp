@@ -29,7 +29,7 @@ namespace SmolEngine
 
 		const auto& shader = pipelineSpec->Shader;
 		const auto& swapchain = pipelineSpec->TargetSwapchain;
-		const auto& device = *pipelineSpec->Device->GetLogicalDevice();
+		const auto& device = pipelineSpec->Device->GetLogicalDevice();
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCI = {};
 		{
@@ -79,8 +79,21 @@ namespace SmolEngine
 		// Color blend state describes how blend factors are calculated (if used)
 		// We need one blend attachment state per color attachment (even if blending is not used)
 		VkPipelineColorBlendAttachmentState blendAttachmentState[1] = {};
-		blendAttachmentState[0].colorWriteMask = 0xf;
-		blendAttachmentState[0].blendEnable = VK_FALSE;
+		{
+			blendAttachmentState[0].colorWriteMask = 0xf;
+			blendAttachmentState[0].blendEnable = VK_FALSE;
+			if (pipelineSpec->IsAlphaBlendingEnabled)
+			{
+				blendAttachmentState[0].blendEnable = VK_TRUE;
+				blendAttachmentState[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+				blendAttachmentState[0].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+				blendAttachmentState[0].colorBlendOp = VK_BLEND_OP_ADD;
+				blendAttachmentState[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+				blendAttachmentState[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+				blendAttachmentState[0].alphaBlendOp = VK_BLEND_OP_ADD;
+			}
+		}
+
 		VkPipelineColorBlendStateCreateInfo colorBlendState = {};
 		colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 		colorBlendState.attachmentCount = 1;
@@ -205,13 +218,13 @@ namespace SmolEngine
 
 	void VulkanPipeline::Destroy()
 	{
-		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 		vkDestroyPipelineCache(device, m_PipelineCache, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 	}
 
-	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures)
+	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer)
 	{
 		std::vector< VkDescriptorImageInfo> descriptorImageInfos;
 		uint32_t index = 0;
@@ -252,15 +265,14 @@ namespace SmolEngine
 
 				for (uint32_t i = 0; i < maxSize - index; ++i)
 				{
-					descriptorImageInfos.emplace_back(m_ReservedTextures[i].m_DescriptorImageInfo);
+					descriptorImageInfos.emplace_back(m_ReservedTextures[i]->m_DescriptorImageInfo);
 				}
 			}
 
 			*samplerSet = VulkanDescriptor::Create(m_DesciptorSet,
 				bindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
-			vkUpdateDescriptorSets(*VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
-			const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
+			vkUpdateDescriptorSets(VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
 			// Bind descriptor sets describing shader binding points
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1,
 				&m_DesciptorSet, 0, nullptr);
@@ -290,7 +302,7 @@ namespace SmolEngine
 
 	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures)
 	{
-		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 
 		m_WriteDescriptorSets.clear();
 		if (m_DescriptorSetLayout != VK_NULL_HANDLE)
@@ -462,8 +474,10 @@ namespace SmolEngine
 							m_ReservedTextures.resize(res.ArraySize - index);
 							for (uint32_t i = index; i < res.ArraySize; ++i)
 							{
-								m_ReservedTextures[count].CreateWhiteTetxure2D(1, 1);
-								descriptorImageInfos.emplace_back(m_ReservedTextures[count].m_DescriptorImageInfo);
+#ifndef SMOLENGINE_OPENGL_IMPL
+								m_ReservedTextures[count] = Texture2D::CreateWhiteTexture()->GetVulkanTexture();
+#endif
+								descriptorImageInfos.emplace_back(m_ReservedTextures[count]->m_DescriptorImageInfo);
 								count++;
 							}
 						}
@@ -487,10 +501,12 @@ namespace SmolEngine
 						else
 						{
 							m_ReservedTextures.resize(1);
-							m_ReservedTextures[0].CreateWhiteTetxure2D(1, 1);
+#ifndef SMOLENGINE_OPENGL_IMPL
+							m_ReservedTextures[0] = Texture2D::CreateWhiteTexture()->GetVulkanTexture();
+#endif
 
 							m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-								res.BindingPoint, &m_ReservedTextures[0].m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+								res.BindingPoint, &m_ReservedTextures[0]->m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
 
 						}
 

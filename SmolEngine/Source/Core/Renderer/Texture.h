@@ -72,7 +72,7 @@ namespace SmolEngine
 #else
 		VulkanTexture m_VulkanTexture = {};
 
-#endif //  SMOLENGINE_OPENGL_IMPL
-
+#endif
+		bool m_Initialized = false;
 	};
 }

@@ -77,9 +77,9 @@ namespace SmolEngine
 		return result == VK_SUCCESS;
 	}
 
-	const VkInstance* VulkanInstance::GetInstance() const
+	const VkInstance VulkanInstance::GetInstance() const
 	{
-		return &m_VKInstance;
+		return m_VKInstance;
 	}
 
 }

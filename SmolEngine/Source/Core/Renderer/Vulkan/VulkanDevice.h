@@ -42,13 +42,13 @@ namespace SmolEngine
 
 		const VkPhysicalDeviceFeatures* const GetDeviceFeatures() const;
 
-		const VkPhysicalDevice* const GetPhysicalDevice() const;
+		const VkPhysicalDevice const GetPhysicalDevice() const;
 
-		const VkDevice* const GetLogicalDevice() const;
+		const VkDevice const GetLogicalDevice() const;
 
 		uint32_t GetQueueFamilyIndex() const;
 
-		const VkQueue* GetQueue() const;
+		const VkQueue GetQueue() const;
 
 	private:
 

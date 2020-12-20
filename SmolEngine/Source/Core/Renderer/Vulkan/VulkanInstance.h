@@ -32,7 +32,7 @@ namespace SmolEngine
 		/// Getters
 		/// 
 
-		const VkInstance* GetInstance() const;
+		const VkInstance GetInstance() const;
 
 	private:
 

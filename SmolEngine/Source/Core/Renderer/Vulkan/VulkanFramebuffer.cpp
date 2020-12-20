@@ -23,7 +23,7 @@ namespace SmolEngine
 	bool VulkanFramebuffer::Create(uint32_t width, uint32_t height)
 	{
 		VkResult result = VK_ERROR_UNKNOWN;
-		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 
 		m_Specification.Width = width;
 		m_Specification.Height = height;
@@ -41,7 +41,7 @@ namespace SmolEngine
 		for (auto& format : depthFormats)
 		{
 			VkFormatProperties formatProps;
-			vkGetPhysicalDeviceFormatProperties(*VulkanContext::GetDevice().GetPhysicalDevice(), format, &formatProps);
+			vkGetPhysicalDeviceFormatProperties(VulkanContext::GetDevice().GetPhysicalDevice(), format, &formatProps);
 			// Format must support depth stencil attachment for optimal tiling
 			if (formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
 			{
@@ -248,7 +248,7 @@ namespace SmolEngine
 
 	void VulkanFramebuffer::FreeResources()
 	{
-		const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 
 		// Color attachment
 

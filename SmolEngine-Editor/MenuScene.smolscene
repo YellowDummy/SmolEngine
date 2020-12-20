@@ -1,15 +1,17 @@
 {
-    "value0": 4,
+    "value0": 6,
     "value1": 0,
     "value2": 1,
     "value3": 2,
     "value4": 3,
-    "value5": 1,
-    "value6": 2,
-    "value7": {
+    "value5": 4,
+    "value6": 5,
+    "value7": 3,
+    "value8": 3,
+    "value9": {
         "value0": {
-            "value0": 2,
-            "value1": "Pawn",
+            "value0": 3,
+            "value1": "A",
             "value2": "Default",
             "value3": true
         },
@@ -21,6 +23,88 @@
             "value4": 10.0,
             "value5": 1.0,
             "value6": 0.0,
+            "value7": 10.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "Background.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": true
+        }
+    },
+    "value10": 4,
+    "value11": {
+        "value0": {
+            "value0": 4,
+            "value1": "AAA",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 0.0,
+            "value7": -6.0,
+            "value8": 0.0
+        },
+        "value2": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 0,
+            "value5": "",
+            "value6": "Ball.png",
+            "value7": true
+        },
+        "value3": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 1.0,
+            "value3": 1.0,
+            "value4": 1.0,
+            "value5": 1.0,
+            "value6": 1.0,
+            "value7": 1.0,
+            "value8": true
+        }
+    },
+    "value12": 5,
+    "value13": {
+        "value0": {
+            "value0": 5,
+            "value1": "Ad",
+            "value2": "Default",
+            "value3": true
+        },
+        "value1": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 10.0,
+            "value4": 10.0,
+            "value5": 1.0,
+            "value6": 10.0,
             "value7": 0.0,
             "value8": 0.0
         },
@@ -31,27 +115,27 @@
             "value3": 1.0,
             "value4": 0,
             "value5": "",
-            "value6": "dungeons_and_flagons8.png",
+            "value6": "SummerBG.png",
             "value7": true
         },
         "value3": {
-            "value0": 4.0,
-            "value1": 3.0,
+            "value0": 0.0,
+            "value1": 0.0,
             "value2": 1.0,
-            "value3": 0.048387110233306888,
-            "value4": 0.048387110233306888,
+            "value3": 1.0,
+            "value4": 1.0,
             "value5": 1.0,
-            "value6": 0.5,
+            "value6": 1.0,
             "value7": 1.0,
-            "value8": true
+            "value8": false
         }
     },
-    "value8": 1,
-    "value9": 3,
-    "value10": {
+    "value14": 1,
+    "value15": 2,
+    "value16": {
         "value0": {
-            "value0": 3,
-            "value1": "Player",
+            "value0": 2,
+            "value1": "Pawn",
             "value2": "Default",
             "value3": true
         },
@@ -70,9 +154,9 @@
                 "value10": 0.0,
                 "value11": 1.0,
                 "value12": 1.0,
-                "value13": 2,
-                "value14": 1,
-                "value15": 0.5,
+                "value13": 0,
+                "value14": 0,
+                "value15": 1.0,
                 "value16": 0.0,
                 "value17": 0.0,
                 "value18": 0.0,
@@ -85,8 +169,8 @@
             "value0": 0.0,
             "value1": 0.0,
             "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
+            "value3": 10.0,
+            "value4": 10.0,
             "value5": 1.0,
             "value6": 0.0,
             "value7": 0.0,
@@ -99,14 +183,14 @@
             "value3": 1.0,
             "value4": 0,
             "value5": "",
-            "value6": "Ball.png",
+            "value6": "Test.png",
             "value7": true
         },
         "value4": {
             "value0": 0.0,
             "value1": 0.0,
-            "value2": 0.36591142416000368,
-            "value3": 0.22177422046661378,
+            "value2": 1.0,
+            "value3": 1.0,
             "value4": 1.0,
             "value5": 1.0,
             "value6": 1.0,
@@ -114,9 +198,9 @@
             "value8": true
         }
     },
-    "value11": 1,
-    "value12": 1,
-    "value13": {
+    "value17": 1,
+    "value18": 1,
+    "value19": {
         "value0": {
             "value0": 1,
             "value1": "Camera",
@@ -124,9 +208,9 @@
             "value3": true
         },
         "value1": {
-            "value0": 1.1877636909484864,
+            "value0": 1.7777777910232545,
             "value1": 6.0,
-            "value2": true,
+            "value2": false,
             "value3": true,
             "value4": -1.0,
             "value5": 1.0,
@@ -147,47 +231,8 @@
             "value0": []
         }
     },
-    "value14": 1,
-    "value15": 2,
-    "value16": {
-        "value0": {
-            "value0": [],
-            "value1": true
-        },
-        "value1": {
-            "value0": [],
-            "value1": {
-                "ptr_wrapper": {
-                    "id": 0
-                }
-            },
-            "value2": 0
-        }
-    },
-    "value17": 1,
-    "value18": 3,
-    "value19": {
-        "value0": 3,
-        "value1": "CharMovementSystem",
-        "value2": [
-            {
-                "value0": "Player Speed",
-                "value1": {
-                    "index": 0,
-                    "data": 25.0
-                },
-                "value2": 0
-            },
-            {
-                "value0": "Player Name",
-                "value1": {
-                    "index": 2,
-                    "data": "Player_0"
-                },
-                "value2": 2
-            }
-        ]
-    }
+    "value20": 0,
+    "value21": 0
 }|{
     "value0": [
         {
@@ -216,7 +261,7 @@
                     "id": 2147483650,
                     "data": {
                         "value0": 2,
-                        "value1": 0,
+                        "value1": 1,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -235,7 +280,7 @@
                     "id": 2147483651,
                     "data": {
                         "value0": 3,
-                        "value1": 1,
+                        "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
@@ -246,22 +291,68 @@
                     }
                 }
             }
+        },
+        {
+            "key": 4,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483652,
+                    "data": {
+                        "value0": 4,
+                        "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 3
+                    }
+                }
+            }
+        },
+        {
+            "key": 5,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483653,
+                    "data": {
+                        "value0": 5,
+                        "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 4
+                    }
+                }
+            }
         }
     ],
     "value1": [
         {
-            "key": "dungeons_and_flagons8.png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\dungeons_and_flagons8.png"
+            "key": "Test.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Test.png"
+        },
+        {
+            "key": "Background.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png"
         },
         {
             "key": "Ball.png",
             "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png"
+        },
+        {
+            "key": "SummerBG.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\SummerBG.png"
         }
     ],
     "value2": 0,
     "value3": 0.0,
     "value4": -9.8100004196167,
-    "value5": 2822656395751046258,
+    "value5": 13919735291189809570,
     "value6": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\MenuScene.smolscene",
     "value7": "MenuScene.smolscene",
     "value8": "",

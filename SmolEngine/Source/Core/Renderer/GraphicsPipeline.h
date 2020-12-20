@@ -29,6 +29,7 @@ namespace SmolEngine
 	struct VertexBufferCreateInfo
 	{
 		size_t Size = 0;
+		size_t Count = 1;
 		size_t Stride = 0;
 		BufferLayout* BufferLayot = nullptr;
 
@@ -47,6 +48,9 @@ namespace SmolEngine
 		IndexBufferCreateInfo* IndexBuffer;
 		VertexBufferCreateInfo* VertexBuffer;
 		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo;
+
+		uint32_t DescriptorSets = 1;
+		bool IsAlphaBlendingEnabled = false;
 	};
 
 	class GraphicsPipeline
@@ -55,17 +59,25 @@ namespace SmolEngine
 
 		bool Create(const GraphicsPipelineCreateInfo* pipelineInfo);
 
+
 		void BeginRenderPass(Ref<Framebuffer> framebuffer = nullptr, const glm::vec4& clearColors = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 		void EndRenderPass();
+
 
 		void BeginBufferSubmit();
 
 		void EndBufferSubmit();
 
 
-		void DrawIndexed();
+		void BeginCommandBuffer();
 
+		void EndCommandBuffer();
+
+		void FlushCommandBuffer();
+
+
+		void DrawIndexed(int32_t vertexBufferIndex = -1);
 
 		void SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 
@@ -80,8 +92,7 @@ namespace SmolEngine
 
 		void SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data);
 
-
-		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t offset = 0);
+		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t offset = 0, int32_t index = -1);
 
 		void UpdateIndexBuffer(uint32_t* indices, size_t count);
 
@@ -90,13 +101,16 @@ namespace SmolEngine
 	private:
 
 		bool IsPipelineCreateInfoValid(const GraphicsPipelineCreateInfo* pipelineInfo);
+
 	private:
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
 		VulkanPipeline m_VulkanPipeline = {};
+		VkCommandBuffer m_CommandBuffer = nullptr;
 #endif
 
+		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 		Ref<VertexArray> m_VextexArray = nullptr;

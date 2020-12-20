@@ -53,7 +53,7 @@ namespace SmolEngine
 		for (uint32_t i = 0; i < m_Framebuffers.size(); ++i)
 		{
 			ivAttachment[0] = m_Swapchain->m_Buffers[i].View;
-			result = vkCreateFramebuffer(*logicalDevice, &framebufferCI, nullptr, &m_Framebuffers[i]);
+			result = vkCreateFramebuffer(logicalDevice, &framebufferCI, nullptr, &m_Framebuffers[i]);
 			VK_CHECK_RESULT(result);
 
 			if (result != VK_SUCCESS)
@@ -69,7 +69,7 @@ namespace SmolEngine
 	{
 		for (auto& framebuffer : m_Framebuffers)
 		{
-			vkDestroyFramebuffer(*m_Swapchain->m_Device->GetLogicalDevice(), framebuffer, nullptr);
+			vkDestroyFramebuffer(m_Swapchain->m_Device->GetLogicalDevice(), framebuffer, nullptr);
 		}
 	}
 

@@ -36,14 +36,13 @@ namespace SmolEngine
 
 		static void ResetLayer(LayerDataBuffer& layer);
 
-		static void DrawImGuiLayer();
-
-
 		static void StartNewBatch();
 
 		static void FlushAllLayers();
 
 		static void UploadLightUniforms();
+
+		static void ClearBuffers();
 
 		// 
 
@@ -94,6 +93,7 @@ namespace SmolEngine
 	private:
 
 		static Renderer2DStats* Stats;
+		inline static bool m_RenderPassIsActive = false;
 
 	private:
 

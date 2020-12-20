@@ -9,7 +9,6 @@
 #include "Core/Renderer/Vulkan/VulkanContext.h"
 #include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
 
-#include <../Libraries/imgui/examples/imgui_impl_vulkan.h>
 
 namespace SmolEngine
 {
@@ -55,6 +54,7 @@ namespace SmolEngine
 			vertexBufferCI.BufferLayot = &layout;
 			vertexBufferCI.Size = sizeof(verticies);
 			vertexBufferCI.Vertices = &verticies;
+			vertexBufferCI.Stride = sizeof(Vertex);
 		}
 
 		uint32_t indices[6] = { 0, 1, 2,  2, 3, 0 };
@@ -78,7 +78,9 @@ namespace SmolEngine
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 		}
 
-		m_GraphicsPipeline.Create(&graphicsPipelineCI);
+		bool result = m_GraphicsPipeline.Create(&graphicsPipelineCI);
+
+
 	}
 
 	void VulkanTestLayer::OnDetach()
@@ -89,8 +91,6 @@ namespace SmolEngine
 	void VulkanTestLayer::OnUpdate(DeltaTime deltaTime)
 	{
 		m_EditorCamera->OnUpdate(deltaTime);
-
-		m_GraphicsPipeline.Update2DTextures({ m_Tetxure1 });
 
 		BuildTestCommandBuffer();
 	}
@@ -127,18 +127,26 @@ namespace SmolEngine
 
 	void VulkanTestLayer::BuildTestCommandBuffer()
 	{
-		// Fist Render Pass - Main
-		{
-			uint32_t bindingPoint = 0;
-			m_GraphicsPipeline.SumbitUniformBuffer(bindingPoint, sizeof(glm::mat4), &m_EditorCamera->GetCamera()->GetViewProjectionMatrix());
+		m_GraphicsPipeline.BeginCommandBuffer();
 
-			m_GraphicsPipeline.BeginRenderPass(m_FrameBuffer, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		{
+			m_GraphicsPipeline.Update2DTextures({ m_Tetxure1 });
+
+			// Fist Render Pass - Main
 			{
-				//m_GraphicsPipeline.SumbitPushConstant(ShaderType::Fragment, sizeof(glm::vec3), &m_AddColor);
-				m_GraphicsPipeline.DrawIndexed();
+				uint32_t bindingPoint = 0;
+				m_GraphicsPipeline.SumbitUniformBuffer(bindingPoint, sizeof(glm::mat4), &m_EditorCamera->GetCamera()->GetViewProjectionMatrix());
+
+				m_GraphicsPipeline.BeginRenderPass(m_FrameBuffer, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+				{
+					m_GraphicsPipeline.SumbitPushConstant(ShaderType::Fragment, sizeof(glm::vec3), &m_AddColor);
+					m_GraphicsPipeline.DrawIndexed();
+				}
+				m_GraphicsPipeline.EndRenderPass();
 			}
-			m_GraphicsPipeline.EndRenderPass();
+
 		}
+		m_GraphicsPipeline.EndCommandBuffer();
 
 
 	}

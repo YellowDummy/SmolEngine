@@ -26,7 +26,6 @@ VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descri
 
 VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descriptorSet, uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType descriptorType)
 {
-	const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
 	VkWriteDescriptorSet writeSet = {};
 	{
 		writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -43,8 +42,6 @@ VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descri
 
 VkWriteDescriptorSet SmolEngine::VulkanDescriptor::Create(VkDescriptorSet descriptorSet, uint32_t binding, const std::vector<VkDescriptorImageInfo>& descriptorimageInfos, VkDescriptorType descriptorType)
 {
-	const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
-
 	VkWriteDescriptorSet writeSet = {};
 	{
 		writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

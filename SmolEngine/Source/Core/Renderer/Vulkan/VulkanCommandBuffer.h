@@ -27,12 +27,12 @@ namespace SmolEngine
 		bool Recrate();
 
 
-		void EndSingleCommandBuffer(const VkCommandBuffer cmdBuffer) const;
+		static void EndSingleCommandBuffer(const VkCommandBuffer cmdBuffer);
 
-		void FlushCommandBuffer(const VkCommandBuffer cmdBuffer) const;
+		static void FlushCommandBuffer(const VkCommandBuffer cmdBuffer);
 
 
-		const VkCommandBuffer CreateSingleCommandBuffer(bool oneCommand = true) const;
+		static const VkCommandBuffer CreateSingleCommandBuffer(bool oneCommand = true);
 
 		/// 
 		/// Getters

@@ -24,7 +24,7 @@ namespace SmolEngine
 
 	void ImGuiVulkanImpl::Init()
 	{
-		g_Device = *VulkanContext::GetDevice().GetLogicalDevice();
+		g_Device = VulkanContext::GetDevice().GetLogicalDevice();
 
 		// Create Descriptor Pool
 		{

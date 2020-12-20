@@ -32,6 +32,8 @@ namespace SmolEngine
 
 		uint32_t GetWidth() const;
 
+		size_t GetID() const;
+
 		void* GetImGuiTextureID() const;
 
 		bool IsActive() const;
@@ -60,6 +62,7 @@ namespace SmolEngine
 
 		uint32_t m_Height = 0;
 		uint32_t m_Width = 0;
+		size_t m_ID = 0;
 
 	private:
 

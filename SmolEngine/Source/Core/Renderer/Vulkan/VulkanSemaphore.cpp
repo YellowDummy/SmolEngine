@@ -22,8 +22,8 @@ namespace SmolEngine
         {
             semaphoreCI.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-            VK_CHECK_RESULT(vkCreateSemaphore(*device->GetLogicalDevice(), &semaphoreCI, nullptr, &m_PresentComplete));
-            VK_CHECK_RESULT(vkCreateSemaphore(*device->GetLogicalDevice(), &semaphoreCI, nullptr, &m_RenderComplete));
+            VK_CHECK_RESULT(vkCreateSemaphore(device->GetLogicalDevice(), &semaphoreCI, nullptr, &m_PresentComplete));
+            VK_CHECK_RESULT(vkCreateSemaphore(device->GetLogicalDevice(), &semaphoreCI, nullptr, &m_RenderComplete));
         }
 
         VkPipelineStageFlags pipelineStageFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -48,7 +48,7 @@ namespace SmolEngine
 
             for (auto& fence : m_WaitFences)
             {
-                auto create = vkCreateFence(*device->GetLogicalDevice(), &fenceCreateInfo, nullptr, &fence);
+                auto create = vkCreateFence(device->GetLogicalDevice(), &fenceCreateInfo, nullptr, &fence);
                 VK_CHECK_RESULT(create);
 
                 if (create == VK_SUCCESS)

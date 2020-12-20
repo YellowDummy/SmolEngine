@@ -31,7 +31,7 @@ namespace SmolEngine
 
 	void VulkanCommandPool::Reset()
 	{
-		vkResetCommandPool(*m_Device->GetLogicalDevice(), m_VkCommandPool, 0);
+		vkResetCommandPool(m_Device->GetLogicalDevice(), m_VkCommandPool, 0);
 	}
 
 	bool VulkanCommandPool::SetupCommandPool(const VulkanDevice* device)
@@ -50,8 +50,8 @@ namespace SmolEngine
 		return result == VK_SUCCESS;
 	}
 
-	const VkCommandPool* VulkanCommandPool::GetCommandPool() const
+	const VkCommandPool VulkanCommandPool::GetCommandPool() const
 	{
-		return &m_VkCommandPool;
+		return m_VkCommandPool;
 	}
 }

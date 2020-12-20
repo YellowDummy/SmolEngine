@@ -4,6 +4,7 @@
 #include "Core/SLog.h"
 #include "Core/Renderer/Renderer.h"
 #include "Core/Renderer/OpenGL/OpenglTexture.h"
+#include "Core/Renderer/TexturesPool.h"
 
 #include <memory>
 
@@ -50,7 +51,7 @@ namespace SmolEngine
 
 		return m_OpenglTexture2D.GetID();
 #else
-		return 0;
+		return m_VulkanTexture.GetID();
 #endif
 	}
 
@@ -81,42 +82,55 @@ namespace SmolEngine
 
 	Ref<Texture2D> Texture2D::Create(const uint32_t width, const uint32_t height)
 	{
-		Ref<Texture2D> texture = std::make_shared<Texture2D>();
+		Ref<Texture2D> texture = TexturesPool::AddTexture2D(width, height);
 
+		if (!texture->m_Initialized)
+		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
-		texture->m_OpenglTexture2D.Init(width, height);
+			texture->m_OpenglTexture2D.Init(width, height);
 #else
-		texture->Create(width, height);
+			texture->Create(width, height);
 #endif
+			texture->m_Initialized = true;
+		}
+
 		return texture;
 	}
 
 	Ref<Texture2D> Texture2D::CreateWhiteTexture()
 	{
-		Ref<Texture2D> texture = std::make_shared<Texture2D>();
+		Ref<Texture2D> texture = TexturesPool::AddTexture2D(1, 1);
 
+		if (!texture->m_Initialized)
+		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
-		uint32_t whiteTextureData = 0xffffffff;
-		texture->m_OpenglTexture2D.Init(1, 1);
-		texture->m_OpenglTexture2D.SetData(&whiteTextureData, sizeof(uint32_t));
+			uint32_t whiteTextureData = 0xffffffff;
+			texture->m_OpenglTexture2D.Init(1, 1);
+			texture->m_OpenglTexture2D.SetData(&whiteTextureData, sizeof(uint32_t));
 #else
-		texture->m_VulkanTexture.CreateWhiteTetxure2D(1, 1);
+			texture->m_VulkanTexture.CreateWhiteTetxure2D(1, 1);
 #endif
+			texture->m_Initialized = true;
+		}
 		return texture;
 	}
 
 	Ref<Texture2D> Texture2D::Create(const std::string& filePath)
 	{
-		Ref<Texture2D> texture = std::make_shared<Texture2D>();
+		Ref<Texture2D> texture = TexturesPool::AddTexture2D(filePath);
 
+		if (!texture->m_Initialized)
+		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
-		texture->m_OpenglTexture2D.Init(filePath);
+			texture->m_OpenglTexture2D.Init(filePath);
 #else
-		texture->m_VulkanTexture.CreateTexture2D(filePath);
+			texture->m_VulkanTexture.CreateTexture2D(filePath);
 #endif
+			texture->m_Initialized = true;
+		}
 		return texture;
 	}
 

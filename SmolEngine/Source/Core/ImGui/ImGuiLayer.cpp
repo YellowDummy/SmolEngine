@@ -146,11 +146,11 @@ namespace SmolEngine
 
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		{
-			init_info.Instance = *VulkanContext::GetInstance().GetInstance();
-			init_info.PhysicalDevice = *VulkanContext::GetDevice().GetPhysicalDevice();
-			init_info.Device = *VulkanContext::GetDevice().GetLogicalDevice();
+			init_info.Instance = VulkanContext::GetInstance().GetInstance();
+			init_info.PhysicalDevice = VulkanContext::GetDevice().GetPhysicalDevice();
+			init_info.Device = VulkanContext::GetDevice().GetLogicalDevice();
 			init_info.QueueFamily = VulkanContext::GetDevice().GetQueueFamilyIndex();
-			init_info.Queue = *VulkanContext::GetDevice().GetQueue();
+			init_info.Queue = VulkanContext::GetDevice().GetQueue();
 			init_info.DescriptorPool = m_VulkanImpl.g_DescriptorPool;
 			init_info.PipelineCache = m_VulkanImpl.g_PipelineCache;
 			init_info.Allocator = nullptr;

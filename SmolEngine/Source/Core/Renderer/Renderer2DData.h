@@ -50,16 +50,13 @@ namespace SmolEngine
 			delete[] Base;
 		}
 
+		size_t ClearSize = 0;
 		QuadVertex* Base = nullptr;
 		QuadVertex* BasePtr = nullptr;
 
-#ifndef SMOLENGINE_OPENGL_IMPL
-		QuadVertex SubmitInfos[4];
-#endif // SMOLENGINE_OPENGL_IMPL
-
 		uint32_t IndexCount = 0;
 		uint32_t QuadCount = 0;
-
+		uint32_t LayerIndex = 0;
 		bool isActive = false;
 	};
 

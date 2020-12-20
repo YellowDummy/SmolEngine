@@ -32,13 +32,21 @@ namespace SmolEngine
 		}
 
 		m_IndexBuffer = IndexBuffer::Create(pipelineInfo->IndexBuffer->Indices, pipelineInfo->IndexBuffer->Count);
-		if (pipelineInfo->VertexBuffer->IsAllocateMemOnly)
+		if (pipelineInfo->VertexBuffer->Count > 1)
 		{
-			m_VertexBuffer = VertexBuffer::Create(pipelineInfo->VertexBuffer->Size);
+			m_VertexBuffers.resize(pipelineInfo->VertexBuffer->Count);
+			for (uint32_t i = 0; i < pipelineInfo->VertexBuffer->Count; ++i)
+			{
+				pipelineInfo->VertexBuffer->IsAllocateMemOnly ?
+					m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Size) :
+					m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Vertices, pipelineInfo->VertexBuffer->Size);
+			}
 		}
 		else
 		{
-			m_VertexBuffer = VertexBuffer::Create(pipelineInfo->VertexBuffer->Vertices, pipelineInfo->VertexBuffer->Size);
+			pipelineInfo->VertexBuffer->IsAllocateMemOnly ?
+				m_VertexBuffer = VertexBuffer::Create(pipelineInfo->VertexBuffer->Size) : 
+				m_VertexBuffer = VertexBuffer::Create(pipelineInfo->VertexBuffer->Vertices, pipelineInfo->VertexBuffer->Size);
 		}
 		m_VextexArray = VertexArray::Create();
 
@@ -68,18 +76,18 @@ namespace SmolEngine
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.Textures = std::move(textures);
 			pipelineSpecCI.Stride = pipelineInfo->VertexBuffer->Stride;
+			pipelineSpecCI.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
 		}
 
 		m_VulkanPipeline.Invalidate(&pipelineSpecCI);
-
 #endif // SMOLENGINE_OPENGL_IMPL
 
+		return true;
 	}
 
 	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer> framebuffer, const glm::vec4& clearColors)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		m_Shader->Bind();
 		m_VextexArray->Bind();
 #else
@@ -101,8 +109,7 @@ namespace SmolEngine
 			renderPassBeginInfo.pClearValues = clearValues;
 		}
 
-		const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
-		vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(m_CommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		// Update dynamic viewport state
 		VkViewport viewport = {};
@@ -112,7 +119,7 @@ namespace SmolEngine
 		viewport.width = (float)scpec.Width;
 		viewport.minDepth = (float)0.0f;
 		viewport.maxDepth = (float)1.0f;
-		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
+		vkCmdSetViewport(m_CommandBuffer, 0, 1, &viewport);
 
 		// Update dynamic scissor state
 		VkRect2D scissor = {};
@@ -120,7 +127,7 @@ namespace SmolEngine
 		scissor.extent.height = scpec.Height;
 		scissor.offset.x = 0;
 		scissor.offset.y = 0;
-		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
+		vkCmdSetScissor(m_CommandBuffer, 0, 1, &scissor);
 
 #endif // SMOLENGINE_OPENGL_IMPL
 	}
@@ -128,13 +135,10 @@ namespace SmolEngine
 	void GraphicsPipeline::EndRenderPass()
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		m_Shader->UnBind();
 		m_VextexArray->UnBind();
 #else
-
-		const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
-		vkCmdEndRenderPass(cmdBuffer);
+		vkCmdEndRenderPass(m_CommandBuffer);
 #endif
 	}
 
@@ -142,7 +146,18 @@ namespace SmolEngine
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		m_VertexBuffer->GetVulkanVertexBuffer().MapMemory();
+		if (m_VertexBuffer != nullptr)
+		{
+			m_VertexBuffer->GetVulkanVertexBuffer().MapMemory();
+		}
+		else
+		{
+			for (auto& vertextBuffer : m_VertexBuffers)
+			{
+				vertextBuffer->GetVulkanVertexBuffer().MapMemory();
+			}
+		}
+
 		m_IndexBuffer->GetVulkanIndexBuffer().MapMemory();
 		for (auto& [binding, ubo] : m_Shader->GetVulkanShader()->m_UniformBuffers)
 		{
@@ -155,7 +170,18 @@ namespace SmolEngine
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		m_VertexBuffer->GetVulkanVertexBuffer().UnMapMemory();
+		if (m_VertexBuffer != nullptr)
+		{
+			m_VertexBuffer->GetVulkanVertexBuffer().UnMapMemory();
+		}
+		else
+		{
+			for (auto& vertextBuffer : m_VertexBuffers)
+			{
+				vertextBuffer->GetVulkanVertexBuffer().UnMapMemory();
+			}
+		}
+
 		m_IndexBuffer->GetVulkanIndexBuffer().UnMapMemory();
 		for (auto& [binding, ubo] : m_Shader->GetVulkanShader()->m_UniformBuffers)
 		{
@@ -164,29 +190,45 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::DrawIndexed()
+	void GraphicsPipeline::BeginCommandBuffer()
+	{
+		m_CommandBuffer = VulkanCommandBuffer::CreateSingleCommandBuffer();
+	}
+
+	void GraphicsPipeline::EndCommandBuffer()
+	{
+		VulkanCommandBuffer::FlushCommandBuffer(m_CommandBuffer);
+	}
+
+	void GraphicsPipeline::FlushCommandBuffer()
+	{
+		VulkanCommandBuffer::FlushCommandBuffer(m_CommandBuffer);
+	}
+
+	void GraphicsPipeline::DrawIndexed(int32_t vertexBufferIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		RendererCommand::DrawIndexed(m_VextexArray);
 
 #else
-		const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
-
 		// Bind the rendering pipeline
 		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
 
-		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline());
+		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline());
+
+		auto& currentVertexBuffer = m_VertexBuffer;
+		vertexBufferIndex > 0 ? currentVertexBuffer = m_VertexBuffers[vertexBufferIndex]: nullptr;
 
 		// Bind Vertex Buffer
-		VkDeviceSize offsets[1] = { 0 }; //temp
-		vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &m_VertexBuffer->GetVulkanVertexBuffer().GetBuffer(), offsets);
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &currentVertexBuffer->GetVulkanVertexBuffer().GetBuffer(), offsets);
 
 		// Bind Index Buffer
-		vkCmdBindIndexBuffer(cmdBuffer, m_IndexBuffer->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindIndexBuffer(m_CommandBuffer, m_IndexBuffer->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 		// Draw indexed
-		vkCmdDrawIndexed(cmdBuffer, m_IndexBuffer->GetVulkanIndexBuffer().GetCount(), 1, 0, 0, 1);
+		vkCmdDrawIndexed(m_CommandBuffer, m_IndexBuffer->GetVulkanIndexBuffer().GetCount(), 1, 0, 0, 1);
 	
 #endif
 	}
@@ -199,15 +241,19 @@ namespace SmolEngine
 	void GraphicsPipeline::SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data)
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
-		const auto& cmdBuffer = VulkanContext::GetCommandBuffer().GetVkCommandBuffer();
-		vkCmdPushConstants(cmdBuffer, m_VulkanPipeline.GetVkPipelineLayot(), VulkanShader::GetVkShaderStage(shaderStage), 0, size, data);
+		vkCmdPushConstants(m_CommandBuffer, m_VulkanPipeline.GetVkPipelineLayot(), VulkanShader::GetVkShaderStage(shaderStage), 0, size, data);
 #endif
 	}
 
-	void GraphicsPipeline::UpdateVertextBuffer(void* vertices, size_t size, uint32_t offset)
+	void GraphicsPipeline::UpdateVertextBuffer(void* vertices, size_t size, uint32_t offset, int32_t index)
 	{
-		m_VertexBuffer->UploadData(vertices, size, offset);
+		auto& vertextBuffer = m_VertexBuffer;
+		if (index > -1)
+		{
+			vertextBuffer = m_VertexBuffers[index];
+		}
 
+		vertextBuffer->UploadData(vertices, size, offset);
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_VextexArray->SetVertexBuffer(m_VertexBuffer);
 #endif
@@ -245,7 +291,7 @@ namespace SmolEngine
 		}
 
 #ifndef SMOLENGINE_OPENGL_IMPL
-		m_VulkanPipeline.UpdateSamplers2D(vkTextures);
+		m_VulkanPipeline.UpdateSamplers2D(vkTextures, m_CommandBuffer);
 #endif
 	}
 

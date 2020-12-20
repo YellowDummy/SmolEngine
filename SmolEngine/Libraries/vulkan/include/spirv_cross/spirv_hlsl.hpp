@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+/*
+ * At your option, you may choose to accept this material under either:
+ *  1. The Apache License, Version 2.0, found at <http://www.apache.org/licenses/LICENSE-2.0>, or
+ *  2. The MIT License, found at <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: Apache-2.0 OR MIT.
+ */
+
 #ifndef SPIRV_HLSL_HPP
 #define SPIRV_HLSL_HPP
 
@@ -124,6 +131,12 @@ public:
 		// Uses half/int16_t/uint16_t instead of min16* types.
 		// Also adds support for 16-bit load-store from (RW)ByteAddressBuffer.
 		bool enable_16bit_types = false;
+
+		// If matrices are used as IO variables, flatten the attribute declaration to use
+		// TEXCOORD{N,N+1,N+2,...} rather than TEXCOORDN_{0,1,2,3}.
+		// If add_vertex_attribute_remap is used and this feature is used,
+		// the semantic name will be queried once per active location.
+		bool flatten_matrix_vertex_input_semantics = false;
 	};
 
 	explicit CompilerHLSL(std::vector<uint32_t> spirv_)

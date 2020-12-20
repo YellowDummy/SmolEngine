@@ -36,16 +36,16 @@ namespace SmolEngine
         m_Instance = instance;
 		m_Device = device;
 
-        fpGetPhysicalDeviceSurfaceSupportKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>(vkGetInstanceProcAddr(*m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceSupportKHR"));
-        fpGetPhysicalDeviceSurfaceCapabilitiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>(vkGetInstanceProcAddr(*m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"));
-        fpGetPhysicalDeviceSurfaceFormatsKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceFormatsKHR>(vkGetInstanceProcAddr(*m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceFormatsKHR"));
-        fpGetPhysicalDeviceSurfacePresentModesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>(vkGetInstanceProcAddr(*m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfacePresentModesKHR"));
+        fpGetPhysicalDeviceSurfaceSupportKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceSupportKHR"));
+        fpGetPhysicalDeviceSurfaceCapabilitiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"));
+        fpGetPhysicalDeviceSurfaceFormatsKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceFormatsKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceFormatsKHR"));
+        fpGetPhysicalDeviceSurfacePresentModesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfacePresentModesKHR"));
 
-        fpCreateSwapchainKHR = reinterpret_cast<PFN_vkCreateSwapchainKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkCreateSwapchainKHR"));
-        fpDestroySwapchainKHR = reinterpret_cast<PFN_vkDestroySwapchainKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkDestroySwapchainKHR"));
-        fpGetSwapchainImagesKHR = reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkGetSwapchainImagesKHR"));
-        fpAcquireNextImageKHR = reinterpret_cast<PFN_vkAcquireNextImageKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkAcquireNextImageKHR"));
-        fpQueuePresentKHR = reinterpret_cast<PFN_vkQueuePresentKHR>(vkGetDeviceProcAddr(*m_Device->GetLogicalDevice(), "vkQueuePresentKHR"));
+        fpCreateSwapchainKHR = reinterpret_cast<PFN_vkCreateSwapchainKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkCreateSwapchainKHR"));
+        fpDestroySwapchainKHR = reinterpret_cast<PFN_vkDestroySwapchainKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkDestroySwapchainKHR"));
+        fpGetSwapchainImagesKHR = reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkGetSwapchainImagesKHR"));
+        fpAcquireNextImageKHR = reinterpret_cast<PFN_vkAcquireNextImageKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkAcquireNextImageKHR"));
+        fpQueuePresentKHR = reinterpret_cast<PFN_vkQueuePresentKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkQueuePresentKHR"));
 
 		return InitSurface(window) == VK_SUCCESS;
     }
@@ -74,15 +74,15 @@ namespace SmolEngine
 
 		// Get physical device surface properties and formats
 		VkSurfaceCapabilitiesKHR surfCaps;
-		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceCapabilitiesKHR(*m_Device->GetPhysicalDevice(), m_Surface, &surfCaps));
+		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceCapabilitiesKHR(m_Device->GetPhysicalDevice(), m_Surface, &surfCaps));
 
 		// Get available present modes
 		uint32_t presentModeCount;
-		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfacePresentModesKHR(*m_Device->GetPhysicalDevice(), m_Surface, &presentModeCount, NULL));
+		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfacePresentModesKHR(m_Device->GetPhysicalDevice(), m_Surface, &presentModeCount, NULL));
 		assert(presentModeCount > 0);
 
 		std::vector<VkPresentModeKHR> presentModes(presentModeCount);
-		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfacePresentModesKHR(*m_Device->GetPhysicalDevice(), m_Surface, &presentModeCount, presentModes.data()));
+		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfacePresentModesKHR(m_Device->GetPhysicalDevice(), m_Surface, &presentModeCount, presentModes.data()));
 
 		VkExtent2D swapchainExtent = {};
 		// If width (and height) equals the special value 0xFFFFFFFF, the size of the surface will be set by the swapchain
@@ -195,7 +195,7 @@ namespace SmolEngine
 				swapchainCI.imageUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 			}
 
-			VK_CHECK_RESULT(fpCreateSwapchainKHR(*m_Device->GetLogicalDevice(), &swapchainCI, nullptr, &m_Swapchain));
+			VK_CHECK_RESULT(fpCreateSwapchainKHR(m_Device->GetLogicalDevice(), &swapchainCI, nullptr, &m_Swapchain));
 		}
 
 		// If an existing swap chain is re-created, destroy the old swap chain
@@ -204,17 +204,17 @@ namespace SmolEngine
 		{
 			for (uint32_t i = 0; i < m_ImageCount; i++)
 			{
-				vkDestroyImageView(*m_Device->GetLogicalDevice(), m_Buffers[i].View, nullptr);
+				vkDestroyImageView(m_Device->GetLogicalDevice(), m_Buffers[i].View, nullptr);
 			}
 
-			fpDestroySwapchainKHR(*m_Device->GetLogicalDevice(), oldSwapchain, nullptr);
+			fpDestroySwapchainKHR(m_Device->GetLogicalDevice(), oldSwapchain, nullptr);
 		}
 
-		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(*m_Device->GetLogicalDevice(), m_Swapchain, &m_ImageCount, NULL));
+		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(m_Device->GetLogicalDevice(), m_Swapchain, &m_ImageCount, NULL));
 
 		// Get the swap chain images
 		m_Images.resize(m_ImageCount);
-		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(*m_Device->GetLogicalDevice(), m_Swapchain, &m_ImageCount, m_Images.data()));
+		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(m_Device->GetLogicalDevice(), m_Swapchain, &m_ImageCount, m_Images.data()));
 
 		// Get the swap chain buffers containing the image and imageview
 		m_Buffers.resize(m_ImageCount);
@@ -244,13 +244,13 @@ namespace SmolEngine
 				colorAttachmentView.image = m_Buffers[i].Image;
 			}
 
-			VK_CHECK_RESULT(vkCreateImageView(*m_Device->GetLogicalDevice(), &colorAttachmentView, nullptr, &m_Buffers[i].View));
+			VK_CHECK_RESULT(vkCreateImageView(m_Device->GetLogicalDevice(), &colorAttachmentView, nullptr, &m_Buffers[i].View));
 		}
 	}
 
 	void VulkanSwapchain::OnResize(uint32_t width, uint32_t height, VulkanCommandBuffer* commandBuffer)
 	{
-		const auto& device = *m_Device->GetLogicalDevice();
+		const auto& device = m_Device->GetLogicalDevice();
 
 		vkDeviceWaitIdle(device);
 
@@ -284,14 +284,14 @@ namespace SmolEngine
 		{
 			for (uint32_t i = 0; i < m_ImageCount; i++)
 			{
-				vkDestroyImageView(*m_Device->GetLogicalDevice(), m_Buffers[i].View, nullptr);
+				vkDestroyImageView(m_Device->GetLogicalDevice(), m_Buffers[i].View, nullptr);
 			}
 		}
 
 		if (m_Surface != VK_NULL_HANDLE)
 		{
-			fpDestroySwapchainKHR(*m_Device->GetLogicalDevice(), m_Swapchain, nullptr);
-			vkDestroySurfaceKHR(*m_Instance->GetInstance(), m_Surface, nullptr);
+			fpDestroySwapchainKHR(m_Device->GetLogicalDevice(), m_Swapchain, nullptr);
+			vkDestroySurfaceKHR(m_Instance->GetInstance(), m_Surface, nullptr);
 		}
 
 		m_Surface = VK_NULL_HANDLE;
@@ -309,7 +309,7 @@ namespace SmolEngine
 
 		// By setting timeout to UINT64_MAX we will always wait until the next image has been acquired or an actual error is thrown
 		// With that we don't have to handle VK_NOT_READY
-		return fpAcquireNextImageKHR(*m_Device->GetLogicalDevice(), m_Swapchain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, &m_CurrentBufferIndex);
+		return fpAcquireNextImageKHR(m_Device->GetLogicalDevice(), m_Swapchain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, &m_CurrentBufferIndex);
 	}
 
 	VkResult VulkanSwapchain::QueuePresent(VkQueue queue, VkSemaphore waitSemaphore)
@@ -342,11 +342,11 @@ namespace SmolEngine
 
     VkResult VulkanSwapchain::InitSurface(GLFWwindow* window)
     {
-		VkResult result = glfwCreateWindowSurface(*m_Instance->GetInstance(), window, nullptr, &m_Surface);
+		VkResult result = glfwCreateWindowSurface(m_Instance->GetInstance(), window, nullptr, &m_Surface);
 		VK_CHECK_RESULT(result);
 
 		VkBool32 supported;
-		vkGetPhysicalDeviceSurfaceSupportKHR(*m_Device->GetPhysicalDevice(), m_Device->GetQueueFamilyIndex(), m_Surface, &supported);
+		vkGetPhysicalDeviceSurfaceSupportKHR(m_Device->GetPhysicalDevice(), m_Device->GetQueueFamilyIndex(), m_Surface, &supported);
 		assert(supported == 1);
 
 		FindColorSpaceFormat();
@@ -482,7 +482,7 @@ namespace SmolEngine
 
 		VkResult result = VK_ERROR_UNKNOWN;
 
-		result = vkCreateRenderPass(*m_Device->GetLogicalDevice(), &renderPassCI, nullptr, &m_RenderPass);
+		result = vkCreateRenderPass(m_Device->GetLogicalDevice(), &renderPassCI, nullptr, &m_RenderPass);
 		VK_CHECK_RESULT(result);
 
 		VkPipelineCacheCreateInfo pipelineCacheCI = {};
@@ -490,7 +490,7 @@ namespace SmolEngine
 			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 		}
 
-		result = vkCreatePipelineCache(*m_Device->GetLogicalDevice(), &pipelineCacheCI, nullptr, &m_PipelineCash);
+		result = vkCreatePipelineCache(m_Device->GetLogicalDevice(), &pipelineCacheCI, nullptr, &m_PipelineCash);
 		VK_CHECK_RESULT(result);
 
 		return result;
@@ -521,7 +521,7 @@ namespace SmolEngine
 		for (auto& format : depthFormats)
 		{
 			VkFormatProperties formatProbs;
-			vkGetPhysicalDeviceFormatProperties(*m_Device->GetPhysicalDevice(), format, &formatProbs);
+			vkGetPhysicalDeviceFormatProperties(m_Device->GetPhysicalDevice(), format, &formatProbs);
 
 			if (formatProbs.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
 			{
@@ -551,11 +551,11 @@ namespace SmolEngine
 			imageCI.tiling = VK_IMAGE_TILING_OPTIMAL;
 			imageCI.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
-			result = vkCreateImage(*m_Device->GetLogicalDevice(), &imageCI, nullptr, &m_DepthStencil.Image);
+			result = vkCreateImage(m_Device->GetLogicalDevice(), &imageCI, nullptr, &m_DepthStencil.Image);
 			VK_CHECK_RESULT(result);
 
 			VkMemoryRequirements memReqs{};
-			vkGetImageMemoryRequirements(*m_Device->GetLogicalDevice(), m_DepthStencil.Image, &memReqs);
+			vkGetImageMemoryRequirements(m_Device->GetLogicalDevice(), m_DepthStencil.Image, &memReqs);
 
 			VkMemoryAllocateInfo memAllloc{};
 			{
@@ -564,10 +564,10 @@ namespace SmolEngine
 				memAllloc.memoryTypeIndex = m_Device->GetMemoryTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 			}
 
-			result = vkAllocateMemory(*m_Device->GetLogicalDevice(), &memAllloc, nullptr, &m_DepthStencil.DeviceMemory);
+			result = vkAllocateMemory(m_Device->GetLogicalDevice(), &memAllloc, nullptr, &m_DepthStencil.DeviceMemory);
 			VK_CHECK_RESULT(result);
 
-			result = vkBindImageMemory(*m_Device->GetLogicalDevice(), m_DepthStencil.Image, m_DepthStencil.DeviceMemory, 0);
+			result = vkBindImageMemory(m_Device->GetLogicalDevice(), m_DepthStencil.Image, m_DepthStencil.DeviceMemory, 0);
 			VK_CHECK_RESULT(result);
 		}
 
@@ -588,7 +588,7 @@ namespace SmolEngine
 				imageViewCI.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 			}
 
-			result = vkCreateImageView(*m_Device->GetLogicalDevice(), &imageViewCI, nullptr, &m_DepthStencil.ImageView);
+			result = vkCreateImageView(m_Device->GetLogicalDevice(), &imageViewCI, nullptr, &m_DepthStencil.ImageView);
 			VK_CHECK_RESULT(result);
 		}
 
@@ -599,11 +599,11 @@ namespace SmolEngine
 	{
 		// Get list of supported surface formats
 		uint32_t formatCount;
-		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceFormatsKHR(*m_Device->GetPhysicalDevice(), m_Surface, &formatCount, NULL));
+		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceFormatsKHR(m_Device->GetPhysicalDevice(), m_Surface, &formatCount, NULL));
 		assert(formatCount > 0);
 
 		std::vector<VkSurfaceFormatKHR> surfaceFormats(formatCount);
-		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceFormatsKHR(*m_Device->GetPhysicalDevice(), m_Surface, &formatCount, surfaceFormats.data()));
+		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceFormatsKHR(m_Device->GetPhysicalDevice(), m_Surface, &formatCount, surfaceFormats.data()));
 
 		// If the surface format list only includes one entry with VK_FORMAT_UNDEFINED,
 		// there is no preferred format, so we assume VK_FORMAT_B8G8R8A8_UNORM

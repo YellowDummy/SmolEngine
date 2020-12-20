@@ -43,7 +43,7 @@ namespace SmolEngine
 
 		const VkBuffer& GetBuffer() const;
 
-		const VkDeviceMemory& GetDeviceMemory() const;
+		const VkDeviceMemory GetDeviceMemory() const;
 
 	private:
 

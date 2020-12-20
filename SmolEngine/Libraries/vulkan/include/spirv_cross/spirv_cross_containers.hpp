@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+/*
+ * At your option, you may choose to accept this material under either:
+ *  1. The Apache License, Version 2.0, found at <http://www.apache.org/licenses/LICENSE-2.0>, or
+ *  2. The MIT License, found at <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: Apache-2.0 OR MIT.
+ */
+
 #ifndef SPIRV_CROSS_CONTAINERS_HPP
 #define SPIRV_CROSS_CONTAINERS_HPP
 
@@ -210,6 +217,10 @@ public:
 		for (size_t i = 0; i < count; i++, arg_list_begin++)
 			new (&this->ptr[i]) T(*arg_list_begin);
 		this->buffer_size = count;
+	}
+
+	SmallVector(std::initializer_list<T> init) SPIRV_CROSS_NOEXCEPT : SmallVector(init.begin(), init.end())
+	{
 	}
 
 	SmallVector(SmallVector &&other) SPIRV_CROSS_NOEXCEPT : SmallVector()

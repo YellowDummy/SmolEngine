@@ -23,7 +23,7 @@ namespace SmolEngine
 
 	void VulkanBuffer::Create(const void* data, size_t size, VkMemoryPropertyFlags memFlags, VkBufferUsageFlags usageFlags, uint32_t offset, VkSharingMode shareMode)
 	{
-		const auto& device = *m_Device->GetLogicalDevice();
+		const auto& device = m_Device->GetLogicalDevice();
 
 		VkDeviceSize bufferSize = size;
 		VkBufferCreateInfo bufferInfo = {};
@@ -75,7 +75,7 @@ namespace SmolEngine
 
 	void VulkanBuffer::Create(size_t size, VkMemoryPropertyFlags memFlags, VkBufferUsageFlags usageFlags, uint32_t offset, VkSharingMode shareMode)
 	{
-		const auto& device = *m_Device->GetLogicalDevice();
+		const auto& device = m_Device->GetLogicalDevice();
 
 		VkDeviceSize bufferSize = size;
 		VkBufferCreateInfo bufferInfo = {};
@@ -121,7 +121,7 @@ namespace SmolEngine
 		if (m_Mapped == nullptr)
 		{
 			uint8_t* dest = nullptr;
-			const auto& device = *m_Device->GetLogicalDevice();
+			const auto& device = m_Device->GetLogicalDevice();
 			VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&dest));
 			memcpy(dest, data, size);
 			UnMapMemory();
@@ -139,7 +139,7 @@ namespace SmolEngine
 	void* VulkanBuffer::MapMemory()
 	{
 		uint8_t* data;
-		const auto& device = *m_Device->GetLogicalDevice();
+		const auto& device = m_Device->GetLogicalDevice();
 		VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&data));
 		m_Mapped = data;
 		return data;
@@ -147,14 +147,14 @@ namespace SmolEngine
 
 	void VulkanBuffer::UnMapMemory()
 	{
-		const auto& device = *m_Device->GetLogicalDevice();
+		const auto& device = m_Device->GetLogicalDevice();
 		vkUnmapMemory(device, m_DeviceMemory);
 		m_Mapped = nullptr;
 	}
 
 	void VulkanBuffer::Destroy()
 	{
-		const auto& device = *m_Device->GetLogicalDevice();
+		const auto& device = m_Device->GetLogicalDevice();
 		vkDestroyBuffer(device, m_Buffer, nullptr);
 	}
 
@@ -168,7 +168,7 @@ namespace SmolEngine
 		return m_Buffer;
 	}
 
-	const VkDeviceMemory& VulkanBuffer::GetDeviceMemory() const
+	const VkDeviceMemory VulkanBuffer::GetDeviceMemory() const
 	{
 		return m_DeviceMemory;
 	}

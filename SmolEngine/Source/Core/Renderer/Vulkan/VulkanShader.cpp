@@ -44,7 +44,7 @@ namespace SmolEngine
 
         if (!binaryData.empty())
         {
-            const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
+            const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
             for (const auto& info : binaryData)
             {
                 const auto& [type, data] = info;

@@ -38,7 +38,7 @@ namespace SmolEngine
 	bool VulkanDevice::SetupPhysicalDevice(const VulkanInstance* _instance)
 	{
 		m_ExtensionsList = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-		const VkInstance& instance = *_instance->GetInstance();
+		const VkInstance& instance = _instance->GetInstance();
 
 		uint32_t devicesCount = 0;
 		vkEnumeratePhysicalDevices(instance, &devicesCount, nullptr);
@@ -199,14 +199,14 @@ return result == VK_SUCCESS;
 		return &m_VkDeviceFeatures;
 	}
 
-	const VkPhysicalDevice* const VulkanDevice::GetPhysicalDevice() const
+	const VkPhysicalDevice const VulkanDevice::GetPhysicalDevice() const
 	{
-		return &m_VkPhysicalDevice;
+		return m_VkPhysicalDevice;
 	}
 
-	const VkDevice* const VulkanDevice::GetLogicalDevice() const
+	const VkDevice const VulkanDevice::GetLogicalDevice() const
 	{
-		return &m_VkLogicalDevice;
+		return m_VkLogicalDevice;
 	}
 
 	uint32_t VulkanDevice::GetMemoryTypeIndex(uint32_t typeBits, VkMemoryPropertyFlags memFlags) const
@@ -233,8 +233,8 @@ return result == VK_SUCCESS;
 		return m_DeviceQueueFamilyIndex;
 	}
 
-	const VkQueue* VulkanDevice::GetQueue() const
+	const VkQueue VulkanDevice::GetQueue() const
 	{
-		return &m_Queue;
+		return m_Queue;
 	}
 }

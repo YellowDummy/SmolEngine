@@ -27,7 +27,7 @@ namespace SmolEngine
 
 		void Destroy();
 
-		void UpdateSamplers2D(const std::vector<VulkanTexture*>& textures);
+		void UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer);
 
 		/// 
 		/// Getters
@@ -47,7 +47,7 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<VulkanTexture> m_ReservedTextures;
+		std::vector<VulkanTexture*> m_ReservedTextures;
 		std::vector<VkWriteDescriptorSet> m_WriteDescriptorSets;
 
 		VkDescriptorSet m_DesciptorSet = VK_NULL_HANDLE;

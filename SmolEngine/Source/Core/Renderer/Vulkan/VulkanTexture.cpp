@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "VulkanTexture.h"
 #include "stb_image.h"
+#include "stb_image_write.h"
 
 #include "Core/Renderer/Vulkan/VulkanContext.h"
 #include "Core/Renderer/Vulkan/VulkanStagingBuffer.h"
@@ -12,7 +13,7 @@ namespace SmolEngine
 {
 	VulkanTexture::VulkanTexture()
 	{
-		m_Device = *VulkanContext::GetDevice().GetLogicalDevice();
+		m_Device = VulkanContext::GetDevice().GetLogicalDevice();
 	}
 
 	VulkanTexture::~VulkanTexture()
@@ -47,15 +48,13 @@ namespace SmolEngine
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
 		{
-			data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+			data = stbi_load(filePath.c_str(), &width, &height, &channels, 4);
 			if (!data)
 			{
 				NATIVE_ERROR("VulkanTexture:: Texture not found! file: {}, line: {}", __FILE__, __LINE__);
 				abort();
 			}
 		}
-
-		assert(channels == 4);
 
 		CreateTexture(width, height, data);
 
@@ -65,6 +64,8 @@ namespace SmolEngine
 		m_IsCreated = true;
 
 		stbi_image_free(data);
+		std::hash<std::string> hasher;
+		m_ID = hasher(filePath);
 	}
 
 	void VulkanTexture::CreateCubeTexture()
@@ -80,6 +81,11 @@ namespace SmolEngine
 	uint32_t VulkanTexture::GetWidth() const
 	{
 		return m_Width;
+	}
+
+	size_t VulkanTexture::GetID() const
+	{
+		return m_ID;
 	}
 
 	void* VulkanTexture::GetImGuiTextureID() const

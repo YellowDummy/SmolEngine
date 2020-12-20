@@ -177,11 +177,13 @@
   <ItemGroup>
     <ClInclude Include="Source\Editor.h" />
     <ClInclude Include="Source\EditorLayer.h" />
+    <ClInclude Include="Source\RaytracingTestLayer.h" />
     <ClInclude Include="Source\VulkanTestLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\EditorLayer.cpp" />
+    <ClCompile Include="Source\RaytracingTestLayer.cpp" />
     <ClCompile Include="Source\VulkanTestLayer.cpp" />
   </ItemGroup>
   <ItemGroup>

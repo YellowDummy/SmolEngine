@@ -4,6 +4,7 @@
 #include "Core/Renderer/Vulkan/VulkanDevice.h"
 #include "Core/Renderer/Vulkan/VulkanSwapchain.h"
 #include "Core/Renderer/Vulkan/VulkanCommandPool.h"
+#include "Core/Renderer/Vulkan/VulkanContext.h"
 
 namespace SmolEngine
 {
@@ -24,11 +25,11 @@ namespace SmolEngine
 		VkCommandBufferAllocateInfo commandBufferInfo = {};
 		{
 			commandBufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-			commandBufferInfo.commandPool = *commandPool->GetCommandPool();
+			commandBufferInfo.commandPool = commandPool->GetCommandPool();
 			commandBufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 			commandBufferInfo.commandBufferCount = static_cast<uint32_t>(m_CommandBuffers.size());
 
-			VkResult result = vkAllocateCommandBuffers(*device->GetLogicalDevice(), &commandBufferInfo, m_CommandBuffers.data());
+			VkResult result = vkAllocateCommandBuffers(device->GetLogicalDevice(), &commandBufferInfo, m_CommandBuffers.data());
 			VK_CHECK_RESULT(result);
 
 			if (result == VK_SUCCESS)
@@ -51,7 +52,7 @@ namespace SmolEngine
 			return false;
 		}
 
-		vkFreeCommandBuffers(*m_Device->GetLogicalDevice(), *m_CommandPool->GetCommandPool(), static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
+		vkFreeCommandBuffers(m_Device->GetLogicalDevice(), m_CommandPool->GetCommandPool(), static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
 		return Init(m_Device, m_CommandPool, m_TargetSwapchain);
 	}
 
@@ -60,16 +61,16 @@ namespace SmolEngine
 		return m_CommandBuffers[m_TargetSwapchain->GetCurrentBufferIndex()];
 	}
 
-	const VkCommandBuffer VulkanCommandBuffer::CreateSingleCommandBuffer(bool oneCommand) const
+	const VkCommandBuffer VulkanCommandBuffer::CreateSingleCommandBuffer(bool oneCommand)
 	{
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandPool = *m_CommandPool->GetCommandPool();
+		allocInfo.commandPool = VulkanContext::GetCommandPool().GetCommandPool();
 		allocInfo.commandBufferCount = 1;
 
 		VkCommandBuffer commandBuffer;
-		VK_CHECK_RESULT(vkAllocateCommandBuffers(*m_Device->GetLogicalDevice(), &allocInfo, &commandBuffer));
+		VK_CHECK_RESULT(vkAllocateCommandBuffers(VulkanContext::GetDevice().GetLogicalDevice(), &allocInfo, &commandBuffer));
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -83,7 +84,7 @@ namespace SmolEngine
 		return commandBuffer;
 	}
 
-	void VulkanCommandBuffer::EndSingleCommandBuffer(const VkCommandBuffer cmdBuffer) const
+	void VulkanCommandBuffer::EndSingleCommandBuffer(const VkCommandBuffer cmdBuffer)
 	{
 		vkEndCommandBuffer(cmdBuffer);
 
@@ -94,18 +95,22 @@ namespace SmolEngine
 			submitInfo.pCommandBuffers = &cmdBuffer;
 		}
 
-		VkQueue q = *m_Device->GetQueue();
+		
+		VkQueue q = VulkanContext::GetDevice().GetQueue();
 		vkQueueSubmit(q, 1, &submitInfo, VK_NULL_HANDLE);
 		vkQueueWaitIdle(q);
-		vkFreeCommandBuffers(*m_Device->GetLogicalDevice(), *m_CommandPool->GetCommandPool(), 1, &cmdBuffer);
+		vkFreeCommandBuffers(VulkanContext::GetDevice().GetLogicalDevice(), VulkanContext::GetCommandPool().GetCommandPool(), 1, &cmdBuffer);
 	}
 
-	void VulkanCommandBuffer::FlushCommandBuffer(const VkCommandBuffer cmdBuffer) const
+	void VulkanCommandBuffer::FlushCommandBuffer(const VkCommandBuffer cmdBuffer)
 	{
 		const uint64_t time_out = 100000000000;
 		assert(cmdBuffer != VK_NULL_HANDLE);
 
 		VK_CHECK_RESULT(vkEndCommandBuffer(cmdBuffer));
+
+		VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
 		VkSubmitInfo submitInfo = {};
 		{
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -120,12 +125,12 @@ namespace SmolEngine
 		}
 
 		VkFence fence;
-		VK_CHECK_RESULT(vkCreateFence(*m_Device->GetLogicalDevice(), &fenceCI, nullptr, &fence));
-		VK_CHECK_RESULT(vkQueueSubmit(*m_Device->GetQueue(), 1, &submitInfo, fence));
-		VK_CHECK_RESULT(vkWaitForFences(*m_Device->GetLogicalDevice(), 1, &fence, VK_TRUE, time_out));
+		VK_CHECK_RESULT(vkCreateFence(VulkanContext::GetDevice().GetLogicalDevice(), &fenceCI, nullptr, &fence));
+		VK_CHECK_RESULT(vkQueueSubmit(VulkanContext::GetDevice().GetQueue(), 1, &submitInfo, fence));
+		VK_CHECK_RESULT(vkWaitForFences(VulkanContext::GetDevice().GetLogicalDevice(), 1, &fence, VK_TRUE, time_out));
 
-		vkDestroyFence(*m_Device->GetLogicalDevice(), fence, nullptr);
-		vkFreeCommandBuffers(*m_Device->GetLogicalDevice(), *m_CommandPool->GetCommandPool(), 1, &cmdBuffer);
+		vkDestroyFence(VulkanContext::GetDevice().GetLogicalDevice(), fence, nullptr);
+		vkFreeCommandBuffers(VulkanContext::GetDevice().GetLogicalDevice(), VulkanContext::GetCommandPool().GetCommandPool(), 1, &cmdBuffer);
 	}
 
 	size_t VulkanCommandBuffer::GetBufferSize() const
