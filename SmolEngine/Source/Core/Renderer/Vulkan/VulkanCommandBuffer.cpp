@@ -108,9 +108,6 @@ namespace SmolEngine
 		assert(cmdBuffer != VK_NULL_HANDLE);
 
 		VK_CHECK_RESULT(vkEndCommandBuffer(cmdBuffer));
-
-		VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-
 		VkSubmitInfo submitInfo = {};
 		{
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

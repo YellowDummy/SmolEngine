@@ -20,7 +20,7 @@ namespace SmolEngine
 	struct Renderer2DStorage
 	{
 		static const uint32_t Light2DBufferMaxSize = 100;
-		static const uint32_t MaxQuads = 15000;
+		static const uint32_t MaxQuads = 3;
 		static const uint32_t MaxVertices = MaxQuads * 6;
 		static const uint32_t MaxIndices = MaxQuads * 4;
 		static const uint32_t MaxLayers = 12;
@@ -64,8 +64,6 @@ namespace SmolEngine
 		/// Vextex Storage
 
 		std::array<LayerDataBuffer, MaxLayers > Layers;
-		uint32_t TextureSlotIndex = 1; // index 0 reserved for white texture
-		std::vector<Ref<Texture2D>> TextureSlots;
 
 		QuadVertex* ClearBuffer = new QuadVertex[MaxVertices];
 		uint32_t MaxDataSize = 0;
@@ -103,6 +101,13 @@ namespace SmolEngine
 		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
 		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
 
+#else
+		s_Data->MainPipeline->BeginCommandBuffer();
+		s_Data->MainPipeline->BeginRenderPass(targetFramebuffer);
+		s_Data->MainPipeline->ClearColors(targetFramebuffer);
+		s_Data->MainPipeline->EndRenderPass();
+
+		s_Data->MainPipeline->BeginBufferSubmit();
 #endif
 		s_Data->SceneData.viewProjectionMatrix = viewProjectionMatrix;
 		s_Data->SceneData.ambientValue = ambientValue;
@@ -115,6 +120,10 @@ namespace SmolEngine
 	void Renderer2D::EndScene()
 	{
 		FlushAllLayers();
+#ifndef SMOLENGINE_OPENGL_IMPL
+		s_Data->MainPipeline->EndBufferSubmit();
+		s_Data->MainPipeline->EndCommandBuffer();
+#endif
 	}
 
 	void Renderer2D::StartNewBatch()
@@ -126,8 +135,6 @@ namespace SmolEngine
 		s_Data->Light2DBufferSize = 0;
 		s_Data->TotalQuadCount = 0;
 		s_Data->TotalQuadIndexCount = 0;
-		s_Data->TextureSlotIndex = 1;
-		m_RenderPassIsActive = false;
 
 		// Resetting all layers
 		for (auto& layer : s_Data->Layers)
@@ -141,46 +148,44 @@ namespace SmolEngine
 		// If true there is nothing to draw
 		if (s_Data->TotalQuadIndexCount == 0)
 		{
-			s_Data->MainPipeline->BeginCommandBuffer();
-			s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
-			s_Data->MainPipeline->EndRenderPass();
-			s_Data->MainPipeline->EndCommandBuffer();
 			return;
 		}
 
-		s_Data->MainPipeline->BeginCommandBuffer();
-		s_Data->MainPipeline->BeginBufferSubmit();
+		// Setting Light2D Data
+		UploadLightUniforms();
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+		// Binding textures
+		for (auto& layer : s_Data->Layers)
 		{
-			// Setting Light2D Data
-			UploadLightUniforms();
-
-			// Binding textures
-			s_Data->MainPipeline->Update2DTextures(s_Data->TextureSlots);
-			s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
-
-			s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+			if (!layer.isActive)
 			{
-				// Iterating over all layers
-				for (auto& layer : s_Data->Layers)
-				{
-					// No need to render empty layer
-
-					if (!layer.isActive)
-					{
-						continue;
-					}
-
-					Stats->LayersInUse++;
-
-					// Initializing Drawcall
-
-					DrawLayer(layer);
-				}
+				continue;
 			}
-			s_Data->MainPipeline->EndRenderPass();
+
+			s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
 		}
-		s_Data->MainPipeline->EndBufferSubmit();
-		s_Data->MainPipeline->EndCommandBuffer();
+#endif
+
+		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
+		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+		{
+			// Iterating over all layers
+			for (auto& layer : s_Data->Layers)
+			{
+				// No need to render empty layer
+
+				if (!layer.isActive)
+				{
+					continue;
+				}
+
+				DrawLayer(layer);
+				Stats->LayersInUse++;
+
+			}
+		}
+		s_Data->MainPipeline->EndRenderPass();
 	}
 
 	void Renderer2D::FlushLayer(LayerDataBuffer& layer)
@@ -188,31 +193,29 @@ namespace SmolEngine
 		if (!layer.isActive || layer.IndexCount == 0)
 			return;
 
-		s_Data->MainPipeline->BeginCommandBuffer();
-		s_Data->MainPipeline->BeginBufferSubmit();
+		// Setting Light2D Data
+		UploadLightUniforms();
+
+		// Binding textures
+		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
+		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
+
+		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
 		{
-			// Setting Light2D Data
-			UploadLightUniforms();
-
-			// Binding textures
-			s_Data->MainPipeline->Update2DTextures(s_Data->TextureSlots);
-			s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
-
-			s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
-			// Initializing Drawcall
 			DrawLayer(layer);
-
-			s_Data->MainPipeline->EndRenderPass();
 		}
-		s_Data->MainPipeline->EndBufferSubmit();
+		s_Data->MainPipeline->EndRenderPass();
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 		s_Data->MainPipeline->EndCommandBuffer();
+		s_Data->MainPipeline->BeginCommandBuffer();
+
 		s_Data->MainPipeline->UpdateVertextBuffer(s_Data->ClearBuffer, layer.ClearSize, 0, layer.LayerIndex);
+
+		m_RenderResetted = true;
 #endif
 		// Resetting Data
 		ResetLayer(layer);
-
 	}
 
 	void Renderer2D::ResetLayer(LayerDataBuffer& layer)
@@ -225,6 +228,7 @@ namespace SmolEngine
 		layer.IndexCount = 0;
 		layer.QuadCount = 0;
 		layer.ClearSize = 0;
+		layer.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::DrawLayer(LayerDataBuffer& layer)
@@ -236,10 +240,15 @@ namespace SmolEngine
 #ifndef SMOLENGINE_OPENGL_IMPL
 		s_Data->MainPipeline->UpdateVertextBuffer(layer.Base, dataSize, 0, layer.LayerIndex);
 		layer.ClearSize = dataSize;
+
+		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(int32_t), &s_Data->Light2DBufferSize);
+		s_Data->MainPipeline->DrawIndexed(layer.LayerIndex, 0, layer.LayerIndex);
 #else
+		// Binding textures
+		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
 		s_Data->MainPipeline->UpdateVertextBuffer(layer.Base, dataSize);
+		s_Data->MainPipeline->DrawIndexed();
 #endif
-		s_Data->MainPipeline->DrawIndexed(layer.LayerIndex);
 		Stats->DrawCalls++;
 	}
 
@@ -248,7 +257,7 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		s_Data->MainPipeline->SumbitUniform<int>("u_Ligh2DBufferSize", &s_Data->Light2DBufferSize);
 #else
-		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(int32_t), &s_Data->Light2DBufferSize);
+
 #endif
 
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -292,15 +301,15 @@ namespace SmolEngine
 		// Getting Layer
 		auto& layer = s_Data->Layers[layerIndex];
 		// Render current layer if we out of the limit
-		if (layer.QuadCount >= Renderer2DStorage::MaxQuads || s_Data->TextureSlotIndex >= Renderer2D::MaxTextureSlot)
+		if (layer.QuadCount >= (Renderer2DStorage::MaxQuads - 1) || layer.TextureSlotIndex >= Renderer2D::MaxTextureSlot)
 		{
-			FlushAllLayers();
+			FlushLayer(layer);
 		}
 
 		// If the texture already exists we just need to find texture ID
-		for (uint32_t i = 1; i < s_Data->TextureSlotIndex; i++)
+		for (uint32_t i = 1; i < layer.TextureSlotIndex; i++)
 		{
-			if (*s_Data->TextureSlots[i] == *texture)
+			if (*layer.TextureSlots[i] == *texture)
 			{
 				textureIndex = (float)i;
 				break;
@@ -310,9 +319,9 @@ namespace SmolEngine
 		// Else set new texture ID
 		if (textureIndex == 0.0f)
 		{
-			textureIndex = (float)s_Data->TextureSlotIndex;
-			s_Data->TextureSlots[s_Data->TextureSlotIndex] = texture;
-			s_Data->TextureSlotIndex++;
+			textureIndex = (float)layer.TextureSlotIndex;
+			layer.TextureSlots[layer.TextureSlotIndex] = texture;
+			layer.TextureSlotIndex++;
 
 			Stats->TexturesInUse++;
 		}
@@ -362,7 +371,7 @@ namespace SmolEngine
 		auto& layer = s_Data->Layers[layerIndex]; // worldPos.z is Z Layer
 
 		// Render current layer if we out of the limit
-		if (layer.QuadCount >= Renderer2DStorage::MaxQuads)
+		if (layer.QuadCount >= (Renderer2DStorage::MaxQuads - 1))
 		{
 			FlushLayer(layer);
 		}
@@ -514,16 +523,15 @@ namespace SmolEngine
 			for (auto& layer : s_Data->Layers)
 			{
 				layer.Base = new QuadVertex[s_Data->MaxVertices];
+				layer.TextureSlots.resize(Renderer2D::MaxTextureSlot);
+				layer.TextureSlots[0] = s_Data->WhiteTexture;
+				layer.TextureSlotIndex = 1;
 				layer.isActive = false;
 				layer.QuadCount = 0;
 				layer.LayerIndex = index;
 				index++;
 			}
 		}
-
-		s_Data->TextureSlotIndex = 1;
-		s_Data->TextureSlots.resize(Renderer2D::MaxTextureSlot);
-		s_Data->TextureSlots[0] = s_Data->WhiteTexture;
 
 #ifdef SMOLENGINE_EDITOR
 
@@ -576,14 +584,15 @@ namespace SmolEngine
 			vertexBufferCI.Size = sizeof(QuadVertex) * s_Data->MaxVertices;
 			vertexBufferCI.Stride = sizeof(QuadVertex);
 #ifndef SMOLENGINE_OPENGL_IMPL
-			vertexBufferCI.Count = s_Data->MaxLayers;
+			vertexBufferCI.BuffersCount = s_Data->MaxLayers;
 #endif
 			vertexBufferCI.IsAllocateMemOnly = true;
 		}
 
 		IndexBufferCreateInfo indexBufferCI = {};
 		{
-			indexBufferCI.Count = s_Data->MaxIndices;
+			indexBufferCI.IndicesCount = s_Data->MaxIndices;
+			indexBufferCI.BuffersCount = 1;
 			indexBufferCI.Indices = quadIndices;
 		}
 
@@ -606,6 +615,7 @@ namespace SmolEngine
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 
 			graphicsPipelineCI.IsAlphaBlendingEnabled = true;
+			graphicsPipelineCI.DescriptorSets = Renderer2DStorage::MaxLayers;
 		}
 
 		s_Data->MainPipeline->Create(&graphicsPipelineCI);

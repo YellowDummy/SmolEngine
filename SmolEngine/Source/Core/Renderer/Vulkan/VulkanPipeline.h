@@ -27,7 +27,7 @@ namespace SmolEngine
 
 		void Destroy();
 
-		void UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer);
+		void UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex = 0);
 
 		/// 
 		/// Getters
@@ -37,20 +37,20 @@ namespace SmolEngine
 
 		const VkPipelineLayout& GetVkPipelineLayot() const;
 
-		const VkDescriptorSet GetVkDescriptorSet() const;
+		const VkDescriptorSet GetVkDescriptorSet(uint32_t setIndex = 0) const;
 
 		const VkDescriptorSetLayout GetVkDescriptorSetLayout() const;
 
 	private:
 
-		void BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures);
+		void BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures, uint32_t DescriptorSets);
 
 	private:
 
 		std::vector<VulkanTexture*> m_ReservedTextures;
-		std::vector<VkWriteDescriptorSet> m_WriteDescriptorSets;
+		std::vector<std::vector<VkWriteDescriptorSet>> m_WriteDescriptorSets;
 
-		VkDescriptorSet m_DesciptorSet = VK_NULL_HANDLE;
+		std::vector<VkDescriptorSet> m_DesciptorSets;
 		VkDescriptorSetLayout m_DescriptorSetLayout = VK_NULL_HANDLE;
 
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;

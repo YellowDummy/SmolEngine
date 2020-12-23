@@ -24,7 +24,7 @@ namespace SmolEngine
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
 		{
-			data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+			data = stbi_load(filePath.c_str(), &width, &height, &channels, 4);
 		}
 
 		if (data == nullptr)
@@ -33,23 +33,8 @@ namespace SmolEngine
 			abort();
 		}
 
-		GLenum openglFormat = 0, dataFormat = 0;
-
-		if (channels == 4)
-		{
-			openglFormat = GL_RGBA8;
-			dataFormat = GL_RGBA;
-
-		}
-
-		if (channels == 3)
-		{
-			openglFormat = GL_RGB8;
-			dataFormat = GL_RGB;
-		}
-
+		GLenum openglFormat = GL_RGBA8, dataFormat = GL_RGBA;
 		m_InternalFormat = openglFormat; m_DataFromat = dataFormat;
-
 		if (openglFormat == 0 || dataFormat == 0)
 		{
 			NATIVE_ERROR("Invalid input parameters, channels: {}", channels);

@@ -1545,6 +1545,9 @@
     <ClInclude Include="Source\Core\Renderer\Texture.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\TexturesPool.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Vulkan\Vulkan.h">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1659,7 +1662,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Renderer\TexturesPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
@@ -1887,6 +1889,9 @@
     <ClCompile Include="Source\Core\Renderer\Texture.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\TexturesPool.cpp">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanBuffer.cpp">
       <Filter>Source\Core\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1977,6 +1982,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Renderer\TexturesPool.cpp" />
   </ItemGroup>
 </Project>

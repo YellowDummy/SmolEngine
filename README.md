@@ -1,26 +1,44 @@
-# SmolEngine
+## SmolEngine
 
-![SmolEngine](https://i.imgur.com/zjhaORe.png)
+![SmolEngine](https://i.imgur.com/xoUx4Lh.png)
 
+## Core Features
 
+### Ready
 
-SmolEngine is an open-source 2D/3D game engine that is developed primarily by one person for learning purposes. The engine is not ready for use in any project.
+- Native rendering API support (Vulkan/OpenGL)
 
-Features :
--
-- 2D Batch Renderer (OpenGL)
-- Level Editor
+- 2D Workflow (batch renderer, physics, sprites, animations, UI, etc)
+
 - Data-Oriented Entity Component System (ECS)
+
 - Scripting in C++
-- Audio
-- UI (buttons, text labels)
-- 2D Animation
-- 2D Lighting
-- 2D Physics
-- Build System (Windows)
-- Serialization (scene, animation files etc)
 
+- Audio Engine
 
-Development Roadmap: 
--
-https://trello.com/b/ElKB9IZk/smolengine-development-roadmap
+### Features to come
+
+- Physically Based Rendering (PBR)
+
+- Linux and Android support
+
+- 3D Workflow
+
+- Ray Tracing
+
+## Limitations
+
+- Developed primarily by one person for learning purposes
+
+- At the moment only Windows is supported
+
+- At a very early stage
+
+- No documentation yet
+
+## Building
+### Windows
+1. Call Win-GenProject.bat or run ```premake5 vs2019```
+2. Go to Libraries\vulkan and extract libs.7z
+3. Go to Libraries\fmod\libs and copy all dll's to output folder
+4. Under configuration properties makes sure that Yojimbo project is set to "build"

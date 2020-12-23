@@ -142,13 +142,14 @@ namespace SmolEngine
 			VK_CHECK_RESULT(result);
 		}
 
+
 		{
 			std::array<VkAttachmentDescription, 2> attchmentDescriptions = {};
 
 			// Color attachment
 			attchmentDescriptions[0].format = FB_COLOR_FORMAT;
 			attchmentDescriptions[0].samples = VK_SAMPLE_COUNT_1_BIT;
-			attchmentDescriptions[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attchmentDescriptions[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attchmentDescriptions[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attchmentDescriptions[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attchmentDescriptions[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -209,6 +210,13 @@ namespace SmolEngine
 			VkImageView attachments[2];
 			attachments[0] = m_OffscreenPass.color.view;
 			attachments[1] = m_OffscreenPass.depth.view;
+
+			m_OffscreenPass.clearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_OffscreenPass.clearAttachments[0].clearValue.color  = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_OffscreenPass.clearAttachments[0].colorAttachment = 0;
+
+			m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_OffscreenPass.clearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
 
 			VkFramebufferCreateInfo fbufCreateInfo = {};
 			{

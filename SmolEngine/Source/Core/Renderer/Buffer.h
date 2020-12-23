@@ -104,6 +104,8 @@ namespace SmolEngine
 
 		void UnBind() const;
 
+		void UploadData(uint32_t* indices, uint32_t count);
+
 		void Destory();
 
 		///

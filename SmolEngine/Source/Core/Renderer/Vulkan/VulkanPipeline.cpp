@@ -18,14 +18,14 @@ namespace SmolEngine
 
 	bool VulkanPipeline::Invalidate(const VulkanPipelineSpecification* pipelineSpec)
 	{
-		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain || !pipelineSpec->BufferLayout)
+		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain || !pipelineSpec->BufferLayout || pipelineSpec->DescriptorSets == 0)
 		{
 			assert(false);
 			return false;
 		}
 
 		memcpy(m_VulkanPipelineSpecification, pipelineSpec, sizeof(VulkanPipelineSpecification));
-		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Textures);
+		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Textures, pipelineSpec->DescriptorSets);
 
 		const auto& shader = pipelineSpec->Shader;
 		const auto& swapchain = pipelineSpec->TargetSwapchain;
@@ -149,18 +149,17 @@ namespace SmolEngine
 		vertexInputBinding.stride = pipelineSpec->Stride;
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		uint32_t index = 0;
 		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(pipelineSpec->BufferLayout->GetElements().size());
-		for (const auto& element: pipelineSpec->BufferLayout->GetElements())
 		{
-
-			// Attribute location 0: Position
-			vertexInputAttributs[index].binding = 0;
-			vertexInputAttributs[index].location = index;
-			vertexInputAttributs[index].format = VK_FORMAT_R32G32B32_SFLOAT;
-			vertexInputAttributs[index].offset = element.offset;
-
-			index++;
+			uint32_t index = 0;
+			for (const auto& element : pipelineSpec->BufferLayout->GetElements())
+			{
+				vertexInputAttributs[index].binding = 0;
+				vertexInputAttributs[index].location = index;
+				vertexInputAttributs[index].format = VK_FORMAT_R32G32B32_SFLOAT; // TODO: add more formats!
+				vertexInputAttributs[index].offset = element.offset;
+				index++;
+			}
 		}
 
 		// Vertex input state used for pipeline creation
@@ -200,8 +199,6 @@ namespace SmolEngine
 		// Shader modules are no longer needed once the graphics pipeline has been created
 		//vkDestroyShaderModule(device, shaderStages[0].module, nullptr);
 		//vkDestroyShaderModule(device, shaderStages[1].module, nullptr);
-
-
 		return true;
 	}
 
@@ -224,7 +221,7 @@ namespace SmolEngine
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 	}
 
-	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer)
+	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex)
 	{
 		std::vector< VkDescriptorImageInfo> descriptorImageInfos;
 		uint32_t index = 0;
@@ -246,7 +243,7 @@ namespace SmolEngine
 		}
 
 		VkWriteDescriptorSet* samplerSet = nullptr;
-		for (auto& writeSet : m_WriteDescriptorSets)
+		for (auto& writeSet : m_WriteDescriptorSets[setIndex])
 		{
 			if (writeSet.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 			{
@@ -269,15 +266,12 @@ namespace SmolEngine
 				}
 			}
 
-			*samplerSet = VulkanDescriptor::Create(m_DesciptorSet,
+			*samplerSet = VulkanDescriptor::Create(m_DesciptorSets[setIndex],
 				bindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
-			vkUpdateDescriptorSets(VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
-			// Bind descriptor sets describing shader binding points
-			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1,
-				&m_DesciptorSet, 0, nullptr);
+			vkUpdateDescriptorSets(VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets[setIndex].size())
+				, m_WriteDescriptorSets[setIndex].data(), 0, nullptr);
 		}
-
 	}
 
 	const VkPipeline& VulkanPipeline::GetVkPipeline() const
@@ -290,9 +284,9 @@ namespace SmolEngine
 		return m_PipelineLayout;
 	}
 
-	const VkDescriptorSet VulkanPipeline::GetVkDescriptorSet() const
+	const VkDescriptorSet VulkanPipeline::GetVkDescriptorSet(uint32_t setIndex) const
 	{
-		return m_DesciptorSet;
+		return m_DesciptorSets[setIndex];
 	}
 
 	const VkDescriptorSetLayout VulkanPipeline::GetVkDescriptorSetLayout() const
@@ -300,11 +294,12 @@ namespace SmolEngine
 		return m_DescriptorSetLayout;
 	}
 
-	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures)
+	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures, uint32_t DescriptorSets)
 	{
 		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 
 		m_WriteDescriptorSets.clear();
+		m_DesciptorSets.clear();
 		if (m_DescriptorSetLayout != VK_NULL_HANDLE)
 		{
 			vkDestroyDescriptorSetLayout(device, m_DescriptorSetLayout, nullptr);
@@ -349,7 +344,7 @@ namespace SmolEngine
 			descriptorPoolInfo.pNext = nullptr;
 			descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(DescriptorPoolSizes.size());
 			descriptorPoolInfo.pPoolSizes = DescriptorPoolSizes.data();
-			descriptorPoolInfo.maxSets = static_cast<uint32_t>(DescriptorPoolSizes.size());
+			descriptorPoolInfo.maxSets = DescriptorSets;
 
 			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &m_DescriptorPool));
 		}
@@ -417,14 +412,19 @@ namespace SmolEngine
 			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayout));
 		}
 
-		VkDescriptorSetAllocateInfo allocateInfo = {};
+		m_WriteDescriptorSets.resize(DescriptorSets);
+		m_DesciptorSets.resize(DescriptorSets);
+		for (uint32_t i = 0; i < DescriptorSets; ++i)
 		{
-			allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			allocateInfo.descriptorPool = m_DescriptorPool;
-			allocateInfo.descriptorSetCount = 1;
-			allocateInfo.pSetLayouts = &m_DescriptorSetLayout;
+			VkDescriptorSetAllocateInfo allocateInfo = {};
+			{
+				allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+				allocateInfo.descriptorPool = m_DescriptorPool;
+				allocateInfo.descriptorSetCount = 1;
+				allocateInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-			VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocateInfo, &m_DesciptorSet));
+				VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocateInfo, &m_DesciptorSets[i]));
+			}
 		}
 		
 		/// Maybe move somewhere else
@@ -438,8 +438,11 @@ namespace SmolEngine
 				{
 					auto& [bindingPoint, buffer] = uboInfo;
 
-					m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-						buffer.BindingPoint, &buffer.DesriptorBufferInfo));
+					for (uint32_t i = 0; i < DescriptorSets; ++i)
+					{
+						m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
+							buffer.BindingPoint, &buffer.DesriptorBufferInfo));
+					}
 
 					NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
 				}
@@ -482,8 +485,11 @@ namespace SmolEngine
 							}
 						}
 
-						m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-							res.BindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+						for (uint32_t i = 0; i < DescriptorSets; ++i)
+						{
+							m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
+								res.BindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+						}
 
 						NATIVE_WARN("UniformResource: BindingPoint: {}, ArraySize: {}", res.BindingPoint, res.ArraySize);
 					}
@@ -494,8 +500,11 @@ namespace SmolEngine
 							auto& texture = *textures[0];
 							if (texture.IsActive())
 							{
-								m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-									res.BindingPoint, &texture.m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+								for (uint32_t i = 0; i < DescriptorSets; ++i)
+								{
+									m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
+										res.BindingPoint, &texture.m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+								}
 							}
 						}
 						else
@@ -505,8 +514,11 @@ namespace SmolEngine
 							m_ReservedTextures[0] = Texture2D::CreateWhiteTexture()->GetVulkanTexture();
 #endif
 
-							m_WriteDescriptorSets.push_back(VulkanDescriptor::Create(m_DesciptorSet,
-								res.BindingPoint, &m_ReservedTextures[0]->m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+							for (uint32_t i = 0; i < DescriptorSets; ++i)
+							{
+								m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
+									res.BindingPoint, &m_ReservedTextures[0]->m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+							}
 
 						}
 
@@ -515,7 +527,10 @@ namespace SmolEngine
 				}
 			}
 
-			vkUpdateDescriptorSets(device, static_cast<uint32_t>(m_WriteDescriptorSets.size()), m_WriteDescriptorSets.data(), 0, nullptr);
+			for (const auto& writeSet : m_WriteDescriptorSets)
+			{
+				vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeSet.size()), writeSet.data(), 0, nullptr);
+			}
 		}
 	}
 }

@@ -54,6 +54,9 @@ namespace SmolEngine
 		QuadVertex* Base = nullptr;
 		QuadVertex* BasePtr = nullptr;
 
+		uint32_t TextureSlotIndex = 1; // index 0 reserved for white texture
+		std::vector<Ref<Texture2D>> TextureSlots;
+
 		uint32_t IndexCount = 0;
 		uint32_t QuadCount = 0;
 		uint32_t LayerIndex = 0;

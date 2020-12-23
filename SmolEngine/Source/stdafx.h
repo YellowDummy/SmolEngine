@@ -42,6 +42,11 @@
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglShader.h"
 #include "../../SmolEngine/Source/Core/Renderer/OpenGL/OpenglTexture.h"
 
+#ifndef SMOLENGINE_OPENGL_IMPL
+#include "../../SmolEngine/Source/Core/Renderer/Vulkan/Vulkan.h"
+#include "../../SmolEngine/Source/Core/Renderer/Vulkan/VulkanContext.h"
+#endif
+
 #include "Core/ECS/Components/BehaviourComponent.h"
 #include "Core/ECS/Components/Light2DSourceComponent.h"
 

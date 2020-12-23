@@ -84,7 +84,7 @@ namespace SmolEngine
 
 		static void DrawFrameBuffer(const uint32_t colorAttachmentID);
 
-		static const uint32_t MaxTextureSlot = 32; // TODO: get TMU (Texture Mapping Units) at initialization
+		static const uint32_t MaxTextureSlot = 3; // TODO: get TMU (Texture Mapping Units) at initialization
 
 	private:
 
@@ -93,7 +93,7 @@ namespace SmolEngine
 	private:
 
 		static Renderer2DStats* Stats;
-		inline static bool m_RenderPassIsActive = false;
+		inline static bool m_RenderResetted = false;
 
 	private:
 

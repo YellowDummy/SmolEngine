@@ -20,9 +20,9 @@ namespace SmolEngine
 
 		VkSampler sampler;
 		VkDescriptorImageInfo descriptor;
-		void* ImGuiTextureID = nullptr;
-
+		VkClearAttachment clearAttachments[2] = {};
 		VkRenderPass renderPass;
+		void* ImGuiTextureID = nullptr;
 	};
 
 	class VulkanFramebuffer
@@ -63,5 +63,7 @@ namespace SmolEngine
 
 		FramebufferSpecification m_Specification = {};
 		OffscreenPass m_OffscreenPass = {};
+
+		friend class GraphicsPipeline;
 	};
 }

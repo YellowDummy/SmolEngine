@@ -60,7 +60,7 @@ namespace SmolEngine
 		uint32_t indices[6] = { 0, 1, 2,  2, 3, 0 };
 		IndexBufferCreateInfo indexBufferCI = {};
 		{
-			indexBufferCI.Count = 6;
+			indexBufferCI.IndicesCount = 6;
 			indexBufferCI.Indices = indices;
 		}
 

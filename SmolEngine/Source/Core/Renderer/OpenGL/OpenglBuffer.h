@@ -70,7 +70,9 @@ namespace SmolEngine
 		
 		void Init(uint32_t* indices, uint32_t count);
 
-		void Destroy();
+		void UploadData(uint32_t* indices, uint32_t count) const;
+
+		void Destroy() const;
 
 		/// 
 		/// Binding

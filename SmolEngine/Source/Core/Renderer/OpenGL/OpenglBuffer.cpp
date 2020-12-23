@@ -75,7 +75,13 @@ namespace SmolEngine
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 
-	void OpenglIndexBuffer::Destroy()
+	void OpenglIndexBuffer::UploadData(uint32_t* indices, uint32_t count) const
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_DYNAMIC_DRAW);
+	}
+
+	void OpenglIndexBuffer::Destroy() const
 	{
 		glDeleteBuffers(1, &m_RendererID);
 	}

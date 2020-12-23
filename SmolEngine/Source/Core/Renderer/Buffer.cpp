@@ -66,6 +66,15 @@ namespace SmolEngine
 
 	}
 
+	void IndexBuffer::UploadData(uint32_t* indices, uint32_t count)
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+		m_OpenglIndexBuffer.UploadData(indices, count);
+#else
+		m_VulkanIndexBuffer.SetData(indices, count);
+#endif
+	}
+
 	void IndexBuffer::Destory()
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
