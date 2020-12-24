@@ -96,7 +96,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -120,7 +120,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -148,7 +148,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;SMOLENGINE_OPENGL_IMPL;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -172,7 +172,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -557,6 +557,10 @@
     <ClInclude Include="Libraries\glm\glm\vec3.hpp" />
     <ClInclude Include="Libraries\glm\glm\vec4.hpp" />
     <ClInclude Include="Libraries\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="Libraries\imgizmo\src\ImCurveEdit.h" />
+    <ClInclude Include="Libraries\imgizmo\src\ImGradient.h" />
+    <ClInclude Include="Libraries\imgizmo\src\ImGuizmo.h" />
+    <ClInclude Include="Libraries\imgizmo\src\ImSequencer.h" />
     <ClInclude Include="Libraries\stb_image\stb_image.h" />
     <ClInclude Include="Libraries\stb_image\stb_image_write.h" />
     <ClInclude Include="Lua\LuaBridge\List.h" />
@@ -716,6 +720,10 @@
     <ClInclude Include="Source\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp" />
+    <ClCompile Include="Libraries\imgizmo\src\ImGradient.cpp" />
+    <ClCompile Include="Libraries\imgizmo\src\ImGuizmo.cpp" />
+    <ClCompile Include="Libraries\imgizmo\src\ImSequencer.cpp" />
     <ClCompile Include="Libraries\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Core\Animation\Animation2DFrameKey.cpp" />
     <ClCompile Include="Source\Core\Animation\AnimationClip.cpp" />
@@ -851,4 +859,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project> 
+</Project>

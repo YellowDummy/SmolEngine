@@ -23,6 +23,7 @@ IncludeDir["entt"] = "SmolEngine/Libraries/entt"
 IncludeDir["yojimbo"] = "SmolEngine/Libraries/yojimbo"
 IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src"
 IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
+IncludeDir["imgizmo"] = "SmolEngine/Libraries/imgizmo/src"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -52,13 +53,26 @@ project "SmolEngine"
 	{
 		"%{prj.name}/Source/**.h",
 		"%{prj.name}/Source/**.cpp",
+
 		"%{prj.name}/Libraries/glm/glm/**.hpp",
 		"%{prj.name}/Libraries/glm/glm/**.inl",
+
 		"%{prj.name}/Libraries/stb_image/**.h",
 		"%{prj.name}/Libraries/stb_image/**.cpp",
+
+		"%{prj.name}/Libraries/imgizmo/src/ImGuizmo.h",
+		"%{prj.name}/Libraries/imgizmo/src/ImGuizmo.cpp",
+		"%{prj.name}/Libraries/imgizmo/src/ImCurveEdit.h",
+		"%{prj.name}/Libraries/imgizmo/src/ImGradient.h",
+		"%{prj.name}/Libraries/imgizmo/src/ImGradient.cpp",
+		"%{prj.name}/Libraries/imgizmo/src/ImCurveEdit.cpp",
+		"%{prj.name}/Libraries/imgizmo/src/ImSequencer.h",
+		"%{prj.name}/Libraries/imgizmo/src/ImSequencer.cpp",
+
 		"%{prj.name}/Lua/**.cpp",
 		"%{prj.name}/Lua/**.h",
 		"%{prj.name}/Lua/**.hpp"
+
 	}
 
 	includedirs
@@ -80,7 +94,8 @@ project "SmolEngine"
         "%{IncludeDir.entt}",
 		"%{IncludeDir.yojimbo}",
 		"%{IncludeDir.rttr}",
-		"%{IncludeDir.vulkan}"
+		"%{IncludeDir.vulkan}",
+		"%{IncludeDir.imgizmo}",
 	}
 
 	links 
@@ -356,7 +371,8 @@ project "GameX"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.yojimbo}",
 		"%{IncludeDir.rttr}",
-		"%{IncludeDir.vulkan}"
+		"%{IncludeDir.vulkan}",
+		"%{IncludeDir.imgizmo}",
 	}
 
 	links
