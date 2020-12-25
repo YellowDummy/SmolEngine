@@ -10,8 +10,11 @@
 #include "Core/Animation/AnimationClip.h"
 
 #include <imgui/imgui.h>
+#include <glm/glm.hpp>
+#include <ImGuizmo.h>
 
 #include "Core/ImGui/FileBrowser/imfilebrowser.h"
+
 
 namespace SmolEngine
 {
@@ -125,7 +128,19 @@ namespace SmolEngine
 
 		void DrawLight2D(Light2DSourceComponent* light);
 
+		void DrawSceneView(bool enabled);
+
+		void DrawGameView(bool enabled);
+
+		void DrawInspector();
+
+		void DrawHierarchy();
+
 		///
+
+		void UpdateFileBrowser(bool& showAnimPanel);
+
+		bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale);
 
 	private:
 
@@ -161,6 +176,8 @@ namespace SmolEngine
 		static std::string m_TempActorName;
 		static std::string m_TempActorTag;
 		static std::string m_TempString;
+
+		inline static ImGuizmo::OPERATION m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 		//TEMP 
 

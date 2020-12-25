@@ -191,8 +191,6 @@ namespace SmolEngine
 
 		OnSystemTick(deltaTime);
 
-		return;
-
 		// Binding Framebuffer
 
 		FramebufferSComponent::Get()[0]->Bind(); // 0 is default framebuffer

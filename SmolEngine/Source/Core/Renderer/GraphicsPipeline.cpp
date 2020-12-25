@@ -48,8 +48,12 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
+		for (uint32_t i = 0; i < m_VertexBuffers.size(); ++i)
+		{
+			m_VertexBuffers[i]->SetLayout(*pipelineInfo->VertexBuffer->BufferLayot);
+		}
+
 		m_VextexArray = VertexArray::Create();
-		m_VertexBuffers[0]->SetLayout(*pipelineInfo->VertexBuffer->BufferLayot);
 		m_VextexArray->SetVertexBuffer(m_VertexBuffers[0]);
 		m_VextexArray->SetIndexBuffer(m_IndexBuffers[0]);
 #else

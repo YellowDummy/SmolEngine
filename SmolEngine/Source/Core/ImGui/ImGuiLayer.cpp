@@ -17,6 +17,7 @@
 #include "Core/EventHandler.h"
 #include "Core/Application.h"
 #include "IconsFontAwesome5.h"
+#include "ImGuizmo.h"
 #include "Core/Window.h"
 
 #include "NodeEditor/imnodes.h"
@@ -195,6 +196,7 @@ namespace SmolEngine
 #endif
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 

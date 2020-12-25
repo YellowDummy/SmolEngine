@@ -17,6 +17,7 @@
 #include "Core/UI/UIButton.h"
 #include "Core/UI/UITextLabel.h"
 #include "Core/Renderer/Text.h"
+#include "Core/Input.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -26,6 +27,10 @@
 #include <cereal/archives/json.hpp>
 
 #include "Core/ImGui/NodeEditor/imnodes.h"
+#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -63,13 +68,13 @@ namespace SmolEngine
 
 		auto camera = m_Scene->CreateActor(ActorBaseType::CameraBase, "Camera", "Default");
 
-		auto actor = m_Scene->CreateActor(ActorBaseType::PhysicsBase, "Pawn");
+		auto actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, "Pawn");
 
-		//actor->GetDefaultBaseTuple()->Light2D.isEnabled = true;
-		//actor->GetDefaultBaseTuple()->Light2D.Color = { 0.8f, 0.6f, 0.4f, 1.0f };
+		actor->GetDefaultBaseTuple()->Light2D.isEnabled = true;
+		actor->GetDefaultBaseTuple()->Light2D.Color = { 0.8f, 0.6f, 0.4f, 1.0f };
 
 
-	   // m_Scene->AddTuple<ResourceTuple>(*actor);
+	   m_Scene->AddTuple<ResourceTuple>(*actor);
 	}
 
 	void EditorLayer::OnDetach()
@@ -369,75 +374,8 @@ namespace SmolEngine
 			}
 		}
 
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-			ImGui::Begin("Scene View");
-			{
-
-				if (ImGui::IsWindowFocused()) { isSceneViewFocused = true; }
-				else { isSceneViewFocused = false; }
-
-				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
-
-				auto& frameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
-				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-
-				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
-				{
-					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
-				}
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-
-				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
-#else
-				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
-#endif // SMOLENGINE_OPENGL_IMPL
-
-			}
-			ImGui::End();
-			ImGui::PopStyleVar();
-		}
-
-		if (showGameView)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-			ImGui::Begin("Game View", &showGameView);
-			{
-				ImGui::SetWindowSize("Game View", { 720.0f, 480.0f });
-
-				m_GameViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
-
-				if (ImGui::IsWindowFocused()) { isGameViewFocused = true; }
-				else { isGameViewFocused = false; }
-
-				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-
-				if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
-				{
-					m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
-				}
-
-				auto framebuffer = FramebufferSComponent::Get()[0];
-				if (framebuffer)
-				{
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-					ImGui::Image(framebuffer->GetImGuiTextureID(),
-						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-#else
-					ImGui::Image(framebuffer->GetImGuiTextureID(),
-						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y });
-#endif
-				}
-			}
-
-			ImGui::End();
-			ImGui::PopStyleVar();
-
-		}
+		DrawSceneView(true);
+		DrawGameView(showGameView);
 
 		// TEMP
 
@@ -470,621 +408,11 @@ namespace SmolEngine
 			ImGui::End();
 		}
 
-		ImGui::Begin("Hierarchy");
-		{
-			static char name[128];
-			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
-			ImGui::Separator();
-
-			std::string sceneStr;
-
-			if (m_Scene->GetSceneData().m_Name == std::string(""))
-			{
-				sceneStr = "Scene (" + std::to_string(m_Scene->GetSceneData().m_ID) + ")";
-			}
-			else
-			{
-				sceneStr = "Scene (" + m_Scene->GetSceneData().m_Name + ")";
-			}
-
-			ImGui::BeginChild("Scene");
-			{
-
-				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-				{
-					for (const auto& actor : m_Scene->GetSortedActorList())
-					{
-						if (ImGui::TreeNodeEx(actor->GetName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
-						{
-
-							ImGui::TreePop();
-						}
-
-
-						if (ImGui::IsItemClicked(1))
-						{
-							m_SelectionFlags = SelectionFlags::Actions;
-
-							m_TempActorTag = "";
-							m_TempActorName = "";
-
-							m_SelectedActor = nullptr;
-							m_SelectedActor = actor;
-						}
-
-						if (ImGui::IsItemClicked())
-						{
-							m_SelectionFlags = SelectionFlags::Inspector;
-							if (m_SelectedActor != nullptr)
-							{
-								m_SelectedActor->m_showComponentUI = false;
-								m_SelectedActor = nullptr;
-							}
-
-							m_TempActorTag = "";
-							m_TempActorName = "";
-
-							m_SelectedActor = actor;
-						}
-
-					}
-
-					ImGui::TreePop();
-				}
-
-				if (m_SelectionFlags == SelectionFlags::Actions)
-				{
-					ImGui::OpenPopup("ActionPopup");
-					m_SelectionFlags = SelectionFlags::None;
-				}
-
-				if (ImGui::BeginPopup("ActionPopup"))
-				{
-					ImGui::MenuItem(m_SelectedActor->GetName().c_str(), NULL, false, false);
-					ImGui::Separator();
-
-					if (ImGui::MenuItem("Save")) {}
-					if (ImGui::MenuItem("Save as", "Ctrl+O")) {}
-
-
-					if (ImGui::MenuItem("Dublicate", "Ctrl+C"))
-					{
-
-					}
-
-					if (ImGui::MenuItem("Delete"))
-					{
-						m_Scene->DeleteActor(m_SelectedActor);
-					}
-
-					ImGui::EndPopup();
-				}
-			}
-			ImGui::EndChild();
-		}
-		ImGui::End();
-
-		ImGui::Begin("Inspector");
-		{
-			ImGui::BeginChild("InspectorChild");
-
-			if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
-			{
-				ImGui::Text("No Actor selected");
-			}
-			else
-			{
-				std::stringstream ss;
-
-				switch (m_SelectedActor->ActorType)
-				{
-				case ActorBaseType::DefaultBase:
-				{
-					ss << "Default Actor";
-
-					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
-					ImGui::TextUnformatted(ss.str().c_str());
-
-					auto ref = m_SelectedActor->GetDefaultBaseTuple();
-
-					ImGui::Separator();
-					ImGui::NewLine();
-
-					// Head
-
-					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						{
-							DrawInfo(&ref->Info);
-						}
-					}
-
-					ImGui::NewLine();
-
-					// Transform 
-
-					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-						DrawTransform(&ref->Transform);
-					}
-
-					ImGui::NewLine();
-
-					// Texture2D
-
-					if (ImGui::CollapsingHeader("Texture2D", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawTexture(&ref->Texture);
-					}
-
-					ImGui::NewLine();
-
-					// Light2D
-
-					if (ImGui::CollapsingHeader("Light 2D", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawLight2D(&ref->Light2D);
-					}
-
-					ImGui::NewLine();
-
-					break;
-				}
-				case ActorBaseType::PhysicsBase:
-				{
-					ss << "Physics Actor";
-
-					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
-					ImGui::TextUnformatted(ss.str().c_str());
-
-					auto ref = m_SelectedActor->GetPhysicsBaseTuple();
-
-					ImGui::Separator();
-					ImGui::NewLine();
-
-					// Head
-
-					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						{
-							DrawInfo(&ref->Info);
-						}
-					}
-
-					ImGui::NewLine();
-
-					// Transform 
-
-					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-						DrawTransform(&ref->Transform);
-					}
-
-					ImGui::NewLine();
-
-					// Texture2D
-
-					if (ImGui::CollapsingHeader("Texture2D", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawTexture(&ref->Texture);
-					}
-
-					ImGui::NewLine();
-
-					// Light2D
-
-					if (ImGui::CollapsingHeader("Light 2D", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawLight2D(&ref->Light2D);
-					}
-
-					ImGui::NewLine();
-
-					// Body2D
-
-					if (ImGui::CollapsingHeader("Rigidbody2D", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawBody2D(&ref->Body);
-
-					}
-
-					ImGui::NewLine();
-
-					break;
-				}
-				case ActorBaseType::CameraBase:
-				{
-					ss << "Camera Actor";
-
-					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
-					ImGui::TextUnformatted(ss.str().c_str());
-
-					auto ref = m_SelectedActor->GetCameraBaseTuple();
-
-					ImGui::Separator();
-					ImGui::NewLine();
-
-					// Head
-
-					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						{
-							DrawInfo(&ref->Info);
-						}
-					}
-
-					ImGui::NewLine();
-
-					// Transform 
-
-					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-						DrawTransform(&ref->Transform);
-					}
-
-					ImGui::NewLine();
-
-					// Camera
-
-					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawCamera(&ref->Camera);
-					}
-
-					ImGui::NewLine();
-
-					// Canvas
-
-					if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						DrawCanvas(&ref->Canvas);
-					}
-
-					ImGui::NewLine();
-
-					break;
-				}
-				default:
-					break;
-				}
-
-				if (m_Scene->HasTuple<ResourceTuple>(*m_SelectedActor))
-				{
-					auto reTuple = m_Scene->GetTuple<ResourceTuple>(*m_SelectedActor);
-
-					if (ImGui::CollapsingHeader("Animation 2D", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						DrawAnimation2D(&reTuple->Animation2D);
-
-					}
-
-					ImGui::NewLine();
-
-					if (ImGui::CollapsingHeader("Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						DrawAudioSource(&reTuple->AudioSource);
-					}
-
-					ImGui::NewLine();
-				}
-
-				if (m_Scene->HasTuple<BehaviourComponent>(*m_SelectedActor))
-				{
-					auto behaviourRef = m_Scene->GetTuple<BehaviourComponent>(*m_SelectedActor);
-
-					if (ImGui::CollapsingHeader(behaviourRef->SystemName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-
-						ImGui::Extensions::Text("System Type", "C++ Script");
-
-						ImGui::NewLine();
-
-						DrawBehaviorComponent(behaviourRef);
-					}
-
-					ImGui::NewLine();
-				}
-
-				ImGui::Separator();
-				ImGui::NewLine();
-
-				if (!m_SelectedActor->m_showComponentUI)
-				{
-					if (ImGui::Button("Add System", { ImGui::GetWindowSize().x - 10.0f, 30 }))
-					{
-						m_SelectedActor->m_showComponentUI = true;
-					}
-
-				}
-				else
-				{
-					std::vector<std::string> list;
-
-					uint16_t actorType = (uint16_t)m_SelectedActor->ActorType;
-
-					if (m_SelectedActor->ActorType != ActorBaseType::CameraBase)
-					{
-						list.push_back("Resource System");
-					}
-
-					for (const auto& pair : SystemRegistry::Get()->m_SystemMap)
-					{
-						const auto& [name, type] = pair;
-						if (actorType == type)
-						{
-							list.push_back(name);
-						}
-					}
-
-					static std::string name;
-					ImGui::PushID("SystemSearch");
-					ImGui::Extensions::InputRawString("Search", name, "System");
-					ImGui::PopID();
-					ImGui::NewLine();
-
-					ImGui::BeginChild("SystemText", { ImGui::GetWindowSize().x - 30.0f, 200 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
-					for (auto str : list)
-					{
-						auto result = str.find(name);
-						if (result == std::string::npos)
-						{
-							continue;
-						}
-
-						bool selected = false;
-
-						if (ImGui::Selectable(str.c_str(), selected))
-						{
-							name = str;
-						}
-
-						if (ImGui::IsItemClicked(0))
-						{
-							selected = true;
-						}
-					}
-
-					ImGui::EndChild();
-
-					ImGui::NewLine();
-
-					if (ImGui::Button("Add", { ImGui::GetWindowSize().x - 30.0f, 30 }))
-					{
-						if (name == "Resource System")
-						{
-							m_Scene->AddTuple<ResourceTuple>(*m_SelectedActor);
-						}
-						else
-						{
-							m_Scene->AddBehaviour(name, m_SelectedActor);
-						}
-
-						name = "";
-						m_SelectedActor->m_showComponentUI = false;
-					}
-
-				}
-			}
-
-			ImGui::NewLine();
-			ImGui::NewLine();
-
-			ImGui::EndChild();
-		}
-
-		ImGui::End();
+		DrawHierarchy();
+		DrawInspector();
 
 		m_FileBrowser->Display();
-
-		if (m_FileBrowser->HasSelected())
-		{
-			m_FilePath = m_FileBrowser->GetSelected().u8string();
-			m_FileName = m_FileBrowser->GetSelected().filename().u8string();
-
-			switch (m_FileBrowserState)
-			{
-			case FileBrowserFlags::Load_Jinx_Script:
-
-				ResetFileBrowser();
-				break;
-
-			case FileBrowserFlags::Load_Texture2D:
-			{
-				switch (m_SelectedActor->ActorType)
-				{
-				case ActorBaseType::DefaultBase:
-				{
-					auto ref = m_SelectedActor->GetDefaultBaseTuple();
-
-					m_Scene->DeleteAsset(ref->Texture.FileName);
-
-					ref->Texture.FileName = m_FileName;
-					ref->Texture.Texture = Texture2D::Create(m_FilePath);
-
-					m_Scene->AddAsset(m_FileName, m_FilePath);
-
-					break;
-				}
-				case ActorBaseType::PhysicsBase:
-				{
-					auto ref = m_SelectedActor->GetPhysicsBaseTuple();
-
-					m_Scene->DeleteAsset(ref->Texture.FileName);
-
-					ref->Texture.FileName = m_FileName;
-					ref->Texture.Texture = Texture2D::Create(m_FilePath);
-
-					m_Scene->AddAsset(m_FileName, m_FilePath);
-
-					break;
-				}
-				default:
-
-					break;
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Scene_Create:
-			{
-				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
-
-				m_SelectedActor = nullptr;
-				m_Scene->CreateScene(m_FilePath, m_FileName);
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Scene_Save:
-			{
-				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
-
-				m_Scene->GetSceneData().m_filePath = m_FilePath;
-				m_Scene->GetSceneData().m_fileName = m_FileName;
-				m_Scene->Save(m_FilePath);
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Scene_Load:
-			{
-				m_SelectedActor = nullptr;
-
-				m_Scene->Load(m_FilePath);
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Load_Animation_Clip:
-			{
-				m_AnimationPanel->Load(m_FilePath);
-				ResetFileBrowser();
-				showAnimationPanel = true;
-
-				break;
-			}
-			case FileBrowserFlags::Load_Audio_Clip:
-			{
-				auto clip = std::make_shared<AudioClip>();
-				auto tuple = m_Scene->GetTuple<ResourceTuple>(*m_SelectedActor);
-
-				if (tuple != nullptr)
-				{
-					std::stringstream ss;
-					ss << "New Audio Clip #" << tuple->AudioSource.AudioClips.size();
-
-					clip->FileName = m_FileName;
-					clip->FilePath = m_FilePath;
-					clip->ClipName = ss.str();
-
-					if (AudioSystem::AddClip(tuple->AudioSource, clip))
-					{
-						m_Scene->AddAsset(m_FileName, m_FilePath);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Canvas_Chanage_Button_Texture:
-			{
-				auto camera = m_SelectedActor->GetCameraBaseTuple();
-				if (camera != nullptr)
-				{
-					auto button = UISystem::GetButton(camera->Canvas, m_IDBuffer);
-					if (button != nullptr)
-					{
-						m_Scene->DeleteAsset(button->m_TetxureName);
-
-						m_Scene->AddAsset(m_FileName, m_FilePath);
-						button->Init(m_FilePath, m_FileName);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Canavas_Create_TextLabel:
-			{
-				auto camera = m_SelectedActor->GetCameraBaseTuple();
-				if (camera != nullptr)
-				{
-					auto element = UISystem::AddElement(camera->Canvas, UIElementType::TextLabel);
-					auto textLabel = std::static_pointer_cast<UITextLabel>(element);
-
-					m_Scene->AddAsset(m_FileName, m_FilePath);
-					textLabel->Init(m_FilePath, m_FileName);
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Canavas_TextLabel_Load_Font:
-			{
-				auto camera = m_SelectedActor->GetCameraBaseTuple();
-				if (camera != nullptr)
-				{
-					auto text = UISystem::GetTextLabel(camera->Canvas, m_IDBuffer);
-					if (text != nullptr)
-					{
-						m_Scene->DeleteAsset(text->m_FontName);
-
-						text->m_FontFilePath = m_FilePath;
-						text->m_FontName = m_FileName;
-						text->SetFont(m_FilePath);
-
-						m_Scene->AddAsset(m_FileName, m_FilePath);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Load_Animation_Clip_Inspector:
-			{
-				auto resRef = m_Scene->GetTuple<ResourceTuple>(m_SelectedActor->Entity);
-				if (resRef)
-				{
-					if (Animation2DSystem::LoadClip(resRef->Animation2D, m_FilePath))
-					{
-						m_Scene->AddAsset(m_FileName, m_FilePath);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			default:
-				break;
-			}
-		}
-
-
+		UpdateFileBrowser(showAnimationPanel);
 		ImGui::End();
 
 	}
@@ -1541,6 +869,836 @@ namespace SmolEngine
 		ImGui::NewLine();
 
 		ImGui::Extensions::CheckBox("Is Enabled?", light->isEnabled, 130.0f, "2DLightPanel");
+	}
+
+	void EditorLayer::DrawSceneView(bool enabled)
+	{
+		bool snap = false;
+		float snapValue = 0.5f;
+		if (Input::IsKeyPressed(KeyCode::LeftShift))
+		{
+			snap = true;
+		}
+		if (Input::IsKeyPressed(KeyCode::Z))
+		{
+			m_GizmoOperation = ImGuizmo::OPERATION::SCALE;
+		}
+		if (Input::IsKeyPressed(KeyCode::Q))
+		{
+			m_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
+			snapValue = 45.0f;
+		}
+		if (Input::IsKeyPressed(KeyCode::E))
+		{
+			m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+		}
+
+		if (enabled)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
+			ImGui::Begin("Scene View", &enabled);
+			{
+
+				if (ImGui::IsWindowFocused()) { isSceneViewFocused = true; }
+				else { isSceneViewFocused = false; }
+
+				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+
+				auto& frameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
+				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
+
+				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
+				{
+					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+					m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
+				}
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
+#else
+				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
+#endif // SMOLENGINE_OPENGL_IMPL
+
+				// Gizmos
+				if (m_SelectedActor != nullptr)
+				{
+					auto tuple = m_SelectedActor->GetDefaultBaseTuple();
+					if (tuple)
+					{
+						ImGuizmo::SetOrthographic(true);
+						ImGuizmo::SetDrawlist();
+
+						float width = (float)ImGui::GetWindowSize().x;
+						float height = (float)ImGui::GetWindowSize().y;
+
+						ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
+
+						auto& camera = m_Scene->m_EditorCamera->GetCamera();
+
+						glm::mat4 rot = rotate(glm::mat4(1.0f), tuple->Transform.Rotation.x, { 1, 0, 0 }) *
+							rotate(glm::mat4(1.0f), tuple->Transform.Rotation.y, { 0, 1, 0 }) *
+							rotate(glm::mat4(1.0f), tuple->Transform.Rotation.z, { 0, 0, 1 });
+
+						glm::mat4 tranform = glm::translate(glm::mat4(1.0f), tuple->Transform.WorldPos) *
+							rot * glm::scale(glm::mat4(1.0f), { tuple->Transform.Scale });
+
+						float snapValues[3] = { snapValue, snapValue, snapValue };
+
+						ImGuizmo::Manipulate(glm::value_ptr(camera->GetViewMatrix()), glm::value_ptr(camera->GetProjectionMatrix()),
+							m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(tranform), nullptr, snap ? snapValues: nullptr);
+
+						if (ImGuizmo::IsUsing())
+						{
+							glm::vec3 tranlation, rotation, scale;
+							DecomposeTransform(tranform, tranlation, rotation, scale);
+							glm::vec3 deltaRot = rotation - tuple->Transform.Rotation;
+
+							tuple->Transform.WorldPos = tranlation;
+							tuple->Transform.Rotation.x += deltaRot.x;
+							tuple->Transform.Scale = scale;
+						}
+					}
+				}
+			}
+			ImGui::End();
+			ImGui::PopStyleVar();
+		}
+	}
+
+	void EditorLayer::DrawGameView(bool enabled)
+	{
+		if (enabled)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
+			ImGui::Begin("Game View", &enabled);
+			{
+				ImGui::SetWindowSize("Game View", { 720.0f, 480.0f });
+
+				m_GameViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+
+				if (ImGui::IsWindowFocused()) { isGameViewFocused = true; }
+				else { isGameViewFocused = false; }
+
+				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
+
+				if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
+				{
+					m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+					m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
+				}
+
+				auto framebuffer = FramebufferSComponent::Get()[0];
+				if (framebuffer)
+				{
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+					ImGui::Image(framebuffer->GetImGuiTextureID(),
+						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+#else
+					ImGui::Image(framebuffer->GetImGuiTextureID(),
+						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y });
+#endif
+				}
+			}
+
+			ImGui::End();
+			ImGui::PopStyleVar();
+
+		}
+	}
+
+	void EditorLayer::DrawInspector()
+	{
+		ImGui::Begin("Inspector");
+		{
+			ImGui::BeginChild("InspectorChild");
+
+			if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
+			{
+				ImGui::Text("No Actor selected");
+			}
+			else
+			{
+				std::stringstream ss;
+
+				switch (m_SelectedActor->ActorType)
+				{
+				case ActorBaseType::DefaultBase:
+				{
+					ss << "Default Actor";
+
+					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+					ImGui::TextUnformatted(ss.str().c_str());
+
+					auto ref = m_SelectedActor->GetDefaultBaseTuple();
+
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					// Head
+
+					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						{
+							DrawInfo(&ref->Info);
+						}
+					}
+
+					ImGui::NewLine();
+
+					// Transform 
+
+					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+						DrawTransform(&ref->Transform);
+					}
+
+					ImGui::NewLine();
+
+					// Texture2D
+
+					if (ImGui::CollapsingHeader("Texture2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawTexture(&ref->Texture);
+					}
+
+					ImGui::NewLine();
+
+					// Light2D
+
+					if (ImGui::CollapsingHeader("Light 2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawLight2D(&ref->Light2D);
+					}
+
+					ImGui::NewLine();
+
+					break;
+				}
+				case ActorBaseType::PhysicsBase:
+				{
+					ss << "Physics Actor";
+
+					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+					ImGui::TextUnformatted(ss.str().c_str());
+
+					auto ref = m_SelectedActor->GetPhysicsBaseTuple();
+
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					// Head
+
+					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						{
+							DrawInfo(&ref->Info);
+						}
+					}
+
+					ImGui::NewLine();
+
+					// Transform 
+
+					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+						DrawTransform(&ref->Transform);
+					}
+
+					ImGui::NewLine();
+
+					// Texture2D
+
+					if (ImGui::CollapsingHeader("Texture2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawTexture(&ref->Texture);
+					}
+
+					ImGui::NewLine();
+
+					// Light2D
+
+					if (ImGui::CollapsingHeader("Light 2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawLight2D(&ref->Light2D);
+					}
+
+					ImGui::NewLine();
+
+					// Body2D
+
+					if (ImGui::CollapsingHeader("Rigidbody2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawBody2D(&ref->Body);
+
+					}
+
+					ImGui::NewLine();
+
+					break;
+				}
+				case ActorBaseType::CameraBase:
+				{
+					ss << "Camera Actor";
+
+					ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.6f);
+					ImGui::TextUnformatted(ss.str().c_str());
+
+					auto ref = m_SelectedActor->GetCameraBaseTuple();
+
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					// Head
+
+					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						{
+							DrawInfo(&ref->Info);
+						}
+					}
+
+					ImGui::NewLine();
+
+					// Transform 
+
+					if (ImGui::CollapsingHeader("Tranform", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+						DrawTransform(&ref->Transform);
+					}
+
+					ImGui::NewLine();
+
+					// Camera
+
+					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawCamera(&ref->Camera);
+					}
+
+					ImGui::NewLine();
+
+					// Canvas
+
+					if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						DrawCanvas(&ref->Canvas);
+					}
+
+					ImGui::NewLine();
+
+					break;
+				}
+				default:
+					break;
+				}
+
+				if (m_Scene->HasTuple<ResourceTuple>(*m_SelectedActor))
+				{
+					auto reTuple = m_Scene->GetTuple<ResourceTuple>(*m_SelectedActor);
+
+					if (ImGui::CollapsingHeader("Animation 2D", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						DrawAnimation2D(&reTuple->Animation2D);
+
+					}
+
+					ImGui::NewLine();
+
+					if (ImGui::CollapsingHeader("Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						DrawAudioSource(&reTuple->AudioSource);
+					}
+
+					ImGui::NewLine();
+				}
+
+				if (m_Scene->HasTuple<BehaviourComponent>(*m_SelectedActor))
+				{
+					auto behaviourRef = m_Scene->GetTuple<BehaviourComponent>(*m_SelectedActor);
+
+					if (ImGui::CollapsingHeader(behaviourRef->SystemName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::NewLine();
+
+						ImGui::Extensions::Text("System Type", "C++ Script");
+
+						ImGui::NewLine();
+
+						DrawBehaviorComponent(behaviourRef);
+					}
+
+					ImGui::NewLine();
+				}
+
+				ImGui::Separator();
+				ImGui::NewLine();
+
+				if (!m_SelectedActor->m_showComponentUI)
+				{
+					if (ImGui::Button("Add System", { ImGui::GetWindowSize().x - 10.0f, 30 }))
+					{
+						m_SelectedActor->m_showComponentUI = true;
+				}
+
+			}
+				else
+				{
+					std::vector<std::string> list;
+
+					uint16_t actorType = (uint16_t)m_SelectedActor->ActorType;
+
+					if (m_SelectedActor->ActorType != ActorBaseType::CameraBase)
+					{
+						list.push_back("Resource System");
+					}
+
+					for (const auto& pair : SystemRegistry::Get()->m_SystemMap)
+					{
+						const auto& [name, type] = pair;
+						if (actorType == type)
+						{
+							list.push_back(name);
+						}
+					}
+
+					static std::string name;
+					ImGui::PushID("SystemSearch");
+					ImGui::Extensions::InputRawString("Search", name, "System");
+					ImGui::PopID();
+					ImGui::NewLine();
+
+					ImGui::BeginChild("SystemText", { ImGui::GetWindowSize().x - 30.0f, 200 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+					for (auto str : list)
+					{
+						auto result = str.find(name);
+						if (result == std::string::npos)
+						{
+							continue;
+						}
+
+						bool selected = false;
+
+						if (ImGui::Selectable(str.c_str(), selected))
+						{
+							name = str;
+						}
+
+						if (ImGui::IsItemClicked(0))
+						{
+							selected = true;
+						}
+					}
+
+					ImGui::EndChild();
+
+					ImGui::NewLine();
+
+					if (ImGui::Button("Add", { ImGui::GetWindowSize().x - 30.0f, 30 }))
+					{
+						if (name == "Resource System")
+						{
+							m_Scene->AddTuple<ResourceTuple>(*m_SelectedActor);
+						}
+						else
+						{
+							m_Scene->AddBehaviour(name, m_SelectedActor);
+						}
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						}
+
+					}
+				}
+
+			ImGui::NewLine();
+			ImGui::NewLine();
+
+			ImGui::EndChild();
+		}
+
+		ImGui::End();
+	}
+
+	void EditorLayer::DrawHierarchy()
+	{
+		ImGui::Begin("Hierarchy");
+		{
+			static char name[128];
+			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
+			ImGui::Separator();
+
+			std::string sceneStr;
+
+			if (m_Scene->GetSceneData().m_Name == std::string(""))
+			{
+				sceneStr = "Scene (" + std::to_string(m_Scene->GetSceneData().m_ID) + ")";
+			}
+			else
+			{
+				sceneStr = "Scene (" + m_Scene->GetSceneData().m_Name + ")";
+			}
+
+			ImGui::BeginChild("Scene");
+			{
+
+				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					for (const auto& actor : m_Scene->GetSortedActorList())
+					{
+						if (ImGui::TreeNodeEx(actor->GetName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+						{
+
+							ImGui::TreePop();
+						}
+
+
+						if (ImGui::IsItemClicked(1))
+						{
+							m_SelectionFlags = SelectionFlags::Actions;
+
+							m_TempActorTag = "";
+							m_TempActorName = "";
+
+							m_SelectedActor = nullptr;
+							m_SelectedActor = actor;
+						}
+
+						if (ImGui::IsItemClicked())
+						{
+							m_SelectionFlags = SelectionFlags::Inspector;
+							if (m_SelectedActor != nullptr)
+							{
+								m_SelectedActor->m_showComponentUI = false;
+								m_SelectedActor = nullptr;
+							}
+
+							m_TempActorTag = "";
+							m_TempActorName = "";
+
+							m_SelectedActor = actor;
+						}
+
+					}
+
+					ImGui::TreePop();
+				}
+
+				if (m_SelectionFlags == SelectionFlags::Actions)
+				{
+					ImGui::OpenPopup("ActionPopup");
+					m_SelectionFlags = SelectionFlags::None;
+				}
+
+				if (ImGui::BeginPopup("ActionPopup"))
+				{
+					ImGui::MenuItem(m_SelectedActor->GetName().c_str(), NULL, false, false);
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Save")) {}
+					if (ImGui::MenuItem("Save as", "Ctrl+O")) {}
+
+
+					if (ImGui::MenuItem("Dublicate", "Ctrl+C"))
+					{
+
+					}
+
+					if (ImGui::MenuItem("Delete"))
+					{
+						m_Scene->DeleteActor(m_SelectedActor);
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+			ImGui::EndChild();
+		}
+		ImGui::End();
+	}
+
+	void EditorLayer::UpdateFileBrowser(bool& showAnimPanel)
+	{
+		if (m_FileBrowser->HasSelected())
+		{
+			m_FilePath = m_FileBrowser->GetSelected().u8string();
+			m_FileName = m_FileBrowser->GetSelected().filename().u8string();
+
+			switch (m_FileBrowserState)
+			{
+			case FileBrowserFlags::Load_Jinx_Script:
+
+				ResetFileBrowser();
+				break;
+
+			case FileBrowserFlags::Load_Texture2D:
+			{
+				switch (m_SelectedActor->ActorType)
+				{
+				case ActorBaseType::DefaultBase:
+				{
+					auto ref = m_SelectedActor->GetDefaultBaseTuple();
+
+					m_Scene->DeleteAsset(ref->Texture.FileName);
+
+					ref->Texture.FileName = m_FileName;
+					ref->Texture.Texture = Texture2D::Create(m_FilePath);
+
+					m_Scene->AddAsset(m_FileName, m_FilePath);
+
+					break;
+				}
+				case ActorBaseType::PhysicsBase:
+				{
+					auto ref = m_SelectedActor->GetPhysicsBaseTuple();
+
+					m_Scene->DeleteAsset(ref->Texture.FileName);
+
+					ref->Texture.FileName = m_FileName;
+					ref->Texture.Texture = Texture2D::Create(m_FilePath);
+
+					m_Scene->AddAsset(m_FileName, m_FilePath);
+
+					break;
+				}
+				default:
+
+					break;
+				}
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Scene_Create:
+			{
+				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+
+				m_SelectedActor = nullptr;
+				m_Scene->CreateScene(m_FilePath, m_FileName);
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Scene_Save:
+			{
+				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
+
+				m_Scene->GetSceneData().m_filePath = m_FilePath;
+				m_Scene->GetSceneData().m_fileName = m_FileName;
+				m_Scene->Save(m_FilePath);
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Scene_Load:
+			{
+				m_SelectedActor = nullptr;
+
+				m_Scene->Load(m_FilePath);
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Load_Animation_Clip:
+			{
+				m_AnimationPanel->Load(m_FilePath);
+				ResetFileBrowser();
+				showAnimPanel = true;
+
+				break;
+			}
+			case FileBrowserFlags::Load_Audio_Clip:
+			{
+				auto clip = std::make_shared<AudioClip>();
+				auto tuple = m_Scene->GetTuple<ResourceTuple>(*m_SelectedActor);
+
+				if (tuple != nullptr)
+				{
+					std::stringstream ss;
+					ss << "New Audio Clip #" << tuple->AudioSource.AudioClips.size();
+
+					clip->FileName = m_FileName;
+					clip->FilePath = m_FilePath;
+					clip->ClipName = ss.str();
+
+					if (AudioSystem::AddClip(tuple->AudioSource, clip))
+					{
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+					}
+				}
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Canvas_Chanage_Button_Texture:
+			{
+				auto camera = m_SelectedActor->GetCameraBaseTuple();
+				if (camera != nullptr)
+				{
+					auto button = UISystem::GetButton(camera->Canvas, m_IDBuffer);
+					if (button != nullptr)
+					{
+						m_Scene->DeleteAsset(button->m_TetxureName);
+
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+						button->Init(m_FilePath, m_FileName);
+					}
+				}
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Canavas_Create_TextLabel:
+			{
+				auto camera = m_SelectedActor->GetCameraBaseTuple();
+				if (camera != nullptr)
+				{
+					auto element = UISystem::AddElement(camera->Canvas, UIElementType::TextLabel);
+					auto textLabel = std::static_pointer_cast<UITextLabel>(element);
+
+					m_Scene->AddAsset(m_FileName, m_FilePath);
+					textLabel->Init(m_FilePath, m_FileName);
+				}
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Canavas_TextLabel_Load_Font:
+			{
+				auto camera = m_SelectedActor->GetCameraBaseTuple();
+				if (camera != nullptr)
+				{
+					auto text = UISystem::GetTextLabel(camera->Canvas, m_IDBuffer);
+					if (text != nullptr)
+					{
+						m_Scene->DeleteAsset(text->m_FontName);
+
+						text->m_FontFilePath = m_FilePath;
+						text->m_FontName = m_FileName;
+						text->SetFont(m_FilePath);
+
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+					}
+				}
+
+				ResetFileBrowser();
+				break;
+			}
+			case FileBrowserFlags::Load_Animation_Clip_Inspector:
+			{
+				auto resRef = m_Scene->GetTuple<ResourceTuple>(m_SelectedActor->Entity);
+				if (resRef)
+				{
+					if (Animation2DSystem::LoadClip(resRef->Animation2D, m_FilePath))
+					{
+						m_Scene->AddAsset(m_FileName, m_FilePath);
+					}
+				}
+
+				ResetFileBrowser();
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	}
+
+	bool EditorLayer::DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
+	{
+		// From glm::decompose in matrix_decompose.inl
+
+		using namespace glm;
+		using T = float;
+
+		mat4 LocalMatrix(transform);
+
+		// Normalize the matrix.
+		if (epsilonEqual(LocalMatrix[3][3], static_cast<float>(0), epsilon<T>()))
+			return false;
+
+		// First, isolate perspective.  This is the messiest.
+		if (
+			epsilonNotEqual(LocalMatrix[0][3], static_cast<T>(0), epsilon<T>()) ||
+			epsilonNotEqual(LocalMatrix[1][3], static_cast<T>(0), epsilon<T>()) ||
+			epsilonNotEqual(LocalMatrix[2][3], static_cast<T>(0), epsilon<T>()))
+		{
+			// Clear the perspective partition
+			LocalMatrix[0][3] = LocalMatrix[1][3] = LocalMatrix[2][3] = static_cast<T>(0);
+			LocalMatrix[3][3] = static_cast<T>(1);
+		}
+
+		// Next take care of translation (easy).
+		translation = vec3(LocalMatrix[3]);
+		LocalMatrix[3] = vec4(0, 0, 0, LocalMatrix[3].w);
+
+		vec3 Row[3], Pdum3;
+
+		// Now get scale and shear.
+		for (length_t i = 0; i < 3; ++i)
+			for (length_t j = 0; j < 3; ++j)
+				Row[i][j] = LocalMatrix[i][j];
+
+		// Compute X scale factor and normalize first row.
+		scale.x = length(Row[0]);
+		Row[0] = detail::scale(Row[0], static_cast<T>(1));
+		scale.y = length(Row[1]);
+		Row[1] = detail::scale(Row[1], static_cast<T>(1));
+		scale.z = length(Row[2]);
+		Row[2] = detail::scale(Row[2], static_cast<T>(1));
+
+		// At this point, the matrix (in rows[]) is orthonormal.
+		// Check for a coordinate system flip.  If the determinant
+		// is -1, then negate the matrix and the scaling factors.
+#if 0
+		Pdum3 = cross(Row[1], Row[2]); // v3Cross(row[1], row[2], Pdum3);
+		if (dot(Row[0], Pdum3) < 0)
+		{
+			for (length_t i = 0; i < 3; i++)
+			{
+				scale[i] *= static_cast<T>(-1);
+				Row[i] *= static_cast<T>(-1);
+			}
+		}
+#endif
+
+		rotation.y = asin(-Row[0][2]);
+		if (cos(rotation.y) != 0) {
+			rotation.x = atan2(Row[1][2], Row[2][2]);
+			rotation.z = atan2(Row[0][1], Row[0][0]);
+		}
+		else {
+			rotation.x = atan2(-Row[2][0], Row[1][1]);
+			rotation.z = 0;
+		}
+
+
+		return true;
 	}
 
 	void EditorLayer::ResetFileBrowser()
