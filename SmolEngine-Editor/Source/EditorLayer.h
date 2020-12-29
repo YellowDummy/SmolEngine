@@ -8,6 +8,7 @@
 
 #include "Core/ImGui/AnimationPanel.h"
 #include "Core/Animation/AnimationClip.h"
+#include "Core/ECS/Components/BaseComponent.h"
 
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
@@ -145,6 +146,19 @@ namespace SmolEngine
 	private:
 
 		void ResetFileBrowser();
+
+		template<typename T>
+		bool IsCurrentComponent(uint32_t index)
+		{
+			if (m_Scene->HasComponent<T>(*m_SelectedActor.get()))
+			{
+				auto comp = m_Scene->GetComponent<T>(*m_SelectedActor.get());
+				BaseComponent* baseComp = static_cast<BaseComponent*>(comp);
+				return baseComp->ComponentID == index;
+			}
+
+			return false;
+		}
 
 	private:
 

@@ -3,7 +3,7 @@
 #include "Core/SLog.h"
 
 #include "Core/ImGui/EditorConsole.h"
-#include "Core/ECS/WorldAdmin.h"
+#include "Core/AssetManager.h"
 
 #include <cereal/archives/json.hpp>
 #include <cstdlib>
@@ -218,8 +218,6 @@ namespace SmolEngine
 		storage << file.rdbuf();
 		file.close();
 
-		const auto scene = WorldAdmin::GetScene();
-
 		{
 			cereal::JSONInputArchive dataInput{ storage };
 			dataInput(ref->m_Scenes, ref->m_AssetFolder);
@@ -228,8 +226,7 @@ namespace SmolEngine
 		for (auto& pair: ref->m_Scenes)
 		{
 			auto& [key, data] = pair;
-
-			if (!scene->PathCheck(data.FilePath, data.FileName))
+			if (!AssetManager::PathCheck(data.FilePath, data.FileName))
 			{
 				NATIVE_ERROR("Could not open the file: {}", data.FilePath);
 				return false;

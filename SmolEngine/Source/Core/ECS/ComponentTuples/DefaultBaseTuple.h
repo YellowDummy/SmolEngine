@@ -3,9 +3,7 @@
 #include "Core/ECS/ComponentTuples/BaseTuple.h"
 
 #include "Core/ECS/Components/HeadComponent.h"
-#include "Core/ECS/Components/Texture2DComponent.h"
 #include "Core/ECS/Components/TransformComponent.h"
-#include "Core/ECS/Components/Light2DSourceComponent.h"
 
 #include <cereal/cereal.hpp>
 
@@ -15,28 +13,26 @@ namespace SmolEngine
 	{
 		DefaultBaseTuple();
 
+		/// Accessors
+
+		const HeadComponent& GetInfo() const;
+
 		/// Components
-
-		TransformComponent Transform;
-
-		Light2DSourceComponent Light2D;
-
-		HeadComponent Info;
-
-		Texture2DComponent Texture;
 
 	private:
 
-		friend class EditorLayer;
+		HeadComponent Info;
 
-		friend class WorldAdmin;
+	private:
 
 		friend class cereal::access;
+		friend class EditorLayer;
+		friend class WorldAdmin;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Info, Transform, Texture, Light2D);
+			archive(Info);
 		}
 	};
 }

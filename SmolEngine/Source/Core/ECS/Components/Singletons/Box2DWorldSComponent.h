@@ -20,9 +20,7 @@ namespace SmolEngine
 		/// Data
 
 		b2World* World = nullptr;
-
 		CollisionListener2D* m_CollisionListener2D = nullptr;
-
 		CollisionFilter2D* m_CollisionFilter2D = nullptr;
 
 		/// Getters

@@ -3,7 +3,7 @@
 
 #include "Core/ECS/Actor.h"
 #include "Core/Physics2D/Box2D/Body2DDefs.h"
-#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
+#include "Core/ECS/ComponentsCore.h"
 #include "Core/ECS/Components/Singletons/Box2DWorldSComponent.h"
 #include "Core/Physics2D/Box2D/RayCast2D.h"
 #include "Core/SLog.h"
@@ -29,9 +29,9 @@ namespace SmolEngine
 		data->World->Step(delta, velocityIterations, positionIterations);
 	}
 
-	void Box2DPhysicsSystem::CreateBody(PhysicsBaseTuple& tuple, b2World* world, Ref<Actor> actor)
+	void Box2DPhysicsSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Ref<Actor> actor)
 	{
-		auto& body = tuple.Body.Body;
+		auto& body = body2D->Body;
 		{
 			b2BodyDef bodyDef;
 			bodyDef.type = FindType(body.m_Type);
@@ -39,10 +39,10 @@ namespace SmolEngine
 			bodyDef.bullet = body.m_IsBullet;
 			bodyDef.awake = body.m_IsAwake;
 			bodyDef.allowSleep = body.m_canSleep;
-			bodyDef.angle = tuple.Transform.Rotation.x;
+			bodyDef.angle = tranform->Rotation.x;
 			bodyDef.userData = actor.get();
 
-			bodyDef.position.Set(tuple.Transform.WorldPos.x, tuple.Transform.WorldPos.y);
+			bodyDef.position.Set(tranform->WorldPos.x, tranform->WorldPos.y);
 			body.m_Body = world->CreateBody(&bodyDef);
 		}
 
@@ -71,9 +71,14 @@ namespace SmolEngine
 		}
 	}
 
-	void Box2DPhysicsSystem::DeleteBody(Body2DComponent* body, b2World* world)
+	void Box2DPhysicsSystem::DeleteBodies(entt::registry& registry, b2World* world)
 	{
-		world->DestroyBody(body->Body.m_Body);
+		const auto& group = registry.view<Body2DComponent>();
+		for (const auto& entity : group)
+		{
+			auto& body = group.get<Body2DComponent>(entity);
+			world->DestroyBody(body.Body.m_Body);
+		}
 	}
 
 	const bool Box2DPhysicsSystem::BindJoint(Body2DComponent* bodyA, Body2DComponent* bodyB, JointType type, JointInfo* info, b2World* world)
@@ -396,22 +401,27 @@ namespace SmolEngine
 		return true;
 	}
 
-	void Box2DPhysicsSystem::SetTransfrom(PhysicsBaseTuple& tuple)
+	void Box2DPhysicsSystem::UpdateTransforms(entt::registry& registry)
 	{
-		auto& b2Pos = tuple.Body.Body.m_Body->GetTransform();
+		const auto& group = registry.view<TransformComponent, Body2DComponent>();
+		for (const auto& entity : group)
+		{
+			auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
+			auto& b2Pos = body2D.Body.m_Body->GetTransform();
 
-		tuple.Transform.WorldPos = { b2Pos.p.x, b2Pos.p.y, tuple.Transform.WorldPos.z };
-		tuple.Transform.Rotation = { b2Pos.q.GetAngle(), tuple.Transform.Rotation.y, tuple.Transform.Rotation.z };
+			transform.WorldPos = { b2Pos.p.x, b2Pos.p.y, transform.WorldPos.z };
+			transform.Rotation = { b2Pos.q.GetAngle(),transform.Rotation.y, transform.Rotation.z };
+		}
 	}
 
-	void Box2DPhysicsSystem::AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, bool wakeBody)
+	void Box2DPhysicsSystem::AddForce(Body2DComponent* body, const glm::vec2& force, bool wakeBody)
 	{
-		tuple.Body.Body.m_Body->ApplyForceToCenter({ force.x, force.y }, wakeBody);
+		body->Body.m_Body->ApplyForceToCenter({ force.x, force.y }, wakeBody);
 	}
 
-	void Box2DPhysicsSystem::AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
+	void Box2DPhysicsSystem::AddForce(Body2DComponent* body, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
 	{
-		tuple.Body.Body.m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, wakeBody);
+		body->Body.m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, wakeBody);
 	}
 
 	const RayCast2DHitInfo Box2DPhysicsSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)

@@ -3,10 +3,6 @@
 #include <rttr/registration.h>
 #include <rttr/type.h>
 
-#include "Core/Scripting/BaseClasses/BaseTupleBehaviour.h"
-#include "Core/Scripting/BaseClasses/CameraTupleBehaviour.h"
-#include "Core/Scripting/BaseClasses/PhysicsTupleBehaviour.h"
-
 #include <unordered_map>
 #include <string>
 
@@ -17,7 +13,6 @@ namespace SmolEngine
 	struct SystemInstance
 	{
 		rttr::type type = rttr::type::get_by_name("NULL");
-
 		rttr::variant variant;
 	};
 
@@ -47,30 +42,6 @@ namespace SmolEngine
 			return false;
 		}
 
-		///
-		
-
-		template<typename T>
-		static bool AddPhysicsSystem(const std::string& name)
-		{
-			if (ProcessSystem<T, PhysicsTupleBehaviour>(name, ActorBaseType::PhysicsBase))
-			{
-				rttr::registration::class_<T>(name.c_str())
-					.constructor<>()
-					.property("Actor", &T::m_Actor, rttr::registration::private_access)
-					.method("OnProcess", &T::OnProcess)
-					.method("OnBegin", &T::OnBegin)
-					.method("OnDestroy", &T::OnDestroy)
-					.method("OnCollisionContact", &T::OnCollisionContact)
-					.method("OnCollisionExit", &T::OnCollisionExit);
-
-				return true;
-			}
-
-			return false;
-		}
-
-		///
 		
 
 		template<typename T>
@@ -119,17 +90,10 @@ namespace SmolEngine
 	private:
 
 		static SystemRegistry* Instance;
-
-		///
-
 		std::unordered_map<std::string, uint16_t> m_SystemMap;
 
-		///
-
 		friend class Application;
-
 		friend class WorldAdmin;
-
 		friend class EditorLayer;
 	};
 

@@ -3,6 +3,7 @@
 
 #include "Core/ECS/Components/Animation2DComponent.h"
 #include "Core/Animation/AnimationClip.h"
+#include "Core/AssetManager.h"
 
 #include "Core/SLog.h"
 
@@ -50,59 +51,73 @@ namespace SmolEngine
 		Reset(search->second);
 	}
 
-	void Animation2DSystem::OnAwake(Animation2DComponent& anim)
+	void Animation2DSystem::OnAwake(entt::registry& registry)
 	{
-		OnReset(anim);
-
-		for (const auto& pair : anim.m_Clips)
+		OnReset(registry);
+		const auto& group = registry.view<Animation2DComponent>();
+		for (const auto& entity : group)
 		{
-			auto& [key, clip] = pair;
-
-			if (clip->m_IsDefaultClip)
+			auto& anim = group.get<Animation2DComponent>(entity);
+			for (const auto& pair : anim.m_Clips)
 			{
-				Play(clip->m_ClipName, anim);
-				continue;
-			}
+				auto& [key, clip] = pair;
 
-			Reset(clip);
-		}
-	}
-
-	void Animation2DSystem::OnReset(Animation2DComponent& anim)
-	{
-		anim.CurrentClip = nullptr;
-
-		for (const auto& pair : anim.m_Clips)
-		{
-			auto& [key, clip] = pair;
-
-			Reset(clip);
-		}
-	}
-
-	void Animation2DSystem::Update(const Animation2DComponent& anim)
-	{
-		if (anim.CurrentClip) 
-		{
-			auto animation = anim.CurrentClip;
-
-			auto currentTexture = animation->m_Frames[animation->m_CurrentIndex];
-			if (animation->m_IsActive && currentTexture)
-			{
-				if (animation->m_Timer.GetTimeInMiliseconds() > currentTexture->Speed)
+				if (clip->m_IsDefaultClip)
 				{
-					animation->m_CurrentIndex++;
-					if (animation->m_CurrentIndex == animation->m_Frames.size()) { animation->m_CurrentIndex = 0; }
-					animation->m_CurrentFrameKey = animation->m_Frames[animation->m_CurrentIndex];
-					auto newTexture = animation->m_CurrentFrameKey->Texture;
-					if (!newTexture)
-					{
-						return;
-					}
+					Play(clip->m_ClipName, anim);
+					continue;
+				}
 
-					animation->m_CurrentTexture = newTexture;
-					animation->m_Timer.StopTimer();
-					animation->m_Timer.StartTimer();
+				Reset(clip);
+			}
+		}
+	}
+
+	void Animation2DSystem::OnReset(entt::registry& registry)
+	{
+		const auto& group = registry.view<Animation2DComponent>();
+		for (const auto& entity : group)
+		{
+			auto& anim = group.get<Animation2DComponent>(entity);
+
+			anim.CurrentClip = nullptr;
+			for (const auto& pair : anim.m_Clips)
+			{
+				auto& [key, clip] = pair;
+
+				Reset(clip);
+			}
+		}
+	}
+
+	void Animation2DSystem::Update(entt::registry& registry)
+	{
+		const auto& group = registry.view<Animation2DComponent>();
+		for (const auto& entity : group)
+		{
+			auto& anim = group.get<Animation2DComponent>(entity);
+			if (anim.CurrentClip)
+			{
+				auto animation = anim.CurrentClip;
+
+				auto currentTexture = animation->m_Frames[animation->m_CurrentIndex];
+				if (animation->m_IsActive && currentTexture)
+				{
+					if (animation->m_Timer.GetTimeInMiliseconds() > currentTexture->Speed)
+					{
+						animation->m_CurrentIndex++;
+						if (animation->m_CurrentIndex == animation->m_Frames.size()) { animation->m_CurrentIndex = 0; }
+						animation->m_CurrentFrameKey = animation->m_Frames[animation->m_CurrentIndex];
+						auto newTexture = animation->m_CurrentFrameKey->Texture;
+						if (!newTexture)
+						{
+							return;
+						}
+
+						animation->m_CurrentTexture = newTexture;
+						animation->m_Timer.StopTimer();
+						animation->m_Timer.StartTimer();
+					}
 				}
 			}
 		}
@@ -176,7 +191,7 @@ namespace SmolEngine
 				continue;
 			}
 
-			if (WorldAdmin::GetScene()->PathCheck(frame->TexturePath, frame->FileName))
+			if (AssetManager::PathCheck(frame->TexturePath, frame->FileName))
 			{
 				frame->Texture = Texture2D::Create(frame->TexturePath);
 			}

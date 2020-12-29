@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ResourceTuple.h"
+#include "BaseComponent.h"
 
 namespace SmolEngine
 {

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RendererSystem.h"
 
+#include "Core/ECS/ComponentsCore.h"
 #include "Core/Animation/AnimationClip.h"
 
 #include "Core/Renderer/Renderer2D.h"
@@ -8,93 +9,112 @@
 
 namespace SmolEngine
 {
-	void RendererSystem::RenderDefaultTuple(const DefaultBaseTuple& tuple)
+	void RendererSystem::BeginDraw(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer>& targetFramebuffer)
 	{
-		if (tuple.Light2D.isEnabled)
-		{
-			Renderer2D::SubmitLight2D(glm::vec3(tuple.Light2D.Position.x, tuple.Light2D.Position.y, 0.0f) + tuple.Transform.WorldPos,
-				tuple.Light2D.Radius, tuple.Light2D.Color, tuple.Light2D.Intensity);
-		}
-
-		if (tuple.Texture.Enabled && tuple.Texture.Texture != nullptr)
-		{
-			Renderer2D::SubmitSprite(tuple.Transform.WorldPos, tuple.Texture.LayerIndex, tuple.Transform.Scale, tuple.Transform.Rotation.x,
-				tuple.Texture.Texture, 1.0f, tuple.Texture.Color);
-		}
+		Renderer2D::BeginScene(viewProjectionMatrix, ambientValue, targetFramebuffer);
 	}
 
-	void RendererSystem::RenderPhysicsTuple(const PhysicsBaseTuple& tuple)
+	void RendererSystem::EndDraw()
 	{
-		if (tuple.Light2D.isEnabled)
-		{
-			Renderer2D::SubmitLight2D(glm::vec3(tuple.Light2D.Position.x, tuple.Light2D.Position.y, 0.0f) + tuple.Transform.WorldPos,
-				tuple.Light2D.Radius, tuple.Light2D.Color, tuple.Light2D.Intensity);
-		}
-
-		if (tuple.Texture.Enabled && tuple.Texture.Texture != nullptr)
-		{
-			Renderer2D::SubmitSprite(tuple.Transform.WorldPos, tuple.Texture.LayerIndex, tuple.Transform.Scale, tuple.Transform.Rotation.x,
-				tuple.Texture.Texture, 1.0f, tuple.Texture.Color);
-		}
+		Renderer2D::EndScene();
 	}
 
-	void RendererSystem::RenderCameraTuple(const CameraBaseTuple& tuple)
+	void RendererSystem::Render2DTextures(entt::registry& registry)
 	{
-		if (!tuple.Camera.isPrimaryCamera) { return; }
-
-		UISystem::DrawAllElements(tuple.Canvas, tuple.Transform.WorldPos, tuple.Camera.ZoomLevel);
-	}
-
-	void RendererSystem::RenderAnimation2D(const Animation2DComponent& anim, const TransformComponent& transform)
-	{
-		if (anim.CurrentClip)
+		const auto& group = registry.view<TransformComponent, Texture2DComponent>();
+		for (const auto& entity : group)
 		{
-			const auto frameKey = anim.CurrentClip->m_CurrentFrameKey;
-			if (frameKey != nullptr)
+			auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
+
+			CheckLayerIndex(texture2D.LayerIndex);
+			if (texture2D.Enabled && texture2D.Texture != nullptr)
 			{
-				Renderer2D::SubmitSprite(transform.WorldPos, anim.IndexLayer, transform.Scale, transform.Rotation.x,
-					frameKey->Texture, 1.0f, frameKey->TextureColor);
+				Renderer2D::SubmitSprite(transform.WorldPos, texture2D.LayerIndex,
+					transform.Scale, transform.Rotation.x, texture2D.Texture, 1.0f, texture2D.Color);
 			}
 		}
 	}
 
-	void RendererSystem::CheckLayerIndex(Texture2DComponent& texture)
+	void RendererSystem::Render2DLight(entt::registry& registry)
 	{
-		if (texture.LayerIndex > 10)
+		const auto& group = registry.view<TransformComponent, Light2DSourceComponent>();
+		for (const auto& entity : group)
 		{
-			texture.LayerIndex = 10;
-		}
-
-		if (texture.LayerIndex < 0)
-		{
-			texture.LayerIndex = 0;
+			auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
+			if (light2D.isEnabled)
+			{
+				Renderer2D::SubmitLight2D(transform.WorldPos + glm::vec3(light2D.Position, 0), light2D.Radius, light2D.Color, light2D.Intensity);
+			}
 		}
 	}
 
-	void RendererSystem::DebugDraw(const PhysicsBaseTuple& tuple)
+	void RendererSystem::Render2DAnimations(entt::registry& registry)
 	{
-		const auto& body = tuple.Body;
+		const auto& group = registry.view<TransformComponent, Animation2DComponent>();
+		for (const auto& entity : group)
+		{
+			auto& [transform, anim] = group.get<TransformComponent, Animation2DComponent>(entity);
 
-		if (!body.ShowShape)
+			if (anim.CurrentClip)
+			{
+				const auto frameKey = anim.CurrentClip->m_CurrentFrameKey;
+				if (frameKey != nullptr)
+				{
+					CheckLayerIndex(anim.IndexLayer);
+					Renderer2D::SubmitSprite(transform.WorldPos, anim.IndexLayer, transform.Scale, transform.Rotation.x,
+						frameKey->Texture, 1.0f, frameKey->TextureColor);
+				}
+			}
+		}
+	}
+
+	void RendererSystem::RenderCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform)
+	{
+		const auto& group = registry.view<CanvasComponent>();
+		for (const auto& entity : group)
+		{
+			auto& canvas = group.get<CanvasComponent>(entity);
+			UISystem::DrawAllElements(canvas, cameraTransform->WorldPos, camera->ZoomLevel);
+		}
+	}
+
+	void RendererSystem::CheckLayerIndex(int& index)
+	{
+		if (index > 10)
+		{
+			index = 10;
+		}
+
+		if (index < 0)
+		{
+			index = 0;
+		}
+	}
+
+	void RendererSystem::DebugDraw(const Body2DComponent& body2D, const TransformComponent& transform)
+	{
+		const auto& body = body2D.Body;
+
+		if (!body2D.ShowShape)
 		{
 			return;
 		}
 
-		switch (body.Body.m_ShapeType)
+		switch (body.m_ShapeType)
 		{
 
 		case (int)ShapeType::Box:
 		{
-			Renderer2D::DebugDraw(DebugPrimitives::Quad, { tuple.Transform.WorldPos.x, tuple.Transform.WorldPos.y, 1.0f },
-				{ body.Body.m_Shape.x * 2 , body.Body.m_Shape.y * 2 }, tuple.Transform.Rotation.x);
+			Renderer2D::DebugDraw(DebugPrimitives::Quad, { transform.WorldPos.x, transform.WorldPos.y, 1.0f },
+				{ body.m_Shape.x * 2 , body.m_Shape.y * 2 }, transform.Rotation.x);
 
 			break;
 		}
 		case (int)ShapeType::Cirlce:
 		{
 			Renderer2D::DebugDraw(DebugPrimitives::Circle, 
-				{ tuple.Transform.WorldPos.x + body.Body.m_Offset.x, tuple.Transform.WorldPos.y + body.Body.m_Offset.y,
-				1.0f }, { body.Body.m_Radius,  body.Body.m_Radius }, tuple.Transform.Rotation.x);
+				{ transform.WorldPos.x + body.m_Offset.x, transform.WorldPos.y + body.m_Offset.y,
+				1.0f }, { body.m_Radius,  body.m_Radius }, transform.Rotation.x);
 
 			break;
 		}

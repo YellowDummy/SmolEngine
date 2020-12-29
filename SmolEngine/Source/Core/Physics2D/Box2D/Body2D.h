@@ -79,8 +79,6 @@ namespace SmolEngine
 
 		friend class WorldAdmin;
 
-		friend class Rigidbody2DComponent;
-
 		template<typename Archive>
 		void serialize(Archive& archive) 
 		{

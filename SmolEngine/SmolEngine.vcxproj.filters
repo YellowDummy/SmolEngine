@@ -1335,12 +1335,6 @@
     <ClInclude Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.h">
       <Filter>Source\Core\ECS\ComponentTuples</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.h">
-      <Filter>Source\Core\ECS\ComponentTuples</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\ECS\ComponentTuples\ResourceTuple.h">
-      <Filter>Source\Core\ECS\ComponentTuples</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\ECS\ComponentTuples\SingletonTuple.h">
       <Filter>Source\Core\ECS\ComponentTuples</Filter>
     </ClInclude>
@@ -1638,16 +1632,7 @@
     <ClInclude Include="Source\Core\SLog.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.h">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.h">
       <Filter>Source\Core\Scripting\BaseClasses</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Scripting\OutValues.h">
@@ -1680,6 +1665,8 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ECS\ComponentsCore.h" />
+    <ClInclude Include="Source\Core\ECS\Components\BaseComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1725,12 +1712,6 @@
       <Filter>Source\Core\ECS\ComponentTuples</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.cpp">
-      <Filter>Source\Core\ECS\ComponentTuples</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.cpp">
-      <Filter>Source\Core\ECS\ComponentTuples</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\ECS\ComponentTuples\ResourceTuple.cpp">
       <Filter>Source\Core\ECS\ComponentTuples</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\ComponentTuples\SingletonTuple.cpp">
@@ -1985,16 +1966,7 @@
     <ClCompile Include="Source\Core\SLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.cpp">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.cpp">
       <Filter>Source\Core\Scripting\BaseClasses</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp">
@@ -2012,5 +1984,6 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Components\BaseComponent.cpp" />
   </ItemGroup>
 </Project>

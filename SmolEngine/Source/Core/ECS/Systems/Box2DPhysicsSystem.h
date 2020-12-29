@@ -6,17 +6,19 @@
 
 #include <box2d/box2d.h>
 #include <vector>
-
+#include <entt.hpp>
 
 namespace SmolEngine
 {
+	struct Box2DWorldSComponent;
+
+	struct TransformComponent;
+
 	struct PhysicsBaseTuple;
 
 	struct Body2DComponent;
 
 	struct RayCast2DHitInfo;
-
-	struct Box2DWorldSComponent;
 
 	struct DistanceJointInfo;
 
@@ -32,8 +34,6 @@ namespace SmolEngine
 
 	enum class JointType: uint16_t;
 
-
-	///
 
 	class Box2DPhysicsSystem
 	{
@@ -51,9 +51,9 @@ namespace SmolEngine
 
 		/// Body Factory
 
-		static void CreateBody(PhysicsBaseTuple& tuple, b2World* world, Ref<Actor> actor);
+		static void CreateBody(Body2DComponent* body, TransformComponent* tranform, b2World* world, Ref<Actor> actor);
 
-		static void DeleteBody(Body2DComponent* body, b2World* world);
+		static void DeleteBodies(entt::registry& registry, b2World* world);
 
 		/// Joint Factory
 
@@ -85,17 +85,17 @@ namespace SmolEngine
 
 		static bool CreateRopeJoint(Body2D* bodyA, Body2D* bodyB, RopeJointInfo* info, b2World* world);
 
-		/// Setters
+		/// Helpers
 
-		static void SetTransfrom(PhysicsBaseTuple& tuple);
+		static void UpdateTransforms(entt::registry& registry);
 
 	public:
 
 		/// Forces
 		
-		static void AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, bool wakeBody = true);
+		static void AddForce(Body2DComponent* body, const glm::vec2& force, bool wakeBody = true);
 
-		static void AddForce(const PhysicsBaseTuple& tuple, const glm::vec2& force, const glm::vec2& point, bool wakeBody = true);
+		static void AddForce(Body2DComponent* body, const glm::vec2& force, const glm::vec2& point, bool wakeBody = true);
 
 
 		/// RayCasting
@@ -108,7 +108,6 @@ namespace SmolEngine
 	private:
 
 		friend class EditorLayer;
-
 		friend class WorldAdmin;
 	};
 }

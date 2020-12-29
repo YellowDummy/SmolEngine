@@ -1,13 +1,15 @@
 #pragma once
 #include "Core/Core.h"
 
+#include <entt.hpp>
+
 namespace SmolEngine
 {
-	struct CameraBaseTuple;
+	struct CameraComponent;
+
+	struct TransformComponent;
 
 	class Event;
-
-	///
 
 	class CameraSystem
 	{
@@ -17,22 +19,19 @@ namespace SmolEngine
 
 		///
 
-		static void CalculateView(CameraBaseTuple& tuple);
+		static void CalculateView(CameraComponent* camera, TransformComponent* tranform);
 
-		static void SetProjection(CameraBaseTuple& tuple, float left, float right, float buttom, float top, float zNear = -1.0f, float zFar = 1.0f);
+		static void SetProjection(CameraComponent* camera, float left, float right, float buttom, float top, float zNear = -1.0f, float zFar = 1.0f);
 
 	private:
 
-		static void OnResize(CameraBaseTuple& tuple, float width, float height);
+		static void OnResize(entt::registry& registry, float width, float height);
 
-		static void OnEvent(CameraBaseTuple& tuple, Event& e);
-
-		///
+		static void OnEvent(entt::registry& registry, Event& e);
 
 	private:
 
 		friend class EditorLayer;
-
 		friend class WorldAdmin;
 	};
 }

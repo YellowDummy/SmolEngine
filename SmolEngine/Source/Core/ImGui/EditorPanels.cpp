@@ -107,13 +107,6 @@ namespace SmolEngine
 						actor = scene->CreateActor(ActorBaseType::DefaultBase, name, tag);
 					}
 
-					// Physics
-
-					if (comboValue == 1)
-					{
-						actor = scene->CreateActor(ActorBaseType::PhysicsBase, name, tag);
-					}
-
 					// Camera
 
 					if (comboValue == 2)

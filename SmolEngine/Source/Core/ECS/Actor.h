@@ -16,29 +16,17 @@
 namespace SmolEngine
 {
 	struct OutValue;
-
 	struct DefaultBaseTuple;
-
 	struct PhysicsBaseTuple;
-
 	struct CameraBaseTuple;
-
 	struct ResourceTuple;
-
 	struct HeadComponent;
-
-	///
 
 	enum class ActorBaseType : uint16_t
 	{
 		DefaultBase,
-
-		PhysicsBase,
-
 		CameraBase
 	};
-
-	///
 
 	class Actor
 	{
@@ -52,19 +40,19 @@ namespace SmolEngine
 		/// Operators
 		/// 
 
-		operator entt::entity() const { return Entity; }
+		operator entt::entity() const { return m_Entity; }
 
 		/// 
 		/// Getters
 		/// 
 
-		std::vector<Ref<Actor>>& GetChilds() { return Childs; }
+		std::vector<Ref<Actor>>& GetChilds() { return m_Childs; }
 
 		Ref<Actor> GetChildByName(const std::string& name);
 
 		Ref<Actor> GetChildByTag(const std::string& tag);
 
-		Ref<Actor> GetParent() { return Parent; }
+		Ref<Actor> GetParent() { return m_Parent; }
 
 		const std::string& GetName() const;
 
@@ -72,60 +60,38 @@ namespace SmolEngine
 
 		const size_t GetID() const;
 
+		const size_t GetComponentsCount() const;
+
 		/// 
 		/// Setters
 		/// 
 
-		void SetParent(Ref<Actor> parent) { Parent = parent; }
-
-		/// 
-		/// Casting
-		/// 
-
-		DefaultBaseTuple* GetDefaultBaseTuple() const;
-
-		PhysicsBaseTuple* GetPhysicsBaseTuple() const;
-
-		CameraBaseTuple*  GetCameraBaseTuple() const;
+		void SetParent(Ref<Actor> parent) { m_Parent = parent; }
 
 		const HeadComponent* GetInfo() const;
 
 	private:
 
-		ActorBaseType ActorType = ActorBaseType::DefaultBase;
+		std::vector<Ref<Actor>> m_Childs;
+		Ref<Actor> m_Parent = nullptr;
+		entt::entity m_Entity;
+		ActorBaseType m_ActorType = ActorBaseType::DefaultBase;
 
-		///
-
-		entt::entity Entity;
-
-		///
-
-		std::vector<Ref<Actor>> Childs;
-
-		///
-
-		Ref<Actor> Parent = nullptr;
-
-		///
-
-		size_t Index = 0;
-
+		size_t m_Index = 0;
+		size_t m_ComponentsCount = 0;
 		bool m_showComponentUI = false;
 
 	private:
 
 		friend class cereal::access;
-
 		friend struct ScriptableObject;
-
 		friend class WorldAdmin;
-
 		friend class EditorLayer;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Entity, ActorType, Parent, Childs, Index);
+			archive(m_Entity, m_ActorType, m_Parent, m_Childs, m_Index, m_ComponentsCount);
 		}
 
 	};

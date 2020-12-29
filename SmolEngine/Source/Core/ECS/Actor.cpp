@@ -5,15 +5,13 @@
 
 #include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
 #include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
-#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
-#include "Core/ECS/ComponentTuples/ResourceTuple.h"
 
 
 namespace SmolEngine
 {
 	Actor::Actor()
 		: 
-		Parent(nullptr)
+		m_Parent(nullptr)
 	{
 
 	}
@@ -21,13 +19,10 @@ namespace SmolEngine
 	Actor::Actor(const ActorBaseType baseType, entt::entity entity, size_t index)
 		:
 
-		Parent(nullptr),
-
-		ActorType(baseType),
-
-		Entity(entity),
-
-		Index(index)
+		m_Parent(nullptr),
+		m_ActorType(baseType),
+		m_Entity(entity),
+		m_Index(index)
 	{
 
 	}
@@ -35,7 +30,7 @@ namespace SmolEngine
 
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{
-		if (Childs.empty()) { return nullptr; }
+		if (m_Childs.empty()) { return nullptr; }
 		auto set = WorldAdmin::GetScene()->GetIDSet();
 		size_t id = set[name];
 
@@ -44,7 +39,6 @@ namespace SmolEngine
 
 	Ref<Actor> Actor::GetChildByTag(const std::string& tag)
 	{
-
 		return nullptr;
 	}
 
@@ -63,39 +57,22 @@ namespace SmolEngine
 		return GetInfo()->ID;
 	}
 
-	DefaultBaseTuple* Actor::GetDefaultBaseTuple() const
+	const size_t Actor::GetComponentsCount() const
 	{
-		return WorldAdmin::GetScene()->GetTuple<DefaultBaseTuple>(Entity);
-	}
-
-	PhysicsBaseTuple* Actor::GetPhysicsBaseTuple() const
-	{
-		return WorldAdmin::GetScene()->GetTuple<PhysicsBaseTuple>(Entity);
-	}
-
-	CameraBaseTuple* Actor::GetCameraBaseTuple() const
-	{
-		return WorldAdmin::GetScene()->GetTuple<CameraBaseTuple>(Entity);
+		return m_ComponentsCount;
 	}
 
 	const HeadComponent* Actor::GetInfo() const
 	{
-		switch (ActorType)
+		switch (m_ActorType)
 		{
 		case ActorBaseType::DefaultBase:
 		{
-			DefaultBaseTuple* defTuple = GetDefaultBaseTuple();
-			return &defTuple->Info;
-		}
-		case ActorBaseType::PhysicsBase:
-		{
-			PhysicsBaseTuple* phTuple = GetPhysicsBaseTuple();
-			return &phTuple->GetInfo();
+			return &WorldAdmin::GetScene()->GetComponent<DefaultBaseTuple>(m_Entity)->GetInfo();
 		}
 		case ActorBaseType::CameraBase:
 		{
-			CameraBaseTuple* camTuple = GetCameraBaseTuple();
-			return &camTuple->GetInfo();
+			return &WorldAdmin::GetScene()->GetComponent<CameraBaseTuple>(m_Entity)->GetInfo();
 		}
 		default:
 			return nullptr;

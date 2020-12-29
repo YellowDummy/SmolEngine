@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AudioSystem.h"
 
-#include "Core/ECS/ComponentTuples/ResourceTuple.h"
+#include "Core/ECS/ComponentsCore.h"
 #include "Core/Audio/AudioEngine.h"
 #include "Core/SLog.h"
 
@@ -14,32 +14,43 @@ namespace SmolEngine
 
 	}
 
-	void AudioSystem::OnAwake(AudioSourceComponent& audioSource, AudioEngine* audioEngine)
+	void AudioSystem::OnAwake(entt::registry& registry, AudioEngine* audioEngine)
 	{
-		OnReset(audioSource, audioEngine);
+		OnReset(registry, audioEngine);
 
-		if (!audioSource.PlayOnAwake) { return; }
-
-		for (const auto& pair : audioSource.AudioClips)
+		const auto& view = registry.view<AudioSourceComponent>();
+		for (const auto& entity : view)
 		{
-			const auto& [key, clip] = pair;
+			auto& audio = view.get<AudioSourceComponent>(entity);
+			if (!audio.PlayOnAwake) { return; }
 
-			if (clip->isDefaultClip)
+			for (const auto& pair : audio.AudioClips)
 			{
-				PlayClip(key, audioSource, audioEngine);
-				return;
+				const auto& [key, clip] = pair;
+
+				if (clip->isDefaultClip)
+				{
+					PlayClip(key, audio, audioEngine);
+					return;
+				}
 			}
 		}
 	}
 
-	void AudioSystem::OnReset(AudioSourceComponent& audioSource, AudioEngine* audioEngine)
+	void AudioSystem::OnReset(entt::registry& registry, AudioEngine* audioEngine)
 	{
-		for (const auto& pair : audioSource.AudioClips)
+		const auto& view = registry.view<AudioSourceComponent>();
+		for (const auto& entity : view)
 		{
-			const auto& [key, clip] = pair;
+			auto& audio = view.get<AudioSourceComponent>(entity);
+			for (const auto& pair : audio.AudioClips)
+			{
+				const auto& [key, clip] = pair;
 
-			audioEngine->StopClip(clip->Channel);
+				audioEngine->StopClip(clip->Channel);
+			}
 		}
+
 	}
 
 	void AudioSystem::PlayClip(const std::string& keyName, AudioSourceComponent& audioSource, AudioEngine* audioEngine)

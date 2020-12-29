@@ -8,7 +8,9 @@ namespace SmolEngine
 {
 	enum class OutValueType: uint16_t
 	{
-		Float, Int, String
+		Float, 
+		Int, 
+		String
 	};
 
 	struct OutValue
@@ -21,21 +23,15 @@ namespace SmolEngine
 		///
 
 		std::variant<float, int, std::string> Value;
-
 		std::string Key;
-
 		OutValueType Type;
 
 	private:
 
 		char stringBuffer[128] = "";
 
-		///
-
 		friend class cereal::access;
-
 		friend class EditorLayer;
-
 		friend class WorldAdmin;
 
 		template<typename Archive>

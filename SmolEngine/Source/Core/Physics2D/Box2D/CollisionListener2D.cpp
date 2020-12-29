@@ -3,6 +3,8 @@
 #include "Core/ECS/Actor.h"
 #include "Core/ECS/WorldAdmin.h"
 
+#include "Core/Scripting/BaseClasses/BehaviourPrimitive.h"
+
 namespace SmolEngine
 {
 	void CollisionListener2D::BeginContact(b2Contact* contact)
@@ -12,6 +14,7 @@ namespace SmolEngine
 
 		const auto actorB = static_cast<Actor*>(dataB);
 
+#if 0
 		if (IsValid(actorB))
 		{
 			const auto actorA = static_cast<Actor*>(dataA);
@@ -37,7 +40,7 @@ namespace SmolEngine
 
 			sysRef.type.invoke("OnCollisionContact", sysRef.variant, { actorA, false });
 		}
-
+#endif
 	}
 
 	void CollisionListener2D::EndContact(b2Contact* contact)
@@ -47,6 +50,7 @@ namespace SmolEngine
 
 		const auto actorB = static_cast<Actor*>(dataB);
 
+#if 0
 		if (IsValid(actorB))
 		{
 			const auto actorA = static_cast<Actor*>(dataA);
@@ -67,6 +71,7 @@ namespace SmolEngine
 
 			sysRef.type.invoke("OnCollisionExit", sysRef.variant, { actorA, false });
 		}
+#endif
 	}
 
 	void CollisionListener2D::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)

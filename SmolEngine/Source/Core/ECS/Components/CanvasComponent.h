@@ -4,6 +4,7 @@
 #include "Core/UI/UIElement.h"
 #include "Core/UI/UIButton.h"
 #include "Core/UI/UITextLabel.h"
+#include "Core/ECS/Components/BaseComponent.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
@@ -18,26 +19,27 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(SmolEngine::UIElement, SmolEngine::UITextLa
 
 namespace SmolEngine
 {
-	struct CanvasComponent
+	struct CanvasComponent: public BaseComponent
 	{
 		CanvasComponent();
 
-		///
+		CanvasComponent(uint32_t id)
+			:BaseComponent(id) {}
+
+		/// Data
 
 		std::unordered_map<size_t, Ref<UIElement>> Elements;
 
 	private:
 
-		friend class EditorLayer;
-
-		friend class WorldAdmin;
-
 		friend class cereal::access;
+		friend class EditorLayer;
+		friend class WorldAdmin;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Elements);
+			archive(Elements, ComponentID);
 		}
 	};
 }

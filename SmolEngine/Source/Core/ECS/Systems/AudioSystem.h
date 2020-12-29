@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/Core.h"
 
+#include <entt.hpp>
+
 namespace SmolEngine
 {
 	struct AudioSourceComponent;
@@ -19,9 +21,9 @@ namespace SmolEngine
 
 		///
 
-		static void OnAwake(AudioSourceComponent& audioSource, AudioEngine* audioEngine);
+		static void OnAwake(entt::registry& registry, AudioEngine* audioEngine);
 
-		static void OnReset(AudioSourceComponent& audioSource, AudioEngine* audioEngine);
+		static void OnReset(entt::registry& registry, AudioEngine* audioEngine);
 
 		///
 
@@ -41,11 +43,11 @@ namespace SmolEngine
 
 		static bool RenameClip(AudioSourceComponent& audioSource, const std::string& keyName, const std::string& newName);
 
-	private:
-
 		static void ReloadAllClips(AudioSourceComponent& audioSource, AudioEngine* audioEngine);
 
 		///
+		
+	private:
 
 		static void DebugPlay(Ref<AudioClip> clip, AudioEngine* audioEngine);
 
@@ -56,7 +58,6 @@ namespace SmolEngine
 	private:
 
 		friend class EditorLayer;
-
 		friend class WorldAdmin;
 
 	};

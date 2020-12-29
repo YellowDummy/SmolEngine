@@ -7,4 +7,9 @@ namespace SmolEngine
     {
 
     }
+
+    const HeadComponent& DefaultBaseTuple::GetInfo() const
+    {
+        return Info;
+    }
 }

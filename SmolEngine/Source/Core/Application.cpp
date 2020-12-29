@@ -17,10 +17,6 @@
 
 namespace SmolEngine 
 {
-	struct MyStruct: public PhysicsTupleBehaviour {
-		MyStruct() {}; void func(double val) { NATIVE_ERROR(val); }; int data = 0; void Update(float b) {} void Process() { NATIVE_ERROR("???"); }
-	};
-
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()

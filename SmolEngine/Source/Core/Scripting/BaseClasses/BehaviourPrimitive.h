@@ -10,8 +10,6 @@ namespace SmolEngine
 {
 	class Actor;
 
-	///
-
 	//Note:
 	//Base class for all script-systems
 
@@ -57,12 +55,8 @@ namespace SmolEngine
 
 		Ref<Actor> m_Actor = nullptr;
 
-		///
-
 		std::unordered_map<const char*, float*> m_OutFloatVariables;
-
 		std::unordered_map<const char*, int*> m_OutIntVariables;
-
 		std::unordered_map<const char*, std::string*> m_OutStringVariables;
 
 	private:
@@ -70,15 +64,10 @@ namespace SmolEngine
 		/// Friends
 
 		friend class SystemRegistry;
-
 		friend class PhysicsTupleBehaviour;
-
 		friend class CameraTupleBehaviour;
-
 		friend class BaseTupleBehaviour;
-
 		friend class CollisionListener2D;
-
 		friend class WorldAdmin;
 
 		/// RTTR

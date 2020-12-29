@@ -12,17 +12,6 @@ namespace SmolEngine
 
 	RTTR_REGISTRATION
 	{
-		// Physics Systems
 
-		SystemRegistry::AddPhysicsSystem<CharMovementSystem>("CharMovementSystem");
-
-	    // Camera Systems
-
-	    SystemRegistry::AddCameraSystem<CameraMovementSystem>("CameraMovementSystem");
-		SystemRegistry::AddCameraSystem<MainMenuSystem>("MainMenuSystem");
-
-		// Base Systems
-
-		SystemRegistry::AddDefaultSystem<DummyActorSystem>("DummyActorSystem");
 	}
 }

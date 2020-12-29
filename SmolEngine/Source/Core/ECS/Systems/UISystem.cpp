@@ -10,21 +10,31 @@
 
 namespace SmolEngine
 {
-	void UISystem::OnUpdate(CanvasComponent& canvas)
+	void UISystem::OnUpdate(entt::registry& registry)
 	{
 
 	}
 
-	void UISystem::OnEvent(CanvasComponent& canvas, Event& e)
+	void UISystem::OnEvent(entt::registry& registry, Event& e)
 	{
 		if (e.m_EventType == (int)EventType::S_MOUSE_PRESS)
 		{
-			OnMouseClick(canvas, e);
+			const auto& view = registry.view<CanvasComponent>();
+			for (const auto& entity : view)
+			{
+				auto& canvas = view.get<CanvasComponent>(entity);
+				OnMouseClick(canvas, e);
+			}
 		}
 
 		if (e.m_EventType == (int)EventType::S_MOUSE_MOVE)
 		{
-			OnMouseMove(canvas, e);
+			const auto& view = registry.view<CanvasComponent>();
+			for (const auto& entity : view)
+			{
+				auto& canvas = view.get<CanvasComponent>(entity);
+				OnMouseMove(canvas, e);
+			}
 		}
 	}
 

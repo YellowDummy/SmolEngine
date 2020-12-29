@@ -28,7 +28,9 @@ namespace SmolEngine
 
 	class Framebuffer;
 
-	struct CameraBaseTuple;
+	struct CameraComponent;
+
+	struct TransformComponent;
 
 	struct BehaviourComponent;
 
@@ -86,7 +88,7 @@ namespace SmolEngine
 		/// Rendering
 		/// 
 
-		void RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, CameraBaseTuple* target = nullptr);
+		void RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, CameraComponent* target = nullptr, TransformComponent* tranform = nullptr);
 
 		/// 
 		/// Assets
@@ -175,27 +177,26 @@ namespace SmolEngine
 		/// 
 
 		template<typename T>
-		T* AddTuple(Actor& actor)
+		T* AddComponent(Actor& actor)
 		{
-			return static_cast<T*>(ProcessTuple<T>(actor));
-		}
-
-		// Don't use! For internal needs
-		template<typename T>
-		BaseTuple* ProcessTuple(Actor& actor)
-		{
-			if (HasTuple<T>(actor))
+			if (HasComponent<T>(actor))
 			{
-				NATIVE_ERROR("Actor already have tuple!");
+				NATIVE_ERROR("Actor already have component!");
 				return nullptr;
 			}
 
-			if (std::is_same<T, ResourceTuple>::value)
+			auto& component = m_SceneData.m_Registry.emplace<T>(actor, actor.m_ComponentsCount);
+			actor.m_ComponentsCount++;
+			return &component;
+		}
+
+		template<typename T>
+		T* AddTuple(Actor& actor)
+		{
+			if (HasComponent<T>(actor))
 			{
-				if (HasTuple<CameraBaseTuple>(actor))
-				{
-					return nullptr;
-				}
+				NATIVE_ERROR("Actor already have tuple!");
+				return nullptr;
 			}
 
 			auto& component = m_SceneData.m_Registry.emplace<T>(actor);
@@ -203,15 +204,15 @@ namespace SmolEngine
 		}
 
 		template<typename T>
-		bool HasTuple(entt::entity entity)
+		bool HasComponent(entt::entity entity)
 		{
 			return m_SceneData.m_Registry.has<T>(entity);
 		}
 
 		template<typename T>
-		T* GetTuple(entt::entity entity)
+		T* GetComponent(entt::entity entity)
 		{
-			if (!HasTuple<T>(entity))
+			if (!HasComponent<T>(entity))
 			{
 				NATIVE_ERROR("Actor does not have tuple");
 				return nullptr;
@@ -229,21 +230,13 @@ namespace SmolEngine
 
 		bool OnActorNameChanged(const std::string& lastName, const std::string& newName);
 
-		bool PathCheck(std::string& path, const std::string& fileName);
-
 		bool LoadProjectConfig();
 
 		void DeleteSingletons();
 
 		void LoadSingletons();
 
-		///
-
-	private:
-
-		bool ChangeFilePath(const std::string& fileName, std::string& pathToChange);
-
-		bool IsPathValid(const std::string& path);
+		void UpdateIDSet();
 
 	private:
 

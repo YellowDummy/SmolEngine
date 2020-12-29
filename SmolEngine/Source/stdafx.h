@@ -51,9 +51,7 @@
 #include "Core/ECS/Components/Light2DSourceComponent.h"
 
 #include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
-#include "Core/ECS/ComponentTuples/PhysicsBaseTuple.h"
 #include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
-#include "Core/ECS/ComponentTuples/ResourceTuple.h"
 #include "Core/ECS/ComponentTuples/SingletonTuple.h"
 
 #include "Core/ECS/Systems/RendererSystem.h"

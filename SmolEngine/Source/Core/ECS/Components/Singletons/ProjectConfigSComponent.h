@@ -11,7 +11,6 @@ namespace SmolEngine
 	struct SceneConfigData
 	{
 		std::string FilePath = "";
-
 		std::string FileName = "";
 
 	private:

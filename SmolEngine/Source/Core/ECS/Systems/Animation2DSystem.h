@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 
 #include <string>
+#include <entt.hpp>
 
 namespace SmolEngine
 {
@@ -23,13 +24,13 @@ namespace SmolEngine
 
 		static void Stop(const std::string& clipName, Animation2DComponent& anim);
 
-		static void OnAwake(Animation2DComponent& anim);
+		static void OnAwake(entt::registry& registry);
 
-		static void OnReset(Animation2DComponent& anim);
+		static void OnReset(entt::registry& registry);
 
 		/// Update-Loop
 
-		static void Update(const Animation2DComponent& anim);
+		static void Update(entt::registry& registry);
 
 		/// Reset
 

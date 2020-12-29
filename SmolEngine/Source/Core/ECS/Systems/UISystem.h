@@ -3,10 +3,13 @@
 #include "Core/UI/UIElement.h"
 
 #include <glm/glm.hpp>
+#include <entt.hpp>
 
 namespace SmolEngine
 {
 	class UIElement;
+
+	class UIButton;
 
 	class UITextLabel;
 
@@ -22,9 +25,9 @@ namespace SmolEngine
 
 		/// Main
 
-		static void OnUpdate(CanvasComponent& canvas);
+		static void OnUpdate(entt::registry& registry);
 
-		static void OnEvent(CanvasComponent& canvas, Event& e);
+		static void OnEvent(entt::registry& registry, Event& e);
 
 		/// Elements
 
@@ -44,11 +47,11 @@ namespace SmolEngine
 
 		static Ref<UIElement> GetElement(const CanvasComponent& canvas, const size_t index);
 
-	private:
-
 		/// Events
 
 		static void ReloadElements(CanvasComponent& canvas);
+
+	private:
 
 		static bool OnMouseClick(CanvasComponent& canvas, Event& e);
 
@@ -58,11 +61,8 @@ namespace SmolEngine
 	private:
 
 		friend class cereal::access;
-
 		friend class WorldAdmin;
-
 		friend class EditorLayer;
-
 		friend class UILayer;
 	};
 }

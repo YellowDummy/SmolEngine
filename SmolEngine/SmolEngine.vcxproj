@@ -600,11 +600,11 @@
     <ClInclude Include="Source\Core\Audio\AudioSource.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\ECS\Actor.h" />
+    <ClInclude Include="Source\Core\ECS\ComponentsCore.h" />
+    <ClInclude Include="Source\Core\ECS\Components\BaseComponent.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\BaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.h" />
-    <ClInclude Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.h" />
-    <ClInclude Include="Source\Core\ECS\ComponentTuples\ResourceTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\SingletonTuple.h" />
     <ClInclude Include="Source\Core\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\AudioSourceComponent.h" />
@@ -704,10 +704,7 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanUniformBufferPool.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Core\SLog.h" />
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.h" />
     <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.h" />
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.h" />
     <ClInclude Include="Source\Core\Scripting\OutValues.h" />
     <ClInclude Include="Source\Core\Scripting\SystemRegistry.h" />
     <ClInclude Include="Source\Core\Time.h" />
@@ -733,10 +730,9 @@
     <ClCompile Include="Source\Core\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Core\Audio\AudioSource.cpp" />
     <ClCompile Include="Source\Core\ECS\Actor.cpp" />
+    <ClCompile Include="Source\Core\ECS\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.cpp" />
-    <ClCompile Include="Source\Core\ECS\ComponentTuples\PhysicsBaseTuple.cpp" />
-    <ClCompile Include="Source\Core\ECS\ComponentTuples\ResourceTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\SingletonTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Animation2DComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\AudioSourceComponent.cpp" />
@@ -821,10 +817,7 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanUniformBufferPool.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\BaseTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\CameraTupleBehaviour.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\PhysicsTupleBehaviour.cpp" />
     <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp" />
     <ClCompile Include="Source\Core\UI\UIButton.cpp" />
     <ClCompile Include="Source\Core\UI\UITextLabel.cpp" />
