@@ -8,10 +8,11 @@ namespace SmolEngine
 {
 	SystemRegistry* SystemRegistry::Instance = nullptr;
 
-	/// Add Your Systems Here
+	/// Add Your C++ Scripts Here
 
 	RTTR_REGISTRATION
 	{
-
+		SystemRegistry::AddScript<CharMovementScript>("CharMovement");
+	    SystemRegistry::AddScript<CameraMovementScript>("CameraMovement");
 	}
 }

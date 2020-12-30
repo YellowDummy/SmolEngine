@@ -9,6 +9,7 @@
 #include "Core/ImGui/AnimationPanel.h"
 #include "Core/Animation/AnimationClip.h"
 #include "Core/ECS/Components/BaseComponent.h"
+#include "Core/Scripting/OutValues.h"
 
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
@@ -125,7 +126,7 @@ namespace SmolEngine
 
 		void DrawCanvas(CanvasComponent* canvas);
 
-		void DrawBehaviorComponent(BehaviourComponent* behaviour);
+		void DrawBehaviorComponent(std::vector<OutValue>& outValues);
 
 		void DrawLight2D(Light2DSourceComponent* light);
 
@@ -160,6 +161,8 @@ namespace SmolEngine
 			return false;
 		}
 
+		void DrawScriptComponent(uint32_t index);
+
 	private:
 
 		glm::vec2 m_GameViewSize = { 0.0f, 0.0f };
@@ -187,9 +190,9 @@ namespace SmolEngine
 		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
 
-		static std::string m_TempActorName;
-		static std::string m_TempActorTag;
-		static std::string m_TempString;
+		inline static std::string m_TempActorName = "";
+		inline static std::string m_TempActorTag = "";
+		inline static std::string m_TempString = "";
 
 		inline static ImGuizmo::OPERATION m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 

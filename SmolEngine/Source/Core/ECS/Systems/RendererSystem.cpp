@@ -3,6 +3,7 @@
 
 #include "Core/ECS/ComponentsCore.h"
 #include "Core/Animation/AnimationClip.h"
+#include "Core/ECS/Systems/UISystem.h"
 
 #include "Core/Renderer/Renderer2D.h"
 #include "Core/Application.h"

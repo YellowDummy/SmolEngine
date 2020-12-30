@@ -14,7 +14,16 @@
 #include "Core/UI/UIButton.h"
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Physics2D/Box2D/CollisionListener2D.h"
-#include "Core/Scripting/BaseClasses/BehaviourPrimitive.h"
+#include "Core/Scripting/BehaviourPrimitive.h"
+
+#include "Core/ECS/Systems/RendererSystem.h"
+#include "Core/ECS/Systems/Box2DPhysicsSystem.h"
+#include "Core/ECS/Systems/AudioSystem.h"
+#include "Core/ECS/Systems/Animation2DSystem.h"
+#include "Core/ECS/Systems/CameraSystem.h"
+#include "Core/ECS/Systems/CommandSystem.h"
+#include "Core/ECS/Systems/UISystem.h"
+#include "Core/ECS/Systems/ScriptingSystem.h"
 
 #include "Core/Animation/AnimationClip.h"
 
@@ -113,13 +122,14 @@ namespace SmolEngine
 		Animation2DSystem::OnAwake(m_SceneData.m_Registry);
 
 		// Sending start callback to all systems-scripts
-		OnSystemBegin();
+		ScriptingSystem::OnSceneBegin(m_SceneData.m_Registry);
 		m_InPlayMode = true;
 	}
 
 	void WorldAdmin::OnEndPlay()
 	{
 		m_InPlayMode = false;
+		ScriptingSystem::OnSceneEnd(m_SceneData.m_Registry);
 
 		// Deleting all Rigidbodies
 		Box2DPhysicsSystem::DeleteBodies(m_SceneData.m_Registry, Box2DWorldSComponent::Get()->World);
@@ -148,7 +158,7 @@ namespace SmolEngine
 
 #endif
 		// Sending OnProcess callback
-		OnSystemTick(deltaTime);
+		ScriptingSystem::OnSceneTick(m_SceneData.m_Registry, deltaTime);
 
 		// Binding Framebuffer
 		FramebufferSComponent::Get()[0]->Bind(); // 0 is default framebuffer
@@ -184,141 +194,6 @@ namespace SmolEngine
 		// Rendering framebuffer to screen. We don't need to do this inside editor - it's handled by dear imgui
 		Renderer2D::DrawFrameBuffer(FramebufferSComponent::Get()[0]->GetColorAttachmentID());
 #endif
-	}
-
-	void WorldAdmin::OnSystemBegin()
-	{
-		// DefaultBase
-		{
-			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple, BehaviourComponent>();
-
-			view.each([&](DefaultBaseTuple& tuple, BehaviourComponent& behaviour)
-			{
-				const auto& sysRef = m_SystemMap[behaviour.SystemName];
-
-				PrepareSystem(behaviour, sysRef);
-
-				sysRef.type.invoke("OnBegin", sysRef.variant, { tuple });
-			});
-		}
-
-		// CameraBase
-
-		{
-			const auto& group = m_SceneData.m_Registry.view<CameraBaseTuple, BehaviourComponent>();
-			for (const auto& entity : group)
-			{
-				auto& [tuple, behaviour] = group.get<CameraBaseTuple, BehaviourComponent>(entity);
-				const auto& sysRef = m_SystemMap[behaviour.SystemName];
-
-				PrepareSystem(behaviour, sysRef);
-
-				sysRef.type.invoke("OnBegin", sysRef.variant, { tuple });
-			}
-		}
-	}
-
-	void WorldAdmin::OnSystemTick(DeltaTime deltaTime)
-	{
-
-#ifdef SMOLENGINE_EDITOR
-
-		if (!m_InPlayMode) { return; }
-#endif
-		// DefaultBase
-		{
-			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple, BehaviourComponent>();
-
-			view.each([&](DefaultBaseTuple& tuple, BehaviourComponent& behaviour)
-			{
-				const auto& sysRef = m_SystemMap[behaviour.SystemName];
-
-				PrepareSystem(behaviour, sysRef);
-
-				sysRef.type.invoke("OnProcess", sysRef.variant, { deltaTime, tuple });
-			});
-		}
-
-		// CameraBase
-		{
-			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple, BehaviourComponent>();
-
-			view.each([&](CameraBaseTuple& tuple, BehaviourComponent& behaviour)
-			{
-				const auto& sysRef = m_SystemMap[behaviour.SystemName];
-
-				PrepareSystem(behaviour, sysRef);
-
-				sysRef.type.invoke("OnProcess", sysRef.variant, { deltaTime, tuple });
-			});
-		}
-	}
-
-	void WorldAdmin::PrepareSystem(const BehaviourComponent& behaviour, const SystemInstance& sysRef)
-	{
-		auto& primitive = sysRef.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
-
-		// Setting Actor
-		primitive.m_Actor = behaviour.Actor;
-
-		// Temp
-		// Setting Out-Properties
-		for (const auto& value: behaviour.OutValues)
-		{
-			switch (value.Value.index())
-			{
-
-			case (uint32_t)OutValueType::Float:
-			{
-				for (const auto& pair : primitive.m_OutFloatVariables)
-				{
-					auto [varName, varValue] = pair;
-
-					if (value.Key == varName)
-					{
-						*varValue = std::get<float>(value.Value);
-						break;
-					}
-				}
-
-				break;
-			}
-			case (uint32_t)OutValueType::Int:
-			{
-				for (const auto& pair : primitive.m_OutIntVariables)
-				{
-					auto [varName, varValue] = pair;
-
-					if (value.Key == varName)
-					{
-						*varValue = std::get<int>(value.Value);
-						break;
-					}
-				}
-
-				break;
-			}
-			case (uint32_t)OutValueType::String:
-			{
-				for (const auto& pair : primitive.m_OutStringVariables)
-				{
-					auto& [varName, varValue] = pair;
-
-					if (value.Key == varName)
-					{
-						*varValue = std::get<std::string>(value.Value);
-						break;
-					}
-				}
-
-				break;
-			}
-			default:
-
-				break;
-			}
-				
-		}
 	}
 
 	// TODO: Fix this event mess
@@ -400,108 +275,10 @@ namespace SmolEngine
 		// Reloading 2D Animations
 		AssetManager::Reload2DAnimations(m_SceneData.m_Registry);
 
-		// Realoding Canvas
+		// Reloading Canvas
 		AssetManager::ReloadCanvases(m_SceneData.m_Registry);
-	}
 
-	void WorldAdmin::ReloadScripts()
-	{
-		const auto& view = m_SceneData.m_Registry.view<BehaviourComponent>();
-
-		view.each([&](BehaviourComponent& behaviour)
-		{
-			Ref<Actor> result = FindActorByID(behaviour.ID);
-			if (result == nullptr)
-			{
-				NATIVE_ERROR("ReloadScripts:: Actor <{}> not found!", behaviour.ID);
-			}
-
-			behaviour.Actor = result;
-
-			// Updating out-variables 
-
-			{
-				auto type = rttr::type::get_by_name(behaviour.SystemName.c_str());
-				auto variant = type.create();
-
-				auto& primitive = variant.get_wrapped_value_non_const<BehaviourPrimitive>();
-
-				// TOFIX: remove values from std::vector
-				// Float
-
-				for (const auto& pair : primitive.m_OutFloatVariables)
-				{
-					const auto [varName, varValue] = pair;
-
-					bool isPresent = false;
-
-					for (const auto& val : behaviour.OutValues)
-					{
-						if (val.Key == varName)
-						{
-							isPresent = true;
-							break;
-						}
-					}
-
-					if (!isPresent)
-					{
-						OutValue value = OutValue(varName, *varValue, OutValueType::Float);
-						behaviour.OutValues.push_back(value);
-					}
-				}
-
-				// Int
-
-				for (const auto& pair : primitive.m_OutIntVariables)
-				{
-					const auto [varName, varValue] = pair;
-
-					bool isPresent = false;
-
-					for (const auto& val : behaviour.OutValues)
-					{
-						if (val.Key == varName)
-						{
-							isPresent = true;
-							break;
-						}
-					}
-
-					if (!isPresent)
-					{
-						OutValue value = OutValue(varName, *varValue, OutValueType::Int);
-						behaviour.OutValues.push_back(value);
-					}
-				}
-
-				// String
-
-				for (const auto& pair : primitive.m_OutStringVariables)
-				{
-					const auto& [varName, varValue] = pair;
-
-					bool isPresent = false;
-
-					for (const auto& val : behaviour.OutValues)
-					{
-						if (val.Key == varName)
-						{
-							isPresent = true;
-							break;
-						}
-					}
-
-					if (!isPresent)
-					{
-						OutValue value = OutValue(varName, *varValue, OutValueType::String);
-						strcpy(value.stringBuffer, varValue->data());
-						behaviour.OutValues.push_back(value);
-					}
-				}
-			}
-
-		});
+		ScriptingSystem::ReloadScripts(m_SceneData.m_Registry, m_SceneData.m_ActorPool);
 	}
 
 	bool WorldAdmin::AddAsset(const std::string& fileName, const std::string& filePath)
@@ -686,14 +463,7 @@ namespace SmolEngine
 
 	BehaviourComponent* WorldAdmin::AddBehaviour(const std::string& systemName, const Ref<Actor>& actor)
 	{
-		if (m_SceneData.m_Registry.has<BehaviourComponent>(*actor))
-		{
-			NATIVE_ERROR("Actor already have behaviour!");
-			return nullptr;
-		}
-
 		auto& systemMap = SystemRegistry::Get()->m_SystemMap;
-
 		const auto& result = systemMap.find(systemName);
 		if (result == systemMap.end())
 		{
@@ -701,34 +471,40 @@ namespace SmolEngine
 			return nullptr;
 		}
 
-		if (result->second != (uint16_t)actor->m_ActorType)
+		BehaviourComponent* behaviour = nullptr;
 		{
-			NATIVE_ERROR("Actor base type does not match the system type");
-			return nullptr;
+			if (!HasComponent<BehaviourComponent>(*actor))
+			{
+				behaviour = AddComponent<BehaviourComponent>(*actor);
+				behaviour->Actor = actor;
+				behaviour->ID = actor->GetID();
+			}
+			else
+			{
+				behaviour = GetComponent<BehaviourComponent>(*actor);
+			}
 		}
 
-		auto& behaviour = m_SceneData.m_Registry.emplace<BehaviourComponent>(*actor);
-
-		// 
-
-		behaviour.Actor = actor;
-		behaviour.ID = actor->GetID();
-		behaviour.SystemName = systemName;
-
-		// Creating out-variables 
-
+		uint32_t index = actor->m_ComponentsCount;
+		actor->m_ComponentsCount++;
+		ScriptInstance instance = {};
 		{
-			auto type = rttr::type::get_by_name(systemName.c_str());
-			auto variant = type.create();
+			instance.type = rttr::type::get_by_name(systemName);
+			instance.variant = instance.type.create();
+		}
 
-			const auto& primitive = variant.get_wrapped_value<BehaviourPrimitive>();
+		std::vector< OutValue> tempValues;
+		// Creating out-variables 
+		{
+			auto& primitive = instance.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+			primitive.m_Actor = actor;
 
 			for (const auto& pair : primitive.m_OutFloatVariables)
 			{
 				const auto [varName, varValue] = pair;
 
 				OutValue value = OutValue(varName, *varValue, OutValueType::Float);
-				behaviour.OutValues.push_back(value);
+				tempValues.push_back(value);
 			}
 
 			for (const auto& pair : primitive.m_OutIntVariables)
@@ -736,7 +512,7 @@ namespace SmolEngine
 				const auto [varName, varValue] = pair;
 
 				OutValue value = OutValue(varName, *varValue, OutValueType::Int);
-				behaviour.OutValues.push_back(value);
+				tempValues.push_back(value);
 			}
 
 			for (const auto& pair : primitive.m_OutStringVariables)
@@ -745,11 +521,14 @@ namespace SmolEngine
 
 				OutValue value = OutValue(varName, *varValue, OutValueType::String);
 				strcpy(value.stringBuffer, varValue->data());
-				behaviour.OutValues.push_back(value);
+				tempValues.push_back(value);
 			}
 		}
 
-		return &behaviour;
+		behaviour->OutValues[systemName].ScriptID = index;
+		behaviour->OutValues[systemName].OutValues = std::move(tempValues);
+		behaviour->Scripts.push_back(std::move(instance));
+		return behaviour;
 	}
 
 	void WorldAdmin::RemoveChild(Ref<Actor>& parent, Ref<Actor>& child)
@@ -958,10 +737,6 @@ namespace SmolEngine
 		// Reloading Assets
 
 		ReloadAssets();
-
-		// Reloading Scripts
-
-		ReloadScripts();
 
 		CONSOLE_WARN(std::string("Scene loaded successfully"));
 		return true;

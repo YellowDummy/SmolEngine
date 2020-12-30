@@ -54,17 +54,7 @@
 #include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
 #include "Core/ECS/ComponentTuples/SingletonTuple.h"
 
-#include "Core/ECS/Systems/RendererSystem.h"
-#include "Core/ECS/Systems/Box2DPhysicsSystem.h"
-#include "Core/ECS/Systems/AudioSystem.h"
-#include "Core/ECS/Systems/Animation2DSystem.h"
-#include "Core/ECS/Systems/CameraSystem.h"
-#include "Core/ECS/Systems/CommandSystem.h"
-#include "Core/ECS/Systems/UISystem.h"
-
 #include "../../SmolEngine/Source/Core/Application.h"
-
-#include "Core/Scripting/SystemRegistry.h"
 
 #include "../../SmolEngine/Source/Core/ImGui/AnimationPanel.h"
 #include "../../SmolEngine/Source/Core/ImGui/BuildPanel.h"

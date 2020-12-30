@@ -5,7 +5,6 @@
 
 #include "Core/ECS/ComponentTuples/BaseTuple.h"
 #include "Core/ECS/Actor.h"
-#include "Core/Scripting/SystemRegistry.h"
 
 #include "Core/Audio/AudioEngine.h"
 #include "Core/Application.h"
@@ -75,16 +74,6 @@ namespace SmolEngine
 		void OnEvent(Event& e);
 
 		/// 
-		/// Systems Processing
-		/// 
-
-		void OnSystemBegin();
-
-		void OnSystemTick(DeltaTime deltaTime);
-
-		void PrepareSystem(const BehaviourComponent& behaviour, const SystemInstance& sysRef);
-
-		/// 
 		/// Rendering
 		/// 
 
@@ -99,8 +88,6 @@ namespace SmolEngine
 		bool DeleteAsset(const std::string& fileName);
 
 		void ReloadAssets();
-
-		void ReloadScripts();
 
 		/// 
 		/// Scene handling
@@ -154,8 +141,6 @@ namespace SmolEngine
 		/// Getters
 		/// 
 		
-		std::unordered_map<std::string, SystemInstance>& GetSystemMap() { return m_SystemMap; }
-
 		const std::unordered_map<std::string, std::string>& GetAssetMap();
 
 		std::vector<Ref<Actor>> GetActorListByTag(const std::string& tag);
@@ -176,8 +161,8 @@ namespace SmolEngine
 		/// Templates
 		/// 
 
-		template<typename T>
-		T* AddComponent(Actor& actor)
+		template<typename T, typename... Args>
+		T* AddComponent(Actor& actor, Args&&... args)
 		{
 			if (HasComponent<T>(actor))
 			{
@@ -185,7 +170,8 @@ namespace SmolEngine
 				return nullptr;
 			}
 
-			auto& component = m_SceneData.m_Registry.emplace<T>(actor, actor.m_ComponentsCount);
+			auto& component = m_SceneData.m_Registry.emplace<T>(actor, std::forward<Args>(args)...);
+			component.ComponentID = actor.m_ComponentsCount;
 			actor.m_ComponentsCount++;
 			return &component;
 		}
@@ -241,35 +227,19 @@ namespace SmolEngine
 	private:
 
 		SceneData m_SceneData;
-
-		///
-
-		std::unordered_map<std::string, SystemInstance> m_SystemMap;
-
 		std::unordered_map<std::string, size_t> m_IDSet;
 
-		///
-
 		Ref<EditorCameraController> m_EditorCamera = nullptr;
-
 		Ref<SubTexture2D> m_TestSub = nullptr;
-
 		static Ref<WorldAdmin> s_Scene;
-
-		///
-
 		bool m_InPlayMode = false;
 
 	private:
 
 		friend class Animation2DController;
-
 		friend class SettingsWindow;
-
 		friend class AnimationPanel;
-
 		friend class EditorLayer;
-
 		friend class Actor;
 	};
 }

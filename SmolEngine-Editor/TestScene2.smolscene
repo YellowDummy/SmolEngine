@@ -10,50 +10,19 @@
             "value0": 2,
             "value1": "Pawn",
             "value2": "Default",
-            "value3": true
-        },
-        "value1": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": -1.7035870552062989,
-            "value7": -1.584449052810669,
-            "value8": 0.0
-        },
-        "value2": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0,
-            "value3": 1.0,
-            "value4": 0,
-            "value5": "",
-            "value6": "",
-            "value7": true
-        },
-        "value3": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.800000011920929,
-            "value3": 0.6000000238418579,
-            "value4": 0.4000000059604645,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": 1.0,
-            "value8": true
+            "value3": true,
+            "value4": 0
         }
     },
-    "value7": 0,
+    "value7": 1,
     "value8": 1,
-    "value9": 1,
-    "value10": {
+    "value9": {
         "value0": {
             "value0": 1,
             "value1": "Camera",
             "value2": "Default",
-            "value3": true
+            "value3": true,
+            "value4": 0
         },
         "value1": {
             "value0": 1.7777777910232545,
@@ -62,184 +31,92 @@
             "value3": true,
             "value4": -1.0,
             "value5": 1.0,
-            "value6": true
-        },
-        "value2": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 1.0,
-            "value4": 1.0,
-            "value5": 1.0,
-            "value6": 0.0,
-            "value7": 0.0,
-            "value8": 0.0
-        },
+            "value6": true,
+            "value7": 0
+        }
+    },
+    "value10": 1,
+    "value11": 2,
+    "value12": {
+        "value0": 2,
+        "value1": [
+            {
+                "key": "CharMovement",
+                "value": {
+                    "value0": 2,
+                    "value1": [
+                        {
+                            "value0": "Speed",
+                            "value1": {
+                                "index": 0,
+                                "data": 10.0
+                            },
+                            "value2": 0
+                        },
+                        {
+                            "value0": "Speed2",
+                            "value1": {
+                                "index": 1,
+                                "data": 12
+                            },
+                            "value2": 1
+                        }
+                    ]
+                }
+            }
+        ],
+        "value2": 1,
         "value3": {
-            "value0": []
+            "ptr_wrapper": {
+                "id": 2147483649,
+                "data": {
+                    "value0": 2,
+                    "value1": 0,
+                    "value2": {
+                        "ptr_wrapper": {
+                            "id": 0
+                        }
+                    },
+                    "value3": [],
+                    "value4": 1,
+                    "value5": 3
+                }
+            }
         }
     },
-    "value11": 1,
-    "value12": 2,
-    "value13": {
-        "value0": {
-            "value0": [],
-            "value1": true
-        },
-        "value1": {
-            "value0": [
-                {
-                    "key": "NoNameClip",
-                    "value": {
-                        "ptr_wrapper": {
-                            "id": 2147483649,
-                            "data": {
-                                "value0": [
-                                    {
-                                        "key": 0,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483650,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_1.png",
-                                                    "value1": "skin1_idle_1.png",
-                                                    "value2": 200.0,
-                                                    "value3": 0.8669354915618897,
-                                                    "value4": 0.3051413595676422,
-                                                    "value5": 0.12584546208381654,
-                                                    "value6": 1.0,
-                                                    "value7": 2.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 1,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483651,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\skin1_idle_2.png",
-                                                    "value1": "skin1_idle_2.png",
-                                                    "value2": 150.0,
-                                                    "value3": 0.69998699426651,
-                                                    "value4": 0.9233871102333069,
-                                                    "value5": 0.7997191548347473,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    }
-                                ],
-                                "value1": "NoNameClip",
-                                "value2": true
-                            }
-                        }
-                    }
-                },
-                {
-                    "key": "EnemyIdle",
-                    "value": {
-                        "ptr_wrapper": {
-                            "id": 2147483652,
-                            "data": {
-                                "value0": [
-                                    {
-                                        "key": 0,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483653,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-1.png",
-                                                    "value1": "idle-1.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 1,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483654,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-2.png",
-                                                    "value1": "idle-2.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 2,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483655,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-3.png",
-                                                    "value1": "idle-3.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "key": 3,
-                                        "value": {
-                                            "ptr_wrapper": {
-                                                "id": 2147483656,
-                                                "data": {
-                                                    "value0": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Temp\\idle-4.png",
-                                                    "value1": "idle-4.png",
-                                                    "value2": 220.0,
-                                                    "value3": 1.0,
-                                                    "value4": 1.0,
-                                                    "value5": 1.0,
-                                                    "value6": 1.0,
-                                                    "value7": 1.0,
-                                                    "value8": 1.0
-                                                }
-                                            }
-                                        }
-                                    }
-                                ],
-                                "value1": "EnemyIdle",
-                                "value2": false
-                            }
-                        }
-                    }
-                }
-            ],
-            "value1": {
-                "ptr_wrapper": {
-                    "id": 0
-                }
-            },
-            "value2": 0
-        }
+    "value13": 0,
+    "value14": 0,
+    "value15": 0,
+    "value16": 0,
+    "value17": 2,
+    "value18": 1,
+    "value19": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 0.0,
+        "value7": 0.0,
+        "value8": 0.0,
+        "value9": 0
     },
-    "value14": 0
+    "value20": 2,
+    "value21": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 0.0,
+        "value7": 0.0,
+        "value8": 0.0,
+        "value9": 0
+    },
+    "value22": 0,
+    "value23": 0
 }|{
     "value0": [
         {
@@ -249,14 +126,15 @@
                     "id": 2147483649,
                     "data": {
                         "value0": 1,
-                        "value1": 2,
+                        "value1": 1,
                         "value2": {
                             "ptr_wrapper": {
                                 "id": 0
                             }
                         },
                         "value3": [],
-                        "value4": 0
+                        "value4": 0,
+                        "value5": 1
                     }
                 }
             }
@@ -275,22 +153,14 @@
                             }
                         },
                         "value3": [],
-                        "value4": 1
+                        "value4": 1,
+                        "value5": 3
                     }
                 }
             }
         }
     ],
-    "value1": [
-        {
-            "key": "playerIdle2.smolanim",
-            "value": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\playerIdle2.smolanim"
-        },
-        {
-            "key": "EnemyAttack.smolanim",
-            "value": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\EnemyAttack.smolanim"
-        }
-    ],
+    "value1": [],
     "value2": 0,
     "value3": 0.0,
     "value4": -9.8100004196167,

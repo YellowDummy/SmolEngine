@@ -38,6 +38,7 @@ namespace SmolEngine
 				{
 					ImGui::BeginChild("ConsoleChild");
 					{
+						ImGui::SetWindowFontScale(0.9f);
 						ImGui::SameLine();
 						if (ImGui::Button("Clear"))
 						{

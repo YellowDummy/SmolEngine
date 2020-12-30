@@ -1632,9 +1632,6 @@
     <ClInclude Include="Source\Core\SLog.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Scripting\OutValues.h">
       <Filter>Source\Core\Scripting</Filter>
     </ClInclude>
@@ -1667,6 +1664,10 @@
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\ComponentsCore.h" />
     <ClInclude Include="Source\Core\ECS\Components\BaseComponent.h" />
+    <ClInclude Include="Source\Core\Scripting\BehaviourPrimitive.h">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\ScriptingSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1966,9 +1967,6 @@
     <ClCompile Include="Source\Core\SLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp">
-      <Filter>Source\Core\Scripting\BaseClasses</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp">
       <Filter>Source\Core\Scripting</Filter>
     </ClCompile>
@@ -1985,5 +1983,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Components\BaseComponent.cpp" />
+    <ClCompile Include="Source\Core\Scripting\BehaviourPrimitive.cpp">
+      <Filter>Source\Core\Scripting\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\ScriptingSystem.cpp" />
   </ItemGroup>
 </Project>

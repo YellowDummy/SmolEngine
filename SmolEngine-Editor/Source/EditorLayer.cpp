@@ -33,6 +33,15 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
+#include "Core/ECS/Systems/RendererSystem.h"
+#include "Core/ECS/Systems/Box2DPhysicsSystem.h"
+#include "Core/ECS/Systems/AudioSystem.h"
+#include "Core/ECS/Systems/Animation2DSystem.h"
+#include "Core/ECS/Systems/CameraSystem.h"
+#include "Core/ECS/Systems/CommandSystem.h"
+#include "Core/ECS/Systems/UISystem.h"
+#include "Core/ECS/Systems/ScriptingSystem.h"
+
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Core/Renderer/Vulkan/Vulkan.h"
@@ -43,14 +52,6 @@
 
 namespace SmolEngine
 {
-	std::string EditorLayer::m_TempActorName = "";
-
-	std::string EditorLayer::m_TempActorTag = "";
-
-	std::string EditorLayer::m_TempString = "";
-
-	///
-
 	void EditorLayer::OnAttach()
 	{
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
@@ -809,9 +810,9 @@ namespace SmolEngine
 		}
 	}
 
-	void EditorLayer::DrawBehaviorComponent(BehaviourComponent* behaviour)
+	void EditorLayer::DrawBehaviorComponent(std::vector<OutValue>& outValues)
 	{
-		for (auto& val : behaviour->OutValues)
+		for (auto& val : outValues)
 		{
 			switch (val.Value.index())
 			{
@@ -880,7 +881,7 @@ namespace SmolEngine
 			ImGui::Begin("Scene View", &enabled);
 			{
 
-				if (ImGui::IsWindowFocused()) { isSceneViewFocused = true; }
+				if (ImGui::IsWindowFocused() && ImGui::IsWindowHovered()) { isSceneViewFocused = true; }
 				else { isSceneViewFocused = false; }
 
 				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
@@ -995,6 +996,7 @@ namespace SmolEngine
 		{
 			ImGui::BeginChild("InspectorChild");
 
+			ImGui::SetWindowFontScale(0.9f);
 			if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
 			{
 				ImGui::Text("No Actor selected");
@@ -1138,6 +1140,8 @@ namespace SmolEngine
 						}
 						ImGui::NewLine();
 					}
+
+					DrawScriptComponent(i);
 				}
 
 				ImGui::Separator();
@@ -1159,6 +1163,11 @@ namespace SmolEngine
 					"Light 2D", "Texture 2D",
 					"Rigidbody 2D", "Canvas"
 				};
+
+				for (const auto& [key, name] : SystemRegistry::Get()->m_SystemMap)
+				{
+					list.push_back(name);
+				}
 
 				// Scripts
 
@@ -1198,32 +1207,86 @@ namespace SmolEngine
 					if (name == "Audio Source")
 					{
 						m_Scene->AddComponent<AudioSourceComponent>(*m_SelectedActor.get());
+
+						ImGui::NewLine();
+						ImGui::NewLine();
+						ImGui::EndChild();
+						ImGui::End();
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						return;
 					}
 					if (name == "Animation 2D")
 					{
 						m_Scene->AddComponent<Animation2DComponent>(*m_SelectedActor.get());
+						ImGui::NewLine();
+						ImGui::NewLine();
+						ImGui::EndChild();
+						ImGui::End();
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						return;
 					}
 					if (name == "Light 2D")
 					{
 						m_Scene->AddComponent<Light2DSourceComponent>(*m_SelectedActor.get());
+						ImGui::NewLine();
+						ImGui::NewLine();
+						ImGui::EndChild();
+						ImGui::End();
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						return;
 					}
 					if (name == "Texture 2D")
 					{
 						m_Scene->AddComponent<Texture2DComponent>(*m_SelectedActor.get());
+						ImGui::NewLine();
+						ImGui::NewLine();
+						ImGui::EndChild();
+						ImGui::End();
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						return;
 					}
 					if (name == "Rigidbody 2D")
 					{
-						m_Scene->AddComponent<Body2DComponent>(*m_SelectedActor.get());
+						m_Scene->AddComponent<Body2DComponent>(*m_SelectedActor.get(), m_SelectedActor, 0);
+						ImGui::NewLine();
+						ImGui::NewLine();
+						ImGui::EndChild();
+						ImGui::End();
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						return;
 					}
 					if (name == "Canvas")
 					{
 						m_Scene->AddComponent<CanvasComponent>(*m_SelectedActor.get());
+						ImGui::NewLine();
+						ImGui::NewLine();
+						ImGui::EndChild();
+						ImGui::End();
+
+						name = "";
+						m_SelectedActor->m_showComponentUI = false;
+						return;
+					}
+					
+					auto& result = SystemRegistry::Get()->m_SystemMap.find(name);
+					if (result != SystemRegistry::Get()->m_SystemMap.end())
+					{
+						m_Scene->AddBehaviour(name, m_SelectedActor);
 					}
 
 					name = "";
 					m_SelectedActor->m_showComponentUI = false;
 				}
-
 			}
 
 			ImGui::NewLine();
@@ -1239,6 +1302,7 @@ namespace SmolEngine
 	{
 		ImGui::Begin("Hierarchy");
 		{
+			ImGui::SetWindowFontScale(0.9f);
 			static char name[128];
 			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
 			ImGui::Separator();
@@ -1299,7 +1363,9 @@ namespace SmolEngine
 						}
 						if (ImGui::MenuItem("Rigidbody 2D"))
 						{
-							m_Scene->AddComponent<Body2DComponent>(*m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+							Ref<Actor> actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str());
+							m_Scene->AddComponent<Body2DComponent>(*actor,
+								actor, 0);
 						}
 						if (ImGui::MenuItem("Animation 2D"))
 						{
@@ -1327,6 +1393,12 @@ namespace SmolEngine
 				{
 					for (const auto& actor : m_Scene->GetSortedActorList())
 					{
+						auto result = actor->GetName().find(name);
+						if (result == std::string::npos)
+						{
+							continue;
+						}
+
 						if (ImGui::TreeNodeEx(actor->GetName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
 						{
 							ImGui::TreePop();
@@ -1637,5 +1709,67 @@ namespace SmolEngine
 		m_FileName = "";
 		m_IDBuffer = 0;
 		m_FileBrowserState = FileBrowserFlags::None;
+	}
+
+	void EditorLayer::DrawScriptComponent(uint32_t index)
+	{
+		if (m_Scene->HasComponent<BehaviourComponent>(*m_SelectedActor.get()))
+		{
+			BehaviourComponent* comp = m_Scene->GetComponent<BehaviourComponent>(*m_SelectedActor.get());
+			bool is_active = false;
+			uint32_t scriptID = 0;
+			std::string scriptName = "";
+			for (auto& [name, data] : comp->OutValues)
+			{
+				if (data.ScriptID == index)
+				{
+					is_active = true;
+					scriptID = data.ScriptID;
+					scriptName = name;
+					break;
+				}
+			}
+
+			if (!is_active)
+				return;
+
+			ImGui::NewLine();
+			if (ImGui::CollapsingHeader(scriptName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			{
+
+				ImGui::NewLine();
+				ImGui::Extensions::Text("Script Type", "C++ Script");
+				ImGui::NewLine();
+
+				for (auto& val : comp->OutValues[scriptName].OutValues)
+				{
+					switch (val.Value.index())
+					{
+
+					case (uint32_t)OutValueType::Float:
+					{
+						ImGui::Extensions::InputFloat(val.Key.c_str(), std::get<float>(val.Value));
+
+						break;
+					}
+					case (uint32_t)OutValueType::Int:
+					{
+						ImGui::Extensions::InputInt(val.Key.c_str(), std::get<int>(val.Value));
+
+						break;
+					}
+					case (uint32_t)OutValueType::String:
+					{
+						ImGui::Extensions::InputRawString(val.Key.c_str(), std::get<std::string>(val.Value), val.Key.c_str());
+
+						break;
+					}
+					default:
+						break;
+					}
+				}
+				ImGui::NewLine();
+			}
+		}
 	}
 }

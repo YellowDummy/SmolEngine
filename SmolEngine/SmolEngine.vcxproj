@@ -627,6 +627,7 @@
     <ClInclude Include="Source\Core\ECS\Systems\CameraSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\CommandSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\RendererSystem.h" />
+    <ClInclude Include="Source\Core\ECS\Systems\ScriptingSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\UISystem.h" />
     <ClInclude Include="Source\Core\ECS\WorldAdmin.h" />
     <ClInclude Include="Source\Core\EngineCommand.h" />
@@ -704,7 +705,7 @@
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanUniformBufferPool.h" />
     <ClInclude Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Core\SLog.h" />
-    <ClInclude Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.h" />
+    <ClInclude Include="Source\Core\Scripting\BehaviourPrimitive.h" />
     <ClInclude Include="Source\Core\Scripting\OutValues.h" />
     <ClInclude Include="Source\Core\Scripting\SystemRegistry.h" />
     <ClInclude Include="Source\Core\Time.h" />
@@ -755,6 +756,7 @@
     <ClCompile Include="Source\Core\ECS\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\CommandSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\RendererSystem.cpp" />
+    <ClCompile Include="Source\Core\ECS\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\UISystem.cpp" />
     <ClCompile Include="Source\Core\ECS\WorldAdmin.cpp" />
     <ClCompile Include="Source\Core\EngineCommand.cpp" />
@@ -817,7 +819,7 @@
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanUniformBufferPool.cpp" />
     <ClCompile Include="Source\Core\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
-    <ClCompile Include="Source\Core\Scripting\BaseClasses\BehaviourPrimitive.cpp" />
+    <ClCompile Include="Source\Core\Scripting\BehaviourPrimitive.cpp" />
     <ClCompile Include="Source\Core\Scripting\SystemRegistry.cpp" />
     <ClCompile Include="Source\Core\UI\UIButton.cpp" />
     <ClCompile Include="Source\Core\UI\UITextLabel.cpp" />

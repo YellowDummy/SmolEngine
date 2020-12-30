@@ -21,6 +21,9 @@
 #include "Core/ECS/ComponentTuples/DefaultBaseTuple.h"
 #include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
 #include "Core/ECS/ComponentTuples/SingletonTuple.h"
+#include "Core/ECS/ComponentsCore.h"
+
+#include "Core/Scripting/BehaviourPrimitive.h"
 
 #include "Core/Renderer/Renderer.h"
 #include "Core/Renderer/Texture.h"

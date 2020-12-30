@@ -25,52 +25,29 @@ namespace SmolEngine
 
 	public:
 
-		int m_Type = (int)Body2DType::Static; // imgui support
-
-		int m_ShapeType = (int)ShapeType::Box;
-
-		int m_CollisionLayer = 0;
-
-		///
-
-		float m_GravityScale = 1.0f;
-
-		float m_Friction = 0.3f;
-
-		float m_Restitution = 0.0f;
-
-		float m_Density = 1.0f;
-
-		float m_Radius = 1.0f;
-
-		float m_InertiaMoment = 0.0f;
-
-		float m_Mass = 1.0f;
-
-		///
-
-		bool m_canSleep = true;
-
-		bool m_IsAwake = true;
-
-		bool m_IsBullet = false;
-
-		bool m_IsTrigger = false;
-
-		///
-
 		glm::vec2 m_Shape = glm::vec2(1.0f);
-
 		glm::vec2 m_Offset = glm::vec2(0.0f);
-
 		glm::vec2 m_MassCenter = glm::vec2(0.0f);
 
-		///
+		float m_GravityScale = 1.0f;
+		float m_Friction = 0.3f;
+		float m_Restitution = 0.0f;
+		float m_Density = 1.0f;
+		float m_Radius = 1.0f;
+		float m_InertiaMoment = 0.0f;
+		float m_Mass = 1.0f;
+
+		int m_Type = (int)Body2DType::Static; // imgui support
+		int m_ShapeType = (int)ShapeType::Box;
+		int m_CollisionLayer = 0;
+
+		bool m_canSleep = true;
+		bool m_IsAwake = true;
+		bool m_IsBullet = false;
+		bool m_IsTrigger = false;
 
 		b2Body* m_Body = nullptr;
-
 		b2Fixture* m_Fixture = nullptr;
-
 		b2Joint* m_Joint = nullptr;
 
 	private:

@@ -4,6 +4,8 @@
 
 #include <string>
 #include <any>
+#include <rttr/registration.h>
+#include <rttr/type.h>
 #include <rttr/registration_friend>
 
 namespace SmolEngine
@@ -64,10 +66,8 @@ namespace SmolEngine
 		/// Friends
 
 		friend class SystemRegistry;
-		friend class PhysicsTupleBehaviour;
-		friend class CameraTupleBehaviour;
-		friend class BaseTupleBehaviour;
 		friend class CollisionListener2D;
+		friend class ScriptingSystem;
 		friend class WorldAdmin;
 
 		/// RTTR

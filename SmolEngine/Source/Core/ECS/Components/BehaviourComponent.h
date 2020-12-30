@@ -2,6 +2,7 @@
 
 #include "Core/Core.h"
 #include "Core/ECS/Components/BaseComponent.h"
+#include "Core/Scripting/SystemRegistry.h"
 #include "Core/Scripting/OutValues.h"
 
 #include <string>
@@ -9,6 +10,7 @@
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
+#include <cereal/types/unordered_map.hpp>
 
 namespace SmolEngine
 {
@@ -23,10 +25,22 @@ namespace SmolEngine
 
 		/// Data
 
+		struct OutData
+		{
+			std::vector<OutValue> OutValues;
+			int32_t ScriptID = 0;
+
+			template<typename Archive>
+			void serialize(Archive& archive)
+			{
+				archive(ScriptID, OutValues);
+			}
+		};
+
+		std::vector<ScriptInstance> Scripts;
+		std::unordered_map<std::string, OutData> OutValues;
+
 		size_t ID = 0;
-		
-		std::vector<OutValue> OutValues;
-		std::string SystemName = "";
 		Ref<Actor> Actor = nullptr;
 
 	private:
@@ -38,7 +52,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ID, SystemName, OutValues, ComponentID);
+			archive(ID, OutValues, ComponentID, Actor);
 		}
 	};
 }
