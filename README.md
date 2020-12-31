@@ -1,6 +1,6 @@
 ## SmolEngine
 
-![SmolEngine](https://i.imgur.com/xoUx4Lh.png)
+![SmolEngine](https://i.imgur.com/ziZbEl0.png)
 
 ## Core Features
 
@@ -25,6 +25,8 @@
 - Network Solution
 
 - 3D Workflow
+
+- C# Binding
 
 - Ray Tracing
 
