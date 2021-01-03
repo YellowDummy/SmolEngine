@@ -40,13 +40,11 @@ namespace SmolEngine
 
 		// Draw
 
-		void DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count = 0);
+		void DrawTriangle (const Ref<VertexArray> vertexArray, uint32_t count = 0, size_t vertices = 0);
 
-		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0);
+		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0, size_t vertices = 0);
 
-		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0);
-
-		void DrawLight();
+		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0, size_t vertices = 0);
 
 
 		void DisableDepth();

@@ -51,7 +51,7 @@ namespace SmolEngine
 
 		// Debug
 
-		static void DebugDraw(const Body2DComponent& body2D, const TransformComponent& transform);
+		static void DebugDraw(entt::registry& registry);
 
 	private:
 

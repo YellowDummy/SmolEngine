@@ -33,7 +33,7 @@ namespace SmolEngine
 		float m_Friction = 0.3f;
 		float m_Restitution = 0.0f;
 		float m_Density = 1.0f;
-		float m_Radius = 1.0f;
+		float m_Radius = 0.5f;
 		float m_InertiaMoment = 0.0f;
 		float m_Mass = 1.0f;
 

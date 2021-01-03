@@ -15,6 +15,7 @@ namespace SmolEngine
 		VulkanShader* Shader = nullptr;
 
 		std::vector<VulkanTexture*> Textures;
+
 		bool IsAlphaBlendingEnabled = false;
 		uint32_t DescriptorSets = 1;
 		uint32_t Stride = 0;

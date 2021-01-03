@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "VulkanPipeline.h"
+#include "Core/Renderer/GraphicsPipeline.h"
 
 #include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
 #include "Core/Renderer/Vulkan/VulkanContext.h"
@@ -16,7 +17,7 @@ namespace SmolEngine
 		delete m_VulkanPipelineSpecification;
 	}
 
-	bool VulkanPipeline::Invalidate(const VulkanPipelineSpecification* pipelineSpec)
+	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification* pipelineSpec)
 	{
 		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain || !pipelineSpec->BufferLayout || pipelineSpec->DescriptorSets == 0)
 		{
@@ -24,12 +25,8 @@ namespace SmolEngine
 			return false;
 		}
 
-		memcpy(m_VulkanPipelineSpecification, pipelineSpec, sizeof(VulkanPipelineSpecification));
 		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Textures, pipelineSpec->DescriptorSets);
-
-		const auto& shader = pipelineSpec->Shader;
-		const auto& swapchain = pipelineSpec->TargetSwapchain;
-		const auto& device = pipelineSpec->Device->GetLogicalDevice();
+		m_VulkanPipelineSpecification = pipelineSpec;
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCI = {};
 		{
@@ -37,11 +34,18 @@ namespace SmolEngine
 			pipelineLayoutCI.pNext = nullptr;
 			pipelineLayoutCI.setLayoutCount = 1;
 			pipelineLayoutCI.pSetLayouts = &m_DescriptorSetLayout;
-			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(shader->m_VkPushConstantRanges.size());
-			pipelineLayoutCI.pPushConstantRanges = shader->m_VkPushConstantRanges.data();
+			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(pipelineSpec->Shader->m_VkPushConstantRanges.size());
+			pipelineLayoutCI.pPushConstantRanges = pipelineSpec->Shader->m_VkPushConstantRanges.data();
 
-			VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &m_PipelineLayout));
+			VK_CHECK_RESULT(vkCreatePipelineLayout(pipelineSpec->Device->GetLogicalDevice(), &pipelineLayoutCI, nullptr, &m_PipelineLayout));
 		}
+	}
+
+	bool VulkanPipeline::CreatePipeline(DrawMode mode)
+	{
+		const auto& shader = m_VulkanPipelineSpecification->Shader;
+		const auto& swapchain = m_VulkanPipelineSpecification->TargetSwapchain;
+		const auto& device = m_VulkanPipelineSpecification->Device->GetLogicalDevice();
 
 		// Create the graphics pipeline
 		// Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
@@ -63,15 +67,15 @@ namespace SmolEngine
 		// This pipeline will assemble vertex data as a triangle lists (though we only use one triangle)
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
 		inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		inputAssemblyState.topology = GetVkTopology(mode);
 
 		// Rasterization state
 		VkPipelineRasterizationStateCreateInfo rasterizationState = {};
 		rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
+		rasterizationState.polygonMode = GetVkPolygonMode(mode);
 		rasterizationState.cullMode = VK_CULL_MODE_NONE;
 		rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-		rasterizationState.depthClampEnable = VK_FALSE;
+		rasterizationState.depthClampEnable = VK_TRUE;
 		rasterizationState.rasterizerDiscardEnable = VK_FALSE;
 		rasterizationState.depthBiasEnable = VK_FALSE;
 		rasterizationState.lineWidth = 1.0f;
@@ -82,7 +86,7 @@ namespace SmolEngine
 		{
 			blendAttachmentState[0].colorWriteMask = 0xf;
 			blendAttachmentState[0].blendEnable = VK_FALSE;
-			if (pipelineSpec->IsAlphaBlendingEnabled)
+			if (m_VulkanPipelineSpecification->IsAlphaBlendingEnabled)
 			{
 				blendAttachmentState[0].blendEnable = VK_TRUE;
 				blendAttachmentState[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
@@ -143,16 +147,16 @@ namespace SmolEngine
 		// Specifies the vertex input parameters for a pipeline
 
 		// Vertex input binding
-        // This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
+		// This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
 		VkVertexInputBindingDescription vertexInputBinding = {};
 		vertexInputBinding.binding = 0;
-		vertexInputBinding.stride = pipelineSpec->Stride;
+		vertexInputBinding.stride = m_VulkanPipelineSpecification->Stride;
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(pipelineSpec->BufferLayout->GetElements().size());
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(m_VulkanPipelineSpecification->BufferLayout->GetElements().size());
 		{
 			uint32_t index = 0;
-			for (const auto& element : pipelineSpec->BufferLayout->GetElements())
+			for (const auto& element : m_VulkanPipelineSpecification->BufferLayout->GetElements())
 			{
 				vertexInputAttributs[index].binding = 0;
 				vertexInputAttributs[index].location = index;
@@ -191,10 +195,10 @@ namespace SmolEngine
 			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 		}
 
-		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &m_PipelineCache))
+		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &m_PipelineCaches[mode]))
 
 		// Create rendering pipeline using the specified states
-		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineCreateInfo, nullptr, &m_Pipeline));
+		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCaches[mode], 1, &pipelineCreateInfo, nullptr, &m_Pipelines[mode]));
 
 		// Shader modules are no longer needed once the graphics pipeline has been created
 		//vkDestroyShaderModule(device, shaderStages[0].module, nullptr);
@@ -216,9 +220,17 @@ namespace SmolEngine
 	void VulkanPipeline::Destroy()
 	{
 		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
+		for (auto& [key, cache] : m_PipelineCaches)
+		{
+			vkDestroyPipelineCache(device, cache, nullptr);
+		}
+
+		for (auto& [key, pipeline] : m_Pipelines)
+		{
+			vkDestroyPipeline(device, pipeline, nullptr);
+		}
+
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
-		vkDestroyPipelineCache(device, m_PipelineCache, nullptr);
-		vkDestroyPipeline(device, m_Pipeline, nullptr);
 	}
 
 	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex)
@@ -274,9 +286,9 @@ namespace SmolEngine
 		}
 	}
 
-	const VkPipeline& VulkanPipeline::GetVkPipeline() const
+	const VkPipeline& VulkanPipeline::GetVkPipeline(DrawMode mode)
 	{
-		return m_Pipeline;
+		return m_Pipelines[mode];
 	}
 
 	const VkPipelineLayout& VulkanPipeline::GetVkPipelineLayot() const
@@ -332,6 +344,17 @@ namespace SmolEngine
 			VkDescriptorPoolSize tempPoolSize = {};
 			{
 				tempPoolSize.descriptorCount = resourcesBufferSize;
+				tempPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			}
+
+			DescriptorPoolSizes.push_back(tempPoolSize);
+		}
+
+		if (shader->m_UniformResources.empty() && shader->m_UniformBuffers.empty())
+		{
+			VkDescriptorPoolSize tempPoolSize = {};
+			{
+				tempPoolSize.descriptorCount = 1;
 				tempPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			}
 
@@ -531,6 +554,36 @@ namespace SmolEngine
 			{
 				vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeSet.size()), writeSet.data(), 0, nullptr);
 			}
+		}
+	}
+
+	VkPrimitiveTopology VulkanPipeline::GetVkTopology(DrawMode mode)
+	{
+		switch (mode)
+		{
+		case SmolEngine::DrawMode::Triangle:
+			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case SmolEngine::DrawMode::Line:
+			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+		case SmolEngine::DrawMode::Fan:
+			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
+		default:
+			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		}
+	}
+
+	VkPolygonMode VulkanPipeline::GetVkPolygonMode(DrawMode mode)
+	{
+		switch (mode)
+		{
+		case SmolEngine::DrawMode::Triangle:
+			return VkPolygonMode::VK_POLYGON_MODE_FILL;
+		case SmolEngine::DrawMode::Line:
+			return VkPolygonMode::VK_POLYGON_MODE_LINE;
+		case SmolEngine::DrawMode::Fan:
+			return VkPolygonMode::VK_POLYGON_MODE_LINE;
+		default:
+			return VkPolygonMode::VK_POLYGON_MODE_FILL;
 		}
 	}
 }

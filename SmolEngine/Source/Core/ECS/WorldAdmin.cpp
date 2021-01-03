@@ -313,49 +313,13 @@ namespace SmolEngine
 		// Rendering scene to the target framebuffer
 
 		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), m_EditorCamera->m_FrameBuffer);
-#if 0
-		// Rendering debug shapes
 
-		{
-			Renderer2D::BeginDebug(m_EditorCamera->GetCamera());
-			{
-				glm::vec2 res;
-				if (gameViewSize == glm::vec2(0.0f))
-				{
-					res = sceneViewSize;
-				}
-				else
-				{
-					res = gameViewSize;
-				}
+		Renderer2D::BeginDebug(m_EditorCamera->GetCamera());
 
-				{
-					const auto& view = m_SceneData.m_Registry.view<const PhysicsBaseTuple>();
+		RendererSystem::DebugDraw(m_SceneData.m_Registry);
 
-					view.each([&](const PhysicsBaseTuple& tuple)
-					{
-						RendererSystem::DebugDraw(tuple);
-					});
-				}
+		Renderer2D::EndDebug();
 
-				{
-					const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
-
-					view.each([&](CameraBaseTuple& tuple)
-					{
-						if (tuple.GetCamera().ShowCanvasShape)
-						{
-							Renderer2D::DebugDraw(DebugPrimitives::Quad, { tuple.Transform.WorldPos.x, tuple.Transform.WorldPos.y, 1.0f },
-								{ (res.x / 100.f), (res.y / 100.f) },
-								0.0f, { 1.0f, 1.0f, 1.0f, 1.0f });
-						}
-					});
-				}
-			}
-			Renderer2D::EndDebug();
-		}
-
-#endif
 		m_EditorCamera->m_FrameBuffer->UnBind();
 	}
 

@@ -15,12 +15,15 @@ namespace SmolEngine
 	{
 		if (!IsPipelineCreateInfoValid(pipelineInfo))
 		{
+			NATIVE_ERROR("GraphicsPipeline was not created!");
+			assert(IsPipelineCreateInfoValid(pipelineInfo) == true);
 			return false;
 		}
 
+		m_Shader = std::make_shared<Shader>();
 		if (pipelineInfo->ShaderCreateInfo->UseSingleFile)
 		{
-			m_Shader = Shader::Create(pipelineInfo->ShaderCreateInfo->SingleFilePath);
+			Shader::Create(m_Shader, pipelineInfo->ShaderCreateInfo->SingleFilePath);
 		}
 		else
 		{
@@ -28,21 +31,45 @@ namespace SmolEngine
 			const auto& frag = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Fragment];
 			const auto& compute = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Compute];
 
-			m_Shader = Shader::Create(vexrtex, frag, pipelineInfo->ShaderCreateInfo->Optimize, compute);
+			Shader::Create(m_Shader, vexrtex, frag, pipelineInfo->ShaderCreateInfo->Optimize, compute);
 		}
 
-		m_VertexBuffers.resize(pipelineInfo->VertexBuffer->BuffersCount);
-		for (uint32_t i = 0; i < pipelineInfo->VertexBuffer->BuffersCount; ++i)
+		uint32_t vertexBuffersCount = pipelineInfo->VertexBuffer->BuffersCount;
+		m_VertexBuffers.resize(vertexBuffersCount);
+		if (pipelineInfo->VertexBuffer->Vertices.size() == vertexBuffersCount && pipelineInfo->VertexBuffer->Sizes.size() == vertexBuffersCount)
 		{
-			pipelineInfo->VertexBuffer->IsAllocateMemOnly ?
-				m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Size) :
-				m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Vertices, pipelineInfo->VertexBuffer->Size);
+			for (uint32_t i = 0; i < vertexBuffersCount; ++i)
+			{
+				pipelineInfo->VertexBuffer->IsAllocateMemOnly ?
+					m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Sizes[i]) :
+					m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Vertices[i], pipelineInfo->VertexBuffer->Sizes[i]);
+			}
+		}
+		else
+		{
+			for (uint32_t i = 0; i < vertexBuffersCount; ++i)
+			{
+				pipelineInfo->VertexBuffer->IsAllocateMemOnly ?
+					m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Sizes[0]) :
+					m_VertexBuffers[i] = VertexBuffer::Create(pipelineInfo->VertexBuffer->Vertices[0], pipelineInfo->VertexBuffer->Sizes[0]);
+			}
 		}
 
-		m_IndexBuffers.resize(pipelineInfo->IndexBuffer->BuffersCount);
-		for (uint32_t i = 0; i < pipelineInfo->IndexBuffer->BuffersCount; ++i)
+		uint32_t indexBuffersCount = pipelineInfo->IndexBuffer->BuffersCount;
+		m_IndexBuffers.resize(indexBuffersCount);
+		if (pipelineInfo->IndexBuffer->Indices.size() == indexBuffersCount && pipelineInfo->IndexBuffer->IndicesCounts.size() == indexBuffersCount)
 		{
-			m_IndexBuffers[i] = IndexBuffer::Create(pipelineInfo->IndexBuffer->Indices, (pipelineInfo->IndexBuffer->IndicesCount));
+			for (uint32_t i = 0; i < indexBuffersCount; ++i)
+			{
+				m_IndexBuffers[i] = IndexBuffer::Create(pipelineInfo->IndexBuffer->Indices[i], pipelineInfo->IndexBuffer->IndicesCounts[i]);
+			}
+		}
+		else
+		{
+			for (uint32_t i = 0; i < indexBuffersCount; ++i)
+			{
+				m_IndexBuffers[i] = IndexBuffer::Create(pipelineInfo->IndexBuffer->Indices[0], pipelineInfo->IndexBuffer->IndicesCounts[0]);
+			}
 		}
 
 
@@ -82,6 +109,11 @@ namespace SmolEngine
 		}
 
 		m_VulkanPipeline.Invalidate(&pipelineSpecCI);
+		for (DrawMode mode : pipelineInfo->PipelineDrawModes)
+		{
+			m_VulkanPipeline.CreatePipeline(mode);
+		}
+
 #endif // SMOLENGINE_OPENGL_IMPL
 
 		return true;
@@ -222,25 +254,31 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::DrawIndexed(uint32_t vertexBufferIndex, uint32_t indexBufferIndex, uint32_t descriptorSetIndex)
+	void GraphicsPipeline::DrawIndexed(DrawMode mode, uint32_t vertexBufferIndex, uint32_t indexBufferIndex, uint32_t descriptorSetIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		if (vertexBufferIndex > 0)
-		{
-			m_VextexArray->SetVertexBuffer(m_VertexBuffers[vertexBufferIndex]);
-		}
-		if (indexBufferIndex > 0)
-		{
-			m_VextexArray->SetIndexBuffer(m_IndexBuffers[indexBufferIndex]);
-		}
+		m_VextexArray->SetVertexBuffer(m_VertexBuffers[vertexBufferIndex]);
 
-		RendererCommand::DrawIndexed(m_VextexArray);
+		switch (mode)
+		{
+		case SmolEngine::DrawMode::Triangle:
+			RendererCommand::DrawTriangle(m_VextexArray);
+			break;
+		case SmolEngine::DrawMode::Line:
+			RendererCommand::DrawLine(m_VextexArray);
+			break;
+		case SmolEngine::DrawMode::Fan:
+			RendererCommand::DrawFan(m_VextexArray);
+			break;
+		default:
+			break;
+		}
 #else
 		// Bind the rendering pipeline
 		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
 
-		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline());
+		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
 		// Bind Vertex Buffer
 		VkDeviceSize offsets[1] = { 0 };
@@ -256,7 +294,48 @@ namespace SmolEngine
 
 		// Draw indexed
 		vkCmdDrawIndexed(m_CommandBuffer, m_IndexBuffers[indexBufferIndex]->GetVulkanIndexBuffer().GetCount(), 1, 0, 0, 1);
+
+		
 	
+#endif
+	}
+
+	void GraphicsPipeline::Draw(uint32_t vertextCount, DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex)
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+		m_VextexArray->SetVertexBuffer(m_VertexBuffers[vertexBufferIndex]);
+
+		switch (mode)
+		{
+		case SmolEngine::DrawMode::Triangle:
+			RendererCommand::DrawTriangle(m_VextexArray, 0, vertextCount);
+			break;
+		case SmolEngine::DrawMode::Line:
+			RendererCommand::DrawLine(m_VextexArray, 0, vertextCount);
+			break;
+		case SmolEngine::DrawMode::Fan:
+			RendererCommand::DrawFan(m_VextexArray, 0, vertextCount);
+			break;
+		default:
+			break;
+		}
+#else
+		// Bind the rendering pipeline
+		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
+
+		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
+
+		// Bind Vertex Buffer
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);
+
+		// Bind descriptor sets describing shader binding points
+		const auto& descriptorSet = m_VulkanPipeline.GetVkDescriptorSet(descriptorSetIndex);
+		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
+			&descriptorSet, 0, nullptr);
+
+		// Draw
+		vkCmdDraw(m_CommandBuffer, vertextCount, 1, 0, 0);
 #endif
 	}
 
@@ -317,21 +396,19 @@ namespace SmolEngine
 
 	bool GraphicsPipeline::IsPipelineCreateInfoValid(const GraphicsPipelineCreateInfo* pipelineInfo)
 	{
-		if (!pipelineInfo->IndexBuffer->Indices || pipelineInfo->IndexBuffer->BuffersCount == 0 || pipelineInfo->VertexBuffer->Size == 0 || !pipelineInfo->VertexBuffer->BufferLayot ||
+		if (pipelineInfo->IndexBuffer->BuffersCount == 0 || !pipelineInfo->VertexBuffer->BufferLayot ||
 			!pipelineInfo->ShaderCreateInfo || pipelineInfo->VertexBuffer->Stride == 0 || pipelineInfo->VertexBuffer->BuffersCount == 0)
-		{
 			return false;
-		}
 
-		if (!pipelineInfo->VertexBuffer->Vertices && pipelineInfo->VertexBuffer->IsAllocateMemOnly == false)
-		{
+		if (pipelineInfo->IndexBuffer->Indices.size() != pipelineInfo->IndexBuffer->BuffersCount)
 			return false;
-		}
+
+		if (pipelineInfo->VertexBuffer->Vertices.size() == 0 && pipelineInfo->VertexBuffer->IsAllocateMemOnly == false)
+			return false;
 
 		if (pipelineInfo->ShaderCreateInfo->SingleFilePath.empty() && pipelineInfo->ShaderCreateInfo->UseSingleFile)
-		{
 			return false;
-		}
+
 
 		return true;
 	}

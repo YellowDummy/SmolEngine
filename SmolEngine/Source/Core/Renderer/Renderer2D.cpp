@@ -9,6 +9,7 @@
 #include "Core/Renderer/Shader.h"
 #include "Core/Renderer/OpenGL/OpenglShader.h"
 #include "Core/Renderer/GraphicsPipeline.h"
+#include "Core/ECS/Systems/CommandSystem.h"
 
 #include <array>
 #include <glm/glm.hpp>
@@ -20,34 +21,19 @@ namespace SmolEngine
 	struct Renderer2DStorage
 	{
 		static const uint32_t Light2DBufferMaxSize = 100;
-		static const uint32_t MaxQuads = 3;
+		static const uint32_t MaxQuads = 15000;
 		static const uint32_t MaxVertices = MaxQuads * 6;
 		static const uint32_t MaxIndices = MaxQuads * 4;
 		static const uint32_t MaxLayers = 12;
 
 		/// Graphics Pipelines
 
-		Ref<GraphicsPipeline> MainPipeline;
-
-		/// Vertex Array
-
-		Ref<VertexArray> QuadVertexArray;
-		Ref<VertexArray> DebugQuadVertexArray;
-		Ref<VertexArray> DebugCircleVertexArray;
-		Ref<VertexArray> FrameBufferVertexArray;
-
-		// Vertex Buffer
-
-		Ref<VertexBuffer> QuadVertexBuffer;
-
-		// Shader
-
-		Ref<Shader> DebugTextureShader;
-		Ref<Shader> FrameBufferShader;
+		Ref<GraphicsPipeline> MainPipeline = nullptr;
+		Ref<GraphicsPipeline> DebugPipeline = nullptr;
 
 		/// Texture
 		
-		Ref<Texture2D> WhiteTexture;
+		Ref<Texture2D> WhiteTexture = nullptr;
 
 		/// Light
 
@@ -68,8 +54,6 @@ namespace SmolEngine
 		QuadVertex* ClearBuffer = new QuadVertex[MaxVertices];
 		uint32_t MaxDataSize = 0;
 
-		/// Temp
-
 		struct Data
 		{
 			glm::mat4 viewProjectionMatrix;
@@ -77,6 +61,15 @@ namespace SmolEngine
 			Ref<Framebuffer> targetFramebuffer;
 
 		} SceneData;
+
+		// Debug
+
+		struct DebugPushConstant
+		{
+			glm::mat4 transform = glm::mat4(1.0f);
+			glm::vec4 color = glm::vec4(1.0f);
+
+		} DebugPushConstant;
 	};
 
 	Renderer2DStats* Renderer2D::Stats = new Renderer2DStats();
@@ -86,10 +79,17 @@ namespace SmolEngine
 	{
 		s_Data = new Renderer2DStorage();
 
+		s_Data->QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data->QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data->QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data->QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
 		// Create geometry, load shaders, generate uniform maps
 		CreateBatchData();
 
-		//CreateDebugData();
+		CreateDebugData();
+		//
+
 		//CreateFramebufferData();
 
 	}
@@ -242,7 +242,7 @@ namespace SmolEngine
 		layer.ClearSize = dataSize;
 
 		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(int32_t), &s_Data->Light2DBufferSize);
-		s_Data->MainPipeline->DrawIndexed(layer.LayerIndex, 0, layer.LayerIndex);
+		s_Data->MainPipeline->DrawIndexed(DrawMode::Triangle, layer.LayerIndex, 0, layer.LayerIndex);
 #else
 		// Binding textures
 		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
@@ -328,16 +328,7 @@ namespace SmolEngine
 
 		// Calculating transformation matrix
 		glm::mat4 transform;
-		if (rotation == 0.0f)
-		{
-			transform = glm::translate(glm::mat4(1.0f), worldPos)
-				* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-		}
-		else
-		{
-			transform = glm::translate(glm::mat4(1.0f), worldPos)
-				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-		}
+		CommandSystem::ComposeTransform(worldPos, { rotation, 0, 0 }, { scale, 0 }, false, transform);
 
 		// Note: layer is now active!
 		layer.isActive = true;
@@ -382,17 +373,7 @@ namespace SmolEngine
 
 		// Calculating transformation matrix
 		glm::mat4 transform;
-
-		if (rotation == 0.0f)
-		{
-			transform = glm::translate(glm::mat4(1.0f), worldPos)
-				* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-		}
-		else
-		{
-			transform = glm::translate(glm::mat4(1.0f), worldPos)
-				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-		}
+		CommandSystem::ComposeTransform(worldPos, { rotation, 0, 0 }, { scale, 0 }, false, transform);
 
 		// Note: layer is now active!
 		layer.isActive = true;
@@ -422,50 +403,42 @@ namespace SmolEngine
 
 	void Renderer2D::BeginDebug(Ref<OrthographicCamera> camera)
 	{
-		s_Data->DebugTextureShader->Bind();
-		s_Data->DebugTextureShader->SumbitUniform<glm::mat4>("u_ViewProjection", &camera->GetViewProjectionMatrix());
+		s_Data->DebugPipeline->BeginCommandBuffer();
+		s_Data->DebugPipeline->BeginBufferSubmit();
+		s_Data->DebugPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
 	}
 
 	void Renderer2D::EndDebug()
 	{
-
+		s_Data->DebugPipeline->EndRenderPass();
+		s_Data->DebugPipeline->EndBufferSubmit();
+		s_Data->DebugPipeline->EndCommandBuffer();
 	}
 
 	void Renderer2D::DebugDraw(DebugPrimitives type, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color)
 	{
 		glm::mat4 transform;
-		if (rotation == 0)
-		{
-			transform = glm::translate(glm::mat4(1.0f), worldPos)
-				* glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-		}
-		else
-		{
-			transform = glm::translate(glm::mat4(1.0f), worldPos)
-				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
-		}
+		CommandSystem::ComposeTransform(worldPos, { rotation, 0, 0 }, { scale, 0 }, false, transform);
+		s_Data->DebugPushConstant.transform = s_Data->SceneData.viewProjectionMatrix * transform;
+		s_Data->DebugPushConstant.color = color;
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+		s_Data->DebugPipeline->SumbitUniform<glm::mat4>("u_Transform", &s_Data->DebugPushConstant.transform);
+		s_Data->DebugPipeline->SumbitUniform<glm::vec4>("u_Color", &s_Data->DebugPushConstant.color);
+#else
+		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
+#endif
 
 		switch (type)
 		{
 		case DebugPrimitives::Quad:
 		{
-			s_Data->DebugTextureShader->SumbitUniform<glm::vec4>("u_Color", &color);
-			s_Data->DebugTextureShader->SumbitUniform<glm::mat4>("u_Transform", &transform);
-
-			s_Data->DebugQuadVertexArray->Bind();
-
-			RendererCommand::DrawLine(s_Data->DebugQuadVertexArray);
+			s_Data->DebugPipeline->DrawIndexed(DrawMode::Line);
 			break;
 		}
 		case DebugPrimitives::Circle:
 		{
-
-			s_Data->DebugTextureShader->SumbitUniform<glm::vec4>("u_Color", &color);
-			s_Data->DebugTextureShader->SumbitUniform<glm::mat4>("u_Transform", &transform);
-
-			s_Data->DebugCircleVertexArray->Bind();
-
-			RendererCommand::DrawFan(s_Data->DebugCircleVertexArray);
+			s_Data->DebugPipeline->Draw(3000, DrawMode::Fan, 1);
 			break;
 		}
 		default:
@@ -489,11 +462,7 @@ namespace SmolEngine
 
 	void Renderer2D::DrawFrameBuffer(const uint32_t colorAttachmentID)
 	{
-		s_Data->FrameBufferShader->Bind();
-		RendererCommand::BindTexture(colorAttachmentID);
 
-		s_Data->FrameBufferVertexArray->Bind();
-		RendererCommand::DrawIndexed(s_Data->FrameBufferVertexArray);
 	}
 
 	bool Renderer2D::FindShader(std::string& filePath, const std::string& shaderName)
@@ -581,9 +550,10 @@ namespace SmolEngine
 		VertexBufferCreateInfo vertexBufferCI = {};
 		{
 			vertexBufferCI.BufferLayot = &layout;
-			vertexBufferCI.Size = sizeof(QuadVertex) * s_Data->MaxVertices;
+			vertexBufferCI.Sizes = { sizeof(QuadVertex) * s_Data->MaxVertices };
 			vertexBufferCI.Stride = sizeof(QuadVertex);
 #ifndef SMOLENGINE_OPENGL_IMPL
+			size_t size = sizeof(QuadVertex) * s_Data->MaxVertices;
 			vertexBufferCI.BuffersCount = s_Data->MaxLayers;
 #endif
 			vertexBufferCI.IsAllocateMemOnly = true;
@@ -591,9 +561,9 @@ namespace SmolEngine
 
 		IndexBufferCreateInfo indexBufferCI = {};
 		{
-			indexBufferCI.IndicesCount = s_Data->MaxIndices;
+			indexBufferCI.IndicesCounts = { s_Data->MaxIndices };
 			indexBufferCI.BuffersCount = 1;
-			indexBufferCI.Indices = quadIndices;
+			indexBufferCI.Indices = { quadIndices };
 		}
 
 		GraphicsPipelineShaderCreateInfo shaderCI = {};
@@ -633,92 +603,84 @@ namespace SmolEngine
 		s_Data->MainPipeline->SumbitUniform<int*>("u_Textures", samplers, MaxTextureSlot);
 
 #endif // SMOLENGINE_OPENGL_IMPL
-
-		s_Data->QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data->QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data->QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
-		s_Data->QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 	}
 
 	void Renderer2D::CreateDebugData()
 	{
-
-#ifdef SMOLENGINE_EDITOR
-
-		s_Data->DebugTextureShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/DebugShader.glsl");
-#else
-
-		std::string path = "../SmolEngine/Assets/Shaders/DebugShader.glsl";
-		std::string name = "DebugShader.glsl";
-
-		if (FindShader(path, name))
+		s_Data->DebugPipeline = std::make_shared<GraphicsPipeline>();
+		BufferLayout layout(
 		{
-			s_Data->DebugTextureShader = RendererCommand::LoadShader(path);
-		}
-
-#endif 
+			{ ShaderDataType::Float3, "a_Position" }
+		});
 
 		/// Quad
 
-		{
-			s_Data->DebugQuadVertexArray = VertexArray::Create();
+		DebugVertex QuadVertex[4];
+		QuadVertex[0].Position = { -0.5f, -0.5f, 0.0f};
+		QuadVertex[1].Position = { 0.5f, -0.5f, 0.0f};
+		QuadVertex[2].Position = { 0.5f,  0.5f, 0.0f};
+		QuadVertex[3].Position = { -0.5f,  0.5f, 0.0f};
 
-			float squareVertices[12] =
-			{
-				-0.5f, -0.5f, 0.0f,
-				 0.5f, -0.5f, 0.0f,
-				 0.5f,  0.5f, 0.0f,
-				-0.5f,  0.5f, 0.0f,
-			};
-
-			Ref<VertexBuffer> squareVB = VertexBuffer::Create(squareVertices, sizeof(squareVertices));
-			squareVB->SetLayout({
-				{ ShaderDataType::Float3, "a_Position" }
-
-				});
-
-			s_Data->DebugQuadVertexArray->SetVertexBuffer(squareVB);
-
-			uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-			Ref<IndexBuffer> squareIB = IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
-			s_Data->DebugQuadVertexArray->SetIndexBuffer(squareIB);
-		}
+		uint32_t quadIndices[6] = { 0, 1, 2,  2, 3, 0 };
 
 		// Cirlce
-
+		const size_t nVertices = 3000;
+		DebugVertex CircleVertex[nVertices];
+		for (size_t i = 1; i < nVertices; i++)
 		{
-			s_Data->DebugCircleVertexArray = VertexArray::Create();
-
-			const float PI = 3.14159f;
-
-			const size_t nVertices = 100;
-			float vertices[3 * nVertices];
-			const float twoPi = 8.0f * atan(1.0f);
-			const size_t nSides = nVertices - 2;
-
-			for (size_t i = 1; i < nVertices; i++)
-			{
-				vertices[3 * i] = cos(i * twoPi / nSides);
-				vertices[3 * i + 1] = sin(i * twoPi / nSides);
-				vertices[3 * i + 2] = 0.0f;
-			}
-
-			Ref<VertexBuffer> squareVB = VertexBuffer::Create(vertices, sizeof(vertices));
-			squareVB->SetLayout({
-				{ ShaderDataType::Float3, "a_Position" }
-
-				});
-
-			s_Data->DebugCircleVertexArray->SetVertexBuffer(squareVB);
-
+			CircleVertex[i].Position = glm::vec3(cos(2 * 3.14159 * i / 1000.0), sin(2 * 3.14159 * i / 1000.0), 0);
 		}
+
+		VertexBufferCreateInfo vertexBufferCI = {};
+		{
+			vertexBufferCI.Sizes = { sizeof(QuadVertex), sizeof(CircleVertex) };
+			vertexBufferCI.Vertices = { QuadVertex, CircleVertex };
+
+			vertexBufferCI.BufferLayot = &layout;
+			vertexBufferCI.Stride = sizeof(DebugVertex);
+			vertexBufferCI.BuffersCount = 2;
+		}
+
+		IndexBufferCreateInfo indexBufferCI = {};
+		{
+			indexBufferCI.BuffersCount = 1;
+
+			indexBufferCI.IndicesCounts.resize(1);
+			indexBufferCI.IndicesCounts[0] = 6;
+			//indexBufferCI.IndicesCounts[1] = nVertices;
+
+			indexBufferCI.Indices.resize(1);
+			indexBufferCI.Indices[0] = quadIndices;
+			//indexBufferCI.Indices[1] = circleIndices;
+		}
+
+		GraphicsPipelineShaderCreateInfo shaderCI = {};
+		{
+#ifdef SMOLENGINE_OPENGL_IMPL
+			shaderCI.UseSingleFile = true;
+			shaderCI.SingleFilePath = "../SmolEngine/Assets/Shaders/DebugShader.glsl";
+#else
+			shaderCI.FilePaths[ShaderType::Vertex] = "../SmolEngine/Assets/Shaders/DebugShader_Vulkan_Vertex.glsl";
+			shaderCI.FilePaths[ShaderType::Fragment] = "../SmolEngine/Assets/Shaders/DebugShader_Vulkan_Fragment.glsl";
+#endif
+		}
+
+		GraphicsPipelineCreateInfo graphicsPipelineCI = {};
+		{
+			graphicsPipelineCI.IndexBuffer = &indexBufferCI;
+			graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
+			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
+			graphicsPipelineCI.PipelineDrawModes = { DrawMode::Line, DrawMode::Fan };
+		}
+
+		assert(s_Data->DebugPipeline->Create(&graphicsPipelineCI) == true);
 	}
 
 	void Renderer2D::CreateFramebufferData()
 	{
 #ifdef SMOLENGINE_EDITOR
 
-		s_Data->FrameBufferShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/Framebuffer.glsl");
+		//s_Data->FrameBufferShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/Framebuffer.glsl");
 #else
 		std::string path = "../SmolEngine/Assets/Shaders/Framebuffer.glsl";
 		std::string name = "Framebuffer.glsl";
@@ -730,31 +692,6 @@ namespace SmolEngine
 		}
 
 #endif
-		// 
-
-		s_Data->FrameBufferVertexArray = VertexArray::Create();
-
-		float quadVertices[] =
-		{
-			// positions   // texCoords
-			-1.0f, -1.0f,  0.0f, 0.0f,
-			 1.0f, -1.0f,  1.0f, 0.0f,
-			 1.0f,  1.0f,  1.0f, 1.0f,
-			-1.0f,  1.0f,  0.0f, 1.0f
-			};
-
-		Ref<VertexBuffer> squareVB = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
-		squareVB->SetLayout(
-			{
-				{ ShaderDataType::Float2, "aPos" },
-				{ ShaderDataType::Float2, "aTexCoords" }
-			});
-
-		s_Data->FrameBufferVertexArray->SetVertexBuffer(squareVB);
-
-		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Ref<IndexBuffer> squareIB = IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
-		s_Data->FrameBufferVertexArray->SetIndexBuffer(squareIB);
 	}
 
 }

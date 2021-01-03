@@ -135,9 +135,9 @@ namespace SmolEngine
 		/// Factory
 		/// 
 
-		static Ref<Shader> Create(const std::string& filePath);
+		static void Create(Ref<Shader>& outShader, const std::string& filePath);
 
-		static Ref<Shader> Create(const std::string& vertexPath, const std::string& fragmentPath, bool optimize = false, const std::string& computePath = "");
+		static void Create(Ref<Shader>& outShader, const std::string& vertexPath, const std::string& fragmentPath, bool optimize = false, const std::string& computePath = "");
 
 	private:
 

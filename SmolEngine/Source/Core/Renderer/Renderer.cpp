@@ -42,7 +42,6 @@ namespace SmolEngine
 		shader->SumbitUniform<glm::mat4>("u_ViewProjection", &m_SceneData->ViewProjectionMatrix);
 
 		vertexArray->Bind();
-		RendererCommand::DrawIndexed(vertexArray);
 	}
 
 	void Renderer::OnWidowResize(uint32_t width, uint32_t height)

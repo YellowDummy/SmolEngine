@@ -81,32 +81,44 @@ namespace SmolEngine
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenglRendererAPI::DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count)
+	void OpenglRendererAPI::DrawTriangle(const Ref<VertexArray> vertexArray, uint32_t count, size_t vertices)
 	{
-		uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
-
-		glDrawElements(GL_TRIANGLES, count_t, GL_UNSIGNED_INT, nullptr);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	void OpenglRendererAPI::DrawLine(const Ref<VertexArray> vertexArray, uint32_t count)
-	{
-		if (count == 0)
+		if (vertices > 0)
 		{
-			count = vertexArray->GetIndexBuffer()->GetCount();
+			glDrawArrays(GL_TRIANGLES, 1, vertices);
 		}
-
-		glDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_INT, nullptr);
+		else
+		{
+			uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
+			glDrawElements(GL_TRIANGLES, count_t, GL_UNSIGNED_INT, nullptr);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 	}
 
-	void OpenglRendererAPI::DrawFan(const Ref<VertexArray> vertexArray, uint32_t count)
+	void OpenglRendererAPI::DrawLine(const Ref<VertexArray> vertexArray, uint32_t count, size_t vertices)
 	{
-		glDrawArrays(GL_LINE_LOOP, 1, 100);
+		if (vertices > 0)
+		{
+			glDrawArrays(GL_LINE_STRIP, 1, vertices);
+		}
+		else
+		{
+			uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
+			glDrawElements(GL_LINE_STRIP, count_t, GL_UNSIGNED_INT, nullptr);
+		}
 	}
 
-	void OpenglRendererAPI::DrawLight()
+	void OpenglRendererAPI::DrawFan(const Ref<VertexArray> vertexArray, uint32_t count, size_t vertices)
 	{
-
+		if (vertices > 0)
+		{
+			glDrawArrays(GL_LINE_LOOP, 1, vertices);
+		}
+		else
+		{
+			uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
+			glDrawElements(GL_LINE_LOOP, count_t, GL_UNSIGNED_INT, nullptr);
+		}
 	}
 
 	void OpenglRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

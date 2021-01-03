@@ -14,33 +14,25 @@
 
 namespace SmolEngine
 {
-	Ref<Shader> Shader::Create(const std::string& filePath)
+	void Shader::Create(Ref<Shader>& outShader, const std::string& filePath)
 	{
-		Ref<Shader> shader = std::make_shared<Shader>();
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		shader->m_OpenglShader.Init(filePath);
+		outShader->m_OpenglShader.Init(filePath);
 #else
 
 #endif
-
-		return shader;
 	}
 
-	Ref<Shader> Shader::Create(const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
+	void Shader::Create(Ref<Shader>& outShader, const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
 	{
-		Ref<Shader> shader = std::make_shared<Shader>();
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
-		shader->m_OpenglShader.Init(vertexPath, fragmentPath, vertexPath);
+		outShader->m_OpenglShader.Init(vertexPath, fragmentPath, vertexPath);
 #else
 		bool precompiled = false; // temp
-		assert(shader->m_VulkanShader.Init(vertexPath, fragmentPath, precompiled, optimize, computePath) == true);
+		assert(outShader->m_VulkanShader.Init(vertexPath, fragmentPath, precompiled, optimize, computePath) == true);
 #endif
-
-		return shader;
 	}
 
 	Shader::Shader()
@@ -254,16 +246,17 @@ namespace SmolEngine
 
 	Ref<Shader> ShaderLib::Load(const std::string& filePath)
 	{
-		auto shader = Shader::Create(filePath);
+		auto shader = std::make_shared<Shader>();
+		Shader::Create(shader, filePath);
 		AddElement(shader);
 		return shader;
 	}
 
 	Ref<Shader> ShaderLib::Load(const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
 	{
-		auto& shader = Shader::Create(vertexPath, fragmentPath, optimize, computePath);
+		auto shader = std::make_shared<Shader>();
+		Shader::Create(shader, vertexPath, fragmentPath, optimize, computePath);
 		AddElement(shader);
-
 		return shader;
 	}
 

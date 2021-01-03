@@ -92,35 +92,40 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::DebugDraw(const Body2DComponent& body2D, const TransformComponent& transform)
+	void RendererSystem::DebugDraw(entt::registry& registry)
 	{
-		const auto& body = body2D.Body;
-
-		if (!body2D.ShowShape)
+		const auto& group = registry.view<TransformComponent, Body2DComponent>();
+		for (const auto& entity : group)
 		{
-			return;
-		}
+			auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
+			const auto& body = body2D.Body;
 
-		switch (body.m_ShapeType)
-		{
+			if (!body2D.ShowShape)
+			{
+				return;
+			}
 
-		case (int)ShapeType::Box:
-		{
-			Renderer2D::DebugDraw(DebugPrimitives::Quad, { transform.WorldPos.x, transform.WorldPos.y, 1.0f },
-				{ body.m_Shape.x * 2 , body.m_Shape.y * 2 }, transform.Rotation.x);
+			switch (body.m_ShapeType)
+			{
 
-			break;
-		}
-		case (int)ShapeType::Cirlce:
-		{
-			Renderer2D::DebugDraw(DebugPrimitives::Circle, 
-				{ transform.WorldPos.x + body.m_Offset.x, transform.WorldPos.y + body.m_Offset.y,
-				1.0f }, { body.m_Radius,  body.m_Radius }, transform.Rotation.x);
+			case (int)ShapeType::Box:
+			{
+				Renderer2D::DebugDraw(DebugPrimitives::Quad, transform.WorldPos,
+					{ body.m_Shape.x, body.m_Shape.y }, transform.Rotation.x);
 
-			break;
-		}
-		default:
-			break;
+				break;
+			}
+			case (int)ShapeType::Cirlce:
+			{
+				Renderer2D::DebugDraw(DebugPrimitives::Circle,
+					{ transform.WorldPos.x + body.m_Offset.x, transform.WorldPos.y + body.m_Offset.y,
+					1.0f }, { body.m_Radius,  body.m_Radius }, transform.Rotation.x);
+
+				break;
+			}
+			default:
+				break;
+			}
 		}
 	}
 }

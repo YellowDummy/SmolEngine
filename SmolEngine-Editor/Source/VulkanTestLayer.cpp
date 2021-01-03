@@ -38,6 +38,7 @@ namespace SmolEngine
 			{ {  0.5f, -0.5, 0.0f},  { 0.5f, 0.0f, 1.0f, 1.0f },  { 1.0f, 0.0f },},
 			{ { -0.5f, -0.5, 0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f },  { 0.0f, 0.0f } },
 		};
+
 		BufferLayout layout({ 
 
 			{ ShaderDataType::Float3, "aPos" }, // location 0
@@ -52,16 +53,16 @@ namespace SmolEngine
 		VertexBufferCreateInfo vertexBufferCI = {};
 		{
 			vertexBufferCI.BufferLayot = &layout;
-			vertexBufferCI.Size = sizeof(verticies);
-			vertexBufferCI.Vertices = &verticies;
+			vertexBufferCI.Sizes = { sizeof(verticies) };
+			vertexBufferCI.Vertices = { &verticies };
 			vertexBufferCI.Stride = sizeof(Vertex);
 		}
 
 		uint32_t indices[6] = { 0, 1, 2,  2, 3, 0 };
 		IndexBufferCreateInfo indexBufferCI = {};
 		{
-			indexBufferCI.IndicesCount = 6;
-			indexBufferCI.Indices = indices;
+			indexBufferCI.IndicesCounts = { 6 };
+			indexBufferCI.Indices = { indices };
 		}
 
 		GraphicsPipelineShaderCreateInfo shaderCI = {};

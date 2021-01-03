@@ -27,8 +27,6 @@ namespace SmolEngine
 
 		static void OnWidowResize(uint32_t width, uint32_t height);
 
-		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
-
 	private:
 		struct SceneData 
 		{
@@ -79,24 +77,19 @@ namespace SmolEngine
 			s_RendererAPI->SetClearColor(color);
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		inline static void DrawTriangle(const Ref<VertexArray>& vertexArray, uint32_t count = 0, size_t vertices = 0)
 		{
-			s_RendererAPI->DrawIndexed(vertexArray, count);
+			s_RendererAPI->DrawTriangle(vertexArray, count, vertices);
 		}
 
-		inline static void DrawLine(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		inline static void DrawLine(const Ref<VertexArray>& vertexArray, uint32_t count = 0, size_t vertices = 0)
 		{
-			s_RendererAPI->DrawLine(vertexArray, count);
+			s_RendererAPI->DrawLine(vertexArray, count, vertices);
 		}
 
-		inline static void DrawFan(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		inline static void DrawFan(const Ref<VertexArray>& vertexArray, uint32_t count = 0, size_t vertices = 0)
 		{
-			s_RendererAPI->DrawFan(vertexArray, count);
-		}
-
-		inline static void DrawLight()
-		{
-			s_RendererAPI->DrawLight();
+			s_RendererAPI->DrawFan(vertexArray, count, vertices);
 		}
 
 		inline static Ref<Shader> LoadShader(const std::string& filePath)

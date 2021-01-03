@@ -187,7 +187,7 @@ namespace SmolEngine
 		case (int)ShapeType::Box:
 		{
 			b2PolygonShape box;
-			box.SetAsBox(bodyDef->m_Shape.x, bodyDef->m_Shape.y);
+			box.SetAsBox(bodyDef->m_Shape.x / 2, bodyDef->m_Shape.y / 2);
 			bodyDef->m_Fixture = bodyDef->m_Body->CreateFixture(&box, 0.0f);
 			break;
 		}
@@ -222,7 +222,7 @@ namespace SmolEngine
 		case (int)ShapeType::Box:
 		{
 			b2PolygonShape box;
-			box.SetAsBox(bodyDef->m_Shape.x, bodyDef->m_Shape.y);
+			box.SetAsBox(bodyDef->m_Shape.x / 2, bodyDef->m_Shape.y / 2);
 			box.ComputeMass(&mass, bodyDef->m_Density);
 
 			b2FixtureDef fixtureDef;
@@ -271,7 +271,7 @@ namespace SmolEngine
 		case (int)ShapeType::Box:
 		{
 			b2PolygonShape box;
-			box.SetAsBox(bodyDef->m_Shape.x, bodyDef->m_Shape.y);
+			box.SetAsBox(bodyDef->m_Shape.x / 2, bodyDef->m_Shape.y / 2);
 			box.ComputeMass(&mass, bodyDef->m_Density);
 
 			b2FixtureDef fixtureDef;

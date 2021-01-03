@@ -16,6 +16,13 @@ namespace SmolEngine
 {
 	class Framebuffer;
 
+	enum class DrawMode : uint16_t
+	{
+		Triangle,
+		Line,
+		Fan
+	};
+
 	struct GraphicsPipelineShaderCreateInfo
 	{
 		std::unordered_map<ShaderType, std::string> FilePaths;
@@ -28,20 +35,22 @@ namespace SmolEngine
 
 	struct VertexBufferCreateInfo
 	{
-		size_t Size = 0;
 		size_t Stride = 0;
 		size_t BuffersCount = 1;
+		bool IsAllocateMemOnly = false;
 		BufferLayout* BufferLayot = nullptr;
 
-		void* Vertices = nullptr;
-		bool IsAllocateMemOnly = false;
+		std::vector<size_t> Sizes;
+		std::vector<void*> Vertices;
 	};
 
 	struct IndexBufferCreateInfo
 	{
-		size_t IndicesCount = 0;
 		size_t BuffersCount = 1;
-		uint32_t* Indices = nullptr;
+
+		std::vector<size_t> Sizes;
+		std::vector<size_t> IndicesCounts;
+		std::vector<uint32_t*> Indices;
 	};
 
 	struct GraphicsPipelineCreateInfo
@@ -50,6 +59,7 @@ namespace SmolEngine
 		VertexBufferCreateInfo* VertexBuffer;
 		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo;
 
+		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 		bool IsAlphaBlendingEnabled = false;
 		uint32_t DescriptorSets = 1;
 	};
@@ -79,7 +89,9 @@ namespace SmolEngine
 		void FlushCommandBuffer();
 
 
-		void DrawIndexed(uint32_t vertexBufferIndex = 0, uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+		void DrawIndexed(DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+
+		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
 		void SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 

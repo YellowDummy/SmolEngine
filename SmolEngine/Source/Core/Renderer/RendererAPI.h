@@ -15,15 +15,6 @@ namespace SmolEngine
 	{
 	public:
 
-		enum class API
-		{
-			None = 0,
-
-			OpenGL, 
-
-			Vulkan
-		};
-
 		/// 
 		/// Main
 		/// 
@@ -46,28 +37,17 @@ namespace SmolEngine
 	
 		// Draw
 
-		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0);
+		void DrawLine(const Ref<VertexArray> vertexArray, uint32_t count = 0, size_t vertices = 0);
 
-		void DrawIndexed(const Ref<VertexArray> vertexArray, uint32_t count = 0);
+		void DrawTriangle(const Ref<VertexArray> vertexArray, uint32_t count = 0, size_t vertices = 0);
 
-		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0);
-
-		void DrawLight();
-
+		void DrawFan(const Ref<VertexArray> vertexArray, uint32_t count = 0, size_t vertices = 0);
 
 		void DisableDepth();
 
 		void BindTexture(uint32_t id);
 
-		/// 
-		/// Getters
-		/// 
-
-		inline static API GetAPI() { return s_API; }
-
 	private:
-
-		static API s_API;
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 

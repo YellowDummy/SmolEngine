@@ -20,6 +20,11 @@ namespace SmolEngine
 		float TextureID = 0.0f;
 	};
 
+	struct DebugVertex
+	{
+		glm::vec3 Position = glm::vec3(1.0f);
+	};
+
 	// Light Data
 
 	struct Light2DBuffer
