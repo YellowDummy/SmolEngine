@@ -58,38 +58,37 @@
         }
     },
     "value16": 0,
-    "value17": 0,
-    "value18": 0,
-    "value19": 0,
+    "value17": 1,
+    "value18": 3,
+    "value19": {
+        "value0": 1.0,
+        "value1": 1.0,
+        "value2": 1.0,
+        "value3": 1.0,
+        "value4": 0,
+        "value5": "",
+        "value6": "Background.png",
+        "value7": true,
+        "value8": 2
+    },
     "value20": 0,
-    "value21": 4,
-    "value22": 1,
+    "value21": 1,
+    "value22": 4,
     "value23": {
         "value0": 0.0,
         "value1": 0.0,
-        "value2": 0.0,
+        "value2": 1.0,
         "value3": 1.0,
         "value4": 1.0,
         "value5": 1.0,
-        "value6": 0.0,
-        "value7": 0.0,
-        "value8": 0.0,
-        "value9": 0
+        "value6": 1.0,
+        "value7": 1.0,
+        "value8": true,
+        "value9": 1
     },
-    "value24": 2,
-    "value25": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 0.0,
-        "value7": 0.0,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value26": 3,
+    "value24": 0,
+    "value25": 4,
+    "value26": 1,
     "value27": {
         "value0": 0.0,
         "value1": 0.0,
@@ -97,12 +96,12 @@
         "value3": 1.0,
         "value4": 1.0,
         "value5": 1.0,
-        "value6": -0.08673529326915741,
-        "value7": 1.9392811059951783,
+        "value6": 0.0,
+        "value7": 0.0,
         "value8": 0.0,
         "value9": 0
     },
-    "value28": 4,
+    "value28": 2,
     "value29": {
         "value0": 0.0,
         "value1": 0.0,
@@ -110,43 +109,41 @@
         "value3": 1.0,
         "value4": 1.0,
         "value5": 1.0,
-        "value6": -0.07397913932800293,
-        "value7": -1.2874844074249268,
+        "value6": 0.0,
+        "value7": 0.0,
         "value8": 0.0,
         "value9": 0
     },
-    "value30": 0,
-    "value31": 2,
-    "value32": 3,
-    "value33": {
-        "value0": {
-            "value0": true,
-            "value1": 1.0,
-            "value2": 0.30000001192092898,
-            "value3": 0,
-            "value4": 0.0,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": true,
-            "value8": false,
-            "value9": false,
-            "value10": 0.30000001192092898,
-            "value11": 1.0,
-            "value12": 1.0,
-            "value13": 2,
-            "value14": 1,
-            "value15": 0.5,
-            "value16": 0.0,
-            "value17": 0.0,
-            "value18": 0.0,
-            "value19": 0.0
-        },
-        "value1": 3,
-        "value2": true,
-        "value3": 1
+    "value30": 3,
+    "value31": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 4.085707187652588,
+        "value4": 2.6250622272491457,
+        "value5": 1.0,
+        "value6": 0.8988966345787048,
+        "value7": -0.6568865180015564,
+        "value8": 0.0,
+        "value9": 0
     },
-    "value34": 4,
-    "value35": {
+    "value32": 4,
+    "value33": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 1.210810899734497,
+        "value7": 0.7444300651550293,
+        "value8": 0.0,
+        "value9": 0
+    },
+    "value34": 0,
+    "value35": 1,
+    "value36": 3,
+    "value37": {
         "value0": {
             "value0": true,
             "value1": 1.0,
@@ -159,17 +156,17 @@
             "value8": false,
             "value9": false,
             "value10": 0.0,
-            "value11": 4.0,
+            "value11": 1.0,
             "value12": 1.0,
-            "value13": 0,
-            "value14": 0,
+            "value13": 2,
+            "value14": 1,
             "value15": 0.5,
             "value16": 0.0,
             "value17": 0.0,
             "value18": 0.0,
             "value19": 0.0
         },
-        "value1": 4,
+        "value1": 3,
         "value2": true,
         "value3": 1
     }
@@ -230,7 +227,7 @@
                         },
                         "value3": [],
                         "value4": 2,
-                        "value5": 2
+                        "value5": 3
                     }
                 }
             }
@@ -256,7 +253,12 @@
             }
         }
     ],
-    "value1": [],
+    "value1": [
+        {
+            "key": "Background.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png"
+        }
+    ],
     "value2": 0,
     "value3": 0.0,
     "value4": -9.8100004196167,

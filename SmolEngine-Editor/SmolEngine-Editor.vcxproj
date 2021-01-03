@@ -99,7 +99,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\SmolEngine\Lua\lua54.lib;..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
@@ -117,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -131,7 +131,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\SmolEngine\Lua\lua54.lib;..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
@@ -139,7 +139,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_DEBUG;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -149,7 +149,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\SmolEngine\Lua\lua54.lib;..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
@@ -157,7 +157,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_RELEASE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Lua;..\SmolEngine\Lua\include;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -171,7 +171,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\SmolEngine\Lua\lua54.lib;..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

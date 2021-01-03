@@ -69,10 +69,6 @@ project "SmolEngine"
 		"%{prj.name}/Libraries/imgizmo/src/ImSequencer.h",
 		"%{prj.name}/Libraries/imgizmo/src/ImSequencer.cpp",
 
-		"%{prj.name}/Lua/**.cpp",
-		"%{prj.name}/Lua/**.h",
-		"%{prj.name}/Lua/**.hpp"
-
 	}
 
 	includedirs
@@ -84,8 +80,6 @@ project "SmolEngine"
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/box2d/include",
 		"%{prj.name}/Source",
-		"%{prj.name}/Lua",
-		"%{prj.name}/Lua/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
@@ -267,8 +261,6 @@ project "GameX"
 		"SmolEngine/Libraries/cereal/include",
 		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Source",
-		"SmolEngine/Lua",
-		"SmolEngine/Lua/include",
 		"SmolEngine/Libraries",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
@@ -281,7 +273,6 @@ project "GameX"
 	links
 	{
 		"SmolEngine",
-		"SmolEngine/Lua/lua54.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}
@@ -364,8 +355,6 @@ project "GameX"
 		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
-		"SmolEngine/Lua",
-		"SmolEngine/Lua/include",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
@@ -378,7 +367,6 @@ project "GameX"
 	links
 	{
 		"SmolEngine",
-		"SmolEngine/Lua/lua54.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
 		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
 	}

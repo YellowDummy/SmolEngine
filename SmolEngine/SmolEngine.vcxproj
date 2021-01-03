@@ -96,7 +96,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -120,7 +120,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -148,7 +148,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_DEBUG;SMOLENGINE_OPENGL_IMPL;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -172,7 +172,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SE_RELEASE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Lua;Lua\include;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -563,34 +563,6 @@
     <ClInclude Include="Libraries\imgizmo\src\ImSequencer.h" />
     <ClInclude Include="Libraries\stb_image\stb_image.h" />
     <ClInclude Include="Libraries\stb_image\stb_image_write.h" />
-    <ClInclude Include="Lua\LuaBridge\List.h" />
-    <ClInclude Include="Lua\LuaBridge\LuaBridge.h" />
-    <ClInclude Include="Lua\LuaBridge\Map.h" />
-    <ClInclude Include="Lua\LuaBridge\RefCountedObject.h" />
-    <ClInclude Include="Lua\LuaBridge\RefCountedPtr.h" />
-    <ClInclude Include="Lua\LuaBridge\UnorderedMap.h" />
-    <ClInclude Include="Lua\LuaBridge\Vector.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\CFunctions.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\ClassInfo.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Config.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Constructor.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\FuncTraits.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Iterator.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\LuaException.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\LuaHelpers.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\LuaRef.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Namespace.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Security.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Stack.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\TypeList.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\TypeTraits.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\Userdata.h" />
-    <ClInclude Include="Lua\LuaBridge\detail\dump.h" />
-    <ClInclude Include="Lua\include\lauxlib.h" />
-    <ClInclude Include="Lua\include\lua.h" />
-    <ClInclude Include="Lua\include\lua.hpp" />
-    <ClInclude Include="Lua\include\luaconf.h" />
-    <ClInclude Include="Lua\include\lualib.h" />
     <ClInclude Include="Source\Core\Animation\Animation2DFrameKey.h" />
     <ClInclude Include="Source\Core\Animation\AnimationClip.h" />
     <ClInclude Include="Source\Core\Application.h" />
@@ -600,14 +572,13 @@
     <ClInclude Include="Source\Core\Audio\AudioSource.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\ECS\Actor.h" />
-    <ClInclude Include="Source\Core\ECS\ComponentsCore.h" />
-    <ClInclude Include="Source\Core\ECS\Components\BaseComponent.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\BaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.h" />
     <ClInclude Include="Source\Core\ECS\ComponentTuples\SingletonTuple.h" />
     <ClInclude Include="Source\Core\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\AudioSourceComponent.h" />
+    <ClInclude Include="Source\Core\ECS\Components\BaseComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\BehaviourComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\Body2DComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\CameraComponent.h" />
@@ -620,6 +591,7 @@
     <ClInclude Include="Source\Core\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\TransformComponent.h" />
+    <ClInclude Include="Source\Core\ECS\ComponentsCore.h" />
     <ClInclude Include="Source\Core\ECS\SceneData.h" />
     <ClInclude Include="Source\Core\ECS\Systems\Animation2DSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\AudioSystem.h" />
@@ -731,12 +703,12 @@
     <ClCompile Include="Source\Core\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Core\Audio\AudioSource.cpp" />
     <ClCompile Include="Source\Core\ECS\Actor.cpp" />
-    <ClCompile Include="Source\Core\ECS\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\CameraBaseTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\DefaultBaseTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\ComponentTuples\SingletonTuple.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Animation2DComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\AudioSourceComponent.cpp" />
+    <ClCompile Include="Source\Core\ECS\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\BehaviourComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Body2DComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\CameraComponent.cpp" />
