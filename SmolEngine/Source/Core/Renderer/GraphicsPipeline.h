@@ -60,8 +60,10 @@ namespace SmolEngine
 		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo;
 
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
-		bool IsAlphaBlendingEnabled = false;
+		std::string PipelineName = "";
 		uint32_t DescriptorSets = 1;
+
+		bool IsAlphaBlendingEnabled = false;
 	};
 
 	class GraphicsPipeline

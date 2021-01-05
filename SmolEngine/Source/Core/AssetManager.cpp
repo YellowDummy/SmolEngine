@@ -146,4 +146,24 @@ namespace SmolEngine
 	{
 		return std::filesystem::exists(path);
 	}
+
+	std::string AssetManager::GetCachedPath(const std::string& filePath, CachedPathType type)
+	{
+		std::filesystem::path p = filePath;
+		std::filesystem::path path;
+		switch (type)
+		{
+		case SmolEngine::CachedPathType::Shader:
+			path = p.parent_path() / "Cached" / (p.filename().string() + ".shader_cached");
+			break;
+		case SmolEngine::CachedPathType::Pipeline:
+			path = p.parent_path() / "Cached" / (p.filename().string() + ".pipeline_cached");
+			break;
+		default:
+			path = p.parent_path() / "Cached" / (p.filename().string() + ".shader_cached");
+			break;
+		}
+
+		return path.string();
+	}
 }

@@ -314,10 +314,10 @@ namespace SmolEngine
 
 		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), m_EditorCamera->m_FrameBuffer);
 
-		Renderer2D::BeginDebug(m_EditorCamera->GetCamera());
-
-		RendererSystem::DebugDraw(m_SceneData.m_Registry);
-
+		Renderer2D::BeginDebug();
+		{
+			RendererSystem::DebugDraw(m_SceneData.m_Registry);
+		}
 		Renderer2D::EndDebug();
 
 		m_EditorCamera->m_FrameBuffer->UnBind();
@@ -774,13 +774,11 @@ namespace SmolEngine
 		}
 
 		size_t id = m_IDSet[lastName];
-
 		if (m_IDSet.erase(lastName) == 1)
 		{
 			m_IDSet[newName] = id;
 			return true;
 		}
-
 		return false;
 	}
 
@@ -792,7 +790,6 @@ namespace SmolEngine
 	void WorldAdmin::UpdateIDSet()
 	{
 		m_IDSet.clear();
-
 		{
 			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple>();
 			view.each([&](DefaultBaseTuple& tuple)
@@ -800,7 +797,6 @@ namespace SmolEngine
 				m_IDSet[tuple.Info.Name] = tuple.Info.ID;
 			});
 		}
-
 		{
 			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
 			view.each([&](CameraBaseTuple& tuple)
@@ -814,7 +810,6 @@ namespace SmolEngine
 	{
 		m_SceneData.m_Registry.remove_if_exists<SingletonTuple>(m_SceneData.m_Entity);
 	}
-
 
 	bool WorldAdmin::LoadProjectConfig()
 	{
@@ -832,7 +827,6 @@ namespace SmolEngine
 
 		std::ifstream file(path);
 		std::stringstream storage;
-
 		if (!file)
 		{
 			NATIVE_ERROR("Could not open the file: {}", path);
@@ -841,12 +835,10 @@ namespace SmolEngine
 
 		storage << file.rdbuf();
 		file.close();
-
 		{
 			cereal::JSONInputArchive dataInput{ storage };
 			dataInput(ref->m_Scenes, ref->m_AssetFolder);
 		}
-
 		return true;
 	}
 

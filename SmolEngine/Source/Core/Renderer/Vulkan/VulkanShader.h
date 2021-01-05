@@ -53,11 +53,11 @@ namespace SmolEngine
 
 		bool SaveSPIRVBinaries(const std::string& filePath, const std::vector<uint32_t>& data);
 
-		const std::vector<uint32_t> LoadSPIRVBinaries(const std::string& filePath);
+		VkShaderModule LoadSPIRVBinaries(const std::string& filePath, ShaderType type);
 
 		const std::string LoadShaderSource(const std::string& filePath);
 
-		const std::string GetCachedPath(const std::string& filePath);
+		void DeleteShaderModules();
 
 	public:
 
@@ -81,6 +81,7 @@ namespace SmolEngine
 		std::vector<VkPipelineShaderStageCreateInfo> m_PipelineShaderStages;
 		std::unordered_map<size_t, UniformBuffer> m_UniformBuffers;
 		std::unordered_map<ShaderType, std::string> m_FilePaths;
+		std::unordered_map<ShaderType, VkShaderModule> m_ShaderModules;
 
 		bool m_Optimize = false;
 		bool m_IsPrecompiled = false;

@@ -401,7 +401,7 @@ namespace SmolEngine
 		delete s_Data;
 	}
 
-	void Renderer2D::BeginDebug(Ref<OrthographicCamera> camera)
+	void Renderer2D::BeginDebug()
 	{
 		s_Data->DebugPipeline->BeginCommandBuffer();
 		s_Data->DebugPipeline->BeginBufferSubmit();
@@ -415,7 +415,7 @@ namespace SmolEngine
 		s_Data->DebugPipeline->EndCommandBuffer();
 	}
 
-	void Renderer2D::DebugDraw(DebugPrimitives type, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color)
+	void Renderer2D::DebugDrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color)
 	{
 		glm::mat4 transform;
 		CommandSystem::ComposeTransform(worldPos, { rotation, 0, 0 }, { scale, 0 }, false, transform);
@@ -428,22 +428,28 @@ namespace SmolEngine
 #else
 		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
 #endif
+		s_Data->DebugPipeline->DrawIndexed(DrawMode::Line);
+	}
 
-		switch (type)
-		{
-		case DebugPrimitives::Quad:
-		{
-			s_Data->DebugPipeline->DrawIndexed(DrawMode::Line);
-			break;
-		}
-		case DebugPrimitives::Circle:
-		{
-			s_Data->DebugPipeline->Draw(3000, DrawMode::Fan, 1);
-			break;
-		}
-		default:
-			break;
-		}
+	void Renderer2D::DebugDrawCircle(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color)
+	{
+		glm::mat4 transform;
+		CommandSystem::ComposeTransform(worldPos, { rotation, 0, 0 }, { scale, 0 }, false, transform);
+		s_Data->DebugPushConstant.transform = s_Data->SceneData.viewProjectionMatrix * transform;
+		s_Data->DebugPushConstant.color = color;
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+		s_Data->DebugPipeline->SumbitUniform<glm::mat4>("u_Transform", &s_Data->DebugPushConstant.transform);
+		s_Data->DebugPipeline->SumbitUniform<glm::vec4>("u_Color", &s_Data->DebugPushConstant.color);
+#else
+		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
+#endif
+		s_Data->DebugPipeline->Draw(3000, DrawMode::Fan, 1);
+	}
+
+	void Renderer2D::DebugDrawLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
+	{
+
 	}
 
 	void Renderer2D::SubmitLight2D(const glm::vec3& offset, const float radius, const glm::vec4& color, const float lightIntensity)
@@ -502,22 +508,6 @@ namespace SmolEngine
 			}
 		}
 
-#ifdef SMOLENGINE_EDITOR
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-
-		//s_Data->TextureShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/BaseShader2D_OpenGL.glsl");
-#endif
-
-#else
-		std::string path = "../../SmolEngine/Assets/Shaders/BaseShader2D_OpenGL.glsl";
-		std::string name = "BaseShader.glsl";
-
-		if (FindShader(path, name))
-		{
-			s_Data->TextureShader = RendererCommand::LoadShader(path);
-		}
-#endif
 		// Creating and uploading indices
 		s_Data->MainPipeline = std::make_shared<GraphicsPipeline>();
 
@@ -570,10 +560,10 @@ namespace SmolEngine
 		{
 #ifdef SMOLENGINE_OPENGL_IMPL
 			shaderCI.UseSingleFile = true;
-			shaderCI.SingleFilePath = "../SmolEngine/Assets/Shaders/BaseShader2D_OpenGL.glsl";
+			shaderCI.SingleFilePath = "../Resources/Shaders/BaseShader2D_OpenGL.glsl";
 #else
-			shaderCI.FilePaths[ShaderType::Vertex] = "../SmolEngine/Assets/Shaders/BaseShader2D_Vulkan_Vertex.glsl";
-			shaderCI.FilePaths[ShaderType::Fragment] = "../SmolEngine/Assets/Shaders/BaseShader2D_Vulkan_Fragment.glsl";
+			shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/BaseShader2D_Vulkan_Vertex.glsl";
+			shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/BaseShader2D_Vulkan_Fragment.glsl";
 
 #endif
 		}
@@ -586,6 +576,7 @@ namespace SmolEngine
 
 			graphicsPipelineCI.IsAlphaBlendingEnabled = true;
 			graphicsPipelineCI.DescriptorSets = Renderer2DStorage::MaxLayers;
+			graphicsPipelineCI.PipelineName = "Renderer2D_Main";
 		}
 
 		s_Data->MainPipeline->Create(&graphicsPipelineCI);
@@ -658,10 +649,10 @@ namespace SmolEngine
 		{
 #ifdef SMOLENGINE_OPENGL_IMPL
 			shaderCI.UseSingleFile = true;
-			shaderCI.SingleFilePath = "../SmolEngine/Assets/Shaders/DebugShader.glsl";
+			shaderCI.SingleFilePath = "../Resources/Shaders/DebugShader.glsl";
 #else
-			shaderCI.FilePaths[ShaderType::Vertex] = "../SmolEngine/Assets/Shaders/DebugShader_Vulkan_Vertex.glsl";
-			shaderCI.FilePaths[ShaderType::Fragment] = "../SmolEngine/Assets/Shaders/DebugShader_Vulkan_Fragment.glsl";
+			shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/DebugShader_Vulkan_Vertex.glsl";
+			shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/DebugShader_Vulkan_Fragment.glsl";
 #endif
 		}
 
@@ -671,6 +662,7 @@ namespace SmolEngine
 			graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 			graphicsPipelineCI.PipelineDrawModes = { DrawMode::Line, DrawMode::Fan };
+			graphicsPipelineCI.PipelineName = "Renderer2D_Debug";
 		}
 
 		assert(s_Data->DebugPipeline->Create(&graphicsPipelineCI) == true);
@@ -680,16 +672,6 @@ namespace SmolEngine
 	{
 #ifdef SMOLENGINE_EDITOR
 
-		//s_Data->FrameBufferShader = RendererCommand::LoadShader("../SmolEngine/Assets/Shaders/Framebuffer.glsl");
-#else
-		std::string path = "../SmolEngine/Assets/Shaders/Framebuffer.glsl";
-		std::string name = "Framebuffer.glsl";
-
-		if (FindShader(path, name))
-		{
-			s_Data->FrameBufferShader = RendererCommand::LoadShader(path);
-
-		}
 
 #endif
 	}

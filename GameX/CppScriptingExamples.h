@@ -43,7 +43,7 @@ public:
 private:
 
 	float player_speed = 10.0f;
-	int player_speed2 = 10.0f;
+	int player_speed2 = 10;
 };
 
 class CameraMovementScript : public BehaviourPrimitive
@@ -81,5 +81,5 @@ public:
 private:
 
 	float player_speed = 140.0f;
-	int player_speed2 = 105.0f;
+	int player_speed2 = 105;
 };

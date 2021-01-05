@@ -2,6 +2,7 @@
 #include "VulkanShader.h"
 
 #include "Core/Renderer/Vulkan/VulkanContext.h"
+#include "Core/AssetManager.h"
 
 namespace SmolEngine
 {
@@ -19,7 +20,6 @@ namespace SmolEngine
     {
         shaderc::Compiler compiler;
         shaderc::CompileOptions options;
-        std::unordered_map<ShaderType, VkShaderModule> shaderModules;
         std::unordered_map<ShaderType, std::vector<uint32_t>> binaryData;
         m_MinUboAlignment = VulkanContext::GetDevice().GetDeviceProperties()->limits.minUniformBufferOffsetAlignment;
 
@@ -38,45 +38,6 @@ namespace SmolEngine
         if (!computePath.empty())
         {
             assert(LoadOrCompile(compiler, options, computePath, shaderc_shader_kind::shaderc_compute_shader, usePrecompiledBinaries, binaryData) == true);
-        }
-
-        // Vulkan Shader Creation
-
-        if (!binaryData.empty())
-        {
-            const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
-            for (const auto& info : binaryData)
-            {
-                const auto& [type, data] = info;
-                auto& shaderModule = shaderModules[type];
-
-                VkShaderModuleCreateInfo shaderModuleCI = {};
-                {
-                    shaderModuleCI.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-                    shaderModuleCI.codeSize = data.size() * sizeof(uint32_t);
-                    shaderModuleCI.pCode = data.data();
-
-                    VK_CHECK_RESULT(vkCreateShaderModule(device, &shaderModuleCI, nullptr, &shaderModule));
-                }
-
-
-                VkPipelineShaderStageCreateInfo pipelineShaderStageCI = {};
-                {
-                    pipelineShaderStageCI.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-                    pipelineShaderStageCI.stage = GetVkShaderStage(type);
-                    pipelineShaderStageCI.pName = "main";
-                    pipelineShaderStageCI.module = shaderModule;
-
-
-                    assert(pipelineShaderStageCI.module != VK_NULL_HANDLE);
-                }
-
-                m_PipelineShaderStages.emplace_back(std::move(pipelineShaderStageCI));
-
-                // Reflection
-
-                Reflect(data, type);
-            }
         }
         
         m_IsPrecompiled = usePrecompiledBinaries;
@@ -122,7 +83,7 @@ namespace SmolEngine
 
     bool VulkanShader::SaveSPIRVBinaries(const std::string& filePath, const std::vector<uint32_t>& data)
     {
-        FILE* f = fopen(GetCachedPath(filePath).c_str(), "w");
+        FILE* f = fopen(AssetManager::GetCachedPath(filePath, CachedPathType::Shader).c_str(), "w");
         if (f)
         {
             fseek(f, 0, SEEK_END);
@@ -135,31 +96,41 @@ namespace SmolEngine
             return true;
         }
 
-        NATIVE_ERROR(GetCachedPath(filePath).c_str());
+        NATIVE_ERROR(AssetManager::GetCachedPath(filePath, CachedPathType::Shader).c_str());
         return false;
     }
 
-    const std::vector<uint32_t> VulkanShader::LoadSPIRVBinaries(const std::string& filePath)
+    VkShaderModule VulkanShader::LoadSPIRVBinaries(const std::string& filePath, ShaderType type)
     {
-       FILE* f = fopen(GetCachedPath(filePath).c_str(), "rb");
-       if (f)
-       {
-           fseek(f, 0, SEEK_END);
-           uint64_t size = ftell(f);
-           fseek(f, 0, SEEK_SET);
-           std::vector<uint32_t> data(size / sizeof(uint32_t));
+        VkShaderModule shaderModule = VK_NULL_HANDLE;
+        FILE* f = fopen(AssetManager::GetCachedPath(filePath, CachedPathType::Shader).c_str(), "rb");
+        if (f)
+        {
+            fseek(f, 0, SEEK_END);
+            uint64_t size = ftell(f);
+            fseek(f, 0, SEEK_SET);
+            std::vector<uint32_t> data(size / sizeof(uint32_t));
 
-           fread(data.data(), sizeof(uint32_t), data.size(), f);
-           fclose(f);
-           return data;
-       }
+            fread(data.data(), sizeof(uint32_t), data.size(), f);
+            fclose(f);
 
-       return std::vector<uint32_t>();
+            VkShaderModuleCreateInfo shaderModuleCI = {};
+            {
+                shaderModuleCI.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+                shaderModuleCI.codeSize = data.size() * sizeof(uint32_t);
+                shaderModuleCI.pCode = data.data();
+
+                VK_CHECK_RESULT(vkCreateShaderModule(VulkanContext::GetDevice().GetLogicalDevice(), &shaderModuleCI, nullptr, &shaderModule));
+            }
+
+            Reflect(data, type);
+        }
+
+        return shaderModule;
     }
 
     void VulkanShader::Reflect(const std::vector<uint32_t>& data, ShaderType shaderType)
     {
-        const auto& device = *VulkanContext::GetDevice().GetLogicalDevice();
         spirv_cross::Compiler compiler(data);
         spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
@@ -241,20 +212,39 @@ namespace SmolEngine
     bool VulkanShader::LoadOrCompile(const shaderc::Compiler& compiler, const shaderc::CompileOptions& options, const std::string& filePath,
         shaderc_shader_kind shaderType, bool usePrecompiledBinaries, std::unordered_map<ShaderType, std::vector<uint32_t>>& out_binaryData)
     {
+        if (filePath.empty())
+            return false;
+
         ShaderType type = GetShaderType(shaderType);
         m_FilePaths[type] = filePath;
 
         if (usePrecompiledBinaries)
         {
-            if (std::filesystem::exists(GetCachedPath(filePath)))
+            if (std::filesystem::exists(AssetManager::GetCachedPath(filePath, CachedPathType::Shader)))
             {
-                out_binaryData.emplace(type, LoadSPIRVBinaries(filePath));
-                return true;
+                VkShaderModule shaderModule = LoadSPIRVBinaries(filePath, type);
+                if (shaderModule != nullptr)
+                {
+
+                    VkPipelineShaderStageCreateInfo pipelineShaderStageCI = {};
+                    {
+                        pipelineShaderStageCI.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+                        pipelineShaderStageCI.stage = GetVkShaderStage(type);
+                        pipelineShaderStageCI.pName = "main";
+                        pipelineShaderStageCI.module = shaderModule;
+
+
+                        assert(pipelineShaderStageCI.module != VK_NULL_HANDLE);
+                    }
+
+                    m_PipelineShaderStages.emplace_back(pipelineShaderStageCI);
+                    m_ShaderModules[type] = shaderModule;
+
+                    return true;
+                }
             }
-            else
-            {
-                goto COMPILE;
-            }
+
+            goto COMPILE;
 
         }
         else
@@ -265,7 +255,32 @@ namespace SmolEngine
             if (result.GetCompilationStatus() == shaderc_compilation_status_success)
             {
                 std::vector<uint32_t> data(result.cbegin(), result.cend());
-                out_binaryData.emplace(type, data);
+
+                VkShaderModule shaderModule = nullptr;
+                VkShaderModuleCreateInfo shaderModuleCI = {};
+                {
+                    shaderModuleCI.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+                    shaderModuleCI.codeSize = data.size() * sizeof(uint32_t);
+                    shaderModuleCI.pCode = data.data();
+
+                    VK_CHECK_RESULT(vkCreateShaderModule(VulkanContext::GetDevice().GetLogicalDevice(), &shaderModuleCI, nullptr, &shaderModule));
+                }
+
+                VkPipelineShaderStageCreateInfo pipelineShaderStageCI = {};
+                {
+                    pipelineShaderStageCI.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+                    pipelineShaderStageCI.stage = GetVkShaderStage(type);
+                    pipelineShaderStageCI.pName = "main";
+                    pipelineShaderStageCI.module = shaderModule;
+
+
+                    assert(pipelineShaderStageCI.module != VK_NULL_HANDLE);
+                }
+
+                m_PipelineShaderStages.emplace_back(pipelineShaderStageCI);
+                m_ShaderModules[type] = shaderModule;
+
+                Reflect(data, type);
                 SaveSPIRVBinaries(filePath, data);
             }
 
@@ -309,11 +324,13 @@ namespace SmolEngine
         return buffer.str();
     }
 
-    const std::string VulkanShader::GetCachedPath(const std::string& filePath)
+    void VulkanShader::DeleteShaderModules()
     {
-        std::filesystem::path p = filePath;
-        auto path = p.parent_path() / "Cached" / (p.filename().string() + ".cached");
-        return path.string();
+        const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
+        for (auto& [key, module] : m_ShaderModules)
+        {
+            vkDestroyShaderModule(device, module, nullptr);
+        }
     }
 
     ShaderType VulkanShader::GetShaderType(shaderc_shader_kind shadercType)

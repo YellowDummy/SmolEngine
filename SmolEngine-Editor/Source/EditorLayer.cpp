@@ -63,14 +63,15 @@ namespace SmolEngine
 		m_ActorCreationWindow = std::make_unique<ActorCreationWindow>();
 
 		m_EditorConsole = EditorConsole::GetConsole();
-
 		m_Scene = WorldAdmin::GetScene();
-		m_Scene->CreateScene(std::string("C:/Dev/SmolEngine/SmolEngine-Editor/TestScene2.smolscene"), std::string("TestScene.smolscene"));
 
+		m_Scene->CreateScene(std::string("TestScene2.smolscene"), std::string("TestScene.smolscene"));
+#if  0
 		auto Texture = Texture2D::Create("../GameX/Assets/Textures/bulkhead-wallsx3.png");
 
 		auto camera = m_Scene->CreateActor(ActorBaseType::CameraBase, "Camera", "Default");
 		auto actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, "Pawn");
+#endif //  0
 	}
 
 	void EditorLayer::OnDetach()

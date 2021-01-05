@@ -32,6 +32,12 @@ namespace SmolEngine
 
 		void UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex = 0);
 
+		/// Save / Load
+
+		bool SaveCache(const std::string& fileName, DrawMode mode);
+
+		bool CreateOrLoadCached(const std::string& fileName, DrawMode mode);
+
 		/// 
 		/// Getters
 		/// 
@@ -64,6 +70,7 @@ namespace SmolEngine
 
 		std::unordered_map<DrawMode, VkPipelineCache> m_PipelineCaches;
 		std::unordered_map<DrawMode, VkPipeline> m_Pipelines;
+		std::string m_FilePath = "";
 
 		VkDescriptorPool m_DescriptorPool = nullptr;
 		VulkanPipelineSpecification* m_VulkanPipelineSpecification = nullptr;

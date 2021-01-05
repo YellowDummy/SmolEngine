@@ -10,6 +10,12 @@ namespace SmolEngine
 {
 	class AudioEngine;
 
+	enum class CachedPathType
+	{
+		Shader,
+		Pipeline
+	};
+
 	class AssetManager
 	{
 	public:
@@ -37,6 +43,8 @@ namespace SmolEngine
 
 		static bool IsPathValid(const std::string& path);
 
+
+		static std::string GetCachedPath(const std::string& filePath, CachedPathType type);
 
 		static Ref<ShaderLib> GetShaderLib() { return s_ShaderLib; }
 

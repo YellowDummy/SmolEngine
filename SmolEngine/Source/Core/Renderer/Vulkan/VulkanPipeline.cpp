@@ -39,6 +39,8 @@ namespace SmolEngine
 
 			VK_CHECK_RESULT(vkCreatePipelineLayout(pipelineSpec->Device->GetLogicalDevice(), &pipelineLayoutCI, nullptr, &m_PipelineLayout));
 		}
+
+		m_FilePath = "../Resources/Cached/" + pipelineSpec->Name;
 	}
 
 	bool VulkanPipeline::CreatePipeline(DrawMode mode)
@@ -190,19 +192,16 @@ namespace SmolEngine
 		pipelineCreateInfo.renderPass = swapchain->GetRenderPass();
 		pipelineCreateInfo.pDynamicState = &dynamicState;
 
-		VkPipelineCacheCreateInfo pipelineCacheCI = {};
-		{
-			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-		}
-
-		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &m_PipelineCaches[mode]))
+		std::string name = std::string(m_FilePath + "_pipeline_" + std::to_string(m_PipelineCaches.size()) + ".cached");
+		bool is_loaded = CreateOrLoadCached(name, mode);
 
 		// Create rendering pipeline using the specified states
 		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCaches[mode], 1, &pipelineCreateInfo, nullptr, &m_Pipelines[mode]));
+		if (!is_loaded)
+		{
+			SaveCache(name, mode);
+		}
 
-		// Shader modules are no longer needed once the graphics pipeline has been created
-		//vkDestroyShaderModule(device, shaderStages[0].module, nullptr);
-		//vkDestroyShaderModule(device, shaderStages[1].module, nullptr);
 		return true;
 	}
 
@@ -231,6 +230,8 @@ namespace SmolEngine
 		}
 
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+		m_Pipelines.clear();
+		m_PipelineCaches.clear();
 	}
 
 	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex)
@@ -286,6 +287,77 @@ namespace SmolEngine
 		}
 	}
 
+	bool VulkanPipeline::SaveCache(const std::string& fileName, DrawMode mode)
+	{
+		FILE* f = fopen(fileName.c_str(), "wb");
+		if (f)
+		{
+			size_t size = 0;
+			void* data = nullptr;
+			const auto& device = m_VulkanPipelineSpecification->Device->GetLogicalDevice();
+
+			vkGetPipelineCacheData(device, m_PipelineCaches[mode], &size, nullptr);
+			data = (char*)malloc(sizeof(char) * size);
+			vkGetPipelineCacheData(device, m_PipelineCaches[mode], &size, data);
+
+			size_t result = fwrite(data, sizeof(char), size, f);
+			if (result != size)
+			{
+				NATIVE_ERROR("VulkanPipeline::SaveCache(): cache was not saved");
+				fclose(f);
+				free(data);
+				return false;
+			}
+
+			fclose(f);
+			free(data);
+			return true;
+		}
+
+		return false;
+	}
+
+	bool VulkanPipeline::CreateOrLoadCached(const std::string& fileName, DrawMode mode)
+	{
+		VkPipelineCache cache = nullptr;
+		const auto& device = m_VulkanPipelineSpecification->Device->GetLogicalDevice();
+
+		FILE* f = fopen(fileName.c_str(), "rb");
+		if (f)
+		{
+			fseek(f, 0, SEEK_END);
+			size_t size = ftell(f);
+			rewind(f);
+			if (size != 0)
+			{
+				void* data = (char*)malloc(sizeof(char) * size);
+				fread(data, 1, size, f);
+				fclose(f);
+
+				VkPipelineCacheCreateInfo pipelineCacheCI = {};
+				{
+					pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+					pipelineCacheCI.initialDataSize = size;
+					pipelineCacheCI.pInitialData = data;
+				}
+
+				VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &cache));
+				m_PipelineCaches[mode] = cache;
+				free(data);
+				return true;
+			}
+		}
+
+		VkPipelineCacheCreateInfo pipelineCacheCI = {};
+		{
+			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+		}
+
+		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &cache));
+		m_PipelineCaches[mode] = cache;
+		return false;
+	}
+
 	const VkPipeline& VulkanPipeline::GetVkPipeline(DrawMode mode)
 	{
 		return m_Pipelines[mode];
@@ -338,7 +410,6 @@ namespace SmolEngine
 			DescriptorPoolSizes.push_back(tempPoolSize);
 		}
 
-		// Resources Buffer PoolSize
 		if (!shader->m_UniformResources.empty())
 		{
 			VkDescriptorPoolSize tempPoolSize = {};

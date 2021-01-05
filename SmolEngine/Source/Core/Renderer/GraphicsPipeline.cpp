@@ -106,6 +106,7 @@ namespace SmolEngine
 			pipelineSpecCI.Stride = pipelineInfo->VertexBuffer->Stride;
 			pipelineSpecCI.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
+			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 		}
 
 		m_VulkanPipeline.Invalidate(&pipelineSpecCI);
@@ -113,7 +114,7 @@ namespace SmolEngine
 		{
 			m_VulkanPipeline.CreatePipeline(mode);
 		}
-
+		m_Shader->GetVulkanShader()->DeleteShaderModules();
 #endif // SMOLENGINE_OPENGL_IMPL
 
 		return true;
@@ -409,6 +410,8 @@ namespace SmolEngine
 		if (pipelineInfo->ShaderCreateInfo->SingleFilePath.empty() && pipelineInfo->ShaderCreateInfo->UseSingleFile)
 			return false;
 
+		if (pipelineInfo->PipelineName.empty())
+			return false;
 
 		return true;
 	}

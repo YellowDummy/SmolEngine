@@ -22,8 +22,6 @@ namespace SmolEngine
 
 		static void Shutdown();
 
-		//
-
 		static void BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer);
 
 		static void EndScene();
@@ -44,32 +42,26 @@ namespace SmolEngine
 
 		static void ClearBuffers();
 
-		// 
-
-		static void CreateBatchData();
-
-		static void CreateDebugData();
-
-		static void CreateFramebufferData();
-
-		// Sprites
+		// Submit
 
 		static void SubmitSprite(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
 			const float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		static void SubmitQuad(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale, const float rotation, const glm::vec4& color);
 
-		// UI
-
 		static void DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D> texture, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		// Debug
 
-		static void BeginDebug(Ref<OrthographicCamera> camera);
+		static void BeginDebug();
 
 		static void EndDebug();
 
-		static void DebugDraw(DebugPrimitives type, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+		static void DebugDrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+
+		static void DebugDrawCircle(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+
+		static void DebugDrawLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
 		// Light
 
@@ -84,7 +76,17 @@ namespace SmolEngine
 
 		static void DrawFrameBuffer(const uint32_t colorAttachmentID);
 
-		static const uint32_t MaxTextureSlot = 3; // TODO: get TMU (Texture Mapping Units) at initialization
+		// Helpers
+
+		static void CreateBatchData();
+
+		static void CreateDebugData();
+
+		static void CreateFramebufferData();
+
+	public:
+
+		static const uint32_t MaxTextureSlot = 32; // TODO: get TMU (Texture Mapping Units) at initialization
 
 	private:
 

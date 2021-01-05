@@ -127,9 +127,9 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_EDITOR
 
-		io.Fonts->AddFontFromFileTTF("../SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
+		io.Fonts->AddFontFromFileTTF("../Resources/Fonts/Font1.ttf", 17.0f, &config);
 #else
-		io.Fonts->AddFontFromFileTTF("../../SmolEngine/Assets/Fonts/Font1.ttf", 17.0f, &config);
+		io.Fonts->AddFontFromFileTTF("../../Resources/Fonts/Font1.ttf", 17.0f, &config);
 #endif
 
 		Application& app = Application::GetApplication();

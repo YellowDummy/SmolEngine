@@ -110,14 +110,14 @@ namespace SmolEngine
 
 			case (int)ShapeType::Box:
 			{
-				Renderer2D::DebugDraw(DebugPrimitives::Quad, transform.WorldPos,
+				Renderer2D::DebugDrawQuad(transform.WorldPos,
 					{ body.m_Shape.x, body.m_Shape.y }, transform.Rotation.x);
 
 				break;
 			}
 			case (int)ShapeType::Cirlce:
 			{
-				Renderer2D::DebugDraw(DebugPrimitives::Circle,
+				Renderer2D::DebugDrawCircle(
 					{ transform.WorldPos.x + body.m_Offset.x, transform.WorldPos.y + body.m_Offset.y,
 					1.0f }, { body.m_Radius,  body.m_Radius }, transform.Rotation.x);
 

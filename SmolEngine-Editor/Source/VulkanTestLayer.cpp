@@ -67,8 +67,8 @@ namespace SmolEngine
 
 		GraphicsPipelineShaderCreateInfo shaderCI = {};
 		{
-			shaderCI.FilePaths[ShaderType::Vertex] = "../SmolEngine/Assets/Shaders/VulkanTriangle_Vertex.glsl";
-			shaderCI.FilePaths[ShaderType::Fragment] = "../SmolEngine/Assets/Shaders/VulkanTriangle_Fragment.glsl";
+			shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/VulkanTriangle_Vertex.glsl";
+			shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/VulkanTriangle_Fragment.glsl";
 			shaderCI.Textures = {  };
 		}
 
@@ -77,6 +77,7 @@ namespace SmolEngine
 			graphicsPipelineCI.IndexBuffer = &indexBufferCI;
 			graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
+			graphicsPipelineCI.PipelineName = "VulkanTestLayer";
 		}
 
 		bool result = m_GraphicsPipeline.Create(&graphicsPipelineCI);
