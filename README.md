@@ -42,7 +42,8 @@
 
 ## Building
 ### Windows
-1. Call Win-GenProject.bat or run ```premake5 vs2019```
-2. Go to Libraries\vulkan and extract libs.7z
-3. Go to Libraries\fmod\libs and copy all dll's to output folder
-4. Under configuration properties makes sure that Yojimbo project is set to "build"
+1. Download VulkanSDK (1.2 or higher)
+2. Call Win-GenProject.bat or run ```premake5 vs2019```
+3. Go to Libraries\vulkan and extract libs.7z
+4. Go to Libraries\fmod\libs and copy all dll's to output folder
+5. Under configuration properties makes sure that Yojimbo project is set to "build"
