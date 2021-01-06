@@ -131,9 +131,9 @@ namespace SmolEngine
 		memcpy(m_Mapped, data, size);
 	}
 
-	void VulkanBuffer::UpdateData(const void* data, size_t size, uint32_t offset)
+	void VulkanBuffer::CmdUpdateData(VkCommandBuffer cmdBuffer, const void* data, size_t size, uint32_t offset)
 	{
-		SetData(data, size, offset);
+		vkCmdUpdateBuffer(cmdBuffer, m_Buffer, offset, size, data);
 	}
 
 	void* VulkanBuffer::MapMemory()

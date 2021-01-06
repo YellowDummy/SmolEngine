@@ -120,19 +120,21 @@ namespace SmolEngine
 		return true;
 	}
 
-	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer> framebuffer, const glm::vec4& clearColors)
+	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer> framebuffer)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
+		m_RenderpassFramebuffer = framebuffer;
+
 		m_Shader->Bind();
 		m_VextexArray->Bind();
+		m_RenderpassFramebuffer->Bind();
 #else
+		assert(framebuffer != nullptr);
 		auto& offscreenPass = framebuffer->GetVulkanFramebuffer().GetOffscreenPass();
 		auto& scpec = framebuffer->GetSpecification();
 
 		VkClearValue clearValues[2];
-		//clearValues[0].color = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
 		clearValues[1].depthStencil = { 1.0f, 0 };
-
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		{
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -170,17 +172,21 @@ namespace SmolEngine
 	void GraphicsPipeline::EndRenderPass()
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
+		m_RenderpassFramebuffer->UnBind();
 		m_Shader->UnBind();
 		m_VextexArray->UnBind();
+
+		m_RenderpassFramebuffer = nullptr;
 #else
 		vkCmdEndRenderPass(m_CommandBuffer);
 #endif
 	}
 
-	void GraphicsPipeline::ClearColors(Ref<Framebuffer>& framebuffer)
+	void GraphicsPipeline::ClearColors(Ref<Framebuffer>& framebuffer, const glm::vec4& clearColors)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-
+		RendererCommand::SetClearColor(clearColors);
+		RendererCommand::Clear();
 #else
 		VkClearRect clearRect = {};
 		clearRect.layerCount = 1;
@@ -188,7 +194,9 @@ namespace SmolEngine
 		clearRect.rect.offset = { 0, 0 };
 		clearRect.rect.extent = { (uint32_t)framebuffer->GetSpecification().Width, (uint32_t)framebuffer->GetSpecification().Height };
 
-		vkCmdClearAttachments(m_CommandBuffer, 2, framebuffer->GetVulkanFramebuffer().m_OffscreenPass.clearAttachments, 1, &clearRect);
+		auto& vkFrameBuffer = framebuffer->GetVulkanFramebuffer();
+		vkFrameBuffer.SetClearColors(clearColors);
+		vkCmdClearAttachments(m_CommandBuffer, 2, vkFrameBuffer.m_OffscreenPass.clearAttachments, 1, &clearRect);
 #endif
 	}
 
@@ -238,6 +246,8 @@ namespace SmolEngine
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
 		m_CommandBuffer = VulkanCommandBuffer::CreateSingleCommandBuffer();
+#else
+		RendererCommand::Reset();
 #endif
 	}
 
@@ -258,8 +268,10 @@ namespace SmolEngine
 	void GraphicsPipeline::DrawIndexed(DrawMode mode, uint32_t vertexBufferIndex, uint32_t indexBufferIndex, uint32_t descriptorSetIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-
+		m_VextexArray->Bind();
 		m_VextexArray->SetVertexBuffer(m_VertexBuffers[vertexBufferIndex]);
+		m_VextexArray->SetIndexBuffer(m_IndexBuffers[indexBufferIndex]);
+		m_Shader->Bind();
 
 		switch (mode)
 		{
@@ -295,16 +307,15 @@ namespace SmolEngine
 
 		// Draw indexed
 		vkCmdDrawIndexed(m_CommandBuffer, m_IndexBuffers[indexBufferIndex]->GetVulkanIndexBuffer().GetCount(), 1, 0, 0, 1);
-
-		
-	
 #endif
 	}
 
 	void GraphicsPipeline::Draw(uint32_t vertextCount, DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
+		m_VextexArray->Bind();
 		m_VextexArray->SetVertexBuffer(m_VertexBuffers[vertexBufferIndex]);
+		m_Shader->Bind();
 
 		switch (mode)
 		{
@@ -352,25 +363,27 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::UpdateVertextBuffer(void* vertices, size_t size, uint32_t offset, uint32_t bufferIndex)
+	void GraphicsPipeline::UpdateVertextBuffer(void* vertices, size_t size, uint32_t bufferIndex, uint32_t offset)
 	{
 		m_VertexBuffers[bufferIndex]->UploadData(vertices, size, offset);
 #ifdef SMOLENGINE_OPENGL_IMPL
+		m_VextexArray->Bind();
 		m_VextexArray->SetVertexBuffer(m_VertexBuffers[bufferIndex]);
 #endif
 	}
 
-	void GraphicsPipeline::UpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex)
+	void GraphicsPipeline::UpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex, uint32_t offset)
 	{
 		m_IndexBuffers[bufferIndex]->UploadData(indices, count);
-
 #ifdef SMOLENGINE_OPENGL_IMPL
+		m_VextexArray->Bind();
 		m_VextexArray->SetIndexBuffer(m_IndexBuffers[bufferIndex]);
 #endif
 	}
 
 	void GraphicsPipeline::Update2DTextures(const std::vector<Ref<Texture2D>>& textures, uint32_t descriptorSetIndex)
 	{
+		m_Shader->Bind();
 		uint32_t index = 0;
 #ifndef SMOLENGINE_OPENGL_IMPL
 		std::vector<VulkanTexture*> vkTextures(textures.size());

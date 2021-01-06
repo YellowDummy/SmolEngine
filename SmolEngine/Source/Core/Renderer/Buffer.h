@@ -21,10 +21,6 @@
 
 namespace SmolEngine
 {
-	/// 
-	/// VERTEX BUFFER
-	///
-
 	class VertexBuffer
 	{
 	public:
@@ -49,6 +45,16 @@ namespace SmolEngine
 
 		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0);
 
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		void CmdUpdateData(VkCommandBuffer cmdBuffer, const void* data, size_t size, uint32_t offset = 0)
+		{
+			m_VulkanVertexBuffer.CmdUpdateData(cmdBuffer, data, size, offset);
+		}
+
+#endif
+
 		/// 
 		/// Getters
 		/// 
@@ -57,7 +63,7 @@ namespace SmolEngine
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		VulkanVertexBuffer& GetVulkanVertexBuffer() { return m_VulkanVextexBuffer; }
+		VulkanVertexBuffer& GetVulkanVertexBuffer() { return m_VulkanVertexBuffer; }
 #endif
 
 		/// 
@@ -79,7 +85,7 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		OpenglVertexBuffer m_OpenglVertexBuffer = {};
 #else
-		VulkanVertexBuffer m_VulkanVextexBuffer = {};
+		VulkanVertexBuffer m_VulkanVertexBuffer = {};
 #endif
 
 	};
@@ -96,15 +102,22 @@ namespace SmolEngine
 
 		~IndexBuffer() = default;
 
-		/// 
-		/// Binding
-		/// 
 
 		void Bind() const;
 
 		void UnBind() const;
 
+
 		void UploadData(uint32_t* indices, uint32_t count);
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		void CmdUpdateData(VkCommandBuffer cmdBuffer, const void* data, size_t size, uint32_t offset = 0)
+		{
+			m_VulkanIndexBuffer.CmdUpdateData(cmdBuffer, data, size, offset);
+		}
+
+#endif
 
 		void Destory();
 

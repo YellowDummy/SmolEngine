@@ -1333,13 +1333,14 @@ namespace SmolEngine
 					if (ImGui::BeginMenu("Base"))
 					{
 						std::stringstream ss;
-						ss << "New_Actor_" << m_Scene->GetSceneData().m_ActorPool.size();
 						if (ImGui::MenuItem("Default"))
 						{
+							ss << "New_DefaultActor_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str());
 						}
 						if (ImGui::MenuItem("Camera"))
 						{
+							ss << "New_CameraActor_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->CreateActor(ActorBaseType::CameraBase, ss.str());
 						}
 
@@ -1349,35 +1350,41 @@ namespace SmolEngine
 					if (ImGui::BeginMenu("Common"))
 					{
 						std::stringstream ss;
-						ss << "New_Actor_" << m_Scene->GetSceneData().m_ActorPool.size();
 						if (ImGui::MenuItem("Sprite"))
 						{
+							ss << "New_Sprite_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->AddComponent<Texture2DComponent>(*m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
 						}
 						if (ImGui::MenuItem("Light 2D"))
 						{
+							ss << "New_Light2D_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->AddComponent<Light2DSourceComponent>(*m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
 						}
 						if (ImGui::MenuItem("Rigidbody 2D"))
 						{
+							ss << "New_Rigidbody2D_" << m_Scene->GetSceneData().m_ActorPool.size();
 							Ref<Actor> actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str());
 							m_Scene->AddComponent<Body2DComponent>(*actor,
 								actor, 0);
 						}
 						if (ImGui::MenuItem("Animation 2D"))
 						{
+							ss << "New_Animation2D_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->AddComponent<Animation2DComponent>(*m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
 						}
 						if (ImGui::MenuItem("Audio Source"))
 						{
+							ss << "New_AudioSource_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->AddComponent<AudioSourceComponent>(*m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
 						}
 						if (ImGui::MenuItem("Canvas"))
 						{
+							ss << "New_Canvas_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->AddComponent<CanvasComponent>(*m_Scene->CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
 						}
 						if (ImGui::MenuItem("Camera"))
 						{
+							ss << "New_Camera_" << m_Scene->GetSceneData().m_ActorPool.size();
 							m_Scene->CreateActor(ActorBaseType::CameraBase, ss.str());
 						}
 						ImGui::EndMenu();

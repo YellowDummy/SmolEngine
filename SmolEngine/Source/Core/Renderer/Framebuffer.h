@@ -46,7 +46,7 @@ namespace SmolEngine
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		const VulkanFramebuffer& GetVulkanFramebuffer() const { return m_VulkanFrameBuffer; }
+		VulkanFramebuffer& GetVulkanFramebuffer() { return m_VulkanFrameBuffer; }
 #endif
 
 		/// 

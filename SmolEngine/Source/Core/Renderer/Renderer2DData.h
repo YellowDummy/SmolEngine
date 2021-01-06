@@ -22,7 +22,7 @@ namespace SmolEngine
 
 	struct DebugVertex
 	{
-		glm::vec3 Position = glm::vec3(1.0f);
+		glm::vec3 Position = glm::vec3(0.0f);
 	};
 
 	// Light Data

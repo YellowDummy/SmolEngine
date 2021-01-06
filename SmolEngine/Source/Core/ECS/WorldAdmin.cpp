@@ -160,14 +160,6 @@ namespace SmolEngine
 		// Sending OnProcess callback
 		ScriptingSystem::OnSceneTick(m_SceneData.m_Registry, deltaTime);
 
-		// Binding Framebuffer
-		FramebufferSComponent::Get()[0]->Bind(); // 0 is default framebuffer
-
-		// Pre-Rendering Preparations
-		RendererCommand::Reset();
-		RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1, 1 });
-		RendererCommand::Clear();
-
 		// Extracting Camera Tuples
 		const auto& cameraGroup = m_SceneData.m_Registry.view<CameraBaseTuple, TransformComponent>();
 		for (const auto& entity : cameraGroup)
@@ -181,14 +173,11 @@ namespace SmolEngine
 			CameraSystem::CalculateView(&tuple.Camera, &transform);
 
 			// Rendering scene to target framebuffer
-			RenderScene(tuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0], &tuple.Camera, &transform);
+			RenderScene(tuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0], false, &tuple.Camera, &transform);
 
 			// At the moment we support only one viewport
 			break;
 		}
-
-		// Unbinding Framebuffer
-		FramebufferSComponent::Get()[0]->UnBind(); // 0 is default framebuffer
 
 #ifndef SMOLENGINE_EDITOR
 		// Rendering framebuffer to screen. We don't need to do this inside editor - it's handled by dear imgui
@@ -225,7 +214,8 @@ namespace SmolEngine
 		UISystem::OnEvent(m_SceneData.m_Registry, e);
 	}
 
-	void WorldAdmin::RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, CameraComponent* targetCamera, TransformComponent* cameraTranform)
+	void WorldAdmin::RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, bool debugDrawEnabled,
+		CameraComponent* targetCamera, TransformComponent* cameraTranform)
 	{
 #ifdef SMOLENGINE_EDITOR
 		if (m_InPlayMode)
@@ -253,6 +243,15 @@ namespace SmolEngine
 				RendererSystem::RenderCanvases(registry, targetCamera, cameraTranform);
 		}
 		RendererSystem::EndDraw();
+
+		if (debugDrawEnabled)
+		{
+			Renderer2D::BeginDebug();
+			{
+				RendererSystem::DebugDraw(m_SceneData.m_Registry);
+			}
+			Renderer2D::EndDebug();
+		}
 	}
 
 	void WorldAdmin::ReloadAssets()
@@ -278,6 +277,7 @@ namespace SmolEngine
 		// Reloading Canvas
 		AssetManager::ReloadCanvases(m_SceneData.m_Registry);
 
+		// Reloading Scripts
 		ScriptingSystem::ReloadScripts(m_SceneData.m_Registry, m_SceneData.m_ActorPool);
 	}
 
@@ -304,23 +304,8 @@ namespace SmolEngine
 
 	void WorldAdmin::UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize)
 	{
-		m_EditorCamera->m_FrameBuffer->Bind();
-
-		// Pre-Rendering Preparations
-		RendererCommand::Reset();
-		RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1, 1 });
-		RendererCommand::Clear();
 		// Rendering scene to the target framebuffer
-
-		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), m_EditorCamera->m_FrameBuffer);
-
-		Renderer2D::BeginDebug();
-		{
-			RendererSystem::DebugDraw(m_SceneData.m_Registry);
-		}
-		Renderer2D::EndDebug();
-
-		m_EditorCamera->m_FrameBuffer->UnBind();
+		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), m_EditorCamera->m_FrameBuffer, true);
 	}
 
 	void WorldAdmin::OnSceneViewResize(float width, float height)

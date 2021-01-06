@@ -22,6 +22,7 @@ namespace SmolEngine
 
 		void SetData(const uint32_t* data, uint64_t count);
 
+		void CmdUpdateData(VkCommandBuffer cmdBuffer, const void* data, size_t size, uint32_t offset = 0);
 
 		void* MapMemory();
 

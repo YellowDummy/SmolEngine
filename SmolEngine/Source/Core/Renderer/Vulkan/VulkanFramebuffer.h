@@ -33,9 +33,7 @@ namespace SmolEngine
 
 		~VulkanFramebuffer();
 
-		///
 		///  Main
-		/// 
 		
 		bool Init(const FramebufferSpecification& data);
 
@@ -49,9 +47,11 @@ namespace SmolEngine
 
 	public:
 
-		/// 
+		/// Setters
+
+		void SetClearColors(const glm::vec4& clearColors);
+
 		/// Getters
-		/// 
 
 		const FramebufferSpecification& GetSpecification() const;
 

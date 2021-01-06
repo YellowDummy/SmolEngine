@@ -84,14 +84,8 @@ namespace SmolEngine
 		s_Data->QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		s_Data->QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
-		// Create geometry, load shaders, generate uniform maps
 		CreateBatchData();
-
 		CreateDebugData();
-		//
-
-		//CreateFramebufferData();
-
 	}
 
 	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer)
@@ -100,15 +94,15 @@ namespace SmolEngine
 
 		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
 		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
-
-#else
+#endif
 		s_Data->MainPipeline->BeginCommandBuffer();
 		s_Data->MainPipeline->BeginRenderPass(targetFramebuffer);
-		s_Data->MainPipeline->ClearColors(targetFramebuffer);
+		{
+			s_Data->MainPipeline->ClearColors(targetFramebuffer);
+		}
 		s_Data->MainPipeline->EndRenderPass();
-
 		s_Data->MainPipeline->BeginBufferSubmit();
-#endif
+
 		s_Data->SceneData.viewProjectionMatrix = viewProjectionMatrix;
 		s_Data->SceneData.ambientValue = ambientValue;
 		s_Data->SceneData.targetFramebuffer = targetFramebuffer;
@@ -155,7 +149,7 @@ namespace SmolEngine
 		UploadLightUniforms();
 
 #ifndef SMOLENGINE_OPENGL_IMPL
-		// Binding textures
+
 		for (auto& layer : s_Data->Layers)
 		{
 			if (!layer.isActive)
@@ -182,7 +176,6 @@ namespace SmolEngine
 
 				DrawLayer(layer);
 				Stats->LayersInUse++;
-
 			}
 		}
 		s_Data->MainPipeline->EndRenderPass();
@@ -210,7 +203,7 @@ namespace SmolEngine
 		s_Data->MainPipeline->EndCommandBuffer();
 		s_Data->MainPipeline->BeginCommandBuffer();
 
-		s_Data->MainPipeline->UpdateVertextBuffer(s_Data->ClearBuffer, layer.ClearSize, 0, layer.LayerIndex);
+		s_Data->MainPipeline->UpdateVertextBuffer(s_Data->ClearBuffer, layer.ClearSize, layer.LayerIndex);
 
 		m_RenderResetted = true;
 #endif
@@ -229,6 +222,7 @@ namespace SmolEngine
 		layer.QuadCount = 0;
 		layer.ClearSize = 0;
 		layer.TextureSlotIndex = 1;
+		layer.TextureSlots[0] = s_Data->WhiteTexture;
 	}
 
 	void Renderer2D::DrawLayer(LayerDataBuffer& layer)
@@ -238,7 +232,7 @@ namespace SmolEngine
 
 		const uint32_t dataSize = (uint32_t)((uint8_t*)layer.BasePtr - (uint8_t*)layer.Base);
 #ifndef SMOLENGINE_OPENGL_IMPL
-		s_Data->MainPipeline->UpdateVertextBuffer(layer.Base, dataSize, 0, layer.LayerIndex);
+		s_Data->MainPipeline->UpdateVertextBuffer(layer.Base, dataSize, layer.LayerIndex);
 		layer.ClearSize = dataSize;
 
 		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(int32_t), &s_Data->Light2DBufferSize);
@@ -449,7 +443,33 @@ namespace SmolEngine
 
 	void Renderer2D::DebugDrawLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
 	{
+		glm::vec4 pos(0.0f, 0.0f, 0.0f, 1.0f);
+		const uint32_t bufferIndex = 2;
+		glm::mat4 start_transform, end_transform;
+		CommandSystem::ComposeTransform(startPos, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }, false, start_transform);
+		CommandSystem::ComposeTransform(endPos, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }, false, end_transform);
 
+		s_Data->DebugPushConstant.color = color;
+		s_Data->DebugPushConstant.transform = s_Data->SceneData.viewProjectionMatrix;
+
+		DebugVertex LineVertex[2];
+		LineVertex[0].Position = start_transform * pos;
+		LineVertex[1].Position = end_transform * pos;
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+		s_Data->DebugPipeline->SumbitUniform<glm::mat4>("u_Transform", &s_Data->DebugPushConstant.transform);
+		s_Data->DebugPipeline->SumbitUniform<glm::vec4>("u_Color", &s_Data->DebugPushConstant.color);
+		s_Data->DebugPipeline->UpdateVertextBuffer(&LineVertex, sizeof(LineVertex), bufferIndex);
+#else
+		s_Data->DebugPipeline->EndRenderPass();
+		{
+			s_Data->DebugPipeline->CmdUpdateVertextBuffer(&LineVertex, sizeof(LineVertex), bufferIndex);
+		}
+		s_Data->DebugPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
+
+#endif
+		s_Data->DebugPipeline->Draw(2, DrawMode::Line, bufferIndex);
 	}
 
 	void Renderer2D::SubmitLight2D(const glm::vec3& offset, const float radius, const glm::vec4& color, const float lightIntensity)
@@ -543,7 +563,6 @@ namespace SmolEngine
 			vertexBufferCI.Sizes = { sizeof(QuadVertex) * s_Data->MaxVertices };
 			vertexBufferCI.Stride = sizeof(QuadVertex);
 #ifndef SMOLENGINE_OPENGL_IMPL
-			size_t size = sizeof(QuadVertex) * s_Data->MaxVertices;
 			vertexBufferCI.BuffersCount = s_Data->MaxLayers;
 #endif
 			vertexBufferCI.IsAllocateMemOnly = true;
@@ -616,20 +635,25 @@ namespace SmolEngine
 
 		// Cirlce
 		const size_t nVertices = 3000;
-		DebugVertex CircleVertex[nVertices];
+		DebugVertex* CircleVertex = new DebugVertex[nVertices];
 		for (size_t i = 1; i < nVertices; i++)
 		{
 			CircleVertex[i].Position = glm::vec3(cos(2 * 3.14159 * i / 1000.0), sin(2 * 3.14159 * i / 1000.0), 0);
 		}
 
+		// Line
+		DebugVertex LineVertex[2];
+		LineVertex[0].Position = { 0.0f, 0.0f, 0.0f };
+		LineVertex[1].Position = { 0.0f, 0.0f, 0.0f };
+
 		VertexBufferCreateInfo vertexBufferCI = {};
 		{
-			vertexBufferCI.Sizes = { sizeof(QuadVertex), sizeof(CircleVertex) };
-			vertexBufferCI.Vertices = { QuadVertex, CircleVertex };
+			vertexBufferCI.BuffersCount = 3;
+			vertexBufferCI.Sizes = { sizeof(QuadVertex), sizeof(DebugVertex) * nVertices, sizeof(LineVertex) };
+			vertexBufferCI.Vertices = { QuadVertex, CircleVertex, LineVertex };
 
 			vertexBufferCI.BufferLayot = &layout;
 			vertexBufferCI.Stride = sizeof(DebugVertex);
-			vertexBufferCI.BuffersCount = 2;
 		}
 
 		IndexBufferCreateInfo indexBufferCI = {};
@@ -638,11 +662,9 @@ namespace SmolEngine
 
 			indexBufferCI.IndicesCounts.resize(1);
 			indexBufferCI.IndicesCounts[0] = 6;
-			//indexBufferCI.IndicesCounts[1] = nVertices;
 
 			indexBufferCI.Indices.resize(1);
 			indexBufferCI.Indices[0] = quadIndices;
-			//indexBufferCI.Indices[1] = circleIndices;
 		}
 
 		GraphicsPipelineShaderCreateInfo shaderCI = {};
@@ -666,6 +688,7 @@ namespace SmolEngine
 		}
 
 		assert(s_Data->DebugPipeline->Create(&graphicsPipelineCI) == true);
+		delete[] CircleVertex;
 	}
 
 	void Renderer2D::CreateFramebufferData()

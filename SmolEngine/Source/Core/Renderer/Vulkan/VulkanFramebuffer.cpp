@@ -304,6 +304,11 @@ namespace SmolEngine
 		}
 	}
 
+	void VulkanFramebuffer::SetClearColors(const glm::vec4& clearColors)
+	{
+		m_OffscreenPass.clearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+	}
+
 	const FramebufferSpecification& VulkanFramebuffer::GetSpecification() const
 	{
 		return m_Specification;

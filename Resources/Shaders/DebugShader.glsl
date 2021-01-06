@@ -10,8 +10,8 @@ out vec4 v_Color;
 
 void main()
 {
-	v_Color = u_Color;
-	gl_Position = u_Transform * vec4(a_Position, 1.0);
+    v_Color = u_Color;
+	gl_Position = u_Transform * vec4(a_Position, 1);
 }
 
 #type fragment

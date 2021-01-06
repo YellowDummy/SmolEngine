@@ -73,11 +73,11 @@ namespace SmolEngine
 		bool Create(const GraphicsPipelineCreateInfo* pipelineInfo);
 
 
-		void BeginRenderPass(Ref<Framebuffer> framebuffer = nullptr, const glm::vec4& clearColors = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		void BeginRenderPass(Ref<Framebuffer> framebuffer = nullptr);
 
 		void EndRenderPass();
 
-		void ClearColors(Ref<Framebuffer>& framebuffer);
+		void ClearColors(Ref<Framebuffer>& framebuffer, const glm::vec4& clearColors = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 		void BeginBufferSubmit();
 
@@ -95,6 +95,7 @@ namespace SmolEngine
 
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
+
 		void SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 
 		template<typename T>
@@ -108,9 +109,24 @@ namespace SmolEngine
 
 		void SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data);
 
-		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t offset = 0, uint32_t bufferIndex = 0);
 
-		void UpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex = 0);
+		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0);
+
+		void UpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex = 0, uint32_t offset = 0);
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		void CmdUpdateVertextBuffer(const void* data, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0)
+		{
+			m_VertexBuffers[bufferIndex]->CmdUpdateData(m_CommandBuffer, data, size, offset);
+		}
+
+		void CmdUpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex = 0, uint32_t offset = 0)
+		{
+			m_IndexBuffers[bufferIndex]->CmdUpdateData(m_CommandBuffer, indices, sizeof(uint32_t) * count, offset);
+		}
+
+#endif
 
 		void Update2DTextures(const std::vector<Ref<Texture2D>>& textures, uint32_t descriptorSetIndex = 0);
 
@@ -131,5 +147,6 @@ namespace SmolEngine
 
 		Ref<VertexArray> m_VextexArray;
 		Ref<Shader> m_Shader = nullptr;
+		Ref<Framebuffer> m_RenderpassFramebuffer = nullptr;
 	};
 }

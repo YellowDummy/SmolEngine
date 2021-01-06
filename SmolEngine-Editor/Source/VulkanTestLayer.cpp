@@ -139,7 +139,8 @@ namespace SmolEngine
 				uint32_t bindingPoint = 0;
 				m_GraphicsPipeline.SumbitUniformBuffer(bindingPoint, sizeof(glm::mat4), &m_EditorCamera->GetCamera()->GetViewProjectionMatrix());
 
-				m_GraphicsPipeline.BeginRenderPass(m_FrameBuffer, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+				m_GraphicsPipeline.ClearColors(m_FrameBuffer);
+				m_GraphicsPipeline.BeginRenderPass(m_FrameBuffer);
 				{
 					m_GraphicsPipeline.SumbitPushConstant(ShaderType::Fragment, sizeof(glm::vec3), &m_AddColor);
 					m_GraphicsPipeline.DrawIndexed();

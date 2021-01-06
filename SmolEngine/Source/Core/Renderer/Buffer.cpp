@@ -27,7 +27,7 @@ namespace SmolEngine
 
 		buffer->m_OpenglVertexBuffer.Init(size);
 #else
-		buffer->m_VulkanVextexBuffer.Create(size);
+		buffer->m_VulkanVertexBuffer.Create(size);
 #endif
 		return buffer;
 	}
@@ -41,7 +41,7 @@ namespace SmolEngine
 
 		buffer->m_OpenglVertexBuffer.Init(vertices, size);
 #else
-		buffer->m_VulkanVextexBuffer.Create(vertices, size);
+		buffer->m_VulkanVertexBuffer.Create(vertices, size);
 
 #endif
 		return buffer;
@@ -197,7 +197,7 @@ namespace SmolEngine
 
 		m_OpenglVertexBuffer.Destroy();
 #else
-		m_VulkanVextexBuffer.Destroy();
+		m_VulkanVertexBuffer.Destroy();
 #endif
 	}
 
@@ -207,9 +207,8 @@ namespace SmolEngine
 
 		m_OpenglVertexBuffer.UploadData(data, size, offset);
 #else
-		
-		
-		m_VulkanVextexBuffer.UploadData(data, size, offset);
+
+		m_VulkanVertexBuffer.SetData(data, size, offset);
 #endif
 
 	}
