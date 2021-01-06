@@ -35,11 +35,11 @@ namespace SmolEngine
 	enum class JointType: uint16_t;
 
 
-	class Box2DPhysicsSystem
+	class Physics2DSystem
 	{
 	public:
 
-		Box2DPhysicsSystem() = default;
+		Physics2DSystem() = default;
 
 		///
 

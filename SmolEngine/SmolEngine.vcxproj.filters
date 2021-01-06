@@ -1296,9 +1296,6 @@
     <ClInclude Include="Source\Core\ECS\Systems\AudioSystem.h">
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Systems\Box2DPhysicsSystem.h">
-      <Filter>Source\Core\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\ECS\Systems\CameraSystem.h">
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClInclude>
@@ -1575,6 +1572,9 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\Physics2DSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1677,9 +1677,6 @@
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Systems\AudioSystem.cpp">
-      <Filter>Source\Core\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\ECS\Systems\Box2DPhysicsSystem.cpp">
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Systems\CameraSystem.cpp">
@@ -1897,6 +1894,9 @@
     </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\Physics2DSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

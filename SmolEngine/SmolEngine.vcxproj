@@ -595,7 +595,7 @@
     <ClInclude Include="Source\Core\ECS\SceneData.h" />
     <ClInclude Include="Source\Core\ECS\Systems\Animation2DSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\AudioSystem.h" />
-    <ClInclude Include="Source\Core\ECS\Systems\Box2DPhysicsSystem.h" />
+    <ClInclude Include="Source\Core\ECS\Systems\Physics2DSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\CameraSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\CommandSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\RendererSystem.h" />
@@ -724,7 +724,7 @@
     <ClCompile Include="Source\Core\ECS\SceneData.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\Animation2DSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\AudioSystem.cpp" />
-    <ClCompile Include="Source\Core\ECS\Systems\Box2DPhysicsSystem.cpp" />
+    <ClCompile Include="Source\Core\ECS\Systems\Physics2DSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\CommandSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\RendererSystem.cpp" />

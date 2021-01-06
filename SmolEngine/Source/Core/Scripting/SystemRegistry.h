@@ -35,9 +35,7 @@ namespace SmolEngine
 					.property("Actor", &T::m_Actor, rttr::registration::private_access)
 					.method("OnProcess", &T::OnProcess)
 					.method("OnBegin", &T::OnBegin)
-					.method("OnDestroy", &T::OnDestroy)
-					.method("OnCollisionContact", &T::OnCollisionContact)
-					.method("OnCollisionExit", &T::OnCollisionExit);
+					.method("OnDestroy", &T::OnDestroy);
 
 				return true;
 			}

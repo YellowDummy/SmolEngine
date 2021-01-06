@@ -23,6 +23,14 @@ namespace SmolEngine
 
 		virtual ~BehaviourPrimitive() = default;
 
+		/// Methods to implement
+
+		virtual void OnCollisionContact(Actor* another, bool isTrigger) {}
+
+		virtual void OnCollisionExit(Actor* another, bool isTrigger) {}
+
+		virtual void OnDebugDraw() {}
+
 		/// Getters
 
 		const std::string& GetName();
@@ -30,6 +38,12 @@ namespace SmolEngine
 		const std::string& GetTag();
 
 		const size_t GetID();
+
+		template<typename T>
+		T* GetComponent()
+		{
+			return WorldAdmin::GetScene()->GetComponent<T>(*m_Actor);
+		}
 
 		/// Search
 
@@ -46,12 +60,8 @@ namespace SmolEngine
 		/// Defines
 
 #define OUT_FLOAT(name, value) PushOutProperty(name, value, OutValueType::Float)
-
 #define OUT_INT(name, value) PushOutProperty(name, value, OutValueType::Int)
-
 #define OUT_STRING(name, value) PushOutProperty(name, value, OutValueType::String)
-
-		///
 
 	private:
 
@@ -62,8 +72,6 @@ namespace SmolEngine
 		std::unordered_map<const char*, std::string*> m_OutStringVariables;
 
 	private:
-
-		/// Friends
 
 		friend class SystemRegistry;
 		friend class CollisionListener2D;

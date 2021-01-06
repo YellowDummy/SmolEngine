@@ -28,6 +28,16 @@ namespace SmolEngine
 
 		RendererSystem() = default;
 
+		static void SubmitDebugQuad(const glm::vec3& worldPos, const glm::vec2 scale, float rotation,
+			const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+
+		static void SubmitDebugCircle(const glm::vec3& worldPos, float radius, float rotation,
+			const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+
+		static void SubmitDebugLine(const glm::vec3& startPos, const glm::vec3& endPos,
+			const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+
+	private:
 
 		static void BeginDraw(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer>& targetFramebuffer);
 
@@ -52,8 +62,6 @@ namespace SmolEngine
 		// Debug
 
 		static void DebugDraw(entt::registry& registry);
-
-	private:
 
 		// Helpers
 

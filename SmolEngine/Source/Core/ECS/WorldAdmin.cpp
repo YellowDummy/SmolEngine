@@ -17,7 +17,7 @@
 #include "Core/Scripting/BehaviourPrimitive.h"
 
 #include "Core/ECS/Systems/RendererSystem.h"
-#include "Core/ECS/Systems/Box2DPhysicsSystem.h"
+#include "Core/ECS/Systems/Physics2DSystem.h"
 #include "Core/ECS/Systems/AudioSystem.h"
 #include "Core/ECS/Systems/Animation2DSystem.h"
 #include "Core/ECS/Systems/CameraSystem.h"
@@ -106,14 +106,14 @@ namespace SmolEngine
 		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
 
 		// Setting Box2D Callbacks
-		Box2DPhysicsSystem::OnBegin(world);
+		Physics2DSystem::OnBegin(world);
 
 		// Creating rigidbodies and joints
 		{
 			const auto& view = m_SceneData.m_Registry.view<TransformComponent, Body2DComponent>();
 			view.each([&](TransformComponent& tranform, Body2DComponent& body)
 			{
-				Box2DPhysicsSystem::CreateBody(&body, &tranform, world->World, FindActorByID(body.ActorID));
+					Physics2DSystem::CreateBody(&body, &tranform, world->World, FindActorByID(body.ActorID));
 			});
 		}
 
@@ -132,7 +132,7 @@ namespace SmolEngine
 		ScriptingSystem::OnSceneEnd(m_SceneData.m_Registry);
 
 		// Deleting all Rigidbodies
-		Box2DPhysicsSystem::DeleteBodies(m_SceneData.m_Registry, Box2DWorldSComponent::Get()->World);
+		Physics2DSystem::DeleteBodies(m_SceneData.m_Registry, Box2DWorldSComponent::Get()->World);
 
 		// Resetting Animation / Audio clips
 		AudioSystem::OnReset(m_SceneData.m_Registry, AudioEngineSComponent::Get()->Engine);
@@ -146,19 +146,19 @@ namespace SmolEngine
 
 	void WorldAdmin::OnUpdate(DeltaTime deltaTime)
 	{
-		// Updating Phycics
 #ifdef SMOLENGINE_EDITOR
-
 		if (m_InPlayMode)
 		{
-			Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
+			// Updating Phycics
+			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
+			// Sending OnProcess callback
+			ScriptingSystem::OnSceneTick(m_SceneData.m_Registry, deltaTime);
 		}
 #else
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
-
-#endif
 		// Sending OnProcess callback
 		ScriptingSystem::OnSceneTick(m_SceneData.m_Registry, deltaTime);
+#endif
 
 		// Extracting Camera Tuples
 		const auto& cameraGroup = m_SceneData.m_Registry.view<CameraBaseTuple, TransformComponent>();
@@ -219,7 +219,7 @@ namespace SmolEngine
 	{
 #ifdef SMOLENGINE_EDITOR
 		if (m_InPlayMode)
-			Box2DPhysicsSystem::UpdateTransforms(m_SceneData.m_Registry);
+			Physics2DSystem::UpdateTransforms(m_SceneData.m_Registry);
 #else
 		Box2DPhysicsSystem::UpdateTransfroms(m_SceneData.m_Registry);
 
@@ -249,6 +249,13 @@ namespace SmolEngine
 			Renderer2D::BeginDebug();
 			{
 				RendererSystem::DebugDraw(m_SceneData.m_Registry);
+
+#ifdef SMOLENGINE_EDITOR
+				if (m_InPlayMode)
+					ScriptingSystem::OnDebugDraw(m_SceneData.m_Registry);
+#else
+				ScriptingSystem::OnDebugDraw(m_SceneData.m_Registry);
+#endif
 			}
 			Renderer2D::EndDebug();
 		}

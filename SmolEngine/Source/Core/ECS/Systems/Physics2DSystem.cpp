@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Box2DPhysicsSystem.h"
+#include "Physics2DSystem.h"
 
 #include "Core/ECS/Actor.h"
 #include "Core/Physics2D/Box2D/Body2DDefs.h"
@@ -13,7 +13,7 @@
 
 namespace SmolEngine
 {
-	void Box2DPhysicsSystem::OnBegin(Box2DWorldSComponent* data)
+	void Physics2DSystem::OnBegin(Box2DWorldSComponent* data)
 	{
 		//Setting Box2D Filtering
 
@@ -24,12 +24,12 @@ namespace SmolEngine
 		data->World->SetContactListener(data->m_CollisionListener2D);
 	}
 
-	void Box2DPhysicsSystem::OnUpdate(DeltaTime delta, uint32_t velocityIterations, uint32_t positionIterations, Box2DWorldSComponent* data)
+	void Physics2DSystem::OnUpdate(DeltaTime delta, uint32_t velocityIterations, uint32_t positionIterations, Box2DWorldSComponent* data)
 	{
 		data->World->Step(delta, velocityIterations, positionIterations);
 	}
 
-	void Box2DPhysicsSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Ref<Actor> actor)
+	void Physics2DSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Ref<Actor> actor)
 	{
 		auto& body = body2D->Body;
 		{
@@ -71,7 +71,7 @@ namespace SmolEngine
 		}
 	}
 
-	void Box2DPhysicsSystem::DeleteBodies(entt::registry& registry, b2World* world)
+	void Physics2DSystem::DeleteBodies(entt::registry& registry, b2World* world)
 	{
 		const auto& group = registry.view<Body2DComponent>();
 		for (const auto& entity : group)
@@ -81,7 +81,7 @@ namespace SmolEngine
 		}
 	}
 
-	const bool Box2DPhysicsSystem::BindJoint(Body2DComponent* bodyA, Body2DComponent* bodyB, JointType type, JointInfo* info, b2World* world)
+	const bool Physics2DSystem::BindJoint(Body2DComponent* bodyA, Body2DComponent* bodyB, JointType type, JointInfo* info, b2World* world)
 	{
 		auto& bodyRefA = bodyA->Body;
 		auto& bodyRefB = bodyB->Body;
@@ -156,13 +156,13 @@ namespace SmolEngine
 		return true;
 	}
 
-	const bool Box2DPhysicsSystem::DeleteJoint(Body2DComponent* body, b2World* world)
+	const bool Physics2DSystem::DeleteJoint(Body2DComponent* body, b2World* world)
 	{
 		world->DestroyJoint(body->Body.m_Joint);
 		return true;
 	}
 
-	b2BodyType Box2DPhysicsSystem::FindType(uint16_t type)
+	b2BodyType Physics2DSystem::FindType(uint16_t type)
 	{
 		if (type == (uint16_t)b2BodyType::b2_dynamicBody)
 		{
@@ -180,7 +180,7 @@ namespace SmolEngine
 		return b2BodyType::b2_staticBody;
 	}
 
-	void Box2DPhysicsSystem::CreateStatic(Body2D* bodyDef)
+	void Physics2DSystem::CreateStatic(Body2D* bodyDef)
 	{
 		switch (bodyDef->m_ShapeType)
 		{
@@ -210,7 +210,7 @@ namespace SmolEngine
 		bodyDef->m_Fixture->SetSensor(bodyDef->m_IsTrigger);
 	}
 
-	void Box2DPhysicsSystem::CreateKinematic(Body2D* bodyDef)
+	void Physics2DSystem::CreateKinematic(Body2D* bodyDef)
 	{
 		b2MassData mass;
 		mass.center = { bodyDef->m_MassCenter.x,  bodyDef->m_MassCenter.y };
@@ -259,7 +259,7 @@ namespace SmolEngine
 		bodyDef->m_Fixture->SetSensor(bodyDef->m_IsTrigger);
 	}
 
-	void Box2DPhysicsSystem::CreateDynamic(Body2D* bodyDef)
+	void Physics2DSystem::CreateDynamic(Body2D* bodyDef)
 	{
 		b2MassData mass;
 		mass.center = { bodyDef->m_MassCenter.x,  bodyDef->m_MassCenter.y };
@@ -308,7 +308,7 @@ namespace SmolEngine
 		bodyDef->m_Fixture->SetSensor(bodyDef->m_IsTrigger);
 	}
 
-	bool Box2DPhysicsSystem::CreateDistanceJoint(Body2D* bodyA, Body2D* bodyB, DistanceJointInfo* info, b2World* world)
+	bool Physics2DSystem::CreateDistanceJoint(Body2D* bodyA, Body2D* bodyB, DistanceJointInfo* info, b2World* world)
 	{
 		const auto& BodyB = bodyB->m_Body;
 		const auto& BodyA = bodyA->m_Body;
@@ -329,7 +329,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	bool Box2DPhysicsSystem::CreateRevoluteJoint(Body2D* bodyA, Body2D* bodyB, RevoluteJointInfo* info, b2World* world)
+	bool Physics2DSystem::CreateRevoluteJoint(Body2D* bodyA, Body2D* bodyB, RevoluteJointInfo* info, b2World* world)
 	{
 		const auto& BodyB = bodyB->m_Body;
 		const auto& BodyA = bodyA->m_Body;
@@ -355,7 +355,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	bool Box2DPhysicsSystem::CreatePrismaticJoint(Body2D* bodyA, Body2D* bodyB, PrismaticJointInfo* info, b2World* world)
+	bool Physics2DSystem::CreatePrismaticJoint(Body2D* bodyA, Body2D* bodyB, PrismaticJointInfo* info, b2World* world)
 	{
 		const auto& BodyB = bodyB->m_Body;
 		const auto& BodyA = bodyA->m_Body;
@@ -381,7 +381,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	bool Box2DPhysicsSystem::CreateRopeJoint(Body2D* bodyA, Body2D* bodyB, RopeJointInfo* info, b2World* world)
+	bool Physics2DSystem::CreateRopeJoint(Body2D* bodyA, Body2D* bodyB, RopeJointInfo* info, b2World* world)
 	{
 		const auto& BodyB = bodyB->m_Body;
 		const auto& BodyA = bodyA->m_Body;
@@ -401,7 +401,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	void Box2DPhysicsSystem::UpdateTransforms(entt::registry& registry)
+	void Physics2DSystem::UpdateTransforms(entt::registry& registry)
 	{
 		const auto& group = registry.view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
@@ -414,17 +414,17 @@ namespace SmolEngine
 		}
 	}
 
-	void Box2DPhysicsSystem::AddForce(Body2DComponent* body, const glm::vec2& force, bool wakeBody)
+	void Physics2DSystem::AddForce(Body2DComponent* body, const glm::vec2& force, bool wakeBody)
 	{
 		body->Body.m_Body->ApplyForceToCenter({ force.x, force.y }, wakeBody);
 	}
 
-	void Box2DPhysicsSystem::AddForce(Body2DComponent* body, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
+	void Physics2DSystem::AddForce(Body2DComponent* body, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
 	{
 		body->Body.m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, wakeBody);
 	}
 
-	const RayCast2DHitInfo Box2DPhysicsSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)
+	const RayCast2DHitInfo Physics2DSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)
 	{
 		RayCast2D ray2D;
 		Box2DWorldSComponent::Get()->World->RayCast(&ray2D, { startPoisition.x, startPoisition.y }, { targerPosition.x, targerPosition.y });
@@ -432,7 +432,7 @@ namespace SmolEngine
 		return ray2D.GetHitInfo();
 	}
 
-	const std::vector<RayCast2DHitInfo> Box2DPhysicsSystem::CircleCast(const glm::vec2& startPoisition, const float distance)
+	const std::vector<RayCast2DHitInfo> Physics2DSystem::CircleCast(const glm::vec2& startPoisition, const float distance)
 	{
 		std::vector<RayCast2DHitInfo> infoList;
 		std::vector<size_t> idList;

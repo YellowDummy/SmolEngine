@@ -10,6 +10,21 @@
 
 namespace SmolEngine
 {
+	void RendererSystem::SubmitDebugQuad(const glm::vec3& worldPos, const glm::vec2 scale, float rotation, const glm::vec4& color)
+	{
+		Renderer2D::DebugDrawQuad(worldPos, scale, rotation, color);
+	}
+
+	void RendererSystem::SubmitDebugCircle(const glm::vec3& worldPos, float radius, float rotation, const glm::vec4& color)
+	{
+		Renderer2D::DebugDrawCircle(worldPos, { radius, 0 }, rotation, color);
+	}
+
+	void RendererSystem::SubmitDebugLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
+	{
+		Renderer2D::DebugDrawLine(startPos, endPos, color);
+	}
+
 	void RendererSystem::BeginDraw(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer>& targetFramebuffer)
 	{
 		Renderer2D::BeginScene(viewProjectionMatrix, ambientValue, targetFramebuffer);

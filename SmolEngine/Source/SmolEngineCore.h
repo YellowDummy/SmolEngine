@@ -14,6 +14,7 @@
 #include "Core/Events/MouseEvent.h"
 
 #include "Core/ECS/Actor.h"
+#include "Core/ECS/WorldAdmin.h"
 
 #include "Core/ImGui/ImGuiLayer.h"
 #include "Core/ImGui/EditorConsole.h"
@@ -22,6 +23,9 @@
 #include "Core/ECS/ComponentTuples/CameraBaseTuple.h"
 #include "Core/ECS/ComponentTuples/SingletonTuple.h"
 #include "Core/ECS/ComponentsCore.h"
+
+#include "Core/ECS/Systems/Physics2DSystem.h"
+#include "Core/ECS/Systems/RendererSystem.h"
 
 #include "Core/Scripting/BehaviourPrimitive.h"
 

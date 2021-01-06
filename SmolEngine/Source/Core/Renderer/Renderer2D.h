@@ -57,11 +57,14 @@ namespace SmolEngine
 
 		static void EndDebug();
 
-		static void DebugDrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+		static void DebugDrawQuad(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation,
+			const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
-		static void DebugDrawCircle(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+		static void DebugDrawCircle(const glm::vec3& worldPos, const glm::vec2& scale, const float rotation,
+			const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
-		static void DebugDrawLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
+		static void DebugDrawLine(const glm::vec3& startPos, const glm::vec3& endPos,
+			const glm::vec4& color = glm::vec4(0.121f, 1.0f, 0.058f, 1.0f));
 
 		// Light
 

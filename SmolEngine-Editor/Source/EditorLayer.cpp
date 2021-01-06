@@ -34,7 +34,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include "Core/ECS/Systems/RendererSystem.h"
-#include "Core/ECS/Systems/Box2DPhysicsSystem.h"
+#include "Core/ECS/Systems/Physics2DSystem.h"
 #include "Core/ECS/Systems/AudioSystem.h"
 #include "Core/ECS/Systems/Animation2DSystem.h"
 #include "Core/ECS/Systems/CameraSystem.h"
@@ -905,7 +905,7 @@ namespace SmolEngine
 #endif // SMOLENGINE_OPENGL_IMPL
 
 				// Gizmos
-				if (m_SelectedActor != nullptr)
+				if (m_SelectedActor != nullptr && !m_Scene->m_InPlayMode)
 				{
 					auto transformComponent = m_Scene->GetComponent<TransformComponent>(*m_SelectedActor.get());
 					if (transformComponent)

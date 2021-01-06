@@ -201,7 +201,7 @@ namespace SmolEngine
 		{
 			if (!HasComponent<T>(entity))
 			{
-				NATIVE_ERROR("Actor does not have tuple");
+				NATIVE_ERROR("Actor does not have component");
 				return nullptr;
 			}
 

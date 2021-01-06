@@ -74,6 +74,7 @@ namespace SmolEngine
 					}
 
 					auto& primitive = instance.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+					primitive.m_Actor = behaviour.Actor;
 
 					for (const auto& value : data.OutValues)
 					{
@@ -145,7 +146,8 @@ namespace SmolEngine
 
 			for (auto& instance : behaviour->Scripts)
 			{
-				instance.type.invoke("OnCollisionContact", instance.variant, { actorA, isTrigger });
+				auto& primitive = instance.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+				primitive.OnCollisionContact(actorA, isTrigger);
 			}
 		}
 	}
@@ -159,8 +161,22 @@ namespace SmolEngine
 
 			for (auto& instance : behaviour->Scripts)
 			{
-				instance.type.invoke("OnCollisionExit", instance.variant, { actorA, isTrigger });
+				auto& primitive = instance.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+				primitive.OnCollisionExit(actorA, isTrigger);
 			}
 		}
+	}
+
+	void ScriptingSystem::OnDebugDraw(entt::registry& registry)
+	{
+		const auto& view = registry.view<BehaviourComponent>();
+		view.each([&](BehaviourComponent& behaviour)
+		{
+			for (auto& instance : behaviour.Scripts)
+			{
+				auto& primitive = instance.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
+				primitive.OnDebugDraw();
+			}
+		});
 	}
 }
