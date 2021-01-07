@@ -592,6 +592,7 @@
     <ClInclude Include="Source\Core\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\Core\ECS\Components\TransformComponent.h" />
     <ClInclude Include="Source\Core\ECS\ComponentsCore.h" />
+    <ClInclude Include="Source\Core\ECS\Scene.h" />
     <ClInclude Include="Source\Core\ECS\SceneData.h" />
     <ClInclude Include="Source\Core\ECS\Systems\Animation2DSystem.h" />
     <ClInclude Include="Source\Core\ECS\Systems\AudioSystem.h" />
@@ -721,6 +722,7 @@
     <ClCompile Include="Source\Core\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\Texture2DComponent.cpp" />
     <ClCompile Include="Source\Core\ECS\Components\TransformComponent.cpp" />
+    <ClCompile Include="Source\Core\ECS\Scene.cpp" />
     <ClCompile Include="Source\Core\ECS\SceneData.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\Animation2DSystem.cpp" />
     <ClCompile Include="Source\Core\ECS\Systems\AudioSystem.cpp" />

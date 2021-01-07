@@ -86,6 +86,7 @@ namespace SmolEngine
 		friend class cereal::access;
 		friend struct ScriptableObject;
 		friend class WorldAdmin;
+		friend class Scene;
 		friend class EditorLayer;
 
 		template<typename Archive>

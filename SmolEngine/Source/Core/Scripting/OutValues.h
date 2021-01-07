@@ -26,9 +26,9 @@ namespace SmolEngine
 		std::string Key;
 		OutValueType Type;
 
-	private:
-
 		char stringBuffer[128] = "";
+
+	private:
 
 		friend class cereal::access;
 		friend class EditorLayer;

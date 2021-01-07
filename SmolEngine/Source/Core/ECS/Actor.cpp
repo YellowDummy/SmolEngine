@@ -31,7 +31,7 @@ namespace SmolEngine
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{
 		if (m_Childs.empty()) { return nullptr; }
-		auto set = WorldAdmin::GetScene()->GetIDSet();
+		auto& set = WorldAdmin::GetSingleton()->GetActiveScene().GetIDSet();
 		size_t id = set[name];
 
 		return nullptr;
@@ -68,11 +68,11 @@ namespace SmolEngine
 		{
 		case ActorBaseType::DefaultBase:
 		{
-			return &WorldAdmin::GetScene()->GetComponent<DefaultBaseTuple>(m_Entity)->GetInfo();
+			return &WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<DefaultBaseTuple>(m_Entity)->GetInfo();
 		}
 		case ActorBaseType::CameraBase:
 		{
-			return &WorldAdmin::GetScene()->GetComponent<CameraBaseTuple>(m_Entity)->GetInfo();
+			return &WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<CameraBaseTuple>(m_Entity)->GetInfo();
 		}
 		default:
 			return nullptr;

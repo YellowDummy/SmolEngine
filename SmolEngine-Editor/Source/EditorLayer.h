@@ -96,7 +96,7 @@ namespace SmolEngine
 
 		~EditorLayer() {}
 
-		/// Overloads
+		// Override
 
 		void OnAttach() override;
 
@@ -108,7 +108,7 @@ namespace SmolEngine
 
 		void OnImGuiRender() override;
 
-		/// Draw
+		// Draw
 
 		void DrawInfo(HeadComponent* head);
 
@@ -138,7 +138,7 @@ namespace SmolEngine
 
 		void DrawHierarchy();
 
-		///
+		// Helpers
 
 		void UpdateFileBrowser(bool& showAnimPanel);
 
@@ -149,9 +149,9 @@ namespace SmolEngine
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
 		{
-			if (m_Scene->HasComponent<T>(*m_SelectedActor.get()))
+			if (m_Scene->GetActiveScene().HasComponent<T>(*m_SelectedActor.get()))
 			{
-				auto comp = m_Scene->GetComponent<T>(*m_SelectedActor.get());
+				auto comp = m_Scene->GetActiveScene().GetComponent<T>(*m_SelectedActor.get());
 				BaseComponent* baseComp = static_cast<BaseComponent*>(comp);
 				return baseComp->ComponentID == index;
 			}
@@ -185,7 +185,6 @@ namespace SmolEngine
 
 		std::unique_ptr<BuildPanel> m_BuildPanel = nullptr;
 		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
-		std::unique_ptr<ActorCreationWindow> m_ActorCreationWindow = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
 
 		inline static std::string m_TempActorName = "";

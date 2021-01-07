@@ -20,17 +20,17 @@ namespace SmolEngine
 
 	Ref<Actor> BehaviourPrimitive::FindActorByName(const std::string& name)
 	{
-		return WorldAdmin::GetScene()->FindActorByName(name);
+		return WorldAdmin::GetSingleton()->GetActiveScene().FindActorByName(name);
 	}
 
 	Ref<Actor> BehaviourPrimitive::FindActorByTag(const std::string& tag)
 	{
-		return WorldAdmin::GetScene()->FindActorByTag(tag);
+		return WorldAdmin::GetSingleton()->GetActiveScene().FindActorByTag(tag);
 	}
 
 	Ref<Actor> BehaviourPrimitive::FindActorByID(size_t id)
 	{
-		return WorldAdmin::GetScene()->FindActorByID(id);
+		return WorldAdmin::GetSingleton()->GetActiveScene().FindActorByID(id);
 	}
 
 	void BehaviourPrimitive::PushOutProperty(const char* keyName, std::any val, OutValueType type)

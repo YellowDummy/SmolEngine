@@ -41,7 +41,7 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnDestroy(Ref<Actor>& actor)
 	{
-		BehaviourComponent* behaviour = WorldAdmin::GetScene()->GetComponent<BehaviourComponent>(*actor.get());
+		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<BehaviourComponent>(*actor.get());
 		if (behaviour)
 		{
 			for (auto& script : behaviour->Scripts)
@@ -54,8 +54,6 @@ namespace SmolEngine
 	void ScriptingSystem::ReloadScripts(entt::registry& registry, const std::unordered_map<size_t, Ref<Actor>>& actorPool)
 	{
 		const auto& view = registry.view<BehaviourComponent>();
-		auto& admin = WorldAdmin::GetScene();
-
 		view.each([&](BehaviourComponent& behaviour)
 		{
 			auto& result = actorPool.find(behaviour.ID);
@@ -139,10 +137,10 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		auto& admin = WorldAdmin::GetScene();
-		if (admin->HasComponent<BehaviourComponent>(*actorB))
+		auto& admin = WorldAdmin::GetSingleton();
+		if (admin->GetActiveScene().HasComponent<BehaviourComponent>(*actorB))
 		{
-			BehaviourComponent* behaviour = admin->GetComponent<BehaviourComponent>(*actorB);
+			BehaviourComponent* behaviour = admin->GetActiveScene().GetComponent<BehaviourComponent>(*actorB);
 
 			for (auto& instance : behaviour->Scripts)
 			{
@@ -154,10 +152,10 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		auto& admin = WorldAdmin::GetScene();
-		if (admin->HasComponent<BehaviourComponent>(*actorB))
+		auto& admin = WorldAdmin::GetSingleton();
+		if (admin->GetActiveScene().HasComponent<BehaviourComponent>(*actorB))
 		{
-			BehaviourComponent* behaviour = admin->GetComponent<BehaviourComponent>(*actorB);
+			BehaviourComponent* behaviour = admin->GetActiveScene().GetComponent<BehaviourComponent>(*actorB);
 
 			for (auto& instance : behaviour->Scripts)
 			{

@@ -16,11 +16,9 @@ namespace SmolEngine
 	void Physics2DSystem::OnBegin(Box2DWorldSComponent* data)
 	{
 		//Setting Box2D Filtering
-
 		data->World->SetContactFilter(data->m_CollisionFilter2D);
 
 		//Setting Box2D Collision Callbacks
-
 		data->World->SetContactListener(data->m_CollisionListener2D);
 	}
 

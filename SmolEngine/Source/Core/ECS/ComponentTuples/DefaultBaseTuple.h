@@ -28,6 +28,7 @@ namespace SmolEngine
 		friend class cereal::access;
 		friend class EditorLayer;
 		friend class WorldAdmin;
+		friend class Scene;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

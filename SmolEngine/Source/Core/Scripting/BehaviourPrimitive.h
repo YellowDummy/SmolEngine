@@ -42,7 +42,7 @@ namespace SmolEngine
 		template<typename T>
 		T* GetComponent()
 		{
-			return WorldAdmin::GetScene()->GetComponent<T>(*m_Actor);
+			return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(*m_Actor);
 		}
 
 		/// Search
@@ -77,6 +77,7 @@ namespace SmolEngine
 		friend class CollisionListener2D;
 		friend class ScriptingSystem;
 		friend class WorldAdmin;
+		friend class Scene;
 
 		/// RTTR
 

@@ -1,14 +1,13 @@
 #pragma once
 #include "Core/Core.h"
 #include "Core/ECS/Components/BaseComponent.h"
+#include "Core/Animation/AnimationClip.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 
 namespace SmolEngine
 {
-	struct AnimationClip;
-
 	struct Animation2DComponent: public BaseComponent
 	{
 		Animation2DComponent();

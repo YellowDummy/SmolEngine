@@ -3,6 +3,17 @@
 
 namespace SmolEngine
 {
+	SceneData::SceneData(const std::string& filePath, const std::string& fileName)
+	{
+		m_filePath = filePath;
+		m_fileName = fileName;
+		m_Name = fileName;
+		m_ID = std::hash<std::string>{}(filePath);
+
+		m_Registry = entt::registry();
+		m_Entity = m_Registry.create();
+	}
+
 	void SceneData::operator=(const SceneData& other)
 	{
 		m_ActorPool = other.m_ActorPool;

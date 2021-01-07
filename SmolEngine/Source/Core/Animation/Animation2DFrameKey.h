@@ -12,27 +12,19 @@ namespace SmolEngine
 	{
 		Animation2DFrameKey() = default;
 
-		///
+	public:
 
 		glm::vec4 TextureColor = glm::vec4(1.0f);
-
 		glm::vec2 TextureScale = glm::vec2(1.0f);
 
-		///
-
 		std::string TexturePath = "";
-
 		std::string FileName = "";
 
-		///
-
 		float Speed = 100.0f;
-
-		///
-
 		Ref<Texture2D> Texture = nullptr;
 
 	private:
+
 		friend class cereal::access;
 
 		template<typename Archive>

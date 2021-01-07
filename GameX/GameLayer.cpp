@@ -2,7 +2,7 @@
 
 void GameLayer::OnAttach()
 {
-	m_Scene = SmolEngine::WorldAdmin::GetScene();
+	m_Scene = SmolEngine::WorldAdmin::GetSingleton();
 }
 
 void GameLayer::OnDetach()

@@ -64,45 +64,30 @@ namespace SmolEngine
 		m_LayerHandler = std::make_shared<LayerManager>();
 
 		std::string appName;
-
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 #ifdef SMOLENGINE_DEBUG
-
 		appName = "SmolEngine Editor - Debug x64 (OpenGL)";
 #else
 		appName = "SmolEngine Editor - Release x64 (OpenGL)";
 #endif
-
 #else
-
 #ifdef SMOLENGINE_DEBUG
-
 		appName = "SmolEngine Editor - Debug x64 (Vulkan)";
 #else
 		appName = "SmolEngine Editor - Release x64 (Vulkan)";
 #endif
-
-#endif // SMOLENGINE_OPENGL_IMPL
-
+#endif 
 		// Creating New GLFW Window
-
 		m_Window = std::make_shared<Window>(appName, 1080, 1920, m_EventHandler);
 
 #ifdef SMOLENGINE_EDITOR
-
 		// Initializing Dear ImGui
 		m_ImGuiLayer = new ImGuiLayer();
 #endif
 
-		// Initializing Scene Handler
-		WorldAdmin::GetScene()->Init();
-
 #ifdef SMOLENGINE_EDITOR
-
 		// Pushing Dear ImGui Layer
 		PushLayer(m_ImGuiLayer);
-
 #endif
 		// Initializing Platform Specific Renderer
 		RendererCommand::Init();
@@ -113,7 +98,8 @@ namespace SmolEngine
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
-		WorldAdmin::GetScene()->InitSystems();
+		// Initializing WorldAdmin
+		WorldAdmin::GetSingleton()->Init();
 
 #ifndef SMOLENGINE_EDITOR
 
@@ -134,9 +120,8 @@ namespace SmolEngine
 
 		m_Running = false;
 
-		WorldAdmin::GetScene()->ShutDown();
+		WorldAdmin::GetSingleton()->ShutDown();
 		m_Window->ShutDown();
-
 		exit(0);
 	}
 

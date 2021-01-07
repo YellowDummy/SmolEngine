@@ -72,6 +72,7 @@ namespace SmolEngine
 
 		friend class Application;
 		friend class WorldAdmin;
+		friend class Scene;
 		friend class EditorLayer;
 	};
 

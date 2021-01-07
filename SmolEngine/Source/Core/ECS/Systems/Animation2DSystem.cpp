@@ -147,7 +147,6 @@ namespace SmolEngine
 	{
 		std::ifstream file(filePath);
 		std::stringstream storage;
-
 		if (!file)
 		{
 			CONSOLE_ERROR(std::string("Animation2DController: Could not open the file!"));
@@ -155,36 +154,28 @@ namespace SmolEngine
 		}
 
 		// Reading file
-
 		storage << file.rdbuf();
 		file.close();
 
 		// Creating new clip
-
 		auto& Clip = std::make_shared<AnimationClip>();
-
 		if (anim.m_Clips.size() == 0)
 		{
 			Clip->m_IsDefaultClip = true;
 		}
 
 		// Loading Clip Data
-
 		{
 			cereal::JSONInputArchive dataInput{ storage };
 			dataInput(Clip->m_Frames, Clip->m_ClipName);
 		}
 
-		const auto assetMap = WorldAdmin::GetScene()->GetAssetMap();
+		const auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_AssetMap;
 
 		// Loading Textures
-
-		for (auto& pair: Clip->m_Frames)
+		for (auto& [value, frame] : Clip->m_Frames)
 		{
-			auto& [value, frame] = pair;
-
-			auto result = assetMap.find(frame->FileName);
-
+			auto& result = assetMap.find(frame->FileName);
 			if (result != assetMap.end())
 			{
 				frame->Texture = Texture2D::Create(result->second);
@@ -198,7 +189,6 @@ namespace SmolEngine
 		}
 
 		// Checking if clip already exists
-
 		auto result = anim.m_Clips.find(Clip->m_ClipName);
 		if (result == anim.m_Clips.end())
 		{

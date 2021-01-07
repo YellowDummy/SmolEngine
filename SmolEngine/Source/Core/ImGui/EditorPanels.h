@@ -19,13 +19,4 @@ namespace SmolEngine
 		void Update(bool& isOpened, Ref<WorldAdmin> scene);
 	};
 
-	class ActorCreationWindow
-	{
-	public:
-
-		ActorCreationWindow() = default;
-
-		void Update(bool& isOpened, Ref<WorldAdmin> scene);
-	};
-
 }
