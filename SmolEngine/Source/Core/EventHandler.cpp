@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "SLog.h"
 #include "EventHandler.h"
-#include "Core/Events/InputEvent.h"
-#include "Core/Events/ApplicationEvent.h"
-#include "Core/Events/MouseEvent.h"
+#include "Events/InputEvent.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/MouseEvent.h"
 
 namespace SmolEngine 
 {

@@ -7,13 +7,13 @@
 #include "Window.h"
 
 #include "ImGui/ImGuiLayer.h" 
-#include "Core/Events/ApplicationEvent.h"
-#include "Core/Renderer/Renderer.h"
+#include "Events/ApplicationEvent.h"
+#include "Renderer/Renderer.h"
 
 #include "../../../GameX/CppScriptingExamples.h"
 
-#include "Core/Renderer/Vulkan/VulkanInstance.h"
-#include "Core/Renderer/Vulkan/VulkanDevice.h"
+#include "Renderer/Vulkan/VulkanInstance.h"
+#include "Renderer/Vulkan/VulkanDevice.h"
 
 namespace SmolEngine 
 {

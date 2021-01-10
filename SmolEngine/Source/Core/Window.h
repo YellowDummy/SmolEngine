@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Renderer/GraphicsContext.h"
-#include "Core/Renderer/OpenGL/OpenglContext.h"
+#include "Renderer/GraphicsContext.h"
+#include "Renderer/OpenGL/OpenglContext.h"
 #include "Core/Core.h"
 #include "SLog.h"
 #include "EventHandler.h"

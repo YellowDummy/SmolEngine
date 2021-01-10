@@ -2,7 +2,7 @@
 #include "EngineCommand.h"
 
 #include "Core/SLog.h"
-#include "Core/ECS/WorldAdmin.h"
+#include "ECS/WorldAdmin.h"
 #include "Core/Application.h"
 
 namespace SmolEngine

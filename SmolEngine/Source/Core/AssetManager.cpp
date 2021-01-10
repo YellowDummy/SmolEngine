@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "Core/AssetManager.h"
-#include "Core/ECS/ComponentsCore.h"
+#include "ECS/ComponentsCore.h"
 
-#include "Core/ECS/Systems/AudioSystem.h"
-#include "Core/ECS/Systems/UISystem.h"
-#include "Core/Animation/AnimationClip.h"
-#include "Core/Audio/AudioEngine.h"
+#include "ECS/Systems/AudioSystem.h"
+#include "ECS/Systems/UISystem.h"
+#include "Animation/AnimationClip.h"
+#include "Audio/AudioEngine.h"
 
 namespace SmolEngine
 {

@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 #include "Core/Layer.h"
 #include "Core/Application.h"
-#include "Core/ECS/WorldAdmin.h"
+#include "ECS/WorldAdmin.h"
 
 class GameLayer : public SmolEngine::Layer
 {

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Window.h"
-#include "Core/Events/ApplicationEvent.h"
-#include "Core/Events/MouseEvent.h"
-#include "Core/Events/InputEvent.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/MouseEvent.h"
+#include "Events/InputEvent.h"
 
 #include "GLFW/glfw3.h"
 #include <glad\glad.h>
@@ -10,7 +10,6 @@
 
 namespace SmolEngine 
 {
-	
 	Window::Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler)
 		:m_Window(nullptr)
 	{

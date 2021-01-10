@@ -2,47 +2,37 @@
 #include "SmolEngineCore.h"
 #include "Core/Layer.h"
 
-#include "Core/ImGui/EditorConsole.h"
-#include "Core/ImGui/EditorPanels.h"
-#include "Core/ImGui/BuildPanel.h"
+#include "ImGui/EditorConsole.h"
+#include "ImGui/EditorPanels.h"
+#include "ImGui/BuildPanel.h"
 
-#include "Core/ImGui/AnimationPanel.h"
-#include "Core/Animation/AnimationClip.h"
-#include "Core/ECS/Components/BaseComponent.h"
-#include "Core/Scripting/OutValues.h"
+#include "ImGui/AnimationPanel.h"
+#include "Animation/AnimationClip.h"
+#include "ECS/Components/BaseComponent.h"
+#include "Scripting/OutValues.h"
 
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <ImGuizmo.h>
 
-#include "Core/ImGui/FileBrowser/imfilebrowser.h"
+#include "ImGui/FileBrowser/imfilebrowser.h"
 
 
 namespace SmolEngine
 {
 	struct TransformComponent;
-
 	struct Texture2DComponent;
-
 	struct HeadComponent;
-
 	struct Body2DComponent;
-
 	struct CameraComponent;
-
 	struct AudioSourceComponent;
-
 	struct Animation2DComponent;
-
 	struct CanvasComponent;
-
 	struct BehaviourComponent;
-
 	struct Light2DSourceComponent;
 
 	class Actor;
-
-	///
+	class Framebuffer;
 
 	enum class FileBrowserFlags : uint16_t
 	{
@@ -84,8 +74,6 @@ namespace SmolEngine
 		Inspector,
 		Actions
 	};
-
-	class Framebuffer;
 
 	class EditorLayer: public Layer
 	{

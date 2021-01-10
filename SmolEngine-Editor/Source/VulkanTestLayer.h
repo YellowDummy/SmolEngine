@@ -2,12 +2,12 @@
 
 #include "SmolEngineCore.h"
 
-#include "Core/Renderer/Texture.h"
-#include "Core/Renderer/Shader.h"
-#include "Core/Renderer/Framebuffer.h"
+#include "Renderer/Texture.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Framebuffer.h"
 
-#include "Core/Renderer/Camera.h"
-#include "Core/Renderer/GraphicsPipeline.h"
+#include "Renderer/Camera.h"
+#include "Renderer/GraphicsPipeline.h"
 
 namespace SmolEngine
 {
@@ -20,9 +20,7 @@ namespace SmolEngine
 
 		~VulkanTestLayer() {}
 
-		/// 
 		/// Main
-		/// 
 
 		void OnUpdate(DeltaTime deltaTime) override;
 

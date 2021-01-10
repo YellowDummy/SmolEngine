@@ -2,23 +2,23 @@
 #include "../../GameX/CppScriptingExamples.h"
 
 #include "EditorLayer.h"
-#include "Core/ImGui/ImGuiExtension.h"
+#include "ImGui/ImGuiExtension.h"
 #include "icon_font_cpp_headers/IconsFontAwesome5.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
-#include "Core/ImGui/NodeEditor/imnodes.h"
+#include "ImGui/NodeEditor/imnodes.h"
 
-#include "Core/Renderer/Renderer2D.h"
-#include "Core/Animation/AnimationClip.h"
-#include "Core/ECS/WorldAdmin.h"
-#include "Core/ECS/Actor.h"
-#include "Core/ECS/ComponentsCore.h"
+#include "Renderer/Renderer2D.h"
+#include "Animation/AnimationClip.h"
+#include "ECS/WorldAdmin.h"
+#include "ECS/Actor.h"
+#include "ECS/ComponentsCore.h"
 
-#include "Core/Audio/AudioClip.h"
-#include "Core/Audio/AudioSource.h"
+#include "Audio/AudioClip.h"
+#include "Audio/AudioSource.h"
 
-#include "Core/UI/UIButton.h"
-#include "Core/UI/UITextLabel.h"
-#include "Core/Renderer/Text.h"
+#include "UI/UIButton.h"
+#include "UI/UITextLabel.h"
+#include "Renderer/Text.h"
 #include "Core/Input.h"
 
 #include <imgui/imgui.h>
@@ -33,24 +33,24 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include "Core/ECS/Systems/RendererSystem.h"
-#include "Core/ECS/Systems/Physics2DSystem.h"
-#include "Core/ECS/Systems/AudioSystem.h"
-#include "Core/ECS/Systems/Animation2DSystem.h"
-#include "Core/ECS/Systems/CameraSystem.h"
-#include "Core/ECS/Systems/CommandSystem.h"
-#include "Core/ECS/Systems/UISystem.h"
-#include "Core/ECS/Systems/ScriptingSystem.h"
-#include "Core/ECS/Systems/CommandSystem.h"
+#include "ECS/Systems/RendererSystem.h"
+#include "ECS/Systems/Physics2DSystem.h"
+#include "ECS/Systems/AudioSystem.h"
+#include "ECS/Systems/Animation2DSystem.h"
+#include "ECS/Systems/CameraSystem.h"
+#include "ECS/Systems/CommandSystem.h"
+#include "ECS/Systems/UISystem.h"
+#include "ECS/Systems/ScriptingSystem.h"
+#include "ECS/Systems/CommandSystem.h"
 
 
 #ifndef SMOLENGINE_OPENGL_IMPL
-#include "Core/Renderer/Vulkan/Vulkan.h"
-#include "Core/Renderer/Vulkan/VulkanContext.h"
-#include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
+#include "Renderer/Vulkan/Vulkan.h"
+#include "Renderer/Vulkan/VulkanContext.h"
+#include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #endif
 
-#include "Core/Renderer/Mesh.h"
+#include "Renderer/Mesh.h"
 
 namespace SmolEngine
 {

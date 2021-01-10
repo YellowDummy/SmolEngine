@@ -3,11 +3,11 @@
 #include "Core/Application.h"
 #include "Core/Window.h"
 
-#include "Core/Renderer/Shader.h"
-#include "Core/Renderer/Renderer2D.h"
-#include "Core/Renderer/Vulkan/Vulkan.h"
-#include "Core/Renderer/Vulkan/VulkanContext.h"
-#include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Renderer2D.h"
+#include "Renderer/Vulkan/Vulkan.h"
+#include "Renderer/Vulkan/VulkanContext.h"
+#include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 
 
 namespace SmolEngine

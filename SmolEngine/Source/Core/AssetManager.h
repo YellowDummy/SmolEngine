@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Renderer/Shader.h"
+#include "Renderer/Shader.h"
 
 #include <unordered_map>
 #include <entt.hpp>
