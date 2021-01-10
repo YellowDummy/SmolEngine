@@ -89,7 +89,12 @@ namespace SmolEngine
 
 	public:
 
-		static const uint32_t MaxTextureSlot = 32; // TODO: get TMU (Texture Mapping Units) at initialization
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		static const uint32_t MaxTextureSlot = 32;
+#else
+		static const uint32_t MaxTextureSlot = 4096;
+#endif
 
 	private:
 

@@ -30,20 +30,6 @@ namespace SmolEngine
 
 	}
 
-	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform, const glm::vec4& color)
-	{
-		shader->Bind();
-		if (color != glm::vec4(1.0f))
-		{
-			shader->SumbitUniform<glm::vec4>("u_Color", &color);
-		}
-
-		shader->SumbitUniform<glm::mat4>("u_Transform", &transform);
-		shader->SumbitUniform<glm::mat4>("u_ViewProjection", &m_SceneData->ViewProjectionMatrix);
-
-		vertexArray->Bind();
-	}
-
 	void Renderer::OnWidowResize(uint32_t width, uint32_t height)
 	{
 		RendererCommand::SetViewport(0, 0, width, height);

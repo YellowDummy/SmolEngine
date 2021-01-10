@@ -1287,6 +1287,9 @@
     <ClInclude Include="Source\Core\ECS\ComponentsCore.h">
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Scene.h">
+      <Filter>Source\Core\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\ECS\SceneData.h">
       <Filter>Source\Core\ECS</Filter>
     </ClInclude>
@@ -1300,6 +1303,9 @@
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Systems\CommandSystem.h">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\ECS\Systems\Physics2DSystem.h">
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\ECS\Systems\RendererSystem.h">
@@ -1399,6 +1405,9 @@
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Camera.h">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer\FBXImporter.h">
       <Filter>Source\Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Renderer\Framebuffer.h">
@@ -1572,10 +1581,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Systems\Physics2DSystem.h">
-      <Filter>Source\Core\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\ECS\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1671,6 +1676,9 @@
     <ClCompile Include="Source\Core\ECS\Components\TransformComponent.cpp">
       <Filter>Source\Core\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Scene.cpp">
+      <Filter>Source\Core\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\ECS\SceneData.cpp">
       <Filter>Source\Core\ECS</Filter>
     </ClCompile>
@@ -1684,6 +1692,9 @@
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Systems\CommandSystem.cpp">
+      <Filter>Source\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\ECS\Systems\Physics2DSystem.cpp">
       <Filter>Source\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\ECS\Systems\RendererSystem.cpp">
@@ -1756,6 +1767,9 @@
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Camera.cpp">
+      <Filter>Source\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Renderer\FBXImporter.cpp">
       <Filter>Source\Core\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Renderer\Framebuffer.cpp">
@@ -1896,9 +1910,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\ECS\Systems\Physics2DSystem.cpp">
-      <Filter>Source\Core\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\ECS\Scene.cpp" />
   </ItemGroup>
 </Project>

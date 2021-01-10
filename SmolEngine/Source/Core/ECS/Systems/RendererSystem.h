@@ -7,20 +7,12 @@
 namespace SmolEngine
 {
 	struct Animation2DComponent;
-
 	struct Body2DComponent;
-
 	struct CanvasComponent;
-
 	struct TransformComponent;
-
 	struct CameraComponent;
-
 	struct Texture2DComponent;
-
 	class Framebuffer;
-
-	///
 
 	class RendererSystem
 	{

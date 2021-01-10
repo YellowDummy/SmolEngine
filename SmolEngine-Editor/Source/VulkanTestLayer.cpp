@@ -133,15 +133,13 @@ namespace SmolEngine
 
 		{
 			m_GraphicsPipeline.Update2DTextures({ m_Tetxure1 });
-
-			// Fist Render Pass - Main
 			{
 				uint32_t bindingPoint = 0;
 				m_GraphicsPipeline.SumbitUniformBuffer(bindingPoint, sizeof(glm::mat4), &m_EditorCamera->GetCamera()->GetViewProjectionMatrix());
 
-				m_GraphicsPipeline.ClearColors(m_FrameBuffer);
 				m_GraphicsPipeline.BeginRenderPass(m_FrameBuffer);
 				{
+					m_GraphicsPipeline.ClearColors(m_FrameBuffer);
 					m_GraphicsPipeline.SumbitPushConstant(ShaderType::Fragment, sizeof(glm::vec3), &m_AddColor);
 					m_GraphicsPipeline.DrawIndexed();
 				}

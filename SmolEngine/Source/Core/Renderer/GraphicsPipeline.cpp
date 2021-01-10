@@ -11,6 +11,23 @@
 
 namespace SmolEngine
 {
+	GraphicsPipeline::~GraphicsPipeline()
+	{
+#ifndef SMOLENGINE_OPENGL_IMPL
+		for (auto& index : m_IndexBuffers)
+		{
+			index->GetVulkanIndexBuffer().Destroy();
+		}
+
+		for (auto& vertex : m_VertexBuffers)
+		{
+			vertex->GetVulkanVertexBuffer().Destroy();
+		}
+
+		m_VulkanPipeline.Destroy();
+#endif
+	}
+
 	bool GraphicsPipeline::Create(const GraphicsPipelineCreateInfo* pipelineInfo)
 	{
 		if (!IsPipelineCreateInfoValid(pipelineInfo))
@@ -109,7 +126,7 @@ namespace SmolEngine
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 		}
 
-		m_VulkanPipeline.Invalidate(&pipelineSpecCI);
+		m_VulkanPipeline.Invalidate(pipelineSpecCI);
 		for (DrawMode mode : pipelineInfo->PipelineDrawModes)
 		{
 			m_VulkanPipeline.CreatePipeline(mode);

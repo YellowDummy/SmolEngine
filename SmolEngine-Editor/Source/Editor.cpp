@@ -19,10 +19,7 @@ namespace SmolEngine
 
 	void Editor::ClientInit()
 	{
-
 		auto& app = Application::GetApplication();
-
-		// TEMP
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 		//app.PushLayer(new EditorLayer);
@@ -30,7 +27,6 @@ namespace SmolEngine
 		//app.PushLayer(new VulkanTestLayer);
 #endif
 		app.PushLayer(new EditorLayer);
-
 		EDITOR_INFO("Initialized successfully");
 	}
 

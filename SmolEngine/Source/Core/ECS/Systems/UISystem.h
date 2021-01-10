@@ -7,15 +7,11 @@
 
 namespace SmolEngine
 {
-	class UIElement;
-
-	class UIButton;
-
-	class UITextLabel;
-
 	struct CanvasComponent;
 
-	///
+	class UIElement;
+	class UIButton;
+	class UITextLabel;
 
 	class UISystem
 	{
@@ -23,19 +19,17 @@ namespace SmolEngine
 
 		UISystem() = default;
 
-		/// Main
-
 		static void OnUpdate(entt::registry& registry);
 
 		static void OnEvent(entt::registry& registry, Event& e);
 
-		/// Elements
+		// Elements
 
 		static Ref<UIElement> AddElement(CanvasComponent& canvas, UIElementType type);
 
 		static bool DeleteElement(CanvasComponent& canvas, size_t id);
 
-		//Rendering
+		// Rendering
 
 		static void DrawAllElements(const CanvasComponent& canvas, const glm::vec3& cameraPos, const float zoomLevel);
 
@@ -56,7 +50,6 @@ namespace SmolEngine
 		static bool OnMouseClick(CanvasComponent& canvas, Event& e);
 
 		static bool OnMouseMove(CanvasComponent& canvas, Event& e);
-
 
 	private:
 

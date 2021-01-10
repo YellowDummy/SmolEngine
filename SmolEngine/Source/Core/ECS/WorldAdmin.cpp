@@ -297,18 +297,19 @@ namespace SmolEngine
 
 	bool WorldAdmin::Load(const std::string& filePath)
 	{
-		std::ifstream file(filePath);
+		std::string path = filePath;
+		std::ifstream file(path);
 		if (!file)
 		{
-			NATIVE_ERROR("Could not open the file: {}", filePath);
+			NATIVE_ERROR("Could not open the file: {}", path);
 			return false;
 		}
 
 		m_SceneMap.clear();
 		m_ActiveSceneID = 0;
-		CreateScene(filePath);
+		CreateScene(path);
 
-		if (GetActiveScene().Load(filePath))
+		if (GetActiveScene().Load(path))
 		{
 			// Reloading Assets
 			ReloadAssets();

@@ -9,24 +9,25 @@ namespace SmolEngine
 {
 	VulkanPipeline::VulkanPipeline()
 	{
-		m_VulkanPipelineSpecification = new VulkanPipelineSpecification();
+
 	}
 
 	VulkanPipeline::~VulkanPipeline()
 	{
-		delete m_VulkanPipelineSpecification;
+		m_VulkanPipelineSpecification = {};
 	}
 
-	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification* pipelineSpec)
+	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification& pipelineSpec)
 	{
-		if(!pipelineSpec->Device || !pipelineSpec->Shader || !pipelineSpec->TargetSwapchain || !pipelineSpec->BufferLayout || pipelineSpec->DescriptorSets == 0)
+		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain || !pipelineSpec.BufferLayout || pipelineSpec.DescriptorSets == 0)
 		{
 			assert(false);
 			return false;
 		}
 
-		BuildDescriptors(pipelineSpec->Shader, pipelineSpec->Textures, pipelineSpec->DescriptorSets);
+		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.Textures, pipelineSpec.DescriptorSets);
 		m_VulkanPipelineSpecification = pipelineSpec;
+		m_VulkanPipelineSpecification.Initialized = true;
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCI = {};
 		{
@@ -34,20 +35,20 @@ namespace SmolEngine
 			pipelineLayoutCI.pNext = nullptr;
 			pipelineLayoutCI.setLayoutCount = 1;
 			pipelineLayoutCI.pSetLayouts = &m_DescriptorSetLayout;
-			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(pipelineSpec->Shader->m_VkPushConstantRanges.size());
-			pipelineLayoutCI.pPushConstantRanges = pipelineSpec->Shader->m_VkPushConstantRanges.data();
+			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(pipelineSpec.Shader->m_VkPushConstantRanges.size());
+			pipelineLayoutCI.pPushConstantRanges = pipelineSpec.Shader->m_VkPushConstantRanges.data();
 
-			VK_CHECK_RESULT(vkCreatePipelineLayout(pipelineSpec->Device->GetLogicalDevice(), &pipelineLayoutCI, nullptr, &m_PipelineLayout));
+			VK_CHECK_RESULT(vkCreatePipelineLayout(pipelineSpec.Device->GetLogicalDevice(), &pipelineLayoutCI, nullptr, &m_PipelineLayout));
 		}
 
-		m_FilePath = "../Resources/Cached/" + pipelineSpec->Name;
+		m_FilePath = "../Resources/Cached/" + pipelineSpec.Name;
 	}
 
 	bool VulkanPipeline::CreatePipeline(DrawMode mode)
 	{
-		const auto& shader = m_VulkanPipelineSpecification->Shader;
-		const auto& swapchain = m_VulkanPipelineSpecification->TargetSwapchain;
-		const auto& device = m_VulkanPipelineSpecification->Device->GetLogicalDevice();
+		const auto& shader = m_VulkanPipelineSpecification.Shader;
+		const auto& swapchain = m_VulkanPipelineSpecification.TargetSwapchain;
+		const auto& device = m_VulkanPipelineSpecification.Device->GetLogicalDevice();
 
 		// Create the graphics pipeline
 		// Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
@@ -88,7 +89,7 @@ namespace SmolEngine
 		{
 			blendAttachmentState[0].colorWriteMask = 0xf;
 			blendAttachmentState[0].blendEnable = VK_FALSE;
-			if (m_VulkanPipelineSpecification->IsAlphaBlendingEnabled)
+			if (m_VulkanPipelineSpecification.IsAlphaBlendingEnabled)
 			{
 				blendAttachmentState[0].blendEnable = VK_TRUE;
 				blendAttachmentState[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
@@ -152,13 +153,13 @@ namespace SmolEngine
 		// This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
 		VkVertexInputBindingDescription vertexInputBinding = {};
 		vertexInputBinding.binding = 0;
-		vertexInputBinding.stride = m_VulkanPipelineSpecification->Stride;
+		vertexInputBinding.stride = m_VulkanPipelineSpecification.Stride;
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(m_VulkanPipelineSpecification->BufferLayout->GetElements().size());
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(m_VulkanPipelineSpecification.BufferLayout->GetElements().size());
 		{
 			uint32_t index = 0;
-			for (const auto& element : m_VulkanPipelineSpecification->BufferLayout->GetElements())
+			for (const auto& element : m_VulkanPipelineSpecification.BufferLayout->GetElements())
 			{
 				vertexInputAttributs[index].binding = 0;
 				vertexInputAttributs[index].location = index;
@@ -207,12 +208,11 @@ namespace SmolEngine
 
 	bool VulkanPipeline::ReCreate()
 	{
-		if (m_VulkanPipelineSpecification != nullptr)
+		if (m_VulkanPipelineSpecification.Initialized)
 		{
 			Destroy();
 			return Invalidate(m_VulkanPipelineSpecification);
 		}
-
 		return false;
 	}
 
@@ -294,7 +294,7 @@ namespace SmolEngine
 		{
 			size_t size = 0;
 			void* data = nullptr;
-			const auto& device = m_VulkanPipelineSpecification->Device->GetLogicalDevice();
+			const auto& device = m_VulkanPipelineSpecification.Device->GetLogicalDevice();
 
 			vkGetPipelineCacheData(device, m_PipelineCaches[mode], &size, nullptr);
 			data = (char*)malloc(sizeof(char) * size);
@@ -320,7 +320,7 @@ namespace SmolEngine
 	bool VulkanPipeline::CreateOrLoadCached(const std::string& fileName, DrawMode mode)
 	{
 		VkPipelineCache cache = nullptr;
-		const auto& device = m_VulkanPipelineSpecification->Device->GetLogicalDevice();
+		const auto& device = m_VulkanPipelineSpecification.Device->GetLogicalDevice();
 
 		FILE* f = fopen(fileName.c_str(), "rb");
 		if (f)

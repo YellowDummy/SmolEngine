@@ -70,6 +70,8 @@ namespace SmolEngine
 	{
 	public:
 
+		~GraphicsPipeline();
+
 		bool Create(const GraphicsPipelineCreateInfo* pipelineInfo);
 
 

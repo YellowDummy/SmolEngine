@@ -23,8 +23,6 @@ namespace SmolEngine
 
 		static void EndScene();
 
-		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f), const glm::vec4& color = glm::vec4(1.0f));
-
 		static void OnWidowResize(uint32_t width, uint32_t height);
 
 	private:

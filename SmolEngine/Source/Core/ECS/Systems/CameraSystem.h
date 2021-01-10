@@ -17,7 +17,6 @@ namespace SmolEngine
 
 		CameraSystem();
 
-		///
 
 		static void CalculateView(CameraComponent* camera, TransformComponent* tranform);
 

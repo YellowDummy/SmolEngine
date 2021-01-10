@@ -50,6 +50,7 @@
 #include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
 #endif
 
+#include "Core/Renderer/Mesh.h"
 
 namespace SmolEngine
 {
@@ -64,12 +65,15 @@ namespace SmolEngine
 		m_EditorConsole = EditorConsole::GetConsole();
 		m_Scene = WorldAdmin::GetSingleton();
 
+		Ref<Mesh> test = std::make_shared<Mesh>();
+		Mesh::Create("../Resources/model.fbx", test);
+
 		m_Scene->CreateScene(std::string("TestScene2.smolscene"));
 #if  0
 		auto Texture = Texture2D::Create("../GameX/Assets/Textures/bulkhead-wallsx3.png");
-
 		auto camera = m_Scene->CreateActor(ActorBaseType::CameraBase, "Camera", "Default");
 		auto actor = m_Scene->CreateActor(ActorBaseType::DefaultBase, "Pawn");
+
 #endif //  0
 	}
 

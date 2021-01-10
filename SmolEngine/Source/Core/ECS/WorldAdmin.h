@@ -19,22 +19,18 @@
 
 namespace SmolEngine
 { 
-	class SubTexture2D;
-	class EditorCameraController;
-	class Framebuffer;
-
 	struct CameraComponent;
 	struct TransformComponent;
 	struct BehaviourComponent;
 	struct SystemInstance;
 
+	class SubTexture2D;
+	class EditorCameraController;
+	class Framebuffer;
+
 	class WorldAdmin
 	{
 	public:
-
-		WorldAdmin()  = default;
-
-	    ~WorldAdmin() = default;
 
 		// Initialization
 

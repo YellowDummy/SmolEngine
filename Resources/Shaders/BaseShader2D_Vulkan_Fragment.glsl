@@ -18,7 +18,7 @@ layout(std140, binding = 1) uniform LightBuffer
 	Light2DBuffer[100] LightData;
 };
 
-layout(binding = 2) uniform sampler2D u_Textures[32]; // note: no need to put textures inside uniform buffer
+layout(binding = 2) uniform sampler2D u_Textures[4096]; // note: no need to put textures inside uniform buffer
 
 layout(push_constant) uniform LightEnvironment
 {

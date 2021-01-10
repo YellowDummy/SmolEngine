@@ -3,12 +3,13 @@
 #include "Core/Renderer/Vulkan/Vulkan.h"
 #include "Core/Renderer/Vulkan/VulkanDescriptor.h"
 
+#include "Core/Renderer/Vulkan/VulkanPipelineSpecification.h"
+
 namespace SmolEngine
 {
 	class VulkanShader;
 	class VulkanTexture;
 	enum class DrawMode : uint16_t;
-	struct VulkanPipelineSpecification;
 
 	class VulkanPipeline
 	{
@@ -22,7 +23,7 @@ namespace SmolEngine
 		/// Main
 		/// 
 		
-		bool Invalidate(VulkanPipelineSpecification* pipelineSpec);
+		bool Invalidate(VulkanPipelineSpecification& pipelineSpec);
 
 		bool CreatePipeline(DrawMode mode);
 
@@ -73,7 +74,7 @@ namespace SmolEngine
 		std::string m_FilePath = "";
 
 		VkDescriptorPool m_DescriptorPool = nullptr;
-		VulkanPipelineSpecification* m_VulkanPipelineSpecification = nullptr;
+		VulkanPipelineSpecification m_VulkanPipelineSpecification = {};
 		
 	};
 }

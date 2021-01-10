@@ -36,15 +36,11 @@ namespace SmolEngine
 
 		Actor(const ActorBaseType baseType, entt::entity entity, size_t index);
 
-		/// 
 		/// Operators
-		/// 
 
 		operator entt::entity() const { return m_Entity; }
 
-		/// 
 		/// Getters
-		/// 
 
 		std::vector<Ref<Actor>>& GetChilds() { return m_Childs; }
 
@@ -62,9 +58,7 @@ namespace SmolEngine
 
 		const size_t GetComponentsCount() const;
 
-		/// 
 		/// Setters
-		/// 
 
 		void SetParent(Ref<Actor> parent) { m_Parent = parent; }
 

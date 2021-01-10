@@ -18,6 +18,7 @@ namespace SmolEngine
 		std::string Name = "";
 
 		bool IsAlphaBlendingEnabled = false;
+		bool Initialized = false;
 
 		uint32_t DescriptorSets = 1;
 		uint32_t Stride = 0;

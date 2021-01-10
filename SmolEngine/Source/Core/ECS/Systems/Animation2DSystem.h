@@ -18,7 +18,6 @@ namespace SmolEngine
 
 		Animation2DSystem() = default;
 
-		/// 
 
 		static void Play(const std::string& clipName, Animation2DComponent& anim);
 
@@ -28,27 +27,20 @@ namespace SmolEngine
 
 		static void OnReset(entt::registry& registry);
 
-		/// Update-Loop
 
 		static void Update(entt::registry& registry);
-
-		/// Reset
 
 		static void Reset(Ref<AnimationClip> anim);
 
 		static void ResetAllFrames(const Animation2DComponent& anim);
 
-		/// Load
 
 		static bool LoadClip(Animation2DComponent& anim, const std::string& filePath);
-
-		///
 
 		static bool RemoveClip(Animation2DComponent& anim, const std::string& keyName);
 
 		static bool RenameClip(Animation2DComponent& anim, const std::string& keyName, const std::string& newName);
 
-		/// Debug
 
 		static void DebugPlay(AnimationClip* anim);
 
