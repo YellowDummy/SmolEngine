@@ -120,7 +120,7 @@ namespace SmolEngine
 		glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 
 #else
-		//glfwMaximizeWindow(m_Window);
+		glfwMaximizeWindow(m_Window);
 
 #endif // SMOLENGINE_OPENGL_IMPL
 

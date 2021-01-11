@@ -1,41 +1,56 @@
 #include "stdafx.h"
 #include "Mesh.h"
 
-#include "Renderer/FBXImporter.h"
+#include "Utils/FBXImporter.h"
 #include "Renderer/GraphicsPipeline.h"
+#include "ECS/Systems/CommandSystem.h"
 
 namespace SmolEngine
 {
     bool Mesh::Create(const std::string& filePath, Ref<Mesh>& out_mesh)
     {
         ImportedData* data = new ImportedData();
-        if (FBXImporter::Load(filePath, *data))
+        if (FBXImporter::Load(filePath, data))
         {
+            out_mesh->m_VertexCount = data->vertices.size();
             out_mesh->m_Pipeline = std::make_shared<GraphicsPipeline>();
             BufferLayout layout(
             {
                 { ShaderDataType::Float3, "aPos" },
+                { ShaderDataType::Float3, "aNormal" },
+                { ShaderDataType::Float2, "aUV" },
                 { ShaderDataType::Float4, "aColor" }
             });
 
             struct Vertex
             {
                 glm::vec3 pos;
+                glm::vec3 normals;
+                glm::vec2 uvs;
                 glm::vec4 color;
             };
+
+            glm::vec3 pos(0, 0, 0);
+            glm::vec3 scale(1, 1, 1);
+            glm::vec3 rot(0, 0, 0);
+            glm::mat4 transform;
+
+            CommandSystem::ComposeTransform(pos, rot, scale, true, transform);
 
             std::vector<Vertex> vertices(data->vertices.size());
             for (uint32_t i = 0; i < data->vertices.size(); ++i)
             {
-                vertices[i].pos = data->vertices[i];
+                vertices[i].pos = glm::vec4(data->vertices[i], 1) * transform;
                 vertices[i].color = data->colors[i];
+                vertices[i].normals = data->normals[i];
+                vertices[i].uvs = data->uvs[i];
             }
 
             VertexBufferCreateInfo vertexBufferCI = {};
             {
                 vertexBufferCI.BuffersCount = 1;
                 vertexBufferCI.BufferLayot = &layout;
-                vertexBufferCI.Sizes = { sizeof(vertices) };
+                vertexBufferCI.Sizes = { sizeof(Vertex) * vertices.size() };
                 vertexBufferCI.Vertices = { vertices.data() };
                 vertexBufferCI.Stride = sizeof(Vertex);
             }

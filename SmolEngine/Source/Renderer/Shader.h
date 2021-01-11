@@ -23,19 +23,15 @@ namespace SmolEngine
 
 		~Shader();
 
-		/// 
 		/// Main
-		/// 
 		
 		void Bind() const;
 
 		void UnBind() const;
 
-		void Realod();
+		bool Realod();
 
-		///
 		///  Uniforms
-		/// 
 
 		void SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset = 0);
 

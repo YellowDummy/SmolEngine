@@ -4,10 +4,13 @@
 #include "Core/Window.h"
 
 #include "Renderer/Shader.h"
+#include "Renderer/Mesh.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
+
+#include "ECS/Systems/CommandSystem.h"
 
 
 namespace SmolEngine
@@ -15,74 +18,27 @@ namespace SmolEngine
 	void VulkanTestLayer::OnAttach()
 	{
 		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
-		m_EditorCamera = std::make_shared<EditorCameraController>(aspectRatio);
-		m_EditorCamera->SetZoom(4.0f);
+		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, aspectRatio, 0.01f, 1000.0f);
 
 		FramebufferSpecification framebufferCI = {};
 		framebufferCI.Width = VulkanContext::GetSwapchain().GetWidth();
 		framebufferCI.Height = VulkanContext::GetSwapchain().GetHeight();
 		m_FrameBuffer = Framebuffer::Create(framebufferCI);
 
-		struct Vertex
+		m_Tetxure1 = Texture2D::Create("../Resources/AK_103_Base_Color.png");
+		m_Tetxure2 = Texture2D::Create("../Resources/AK_103_Metallic.png");
+		m_Tetxure3 = Texture2D::Create("../Resources/AK_103_Normal.png");
+		m_Tetxure4 = Texture2D::Create("../Resources/AK_103_Roughness.png");
+
+		m_TestMesh = std::make_shared<Mesh>();
+		bool result = Mesh::Create("../Resources/AK-103.fbx", m_TestMesh);
+		m_TestMesh->m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4});
+
+		for (uint32_t i = 0; i < 4; ++i)
 		{
-			glm::vec3 Pos;
-			glm::vec4 Color;
-			glm::vec2 TexCood;
-		};
-
-		Vertex verticies[4] =
-		{
-			// pos                       // color                    // texCood
-			{ { -0.5f, 0.5, 0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f },  { 0.0f, 1.0f },},
-			{ { 0.5f, 0.5f, 0.0f },  { 0.2f, 1.0f, 0.0f, 1.0f },  { 1.0f, 1.0f},},
-			{ {  0.5f, -0.5, 0.0f},  { 0.5f, 0.0f, 1.0f, 1.0f },  { 1.0f, 0.0f },},
-			{ { -0.5f, -0.5, 0.0f },  { 1.0f, 0.0f, 1.0f, 1.0f },  { 0.0f, 0.0f } },
-		};
-
-		BufferLayout layout({ 
-
-			{ ShaderDataType::Float3, "aPos" }, // location 0
-			{ ShaderDataType::Float4, "aColor" },
-			{ ShaderDataType::Float2, "aTexCood" } // location 2
-		});
-
-		m_Tetxure1 = Texture2D::Create("../GameX/Assets/Textures/SummerBG.png");
-		m_Tetxure2 = Texture2D::Create("../GameX/Assets/Textures/bulkhead-wallsx3.png");
-		m_Tetxure3 = Texture2D::CreateWhiteTexture();
-
-		VertexBufferCreateInfo vertexBufferCI = {};
-		{
-			vertexBufferCI.BufferLayot = &layout;
-			vertexBufferCI.Sizes = { sizeof(verticies) };
-			vertexBufferCI.Vertices = { &verticies };
-			vertexBufferCI.Stride = sizeof(Vertex);
+			m_PBR.lightPositions[i] = glm::vec3(i - 0.5f, i - 0.5f, -1);
+			m_PBR.lightColor[i] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		}
-
-		uint32_t indices[6] = { 0, 1, 2,  2, 3, 0 };
-		IndexBufferCreateInfo indexBufferCI = {};
-		{
-			indexBufferCI.IndicesCounts = { 6 };
-			indexBufferCI.Indices = { indices };
-		}
-
-		GraphicsPipelineShaderCreateInfo shaderCI = {};
-		{
-			shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/VulkanTriangle_Vertex.glsl";
-			shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/VulkanTriangle_Fragment.glsl";
-			shaderCI.Textures = {  };
-		}
-
-		GraphicsPipelineCreateInfo graphicsPipelineCI = {};
-		{
-			graphicsPipelineCI.IndexBuffer = &indexBufferCI;
-			graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
-			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
-			graphicsPipelineCI.PipelineName = "VulkanTestLayer";
-		}
-
-		bool result = m_GraphicsPipeline.Create(&graphicsPipelineCI);
-
-
 	}
 
 	void VulkanTestLayer::OnDetach()
@@ -112,23 +68,62 @@ namespace SmolEngine
 	{
 		ImGui::Begin("Shader Settings");
 		{
-			if (ImGui::Button("Reload Shader"))
-			{
+			rot.y += 0.0005f;
 
-			}
-
-
+			ImGui::NewLine();
 			ImGui::ColorPicker4("Add Color", glm::value_ptr(m_AddColor));
 
 			ImGui::NewLine();
+			ImGui::InputFloat3("Translation", glm::value_ptr(pos));
+			ImGui::InputFloat3("Scale", glm::value_ptr(scale));
+			ImGui::InputFloat3("Rotation", glm::value_ptr(rot));
 
-			ImGui::Image(m_FrameBuffer->GetImGuiTextureID(), ImVec2{ 100, 100 });
+			ImGui::NewLine();
+			if (ImGui::Button("Reload Shader"))
+			{
+				if (m_TestMesh->m_Pipeline->Reload())
+				{
+					m_TestMesh->m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4 });
+				}
+			}
+			ImGui::NewLine();
+			//ImGui::Image(m_FrameBuffer->GetImGuiTextureID(), ImVec2{ 200, 200 });
 		}
 		ImGui::End();
 	}
 
 	void VulkanTestLayer::BuildTestCommandBuffer()
 	{
+		m_TestMesh->m_Pipeline->BeginCommandBuffer(true);
+		m_TestMesh->m_Pipeline->BeginBufferSubmit();
+
+		m_TestMesh->m_Pipeline->BeginRenderPass();
+		{
+			glm::mat4 trans;
+			CommandSystem::ComposeTransform(pos, rot, scale, true, trans);
+
+			struct PushConsant
+			{
+				glm::mat4 viewProj;
+				glm::mat4 trans;
+				glm::vec4 color;
+				glm::vec3 camPos;
+
+			} pc;
+
+			pc.viewProj = m_EditorCamera->GetViewProjection();
+			pc.trans = trans;
+			pc.color = m_AddColor;
+			pc.camPos = m_EditorCamera->GetPosition();
+
+			m_TestMesh->m_Pipeline->ClearColors();
+			m_TestMesh->m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
+			m_TestMesh->m_Pipeline->Draw(m_TestMesh->m_VertexCount);
+		}
+		m_TestMesh->m_Pipeline->EndRenderPass();
+		m_TestMesh->m_Pipeline->EndBufferSubmit();
+		m_TestMesh->m_Pipeline->EndCommandBuffer();
+#if 0
 		m_GraphicsPipeline.BeginCommandBuffer();
 
 		{
@@ -148,6 +143,8 @@ namespace SmolEngine
 
 		}
 		m_GraphicsPipeline.EndCommandBuffer();
+
+#endif
 
 
 	}

@@ -88,8 +88,6 @@ namespace SmolEngine
 				m_IndexBuffers[i] = IndexBuffer::Create(pipelineInfo->IndexBuffer->Indices[0], pipelineInfo->IndexBuffer->IndicesCounts[0]);
 			}
 		}
-
-
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		for (uint32_t i = 0; i < m_VertexBuffers.size(); ++i)
@@ -117,13 +115,14 @@ namespace SmolEngine
 			pipelineSpecCI.Device = &VulkanContext::GetDevice();
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
-			pipelineSpecCI.BufferLayout = pipelineInfo->VertexBuffer->BufferLayot;
+			pipelineSpecCI.BufferLayout = *pipelineInfo->VertexBuffer->BufferLayot;
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.Textures = std::move(textures);
 			pipelineSpecCI.Stride = pipelineInfo->VertexBuffer->Stride;
 			pipelineSpecCI.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
+			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 		}
 
 		m_VulkanPipeline.Invalidate(pipelineSpecCI);
@@ -132,33 +131,75 @@ namespace SmolEngine
 			m_VulkanPipeline.CreatePipeline(mode);
 		}
 		m_Shader->GetVulkanShader()->DeleteShaderModules();
-#endif // SMOLENGINE_OPENGL_IMPL
+#endif
+		m_State.DescriptorSets = pipelineInfo->DescriptorSets;
+		m_State.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
+		m_State.Layout = *pipelineInfo->VertexBuffer->BufferLayot;
+		m_State.Stride = pipelineInfo->VertexBuffer->Stride;
+		m_State.PipelineName = pipelineInfo->PipelineName;
+		return true;
+	}
+
+	bool GraphicsPipeline::Reload()
+	{
+		bool shader_res = m_Shader->Realod();
+		bool pipe_res = m_VulkanPipeline.ReCreate();
+#ifndef SMOLENGINE_OPENGL_IMPL
+		m_Shader->GetVulkanShader()->DeleteShaderModules();
+#endif
 
 		return true;
 	}
 
 	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer> framebuffer)
 	{
-#ifdef SMOLENGINE_OPENGL_IMPL
 		m_RenderpassFramebuffer = framebuffer;
+#ifdef SMOLENGINE_OPENGL_IMPL
 
 		m_Shader->Bind();
 		m_VextexArray->Bind();
 		m_RenderpassFramebuffer->Bind();
 #else
-		assert(framebuffer != nullptr);
 		auto& offscreenPass = framebuffer->GetVulkanFramebuffer().GetOffscreenPass();
-		auto& scpec = framebuffer->GetSpecification();
 
 		VkClearValue clearValues[2];
 		clearValues[1].depthStencil = { 1.0f, 0 };
+
+		uint32_t width = 0;
+		uint32_t height = 0;
+
+		VkRenderPass selectedPass = nullptr;
+		VkFramebuffer selectedFramebuffer = nullptr;
+		if (framebuffer)
+		{
+			auto& scpec = framebuffer->GetSpecification();
+			selectedPass = offscreenPass.renderPass;
+			selectedFramebuffer = offscreenPass.frameBuffer;
+			width = scpec.Width;
+			height = scpec.Height;
+		}
+		else
+		{
+			auto& framebuffers = VulkanContext::GetSwapchain().GetSwapchainFramebuffer().GetVkFramebuffers();
+			uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
+
+			clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
+			clearValues[1].depthStencil = { 1.0f, 0 };
+
+			width = VulkanContext::GetSwapchain().GetWidth();
+			height = VulkanContext::GetSwapchain().GetHeight();
+
+			selectedPass = VulkanContext::GetSwapchain().GetRenderPass();
+			selectedFramebuffer = framebuffers[index];
+		}
+
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		{
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = offscreenPass.renderPass;
-			renderPassBeginInfo.framebuffer = offscreenPass.frameBuffer;
-			renderPassBeginInfo.renderArea.extent.width = scpec.Width;
-			renderPassBeginInfo.renderArea.extent.height = scpec.Height;
+			renderPassBeginInfo.renderPass = selectedPass;
+			renderPassBeginInfo.framebuffer = selectedFramebuffer;
+			renderPassBeginInfo.renderArea.extent.width = width;
+			renderPassBeginInfo.renderArea.extent.height = height;
 			renderPassBeginInfo.clearValueCount = 2;
 			renderPassBeginInfo.pClearValues = clearValues;
 		}
@@ -168,17 +209,17 @@ namespace SmolEngine
 		// Update dynamic viewport state
 		VkViewport viewport = {};
 		viewport.x = 0;
-		viewport.y = (float)scpec.Height;
-		viewport.height = -(float)scpec.Height;
-		viewport.width = (float)scpec.Width;
+		viewport.y = (float)height;
+		viewport.height = -(float)height;
+		viewport.width = (float)width;
 		viewport.minDepth = (float)0.0f;
 		viewport.maxDepth = (float)1.0f;
 		vkCmdSetViewport(m_CommandBuffer, 0, 1, &viewport);
 
 		// Update dynamic scissor state
 		VkRect2D scissor = {};
-		scissor.extent.width = scpec.Width;
-		scissor.extent.height = scpec.Height;
+		scissor.extent.width = width;
+		scissor.extent.height = height;
 		scissor.offset.x = 0;
 		scissor.offset.y = 0;
 		vkCmdSetScissor(m_CommandBuffer, 0, 1, &scissor);
@@ -192,26 +233,29 @@ namespace SmolEngine
 		m_RenderpassFramebuffer->UnBind();
 		m_Shader->UnBind();
 		m_VextexArray->UnBind();
-
-		m_RenderpassFramebuffer = nullptr;
 #else
+		m_RenderpassFramebuffer = nullptr;
 		vkCmdEndRenderPass(m_CommandBuffer);
 #endif
 	}
 
-	void GraphicsPipeline::ClearColors(Ref<Framebuffer>& framebuffer, const glm::vec4& clearColors)
+	void GraphicsPipeline::ClearColors(const glm::vec4& clearColors)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 		RendererCommand::SetClearColor(clearColors);
 		RendererCommand::Clear();
 #else
+		if (!m_RenderpassFramebuffer)
+			return;
+
 		VkClearRect clearRect = {};
 		clearRect.layerCount = 1;
 		clearRect.baseArrayLayer = 0;
 		clearRect.rect.offset = { 0, 0 };
-		clearRect.rect.extent = { (uint32_t)framebuffer->GetSpecification().Width, (uint32_t)framebuffer->GetSpecification().Height };
+		clearRect.rect.extent = { (uint32_t)m_RenderpassFramebuffer->GetSpecification().Width, 
+			(uint32_t)m_RenderpassFramebuffer->GetSpecification().Height };
 
-		auto& vkFrameBuffer = framebuffer->GetVulkanFramebuffer();
+		auto& vkFrameBuffer = m_RenderpassFramebuffer->GetVulkanFramebuffer();
 		vkFrameBuffer.SetClearColors(clearColors);
 		vkCmdClearAttachments(m_CommandBuffer, 2, vkFrameBuffer.m_OffscreenPass.clearAttachments, 1, &clearRect);
 #endif
@@ -259,9 +303,16 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::BeginCommandBuffer()
+	void GraphicsPipeline::BeginCommandBuffer(bool isSwapchainTarget)
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
+		if (isSwapchainTarget)
+		{
+			m_CommandBuffer = VulkanContext::GetCurrentVkCmdBuffer();
+			m_IsSwapchainTarget = true;
+			return;
+		}
+
 		m_CommandBuffer = VulkanCommandBuffer::CreateSingleCommandBuffer();
 #else
 		RendererCommand::Reset();
@@ -271,7 +322,10 @@ namespace SmolEngine
 	void GraphicsPipeline::EndCommandBuffer()
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
-		VulkanCommandBuffer::FlushCommandBuffer(m_CommandBuffer);
+		if (!m_IsSwapchainTarget)
+		{
+			VulkanCommandBuffer::FlushCommandBuffer(m_CommandBuffer);
+		}
 #endif
 	}
 
@@ -370,7 +424,11 @@ namespace SmolEngine
 
 	void GraphicsPipeline::SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
 	{
+#ifndef SMOLENGINE_OPENGL_IMPL
 		m_Shader->SumbitUniformBuffer(bindingPoint, data, size, offset);
+		//m_VulkanPipeline.UpdateDescriptors();
+#endif
+
 	}
 
 	void GraphicsPipeline::SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data)

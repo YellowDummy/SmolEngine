@@ -29,8 +29,10 @@ namespace SmolEngine
 
 		std::vector<VkFramebuffer> m_Framebuffers;
 		VulkanSwapchain* m_Swapchain = nullptr;
+		VkClearAttachment m_ClearAttachments[2] = {};
 
 	private:
+
 		friend class VulkanSwapchain;
 	};
 }

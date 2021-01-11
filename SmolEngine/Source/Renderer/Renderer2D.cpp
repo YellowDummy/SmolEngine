@@ -98,7 +98,7 @@ namespace SmolEngine
 		s_Data->MainPipeline->BeginCommandBuffer();
 		s_Data->MainPipeline->BeginRenderPass(targetFramebuffer);
 		{
-			s_Data->MainPipeline->ClearColors(targetFramebuffer);
+			s_Data->MainPipeline->ClearColors();
 		}
 		s_Data->MainPipeline->EndRenderPass();
 		s_Data->MainPipeline->BeginBufferSubmit();

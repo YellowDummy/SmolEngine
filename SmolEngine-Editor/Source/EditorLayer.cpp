@@ -8,6 +8,7 @@
 #include "ImGui/NodeEditor/imnodes.h"
 
 #include "Renderer/Renderer2D.h"
+#include "Renderer/EditorCamera.h"
 #include "Animation/AnimationClip.h"
 #include "ECS/WorldAdmin.h"
 #include "ECS/Actor.h"
@@ -56,6 +57,10 @@ namespace SmolEngine
 {
 	void EditorLayer::OnAttach()
 	{
+		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
+		m_Camera = std::make_shared<EditorCamera>(45.0f, aspectRatio, 0.01f, 1000.0f);
+		m_Camera->SetCameraType(CameraType::Ortho);
+
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
 
 		m_BuildPanel = std::make_unique<BuildPanel>();
@@ -64,9 +69,6 @@ namespace SmolEngine
 
 		m_EditorConsole = EditorConsole::GetConsole();
 		m_Scene = WorldAdmin::GetSingleton();
-
-		Ref<Mesh> test = std::make_shared<Mesh>();
-		Mesh::Create("../Resources/model.fbx", test);
 
 		m_Scene->CreateScene(std::string("TestScene2.smolscene"));
 #if  0
@@ -85,10 +87,9 @@ namespace SmolEngine
 	void EditorLayer::OnUpdate(DeltaTime deltaTime)
 	{
 		if (isSceneViewFocused)
-		{
-			m_Scene->m_EditorCamera->OnUpdate(deltaTime);
-		}
-		m_Scene->UpdateEditorCamera(m_GameViewPortSize, m_SceneViewSize);
+			m_Camera->OnUpdate(deltaTime);
+
+		m_Scene->UpdateEditorCamera(m_Camera);
 		m_Scene->OnUpdate(deltaTime);
 	}
 
@@ -102,9 +103,7 @@ namespace SmolEngine
 		}
 
 		if (isSceneViewFocused)
-		{
-			m_Scene->m_EditorCamera->OnEvent(event);
-		}
+			m_Camera->OnEvent(event);
 
 		m_Scene->OnEvent(event);
 	}
@@ -890,13 +889,13 @@ namespace SmolEngine
 
 				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
 
-				auto& frameBuffer = m_Scene->m_EditorCamera->m_FrameBuffer;
+				auto& frameBuffer = m_Camera->GetFramebuffer();
 				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
 				{
 					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_Scene->OnSceneViewResize(m_ViewPortSize.x, m_ViewPortSize.y);
+					m_Camera->OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
 				}
 
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -912,7 +911,22 @@ namespace SmolEngine
 					auto transformComponent = m_Scene->GetActiveScene().GetComponent<TransformComponent>(*m_SelectedActor.get());
 					if (transformComponent)
 					{
-						ImGuizmo::SetOrthographic(true);
+						switch (m_Camera->GetType())
+						{
+						case CameraType::Perspective:
+						{
+							ImGuizmo::SetOrthographic(false);
+							break;
+						}
+						case CameraType::Ortho:
+						{
+							ImGuizmo::SetOrthographic(true);
+							break;
+						}
+						default:
+							break;
+						}
+
 						ImGuizmo::SetDrawlist();
 
 						float width = (float)ImGui::GetWindowSize().x;
@@ -920,13 +934,11 @@ namespace SmolEngine
 
 						ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
 
-						auto& camera = m_Scene->m_EditorCamera->GetCamera();
-
 						glm::mat4 transform;
 						CommandSystem::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, false, transform);
 						float snapValues[3] = { snapValue, snapValue, snapValue };
 
-						ImGuizmo::Manipulate(glm::value_ptr(camera->GetViewMatrix()), glm::value_ptr(camera->GetProjectionMatrix()),
+						ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetViewProjection()),
 							m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues: nullptr);
 
 						if (ImGuizmo::IsUsing())

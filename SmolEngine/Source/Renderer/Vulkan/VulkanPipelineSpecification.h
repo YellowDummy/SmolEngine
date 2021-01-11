@@ -8,18 +8,21 @@
 
 namespace SmolEngine
 {
+	enum class DrawMode : uint16_t;
+
 	struct VulkanPipelineSpecification
 	{
 		VulkanSwapchain* TargetSwapchain = nullptr;
-		BufferLayout* BufferLayout = nullptr;
 		VulkanDevice* Device = nullptr;
 		VulkanShader* Shader = nullptr;
+		BufferLayout BufferLayout = {};
 
 		std::vector<VulkanTexture*> Textures;
+		std::vector<DrawMode> PipelineDrawModes;
 		std::string Name = "";
 
 		bool IsAlphaBlendingEnabled = false;
-		bool Initialized = false;
+		bool Initialized = false; //don't use!
 
 		uint32_t DescriptorSets = 1;
 		uint32_t Stride = 0;

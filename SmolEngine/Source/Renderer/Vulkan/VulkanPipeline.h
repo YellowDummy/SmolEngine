@@ -51,6 +51,8 @@ namespace SmolEngine
 
 		void BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures, uint32_t DescriptorSets);
 
+		void UpdateDescriptors();
+
 		VkPrimitiveTopology GetVkTopology(DrawMode mode);
 
 		VkPolygonMode GetVkPolygonMode(DrawMode mode);
@@ -72,5 +74,8 @@ namespace SmolEngine
 		VkDescriptorPool m_DescriptorPool = nullptr;
 		VulkanPipelineSpecification m_VulkanPipelineSpecification = {};
 		
+	private:
+
+		friend class GraphicsPipeline;
 	};
 }

@@ -299,6 +299,18 @@ namespace SmolEngine
 		m_Swapchain = VK_NULL_HANDLE;
 	}
 
+	void VulkanSwapchain::ClearColors(VkCommandBuffer cmdBuffer, const glm::vec4& color)
+	{
+		VkClearRect clearRect = {};
+		clearRect.layerCount = 1;
+		clearRect.baseArrayLayer = 0;
+		clearRect.rect.offset = { 0, 0 };
+		clearRect.rect.extent = { m_Width,
+			m_Height };
+
+		vkCmdClearAttachments(cmdBuffer, 2, m_Framebuffer.m_ClearAttachments, 1, &clearRect);
+	}
+
 	VkResult VulkanSwapchain::AcquireNextImage(VkSemaphore presentCompleteSemaphore)
 	{
 		if (m_Device == nullptr || m_Instance == nullptr)
@@ -414,7 +426,7 @@ namespace SmolEngine
 		{
 			attachments[0].format = m_ColorFormat;
 			attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
-			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;

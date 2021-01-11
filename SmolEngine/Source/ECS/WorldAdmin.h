@@ -26,6 +26,7 @@ namespace SmolEngine
 	class SubTexture2D;
 	class EditorCameraController;
 	class Framebuffer;
+	class EditorCamera;
 
 	class WorldAdmin
 	{
@@ -76,9 +77,7 @@ namespace SmolEngine
 
 		// Camera handling
 		
-		void UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize);
-
-		void OnSceneViewResize(float width, float height);
+		void UpdateEditorCamera(Ref<EditorCamera>& cam);
 
 		void OnGameViewResize(float width, float height);
 

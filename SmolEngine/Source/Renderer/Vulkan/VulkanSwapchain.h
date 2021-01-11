@@ -5,6 +5,7 @@
 #include "Renderer/Vulkan/VulkanSwapchainFramebuffer.h"
 
 #include <vector>
+#include <glm/glm.hpp>
 
 struct GLFWwindow;
 
@@ -37,11 +38,9 @@ namespace SmolEngine
 
 		/// Main
 
-
 		bool Init(VulkanInstance* instance, VulkanDevice* device, GLFWwindow* window);
 
 		bool Prepare();
-
 
 		void Create(uint32_t* width, uint32_t* height, bool vSync = false);
 
@@ -49,6 +48,7 @@ namespace SmolEngine
 
 		void CleanUp();
 
+		void ClearColors(VkCommandBuffer cmdBuffer, const glm::vec4& color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 		VkResult AcquireNextImage(VkSemaphore presentCompleteSemaphore);
 
@@ -60,7 +60,6 @@ namespace SmolEngine
 
 		const VkRenderPass GetRenderPass() const;
 
-
 		uint32_t GetCurrentBufferIndex() const;
 
 		uint32_t& GetCurrentBufferIndexRef();
@@ -71,11 +70,9 @@ namespace SmolEngine
 
 		const VkSurfaceKHR GetVkSurface() const;
 
-
 		const VkFormat& GetColorFormat() const;
 
 		const VkSwapchainKHR& GetVkSwapchain() const;
-
 
 	private:
 
@@ -86,7 +83,6 @@ namespace SmolEngine
 		VkResult CreateDepthStencil();
 
 		VkResult CreateRenderPass();
-
 
 		void FindColorSpaceFormat();
 

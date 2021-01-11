@@ -636,7 +636,9 @@
     <ClInclude Include="Source\Renderer\BufferElement.h" />
     <ClInclude Include="Source\Renderer\BufferLayout.h" />
     <ClInclude Include="Source\Renderer\Camera.h" />
-    <ClInclude Include="Source\Renderer\FBXImporter.h" />
+    <ClInclude Include="Source\Renderer\EditorCamera.h" />
+    <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h" />
+    <ClInclude Include="Source\Utils\FBXImporter.h" />
     <ClInclude Include="Source\Renderer\Framebuffer.h" />
     <ClInclude Include="Source\Renderer\FramebufferSpecification.h" />
     <ClInclude Include="Source\Renderer\GraphicsContext.h" />
@@ -756,7 +758,8 @@
     <ClCompile Include="Source\Physics2D\Box2D\RayCast2D.cpp" />
     <ClCompile Include="Source\Renderer\Buffer.cpp" />
     <ClCompile Include="Source\Renderer\Camera.cpp" />
-    <ClCompile Include="Source\Renderer\FBXImporter.cpp" />
+    <ClCompile Include="Source\Renderer\EditorCamera.cpp" />
+    <ClCompile Include="Source\Utils\FBXImporter.cpp" />
     <ClCompile Include="Source\Renderer\Framebuffer.cpp" />
     <ClCompile Include="Source\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="Source\Renderer\GraphicsPipeline.cpp" />

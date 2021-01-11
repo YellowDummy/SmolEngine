@@ -25,6 +25,7 @@
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
 
+#include "Renderer/EditorCamera.h"
 #include "Animation/AnimationClip.h"
 
 #include <filesystem>
@@ -40,12 +41,6 @@ namespace SmolEngine
 	void WorldAdmin::Init()
 	{
 		m_InPlayMode = false;
-
-#ifdef SMOLENGINE_EDITOR
-		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
-		m_EditorCamera = std::make_shared<EditorCameraController>(aspectRatio);
-		m_EditorCamera->SetZoom(4.0f);
-#endif
 	}
 
 	void WorldAdmin::StartGame()
@@ -267,16 +262,10 @@ namespace SmolEngine
 		ScriptingSystem::ReloadScripts(registry, activeScene.m_SceneData.m_ActorPool);
 	}
 
-	void WorldAdmin::UpdateEditorCamera(const glm::vec2& gameViewSize, const glm::vec2& sceneViewSize)
+	void WorldAdmin::UpdateEditorCamera(Ref<EditorCamera>& cam)
 	{
 		// Rendering scene to the target framebuffer
-		RenderScene(m_EditorCamera->GetCamera()->GetViewProjectionMatrix(), m_EditorCamera->m_FrameBuffer, true);
-	}
-
-	void WorldAdmin::OnSceneViewResize(float width, float height)
-	{
-		m_EditorCamera->m_FrameBuffer->OnResize(width, height);
-		m_EditorCamera->OnResize(width, height);
+		RenderScene(cam->GetViewProjection(), cam->GetFramebuffer(), true);
 	}
 
 	void WorldAdmin::OnGameViewResize(float width, float height)

@@ -19,7 +19,8 @@ namespace SmolEngine
 
 	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification& pipelineSpec)
 	{
-		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain || !pipelineSpec.BufferLayout || pipelineSpec.DescriptorSets == 0)
+		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain ||
+			pipelineSpec.BufferLayout.GetElements().size() == 0 || pipelineSpec.DescriptorSets == 0)
 		{
 			assert(false);
 			return false;
@@ -156,10 +157,10 @@ namespace SmolEngine
 		vertexInputBinding.stride = m_VulkanPipelineSpecification.Stride;
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(m_VulkanPipelineSpecification.BufferLayout->GetElements().size());
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(m_VulkanPipelineSpecification.BufferLayout.GetElements().size());
 		{
 			uint32_t index = 0;
-			for (const auto& element : m_VulkanPipelineSpecification.BufferLayout->GetElements())
+			for (const auto& element : m_VulkanPipelineSpecification.BufferLayout.GetElements())
 			{
 				vertexInputAttributs[index].binding = 0;
 				vertexInputAttributs[index].location = index;
@@ -211,7 +212,15 @@ namespace SmolEngine
 		if (m_VulkanPipelineSpecification.Initialized)
 		{
 			Destroy();
-			return Invalidate(m_VulkanPipelineSpecification);
+			if (Invalidate(m_VulkanPipelineSpecification))
+			{
+				for (auto mode : m_VulkanPipelineSpecification.PipelineDrawModes)
+				{
+					CreatePipeline(mode);
+				}
+				return true;
+			}
+
 		}
 		return false;
 	}
@@ -625,6 +634,15 @@ namespace SmolEngine
 			{
 				vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeSet.size()), writeSet.data(), 0, nullptr);
 			}
+		}
+	}
+
+	void VulkanPipeline::UpdateDescriptors()
+	{
+		for (auto& set : m_WriteDescriptorSets)
+		{
+			vkUpdateDescriptorSets(VulkanContext::GetDevice().GetLogicalDevice(), static_cast<uint32_t>(set.size())
+				, set.data(), 0, nullptr);
 		}
 	}
 
