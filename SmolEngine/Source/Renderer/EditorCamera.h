@@ -11,6 +11,7 @@ namespace SmolEngine
 	enum class CameraType: uint16_t
 	{
 		Perspective,
+
 		Ortho
 	};
 

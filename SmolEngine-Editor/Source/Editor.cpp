@@ -3,6 +3,8 @@
 
 #include "EditorLayer.h"
 #include "VulkanTestLayer.h"
+#include "RaytracingTestLayer.h"
+#include "PBRTestLayer.h"
 
 
 namespace SmolEngine
@@ -24,7 +26,7 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		//app.PushLayer(new EditorLayer);
 #else
-		app.PushLayer(new VulkanTestLayer);
+		app.PushLayer(new PBRTestLayer);
 #endif
 		//app.PushLayer(new EditorLayer);
 		EDITOR_INFO("Initialized successfully");

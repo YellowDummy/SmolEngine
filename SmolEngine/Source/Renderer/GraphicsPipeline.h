@@ -41,6 +41,8 @@ namespace SmolEngine
 
 		bool Reload();
 
+		void Destroy();
+
 		void ClearColors(const glm::vec4& clearColors = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Render Pass

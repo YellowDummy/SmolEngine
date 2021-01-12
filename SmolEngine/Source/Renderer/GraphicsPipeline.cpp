@@ -13,19 +13,7 @@ namespace SmolEngine
 {
 	GraphicsPipeline::~GraphicsPipeline()
 	{
-#ifndef SMOLENGINE_OPENGL_IMPL
-		for (auto& index : m_IndexBuffers)
-		{
-			index->GetVulkanIndexBuffer().Destroy();
-		}
-
-		for (auto& vertex : m_VertexBuffers)
-		{
-			vertex->GetVulkanVertexBuffer().Destroy();
-		}
-
-		m_VulkanPipeline.Destroy();
-#endif
+		Destroy();
 	}
 
 	bool GraphicsPipeline::Create(const GraphicsPipelineCreateInfo* pipelineInfo)
@@ -149,6 +137,33 @@ namespace SmolEngine
 #endif
 
 		return true;
+	}
+
+	void GraphicsPipeline::Destroy()
+	{
+#ifndef SMOLENGINE_OPENGL_IMPL
+		for (auto& index : m_IndexBuffers)
+		{
+			index->GetVulkanIndexBuffer().Destroy();
+		}
+
+		for (auto& vertex : m_VertexBuffers)
+		{
+			vertex->GetVulkanVertexBuffer().Destroy();
+		}
+#endif
+		m_VertexBuffers.clear();
+		m_IndexBuffers.clear();
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+		m_VulkanPipeline.Destroy();
+		m_VulkanPipeline = {};
+#endif
+		if (m_Shader)
+			m_Shader = nullptr;
+
+		if (m_VextexArray)
+			m_VextexArray = nullptr;
 	}
 
 	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer> framebuffer)

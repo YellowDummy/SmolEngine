@@ -10,6 +10,18 @@ layout(location = 8) in vec3 v_Camera;
 
 layout(binding = 9) uniform sampler2D u_Textures[7];
 
+struct Light2DBuffer
+{
+	vec4 LightColor;
+	vec4 Position;
+	vec4 Attributes; // r = radius, g = intensity
+};
+
+layout(std140, binding = 10) uniform LightBuffer
+{
+	Light2DBuffer LightData[2];
+};
+
 
 const float PI = 3.14159265359;
 float DistributionGGX(vec3 N, vec3 H, float roughness);
@@ -19,40 +31,34 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0);
 
 void main()
 {
-	float ao = 1;
-	float roughness = 0.4;
-	float metallic = 0.2;
+	float ao = texture(u_Textures[0], v_UV).r;
+	float roughness = texture(u_Textures[3], v_UV).r;
+	float metallic = texture(u_Textures[1], v_UV).r;;
 
-	vec3 albedo = vec3(1.0);
+	vec3 albedo = pow(texture(u_Textures[0], v_UV).rgb, vec3(2.2));
 
-	vec3 lightPositions[4];
-	vec3 lightColors[4];
-
-	lightPositions[0] = vec3(0, 0, -1);
-	lightPositions[1] = vec3(1, 1, -2);
-	lightPositions[2] = vec3(2, 3, 0);
-	lightPositions[3] = vec3(1, 1, 3);
-
-	lightColors[0] = vec3(1, 1, 1);
-	lightColors[1] = vec3(1, 1, 1);
-	lightColors[2] = vec3(1, 1, 1);
-	lightColors[3] = vec3(1, 1, 1);
+    vec4 result = texture(u_Textures[0], v_UV);
+	for(int i = 1; i < 7; ++i)
+	{
+		result *= texture(u_Textures[i], v_UV);
+	}
+	vec4 finalColor = result * v_Color;
 
 	vec3 N = normalize(v_Normal);
     vec3 V = normalize(v_Camera - v_WorldPos);
-	vec3 F0 = vec3(0.04); 
+	vec3 F0 = vec3(0.06); 
     F0 = mix(F0, albedo, metallic);
 
 	// reflectance equation
     vec3 Lo = vec3(0.0);
-    for(int i = 0; i < 4; ++i) 
+    for(int i = 0; i < 2; ++i) 
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightPositions[i] - v_WorldPos);
+        vec3 L = normalize(LightData[i].Position.rgb - v_WorldPos);
         vec3 H = normalize(V + L);
-        float distance    = length(lightPositions[i] - v_WorldPos);
-        float attenuation = 1.0 / (distance * distance);
-        vec3 radiance     = lightColors[i] * attenuation;        
+        float distance    = length(LightData[i].Position.rgb - v_WorldPos);
+        float attenuation =LightData[i].Attributes.r / (distance * distance);
+        vec3 radiance     = LightData[i].LightColor.rgb * attenuation;        
         
         // cook-torrance brdf
         float NDF = DistributionGGX(N, H, roughness);        
@@ -70,15 +76,7 @@ void main()
         // add to outgoing radiance Lo
         float NdotL = max(dot(N, L), 0.0);                
         Lo += (kD * albedo / PI + specular) * radiance * NdotL; 
-    }   
-
-	
-	vec4 result = texture(u_Textures[0], v_UV);
-	for(int i = 1; i < 7; ++i)
-	{
-		result *= texture(u_Textures[i], v_UV);
-	}
-	vec4 finalColor = result * v_Color;
+    }
 
 	vec3 ambient = vec3(0.03) * albedo * ao;
     vec3 color = ambient + Lo;
@@ -86,8 +84,7 @@ void main()
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0/2.2));
 
-	finalColor *= vec4(color, 1.0);
-	o_color = finalColor;
+	o_color = vec4(color, 1.0);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

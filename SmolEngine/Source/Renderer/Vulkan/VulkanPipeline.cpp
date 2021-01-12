@@ -241,6 +241,9 @@ namespace SmolEngine
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 		m_Pipelines.clear();
 		m_PipelineCaches.clear();
+		m_WriteDescriptorSets.clear();
+		m_DesciptorSets.clear();
+		m_ReservedTextures.clear();
 	}
 
 	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex)
