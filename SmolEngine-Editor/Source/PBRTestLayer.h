@@ -52,7 +52,8 @@ namespace SmolEngine
 		Ref<Texture2D> m_Tetxure3;
 		Ref<Texture2D> m_Tetxure4;
 
-		Ref<Mesh> m_TestMesh;
+		Ref<Mesh> m_TestMesh = nullptr;
+		Ref<GraphicsPipeline> m_Pipeline = nullptr;
 
 		Ref<Framebuffer> m_FrameBuffer;
 

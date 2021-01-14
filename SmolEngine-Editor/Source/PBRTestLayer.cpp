@@ -30,9 +30,30 @@ namespace SmolEngine
 		m_Tetxure3 = Texture2D::Create("../Resources/AK_103_Normal.png");
 		m_Tetxure4 = Texture2D::Create("../Resources/AK_103_Roughness.png");
 
-		m_TestMesh = std::make_shared<Mesh>();
-		bool result = Mesh::Create("../Resources/AK-103.fbx", m_TestMesh);
-		m_TestMesh->m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4});
+		m_TestMesh = Mesh::Create("../Resources/AK-103.fbx");
+		m_Pipeline = std::make_shared<GraphicsPipeline>();
+
+		GraphicsPipelineShaderCreateInfo shaderCI = {};
+		{
+			shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/BaseShader3D_Vulkan_Vertex.glsl";
+			shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/BaseShader3D_Vulkan_Fragment.glsl";
+			shaderCI.Textures = {  };
+		};
+
+		DynamicGraphicsPipelineCreateInfo DynamicPipelineCI = {};
+		{
+			DynamicPipelineCI.BufferLayot = &m_TestMesh->m_Layout;
+			DynamicPipelineCI.PipelineName = "PBR_TEST";
+			DynamicPipelineCI.Stride = m_TestMesh->m_Stride;
+			DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+		}
+
+		bool result = m_Pipeline->Create(&DynamicPipelineCI);
+		assert(result == true);
+
+		m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4});
+		std::vector<Ref<VertexBuffer>> buffer = { m_TestMesh->m_VertexBuffer };
+		m_Pipeline->SetDynamicVertexBuffers(buffer);
 
 		m_Light.Pos = { 0, 1, -2, 1 };
 		m_Light.Color = { 0.2, 0.7, 0.5, 1.0f };
@@ -81,9 +102,9 @@ namespace SmolEngine
 			ImGui::NewLine();
 			if (ImGui::Button("Reload Shader"))
 			{
-				if (m_TestMesh->m_Pipeline->Reload())
+				if (m_Pipeline->Reload())
 				{
-					m_TestMesh->m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4 });
+					m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4 });
 				}
 			}
 			ImGui::NewLine();
@@ -104,8 +125,8 @@ namespace SmolEngine
 
 	void PBRTestLayer::BuildTestCommandBuffer()
 	{
-		m_TestMesh->m_Pipeline->BeginCommandBuffer(true);
-		m_TestMesh->m_Pipeline->BeginBufferSubmit();
+		m_Pipeline->BeginCommandBuffer(true);
+		m_Pipeline->BeginBufferSubmit();
 
 		struct Data
 		{
@@ -122,9 +143,9 @@ namespace SmolEngine
 		data[1].pos = m_Light2.Pos;
 		data[1].atr.r = m_Light2.intensity;
 
-		m_TestMesh->m_Pipeline->SumbitUniformBuffer(10, sizeof(data), &data);
+		m_Pipeline->SumbitUniformBuffer(10, sizeof(data), &data);
 
-		m_TestMesh->m_Pipeline->BeginRenderPass();
+		m_Pipeline->BeginRenderPass();
 		{
 			glm::mat4 trans;
 			CommandSystem::ComposeTransform(pos, rot, scale, true, trans);
@@ -143,36 +164,12 @@ namespace SmolEngine
 			pc.color = m_AddColor;
 			pc.camPos = m_EditorCamera->GetPosition();
 
-			m_TestMesh->m_Pipeline->ClearColors();
-			m_TestMesh->m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-			m_TestMesh->m_Pipeline->Draw(m_TestMesh->m_VertexCount);
+			m_Pipeline->ClearColors();
+			m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
+			m_Pipeline->Draw(m_TestMesh->m_VertexCount);
 		}
-		m_TestMesh->m_Pipeline->EndRenderPass();
-		m_TestMesh->m_Pipeline->EndBufferSubmit();
-		m_TestMesh->m_Pipeline->EndCommandBuffer();
-#if 0
-		m_GraphicsPipeline.BeginCommandBuffer();
-
-		{
-			m_GraphicsPipeline.Update2DTextures({ m_Tetxure1 });
-			{
-				uint32_t bindingPoint = 0;
-				m_GraphicsPipeline.SumbitUniformBuffer(bindingPoint, sizeof(glm::mat4), &m_EditorCamera->GetCamera()->GetViewProjectionMatrix());
-
-				m_GraphicsPipeline.BeginRenderPass(m_FrameBuffer);
-				{
-					m_GraphicsPipeline.ClearColors(m_FrameBuffer);
-					m_GraphicsPipeline.SumbitPushConstant(ShaderType::Fragment, sizeof(glm::vec3), &m_AddColor);
-					m_GraphicsPipeline.DrawIndexed();
-				}
-				m_GraphicsPipeline.EndRenderPass();
-			}
-
-		}
-		m_GraphicsPipeline.EndCommandBuffer();
-
-#endif
-
-
+		m_Pipeline->EndRenderPass();
+		m_Pipeline->EndBufferSubmit();
+		m_Pipeline->EndCommandBuffer();
 	}
 }

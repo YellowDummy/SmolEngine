@@ -27,9 +27,7 @@ namespace SmolEngine
 
 		m_Shader = std::make_shared<Shader>();
 		if (pipelineInfo->ShaderCreateInfo->UseSingleFile)
-		{
 			Shader::Create(m_Shader, pipelineInfo->ShaderCreateInfo->SingleFilePath);
-		}
 		else
 		{
 			const auto& vexrtex = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Vertex];
@@ -113,10 +111,13 @@ namespace SmolEngine
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 		}
 
-		m_VulkanPipeline.Invalidate(pipelineSpecCI);
+		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
+			return false;
+
 		for (DrawMode mode : pipelineInfo->PipelineDrawModes)
 		{
-			m_VulkanPipeline.CreatePipeline(mode);
+			if (!m_VulkanPipeline.CreatePipeline(mode))
+				return false;
 		}
 		m_Shader->GetVulkanShader()->DeleteShaderModules();
 #endif
@@ -124,6 +125,71 @@ namespace SmolEngine
 		m_State.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
 		m_State.Layout = *pipelineInfo->VertexBuffer->BufferLayot;
 		m_State.Stride = pipelineInfo->VertexBuffer->Stride;
+		m_State.PipelineName = pipelineInfo->PipelineName;
+		return true;
+	}
+
+	bool GraphicsPipeline::Create(const DynamicGraphicsPipelineCreateInfo* pipelineInfo)
+	{
+		if (pipelineInfo->Stride < 1 || pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
+			return false;
+
+		m_Shader = std::make_shared<Shader>();
+		if (pipelineInfo->ShaderCreateInfo->UseSingleFile)
+			Shader::Create(m_Shader, pipelineInfo->ShaderCreateInfo->SingleFilePath);
+		else
+		{
+			const auto& vexrtex = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Vertex];
+			const auto& frag = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Fragment];
+			const auto& compute = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Compute];
+
+			Shader::Create(m_Shader, vexrtex, frag, pipelineInfo->ShaderCreateInfo->Optimize, compute);
+		}
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+		m_VextexArray = VertexArray::Create();
+#else
+		m_VulkanPipeline = {};
+		std::vector<VulkanTexture*> textures(pipelineInfo->ShaderCreateInfo->Textures.size());
+		{
+			uint32_t index = 0;
+			for (const auto& texture : pipelineInfo->ShaderCreateInfo->Textures)
+			{
+				textures[index] = texture->GetVulkanTexture();
+				index++;
+			}
+		}
+
+		VulkanPipelineSpecification pipelineSpecCI = {};
+		{
+			pipelineSpecCI.Device = &VulkanContext::GetDevice();
+			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
+			pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
+			pipelineSpecCI.BufferLayout = *pipelineInfo->BufferLayot;
+			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
+			pipelineSpecCI.Textures = std::move(textures);
+			pipelineSpecCI.Stride = pipelineInfo->Stride;
+			pipelineSpecCI.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
+			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
+			pipelineSpecCI.Name = pipelineInfo->PipelineName;
+			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
+		}
+
+		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
+			return false;
+
+		for (DrawMode mode : pipelineInfo->PipelineDrawModes)
+		{
+			if (!m_VulkanPipeline.CreatePipeline(mode))
+				return false;
+		}
+		m_Shader->GetVulkanShader()->DeleteShaderModules();
+
+#endif
+		m_State.DescriptorSets = pipelineInfo->DescriptorSets;
+		m_State.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
+		m_State.Layout = *pipelineInfo->BufferLayot;
+		m_State.Stride = pipelineInfo->Stride;
 		m_State.PipelineName = pipelineInfo->PipelineName;
 		return true;
 	}
@@ -453,6 +519,16 @@ namespace SmolEngine
 #endif
 	}
 
+	void GraphicsPipeline::SetDynamicVertexBuffers(std::vector<Ref<VertexBuffer>>& buffer)
+	{
+		m_VertexBuffers = std::move(buffer);
+	}
+
+	void GraphicsPipeline::SetDynamicIndexBuffers(std::vector<Ref<IndexBuffer>>& buffer)
+	{
+		m_IndexBuffers = std::move(buffer);
+	}
+
 	void GraphicsPipeline::UpdateVertextBuffer(void* vertices, size_t size, uint32_t bufferIndex, uint32_t offset)
 	{
 		m_VertexBuffers[bufferIndex]->UploadData(vertices, size, offset);
@@ -498,6 +574,7 @@ namespace SmolEngine
 #endif
 	}
 
+	// TODO: Add Debug Messages
 	bool GraphicsPipeline::IsPipelineCreateInfoValid(const GraphicsPipelineCreateInfo* pipelineInfo)
 	{
 		if (pipelineInfo->IndexBuffer->BuffersCount == 0 || !pipelineInfo->VertexBuffer->BufferLayot ||

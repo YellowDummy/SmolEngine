@@ -1,18 +1,20 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <glm/glm.hpp>
-
 namespace SmolEngine
 {
-	class GraphicsPipeline;
 	struct ImportedData;
+
+	class VertexBuffer;
+	class IndexBuffer;
+	class BufferLayout;
+	class Texture2D;
 
 	class Mesh
 	{
 	public:
 
-		static bool Create(const std::string& filePath, Ref<Mesh>& out_mesh);
+		static Ref<Mesh> Create(const std::string& filePath);
 
 	private:
 
@@ -22,8 +24,14 @@ namespace SmolEngine
 
 	private:
 
-		Ref<GraphicsPipeline> m_Pipeline = nullptr;
+		Ref<VertexBuffer> m_VertexBuffer = nullptr;
+		Ref<IndexBuffer> m_IndexBuffer = nullptr;
+		BufferLayout m_Layout = {};
+
 		uint32_t m_VertexCount = 0;
+		uint32_t m_Stride = 0;
+
+		std::vector<Texture2D> m_Textures;
 
 	private:
 

@@ -2,41 +2,39 @@
 #include "Mesh.h"
 
 #include "Utils/FBXImporter.h"
-#include "Renderer/GraphicsPipeline.h"
+#include "Renderer/Buffer.h"
 #include "ECS/Systems/CommandSystem.h"
+
+#include <glm/glm.hpp>
 
 namespace SmolEngine
 {
-    bool Mesh::Create(const std::string& filePath, Ref<Mesh>& out_mesh)
+    Ref<Mesh> Mesh::Create(const std::string& filePath)
     {
         ImportedData* data = new ImportedData();
         bool create_result = false;
         if (FBXImporter::Load(filePath, data))
-            create_result = out_mesh->Init(data);
+        {
+            Ref<Mesh> mesh = std::make_shared<Mesh>();
+            if (mesh->Init(data))
+                return mesh;
+        }
 
         delete data;
-        return create_result;
+        return nullptr;
     }
 
     void Mesh::Free()
     {
-        if(m_Pipeline)
-            m_Pipeline->Destroy();
+        if (m_IndexBuffer)
+            m_IndexBuffer->Destory();
+        if (m_VertexBuffer)
+            m_VertexBuffer->Destory();
     }
 
     bool Mesh::Init(ImportedData* data)
     {
         Free();
-        m_VertexCount = data->vertices.size();
-        m_Pipeline = std::make_shared<GraphicsPipeline>();
-        BufferLayout layout(
-            {
-                { ShaderDataType::Float3, "aPos" },
-                { ShaderDataType::Float3, "aNormal" },
-                { ShaderDataType::Float2, "aUV" },
-                { ShaderDataType::Float4, "aColor" }
-            });
-
         struct Vertex
         {
             glm::vec3 pos;
@@ -45,11 +43,20 @@ namespace SmolEngine
             glm::vec4 color;
         };
 
+        m_Stride = sizeof(Vertex);
+        m_VertexCount = data->vertices.size();
+        m_Layout =
+        {
+            { ShaderDataType::Float3, "aPos" },
+            { ShaderDataType::Float3, "aNormal" },
+            { ShaderDataType::Float2, "aUV" },
+            { ShaderDataType::Float4, "aColor" }
+        };
+
         glm::vec3 pos(0, 0, 0);
         glm::vec3 scale(1, 1, 1);
         glm::vec3 rot(0, 0, 0);
         glm::mat4 transform;
-
         CommandSystem::ComposeTransform(pos, rot, scale, true, transform);
 
         std::vector<Vertex> vertices(data->vertices.size());
@@ -61,37 +68,8 @@ namespace SmolEngine
             vertices[i].uvs = data->uvs[i];
         }
 
-        VertexBufferCreateInfo vertexBufferCI = {};
-        {
-            vertexBufferCI.BuffersCount = 1;
-            vertexBufferCI.BufferLayot = &layout;
-            vertexBufferCI.Sizes = { sizeof(Vertex) * vertices.size() };
-            vertexBufferCI.Vertices = { vertices.data() };
-            vertexBufferCI.Stride = sizeof(Vertex);
-        }
-
-        IndexBufferCreateInfo indexBufferCI = {};
-        {
-            indexBufferCI.BuffersCount = 1;
-            indexBufferCI.IndicesCounts = { data->indices.size() };
-            indexBufferCI.Indices = { data->indices.data() };
-        }
-
-        GraphicsPipelineShaderCreateInfo shaderCI = {};
-        {
-            shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/BaseShader3D_Vulkan_Vertex.glsl";
-            shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/BaseShader3D_Vulkan_Fragment.glsl";
-            shaderCI.Textures = {  };
-        }
-
-        GraphicsPipelineCreateInfo graphicsPipelineCI = {};
-        {
-            graphicsPipelineCI.IndexBuffer = &indexBufferCI;
-            graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
-            graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
-            graphicsPipelineCI.PipelineName = "MeshPipiline";
-        }
-
-        return m_Pipeline->Create(&graphicsPipelineCI);
+        m_VertexBuffer = VertexBuffer::Create(vertices.data(), sizeof(Vertex) * vertices.size());
+        m_IndexBuffer = IndexBuffer::Create(data->indices.data(), data->indices.size());
+        return true;
     }
 }

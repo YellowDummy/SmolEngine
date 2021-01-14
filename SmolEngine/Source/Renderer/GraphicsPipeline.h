@@ -20,14 +20,27 @@ namespace SmolEngine
 
 	struct GraphicsPipelineCreateInfo
 	{
-		IndexBufferCreateInfo* IndexBuffer;
-		VertexBufferCreateInfo* VertexBuffer;
-		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo;
+		IndexBufferCreateInfo* IndexBuffer = nullptr;
+		VertexBufferCreateInfo* VertexBuffer = nullptr;
+		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
 
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 		std::string PipelineName = "";
 		uint32_t DescriptorSets = 1;
 
+		bool IsAlphaBlendingEnabled = false;
+	};
+
+	struct DynamicGraphicsPipelineCreateInfo
+	{
+		BufferLayout* BufferLayot = nullptr;
+		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
+		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
+
+		uint32_t Stride = 0;
+		uint32_t DescriptorSets = 1;
+
+		std::string PipelineName = "";
 		bool IsAlphaBlendingEnabled = false;
 	};
 
@@ -37,9 +50,14 @@ namespace SmolEngine
 
 		~GraphicsPipeline();
 
+		// Main
+
 		bool Create(const GraphicsPipelineCreateInfo* pipelineInfo);
 
+		bool Create(const DynamicGraphicsPipelineCreateInfo* pipelineInfo);
+
 		bool Reload();
+
 
 		void Destroy();
 
@@ -85,6 +103,10 @@ namespace SmolEngine
 		void SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data);
 
 		// Update Resources
+
+		void SetDynamicVertexBuffers(std::vector<Ref<VertexBuffer>>& buffer);
+
+		void SetDynamicIndexBuffers(std::vector<Ref<IndexBuffer>>& buffer);
 
 		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0);
 
