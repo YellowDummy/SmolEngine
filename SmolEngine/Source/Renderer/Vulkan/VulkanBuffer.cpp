@@ -123,6 +123,10 @@ namespace SmolEngine
 			uint8_t* dest = nullptr;
 			const auto& device = m_Device->GetLogicalDevice();
 			VK_CHECK_RESULT(vkMapMemory(device, m_DeviceMemory, 0, m_MemoryRequirementsSize, 0, (void**)&dest));
+
+			if (!dest)
+				assert(false);
+
 			memcpy(dest, data, size);
 			UnMapMemory();
 			return;

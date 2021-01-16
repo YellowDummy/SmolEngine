@@ -21,6 +21,6 @@ namespace SmolEngine
 		TexturePath(filePath),
 		Color(color)
 	{
-		Texture = Texture2D::Create(filePath);
+		Texture = Texture::Create(filePath);
 	}
 }

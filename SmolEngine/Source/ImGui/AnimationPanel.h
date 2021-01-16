@@ -6,16 +6,17 @@
 
 namespace SmolEngine
 {
-	class CameraController;
-
 	struct AnimationClip;
-
 	struct Animation2DFrameKey;
 
+	class CameraController;
 	enum class AnimationPanelSelectionState : uint16_t
 	{
 		None = 0,
-		NewFrame, NewSprite, Save, Load
+		NewFrame, 
+		NewSprite, 
+		Save,
+		Load
 	};
 
 	class AnimationPanel

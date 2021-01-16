@@ -12,7 +12,7 @@ extern "C" {
 
 namespace SmolEngine
 {
-	class Texture2D;
+	class Texture;
 
 	class Text
 	{
@@ -42,7 +42,7 @@ namespace SmolEngine
 
 		struct Character
 		{
-			Ref<Texture2D> Texture = nullptr;
+			Ref<Texture> Texture = nullptr;
 			glm::vec2 Size = { 0, 0 };
 			bool Skip = false;
 		};

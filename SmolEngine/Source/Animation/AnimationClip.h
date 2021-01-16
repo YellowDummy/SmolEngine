@@ -17,7 +17,7 @@ namespace SmolEngine
 		std::string m_ClipName = "";
 
 		ToolTimer m_Timer;
-		Ref<Texture2D> m_CurrentTexture = nullptr;
+		Ref<Texture> m_CurrentTexture = nullptr;
 		Ref<Animation2DFrameKey> m_CurrentFrameKey = nullptr;
 
 		int m_CurrentIndex = 0;

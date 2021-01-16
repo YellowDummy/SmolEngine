@@ -8,7 +8,7 @@ namespace SmolEngine
 	class VertexBuffer;
 	class IndexBuffer;
 	class BufferLayout;
-	class Texture2D;
+	class Texture;
 
 	class Mesh
 	{
@@ -31,7 +31,7 @@ namespace SmolEngine
 		uint32_t m_VertexCount = 0;
 		uint32_t m_Stride = 0;
 
-		std::vector<Texture2D> m_Textures;
+		std::vector<Texture> m_Textures;
 
 	private:
 

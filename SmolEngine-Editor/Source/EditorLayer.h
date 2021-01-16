@@ -189,8 +189,8 @@ namespace SmolEngine
 		Ref<Actor> m_CameraActor = nullptr;
 		Ref<Actor> m_SelectedActor = nullptr;
 
-		Ref<Texture2D> m_Texture = nullptr;
-		Ref<Texture2D> m_SheetTexture = nullptr;
+		Ref<Texture> m_Texture = nullptr;
+		Ref<Texture> m_SheetTexture = nullptr;
 
 		Ref<SubTexture2D> m_HouseSubTexture = nullptr;
 		Ref<SubTexture2D> m_FieldSubTexture = nullptr;

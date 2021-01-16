@@ -1500,9 +1500,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanContext.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanDevice.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1583,6 +1580,8 @@
     </ClInclude>
     <ClInclude Include="Source\Renderer\EditorCamera.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h" />
+    <ClInclude Include="Source\Renderer\TextureTypes.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1846,9 +1845,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanContext.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanDevice.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1913,5 +1909,6 @@
       <Filter>Source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\EditorCamera.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp" />
   </ItemGroup>
 </Project>

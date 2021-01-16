@@ -15,6 +15,8 @@
 
 namespace SmolEngine
 {
+	static const uint32_t s_SamplersBindingPoint = 9;
+
 	void PBRTestLayer::OnAttach()
 	{
 		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
@@ -25,10 +27,22 @@ namespace SmolEngine
 		framebufferCI.Height = VulkanContext::GetSwapchain().GetHeight();
 		m_FrameBuffer = Framebuffer::Create(framebufferCI);
 
-		m_Tetxure1 = Texture2D::Create("../Resources/AK_103_Base_Color.png");
-		m_Tetxure2 = Texture2D::Create("../Resources/AK_103_Metallic.png");
-		m_Tetxure3 = Texture2D::Create("../Resources/AK_103_Normal.png");
-		m_Tetxure4 = Texture2D::Create("../Resources/AK_103_Roughness.png");
+		m_Tetxure1 = Texture::Create("../Resources/AK_103_Base_Color.png");
+		m_Tetxure2 = Texture::Create("../Resources/AK_103_Metallic.png");
+		m_Tetxure3 = Texture::Create("../Resources/AK_103_Normal.png");
+		m_Tetxure4 = Texture::Create("../Resources/AK_103_Roughness.png");
+
+		std::array<std::string, 6> paths =
+		{
+			"../GameX/Assets/Textures/Test.png",
+			"../GameX/Assets/Textures/Test.png",
+			"../GameX/Assets/Textures/Test.png",
+			"../GameX/Assets/Textures/Test.png",
+			"../GameX/Assets/Textures/Test.png",
+			"../GameX/Assets/Textures/Test.png"
+		};
+
+		//auto cubeMap = Texture::CreateCubeMap(paths);
 
 		m_TestMesh = Mesh::Create("../Resources/AK-103.fbx");
 		m_Pipeline = std::make_shared<GraphicsPipeline>();
@@ -46,12 +60,15 @@ namespace SmolEngine
 			DynamicPipelineCI.PipelineName = "PBR_TEST";
 			DynamicPipelineCI.Stride = m_TestMesh->m_Stride;
 			DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+			//DynamicPipelineCI.SkyBox = cubeMap;
 		}
 
 		bool result = m_Pipeline->Create(&DynamicPipelineCI);
 		assert(result == true);
 
-		m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4});
+		m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4}, s_SamplersBindingPoint);
+		//m_Pipeline->UpdateCubeMap(cubeMap, 15);
+
 		std::vector<Ref<VertexBuffer>> buffer = { m_TestMesh->m_VertexBuffer };
 		m_Pipeline->SetDynamicVertexBuffers(buffer);
 
@@ -104,7 +121,7 @@ namespace SmolEngine
 			{
 				if (m_Pipeline->Reload())
 				{
-					m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4 });
+					m_Pipeline->Update2DTextures({ m_Tetxure1, m_Tetxure2, m_Tetxure3, m_Tetxure4 }, s_SamplersBindingPoint);
 				}
 			}
 			ImGui::NewLine();

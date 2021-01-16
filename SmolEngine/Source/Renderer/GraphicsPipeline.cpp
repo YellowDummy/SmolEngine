@@ -109,6 +109,7 @@ namespace SmolEngine
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
+			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -173,6 +174,7 @@ namespace SmolEngine
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
+			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -453,9 +455,10 @@ namespace SmolEngine
 		vkCmdBindIndexBuffer(m_CommandBuffer, m_IndexBuffers[indexBufferIndex]->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 		// Bind descriptor sets describing shader binding points
-		const auto& descriptorSet = m_VulkanPipeline.GetVkDescriptorSet(descriptorSetIndex);
-		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
-			&descriptorSet, 0, nullptr);
+		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
+		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
+			&descriptorSets, 0, nullptr);
 
 		// Draw indexed
 		vkCmdDrawIndexed(m_CommandBuffer, m_IndexBuffers[indexBufferIndex]->GetVulkanIndexBuffer().GetCount(), 1, 0, 0, 1);
@@ -494,9 +497,10 @@ namespace SmolEngine
 		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);
 
 		// Bind descriptor sets describing shader binding points
-		const auto& descriptorSet = m_VulkanPipeline.GetVkDescriptorSet(descriptorSetIndex);
-		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
-			&descriptorSet, 0, nullptr);
+		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
+		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
+			&descriptorSets, 0, nullptr);
 
 		// Draw
 		vkCmdDraw(m_CommandBuffer, vertextCount, 1, 0, 0);
@@ -547,7 +551,7 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::Update2DTextures(const std::vector<Ref<Texture2D>>& textures, uint32_t descriptorSetIndex)
+	bool GraphicsPipeline::Update2DTextures(const std::vector<Ref<Texture>>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex)
 	{
 		m_Shader->Bind();
 		uint32_t index = 0;
@@ -570,7 +574,18 @@ namespace SmolEngine
 		}
 
 #ifndef SMOLENGINE_OPENGL_IMPL
-		m_VulkanPipeline.UpdateSamplers2D(vkTextures, m_CommandBuffer, descriptorSetIndex);
+		return m_VulkanPipeline.UpdateSamplers2D(vkTextures, bindingPoint, descriptorSetIndex);
+#else
+		return true;
+#endif
+	}
+
+	bool GraphicsPipeline::UpdateCubeMap(const Ref<Texture>& cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex)
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+		return true; // temp
+#else
+		return m_VulkanPipeline.UpdateCubeMap(cubeMap->GetVulkanTexture(), bindingPoint, descriptorSetIndex);
 #endif
 	}
 

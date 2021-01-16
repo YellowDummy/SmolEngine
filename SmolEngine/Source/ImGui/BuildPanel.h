@@ -8,7 +8,9 @@ namespace SmolEngine
 	enum class BuildPanelFileBrowserState: uint16_t
 	{
 		None = 0,
-		Add_Scene, Save_Config, Load_Config
+		Add_Scene,
+		Save_Config,
+		Load_Config
 	};
 
 	class BuildPanel
@@ -36,7 +38,6 @@ namespace SmolEngine
 		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
 		float m_xOffset = 300.0f;
-
 
 		BuildPanelFileBrowserState m_FileBrowserState = BuildPanelFileBrowserState::None;
 	};

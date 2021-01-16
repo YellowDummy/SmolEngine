@@ -263,7 +263,7 @@ namespace SmolEngine
 						m_SelectedFrame = std::make_shared<Animation2DFrameKey>();
 						m_AnimationClip->m_Frames[m_AnimationClip->m_Frames.size()] = m_SelectedFrame;
 
-						m_SelectedFrame->Texture = Texture2D::Create(FilePath);
+						m_SelectedFrame->Texture = Texture::Create(FilePath);
 						m_SelectedFrame->TexturePath = FilePath;
 						m_SelectedFrame->FileName = FileName;
 
@@ -276,7 +276,7 @@ namespace SmolEngine
 				}
 				case AnimationPanelSelectionState::NewSprite:
 				{
-					m_SelectedFrame->Texture = Texture2D::Create(FilePath);
+					m_SelectedFrame->Texture = Texture::Create(FilePath);
 					m_SelectedFrame->TexturePath = FilePath;
 					m_SelectedFrame->FileName = FileName;
 
@@ -365,7 +365,7 @@ namespace SmolEngine
 
 			if (AssetManager::PathCheck(frame->TexturePath, frame->FileName))
 			{
-				frame->Texture = Texture2D::Create(frame->TexturePath);
+				frame->Texture = Texture::Create(frame->TexturePath);
 			}
 		}
 	}

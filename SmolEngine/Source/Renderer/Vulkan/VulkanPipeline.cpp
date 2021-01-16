@@ -26,16 +26,23 @@ namespace SmolEngine
 			return false;
 		}
 
-		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.Textures, pipelineSpec.DescriptorSets);
+		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.Skybox, pipelineSpec.DescriptorSets);
 		m_VulkanPipelineSpecification = pipelineSpec;
 		m_VulkanPipelineSpecification.Initialized = true;
+
+		m_SetLayout.clear();
+		m_SetLayout.reserve(m_Descriptors.size());
+		for (auto& descriptor : m_Descriptors)
+		{
+			m_SetLayout.push_back(descriptor.m_DescriptorSetLayout);
+		}
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCI = {};
 		{
 			pipelineLayoutCI.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 			pipelineLayoutCI.pNext = nullptr;
-			pipelineLayoutCI.setLayoutCount = 1;
-			pipelineLayoutCI.pSetLayouts = &m_DescriptorSetLayout;
+			pipelineLayoutCI.setLayoutCount = static_cast<uint32_t>(m_SetLayout.size());
+			pipelineLayoutCI.pSetLayouts = m_SetLayout.data();
 			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(pipelineSpec.Shader->m_VkPushConstantRanges.size());
 			pipelineLayoutCI.pPushConstantRanges = pipelineSpec.Shader->m_VkPushConstantRanges.data();
 
@@ -241,62 +248,16 @@ namespace SmolEngine
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 		m_Pipelines.clear();
 		m_PipelineCaches.clear();
-		m_WriteDescriptorSets.clear();
-		m_DesciptorSets.clear();
-		m_ReservedTextures.clear();
 	}
 
-	void VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex)
+	bool VulkanPipeline::UpdateCubeMap(const VulkanTexture* cubeMap, uint32_t bindingPoint, uint32_t setIndex)
 	{
-		std::vector< VkDescriptorImageInfo> descriptorImageInfos;
-		uint32_t index = 0;
-		for (auto& image : textures)
-		{
-			if (image == nullptr)
-			{
-				break;
-			}
+		return m_Descriptors[setIndex].UpdateCubeMap(cubeMap, bindingPoint);
+	}
 
-			if (!image->IsActive())
-			{
-				NATIVE_ERROR("VulkanTexture is not initialized!");
-				assert(image->IsActive() == true);
-			}
-
-			descriptorImageInfos.push_back(image->m_DescriptorImageInfo);
-			index++;
-		}
-
-		VkWriteDescriptorSet* samplerSet = nullptr;
-		for (auto& writeSet : m_WriteDescriptorSets[setIndex])
-		{
-			if (writeSet.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-			{
-				samplerSet = &writeSet;
-				break;
-			}
-		}
-
-		if (samplerSet != nullptr)
-		{
-			uint32_t bindingPoint = samplerSet->dstBinding;
-			if (index < m_ReservedTextures.size())
-			{
-				uint32_t maxSize = m_ReservedTextures.size();
-				descriptorImageInfos.reserve(maxSize - index);
-
-				for (uint32_t i = 0; i < maxSize - index; ++i)
-				{
-					descriptorImageInfos.emplace_back(m_ReservedTextures[i]->m_DescriptorImageInfo);
-				}
-			}
-
-			*samplerSet = VulkanDescriptor::Create(m_DesciptorSets[setIndex],
-				bindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-
-			vkUpdateDescriptorSets(VulkanContext::GetDevice().GetLogicalDevice() , static_cast<uint32_t>(m_WriteDescriptorSets[setIndex].size())
-				, m_WriteDescriptorSets[setIndex].data(), 0, nullptr);
-		}
+	bool VulkanPipeline::UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, uint32_t bindingPoint,  uint32_t setIndex)
+	{
+		return m_Descriptors[setIndex].Update2DSamplers(textures, bindingPoint);
 	}
 
 	bool VulkanPipeline::SaveCache(const std::string& fileName, DrawMode mode)
@@ -380,49 +341,44 @@ namespace SmolEngine
 		return m_PipelineLayout;
 	}
 
-	const VkDescriptorSet VulkanPipeline::GetVkDescriptorSet(uint32_t setIndex) const
+	const VkDescriptorSet VulkanPipeline::GetVkDescriptorSets(uint32_t setIndex) const
 	{
-		return m_DesciptorSets[setIndex];
+		return m_Descriptors[setIndex].GetDescriptorSets();
 	}
 
-	const VkDescriptorSetLayout VulkanPipeline::GetVkDescriptorSetLayout() const
-	{
-		return m_DescriptorSetLayout;
-	}
-
-	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures, uint32_t DescriptorSets)
+	void VulkanPipeline::BuildDescriptors(VulkanShader* shader,
+		VulkanTexture* skybox, uint32_t DescriptorSets)
 	{
 		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
-
-		m_WriteDescriptorSets.clear();
-		m_DesciptorSets.clear();
-		if (m_DescriptorSetLayout != VK_NULL_HANDLE)
-		{
-			vkDestroyDescriptorSetLayout(device, m_DescriptorSetLayout, nullptr);
-		}
+		m_Descriptors.clear();
 		if (m_DescriptorPool != VK_NULL_HANDLE)
 		{
 			vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);
 		}
 
-		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes;
-		std::vector< VkDescriptorSetLayoutBinding> DescriptorSetLayoutBinding;
-		uint32_t unformsBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
-		uint32_t resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformResources.size());;
+		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes(2);
+		uint32_t unformsBufferSize = 1;
+		uint32_t resourcesBufferSize = 1;
 
-		// Uniform Buffer PoolSize
-		if (!shader->m_UniformBuffers.empty())
+		if (shader->m_UniformBuffers.size() > 0)
+			unformsBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
+
+		if (shader->m_UniformResources.size() > 0)
+			resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
+
+		// UBO
 		{
 			VkDescriptorPoolSize tempPoolSize = {};
 			{
 				tempPoolSize.descriptorCount = unformsBufferSize;
 				tempPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+
 			}
 
-			DescriptorPoolSizes.push_back(tempPoolSize);
+			DescriptorPoolSizes[0] = tempPoolSize;
 		}
 
-		if (!shader->m_UniformResources.empty())
+		// Samplers
 		{
 			VkDescriptorPoolSize tempPoolSize = {};
 			{
@@ -430,18 +386,7 @@ namespace SmolEngine
 				tempPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			}
 
-			DescriptorPoolSizes.push_back(tempPoolSize);
-		}
-
-		if (shader->m_UniformResources.empty() && shader->m_UniformBuffers.empty())
-		{
-			VkDescriptorPoolSize tempPoolSize = {};
-			{
-				tempPoolSize.descriptorCount = 1;
-				tempPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			}
-
-			DescriptorPoolSizes.push_back(tempPoolSize);
+			DescriptorPoolSizes[1] = tempPoolSize;
 		}
 
 		VkDescriptorPoolCreateInfo descriptorPoolInfo = {};
@@ -455,197 +400,12 @@ namespace SmolEngine
 			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &m_DescriptorPool));
 		}
 
-		// UBO's
-
-		if (!shader->m_UniformBuffers.empty())
-		{
-			for (auto& uboInfo : shader->m_UniformBuffers)
-			{
-				auto& [bindingPoint, buffer] = uboInfo;
-
-				VkDescriptorSetLayoutBinding layoutBinding = {};
-				{
-					layoutBinding.binding = buffer.BindingPoint;
-					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-					layoutBinding.descriptorCount = static_cast<uint32_t>(buffer.Uniforms.size());
-					layoutBinding.stageFlags = buffer.StageFlags;
-				}
-
-				DescriptorSetLayoutBinding.push_back(layoutBinding);
-
-				buffer.VkBuffer.Create(buffer.Size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-				buffer.DesriptorBufferInfo.buffer = buffer.VkBuffer.GetBuffer();
-				buffer.DesriptorBufferInfo.offset = 0;
-				buffer.DesriptorBufferInfo.range = buffer.VkBuffer.GetSize();
-			}
-
-		}
-
-		// Samplers
-
-		if (!shader->m_UniformResources.empty())
-		{
-
-			for (auto& info : shader->m_UniformResources)
-			{
-				auto& [bindingPoint, res] = info;
-
-				VkDescriptorSetLayoutBinding layoutBinding = {};
-				{
-					layoutBinding.binding = res.BindingPoint;
-					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					if (res.ArraySize > 0)
-					{
-						layoutBinding.descriptorCount = res.ArraySize;
-					}
-					else
-					{
-						layoutBinding.descriptorCount = 1;
-					}
-					layoutBinding.stageFlags = res.StageFlags;
-
-					DescriptorSetLayoutBinding.push_back(layoutBinding);
-				}
-			}
-		}
-
-		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
-		{
-			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-			layoutInfo.bindingCount = static_cast<uint32_t>(DescriptorSetLayoutBinding.size());
-			layoutInfo.pBindings = DescriptorSetLayoutBinding.data();
-
-			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayout));
-		}
-
-		m_WriteDescriptorSets.resize(DescriptorSets);
-		m_DesciptorSets.resize(DescriptorSets);
+		m_Descriptors.resize(DescriptorSets);
 		for (uint32_t i = 0; i < DescriptorSets; ++i)
 		{
-			VkDescriptorSetAllocateInfo allocateInfo = {};
-			{
-				allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-				allocateInfo.descriptorPool = m_DescriptorPool;
-				allocateInfo.descriptorSetCount = 1;
-				allocateInfo.pSetLayouts = &m_DescriptorSetLayout;
-
-				VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocateInfo, &m_DesciptorSets[i]));
-			}
-		}
-		
-		/// Maybe move somewhere else
-		/// Seconds Pass
-		{
-			/// UBO
-
-			if (!shader->m_UniformBuffers.empty())
-			{
-				for (auto& uboInfo : shader->m_UniformBuffers)
-				{
-					auto& [bindingPoint, buffer] = uboInfo;
-
-					for (uint32_t i = 0; i < DescriptorSets; ++i)
-					{
-						m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
-							buffer.BindingPoint, &buffer.DesriptorBufferInfo));
-					}
-
-					NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
-				}
-			}
-
-			/// Samplers
-
-			std::vector< VkDescriptorImageInfo> descriptorImageInfos;
-			if (!shader->m_UniformResources.empty()) 
-			{
-				for (auto& [bindingPoint, res] : shader->m_UniformResources)
-				{
-					if (res.ArraySize > 0)
-					{
-						descriptorImageInfos.reserve(textures.size());
-						uint32_t index = 0;
-						for (auto& image : textures)
-						{
-							if (!image->IsActive())
-							{
-								NATIVE_ERROR("VulkanTexture is not initialized!");
-								assert(image->IsActive() == true);
-							}
-
-							descriptorImageInfos.emplace_back(image->m_DescriptorImageInfo);
-							index++;
-						}
-
-						if (index < res.ArraySize)
-						{
-							uint32_t count = 0;
-							m_ReservedTextures.resize(res.ArraySize - index);
-							for (uint32_t i = index; i < res.ArraySize; ++i)
-							{
-#ifndef SMOLENGINE_OPENGL_IMPL
-								m_ReservedTextures[count] = Texture2D::CreateWhiteTexture()->GetVulkanTexture();
-#endif
-								descriptorImageInfos.emplace_back(m_ReservedTextures[count]->m_DescriptorImageInfo);
-								count++;
-							}
-						}
-
-						for (uint32_t i = 0; i < DescriptorSets; ++i)
-						{
-							m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
-								res.BindingPoint, descriptorImageInfos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
-						}
-
-						NATIVE_WARN("UniformResource: BindingPoint: {}, ArraySize: {}", res.BindingPoint, res.ArraySize);
-					}
-					else
-					{
-						if (textures.size() > 0)
-						{
-							auto& texture = *textures[0];
-							if (texture.IsActive())
-							{
-								for (uint32_t i = 0; i < DescriptorSets; ++i)
-								{
-									m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
-										res.BindingPoint, &texture.m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
-								}
-							}
-						}
-						else
-						{
-							m_ReservedTextures.resize(1);
-#ifndef SMOLENGINE_OPENGL_IMPL
-							m_ReservedTextures[0] = Texture2D::CreateWhiteTexture()->GetVulkanTexture();
-#endif
-
-							for (uint32_t i = 0; i < DescriptorSets; ++i)
-							{
-								m_WriteDescriptorSets[i].push_back(VulkanDescriptor::Create(m_DesciptorSets[i],
-									res.BindingPoint, &m_ReservedTextures[0]->m_DescriptorImageInfo, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
-							}
-
-						}
-
-						NATIVE_WARN("UniformResource: BindingPoint: {}, ArraySize: {}", res.BindingPoint, res.ArraySize);
-					}
-				}
-			}
-
-			for (const auto& writeSet : m_WriteDescriptorSets)
-			{
-				vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeSet.size()), writeSet.data(), 0, nullptr);
-			}
-		}
-	}
-
-	void VulkanPipeline::UpdateDescriptors()
-	{
-		for (auto& set : m_WriteDescriptorSets)
-		{
-			vkUpdateDescriptorSets(VulkanContext::GetDevice().GetLogicalDevice(), static_cast<uint32_t>(set.size())
-				, set.data(), 0, nullptr);
+			m_Descriptors[i].GenDescriptorSet(shader, m_DescriptorPool);
+			m_Descriptors[i].GenUniformBuffersDescriptors(shader);
+			m_Descriptors[i].GenSamplersDescriptors(shader, skybox);
 		}
 	}
 

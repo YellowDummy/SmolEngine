@@ -21,7 +21,7 @@ namespace SmolEngine
 		std::string FileName = "";
 
 		float Speed = 100.0f;
-		Ref<Texture2D> Texture = nullptr;
+		Ref<Texture> Texture = nullptr;
 
 	private:
 

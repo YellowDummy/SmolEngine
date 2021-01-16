@@ -10,21 +10,21 @@
 
 namespace SmolEngine
 {
-	void Texture2D::Bind(uint32_t slot) const
+	void Texture::Bind(uint32_t slot) const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 		m_OpenglTexture2D.Bind(slot);
 #endif
 	}
 
-	void Texture2D::UnBind() const
+	void Texture::UnBind() const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 		m_OpenglTexture2D.UnBind();
 #endif
 	}
 
-	uint32_t Texture2D::GetHeight() const
+	uint32_t Texture::GetHeight() const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
@@ -35,7 +35,7 @@ namespace SmolEngine
 #endif
 	}
 
-	uint32_t Texture2D::GetWidth() const
+	uint32_t Texture::GetWidth() const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
@@ -45,7 +45,7 @@ namespace SmolEngine
 #endif
 	}
 
-	const uint32_t Texture2D::GetID() const
+	const uint32_t Texture::GetID() const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
@@ -55,7 +55,7 @@ namespace SmolEngine
 #endif
 	}
 
-	void* Texture2D::GetImGuiTexture() const
+	void* Texture::GetImGuiTexture() const
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
@@ -65,7 +65,7 @@ namespace SmolEngine
 #endif
 	}
 
-	void Texture2D::SetData(void* data, uint32_t size)
+	void Texture::SetData(void* data, uint32_t size)
 	{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
@@ -75,14 +75,14 @@ namespace SmolEngine
 #endif
 	}
 
-	bool Texture2D::operator==(const Texture2D& other) const
+	bool Texture::operator==(const Texture& other) const
 	{
 		return GetID() == other.GetID();
 	}
 
-	Ref<Texture2D> Texture2D::Create(const uint32_t width, const uint32_t height)
+	Ref<Texture> Texture::Create(const uint32_t width, const uint32_t height)
 	{
-		Ref<Texture2D> texture = TexturesPool::AddTexture2D(width, height);
+		Ref<Texture> texture = TexturesPool::AddTexture(width, height);
 
 		if (!texture->m_Initialized)
 		{
@@ -98,9 +98,9 @@ namespace SmolEngine
 		return texture;
 	}
 
-	Ref<Texture2D> Texture2D::CreateWhiteTexture()
+	Ref<Texture> Texture::CreateWhiteTexture()
 	{
-		Ref<Texture2D> texture = TexturesPool::AddTexture2D(1, 1);
+		Ref<Texture> texture = TexturesPool::AddTexture(1, 1);
 
 		if (!texture->m_Initialized)
 		{
@@ -110,16 +110,16 @@ namespace SmolEngine
 			texture->m_OpenglTexture2D.Init(1, 1);
 			texture->m_OpenglTexture2D.SetData(&whiteTextureData, sizeof(uint32_t));
 #else
-			texture->m_VulkanTexture.CreateWhiteTetxure2D(1, 1);
+			texture->m_VulkanTexture.CreateWhiteTetxure(1, 1);
 #endif
 			texture->m_Initialized = true;
 		}
 		return texture;
 	}
 
-	Ref<Texture2D> Texture2D::Create(const std::string& filePath)
+	Ref<Texture> Texture::Create(const std::string& filePath)
 	{
-		Ref<Texture2D> texture = TexturesPool::AddTexture2D(filePath);
+		Ref<Texture> texture = TexturesPool::AddTexture(filePath);
 
 		if (!texture->m_Initialized)
 		{
@@ -127,22 +127,36 @@ namespace SmolEngine
 
 			texture->m_OpenglTexture2D.Init(filePath);
 #else
-			texture->m_VulkanTexture.CreateTexture2D(filePath);
+			texture->m_VulkanTexture.CreateTexture(filePath);
 #endif
 			texture->m_Initialized = true;
 		}
 		return texture;
 	}
 
-	Ref<Texture2D> Texture2D::Create(FT_Bitmap* bitmap)
+	Ref<Texture> Texture::CreateCubeMap(const std::array<std::string, 6> filePaths)
 	{
-		Ref<Texture2D> texture = std::make_shared<Texture2D>();
-
+		Ref<Texture> texture = std::make_shared<Texture>();
+		if (!texture->m_Initialized)
+		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
+#else
+			texture->m_VulkanTexture.CreateCubeMap(filePaths);
+#endif
+			texture->m_Initialized = true;
+		}
+
+		return texture;
+	}
+
+	Ref<Texture> Texture::Create(FT_Bitmap* bitmap)
+	{
+		Ref<Texture> texture = std::make_shared<Texture>();
+
+#ifdef  SMOLENGINE_OPENGL_IMPL
 		texture->m_OpenglTexture2D.Init(bitmap);
 #else
-
 #endif
 		return texture;
 	}

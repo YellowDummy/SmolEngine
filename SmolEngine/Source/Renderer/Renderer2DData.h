@@ -8,7 +8,12 @@
 
 namespace SmolEngine
 {
-	// Vextex Data
+	enum class DebugPrimitives : uint16_t
+	{
+		None = 0,
+		Quad,
+		Circle
+	};
 
 	struct QuadVertex
 	{
@@ -25,8 +30,6 @@ namespace SmolEngine
 		glm::vec3 Position = glm::vec3(0.0f);
 	};
 
-	// Light Data
-
 	struct Light2DBuffer
 	{
 		Light2DBuffer() = default;
@@ -41,34 +44,24 @@ namespace SmolEngine
 		glm::vec4 Attributes = glm::vec4(1.0); // r = radius, g = intensity, b = 0, a = 0
 	};
 
-	// Layer Data
-
 	struct LayerDataBuffer
 	{
+		LayerDataBuffer() = default;
 
-		LayerDataBuffer()
-		{
-		}
-
-		~LayerDataBuffer()
-		{
-			delete[] Base;
-		}
+		~LayerDataBuffer() { delete[] Base; }
 
 		size_t ClearSize = 0;
 		QuadVertex* Base = nullptr;
 		QuadVertex* BasePtr = nullptr;
 
 		uint32_t TextureSlotIndex = 1; // index 0 reserved for white texture
-		std::vector<Ref<Texture2D>> TextureSlots;
+		std::vector<Ref<Texture>> TextureSlots;
 
 		uint32_t IndexCount = 0;
 		uint32_t QuadCount = 0;
 		uint32_t LayerIndex = 0;
 		bool isActive = false;
 	};
-
-	// Debug Data
 
 	struct Renderer2DStats
 	{
@@ -77,9 +70,7 @@ namespace SmolEngine
 		uint32_t TexturesInUse = 0;
 		uint32_t LayersInUse = 0;
 
-		/// 
 		/// Helpers
-		/// 
 
 		void Reset()
 		{
@@ -89,21 +80,10 @@ namespace SmolEngine
 			LayersInUse = 0;
 		}
 
-		///
 		///  Getters
-		/// 
 
 		inline uint32_t GetTotalVertexCount() { return QuadCount * 4; }
 
 		inline uint32_t GetTotalIndexCount() { return QuadCount * 6; }
-	};
-
-	enum class DebugPrimitives : uint16_t
-	{
-		None = 0,
-
-		Quad,
-
-		Circle
 	};
 }

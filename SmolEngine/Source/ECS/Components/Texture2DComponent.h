@@ -7,7 +7,7 @@
 
 namespace SmolEngine
 {
-	class Texture2D;
+	class Texture;
 
 	struct Texture2DComponent: public BaseComponent
 	{
@@ -24,7 +24,7 @@ namespace SmolEngine
 		std::string TexturePath = "";
 		std::string FileName = "";
 
-		Ref<Texture2D> Texture = nullptr;
+		Ref<Texture> Texture = nullptr;
 
 		int LayerIndex = 0;
 		bool Enabled = true;

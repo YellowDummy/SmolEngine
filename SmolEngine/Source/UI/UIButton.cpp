@@ -12,10 +12,10 @@ namespace SmolEngine
 	{
 		m_TexturePath = filePath;
 		m_TetxureName = fileName;
-		m_Texture = Texture2D::Create(filePath);
+		m_Texture = Texture::Create(filePath);
 	}
 
-	void UIButton::SetTexture(const Ref<Texture2D> texture)
+	void UIButton::SetTexture(const Ref<Texture> texture)
 	{
 		m_Texture = texture;
 	}
@@ -138,7 +138,7 @@ namespace SmolEngine
 		auto& result = assetMap.find(m_TetxureName);
 		if (result != assetMap.end())
 		{
-			m_Texture = Texture2D::Create(result->second);
+			m_Texture = Texture::Create(result->second);
 			return;
 		}
 

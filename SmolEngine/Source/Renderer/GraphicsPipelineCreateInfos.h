@@ -11,7 +11,7 @@ namespace SmolEngine
 	struct GraphicsPipelineShaderCreateInfo
 	{
 		std::unordered_map<ShaderType, std::string> FilePaths;
-		std::vector<Ref<Texture2D>> Textures;
+		std::vector<Ref<Texture>> Textures;
 		std::string SingleFilePath = "";
 
 		bool Optimize = false;

@@ -638,6 +638,8 @@
     <ClInclude Include="Source\Renderer\Camera.h" />
     <ClInclude Include="Source\Renderer\EditorCamera.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h" />
+    <ClInclude Include="Source\Renderer\TextureTypes.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h" />
     <ClInclude Include="Source\Utils\FBXImporter.h" />
     <ClInclude Include="Source\Renderer\Framebuffer.h" />
     <ClInclude Include="Source\Renderer\FramebufferSpecification.h" />
@@ -666,7 +668,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandPool.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanContext.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanDevice.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanFramebuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanIndexBuffer.h" />
@@ -759,6 +760,7 @@
     <ClCompile Include="Source\Renderer\Buffer.cpp" />
     <ClCompile Include="Source\Renderer\Camera.cpp" />
     <ClCompile Include="Source\Renderer\EditorCamera.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp" />
     <ClCompile Include="Source\Utils\FBXImporter.cpp" />
     <ClCompile Include="Source\Renderer\Framebuffer.cpp" />
     <ClCompile Include="Source\Renderer\GraphicsContext.cpp" />
@@ -783,7 +785,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandPool.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanContext.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanDevice.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanFramebuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanIndexBuffer.cpp" />

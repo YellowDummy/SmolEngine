@@ -25,7 +25,7 @@ namespace SmolEngine
 			auto search = assetMap.find(texture.FileName);
 			if (search != assetMap.end())
 			{
-				texture.Texture = Texture2D::Create(search->second);
+				texture.Texture = Texture::Create(search->second);
 			}
 		});
 	}
@@ -49,7 +49,7 @@ namespace SmolEngine
 							continue;
 						}
 
-						frame->Texture = Texture2D::Create(frame->TexturePath);
+						frame->Texture = Texture::Create(frame->TexturePath);
 					}
 				}
 

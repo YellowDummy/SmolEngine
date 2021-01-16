@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Renderer/TextureTypes.h"
 #include "Renderer/Vulkan/Vulkan.h"
 
 namespace SmolEngine
@@ -14,13 +15,11 @@ namespace SmolEngine
 
 		/// Main
 		
-		void CreateTexture2D(uint32_t width, uint32_t height);
+		void CreateWhiteTetxure(uint32_t width, uint32_t height);
 
-		void CreateWhiteTetxure2D(uint32_t width, uint32_t height);
+		void CreateTexture(const std::string& filePath);
 
-		void CreateTexture2D(const std::string& filePath);
-
-		void CreateCubeTexture();
+		void CreateCubeMap(const std::array<std::string, 6>& filePaths);
 
 		/// Getters
 		
@@ -36,9 +35,13 @@ namespace SmolEngine
 
 	private:
 
-		void CreateTexture(uint32_t width, uint32_t height, void* data);
+		void CreateTexture(uint32_t width, uint32_t height, void* data, TextureType type);
 
-		void CreateSamplerAndImageView(VkFormat format);
+		void CreateSamplerAndImageView(TextureType type);
+
+		VkImageViewType GetVkImageViewType(TextureType type);
+
+		uint32_t GetImageArrayLayers(TextureType type);
 
 	private:
 
@@ -63,5 +66,6 @@ namespace SmolEngine
 	private:
 
 		friend class VulkanPipeline;
+		friend class VulkanDescriptor;
 	};
 }

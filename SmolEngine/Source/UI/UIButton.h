@@ -10,7 +10,7 @@
 namespace SmolEngine
 {
 	class Event;
-	class Texture2D;
+	class Texture;
 
 	class UIButton: public UIElement
 	{
@@ -24,7 +24,7 @@ namespace SmolEngine
 
 		/// Setters
 
-		void SetTexture(const Ref<Texture2D> texture);
+		void SetTexture(const Ref<Texture> texture);
 
 		void SetSize(const glm::vec2& size);
 
@@ -67,7 +67,7 @@ namespace SmolEngine
 		bool m_isPressed = false;
 		bool m_PressedColorEnabled = false;
 
-		Ref<Texture2D> m_Texture = nullptr;
+		Ref<Texture> m_Texture = nullptr;
 		std::function<void()> m_ClickCallback = nullptr;
 
 	private:

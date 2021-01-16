@@ -2,19 +2,20 @@
 
 #include "Renderer/OpenGL/OpenglTexture.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
+#include "Renderer/TextureTypes.h"
 
 #include <glm/glm.hpp>
 #include <string>
 
 namespace SmolEngine
 {
-	class Texture2D
+	class Texture
 	{
 	public:
 
-		Texture2D() = default;
+		Texture() = default;
 
-		~Texture2D() = default;
+		~Texture() = default;
 
 		/// Binding
 
@@ -42,17 +43,19 @@ namespace SmolEngine
 
 		/// Factory
 
-		static Ref<Texture2D> Create(const uint32_t width, const uint32_t height);
+		static Ref<Texture> Create(const uint32_t width, const uint32_t height);
 
-		static Ref<Texture2D> CreateWhiteTexture();
+		static Ref<Texture> CreateWhiteTexture();
 
-		static Ref<Texture2D> Create(const std::string& filePath);
+		static Ref<Texture> Create(const std::string& filePath);
 
-		static Ref<Texture2D> Create(FT_Bitmap* bitmap);
+		static Ref<Texture> CreateCubeMap(const std::array<std::string, 6> filePaths);
+
+		static Ref<Texture> Create(FT_Bitmap* bitmap);
 
 		/// Operators
 
-		bool operator==(const Texture2D& other) const;
+		bool operator==(const Texture& other) const;
 
 	private:
 

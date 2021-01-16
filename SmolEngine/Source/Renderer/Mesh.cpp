@@ -11,17 +11,16 @@ namespace SmolEngine
 {
     Ref<Mesh> Mesh::Create(const std::string& filePath)
     {
+        Ref<Mesh> mesh = nullptr;
         ImportedData* data = new ImportedData();
-        bool create_result = false;
         if (FBXImporter::Load(filePath, data))
         {
-            Ref<Mesh> mesh = std::make_shared<Mesh>();
-            if (mesh->Init(data))
-                return mesh;
+            mesh = std::make_shared<Mesh>();
+            mesh->Init(data);
         }
 
         delete data;
-        return nullptr;
+        return mesh;
     }
 
     void Mesh::Free()

@@ -69,7 +69,7 @@ namespace SmolEngine
 
             Character character;
             character.Size = { m_Face->glyph->bitmap.width, m_Face->glyph->bitmap_top };
-            character.Texture = Texture2D::Create(&m_Face->glyph->bitmap);
+            character.Texture = Texture::Create(&m_Face->glyph->bitmap);
 
             if (c == ' ')
             {

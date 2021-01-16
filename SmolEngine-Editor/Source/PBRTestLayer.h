@@ -47,10 +47,10 @@ namespace SmolEngine
 
 	private:
 
-		Ref<Texture2D> m_Tetxure1;
-		Ref<Texture2D> m_Tetxure2;
-		Ref<Texture2D> m_Tetxure3;
-		Ref<Texture2D> m_Tetxure4;
+		Ref<Texture> m_Tetxure1;
+		Ref<Texture> m_Tetxure2;
+		Ref<Texture> m_Tetxure3;
+		Ref<Texture> m_Tetxure4;
 
 		Ref<Mesh> m_TestMesh = nullptr;
 		Ref<GraphicsPipeline> m_Pipeline = nullptr;

@@ -178,13 +178,13 @@ namespace SmolEngine
 			auto& result = assetMap.find(frame->FileName);
 			if (result != assetMap.end())
 			{
-				frame->Texture = Texture2D::Create(result->second);
+				frame->Texture = Texture::Create(result->second);
 				continue;
 			}
 
 			if (AssetManager::PathCheck(frame->TexturePath, frame->FileName))
 			{
-				frame->Texture = Texture2D::Create(frame->TexturePath);
+				frame->Texture = Texture::Create(frame->TexturePath);
 			}
 		}
 

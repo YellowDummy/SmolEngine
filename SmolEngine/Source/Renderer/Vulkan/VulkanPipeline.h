@@ -4,6 +4,7 @@
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanDescriptor.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
+#include "Renderer/Vulkan/VulkanDescriptor.h"
 
 namespace SmolEngine
 {
@@ -29,7 +30,9 @@ namespace SmolEngine
 
 		void Destroy();
 
-		void UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, VkCommandBuffer cmdBuffer, uint32_t setIndex = 0);
+		bool UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, uint32_t bindingPoint, uint32_t setIndex = 0);
+
+		bool UpdateCubeMap(const VulkanTexture* cubeMap, uint32_t bindingPoint, uint32_t setIndex = 0);
 
 		/// Save / Load
 
@@ -43,15 +46,12 @@ namespace SmolEngine
 
 		const VkPipelineLayout& GetVkPipelineLayot() const;
 
-		const VkDescriptorSet GetVkDescriptorSet(uint32_t setIndex = 0) const;
-
-		const VkDescriptorSetLayout GetVkDescriptorSetLayout() const;
+		const VkDescriptorSet GetVkDescriptorSets(uint32_t setIndex = 0) const;
 
 	private:
 
-		void BuildDescriptors(VulkanShader* shader, const std::vector<VulkanTexture*>& textures, uint32_t DescriptorSets);
-
-		void UpdateDescriptors();
+		void BuildDescriptors(VulkanShader* shader,
+			VulkanTexture* skybox, uint32_t DescriptorSets);
 
 		VkPrimitiveTopology GetVkTopology(DrawMode mode);
 
@@ -59,11 +59,8 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<VulkanTexture*> m_ReservedTextures;
-		std::vector<std::vector<VkWriteDescriptorSet>> m_WriteDescriptorSets;
-
-		std::vector<VkDescriptorSet> m_DesciptorSets;
-		VkDescriptorSetLayout m_DescriptorSetLayout = VK_NULL_HANDLE;
+		std::vector<VulkanDescriptor> m_Descriptors;
+		std::vector<VkDescriptorSetLayout> m_SetLayout;
 
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 

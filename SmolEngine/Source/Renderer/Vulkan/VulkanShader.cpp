@@ -195,13 +195,6 @@ namespace SmolEngine
                 resBuffer.StageFlags = GetVkShaderStage(shaderType);
                 resBuffer.Sampler = sampler;
                 resBuffer.ArraySize = compiler.get_type(res.type_id).array[0];
-
-            }
-
-            int32_t samplers[Renderer2D::MaxTextureSlot];
-            for (uint32_t i = 0; i < Renderer2D::MaxTextureSlot; i++)
-            {
-                samplers[i] = i;
             }
 
             m_UniformResources[compiler.get_decoration(res.id, spv::DecorationBinding)] = std::move(resBuffer);

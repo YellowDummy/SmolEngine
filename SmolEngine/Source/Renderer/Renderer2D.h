@@ -22,7 +22,8 @@ namespace SmolEngine
 
 		static void Shutdown();
 
-		static void BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer);
+		static void BeginScene(const glm::mat4& viewProjectionMatrix, 
+			const float ambientValue, Ref<Framebuffer> targetFramebuffer);
 
 		static void EndScene();
 
@@ -44,12 +45,15 @@ namespace SmolEngine
 
 		// Submit
 
-		static void SubmitSprite(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+		static void SubmitSprite(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale,
+			const float rotation, const Ref<Texture>& texture,
 			const float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
-		static void SubmitQuad(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale, const float rotation, const glm::vec4& color);
+		static void SubmitQuad(const glm::vec3& worldPos, const uint32_t layerIndex,
+			const glm::vec2& scale, const float rotation, const glm::vec4& color);
 
-		static void DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D> texture, const glm::vec4& tintColor = glm::vec4(1.0f));
+		static void DrawUIText(const glm::vec3& pos, const glm::vec2& scale, 
+			const Ref<Texture> texture, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		// Debug
 
@@ -72,7 +76,8 @@ namespace SmolEngine
 
 		// Animation
 
-		static void DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+		static void DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue,
+			const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture>& texture,
 			float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		// Framebuffer

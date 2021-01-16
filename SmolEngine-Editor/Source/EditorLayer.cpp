@@ -1513,7 +1513,7 @@ namespace SmolEngine
 				m_Scene->GetActiveScene().DeleteAsset(texture2D->FileName);
 
 				texture2D->FileName = m_FileName;
-				texture2D->Texture = Texture2D::Create(m_FilePath);
+				texture2D->Texture = Texture::Create(m_FilePath);
 
 				m_Scene->GetActiveScene().AddAsset(m_FileName, m_FilePath);
 				ResetFileBrowser();

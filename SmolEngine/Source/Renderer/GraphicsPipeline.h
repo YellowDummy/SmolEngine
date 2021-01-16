@@ -24,11 +24,12 @@ namespace SmolEngine
 		VertexBufferCreateInfo* VertexBuffer = nullptr;
 		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
 
-		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
-		std::string PipelineName = "";
+		uint32_t Samplers = 10;
 		uint32_t DescriptorSets = 1;
-
+		std::string PipelineName = "";
+		Ref<Texture> SkyBox = nullptr;
 		bool IsAlphaBlendingEnabled = false;
+		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 	};
 
 	struct DynamicGraphicsPipelineCreateInfo
@@ -38,6 +39,8 @@ namespace SmolEngine
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 
 		uint32_t Stride = 0;
+		uint32_t Samplers = 10;
+		Ref<Texture> SkyBox = nullptr;
 		uint32_t DescriptorSets = 1;
 
 		std::string PipelineName = "";
@@ -125,7 +128,9 @@ namespace SmolEngine
 		}
 
 #endif
-		void Update2DTextures(const std::vector<Ref<Texture2D>>& textures, uint32_t descriptorSetIndex = 0);
+		bool Update2DTextures(const std::vector<Ref<Texture>>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
+
+		bool UpdateCubeMap(const Ref<Texture>& cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
 
 
 	private:

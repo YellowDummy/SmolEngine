@@ -18,6 +18,8 @@
 
 namespace SmolEngine
 {
+	static const uint32_t s_SamplersBindingPoint = 2;
+
 	struct Renderer2DStorage
 	{
 		static const uint32_t Light2DBufferMaxSize = 100;
@@ -33,7 +35,7 @@ namespace SmolEngine
 
 		/// Texture
 		
-		Ref<Texture2D> WhiteTexture = nullptr;
+		Ref<Texture> WhiteTexture = nullptr;
 
 		/// Light
 
@@ -157,7 +159,7 @@ namespace SmolEngine
 				continue;
 			}
 
-			s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
+			s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, s_SamplersBindingPoint,  layer.LayerIndex);
 		}
 #endif
 
@@ -190,7 +192,7 @@ namespace SmolEngine
 		UploadLightUniforms();
 
 		// Binding textures
-		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
+		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, s_SamplersBindingPoint, layer.LayerIndex);
 		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
 
 		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
@@ -285,7 +287,8 @@ namespace SmolEngine
 		}
 	}
 
-	void Renderer2D::SubmitSprite(const glm::vec3& worldPos, const uint32_t layerIndex, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture,
+	void Renderer2D::SubmitSprite(const glm::vec3& worldPos, const uint32_t layerIndex,
+		const glm::vec2& scale, const float rotation, const Ref<Texture>& texture,
 		const float repeatValue, const glm::vec4& tintColor)
 	{
 		constexpr size_t quadVertexCount = 4;
@@ -345,7 +348,8 @@ namespace SmolEngine
 		Stats->QuadCount++;
 	}
 
-	void Renderer2D::DrawUIText(const glm::vec3& pos, const glm::vec2& scale, const Ref<Texture2D> texture, const glm::vec4& tintColor)
+	void Renderer2D::DrawUIText(const glm::vec3& pos, const glm::vec2& scale,
+		const Ref<Texture> texture, const glm::vec4& tintColor)
 	{
 		
 	}
@@ -481,7 +485,9 @@ namespace SmolEngine
 		}
 	}
 
-	void Renderer2D::DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture2D>& texture, float repeatValue, const glm::vec4& tintColor)
+	void Renderer2D::DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, 
+		const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, 
+		const Ref<Texture>& texture, float repeatValue, const glm::vec4& tintColor)
 	{
 
 	}
@@ -510,7 +516,7 @@ namespace SmolEngine
 	void Renderer2D::CreateBatchData()
 	{
 		// Creating white texture
-		s_Data->WhiteTexture = Texture2D::CreateWhiteTexture();
+		s_Data->WhiteTexture = Texture::CreateWhiteTexture();
 
 		// Creating Layers
 		{
