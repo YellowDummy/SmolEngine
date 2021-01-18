@@ -4,6 +4,8 @@
 #include "Renderer/FramebufferSpecification.h"
 #include "Renderer/Vulkan/Vulkan.h"
 
+#include <glm/glm.hpp>
+
 namespace SmolEngine
 {
 	struct FrameBufferAttachment 
@@ -15,14 +17,10 @@ namespace SmolEngine
 
 	struct OffscreenPass
 	{
-		VkFramebuffer frameBuffer;
-		FrameBufferAttachment color, depth;
+		FrameBufferAttachment color, depth, resolve;
 
 		VkSampler sampler;
-		VkDescriptorImageInfo descriptor;
-		VkClearAttachment clearAttachments[2] = {};
-		VkRenderPass renderPass;
-		void* ImGuiTextureID = nullptr;
+		VkClearAttachment clearAttachments[3] = {};
 	};
 
 	class VulkanFramebuffer
@@ -55,15 +53,24 @@ namespace SmolEngine
 
 		const FramebufferSpecification& GetSpecification() const;
 
+		const VkFramebuffer GetCurrentVkFramebuffer() const;
+
 		const OffscreenPass& GetOffscreenPass() const;
 
 		void* GetImGuiTextureID() const;
 
 	private:
 
-		FramebufferSpecification m_Specification = {};
-		OffscreenPass m_OffscreenPass = {};
+		FramebufferSpecification              m_Specification = {};
+		OffscreenPass                         m_OffscreenPass = {};
+		std::vector<VkFramebuffer>            m_VkFrameBuffers;
+		void*                                 m_ImGuiTextureID = nullptr;
+		VkDevice                              m_Device = nullptr;
+		VkSampleCountFlagBits                 m_MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+
+	private:
 
 		friend class GraphicsPipeline;
+		friend class VulkanSwapchain;
 	};
 }

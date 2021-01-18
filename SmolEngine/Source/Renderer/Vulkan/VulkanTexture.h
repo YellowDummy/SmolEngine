@@ -21,6 +21,19 @@ namespace SmolEngine
 
 		void CreateCubeMap(const std::array<std::string, 6>& filePaths);
 
+		/// Static
+
+		static VkImage CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels,
+			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
+			VkImageUsageFlags usage,
+			VkDeviceMemory& imageMemory);
+
+		static void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps);
+
+		static void TransitionImageLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipMaps);
+
+		static void CopyBufferToImage(VkImage image, VkBuffer buffer, uint32_t width, uint32_t height);
+
 		/// Getters
 		
 		uint32_t GetHeight() const;
@@ -35,9 +48,9 @@ namespace SmolEngine
 
 	private:
 
-		void CreateTexture(uint32_t width, uint32_t height, void* data, TextureType type);
+		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data, TextureType type);
 
-		void CreateSamplerAndImageView(TextureType type);
+		void CreateSamplerAndImageView(TextureType type, uint32_t mipMaps);
 
 		VkImageViewType GetVkImageViewType(TextureType type);
 

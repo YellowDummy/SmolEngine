@@ -2,13 +2,9 @@
 #include "Core/Core.h"
 
 #ifdef  SMOLENGINE_OPENGL_IMPL
-
 #include "Renderer/OpenGL/OpenglContext.h"
-
 #else
-
 #include "Renderer/Vulkan/VulkanContext.h"
-
 #endif
 
 namespace SmolEngine 
@@ -17,21 +13,17 @@ namespace SmolEngine
 	{
 	public:
 
-		/// 
 		/// Main
-		/// 
 		
 		void OnResize(uint32_t width, uint32_t height);
 
-		void Setup(GLFWwindow* window);
+		void Setup(GLFWwindow* window, uint32_t* width, uint32_t* height);
 
 		void SwapBuffers();
 
 		void BeginFrame();
 
-		/// 
 		/// Getters
-		/// 
 
 #ifndef  SMOLENGINE_OPENGL_IMPL
 

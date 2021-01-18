@@ -9,7 +9,7 @@ namespace SmolEngine
 {
 	VulkanPipeline::VulkanPipeline()
 	{
-
+		m_Device = VulkanContext::GetDevice().GetLogicalDevice();
 	}
 
 	VulkanPipeline::~VulkanPipeline()
@@ -29,6 +29,9 @@ namespace SmolEngine
 		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.Skybox, pipelineSpec.DescriptorSets);
 		m_VulkanPipelineSpecification = pipelineSpec;
 		m_VulkanPipelineSpecification.Initialized = true;
+
+		pipelineSpec.IsTargetsSwapchain ? m_TargetRenderPass = VulkanContext::GetVkRenderPassSwapchainLayout() :
+			m_TargetRenderPass = VulkanContext::GetVkRenderPassFramebufferLayout();
 
 		m_SetLayout.clear();
 		m_SetLayout.reserve(m_Descriptors.size());
@@ -56,7 +59,6 @@ namespace SmolEngine
 	{
 		const auto& shader = m_VulkanPipelineSpecification.Shader;
 		const auto& swapchain = m_VulkanPipelineSpecification.TargetSwapchain;
-		const auto& device = m_VulkanPipelineSpecification.Device->GetLogicalDevice();
 
 		// Create the graphics pipeline
 		// Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
@@ -69,7 +71,7 @@ namespace SmolEngine
 			// The layout used for this pipeline (can be shared among multiple pipelines using the same layout)
 			pipelineCreateInfo.layout = m_PipelineLayout;
 			// Renderpass this pipeline is attached to
-			pipelineCreateInfo.renderPass = swapchain->GetRenderPass();
+			pipelineCreateInfo.renderPass = m_TargetRenderPass;
 		}
 
 		// Construct the different states making up the pipeline
@@ -148,10 +150,11 @@ namespace SmolEngine
 		depthStencilState.front = depthStencilState.back;
 
 		// Multi sampling state
-		// This example does not make use of multi sampling (for anti-aliasing), the state must still be set and passed to the pipeline
 		VkPipelineMultisampleStateCreateInfo multisampleState = {};
 		multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+		multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
+		multisampleState.sampleShadingEnable = VK_TRUE;
+		multisampleState.minSampleShading = 0.2f;
 		multisampleState.pSampleMask = nullptr;
 
 		// Vertex input descriptions
@@ -198,14 +201,14 @@ namespace SmolEngine
 		pipelineCreateInfo.pMultisampleState = &multisampleState;
 		pipelineCreateInfo.pViewportState = &viewportState;
 		pipelineCreateInfo.pDepthStencilState = &depthStencilState;
-		pipelineCreateInfo.renderPass = swapchain->GetRenderPass();
+		pipelineCreateInfo.renderPass = m_TargetRenderPass;
 		pipelineCreateInfo.pDynamicState = &dynamicState;
 
 		std::string name = std::string(m_FilePath + "_pipeline_" + std::to_string(m_PipelineCaches.size()) + ".cached");
 		bool is_loaded = CreateOrLoadCached(name, mode);
 
 		// Create rendering pipeline using the specified states
-		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCaches[mode], 1, &pipelineCreateInfo, nullptr, &m_Pipelines[mode]));
+		VK_CHECK_RESULT(vkCreateGraphicsPipelines(m_Device, m_PipelineCaches[mode], 1, &pipelineCreateInfo, nullptr, &m_Pipelines[mode]));
 		if (!is_loaded)
 		{
 			SaveCache(name, mode);
@@ -234,18 +237,17 @@ namespace SmolEngine
 
 	void VulkanPipeline::Destroy()
 	{
-		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 		for (auto& [key, cache] : m_PipelineCaches)
 		{
-			vkDestroyPipelineCache(device, cache, nullptr);
+			vkDestroyPipelineCache(m_Device, cache, nullptr);
 		}
 
 		for (auto& [key, pipeline] : m_Pipelines)
 		{
-			vkDestroyPipeline(device, pipeline, nullptr);
+			vkDestroyPipeline(m_Device, pipeline, nullptr);
 		}
 
-		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+		vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
 		m_Pipelines.clear();
 		m_PipelineCaches.clear();
 	}
@@ -293,7 +295,6 @@ namespace SmolEngine
 	bool VulkanPipeline::CreateOrLoadCached(const std::string& fileName, DrawMode mode)
 	{
 		VkPipelineCache cache = nullptr;
-		const auto& device = m_VulkanPipelineSpecification.Device->GetLogicalDevice();
 
 		FILE* f = fopen(fileName.c_str(), "rb");
 		if (f)
@@ -314,7 +315,7 @@ namespace SmolEngine
 					pipelineCacheCI.pInitialData = data;
 				}
 
-				VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &cache));
+				VK_CHECK_RESULT(vkCreatePipelineCache(m_Device, &pipelineCacheCI, nullptr, &cache));
 				m_PipelineCaches[mode] = cache;
 				free(data);
 				return true;
@@ -326,7 +327,7 @@ namespace SmolEngine
 			pipelineCacheCI.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 		}
 
-		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCI, nullptr, &cache));
+		VK_CHECK_RESULT(vkCreatePipelineCache(m_Device, &pipelineCacheCI, nullptr, &cache));
 		m_PipelineCaches[mode] = cache;
 		return false;
 	}
@@ -349,11 +350,10 @@ namespace SmolEngine
 	void VulkanPipeline::BuildDescriptors(VulkanShader* shader,
 		VulkanTexture* skybox, uint32_t DescriptorSets)
 	{
-		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
 		m_Descriptors.clear();
 		if (m_DescriptorPool != VK_NULL_HANDLE)
 		{
-			vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);
+			vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 		}
 
 		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes(2);
@@ -397,7 +397,7 @@ namespace SmolEngine
 			descriptorPoolInfo.pPoolSizes = DescriptorPoolSizes.data();
 			descriptorPoolInfo.maxSets = DescriptorSets;
 
-			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &m_DescriptorPool));
+			VK_CHECK_RESULT(vkCreateDescriptorPool(m_Device, &descriptorPoolInfo, nullptr, &m_DescriptorPool));
 		}
 
 		m_Descriptors.resize(DescriptorSets);

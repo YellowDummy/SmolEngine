@@ -63,6 +63,8 @@ namespace SmolEngine
 		std::vector<VkDescriptorSetLayout> m_SetLayout;
 
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+		VkRenderPass m_TargetRenderPass = nullptr;
+		VkDevice m_Device = nullptr;
 
 		std::unordered_map<DrawMode, VkPipelineCache> m_PipelineCaches;
 		std::unordered_map<DrawMode, VkPipeline> m_Pipelines;

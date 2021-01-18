@@ -16,9 +16,7 @@ namespace SmolEngine
 
 		~Framebuffer() = default;
 
-		/// 
 		/// Binding
-		/// 
 
 		void Bind();
 
@@ -26,15 +24,11 @@ namespace SmolEngine
 
 		void UnBind();
 
-		/// 
 		/// Events
-		/// 
 
 		void OnResize(const uint32_t width, const uint32_t height);
 
-		///
 		///  Getters
-		/// 
 
 		const FramebufferSpecification& GetSpecification() const;
 
@@ -49,9 +43,7 @@ namespace SmolEngine
 		VulkanFramebuffer& GetVulkanFramebuffer() { return m_VulkanFrameBuffer; }
 #endif
 
-		/// 
 		/// Factory
-		/// 
 
 		static Ref<Framebuffer> Create(const FramebufferSpecification& data);
 

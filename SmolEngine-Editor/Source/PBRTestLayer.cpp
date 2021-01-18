@@ -20,12 +20,11 @@ namespace SmolEngine
 	void PBRTestLayer::OnAttach()
 	{
 		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
-		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, aspectRatio, 0.01f, 1000.0f);
+		EditorCameraCreateInfo cameraCI = {};
+		cameraCI.IsFramebufferTargetsSwapchain = true;
+		m_EditorCamera = std::make_shared<EditorCamera>(&cameraCI);
 
-		FramebufferSpecification framebufferCI = {};
-		framebufferCI.Width = VulkanContext::GetSwapchain().GetWidth();
-		framebufferCI.Height = VulkanContext::GetSwapchain().GetHeight();
-		m_FrameBuffer = Framebuffer::Create(framebufferCI);
+		m_FrameBuffer = m_EditorCamera->GetFramebuffer();
 
 		m_Tetxure1 = Texture::Create("../Resources/AK_103_Base_Color.png");
 		m_Tetxure2 = Texture::Create("../Resources/AK_103_Metallic.png");
@@ -60,6 +59,7 @@ namespace SmolEngine
 			DynamicPipelineCI.PipelineName = "PBR_TEST";
 			DynamicPipelineCI.Stride = m_TestMesh->m_Stride;
 			DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+			DynamicPipelineCI.IsTargetsSwapchain = true;
 			//DynamicPipelineCI.SkyBox = cubeMap;
 		}
 
@@ -104,9 +104,10 @@ namespace SmolEngine
 
 	void PBRTestLayer::OnImGuiRender()
 	{
+		rot.y += 0.0005f;
+
 		ImGui::Begin("Shader Settings");
 		{
-			rot.y += 0.0005f;
 
 			//ImGui::NewLine();
 			//ImGui::ColorPicker4("Add Color", glm::value_ptr(m_AddColor));
@@ -134,10 +135,12 @@ namespace SmolEngine
 			ImGui::ColorPicker4("LightColor_2", glm::value_ptr(m_Light2.Color));
 			ImGui::InputFloat4("Position_2", glm::value_ptr(m_Light2.Pos));
 			ImGui::InputFloat("Intensity_2", &m_Light2.intensity);
-
-			//ImGui::Image(m_FrameBuffer->GetImGuiTextureID(), ImVec2{ 200, 200 });
 		}
 		ImGui::End();
+
+		//ImGui::Begin("GameView");
+		//ImGui::Image(m_FrameBuffer->GetImGuiTextureID(), ImVec2{ 200, 200 });
+		//ImGui::End();
 	}
 
 	void PBRTestLayer::BuildTestCommandBuffer()
@@ -162,7 +165,7 @@ namespace SmolEngine
 
 		m_Pipeline->SumbitUniformBuffer(10, sizeof(data), &data);
 
-		m_Pipeline->BeginRenderPass();
+		m_Pipeline->BeginRenderPass(m_FrameBuffer);
 		{
 			glm::mat4 trans;
 			CommandSystem::ComposeTransform(pos, rot, scale, true, trans);

@@ -28,6 +28,8 @@ namespace SmolEngine
 
 		const VkPhysicalDeviceFeatures* const GetDeviceFeatures() const;
 
+		const VkSampleCountFlagBits GetMSAASamplesCount() const;
+
 		const VkPhysicalDevice const GetPhysicalDevice() const;
 
 		const VkDevice const GetLogicalDevice() const;
@@ -48,6 +50,8 @@ namespace SmolEngine
 
 		bool GetFamilyQueue(const VkPhysicalDevice& device, VkQueueFlags flags, uint32_t& outQueueIndex);
 
+		void FindMaxUsableSampleCount();
+
 	private:
 
 		VkPhysicalDevice                   m_VkPhysicalDevice = VK_NULL_HANDLE;
@@ -58,6 +62,7 @@ namespace SmolEngine
 		VkQueue                            m_Queue = nullptr;
 
 		uint32_t                           m_DeviceQueueFamilyIndex = 0;
+		VkSampleCountFlagBits              m_MSAASamplesCount = VK_SAMPLE_COUNT_2_BIT;
 		std::vector<const char*>           m_ExtensionsList;
 
 		friend class VulkanRendererAPI;

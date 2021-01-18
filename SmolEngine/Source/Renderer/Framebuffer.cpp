@@ -46,7 +46,7 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_OpenglFramebuffer.OnResize(width, height);
 #else
-		m_VulkanFrameBuffer.OnResize(width, height);
+		m_VulkanFrameBuffer.OnResize(height, width);
 #endif
 	}
 

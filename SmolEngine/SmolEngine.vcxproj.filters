@@ -94,6 +94,9 @@
     <Filter Include="Source\UI">
       <UniqueIdentifier>{C3068266-2F71-36DD-78AF-E782E4581432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Utils">
+      <UniqueIdentifier>{369510F3-22F8-9F97-CB7D-D84DB7BF6B1A}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\glm\glm\common.hpp">
@@ -1419,6 +1422,9 @@
     <ClInclude Include="Source\Renderer\Camera.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Renderer\EditorCamera.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Renderer\Framebuffer.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
@@ -1429,6 +1435,9 @@
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\GraphicsPipeline.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Mesh.h">
@@ -1482,6 +1491,9 @@
     <ClInclude Include="Source\Renderer\Texture.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Renderer\TextureTypes.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Renderer\TexturesPool.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
@@ -1498,6 +1510,9 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanContext.h">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanDevice.h">
@@ -1539,9 +1554,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSwapchain.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanSwapchainFramebuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanTexture.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1572,16 +1584,12 @@
     <ClInclude Include="Source\UI\UITextLabel.h">
       <Filter>Source\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Utils\FBXImporter.h">
+      <Filter>Source\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utils\FBXImporter.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\EditorCamera.h" />
-    <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h" />
-    <ClInclude Include="Source\Renderer\TextureTypes.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1776,6 +1784,9 @@
     <ClCompile Include="Source\Renderer\Camera.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Renderer\EditorCamera.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Renderer\Framebuffer.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
@@ -1845,6 +1856,9 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanContext.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanDevice.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1878,9 +1892,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSwapchain.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanSwapchainFramebuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanTexture.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1902,13 +1913,11 @@
     <ClCompile Include="Source\UI\UITextLabel.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utils\FBXImporter.cpp">
+      <Filter>Source\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utils\FBXImporter.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\EditorCamera.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp" />
   </ItemGroup>
 </Project>

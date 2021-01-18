@@ -29,10 +29,7 @@ namespace SmolEngine
 
 		Application();
 
-
-		/// 
 		/// Main
-		/// 
 
 		void OnEvent(Event& event);
 
@@ -42,15 +39,7 @@ namespace SmolEngine
 
 		void RunApp();
 
-		/// 
-		/// Overrides
-		/// 
-
-		virtual void ClientInit() = 0;
-
-		/// 
 		/// Layers
-		/// 
 
 		void PushOverlay(Layer* layer);
 
@@ -58,19 +47,21 @@ namespace SmolEngine
 
 		void PopLayer();
 
-		/// 
 		/// Callbacks
-		/// 
 
 		bool OnWindowResize(Event& e);
 
 		bool OnWindowClose(Event& e);
 
-		/// 
+		/// Overrides
+
+		virtual void ClientInit() = 0;
+
 		/// Getters
-		/// 
 
 		static Application& GetApplication() { return *s_Instance; }
+
+		void GetAppName(std::string& outName);
 
 		Window& GetWindow() { return *m_Window; }
 
@@ -81,23 +72,17 @@ namespace SmolEngine
 	protected:
 
 		ImGuiLayer* m_ImGuiLayer;
-
+		UIText* m_UIText = nullptr;
 
 		Ref<LayerManager> m_LayerHandler = nullptr;
-
 		Ref<EventHandler> m_EventHandler = nullptr;
-
 		Ref<Window> m_Window = nullptr;
-
-
-		UIText* m_UIText = nullptr;
 
 	private:
 
 		static Application* s_Instance;
-
-		bool m_Running, m_WindowMinimized;
-
+		bool m_Running;
+		bool m_WindowMinimized;
 		float m_LastFrameTime;
 	};
 

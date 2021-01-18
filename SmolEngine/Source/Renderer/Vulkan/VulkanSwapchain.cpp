@@ -7,6 +7,7 @@
 #include "Renderer/Vulkan/VulkanCommandBuffer.h"
 #include "Renderer/Vulkan/VulkanCommandPool.h"
 #include "Renderer/Vulkan/VulkanMemoryAllocator.h"
+#include "Renderer/Vulkan/VulkanTexture.h"
 
 #include <GLFW/glfw3.h>
 
@@ -29,7 +30,13 @@ namespace SmolEngine
 
     VulkanSwapchain::~VulkanSwapchain()
     {
+		//CleanUp();
+		//FreeResources();
 
+		//if (m_RenderPass != VK_NULL_HANDLE)
+		//{
+		//	vkDestroyRenderPass(m_Device->GetLogicalDevice(), m_RenderPass, nullptr);
+		//}
     }
 
     bool VulkanSwapchain::Init(VulkanInstance* instance, VulkanDevice* device, GLFWwindow* window)
@@ -37,29 +44,28 @@ namespace SmolEngine
         m_Instance = instance;
 		m_Device = device;
 
-        fpGetPhysicalDeviceSurfaceSupportKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceSupportKHR"));
-        fpGetPhysicalDeviceSurfaceCapabilitiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"));
-        fpGetPhysicalDeviceSurfaceFormatsKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceFormatsKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfaceFormatsKHR"));
-        fpGetPhysicalDeviceSurfacePresentModesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>(vkGetInstanceProcAddr(m_Instance->GetInstance(), "vkGetPhysicalDeviceSurfacePresentModesKHR"));
+		GetPtrs();
+		FindDepthStencilFormat();
+		if (InitSurface(window) == VK_SUCCESS)
+		{
+			return CreateRenderPass() == VK_SUCCESS;
+		}
 
-        fpCreateSwapchainKHR = reinterpret_cast<PFN_vkCreateSwapchainKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkCreateSwapchainKHR"));
-        fpDestroySwapchainKHR = reinterpret_cast<PFN_vkDestroySwapchainKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkDestroySwapchainKHR"));
-        fpGetSwapchainImagesKHR = reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkGetSwapchainImagesKHR"));
-        fpAcquireNextImageKHR = reinterpret_cast<PFN_vkAcquireNextImageKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkAcquireNextImageKHR"));
-        fpQueuePresentKHR = reinterpret_cast<PFN_vkQueuePresentKHR>(vkGetDeviceProcAddr(m_Device->GetLogicalDevice(), "vkQueuePresentKHR"));
-
-		return InitSurface(window) == VK_SUCCESS;
+		return false;
     }
 
-	bool VulkanSwapchain::Prepare()
+	bool VulkanSwapchain::Prepare(uint32_t width, uint32_t height)
 	{
-		VkResult result = VK_ERROR_UNKNOWN;
+		FreeResources();
+		if (CreateDepthStencil() == VK_SUCCESS)
+		{
+			if (CreateFramebuffers(width, height) == VK_SUCCESS)
+			{
+				return true;
+			}
+		}
 
-		result = CreateDepthStencil();
-		result = CreateRenderPass();
-		result = CreateFramebuffer(m_Width, m_Height);
-
-		return result == VK_SUCCESS;
+		return false;
 	}
 
 	void VulkanSwapchain::Create(uint32_t* width, uint32_t* height, bool vSync)
@@ -256,15 +262,11 @@ namespace SmolEngine
 		vkDeviceWaitIdle(device);
 
 		{
-			Create(&width, &height);
+			uint32_t w_width = width;
+			uint32_t w_height = height;
 
-			vkDestroyImageView(device, m_DepthStencil.ImageView, nullptr);
-			vkDestroyImage(device, m_DepthStencil.Image, nullptr);
-			vkFreeMemory(device, m_DepthStencil.DeviceMemory, nullptr);
-
-			m_Framebuffer.Clear();
-
-			Prepare();
+			Create(&w_width, &w_height);
+			Prepare(w_width, w_height);
 
 			assert(commandBuffer->Recrate() == true);
 		}
@@ -308,7 +310,7 @@ namespace SmolEngine
 		clearRect.rect.extent = { m_Width,
 			m_Height };
 
-		vkCmdClearAttachments(cmdBuffer, 2, m_Framebuffer.m_ClearAttachments, 1, &clearRect);
+		vkCmdClearAttachments(cmdBuffer, 2, m_ClearAttachments, 1, &clearRect);
 	}
 
 	VkResult VulkanSwapchain::AcquireNextImage(VkSemaphore presentCompleteSemaphore)
@@ -367,59 +369,9 @@ namespace SmolEngine
 		return result;
     }
 
-	const VulkanSwapchainFramebuffer& VulkanSwapchain::GetSwapchainFramebuffer() const
-	{
-		return m_Framebuffer;
-	}
-
-	const VkRenderPass VulkanSwapchain::GetRenderPass() const
-	{
-		return m_RenderPass;
-	}
-
-	uint32_t VulkanSwapchain::GetWidth() const
-	{
-		return m_Width;
-	}
-
-	const VkSurfaceKHR VulkanSwapchain::GetVkSurface() const
-	{
-		return m_Surface;
-	}
-
-	const VkFormat& VulkanSwapchain::GetColorFormat() const
-	{
-		return m_ColorFormat;
-	}
-
-	const VkSwapchainKHR& VulkanSwapchain::GetVkSwapchain() const
-	{
-		return m_Swapchain;
-	}
-
-	uint32_t VulkanSwapchain::GetCurrentBufferIndex() const
-	{
-		return m_CurrentBufferIndex;
-	}
-
-	uint32_t& VulkanSwapchain::GetCurrentBufferIndexRef()
-	{
-		return m_CurrentBufferIndex;
-	}
-
-	uint32_t VulkanSwapchain::GetHeight() const
-	{
-		return m_Height;
-	}
-
-	VkResult VulkanSwapchain::CreateFramebuffer(uint32_t width, uint32_t height)
-	{
-		m_Framebuffer = {};
-		return m_Framebuffer.Init(this, width, height);
-	}
-
 	VkResult VulkanSwapchain::CreateRenderPass()
 	{
+		VkResult result = VK_ERROR_UNKNOWN;
 		std::array<VkAttachmentDescription, 2> attachments = {};
 
 		// color attachment
@@ -434,7 +386,6 @@ namespace SmolEngine
 			attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 		}
 
-
 		// depth attachment
 		{
 			attachments[1].format = m_DepthBufferFormat;
@@ -447,17 +398,8 @@ namespace SmolEngine
 			attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		}
 
-		VkAttachmentReference colorRef = {};
-		{
-			colorRef.attachment = 0;
-			colorRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		}
-
-		VkAttachmentReference depthRef = {};
-		{
-			depthRef.attachment = 1;
-			depthRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-		}
+		VkAttachmentReference colorRef = { 0 , VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
+		VkAttachmentReference depthRef = {1, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
 
 		VkSubpassDescription subpassDes = {};
 		{
@@ -493,8 +435,6 @@ namespace SmolEngine
 			renderPassCI.pDependencies = &subpassDependency;
 		}
 
-		VkResult result = VK_ERROR_UNKNOWN;
-
 		result = vkCreateRenderPass(m_Device->GetLogicalDevice(), &renderPassCI, nullptr, &m_RenderPass);
 		VK_CHECK_RESULT(result);
 
@@ -511,99 +451,119 @@ namespace SmolEngine
 
 	VkResult VulkanSwapchain::CreateDepthStencil()
 	{
-		if (m_Device == nullptr || m_Instance == nullptr)
-		{
-			NATIVE_ERROR("VulkanDevice or VulkanInstance is nullptr");
-			assert(m_Device != nullptr || m_Instance != nullptr);
-			return VK_ERROR_UNKNOWN;
-		}
-
 		VkResult result = VK_ERROR_UNKNOWN;
-		std::vector<VkFormat> depthFormats =
+		m_DepthStencil = {};
+
+		m_DepthStencil.Image = VulkanTexture::CreateImage(m_Width, m_Height,
+			1,
+			VK_SAMPLE_COUNT_1_BIT,
+			m_DepthBufferFormat,
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, m_DepthStencil.DeviceMemory);
+
+		VkImageViewCreateInfo depthStencilViewCI = {};
 		{
-			VK_FORMAT_D32_SFLOAT_S8_UINT,
-			VK_FORMAT_D32_SFLOAT,
-			VK_FORMAT_D24_UNORM_S8_UINT,
-			VK_FORMAT_D16_UNORM_S8_UINT,
-			VK_FORMAT_D16_UNORM
-		};
+			depthStencilViewCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			depthStencilViewCI.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			depthStencilViewCI.format = m_DepthBufferFormat;
+			depthStencilViewCI.flags = 0;
+			depthStencilViewCI.subresourceRange = {};
+			depthStencilViewCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			depthStencilViewCI.subresourceRange.baseMipLevel = 0;
+			depthStencilViewCI.subresourceRange.levelCount = 1;
+			depthStencilViewCI.subresourceRange.baseArrayLayer = 0;
+			depthStencilViewCI.subresourceRange.layerCount = 1;
+			depthStencilViewCI.image = m_DepthStencil.Image;
+			depthStencilViewCI.components.r = VK_COMPONENT_SWIZZLE_R;
+			depthStencilViewCI.components.g = VK_COMPONENT_SWIZZLE_G;
+			depthStencilViewCI.components.b = VK_COMPONENT_SWIZZLE_B;
+			depthStencilViewCI.components.a = VK_COMPONENT_SWIZZLE_A;
 
-		//TODO: Move to VulkanDevice
+			result = vkCreateImageView(m_Device->GetLogicalDevice(), &depthStencilViewCI, nullptr, &m_DepthStencil.ImageView);
+			VK_CHECK_RESULT(result);
+		}
 
-		bool formatFound = false;
-		for (auto& format : depthFormats)
+		return result;
+	}
+
+	void VulkanSwapchain::GetPtrs()
+	{
+		fpGetPhysicalDeviceSurfaceSupportKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>
+			(vkGetInstanceProcAddr(m_Instance->GetInstance(),
+			"vkGetPhysicalDeviceSurfaceSupportKHR"));
+
+		fpGetPhysicalDeviceSurfaceCapabilitiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>
+			(vkGetInstanceProcAddr(m_Instance->GetInstance(),
+			"vkGetPhysicalDeviceSurfaceCapabilitiesKHR"));
+
+		fpGetPhysicalDeviceSurfaceFormatsKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceFormatsKHR>
+			(vkGetInstanceProcAddr(m_Instance->GetInstance(),
+			"vkGetPhysicalDeviceSurfaceFormatsKHR"));
+
+		fpGetPhysicalDeviceSurfacePresentModesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>
+			(vkGetInstanceProcAddr(m_Instance->GetInstance(),
+			"vkGetPhysicalDeviceSurfacePresentModesKHR"));
+
+		fpCreateSwapchainKHR = reinterpret_cast<PFN_vkCreateSwapchainKHR>(vkGetDeviceProcAddr
+		(m_Device->GetLogicalDevice(),
+			"vkCreateSwapchainKHR"));
+
+		fpDestroySwapchainKHR = reinterpret_cast<PFN_vkDestroySwapchainKHR>(vkGetDeviceProcAddr
+		(m_Device->GetLogicalDevice(),
+			"vkDestroySwapchainKHR"));
+
+		fpGetSwapchainImagesKHR = reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(vkGetDeviceProcAddr
+		(m_Device->GetLogicalDevice(),
+			"vkGetSwapchainImagesKHR"));
+
+		fpAcquireNextImageKHR = reinterpret_cast<PFN_vkAcquireNextImageKHR>(vkGetDeviceProcAddr
+		(m_Device->GetLogicalDevice(),
+			"vkAcquireNextImageKHR"));
+
+		fpQueuePresentKHR = reinterpret_cast<PFN_vkQueuePresentKHR>(vkGetDeviceProcAddr
+		(m_Device->GetLogicalDevice(),
+			"vkQueuePresentKHR"));
+	}
+
+	VkResult VulkanSwapchain::CreateFramebuffers(uint32_t width, uint32_t height)
+	{
+		VkResult result = VK_ERROR_UNKNOWN;
+		VkImageView ivAttachment[2];
+		// Depth attachment is the same for all framebuffers
+		ivAttachment[1] = m_DepthStencil.ImageView;
+
+		VkFramebufferCreateInfo framebufferCI = {};
 		{
-			VkFormatProperties formatProbs;
-			vkGetPhysicalDeviceFormatProperties(m_Device->GetPhysicalDevice(), format, &formatProbs);
+			framebufferCI.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+			framebufferCI.pNext = NULL;
+			framebufferCI.renderPass = m_RenderPass;
+			framebufferCI.attachmentCount = 2;
+			framebufferCI.pAttachments = ivAttachment;
+			framebufferCI.width = width;
+			framebufferCI.height = height;
+			framebufferCI.layers = 1;
+		}
 
-			if (formatProbs.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+		// Create framebuffer for every swapchain image
+		m_Framebuffers.resize(m_ImageCount);
+		for (uint32_t i = 0; i < m_Framebuffers.size(); ++i)
+		{
+			ivAttachment[0] = m_Buffers[i].View;
+			result = (vkCreateFramebuffer(m_Device->GetLogicalDevice(), &framebufferCI, nullptr, &m_Framebuffers[i]));
+			VK_CHECK_RESULT(result);
+
+			if (result != VK_SUCCESS)
 			{
-				m_DepthBufferFormat = format;
-				formatFound = true;
-				break;
+				NATIVE_ERROR("VulkanFramebuffer::Create: Failed to create framebuffer object!");
 			}
 		}
 
-		if (formatFound == false)
-		{
-			NATIVE_ERROR("VulkanSwapchain::CreateDepthStencil: DepthBufferFormat is not found!");
-			assert(formatFound == true);
+		m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+		m_ClearAttachments[0].colorAttachment = 0;
 
-			abort();
-		}
-
-		VkImageCreateInfo imageCI = {};
-		{
-			imageCI.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-			imageCI.imageType = VK_IMAGE_TYPE_2D;
-			imageCI.format = m_DepthBufferFormat;
-			imageCI.extent = { m_Width, m_Height, 1 };
-			imageCI.mipLevels = 1;
-			imageCI.arrayLayers = 1;
-			imageCI.samples = VK_SAMPLE_COUNT_1_BIT;
-			imageCI.tiling = VK_IMAGE_TILING_OPTIMAL;
-			imageCI.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-
-			result = vkCreateImage(m_Device->GetLogicalDevice(), &imageCI, nullptr, &m_DepthStencil.Image);
-			VK_CHECK_RESULT(result);
-
-			VkMemoryRequirements memReqs{};
-			vkGetImageMemoryRequirements(m_Device->GetLogicalDevice(), m_DepthStencil.Image, &memReqs);
-
-			VkMemoryAllocateInfo memAllloc{};
-			{
-				memAllloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-				memAllloc.allocationSize = memReqs.size;
-				memAllloc.memoryTypeIndex = m_Device->GetMemoryTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-			}
-
-			result = vkAllocateMemory(m_Device->GetLogicalDevice(), &memAllloc, nullptr, &m_DepthStencil.DeviceMemory);
-			VK_CHECK_RESULT(result);
-
-			result = vkBindImageMemory(m_Device->GetLogicalDevice(), m_DepthStencil.Image, m_DepthStencil.DeviceMemory, 0);
-			VK_CHECK_RESULT(result);
-		}
-
-		VkImageViewCreateInfo imageViewCI = {};
-		{
-			imageViewCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			imageViewCI.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			imageViewCI.image = m_DepthStencil.Image;
-			imageViewCI.format = m_DepthBufferFormat;
-			imageViewCI.subresourceRange.baseMipLevel = 0;
-			imageViewCI.subresourceRange.levelCount = 1;
-			imageViewCI.subresourceRange.baseArrayLayer = 0;
-			imageViewCI.subresourceRange.layerCount = 1;
-			imageViewCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-
-			if (m_DepthBufferFormat >= VK_FORMAT_D16_UNORM_S8_UINT)
-			{
-				imageViewCI.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
-			}
-
-			result = vkCreateImageView(m_Device->GetLogicalDevice(), &imageViewCI, nullptr, &m_DepthStencil.ImageView);
-			VK_CHECK_RESULT(result);
-		}
+		m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+		m_ClearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
 
 		return result;
 	}
@@ -650,5 +610,104 @@ namespace SmolEngine
 			}
 		}
 	}
+
+	void VulkanSwapchain::FindDepthStencilFormat()
+	{
+		VkResult result = VK_ERROR_UNKNOWN;
+		std::vector<VkFormat> depthFormats =
+		{
+			VK_FORMAT_D32_SFLOAT_S8_UINT,
+			VK_FORMAT_D32_SFLOAT,
+			VK_FORMAT_D24_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM
+		};
+
+		bool formatFound = false;
+		for (auto& format : depthFormats)
+		{
+			VkFormatProperties formatProbs;
+			vkGetPhysicalDeviceFormatProperties(m_Device->GetPhysicalDevice(), format, &formatProbs);
+
+			if (formatProbs.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+			{
+				m_DepthBufferFormat = format;
+				formatFound = true;
+				break;
+			}
+		}
+
+		if (!formatFound)
+		{
+			NATIVE_ERROR("Depth Stencil Format not found!"); 
+			abort();
+		}
+	}
+
+	void VulkanSwapchain::FreeResources()
+	{
+		if (m_DepthStencil.Image != VK_NULL_HANDLE)
+			vkDestroyImage(m_Device->GetLogicalDevice(), m_DepthStencil.Image, nullptr);
+
+		if (m_DepthStencil.ImageView != VK_NULL_HANDLE)
+			vkDestroyImageView(m_Device->GetLogicalDevice(), m_DepthStencil.ImageView, nullptr);
+
+		if (m_DepthStencil.DeviceMemory != VK_NULL_HANDLE)
+			vkFreeMemory(m_Device->GetLogicalDevice(), m_DepthStencil.DeviceMemory, nullptr);
+
+		for (auto& framebuffer : m_Framebuffers)
+		{
+			if (framebuffer != VK_NULL_HANDLE)
+			{
+				vkDestroyFramebuffer(m_Device->GetLogicalDevice(), framebuffer, nullptr);
+			}
+		}
+	}
+
+	uint32_t VulkanSwapchain::GetWidth() const
+	{
+		return m_Width;
+	}
+
+	const VkSurfaceKHR VulkanSwapchain::GetVkSurface() const
+	{
+		return m_Surface;
+	}
+
+	const VkFormat& VulkanSwapchain::GetColorFormat() const
+	{
+		return m_ColorFormat;
+	}
+
+	const VkSwapchainKHR& VulkanSwapchain::GetVkSwapchain() const
+	{
+		return m_Swapchain;
+	}
+
+	const VkFramebuffer VulkanSwapchain::GetCurrentFramebuffer() const
+	{
+		return m_Framebuffers[m_CurrentBufferIndex];
+	}
+
+	const VkRenderPass VulkanSwapchain::GetVkRenderPass() const
+	{
+		return m_RenderPass;
+	}
+
+	uint32_t VulkanSwapchain::GetCurrentBufferIndex() const
+	{
+		return m_CurrentBufferIndex;
+	}
+
+	uint32_t& VulkanSwapchain::GetCurrentBufferIndexRef()
+	{
+		return m_CurrentBufferIndex;
+	}
+
+	uint32_t VulkanSwapchain::GetHeight() const
+	{
+		return m_Height;
+	}
+
 
 }

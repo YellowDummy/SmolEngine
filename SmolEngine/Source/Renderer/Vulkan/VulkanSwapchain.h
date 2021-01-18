@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 
 #include "Renderer/Vulkan/Vulkan.h"
-#include "Renderer/Vulkan/VulkanSwapchainFramebuffer.h"
+#include "Renderer/Vulkan/VulkanFramebuffer.h"
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -40,7 +40,7 @@ namespace SmolEngine
 
 		bool Init(VulkanInstance* instance, VulkanDevice* device, GLFWwindow* window);
 
-		bool Prepare();
+		bool Prepare(uint32_t width, uint32_t height);
 
 		void Create(uint32_t* width, uint32_t* height, bool vSync = false);
 
@@ -56,9 +56,9 @@ namespace SmolEngine
 
 		/// Getters
 
-		const VulkanSwapchainFramebuffer& GetSwapchainFramebuffer() const;
+		const VkFramebuffer GetCurrentFramebuffer() const;
 
-		const VkRenderPass GetRenderPass() const;
+		const VkRenderPass GetVkRenderPass() const;
 
 		uint32_t GetCurrentBufferIndex() const;
 
@@ -76,29 +76,36 @@ namespace SmolEngine
 
 	private:
 
-		VkResult CreateFramebuffer(uint32_t width, uint32_t height);
+		VkResult CreateFramebuffers(uint32_t width, uint32_t height);
 
 		VkResult InitSurface(GLFWwindow* window);
 
-		VkResult CreateDepthStencil();
-
 		VkResult CreateRenderPass();
 
+		VkResult CreateDepthStencil();
+
+		void GetPtrs();
+
 		void FindColorSpaceFormat();
+
+		void FindDepthStencilFormat();
+
+		void FreeResources();
 
 	private:
 
 		std::vector<VkImage> m_Images;
+		std::vector<VkFramebuffer> m_Framebuffers;
 		std::vector<SwapchainBuffer> m_Buffers;
 
-		VulkanSwapchainFramebuffer m_Framebuffer = {};
 		DepthStencil m_DepthStencil = {};
-
-		VkRenderPass m_RenderPass = VK_NULL_HANDLE;
+		VkClearAttachment m_ClearAttachments[2] = {};
 
 		VkFormat m_ColorFormat = VK_FORMAT_B8G8R8A8_UNORM;
 		VkFormat m_DepthBufferFormat = VK_FORMAT_B8G8R8A8_UNORM;
 		VkColorSpaceKHR m_ColorSpace = VkColorSpaceKHR::VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+
+		VkRenderPass m_RenderPass = nullptr;
 
 		VkSwapchainKHR m_Swapchain = nullptr;
 		VkPipelineCache m_PipelineCash = nullptr;
@@ -120,6 +127,7 @@ namespace SmolEngine
 	private:
 
 		friend class VulkanCommandBuffer;
+		friend class VulkanFramebuffer;
 		friend class VulkanSwapchainFramebuffer;
 	};
 }

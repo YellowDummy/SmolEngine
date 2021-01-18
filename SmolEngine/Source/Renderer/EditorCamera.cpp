@@ -11,20 +11,25 @@
 
 namespace SmolEngine
 {
-	EditorCamera::EditorCamera(float fov, float aspectRation, float nearClip, float farClip)
-		:
-		m_FOV(fov),
-		m_AspectRatio(aspectRation),
-		m_NearClip(nearClip),
-		m_FarClip(farClip)
+	EditorCamera::EditorCamera(EditorCameraCreateInfo* createInfo)
+
 	{
+		if (createInfo)
+		{
+			m_FOV = createInfo->FOV;
+			m_AspectRatio = createInfo->AspectRation;
+			m_NearClip = createInfo->NearClip;
+			m_FarClip = createInfo->FarClip;
+		}
+
 		FramebufferSpecification spec;
+		spec.IsTargetsSwapchain = createInfo ? createInfo->IsFramebufferTargetsSwapchain: false;
 		spec.Width = Application::GetApplication().GetWindowWidth();
 		spec.Height = Application::GetApplication().GetWindowHeight();
 		m_FrameBuffer = Framebuffer::Create(spec);
 
 		//m_Projection = glm::ortho(-aspectRation * m_Distance, aspectRation * m_Distance, -m_Distance, m_Distance);
-		m_Projection = glm::perspective(glm::radians(fov), aspectRation, nearClip, farClip);
+		m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
 		UpdateView();
 	}
 
@@ -168,6 +173,8 @@ namespace SmolEngine
 	bool EditorCamera::OnResize(Event& e)
 	{
 		auto& res_e = static_cast<WindowResizeEvent&>(e);
+
+
 		m_FrameBuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());
 		return false;
 	}

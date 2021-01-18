@@ -58,7 +58,7 @@ namespace SmolEngine
 	void EditorLayer::OnAttach()
 	{
 		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
-		m_Camera = std::make_shared<EditorCamera>(45.0f, aspectRatio, 0.01f, 1000.0f);
+		m_Camera = std::make_shared<EditorCamera>();
 		m_Camera->SetCameraType(CameraType::Ortho);
 
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();

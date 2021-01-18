@@ -1,11 +1,22 @@
 #include "stdafx.h"
 #include "VulkanContext.h"
+#include "Core/Application.h"
 
 #include <GLFW/glfw3.h>
 #include <../Libraries/imgui/examples/imgui_impl_vulkan.h>
 
 namespace SmolEngine
 {
+	VulkanContext::~VulkanContext()
+	{
+		m_Swapchain.~VulkanSwapchain();
+		m_CommandBuffer.~VulkanCommandBuffer();
+		m_CommandPool.~VulkanCommandPool();
+		m_Semaphore.~VulkanSemaphore();
+		m_Instance.~VulkanInstance();
+		m_Device.~VulkanDevice();
+	}
+
 	void VulkanContext::OnResize(uint32_t width, uint32_t height)
 	{
 		if (m_IsInitialized == false)
@@ -16,7 +27,7 @@ namespace SmolEngine
 		m_Swapchain.OnResize(width, height, &m_CommandBuffer);
 	}
 
-	void VulkanContext::Setup(GLFWwindow* window)
+	void VulkanContext::Setup(GLFWwindow* window, uint32_t* width, uint32_t* height)
 	{
 		assert(glfwVulkanSupported() == GLFW_TRUE);
 
@@ -33,14 +44,16 @@ namespace SmolEngine
 			swapchain_initialized = m_Swapchain.Init(&m_Instance, &m_Device, window);
 			if (swapchain_initialized)
 			{
-				uint32_t width = 1280, height = 720;
-				m_Swapchain.Create(&width, &height);
+				m_MSAARenderPassFramebuffer = CreateRenderPass(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+				m_MSAARenderPassSwapchain = CreateRenderPass(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+
+				m_Swapchain.Create(width, height);
 
 				m_CommandBuffer.Init(&m_Device, &m_CommandPool, &m_Swapchain);
 
 				m_Semaphore.Init(&m_Device, &m_CommandBuffer);
 
-				m_Swapchain.Prepare();
+				m_Swapchain.Prepare(*width, *height);
 			}
 		}
 
@@ -73,10 +86,9 @@ namespace SmolEngine
 
 		// Clear Pass
 		{
-			auto& framebuffers = VulkanContext::GetSwapchain().GetSwapchainFramebuffer().GetVkFramebuffers();
-			uint32_t width = VulkanContext::GetSwapchain().GetWidth();
-			uint32_t height = VulkanContext::GetSwapchain().GetHeight();
-			uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
+			auto framebuffer = m_Swapchain.GetCurrentFramebuffer();
+			uint32_t width = m_Swapchain.GetWidth();
+			uint32_t height = m_Swapchain.GetHeight();
 
 			// Set clear values for all framebuffer attachments with loadOp set to clear
 			// We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
@@ -86,7 +98,7 @@ namespace SmolEngine
 			VkRenderPassBeginInfo renderPassBeginInfo = {};
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 			renderPassBeginInfo.pNext = nullptr;
-			renderPassBeginInfo.renderPass = VulkanContext::GetSwapchain().GetRenderPass();
+			renderPassBeginInfo.renderPass = m_Swapchain.GetVkRenderPass();
 			renderPassBeginInfo.renderArea.offset.x = 0;
 			renderPassBeginInfo.renderArea.offset.y = 0;
 			renderPassBeginInfo.renderArea.extent.width = width;
@@ -95,7 +107,7 @@ namespace SmolEngine
 			renderPassBeginInfo.pClearValues = clearValues;
 
 			// Set target frame buffer
-			renderPassBeginInfo.framebuffer = framebuffers[index];
+			renderPassBeginInfo.framebuffer = framebuffer;
 
 			// Start the first sub pass specified in our default render pass setup by the base class
 			// This will clear the color and depth attachment
@@ -132,10 +144,9 @@ namespace SmolEngine
 
 		// Second Render Pass - ImGui
 		{
-			auto& framebuffers = VulkanContext::GetSwapchain().GetSwapchainFramebuffer().GetVkFramebuffers();
-			uint32_t width = VulkanContext::GetSwapchain().GetWidth();
-			uint32_t height = VulkanContext::GetSwapchain().GetHeight();
-			uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
+			auto framebuffer = m_Swapchain.GetCurrentFramebuffer();
+			uint32_t width = m_Swapchain.GetWidth();
+			uint32_t height = m_Swapchain.GetHeight();
 
 			// Set clear values for all framebuffer attachments with loadOp set to clear
 			// We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
@@ -145,7 +156,7 @@ namespace SmolEngine
 			VkRenderPassBeginInfo renderPassBeginInfo = {};
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 			renderPassBeginInfo.pNext = nullptr;
-			renderPassBeginInfo.renderPass = VulkanContext::GetSwapchain().GetRenderPass();
+			renderPassBeginInfo.renderPass = m_Swapchain.GetVkRenderPass();
 			renderPassBeginInfo.renderArea.offset.x = 0;
 			renderPassBeginInfo.renderArea.offset.y = 0;
 			renderPassBeginInfo.renderArea.extent.width = width;
@@ -154,7 +165,7 @@ namespace SmolEngine
 			renderPassBeginInfo.pClearValues = clearValues;
 
 			// Set target frame buffer
-			renderPassBeginInfo.framebuffer = framebuffers[index];
+			renderPassBeginInfo.framebuffer = framebuffer;
 
 			// Start the first sub pass specified in our default render pass setup by the base class
 			// This will clear the color and depth attachment
@@ -239,4 +250,118 @@ namespace SmolEngine
 		VK_CHECK_RESULT(vkWaitForFences(m_Device.GetLogicalDevice(), 1, &m_Semaphore.GetVkFences()[m_Swapchain.GetCurrentBufferIndex()], VK_TRUE, DEFAULT_FENCE_TIME_OUT));
 	}
 
+	VkRenderPass VulkanContext::CreateRenderPass(VkImageLayout finalResolveLayout)
+	{
+		VkRenderPass renderPass = nullptr;
+		VkFormat fbDepthFormat;
+		std::vector<VkFormat> depthFormats = {
+				VK_FORMAT_D32_SFLOAT_S8_UINT,
+				VK_FORMAT_D32_SFLOAT,
+				VK_FORMAT_D24_UNORM_S8_UINT,
+				VK_FORMAT_D16_UNORM_S8_UINT,
+				VK_FORMAT_D16_UNORM
+		};
+
+		bool formatfound = false;
+		for (auto& format : depthFormats)
+		{
+			VkFormatProperties formatProps;
+			vkGetPhysicalDeviceFormatProperties(m_Device.GetPhysicalDevice(), format, &formatProps);
+			// Format must support depth stencil attachment for optimal tiling
+			if (formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+			{
+				fbDepthFormat = format;
+				formatfound = true;
+				break;
+			}
+		}
+		assert(formatfound == true);
+#define FB_COLOR_FORMAT VK_FORMAT_B8G8R8A8_UNORM
+
+		VkSampleCountFlagBits MSAASamplesCount = m_Device.GetMSAASamplesCount();
+
+		std::array<VkAttachmentDescription, 3> attachments = {};
+
+		// Multisampled attachment that we render to
+		attachments[0].format = FB_COLOR_FORMAT;
+		attachments[0].samples = MSAASamplesCount;
+		attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		attachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+		// This is the frame buffer attachment to where the multisampled image
+		// will be resolved to and which will be presented to the swapchain
+		attachments[1].format = FB_COLOR_FORMAT;
+		attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+		attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		attachments[1].finalLayout = finalResolveLayout;
+
+		// Multisampled depth attachment we render to
+		attachments[2].format = fbDepthFormat;
+		attachments[2].samples = MSAASamplesCount;
+		attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		attachments[2].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+		VkAttachmentReference colorReference = {};
+		colorReference.attachment = 0;
+		colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+		VkAttachmentReference depthReference = {};
+		depthReference.attachment = 2;
+		depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+		// Resolve attachment reference for the color attachment
+		VkAttachmentReference resolveReference = {};
+		resolveReference.attachment = 1;
+		resolveReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+		VkSubpassDescription subpass = {};
+		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+		subpass.colorAttachmentCount = 1;
+		subpass.pColorAttachments = &colorReference;
+		// Pass our resolve attachments to the sub pass
+		subpass.pResolveAttachments = &resolveReference;
+		subpass.pDepthStencilAttachment = &depthReference;
+
+		std::array<VkSubpassDependency, 2> dependencies;
+
+		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+		dependencies[0].dstSubpass = 0;
+		dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		dependencies[1].srcSubpass = 0;
+		dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+		dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		VkRenderPassCreateInfo renderPassInfo{};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+		renderPassInfo.attachmentCount = attachments.size();
+		renderPassInfo.pAttachments = attachments.data();
+		renderPassInfo.subpassCount = 1;
+		renderPassInfo.pSubpasses = &subpass;
+		renderPassInfo.dependencyCount = 2;
+		renderPassInfo.pDependencies = dependencies.data();
+
+		VK_CHECK_RESULT(vkCreateRenderPass(m_Device.GetLogicalDevice(), &renderPassInfo, nullptr, &renderPass));
+		return renderPass;
+	}
 }

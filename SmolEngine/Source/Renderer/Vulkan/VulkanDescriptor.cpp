@@ -145,7 +145,6 @@ namespace SmolEngine
 
 	bool VulkanDescriptor::Update2DSamplers(const std::vector<VulkanTexture*>& textures, uint32_t bindingPoint)
 	{
-		std::vector<VkDescriptorImageInfo> infos(textures.size());
 		VkWriteDescriptorSet* writeSet = nullptr;
 		for (auto& set: m_WriteSets)
 		{
@@ -159,6 +158,7 @@ namespace SmolEngine
 		if (!writeSet)
 			return false;
 
+		std::vector<VkDescriptorImageInfo> infos(textures.size());
 		for (uint32_t i = 0; i < textures.size(); ++i)
 		{
 			infos[i] = textures[i]->m_DescriptorImageInfo;

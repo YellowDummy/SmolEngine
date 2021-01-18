@@ -23,19 +23,26 @@ namespace SmolEngine
 		Ref<EventHandler> m_eventHandler;
 	};
 
+	struct WindowCreateInfo
+	{
+		uint32_t Width = 0;
+		uint32_t Height = 0;
+
+		Ref<EventHandler> EventHandler = nullptr;
+		std::string Title = "";
+	};
+
 	static WindowData Data;
 
 	class Window
 	{
 	public:
 
-		Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler);
+		Window(const WindowCreateInfo& info);
 
 		~Window() {  }
 
-		/// 
 		/// Main
-		/// 
 
 		void ResizeContext(uint32_t width, uint32_t height);
 
@@ -47,9 +54,7 @@ namespace SmolEngine
 
 		void ShutDown();
 
-		/// 
 		/// Getters
-		/// 
 
 		GLFWwindow* GetNativeWindow() const;
 
@@ -59,9 +64,7 @@ namespace SmolEngine
 
 		uint32_t GetHeight() const;
 
-		/// 
 		/// Setters
-		/// 
 
 		void SetWidth(uint32_t value);
 

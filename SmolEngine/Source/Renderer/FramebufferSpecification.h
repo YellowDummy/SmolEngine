@@ -7,5 +7,8 @@ namespace SmolEngine
 	{
 		int32_t Width = 0;
 		int32_t Height = 0;
+		int32_t samples = 0;
+
+		bool IsTargetsSwapchain = false;
 	};
 }

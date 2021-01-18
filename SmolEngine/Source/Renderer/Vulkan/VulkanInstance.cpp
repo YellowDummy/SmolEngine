@@ -15,7 +15,10 @@ namespace SmolEngine
 
 	VulkanInstance::~VulkanInstance()
 	{
-		vkDestroyInstance(m_VKInstance, nullptr);
+		if (m_VKInstance != VK_NULL_HANDLE)
+		{
+			//vkDestroyInstance(m_VKInstance, nullptr);
+		}
 	}
 
 	void VulkanInstance::Init()
@@ -30,11 +33,8 @@ namespace SmolEngine
 			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 
 #ifdef  SMOLENGINE_EDITOR
-
-
 			appInfo.pApplicationName = "SmolEngine Editor";
 #else
-
 			appInfo.pApplicationName = "SmolEngine Game";
 #endif
 
@@ -54,11 +54,8 @@ namespace SmolEngine
 		std::vector<const char*> instanceExt = { "VK_EXT_debug_report", VK_KHR_SURFACE_EXTENSION_NAME};
 
 #ifdef _WIN32
-
 		instanceExt.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-		
 #endif // _WIN32
-
 
 		VkInstanceCreateInfo instanceInfo = {};
 		{

@@ -23,6 +23,7 @@ namespace SmolEngine
 		std::string Name = "";
 
 		bool IsAlphaBlendingEnabled = false;
+		bool IsTargetsSwapchain = false;
 		bool Initialized = false; //don't use!
 
 		uint32_t DescriptorSets = 1;

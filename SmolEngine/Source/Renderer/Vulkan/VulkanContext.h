@@ -16,11 +16,15 @@ namespace SmolEngine
 	{
 	public:
 
+		VulkanContext() = default;
+
+		~VulkanContext();
+
 		/// Main
 		
 		void OnResize(uint32_t width, uint32_t height);
 
-		void Setup(GLFWwindow* window);
+		void Setup(GLFWwindow* window, uint32_t* width, uint32_t* height);
 
 		void BeginFrame();
 
@@ -43,7 +47,15 @@ namespace SmolEngine
 
 		inline static VulkanDevice& GetDevice() { return m_Device; }
 
+		inline static VkRenderPass GetVkRenderPassFramebufferLayout() { return m_MSAARenderPassFramebuffer; }
+
+		inline static VkRenderPass GetVkRenderPassSwapchainLayout() { return m_MSAARenderPassSwapchain; }
+
 		static VkCommandBuffer GetCurrentVkCmdBuffer() { return m_CurrentVkCmdBuffer; }
+
+	private:
+
+		VkRenderPass CreateRenderPass(VkImageLayout finalResolveLayout);
 
 	private:
 
@@ -55,7 +67,9 @@ namespace SmolEngine
 		inline static VulkanSemaphore           m_Semaphore = {};
 		inline static VulkanInstance            m_Instance = {};
 		inline static VulkanDevice              m_Device = {};
-		GLFWwindow* m_Window = nullptr;
+		inline static VkRenderPass              m_MSAARenderPassFramebuffer = nullptr;
+		inline static VkRenderPass              m_MSAARenderPassSwapchain = nullptr;
+		GLFWwindow*                             m_Window = nullptr;
 
 		bool                                    m_IsInitialized = false;
 

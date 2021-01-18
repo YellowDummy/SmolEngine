@@ -13,7 +13,10 @@ namespace SmolEngine
 
 	VulkanDevice::~VulkanDevice()
 	{
-		vkDestroyDevice(m_VkLogicalDevice, nullptr);
+		if (m_VkLogicalDevice != VK_NULL_HANDLE)
+		{
+			//vkDestroyDevice(m_VkLogicalDevice, nullptr);
+		}
 	}
 
 	bool VulkanDevice::Init(const VulkanInstance* instance)
@@ -30,6 +33,7 @@ namespace SmolEngine
 			if (setup_result)
 			{
 				vkGetDeviceQueue(m_VkLogicalDevice, m_DeviceQueueFamilyIndex, 0, &m_Queue);
+				FindMaxUsableSampleCount();
 			}
 			return setup_result;
 		}
@@ -186,6 +190,22 @@ return result == VK_SUCCESS;
 		return false;
 	}
 
+	void VulkanDevice::FindMaxUsableSampleCount()
+	{
+		VkSampleCountFlagBits sampleCount;
+		VkSampleCountFlags counts = m_VkDeviceProperties.limits.framebufferColorSampleCounts & m_VkDeviceProperties.limits.framebufferDepthSampleCounts;
+		if (counts & VK_SAMPLE_COUNT_64_BIT) { sampleCount = VK_SAMPLE_COUNT_64_BIT; }
+		else if (counts & VK_SAMPLE_COUNT_32_BIT) { sampleCount = VK_SAMPLE_COUNT_32_BIT; }
+		else if (counts & VK_SAMPLE_COUNT_16_BIT) { sampleCount = VK_SAMPLE_COUNT_16_BIT; }
+		else if (counts & VK_SAMPLE_COUNT_8_BIT) { sampleCount = VK_SAMPLE_COUNT_8_BIT; }
+		else if (counts & VK_SAMPLE_COUNT_4_BIT) { sampleCount = VK_SAMPLE_COUNT_4_BIT; }
+		else if (counts & VK_SAMPLE_COUNT_2_BIT) { sampleCount = VK_SAMPLE_COUNT_2_BIT; }
+		else { sampleCount = VK_SAMPLE_COUNT_1_BIT; }
+
+		m_VkDeviceFeatures.sampleRateShading = VK_TRUE;
+		m_MSAASamplesCount = sampleCount;
+	}
+
 	const VkPhysicalDeviceMemoryProperties* const VulkanDevice::GetMemoryProperties() const
 	{
 		return &m_VkMemoryProperties;
@@ -199,6 +219,11 @@ return result == VK_SUCCESS;
 	const VkPhysicalDeviceFeatures* const VulkanDevice::GetDeviceFeatures() const
 	{
 		return &m_VkDeviceFeatures;
+	}
+
+	const VkSampleCountFlagBits VulkanDevice::GetMSAASamplesCount() const
+	{
+		return m_MSAASamplesCount;
 	}
 
 	const VkPhysicalDevice const VulkanDevice::GetPhysicalDevice() const

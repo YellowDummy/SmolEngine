@@ -29,6 +29,7 @@ namespace SmolEngine
 		std::string PipelineName = "";
 		Ref<Texture> SkyBox = nullptr;
 		bool IsAlphaBlendingEnabled = false;
+		bool IsTargetsSwapchain = false;
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 	};
 
@@ -45,6 +46,7 @@ namespace SmolEngine
 
 		std::string PipelineName = "";
 		bool IsAlphaBlendingEnabled = false;
+		bool IsTargetsSwapchain = false;
 	};
 
 	class GraphicsPipeline
@@ -68,7 +70,7 @@ namespace SmolEngine
 
 		// Render Pass
 
-		void BeginRenderPass(Ref<Framebuffer> framebuffer = nullptr);
+		void BeginRenderPass(Ref<Framebuffer>& framebuffer);
 
 		void EndRenderPass();
 

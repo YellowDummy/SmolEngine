@@ -110,6 +110,7 @@ namespace SmolEngine
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
+			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -175,6 +176,7 @@ namespace SmolEngine
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
+			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -234,7 +236,7 @@ namespace SmolEngine
 			m_VextexArray = nullptr;
 	}
 
-	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer> framebuffer)
+	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer>& framebuffer)
 	{
 		m_RenderpassFramebuffer = framebuffer;
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -243,37 +245,21 @@ namespace SmolEngine
 		m_VextexArray->Bind();
 		m_RenderpassFramebuffer->Bind();
 #else
-		auto& offscreenPass = framebuffer->GetVulkanFramebuffer().GetOffscreenPass();
+		VkClearValue clearValues[3];
+		clearValues[2].depthStencil = { 1.0f, 0 };
+		uint32_t width = framebuffer->GetSpecification().Width;
+		uint32_t height = framebuffer->GetSpecification().Height;
+		VkRenderPass selectedPass = VulkanContext::GetVkRenderPassFramebufferLayout();
+		VkFramebuffer selectedFramebuffer = framebuffer->GetVulkanFramebuffer().GetCurrentVkFramebuffer();
 
-		VkClearValue clearValues[2];
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		uint32_t width = 0;
-		uint32_t height = 0;
-
-		VkRenderPass selectedPass = nullptr;
-		VkFramebuffer selectedFramebuffer = nullptr;
-		if (framebuffer)
+		if (framebuffer->GetSpecification().IsTargetsSwapchain)
 		{
-			auto& scpec = framebuffer->GetSpecification();
-			selectedPass = offscreenPass.renderPass;
-			selectedFramebuffer = offscreenPass.frameBuffer;
-			width = scpec.Width;
-			height = scpec.Height;
-		}
-		else
-		{
-			auto& framebuffers = VulkanContext::GetSwapchain().GetSwapchainFramebuffer().GetVkFramebuffers();
-			uint32_t index = VulkanContext::GetSwapchain().GetCurrentBufferIndex();
+			auto framebuffer = VulkanContext::GetSwapchain().GetCurrentFramebuffer();
 
 			clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
-			clearValues[1].depthStencil = { 1.0f, 0 };
+			clearValues[2].depthStencil = { 1.0f, 0 };
 
-			width = VulkanContext::GetSwapchain().GetWidth();
-			height = VulkanContext::GetSwapchain().GetHeight();
-
-			selectedPass = VulkanContext::GetSwapchain().GetRenderPass();
-			selectedFramebuffer = framebuffers[index];
+			selectedPass = VulkanContext::GetVkRenderPassSwapchainLayout();
 		}
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
@@ -283,7 +269,7 @@ namespace SmolEngine
 			renderPassBeginInfo.framebuffer = selectedFramebuffer;
 			renderPassBeginInfo.renderArea.extent.width = width;
 			renderPassBeginInfo.renderArea.extent.height = height;
-			renderPassBeginInfo.clearValueCount = 2;
+			renderPassBeginInfo.clearValueCount = 3;
 			renderPassBeginInfo.pClearValues = clearValues;
 		}
 

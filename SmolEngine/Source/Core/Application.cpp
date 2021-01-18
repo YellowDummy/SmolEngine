@@ -63,22 +63,19 @@ namespace SmolEngine
 		// Initializing LayerManager and Related Classes
 		m_LayerHandler = std::make_shared<LayerManager>();
 
-		std::string appName;
-#ifdef SMOLENGINE_OPENGL_IMPL
-#ifdef SMOLENGINE_DEBUG
-		appName = "SmolEngine Editor - Debug x64 (OpenGL)";
-#else
-		appName = "SmolEngine Editor - Release x64 (OpenGL)";
-#endif
-#else
-#ifdef SMOLENGINE_DEBUG
-		appName = "SmolEngine Editor - Debug x64 (Vulkan)";
-#else
-		appName = "SmolEngine Editor - Release x64 (Vulkan)";
-#endif
-#endif 
+		std::string appName = "";
+		GetAppName(appName);
+
+		WindowCreateInfo windowCI = {};
+		{
+			windowCI.Height = 1080;
+			windowCI.Width = 1920;
+			windowCI.Title = appName;
+			windowCI.EventHandler = m_EventHandler;
+		}
+
 		// Creating New GLFW Window
-		m_Window = std::make_shared<Window>(appName, 1080, 1920, m_EventHandler);
+		m_Window = std::make_shared<Window>(windowCI);
 
 #ifdef SMOLENGINE_EDITOR
 		// Initializing Dear ImGui
@@ -170,10 +167,6 @@ namespace SmolEngine
 
 	void Application::OnEvent(SmolEngine::Event& event)
 	{
-		// Setting Event Hooks - Functions Must Always Return Boolean: True If Event Should Be Blocked, False If Not
-
-		//S_BIND_EVENT_CATEGORY(Application, OnWindowClose, EventCategory::S_EVENT_APPLICATION, event);
-
 		S_BIND_EVENT_TYPE(Application, OnWindowClose, EventType::S_WINDOW_CLOSE, event);
 		S_BIND_EVENT_TYPE(Application, OnWindowResize, EventType::S_WINDOW_RESIZE, event);
 
@@ -220,11 +213,28 @@ namespace SmolEngine
 
 		m_WindowMinimized = false; 
 
-		m_Window->ResizeContext(e.GetWidth(), e.GetHeight());
+		m_Window->ResizeContext(e.GetHeight(), e.GetWidth());
 		Renderer::OnWidowResize(e.GetHeight(), e.GetWidth());
 
 		// No need to block this event
 		return false;
+	}
+
+	void Application::GetAppName(std::string& outName)
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+#ifdef SMOLENGINE_DEBUG
+		outName = "SmolEngine Editor - Debug x64 (OpenGL)";
+#else
+		outName = "SmolEngine Editor - Release x64 (OpenGL)";
+#endif
+#else
+#ifdef SMOLENGINE_DEBUG
+		outName = "SmolEngine Editor - Debug x64 (Vulkan)";
+#else
+		outName = "SmolEngine Editor - Release x64 (Vulkan)";
+#endif
+#endif 
 	}
 
 	const uint32_t Application::GetWindowHeight()

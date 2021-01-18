@@ -156,10 +156,10 @@ namespace SmolEngine
 			init_info.PipelineCache = m_VulkanImpl.g_PipelineCache;
 			init_info.Allocator = nullptr;
 			init_info.MinImageCount = 2;
-			init_info.ImageCount = 3; // temp
+			init_info.ImageCount = 3;
 		}
 
-		ImGui_ImplVulkan_Init(&init_info, VulkanContext::GetSwapchain().GetRenderPass());
+		ImGui_ImplVulkan_Init(&init_info, VulkanContext::GetSwapchain().GetVkRenderPass());
 
 		m_VulkanImpl.InitResources();
 

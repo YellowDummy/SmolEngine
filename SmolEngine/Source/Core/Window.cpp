@@ -10,17 +10,18 @@
 
 namespace SmolEngine 
 {
-	Window::Window(const std::string& title, const int& height, const int& width, Ref<EventHandler> eventHandler)
+	Window::Window(const WindowCreateInfo& info)
 		:m_Window(nullptr)
 	{
-		//--------------------------------------------------DATA---------------------------------------------//
-		Data.Title = title;
-		Data.Height = height;
-		Data.Width = width;
-		Data.m_eventHandler = eventHandler;
-		//--------------------------------------------------DATA---------------------------------------------//
+		if (!info.EventHandler)
+			std::runtime_error("EventHandler is nullptr!");
 
-		WidnowInit(title, width, height);
+		Data.Title = info.Title;
+		Data.Height = info.Height;
+		Data.Width = info.Width;
+		Data.m_eventHandler = info.EventHandler;
+
+		WidnowInit(Data.Title, Data.Width, Data.Height);
 	}
 
 	void Window::ResizeContext(uint32_t width, uint32_t height)
@@ -105,11 +106,11 @@ namespace SmolEngine
 
 		// Create Graphics Context
 
-		m_Context = new GraphicsContext();
-		m_Context->Setup(m_Window);
-
 		Data.Width = width;
 		Data.Height = height;
+
+		m_Context = new GraphicsContext();
+		m_Context->Setup(m_Window, &Data.Width, &Data.Height);
 
 #ifndef SMOLENGINE_EDITOR
 
@@ -120,7 +121,7 @@ namespace SmolEngine
 		glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 
 #else
-		glfwMaximizeWindow(m_Window);
+		//glfwMaximizeWindow(m_Window);
 
 #endif // SMOLENGINE_OPENGL_IMPL
 
@@ -213,6 +214,7 @@ namespace SmolEngine
 
 	void Window::ShutDown()
 	{
+		delete m_Context;
 		glfwDestroyWindow(m_Window);
 	}
 

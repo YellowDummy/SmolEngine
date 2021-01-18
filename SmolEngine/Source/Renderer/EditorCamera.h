@@ -6,8 +6,17 @@
 
 namespace SmolEngine
 {
-	class Framebuffer;
+	struct EditorCameraCreateInfo
+	{
+		float FOV = 45.0f;
+		float NearClip = 0.1f;
+		float FarClip = 1000.0f;
+		float AspectRation = 1.778f;
 
+		bool IsFramebufferTargetsSwapchain = false;
+	};
+
+	class Framebuffer;
 	enum class CameraType: uint16_t
 	{
 		Perspective,
@@ -19,9 +28,7 @@ namespace SmolEngine
 	{
 	public:
 
-		EditorCamera() = default;
-
-		EditorCamera(float fov, float aspectRation, float nearClip, float farClip);
+		EditorCamera(EditorCameraCreateInfo* createInfo = nullptr);
 
 		// Main
 
