@@ -10,6 +10,7 @@
 namespace SmolEngine
 {
 	class Framebuffer;
+	class CubeTexture;
 
 	enum class DrawMode : uint16_t
 	{
@@ -27,9 +28,10 @@ namespace SmolEngine
 		uint32_t Samplers = 10;
 		uint32_t DescriptorSets = 1;
 		std::string PipelineName = "";
-		Ref<Texture> SkyBox = nullptr;
+		Ref<CubeTexture> SkyBox = nullptr;
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
+		bool IsDepthTestEnabled = true;
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 	};
 
@@ -41,12 +43,13 @@ namespace SmolEngine
 
 		uint32_t Stride = 0;
 		uint32_t Samplers = 10;
-		Ref<Texture> SkyBox = nullptr;
+		Ref<CubeTexture> SkyBox = nullptr;
 		uint32_t DescriptorSets = 1;
 
 		std::string PipelineName = "";
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
+		bool IsDepthTestEnabled = true;
 	};
 
 	class GraphicsPipeline
@@ -134,6 +137,18 @@ namespace SmolEngine
 
 		bool UpdateCubeMap(const Ref<Texture>& cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
 
+#ifndef SMOLENGINE_OPENGL_IMPL
+
+		const VkPipeline& GetVkPipeline(DrawMode mode)
+		{
+			return m_VulkanPipeline.GetVkPipeline(mode);
+		}
+
+		const VulkanShader* GetVulkanShader() const
+		{
+			return m_Shader->GetVulkanShader();
+		}
+#endif
 
 	private:
 

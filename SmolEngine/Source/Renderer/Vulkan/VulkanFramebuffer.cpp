@@ -150,22 +150,30 @@ namespace SmolEngine
 
 		// Sampler
 		{
-			VkSamplerCreateInfo samplerInfoCI = {};
+			VkSamplerCreateInfo samplerCI = {};
 			{
-				samplerInfoCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-				samplerInfoCI.magFilter = VK_FILTER_LINEAR;
-				samplerInfoCI.minFilter = VK_FILTER_LINEAR;
-				samplerInfoCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-				samplerInfoCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-				samplerInfoCI.addressModeV = samplerInfoCI.addressModeU;
-				samplerInfoCI.addressModeW = samplerInfoCI.addressModeU;
-				samplerInfoCI.mipLodBias = 0.0f;
-				samplerInfoCI.maxAnisotropy = 1.0f;
-				samplerInfoCI.minLod = 0.0f;
-				samplerInfoCI.maxLod = static_cast<float>(m_MSAASamples);
-				samplerInfoCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+				auto& device = VulkanContext::GetDevice();
 
-				result = vkCreateSampler(m_Device, &samplerInfoCI, nullptr, &m_OffscreenPass.sampler);
+				samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+				samplerCI.magFilter = VK_FILTER_LINEAR;
+				samplerCI.minFilter = VK_FILTER_LINEAR;
+				samplerCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+				samplerCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+				samplerCI.addressModeV = samplerCI.addressModeU;
+				samplerCI.addressModeW = samplerCI.addressModeU;
+				samplerCI.mipLodBias = 0.0f;
+				samplerCI.maxAnisotropy = 1.0f;
+				samplerCI.minLod = 0.0f;
+				samplerCI.maxLod = 1.0f;
+				samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+				samplerCI.maxAnisotropy = 1.0f;
+				if (device.GetDeviceFeatures()->samplerAnisotropy)
+				{
+					samplerCI.maxAnisotropy = device.GetDeviceProperties()->limits.maxSamplerAnisotropy;
+					samplerCI.anisotropyEnable = VK_TRUE;
+				}
+
+				result = vkCreateSampler(m_Device, &samplerCI, nullptr, &m_OffscreenPass.sampler);
 				VK_CHECK_RESULT(result);
 			}
 		}
@@ -185,7 +193,6 @@ namespace SmolEngine
 			m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			m_OffscreenPass.clearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
 			m_OffscreenPass.clearAttachments[1].colorAttachment = 0;
-
 
 			m_OffscreenPass.clearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 			m_OffscreenPass.clearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };

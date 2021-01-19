@@ -83,59 +83,6 @@ namespace SmolEngine
 		}
 
 		VK_CHECK_RESULT(vkBeginCommandBuffer(m_CurrentVkCmdBuffer, &cmdBufInfo));
-
-		// Clear Pass
-		{
-			auto framebuffer = m_Swapchain.GetCurrentFramebuffer();
-			uint32_t width = m_Swapchain.GetWidth();
-			uint32_t height = m_Swapchain.GetHeight();
-
-			// Set clear values for all framebuffer attachments with loadOp set to clear
-			// We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
-			VkClearValue clearValues[2];
-			clearValues[1].depthStencil = { 1.0f, 0 };
-
-			VkRenderPassBeginInfo renderPassBeginInfo = {};
-			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.pNext = nullptr;
-			renderPassBeginInfo.renderPass = m_Swapchain.GetVkRenderPass();
-			renderPassBeginInfo.renderArea.offset.x = 0;
-			renderPassBeginInfo.renderArea.offset.y = 0;
-			renderPassBeginInfo.renderArea.extent.width = width;
-			renderPassBeginInfo.renderArea.extent.height = height;
-			renderPassBeginInfo.clearValueCount = 2;
-			renderPassBeginInfo.pClearValues = clearValues;
-
-			// Set target frame buffer
-			renderPassBeginInfo.framebuffer = framebuffer;
-
-			// Start the first sub pass specified in our default render pass setup by the base class
-			// This will clear the color and depth attachment
-			vkCmdBeginRenderPass(m_CurrentVkCmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-			// Update dynamic viewport state
-			VkViewport viewport = {};
-			viewport.x = 0;
-			viewport.y = (float)height;
-			viewport.height = -(float)height;
-			viewport.width = (float)width;
-			viewport.minDepth = (float)0.0f;
-			viewport.maxDepth = (float)1.0f;
-			vkCmdSetViewport(m_CurrentVkCmdBuffer, 0, 1, &viewport);
-
-			// Update dynamic scissor state
-			VkRect2D scissor = {};
-			scissor.extent.width = width;
-			scissor.extent.height = height;
-			scissor.offset.x = 0;
-			scissor.offset.y = 0;
-			vkCmdSetScissor(m_CurrentVkCmdBuffer, 0, 1, &scissor);
-
-			m_Swapchain.ClearColors(m_CurrentVkCmdBuffer);
-
-			vkCmdEndRenderPass(m_CurrentVkCmdBuffer);
-		}
-		
 	}
 
 	void VulkanContext::SwapBuffers(bool skip)
@@ -285,7 +232,7 @@ namespace SmolEngine
 		// Multisampled attachment that we render to
 		attachments[0].format = FB_COLOR_FORMAT;
 		attachments[0].samples = MSAASamplesCount;
-		attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
 		attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 		attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -296,9 +243,9 @@ namespace SmolEngine
 		// will be resolved to and which will be presented to the swapchain
 		attachments[1].format = FB_COLOR_FORMAT;
 		attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-		attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
 		attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-		attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
 		attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		attachments[1].finalLayout = finalResolveLayout;

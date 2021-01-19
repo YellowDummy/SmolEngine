@@ -52,16 +52,10 @@ namespace SmolEngine
             { ShaderDataType::Float4, "aColor" }
         };
 
-        glm::vec3 pos(0, 0, 0);
-        glm::vec3 scale(1, 1, 1);
-        glm::vec3 rot(0, 0, 0);
-        glm::mat4 transform;
-        CommandSystem::ComposeTransform(pos, rot, scale, true, transform);
-
         std::vector<Vertex> vertices(data->vertices.size());
         for (uint32_t i = 0; i < data->vertices.size(); ++i)
         {
-            vertices[i].pos = glm::vec4(data->vertices[i], 1) * transform;
+            vertices[i].pos = data->vertices[i];
             vertices[i].color = data->colors[i];
             vertices[i].normals = data->normals[i];
             vertices[i].uvs = data->uvs[i];

@@ -112,13 +112,27 @@ namespace SmolEngine
 				{
 					if (cubeMap != nullptr)
 					{
-						m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
-							res.BindingPoint, { cubeMap->m_DescriptorImageInfo }, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+						VkWriteDescriptorSet writeSet = {};
+						{
+							writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+							writeSet.dstSet = m_DescriptorSet;
+							writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+							writeSet.dstBinding = res.BindingPoint;
+							writeSet.dstArrayElement = 0;
+							writeSet.descriptorCount = 1;
+							writeSet.pImageInfo = &cubeMap->m_DescriptorImageInfo;
+						}
 
+						m_WriteSets.push_back(writeSet);
+
+						auto& kek = m_WriteSets.back();
 						vkUpdateDescriptorSets(device, 1, &m_WriteSets.back(), 0, nullptr);
 					}
 					else
-						NATIVE_ERROR("GraphicsPipeline: Skybox is nullptr!"); abort();
+					{
+						NATIVE_ERROR("GraphicsPipeline: Skybox is nullptr!");
+						abort();
+					}
 				}
 				else // sampler2d
 				{

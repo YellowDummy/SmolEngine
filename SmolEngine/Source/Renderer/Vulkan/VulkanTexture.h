@@ -19,7 +19,7 @@ namespace SmolEngine
 
 		void CreateTexture(const std::string& filePath);
 
-		void CreateCubeMap(const std::array<std::string, 6>& filePaths);
+		void CreateCubeMapKtx(const std::string& filePath);
 
 		/// Static
 
@@ -36,6 +36,8 @@ namespace SmolEngine
 
 		/// Getters
 		
+		const VkDescriptorImageInfo& GetVkDescriptorImageInfo() const;
+
 		uint32_t GetHeight() const;
 
 		uint32_t GetWidth() const;
@@ -51,6 +53,14 @@ namespace SmolEngine
 		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data, TextureType type);
 
 		void CreateSamplerAndImageView(TextureType type, uint32_t mipMaps);
+
+		void SetImageLayout(VkCommandBuffer cmdbuffer,
+			VkImage image,
+			VkImageLayout oldImageLayout,
+			VkImageLayout newImageLayout,
+			VkImageSubresourceRange subresourceRange,
+			VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
 		VkImageViewType GetVkImageViewType(TextureType type);
 

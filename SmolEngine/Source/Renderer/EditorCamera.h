@@ -8,7 +8,7 @@ namespace SmolEngine
 {
 	struct EditorCameraCreateInfo
 	{
-		float FOV = 45.0f;
+		float FOV = 75.0f;
 		float NearClip = 0.1f;
 		float FarClip = 1000.0f;
 		float AspectRation = 1.778f;
@@ -46,7 +46,9 @@ namespace SmolEngine
 
 		// Getters
 
-		glm::mat4 GetViewProjection() const { return m_Projection * m_ViewMatrix; }
+		const glm::mat4& GetViewProjection() const { return m_Projection * m_ViewMatrix; }
+
+		const glm::mat4& GetProjection() const { return m_Projection; }
 
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 
@@ -107,10 +109,10 @@ namespace SmolEngine
 		glm::mat4          m_Projection = glm::mat4(0.0f);
 		glm::mat4          m_ViewMatrix = glm::mat4(0.0f);
 		glm::vec3          m_Position = glm::vec3(0.0f);
-		glm::vec3          m_FocalPoint = glm::vec3(0.0f);
+		glm::vec3          m_FocalPoint = glm::vec3(0.0f, 0.0f, -4.0f);
 		glm::vec2          m_InitialMousePosition = glm::vec2(0.0f);
 						   
-		float              m_FOV = 45.0f;
+		float              m_FOV = 75.0f;
 		float              m_AspectRatio = 1.778f;
 		float              m_NearClip = 0.1f;
 		float              m_FarClip = 1000.0f;

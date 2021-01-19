@@ -3,6 +3,7 @@
 #include "SmolEngineCore.h"
 
 #include "Renderer/Texture.h"
+#include "Renderer/CubeTexture.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/EditorCamera.h"
@@ -52,8 +53,12 @@ namespace SmolEngine
 		Ref<Texture> m_Tetxure3;
 		Ref<Texture> m_Tetxure4;
 
+		Ref<CubeTexture> m_CubeTexture;
+
 		Ref<Mesh> m_TestMesh = nullptr;
+
 		Ref<GraphicsPipeline> m_Pipeline = nullptr;
+		Ref<GraphicsPipeline> m_SkyboxPipeline = nullptr;
 
 		Ref<Framebuffer> m_FrameBuffer;
 

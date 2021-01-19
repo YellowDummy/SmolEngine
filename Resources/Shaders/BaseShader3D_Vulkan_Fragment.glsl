@@ -9,7 +9,6 @@ layout(location = 7) in vec3 v_WorldPos;
 layout(location = 8) in vec3 v_Camera;
 
 layout(binding = 9) uniform sampler2D u_Textures[7];
-//layout(binding = 15) uniform samplerCube u_SkyBox;
 
 struct Light2DBuffer
 {
@@ -32,8 +31,7 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0);
 
 void main()
 {
-    ////vec4 skyBox = texture(u_SkyBox, vec3(0.0, 0.0, 1.0));
-    
+
 	float ao = texture(u_Textures[0], v_UV).r;
 	float roughness = texture(u_Textures[3], v_UV).r;
 	float metallic = texture(u_Textures[1], v_UV).r;;

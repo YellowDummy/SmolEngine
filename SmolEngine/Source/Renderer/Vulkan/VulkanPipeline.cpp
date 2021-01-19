@@ -139,7 +139,7 @@ namespace SmolEngine
 		// We only use depth tests and want depth tests and writes to be enabled and compare with less or equal
 		VkPipelineDepthStencilStateCreateInfo depthStencilState = {};
 		depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencilState.depthTestEnable = VK_TRUE;
+		depthStencilState.depthTestEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;;
 		depthStencilState.depthWriteEnable = VK_TRUE;
 		depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 		depthStencilState.depthBoundsTestEnable = VK_FALSE;
@@ -364,7 +364,7 @@ namespace SmolEngine
 			unformsBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
 
 		if (shader->m_UniformResources.size() > 0)
-			resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
+			resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformResources.size());
 
 		// UBO
 		{

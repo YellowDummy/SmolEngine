@@ -8,6 +8,7 @@
 
 #include "Renderer/RendererAPI.h"
 #include "Renderer/Framebuffer.h"
+#include "Renderer/CubeTexture.h"
 
 namespace SmolEngine
 {
@@ -111,6 +112,7 @@ namespace SmolEngine
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
 			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
+			pipelineSpecCI.IsDepthTestEnabled = pipelineInfo->IsDepthTestEnabled;
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -177,6 +179,7 @@ namespace SmolEngine
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
 			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
+			pipelineSpecCI.IsDepthTestEnabled = pipelineInfo->IsDepthTestEnabled;
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -247,20 +250,14 @@ namespace SmolEngine
 #else
 		VkClearValue clearValues[3];
 		clearValues[2].depthStencil = { 1.0f, 0 };
+
 		uint32_t width = framebuffer->GetSpecification().Width;
 		uint32_t height = framebuffer->GetSpecification().Height;
 		VkRenderPass selectedPass = VulkanContext::GetVkRenderPassFramebufferLayout();
 		VkFramebuffer selectedFramebuffer = framebuffer->GetVulkanFramebuffer().GetCurrentVkFramebuffer();
 
 		if (framebuffer->GetSpecification().IsTargetsSwapchain)
-		{
-			auto framebuffer = VulkanContext::GetSwapchain().GetCurrentFramebuffer();
-
-			clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
-			clearValues[2].depthStencil = { 1.0f, 0 };
-
 			selectedPass = VulkanContext::GetVkRenderPassSwapchainLayout();
-		}
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		{
@@ -326,7 +323,7 @@ namespace SmolEngine
 
 		auto& vkFrameBuffer = m_RenderpassFramebuffer->GetVulkanFramebuffer();
 		vkFrameBuffer.SetClearColors(clearColors);
-		vkCmdClearAttachments(m_CommandBuffer, 2, vkFrameBuffer.m_OffscreenPass.clearAttachments, 1, &clearRect);
+		vkCmdClearAttachments(m_CommandBuffer, 3, vkFrameBuffer.m_OffscreenPass.clearAttachments, 1, &clearRect);
 #endif
 	}
 

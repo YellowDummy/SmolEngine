@@ -74,43 +74,44 @@ namespace SmolEngine
 		m_ID = hasher(filePath);
 	}
 
-	void VulkanTexture::CreateCubeMap(const std::array<std::string, 6>& filePaths)
+	void VulkanTexture::CreateCubeMapKtx(const std::string& filePath)
 	{
-		int height, width, channels;
-		stbi_uc* data[6];
-		for (uint32_t i = 0; i < 6; ++i)
+		ktxResult result;
+		ktxTexture* ktxTexture;
+
+		result = ktxTexture_CreateFromNamedFile(filePath.c_str(), KTX_TEXTURE_CREATE_LOAD_IMAGE_DATA_BIT, &ktxTexture);
+		assert(result == KTX_SUCCESS);
+
+		uint32_t width = ktxTexture->baseWidth;
+		uint32_t height = ktxTexture->baseHeight;
+		uint32_t mipLevels = ktxTexture->numLevels;
+
+		ktx_uint8_t* ktxTextureData = ktxTexture_GetData(ktxTexture);
+		ktx_size_t ktxTextureSize = ktxTexture_GetSize(ktxTexture);
+
+		VulkanBuffer stagingBuffer;
+		stagingBuffer.Create(ktxTextureSize, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+		stagingBuffer.SetData(ktxTextureData, ktxTextureSize);
+
+		// Create optimal tiled target image
+		VkImageCreateInfo imageCreateInfo = {};
 		{
-			stbi_set_flip_vertically_on_load(1);
-			{
-				data[i] = stbi_load(filePaths[i].c_str(), &width, &height, &channels, 4);
-				if (!data[i])
-				{
-					NATIVE_ERROR("VulkanTexture:: Texture not found! file: {}, line: {}", __FILE__, __LINE__);
-					abort();
-				}
-			}
-		}
+			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+			imageCreateInfo.format = Format;
+			imageCreateInfo.mipLevels = mipLevels;
+			imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+			imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+			imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			imageCreateInfo.extent = { width, height, 1 };
+			imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+			// Cube faces count as array layers in Vulkan
+			imageCreateInfo.arrayLayers = 6;
+			// This flag is required for cube map images
+			imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
-		const uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height)))) + 1;
-		const VkDeviceSize size = width * height * 4 * 6;
-		const VkDeviceSize bufferOffset = size / 6;
-
-		VkImageCreateInfo imageCI = {};
-		{
-			imageCI.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-			imageCI.imageType = VK_IMAGE_TYPE_2D;
-			imageCI.format = Format;
-			imageCI.mipLevels = 1;
-			imageCI.arrayLayers = 6;
-			imageCI.samples = VK_SAMPLE_COUNT_1_BIT;
-			imageCI.tiling = VK_IMAGE_TILING_OPTIMAL;
-			imageCI.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			imageCI.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			imageCI.extent = { (uint32_t)width, (uint32_t)height, 1 };
-			imageCI.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			imageCI.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
-
-			VK_CHECK_RESULT(vkCreateImage(m_Device, &imageCI, nullptr, &m_Image));
+			VK_CHECK_RESULT(vkCreateImage(m_Device, &imageCreateInfo, nullptr, &m_Image));
 		}
 
 		VkMemoryRequirements memReqs;
@@ -119,81 +120,120 @@ namespace SmolEngine
 		VulkanMemoryAllocator::Allocate(m_Device, memReqs, &m_DeviceMemory, typeIndex);
 		VK_CHECK_RESULT(vkBindImageMemory(m_Device, m_Image, m_DeviceMemory, 0));
 
-		VulkanStagingBuffer stagingBuffer;
-		stagingBuffer.Create(size);
-
-		std::vector< VkBufferImageCopy> bufferImages(6);
-		VkDeviceSize offset = 0;
-		uint32_t index = 0;
-		for (uint32_t i = 0; i < 6; ++i)
+		// Setup buffer copy regions for each face including all of its miplevels
+		std::vector<VkBufferImageCopy> bufferCopyRegions;
+		uint32_t offset = 0;
+		for (uint32_t face = 0; face < 6; face++)
 		{
-			stagingBuffer.SetData(data[i], width * height * 4, offset);
-
-			VkBufferImageCopy bufferImageCopy = {};
+			for (uint32_t level = 0; level < mipLevels; level++)
 			{
-				bufferImageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				bufferImageCopy.imageSubresource.mipLevel = 1;
-				bufferImageCopy.imageSubresource.baseArrayLayer = i;
-				bufferImageCopy.imageSubresource.layerCount = 1;
-				bufferImageCopy.imageExtent.width = width;
-				bufferImageCopy.imageExtent.height = height;
-				bufferImageCopy.imageExtent.depth = 1;
-				bufferImageCopy.bufferOffset = offset;
+				// Calculate offset into staging buffer for the current mip level and face
+				ktx_size_t offset;
+				KTX_error_code ret = ktxTexture_GetImageOffset(ktxTexture, level, 0, face, &offset);
+				assert(ret == KTX_SUCCESS);
+				VkBufferImageCopy bufferCopyRegion = {};
+				bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				bufferCopyRegion.imageSubresource.mipLevel = level;
+				bufferCopyRegion.imageSubresource.baseArrayLayer = face;
+				bufferCopyRegion.imageSubresource.layerCount = 1;
+				bufferCopyRegion.imageExtent.width = ktxTexture->baseWidth >> level;
+				bufferCopyRegion.imageExtent.height = ktxTexture->baseHeight >> level;
+				bufferCopyRegion.imageExtent.depth = 1;
+				bufferCopyRegion.bufferOffset = offset;
+				bufferCopyRegions.push_back(bufferCopyRegion);
 			}
-
-			bufferImages[i] = bufferImageCopy;
-			offset += bufferOffset;
 		}
 
-		VkImageSubresourceRange subResRange = {};
-		{
-			subResRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			subResRange.baseMipLevel = 0;
-			subResRange.levelCount = 1;
-			subResRange.layerCount = GetImageArrayLayers(TextureType::CubeMap);
-		}
-
-		VkImageMemoryBarrier imageMemBarries = {};
-		{
-			imageMemBarries.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-			imageMemBarries.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			imageMemBarries.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			imageMemBarries.image = m_Image;
-			imageMemBarries.subresourceRange = subResRange;
-			imageMemBarries.srcAccessMask = 0;
-			imageMemBarries.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			imageMemBarries.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			imageMemBarries.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		}
-
-		VulkanCommandBuffer& vulkanCmdBuffer = VulkanContext::GetCommandBuffer();
-		VkCommandBuffer copyCmd = vulkanCmdBuffer.CreateSingleCommandBuffer(false);
-		VkPipelineStageFlags srcStage = VK_PIPELINE_STAGE_HOST_BIT;
-		VkPipelineStageFlags dstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-		{
-			vkCmdPipelineBarrier(copyCmd, srcStage, dstStage,
-				0,
-				0, nullptr,
-				0, nullptr,
-				1, &imageMemBarries);
-
-			vkCmdCopyBufferToImage(copyCmd, stagingBuffer.GetBuffer(), m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-				static_cast<uint32_t>(bufferImages.size()), bufferImages.data());
-
-			// Once the data has been uploaded we transfer to the texture image to the shader read layout, so it can be sampled from
-			imageMemBarries.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			imageMemBarries.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			imageMemBarries.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-			imageMemBarries.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-			vkCmdPipelineBarrier(copyCmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemBarries);
-		}
-
-		vulkanCmdBuffer.FlushCommandBuffer(copyCmd);
-		stagingBuffer.Destroy();
+		// Image barrier for optimal image (target)
+		// Set initial layout for all array layers (faces) of the optimal (target) tiled texture
+		VkImageSubresourceRange subresourceRange = {};
+		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		subresourceRange.baseMipLevel = 0;
+		subresourceRange.levelCount = mipLevels;
+		subresourceRange.layerCount = 6;
 
 		m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		CreateSamplerAndImageView(TextureType::CubeMap, 1);
+
+		VkCommandBuffer copyCmd = VulkanContext::GetCommandBuffer().CreateSingleCommandBuffer();
+		{
+			SetImageLayout(
+				copyCmd,
+				m_Image,
+				VK_IMAGE_LAYOUT_UNDEFINED,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				subresourceRange);
+
+			vkCmdCopyBufferToImage(
+				copyCmd,
+				stagingBuffer.GetBuffer(),
+				m_Image,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				static_cast<uint32_t>(bufferCopyRegions.size()),
+				bufferCopyRegions.data()
+			);
+
+			SetImageLayout(
+				copyCmd,
+				m_Image,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				m_ImageLayout,
+				subresourceRange);
+		}
+		VulkanContext::GetCommandBuffer().EndSingleCommandBuffer(copyCmd);
+
+		// Sampler
+		{
+			auto& device = VulkanContext::GetDevice();
+
+			// Create sampler
+			VkSamplerCreateInfo samplerCI = {};
+			samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			samplerCI.maxAnisotropy = 1.0f;
+			samplerCI.magFilter = VK_FILTER_LINEAR;
+			samplerCI.minFilter = VK_FILTER_LINEAR;
+			samplerCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			samplerCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+			samplerCI.addressModeV = samplerCI.addressModeU;
+			samplerCI.addressModeW = samplerCI.addressModeU;
+			samplerCI.mipLodBias = 0.0f;
+			samplerCI.compareOp = VK_COMPARE_OP_NEVER;
+			samplerCI.minLod = 0.0f;
+			samplerCI.maxLod = mipLevels;
+			samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+			samplerCI.maxAnisotropy = 1.0f;
+			if (device.GetDeviceFeatures()->samplerAnisotropy)
+			{
+				samplerCI.maxAnisotropy = device.GetDeviceProperties()->limits.maxSamplerAnisotropy;
+				samplerCI.anisotropyEnable = VK_TRUE;
+			}
+
+			VK_CHECK_RESULT(vkCreateSampler(m_Device, &samplerCI, nullptr, &m_Samper));
+		}
+
+		// View
+		{
+			VkImageViewCreateInfo view = {};
+			view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			// Cube map view type
+			view.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
+			view.format = Format;
+			view.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
+			view.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+			// 6 array layers (faces)
+			view.subresourceRange.layerCount = 6;
+			// Set number of mip levels
+			view.subresourceRange.levelCount = mipLevels;
+			view.image = m_Image;
+			VK_CHECK_RESULT(vkCreateImageView(m_Device, &view, nullptr, &m_ImageView));
+		}
+
+		m_DescriptorImageInfo = {};
+		m_DescriptorImageInfo.imageLayout = m_ImageLayout;
+		m_DescriptorImageInfo.imageView = m_ImageView;
+		m_DescriptorImageInfo.sampler = m_Samper;
+
+		stagingBuffer.Destroy();
+		ktxTexture_Destroy(ktxTexture);
 	}
 
 	VkImage VulkanTexture::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels,
@@ -420,6 +460,8 @@ namespace SmolEngine
 
 		VkSamplerCreateInfo samplerCI = {};
 		{
+			auto& device = VulkanContext::GetDevice();
+
 			samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 			samplerCI.maxAnisotropy = 1.0f;
 			samplerCI.magFilter = VK_FILTER_LINEAR;
@@ -432,9 +474,14 @@ namespace SmolEngine
 			samplerCI.mipLodBias = 0.0f;
 			samplerCI.minLod = 0.0f;
 			samplerCI.maxLod = static_cast<float>(mipMaps);
-			samplerCI.anisotropyEnable = VK_FALSE;
 			samplerCI.maxAnisotropy = 1.0;
 			samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+			samplerCI.maxAnisotropy = 1.0f;
+			if (device.GetDeviceFeatures()->samplerAnisotropy)
+			{
+				samplerCI.maxAnisotropy = device.GetDeviceProperties()->limits.maxSamplerAnisotropy;
+				samplerCI.anisotropyEnable = VK_TRUE;
+			}
 
 			VK_CHECK_RESULT(vkCreateSampler(m_Device, &samplerCI, nullptr, &m_Samper));
 		}
@@ -462,6 +509,123 @@ namespace SmolEngine
 		m_DescriptorImageInfo.imageLayout = m_ImageLayout;
 		m_DescriptorImageInfo.imageView = m_ImageView;
 		m_DescriptorImageInfo.sampler = m_Samper;
+	}
+
+	void VulkanTexture::SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
+	{
+		VkImageMemoryBarrier imageMemoryBarrier = {};
+		imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		imageMemoryBarrier.oldLayout = oldImageLayout;
+		imageMemoryBarrier.newLayout = newImageLayout;
+		imageMemoryBarrier.image = image;
+		imageMemoryBarrier.subresourceRange = subresourceRange;
+
+		// Source layouts (old)
+		// Source access mask controls actions that have to be finished on the old layout
+		// before it will be transitioned to the new layout
+		switch (oldImageLayout)
+		{
+		case VK_IMAGE_LAYOUT_UNDEFINED:
+			// Image layout is undefined (or does not matter)
+			// Only valid as initial layout
+			// No flags required, listed only for completeness
+			imageMemoryBarrier.srcAccessMask = 0;
+			break;
+
+		case VK_IMAGE_LAYOUT_PREINITIALIZED:
+			// Image is preinitialized
+			// Only valid as initial layout for linear images, preserves memory contents
+			// Make sure host writes have been finished
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+			// Image is a color attachment
+			// Make sure any writes to the color buffer have been finished
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+			// Image is a depth/stencil attachment
+			// Make sure any writes to the depth/stencil buffer have been finished
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			// Image is a transfer source
+			// Make sure any reads from the image have been finished
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			// Image is a transfer destination
+			// Make sure any writes to the image have been finished
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+			// Image is read by a shader
+			// Make sure any shader reads from the image have been finished
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			break;
+		default:
+			// Other source layouts aren't handled (yet)
+			break;
+		}
+
+		// Target layouts (new)
+		// Destination access mask controls the dependency for the new image layout
+		switch (newImageLayout)
+		{
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			// Image will be used as a transfer destination
+			// Make sure any writes to the image have been finished
+			imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			// Image will be used as a transfer source
+			// Make sure any reads from the image have been finished
+			imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+			// Image will be used as a color attachment
+			// Make sure any writes to the color buffer have been finished
+			imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+			// Image layout will be used as a depth/stencil attachment
+			// Make sure any writes to depth/stencil buffer have been finished
+			imageMemoryBarrier.dstAccessMask = imageMemoryBarrier.dstAccessMask | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+			// Image will be read in a shader (sampler, input attachment)
+			// Make sure any writes to the image have been finished
+			if (imageMemoryBarrier.srcAccessMask == 0)
+			{
+				imageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+			}
+			imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			break;
+		default:
+			// Other source layouts aren't handled (yet)
+			break;
+		}
+
+		// Put barrier inside setup command buffer
+		vkCmdPipelineBarrier(
+			cmdbuffer,
+			srcStageMask,
+			dstStageMask,
+			0,
+			0, nullptr,
+			0, nullptr,
+			1, &imageMemoryBarrier);
 	}
 
 	VkImageViewType VulkanTexture::GetVkImageViewType(TextureType type)
@@ -492,6 +656,11 @@ namespace SmolEngine
 		default:
 			return 1;
 		}
+	}
+
+	const VkDescriptorImageInfo& VulkanTexture::GetVkDescriptorImageInfo() const
+	{
+		return m_DescriptorImageInfo;
 	}
 
 	uint32_t VulkanTexture::GetHeight() const

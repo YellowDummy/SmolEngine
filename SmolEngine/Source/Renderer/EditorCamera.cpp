@@ -35,18 +35,34 @@ namespace SmolEngine
 
 	void EditorCamera::OnUpdate(DeltaTime delta)
 	{
+
+		if (Input::IsKeyPressed(Key::W))
+			m_FocalPoint += GetForwardDirection() / 100.0f;
+
+		if (Input::IsKeyPressed(Key::S))
+			m_FocalPoint -= GetForwardDirection() / 100.0f;
+
+		if (Input::IsKeyPressed(Key::D))
+			m_FocalPoint += GetRightDirection() / 175.0f;
+
+		if (Input::IsKeyPressed(Key::A))
+			m_FocalPoint -= GetRightDirection() / 175.0f;
+
+		const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
+		glm::vec2 deltaT = (mouse - m_InitialMousePosition) * 0.003f;
+		m_InitialMousePosition = mouse;
+
+		if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
+			MousePan(deltaT);
+
 		if (Input::IsKeyPressed(Key::LeftAlt))
 		{
-			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
-			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
-			m_InitialMousePosition = mouse;
 
-			if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
-				MousePan(delta);
-			else if (Input::IsMouseButtonPressed(Mouse::ButtonLeft))
-				MouseRotate(delta);
-			else if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
-				MouseZoom(delta.y);
+			if (Input::IsMouseButtonPressed(Mouse::ButtonLeft))
+				MouseRotate(deltaT);
+
+			if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
+				MouseZoom(deltaT.y);
 		}
 
 		UpdateView();
@@ -174,6 +190,7 @@ namespace SmolEngine
 	{
 		auto& res_e = static_cast<WindowResizeEvent&>(e);
 
+		m_AspectRatio = res_e.GetHeight() / res_e.GetWidth();
 
 		m_FrameBuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());
 		return false;

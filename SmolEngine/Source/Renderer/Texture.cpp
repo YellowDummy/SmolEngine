@@ -134,22 +134,6 @@ namespace SmolEngine
 		return texture;
 	}
 
-	Ref<Texture> Texture::CreateCubeMap(const std::array<std::string, 6> filePaths)
-	{
-		Ref<Texture> texture = std::make_shared<Texture>();
-		if (!texture->m_Initialized)
-		{
-#ifdef  SMOLENGINE_OPENGL_IMPL
-
-#else
-			texture->m_VulkanTexture.CreateCubeMap(filePaths);
-#endif
-			texture->m_Initialized = true;
-		}
-
-		return texture;
-	}
-
 	Ref<Texture> Texture::Create(FT_Bitmap* bitmap)
 	{
 		Ref<Texture> texture = std::make_shared<Texture>();

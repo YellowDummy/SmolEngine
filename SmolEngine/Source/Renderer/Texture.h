@@ -49,8 +49,6 @@ namespace SmolEngine
 
 		static Ref<Texture> Create(const std::string& filePath);
 
-		static Ref<Texture> CreateCubeMap(const std::array<std::string, 6> filePaths);
-
 		static Ref<Texture> Create(FT_Bitmap* bitmap);
 
 		/// Operators
