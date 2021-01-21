@@ -93,7 +93,6 @@ namespace SmolEngine
 	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
 		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
 #endif
@@ -109,11 +108,6 @@ namespace SmolEngine
 		s_Data->SceneData.viewProjectionMatrix = viewProjectionMatrix;
 		s_Data->SceneData.ambientValue = ambientValue;
 		s_Data->SceneData.targetFramebuffer = targetFramebuffer;
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
-		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
-#endif
 
 		StartNewBatch();
 		Stats->Reset();
@@ -157,7 +151,6 @@ namespace SmolEngine
 		UploadLightUniforms();
 
 #ifndef SMOLENGINE_OPENGL_IMPL
-
 		for (auto& layer : s_Data->Layers)
 		{
 			if (!layer.isActive)
@@ -266,11 +259,6 @@ namespace SmolEngine
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 		s_Data->MainPipeline->SumbitUniform<int>("u_Ligh2DBufferSize", &s_Data->Light2DBufferSize);
-#else
-
-#endif
-
-#ifdef SMOLENGINE_OPENGL_IMPL
 		for (uint32_t i = 0; i < s_Data->Light2DBufferSize; i++)
 		{
 			auto& ref = s_Data->LightBuffer[i];
@@ -284,7 +272,7 @@ namespace SmolEngine
 			ref.Attributes = glm::vec4(0.0f);
 			ref.Offset = glm::vec4(0.0f);
 		}
-
+			
 #else
 		s_Data->MainPipeline->SumbitUniformBuffer(1, sizeof(Light2DBuffer) * (s_Data->Light2DBufferSize + 1), s_Data->LightBuffer);
 #endif
@@ -622,7 +610,6 @@ namespace SmolEngine
 		delete[] quadIndices;
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		// Loading samplers
 		int32_t samplers[MaxTextureSlot];
 		for (uint32_t i = 0; i < MaxTextureSlot; ++i)
@@ -631,6 +618,11 @@ namespace SmolEngine
 		}
 
 		s_Data->MainPipeline->SumbitUniform<int*>("u_Textures", samplers, MaxTextureSlot);
+		for (uint32_t i = 0; i < MaxTextureSlot; ++i)
+		{
+			s_Data->WhiteTexture->Bind(i);
+		}
+
 
 #endif // SMOLENGINE_OPENGL_IMPL
 	}

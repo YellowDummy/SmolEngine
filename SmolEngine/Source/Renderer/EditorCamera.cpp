@@ -28,8 +28,6 @@ namespace SmolEngine
 		spec.Height = Application::GetApplication().GetWindowHeight();
 		m_FrameBuffer = Framebuffer::Create(spec);
 
-		//m_AspectRatio = static_cast<float>(spec.Width) / static_cast<float>(spec.Height);
-
 		switch (m_Type)
 		{
 		case CameraType::Ortho:

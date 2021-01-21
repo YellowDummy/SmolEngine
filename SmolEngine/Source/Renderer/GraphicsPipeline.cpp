@@ -247,7 +247,8 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_Shader->Bind();
 		m_VextexArray->Bind();
-		m_RenderpassFramebuffer->Bind();
+		if(m_RenderpassFramebuffer)
+			m_RenderpassFramebuffer->Bind();
 #else
 		VkClearValue clearValues[3];
 		clearValues[2].depthStencil = { 1.0f, 0 };
@@ -297,7 +298,9 @@ namespace SmolEngine
 	void GraphicsPipeline::EndRenderPass()
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		m_RenderpassFramebuffer->UnBind();
+		if(m_RenderpassFramebuffer)
+			m_RenderpassFramebuffer->UnBind();
+
 		m_Shader->UnBind();
 		m_VextexArray->UnBind();
 #else

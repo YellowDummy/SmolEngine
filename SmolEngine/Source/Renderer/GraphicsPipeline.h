@@ -153,6 +153,14 @@ namespace SmolEngine
 		}
 #endif
 
+#ifdef SMOLENGINE_OPENGL_IMPL
+
+		void BindOpenGLShader()
+		{
+			m_Shader->Bind();
+		}
+#endif
+
 	private:
 
 		// Helpres

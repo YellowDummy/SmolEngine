@@ -60,6 +60,8 @@ namespace SmolEngine
 		EditorCameraCreateInfo editorCamCI{};
 		{
 			editorCamCI.Type = CameraType::Ortho;
+			editorCamCI.NearClip = -1.0f;
+			editorCamCI.FarClip = 1.0f;
 			editorCamCI.IsFramebufferTargetsSwapchain = false;
 		}
 
