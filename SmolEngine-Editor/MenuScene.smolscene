@@ -1,136 +1,22 @@
 {
-    "value0": 9,
+    "value0": 1,
     "value1": 0,
     "value2": 1,
-    "value3": 2,
-    "value4": 3,
-    "value5": 4,
-    "value6": 5,
-    "value7": 6,
-    "value8": 7,
-    "value9": 8,
-    "value10": 8,
-    "value11": 1,
-    "value12": {
+    "value3": 0,
+    "value4": {
         "value0": {
-            "value0": 1,
-            "value1": "New_Actor_0",
+            "value0": 0,
+            "value1": "New_Sprite_0",
             "value2": "Default",
             "value3": true,
             "value4": 0
         }
     },
-    "value13": 2,
-    "value14": {
-        "value0": {
-            "value0": 2,
-            "value1": "New_Actor_1",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value15": 3,
-    "value16": {
-        "value0": {
-            "value0": 3,
-            "value1": "New_Actor_2",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value17": 4,
-    "value18": {
-        "value0": {
-            "value0": 4,
-            "value1": "New_Actor_3",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value19": 5,
-    "value20": {
-        "value0": {
-            "value0": 5,
-            "value1": "New_Actor_4",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value21": 6,
-    "value22": {
-        "value0": {
-            "value0": 6,
-            "value1": "New_Actor_5",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value23": 7,
-    "value24": {
-        "value0": {
-            "value0": 7,
-            "value1": "New_Actor_6",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value25": 8,
-    "value26": {
-        "value0": {
-            "value0": 8,
-            "value1": "New_Actor_7",
-            "value2": "Default",
-            "value3": true,
-            "value4": 0
-        }
-    },
-    "value27": 0,
-    "value28": 0,
-    "value29": 6,
-    "value30": 1,
-    "value31": {
-        "value0": 1.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 0,
-        "value5": "",
-        "value6": "Test.png",
-        "value7": true,
-        "value8": 1
-    },
-    "value32": 2,
-    "value33": {
-        "value0": 1.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 0,
-        "value5": "",
-        "value6": "more_rough_wood_6 (2).png",
-        "value7": true,
-        "value8": 1
-    },
-    "value34": 3,
-    "value35": {
-        "value0": 1.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 0,
-        "value5": "",
-        "value6": "more_rough_wood_6 (2).png",
-        "value7": true,
-        "value8": 1
-    },
-    "value36": 4,
-    "value37": {
+    "value5": 0,
+    "value6": 0,
+    "value7": 1,
+    "value8": 0,
+    "value9": {
         "value0": 1.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -141,138 +27,12 @@
         "value7": true,
         "value8": 1
     },
-    "value38": 5,
-    "value39": {
-        "value0": 1.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 0,
-        "value5": "",
-        "value6": "Background.png",
-        "value7": true,
-        "value8": 1
-    },
-    "value40": 8,
-    "value41": {
-        "value0": 1.0,
-        "value1": 1.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 0,
-        "value5": "",
-        "value6": "example.png",
-        "value7": true,
-        "value8": 2
-    },
-    "value42": 1,
-    "value43": 7,
-    "value44": {
-        "value0": [],
-        "value1": {
-            "ptr_wrapper": {
-                "id": 0
-            }
-        },
-        "value2": 0,
-        "value3": 1
-    },
-    "value45": 1,
-    "value46": 6,
-    "value47": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 1.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 1.0,
-        "value7": 3.0,
-        "value8": true,
-        "value9": 1
-    },
-    "value48": 0,
-    "value49": 8,
-    "value50": 1,
-    "value51": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": -1.6326534748077393,
-        "value7": 1.368030071258545,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value52": 2,
-    "value53": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 2.785714864730835,
-        "value7": 1.2094173431396485,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value54": 3,
-    "value55": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": -2.2857141494750978,
-        "value7": -1.1400246620178223,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value56": 4,
-    "value57": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": -1.2142858505249024,
-        "value7": -1.1895909309387208,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value58": 5,
-    "value59": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 0.3775513172149658,
-        "value7": -1.6257743835449219,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value60": 6,
-    "value61": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 0.7601352334022522,
-        "value7": 1.3958063125610352,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value62": 7,
-    "value63": {
+    "value10": 0,
+    "value11": 0,
+    "value12": 0,
+    "value13": 1,
+    "value14": 0,
+    "value15": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -284,58 +44,17 @@
         "value8": 0.0,
         "value9": 0
     },
-    "value64": 8,
-    "value65": {
-        "value0": 0.0,
-        "value1": 0.0,
-        "value2": 0.0,
-        "value3": 1.0,
-        "value4": 1.0,
-        "value5": 1.0,
-        "value6": 1.0783778429031373,
-        "value7": 3.6834871768951418,
-        "value8": 0.0,
-        "value9": 0
-    },
-    "value66": 0,
-    "value67": 1,
-    "value68": 8,
-    "value69": {
-        "value0": {
-            "value0": true,
-            "value1": 1.0,
-            "value2": 0.30000001192092898,
-            "value3": 0,
-            "value4": 0.0,
-            "value5": 1.0,
-            "value6": 1.0,
-            "value7": true,
-            "value8": false,
-            "value9": false,
-            "value10": 0.0,
-            "value11": 1.0,
-            "value12": 1.0,
-            "value13": 2,
-            "value14": 1,
-            "value15": 0.5,
-            "value16": 0.0,
-            "value17": 0.0,
-            "value18": 0.0,
-            "value19": 0.0
-        },
-        "value1": 8,
-        "value2": true,
-        "value3": 1
-    }
+    "value16": 0,
+    "value17": 0
 }|{
     "value0": [
         {
-            "key": 1,
+            "key": 0,
             "value": {
                 "ptr_wrapper": {
                     "id": 2147483649,
                     "data": {
-                        "value0": 1,
+                        "value0": 0,
                         "value1": 0,
                         "value2": {
                             "ptr_wrapper": {
@@ -348,168 +67,12 @@
                     }
                 }
             }
-        },
-        {
-            "key": 2,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483650,
-                    "data": {
-                        "value0": 2,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 1,
-                        "value5": 2
-                    }
-                }
-            }
-        },
-        {
-            "key": 3,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483651,
-                    "data": {
-                        "value0": 3,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 2,
-                        "value5": 2
-                    }
-                }
-            }
-        },
-        {
-            "key": 4,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483652,
-                    "data": {
-                        "value0": 4,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 3,
-                        "value5": 2
-                    }
-                }
-            }
-        },
-        {
-            "key": 5,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483653,
-                    "data": {
-                        "value0": 5,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 4,
-                        "value5": 2
-                    }
-                }
-            }
-        },
-        {
-            "key": 6,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483654,
-                    "data": {
-                        "value0": 6,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 5,
-                        "value5": 2
-                    }
-                }
-            }
-        },
-        {
-            "key": 7,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483655,
-                    "data": {
-                        "value0": 7,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 6,
-                        "value5": 2
-                    }
-                }
-            }
-        },
-        {
-            "key": 8,
-            "value": {
-                "ptr_wrapper": {
-                    "id": 2147483656,
-                    "data": {
-                        "value0": 8,
-                        "value1": 0,
-                        "value2": {
-                            "ptr_wrapper": {
-                                "id": 0
-                            }
-                        },
-                        "value3": [],
-                        "value4": 7,
-                        "value5": 3
-                    }
-                }
-            }
         }
     ],
     "value1": [
         {
-            "key": "Test.png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Test.png"
-        },
-        {
-            "key": "Background.png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png"
-        },
-        {
-            "key": "more_rough_wood_6 (2).png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\more_rough_wood_6 (2).png"
-        },
-        {
             "key": "Ball.png",
             "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png"
-        },
-        {
-            "key": "example.png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\example.png"
         }
     ],
     "value2": 0,
@@ -518,6 +81,6 @@
     "value5": 7452781543701302592,
     "value6": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\MenuScene.smolscene",
     "value7": "MenuScene.smolscene",
-    "value8": "",
+    "value8": "TestScene2.smolscene",
     "value9": 1.0
 }

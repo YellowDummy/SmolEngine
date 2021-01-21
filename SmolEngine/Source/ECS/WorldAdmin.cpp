@@ -323,10 +323,8 @@ namespace SmolEngine
 
 	void WorldAdmin::CreateScene(const std::string& filePath)
 	{
-		Scene newScene(filePath);
-
 		m_ActiveSceneID++;
-		m_SceneMap[m_ActiveSceneID] = std::move(newScene);
+		m_SceneMap[m_ActiveSceneID].Init(filePath);
 	}
 
 	bool WorldAdmin::LoadSceneRuntime(uint32_t index)

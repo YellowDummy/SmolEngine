@@ -20,11 +20,6 @@ layout(std140, binding = 1) uniform LightBuffer
 
 layout(binding = 2) uniform sampler2D u_Textures[4096]; // note: no need to put textures inside uniform buffer
 
-layout(push_constant) uniform LightEnvironment
-{
-	int LightSources;
-};
-
 // Batch Buffer
 
 struct BatchData
@@ -35,6 +30,7 @@ struct BatchData
 	float ambientValue;
 	float textureID;
 	float textMode;
+	float lightSources;
 };
 
 layout (location = 22) in BatchData v_Data;
@@ -54,6 +50,8 @@ void main()
 
 		vec3 tempColor = vec3(0.0, 0.0, 0.0);
 		
+		int LightSources = int(v_Data.lightSources);
+
 		for(int i = 0; i < LightSources; ++i)
 		{
 			float intensity = ( LightData[i].Attributes.r / length(v_Data.position.xy - LightData[i].Position.xy) ) * LightData[i].Attributes.g;

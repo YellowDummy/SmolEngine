@@ -7,7 +7,7 @@
 
 namespace SmolEngine
 {
-	Scene::Scene(const std::string& filePath)
+	void Scene::Init(const std::string& filePath)
 	{
 		std::filesystem::path p(filePath);
 		m_SceneData = SceneData(filePath, p.filename().string());

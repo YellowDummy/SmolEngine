@@ -10,6 +10,7 @@ layout(location = 8) in vec3 v_Camera;
 
 layout(binding = 9) uniform sampler2D u_Textures[7];
 
+
 struct Light2DBuffer
 {
 	vec4 LightColor;

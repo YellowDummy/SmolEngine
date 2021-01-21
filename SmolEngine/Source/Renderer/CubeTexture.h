@@ -18,7 +18,10 @@ namespace SmolEngine
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
-		VulkanTexture* GetVulkanTexture();
+		VulkanTexture* GetVulkanTexture()
+		{
+			return &m_VulkanTetxure;
+		}
 #endif
 
 	private:

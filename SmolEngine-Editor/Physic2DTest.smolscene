@@ -1,14 +1,15 @@
 {
-    "value0": 6,
+    "value0": 7,
     "value1": 0,
     "value2": 1,
     "value3": 2,
     "value4": 3,
     "value5": 4,
     "value6": 5,
-    "value7": 5,
-    "value8": 1,
-    "value9": {
+    "value7": 6,
+    "value8": 6,
+    "value9": 1,
+    "value10": {
         "value0": {
             "value0": 1,
             "value1": "New_Rigidbody2D_0",
@@ -17,8 +18,8 @@
             "value4": 0
         }
     },
-    "value10": 2,
-    "value11": {
+    "value11": 2,
+    "value12": {
         "value0": {
             "value0": 2,
             "value1": "New_Rigidbody2D_1",
@@ -27,8 +28,8 @@
             "value4": 0
         }
     },
-    "value12": 3,
-    "value13": {
+    "value13": 3,
+    "value14": {
         "value0": {
             "value0": 3,
             "value1": "New_Light2D_2",
@@ -37,8 +38,8 @@
             "value4": 0
         }
     },
-    "value14": 4,
-    "value15": {
+    "value15": 4,
+    "value16": {
         "value0": {
             "value0": 4,
             "value1": "New_Sprite_3",
@@ -47,8 +48,8 @@
             "value4": 0
         }
     },
-    "value16": 5,
-    "value17": {
+    "value17": 5,
+    "value18": {
         "value0": {
             "value0": 5,
             "value1": "New_Rigidbody2D_4",
@@ -57,10 +58,20 @@
             "value4": 0
         }
     },
-    "value18": 0,
-    "value19": 1,
-    "value20": 2,
-    "value21": {
+    "value19": 6,
+    "value20": {
+        "value0": {
+            "value0": 6,
+            "value1": "New_Light2D_5",
+            "value2": "Default",
+            "value3": true,
+            "value4": 0
+        }
+    },
+    "value21": 0,
+    "value22": 1,
+    "value23": 2,
+    "value24": {
         "value0": 2,
         "value1": [
             {
@@ -115,9 +126,9 @@
             }
         }
     },
-    "value22": 2,
-    "value23": 2,
-    "value24": {
+    "value25": 2,
+    "value26": 2,
+    "value27": {
         "value0": 1.0,
         "value1": 1.0,
         "value2": 1.0,
@@ -128,22 +139,22 @@
         "value7": true,
         "value8": 2
     },
-    "value25": 4,
-    "value26": {
+    "value28": 4,
+    "value29": {
         "value0": 1.0,
         "value1": 1.0,
         "value2": 1.0,
         "value3": 1.0,
         "value4": 0,
         "value5": "",
-        "value6": "Background.png",
+        "value6": "bulkhead-wallsx3.png",
         "value7": true,
         "value8": 1
     },
-    "value27": 0,
-    "value28": 1,
-    "value29": 3,
-    "value30": {
+    "value30": 0,
+    "value31": 2,
+    "value32": 3,
+    "value33": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.9999969601631165,
@@ -155,10 +166,23 @@
         "value8": true,
         "value9": 1
     },
-    "value31": 0,
-    "value32": 5,
-    "value33": 1,
-    "value34": {
+    "value34": 6,
+    "value35": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.9256668090820313,
+        "value3": 0.4885351359844208,
+        "value4": 0.7383249402046204,
+        "value5": 1.0,
+        "value6": 1.0,
+        "value7": 1.0,
+        "value8": true,
+        "value9": 1
+    },
+    "value36": 0,
+    "value37": 6,
+    "value38": 1,
+    "value39": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -170,8 +194,8 @@
         "value8": 0.0,
         "value9": 0
     },
-    "value35": 2,
-    "value36": {
+    "value40": 2,
+    "value41": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -183,8 +207,8 @@
         "value8": 0.0,
         "value9": 0
     },
-    "value37": 3,
-    "value38": {
+    "value42": 3,
+    "value43": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -196,8 +220,8 @@
         "value8": 0.0,
         "value9": 0
     },
-    "value39": 4,
-    "value40": {
+    "value44": 4,
+    "value45": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -209,8 +233,8 @@
         "value8": 0.0,
         "value9": 0
     },
-    "value41": 5,
-    "value42": {
+    "value46": 5,
+    "value47": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -222,10 +246,23 @@
         "value8": 0.0,
         "value9": 0
     },
-    "value43": 0,
-    "value44": 3,
-    "value45": 1,
-    "value46": {
+    "value48": 6,
+    "value49": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 4.806542873382568,
+        "value7": -1.9023282527923585,
+        "value8": -1000.0999145507813,
+        "value9": 0
+    },
+    "value50": 0,
+    "value51": 3,
+    "value52": 1,
+    "value53": {
         "value0": {
             "value0": true,
             "value1": 1.0,
@@ -252,8 +289,8 @@
         "value2": true,
         "value3": 1
     },
-    "value47": 2,
-    "value48": {
+    "value54": 2,
+    "value55": {
         "value0": {
             "value0": true,
             "value1": 1.0,
@@ -280,8 +317,8 @@
         "value2": true,
         "value3": 1
     },
-    "value49": 5,
-    "value50": {
+    "value56": 5,
+    "value57": {
         "value0": {
             "value0": true,
             "value1": 1.0,
@@ -409,6 +446,26 @@
                     }
                 }
             }
+        },
+        {
+            "key": 6,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483654,
+                    "data": {
+                        "value0": 6,
+                        "value1": 0,
+                        "value2": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value3": [],
+                        "value4": 5,
+                        "value5": 2
+                    }
+                }
+            }
         }
     ],
     "value1": [
@@ -417,8 +474,8 @@
             "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Ball.png"
         },
         {
-            "key": "Background.png",
-            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\Background.png"
+            "key": "bulkhead-wallsx3.png",
+            "value": "C:\\Dev\\SmolEngine\\GameX\\Assets\\Textures\\bulkhead-wallsx3.png"
         }
     ],
     "value2": 0,

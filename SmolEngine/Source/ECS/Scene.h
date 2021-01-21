@@ -17,7 +17,7 @@ namespace SmolEngine
 
 		Scene() = default;
 
-		Scene(const std::string& filePath);
+		void Init(const std::string& filePath);
 
 		/// Actors
 

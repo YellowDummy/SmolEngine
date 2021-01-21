@@ -57,9 +57,13 @@ namespace SmolEngine
 {
 	void EditorLayer::OnAttach()
 	{
-		float aspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
-		m_Camera = std::make_shared<EditorCamera>();
-		m_Camera->SetCameraType(CameraType::Ortho);
+		EditorCameraCreateInfo editorCamCI{};
+		{
+			editorCamCI.Type = CameraType::Ortho;
+			editorCamCI.IsFramebufferTargetsSwapchain = false;
+		}
+
+		m_Camera = std::make_shared<EditorCamera>(&editorCamCI);
 
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
 
@@ -895,7 +899,7 @@ namespace SmolEngine
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
 				{
 					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_Camera->OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
+					m_Camera->OnResize(m_ViewPortSize.y, m_ViewPortSize.x);
 				}
 
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -938,7 +942,7 @@ namespace SmolEngine
 						CommandSystem::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, false, transform);
 						float snapValues[3] = { snapValue, snapValue, snapValue };
 
-						ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetViewProjection()),
+						ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
 							m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues: nullptr);
 
 						if (ImGuizmo::IsUsing())

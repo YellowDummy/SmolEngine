@@ -28,11 +28,16 @@ namespace SmolEngine
 			VkImageUsageFlags usage,
 			VkDeviceMemory& imageMemory);
 
-		static void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps);
-
-		static void TransitionImageLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipMaps);
-
-		static void CopyBufferToImage(VkImage image, VkBuffer buffer, uint32_t width, uint32_t height);
+		static void InsertImageMemoryBarrier(
+			VkCommandBuffer cmdbuffer,
+			VkImage image,
+			VkAccessFlags srcAccessMask,
+			VkAccessFlags dstAccessMask,
+			VkImageLayout oldImageLayout,
+			VkImageLayout newImageLayout,
+			VkPipelineStageFlags srcStageMask,
+			VkPipelineStageFlags dstStageMask,
+			VkImageSubresourceRange subresourceRange);
 
 		/// Getters
 		
@@ -53,6 +58,8 @@ namespace SmolEngine
 		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data, TextureType type);
 
 		void CreateSamplerAndImageView(TextureType type, uint32_t mipMaps);
+
+		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps, VkImageSubresourceRange& range);
 
 		void SetImageLayout(VkCommandBuffer cmdbuffer,
 			VkImage image,

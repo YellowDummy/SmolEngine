@@ -12,9 +12,4 @@ namespace SmolEngine
 #endif
 		return texture;
 	}
-
-	VulkanTexture* CubeTexture::GetVulkanTexture()
-	{
-		return &m_VulkanTetxure;
-	}
 }

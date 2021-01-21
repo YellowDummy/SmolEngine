@@ -203,12 +203,14 @@ namespace SmolEngine
 
 	bool GraphicsPipeline::Reload()
 	{
-		bool shader_res = m_Shader->Realod();
-		bool pipe_res = m_VulkanPipeline.ReCreate();
+		if (!m_Shader->Realod())
+			return false;
+
 #ifndef SMOLENGINE_OPENGL_IMPL
+		if (!m_VulkanPipeline.ReCreate())
+			return false;
 		m_Shader->GetVulkanShader()->DeleteShaderModules();
 #endif
-
 		return true;
 	}
 
@@ -243,7 +245,6 @@ namespace SmolEngine
 	{
 		m_RenderpassFramebuffer = framebuffer;
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		m_Shader->Bind();
 		m_VextexArray->Bind();
 		m_RenderpassFramebuffer->Bind();
@@ -369,13 +370,13 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::BeginCommandBuffer(bool isSwapchainTarget)
+	void GraphicsPipeline::BeginCommandBuffer(bool isMainCmdBufferInUse)
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
-		if (isSwapchainTarget)
+		if (isMainCmdBufferInUse)
 		{
 			m_CommandBuffer = VulkanContext::GetCurrentVkCmdBuffer();
-			m_IsSwapchainTarget = true;
+			m_IsMainCmdBufferInUse = true;
 			return;
 		}
 
@@ -388,7 +389,7 @@ namespace SmolEngine
 	void GraphicsPipeline::EndCommandBuffer()
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
-		if (!m_IsSwapchainTarget)
+		if (!m_IsMainCmdBufferInUse)
 		{
 			VulkanCommandBuffer::FlushCommandBuffer(m_CommandBuffer);
 		}
@@ -494,7 +495,6 @@ namespace SmolEngine
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
 		m_Shader->SumbitUniformBuffer(bindingPoint, data, size, offset);
-		//m_VulkanPipeline.UpdateDescriptors();
 #endif
 
 	}
@@ -566,7 +566,7 @@ namespace SmolEngine
 	bool GraphicsPipeline::UpdateCubeMap(const Ref<Texture>& cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		return true; // temp
+		return false; // temp
 #else
 		return m_VulkanPipeline.UpdateCubeMap(cubeMap->GetVulkanTexture(), bindingPoint, descriptorSetIndex);
 #endif

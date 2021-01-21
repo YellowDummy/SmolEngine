@@ -44,7 +44,7 @@ namespace SmolEngine
 	void Framebuffer::OnResize(const uint32_t width, const uint32_t height)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		m_OpenglFramebuffer.OnResize(width, height);
+		m_OpenglFramebuffer.OnResize(height, width);
 #else
 		m_VulkanFrameBuffer.OnResize(height, width);
 #endif

@@ -97,6 +97,7 @@ namespace SmolEngine
 		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
 		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
 #endif
+
 		s_Data->MainPipeline->BeginCommandBuffer();
 		s_Data->MainPipeline->BeginRenderPass(targetFramebuffer);
 		{
@@ -108,6 +109,11 @@ namespace SmolEngine
 		s_Data->SceneData.viewProjectionMatrix = viewProjectionMatrix;
 		s_Data->SceneData.ambientValue = ambientValue;
 		s_Data->SceneData.targetFramebuffer = targetFramebuffer;
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
+		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
+#endif
 
 		StartNewBatch();
 		Stats->Reset();
@@ -163,7 +169,6 @@ namespace SmolEngine
 		}
 #endif
 
-		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
 		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
 		{
 			// Iterating over all layers
@@ -237,7 +242,16 @@ namespace SmolEngine
 		s_Data->MainPipeline->UpdateVertextBuffer(layer.Base, dataSize, layer.LayerIndex);
 		layer.ClearSize = dataSize;
 
-		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(int32_t), &s_Data->Light2DBufferSize);
+		struct PushConstant
+		{
+			glm::mat4 cameraViewProj;
+			float LightCount;
+		} ps;
+
+		ps.cameraViewProj = s_Data->SceneData.viewProjectionMatrix;
+		ps.LightCount = s_Data->Light2DBufferSize;
+
+		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &ps);
 		s_Data->MainPipeline->DrawIndexed(DrawMode::Triangle, layer.LayerIndex, 0, layer.LayerIndex);
 #else
 		// Binding textures

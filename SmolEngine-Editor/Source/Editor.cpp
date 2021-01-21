@@ -26,9 +26,9 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		//app.PushLayer(new EditorLayer);
 #else
-		app.PushLayer(new PBRTestLayer);
+		//app.PushLayer(new PBRTestLayer);
 #endif
-		//app.PushLayer(new EditorLayer);
+		app.PushLayer(new EditorLayer);
 		EDITOR_INFO("Initialized successfully");
 	}
 

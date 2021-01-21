@@ -43,10 +43,11 @@ namespace SmolEngine
 
 		uint32_t Stride = 0;
 		uint32_t Samplers = 10;
-		Ref<CubeTexture> SkyBox = nullptr;
 		uint32_t DescriptorSets = 1;
 
 		std::string PipelineName = "";
+		Ref<CubeTexture> SkyBox = nullptr;
+
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
 		bool IsDepthTestEnabled = true;
@@ -79,7 +80,7 @@ namespace SmolEngine
 
 		// Cmd Buffer
 
-		void BeginCommandBuffer(bool isSwapchainTarget = false);
+		void BeginCommandBuffer(bool isMainCmdBufferInUse = false);
 
 		void EndCommandBuffer();
 
@@ -87,9 +88,11 @@ namespace SmolEngine
 
 		// Draw
 
-		void DrawIndexed(DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+		void DrawIndexed(DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, 
+			uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
-		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle,
+			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
 		// Submit
 
@@ -158,12 +161,6 @@ namespace SmolEngine
 
 	private:
 
-#ifndef SMOLENGINE_OPENGL_IMPL
-
-		VulkanPipeline m_VulkanPipeline = {};
-		VkCommandBuffer m_CommandBuffer = nullptr;
-		uint32_t m_IsSwapchainTarget = false;
-#endif
 		struct PipelineState
 		{
 			std::vector<DrawMode> PipelineDrawModes;
@@ -174,13 +171,19 @@ namespace SmolEngine
 			bool IsAlphaBlendingEnabled = false;
 			std::string PipelineName = "";
 
-		} m_State;
+		}                                 m_State = {};
 
-		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
-		std::vector<Ref<IndexBuffer>> m_IndexBuffers;
+#ifndef SMOLENGINE_OPENGL_IMPL
+		VulkanPipeline                    m_VulkanPipeline = {};
+		VkCommandBuffer                   m_CommandBuffer = nullptr;
+		bool                              m_IsMainCmdBufferInUse = false;
+#endif
 
-		Ref<VertexArray> m_VextexArray;
-		Ref<Shader> m_Shader = nullptr;
-		Ref<Framebuffer> m_RenderpassFramebuffer = nullptr;
+		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
+		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;
+
+		Ref<VertexArray>                  m_VextexArray = nullptr;
+		Ref<Shader>                       m_Shader = nullptr;
+		Ref<Framebuffer>                  m_RenderpassFramebuffer = nullptr;
 	};
 }

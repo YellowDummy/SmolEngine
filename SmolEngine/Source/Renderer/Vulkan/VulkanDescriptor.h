@@ -10,7 +10,7 @@ namespace SmolEngine
 	{
 	public:
 
-		VulkanDescriptor() = default;
+		VulkanDescriptor();
 
 		~VulkanDescriptor();
 
@@ -50,9 +50,10 @@ namespace SmolEngine
 
 		VkDescriptorSetLayout                   m_DescriptorSetLayout;
 		VkDescriptorSet                         m_DescriptorSet;
+		VkDevice                                m_Device;
 
 		std::vector<VkWriteDescriptorSet>       m_WriteSets;
-		std::vector<VkDescriptorImageInfo>      m_ImageInfo;
+		VkDescriptorImageInfo                   m_ImageInfo;
 
 	private:
 

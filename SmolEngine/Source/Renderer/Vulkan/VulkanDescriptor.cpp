@@ -7,18 +7,24 @@
 
 namespace SmolEngine
 {
+	VulkanDescriptor::VulkanDescriptor()
+	{
+		m_Device = VulkanContext::GetDevice().GetLogicalDevice();
+	}
+
 	VulkanDescriptor::~VulkanDescriptor()
 	{
-		const auto& device = VulkanContext::GetDevice().GetLogicalDevice();
-		if (m_DescriptorSetLayout != VK_NULL_HANDLE)
+		if (m_Device)
 		{
-			vkDestroyDescriptorSetLayout(device, m_DescriptorSetLayout, nullptr);
+			if (m_DescriptorSetLayout != VK_NULL_HANDLE)
+			{
+				vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
+			}
 		}
 	}
 
 	void VulkanDescriptor::GenDescriptorSet(VulkanShader* shader, VkDescriptorPool pool)
 	{
-		auto device = VulkanContext::GetDevice().GetLogicalDevice();
 		std::vector< VkDescriptorSetLayoutBinding> layouts;
 		layouts.reserve(shader->m_UniformResources.size() + shader->m_UniformResources.size());
 
@@ -65,7 +71,7 @@ namespace SmolEngine
 			layoutInfo.bindingCount = static_cast<uint32_t>(layouts.size());
 			layoutInfo.pBindings = layouts.data();
 
-			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayout));
+			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &m_DescriptorSetLayout));
 		}
 
 		VkDescriptorSetAllocateInfo allocateInfo = {};
@@ -75,14 +81,12 @@ namespace SmolEngine
 			allocateInfo.descriptorSetCount = 1;
 			allocateInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-			VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocateInfo, &m_DescriptorSet));
+			VK_CHECK_RESULT(vkAllocateDescriptorSets(m_Device, &allocateInfo, &m_DescriptorSet));
 		}
 	}
 
 	void VulkanDescriptor::GenUniformBuffersDescriptors(VulkanShader* shader)
 	{
-		auto device = VulkanContext::GetDevice().GetLogicalDevice();
-
 		if (!shader->m_UniformBuffers.empty())
 		{
 			for (auto& uboInfo : shader->m_UniformBuffers)
@@ -92,7 +96,7 @@ namespace SmolEngine
 				m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
 					buffer.BindingPoint, &buffer.DesriptorBufferInfo));
 
-				vkUpdateDescriptorSets(device, 1, &m_WriteSets.back(), 0, nullptr);
+				vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 
 				NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
 			}
@@ -101,11 +105,12 @@ namespace SmolEngine
 
 	void VulkanDescriptor::GenSamplersDescriptors(VulkanShader* shader, VulkanTexture* cubeMap)
 	{
-		auto device = VulkanContext::GetDevice().GetLogicalDevice();
-
 		if (!shader->m_UniformResources.empty())
 		{
-			VkDescriptorImageInfo whiteTexture = Texture::CreateWhiteTexture()->GetVulkanTexture()->m_DescriptorImageInfo;
+#ifndef SMOLENGINE_OPENGL_IMPL
+			m_ImageInfo = Texture::CreateWhiteTexture()->GetVulkanTexture()->m_DescriptorImageInfo;
+#endif
+
 			for (auto& [bindingPoint, res] : shader->m_UniformResources)
 			{
 				if (res.Dimension > 1) // cubeMap
@@ -126,7 +131,7 @@ namespace SmolEngine
 						m_WriteSets.push_back(writeSet);
 
 						auto& kek = m_WriteSets.back();
-						vkUpdateDescriptorSets(device, 1, &m_WriteSets.back(), 0, nullptr);
+						vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 					}
 					else
 					{
@@ -143,15 +148,15 @@ namespace SmolEngine
 						infos.resize(res.ArraySize);
 						for (uint32_t i = 0; i < res.ArraySize; ++i)
 						{
-							infos[i] = whiteTexture;
+							infos[i] = m_ImageInfo;
 						}
 					}
 					else
-						infos.push_back(whiteTexture);
+						infos.push_back(m_ImageInfo);
 
 					m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
 						res.BindingPoint, infos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
-					vkUpdateDescriptorSets(device, 1, &m_WriteSets.back(), 0, nullptr);
+					vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 				}
 			}
 		}
@@ -175,14 +180,16 @@ namespace SmolEngine
 		std::vector<VkDescriptorImageInfo> infos(textures.size());
 		for (uint32_t i = 0; i < textures.size(); ++i)
 		{
-			infos[i] = textures[i]->m_DescriptorImageInfo;
+			if (textures[i])
+				infos[i] = textures[i]->m_DescriptorImageInfo;
+			else
+				infos[i] = m_ImageInfo;
 		}
 
 		*writeSet = CreateWriteSet(m_DescriptorSet,
 			bindingPoint, infos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
-		auto device = VulkanContext::GetDevice().GetLogicalDevice();
-		vkUpdateDescriptorSets(device, 1, writeSet, 0, nullptr);
+		UpdateWriteSets();
 		return true;
 	}
 
@@ -207,15 +214,13 @@ namespace SmolEngine
 		*writeSet = CreateWriteSet(m_DescriptorSet,
 			bindingPoint, { cubeMap->m_DescriptorImageInfo }, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
-		auto device = VulkanContext::GetDevice().GetLogicalDevice();
-		vkUpdateDescriptorSets(device, 1, writeSet, 0, nullptr);
+		vkUpdateDescriptorSets(m_Device, 1, writeSet, 0, nullptr);
 		return true;
 	}
 
 	void VulkanDescriptor::UpdateWriteSets()
 	{
-		auto device = VulkanContext::GetDevice().GetLogicalDevice();
-		vkUpdateDescriptorSets(device, static_cast<uint32_t>(m_WriteSets.size()), m_WriteSets.data(), 0, nullptr);
+		vkUpdateDescriptorSets(m_Device, static_cast<uint32_t>(m_WriteSets.size()), m_WriteSets.data(), 0, nullptr);
 	}
 
 	const VkDescriptorSet VulkanDescriptor::GetDescriptorSets() const

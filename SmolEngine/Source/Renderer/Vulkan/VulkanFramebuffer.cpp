@@ -244,10 +244,7 @@ namespace SmolEngine
 	{
 		m_OffscreenPass = {};
 		m_Specification = data;
-		if (m_Specification.samples == 0)
-		{
-			m_MSAASamples = VulkanContext::GetDevice().GetMSAASamplesCount();
-		}
+		m_MSAASamples = VulkanContext::GetDevice().GetMSAASamplesCount();
 
 		return Create(data.Width, data.Height);
 	}

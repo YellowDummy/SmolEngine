@@ -224,34 +224,14 @@ namespace SmolEngine
 		bool useMainCmdBuffer = true; // executed at swapbuffers() inside VulkanContex class
 
 
-		// Skybox pass - main command buffer
+		// Skybox
 		{
-			m_Pipeline->BeginCommandBuffer(useMainCmdBuffer);
-			m_Pipeline->BeginBufferSubmit();
-
-			struct Data
-			{
-				glm::vec4 color;
-				glm::vec4 pos;
-				glm::vec4 atr;
-
-			} data[2];
-
-			data[0].color = m_Light.Color;
-			data[0].pos = m_Light.Pos;
-			data[0].atr.r = m_Light.intensity;
-			data[1].color = m_Light2.Color;
-			data[1].pos = m_Light2.Pos;
-			data[1].atr.r = m_Light2.intensity;
-			m_Pipeline->SumbitUniformBuffer(10, sizeof(data), &data);
-
 			m_SkyboxPipeline->BeginCommandBuffer(useMainCmdBuffer);
 			m_SkyboxPipeline->BeginBufferSubmit();
 
 			m_SkyboxPipeline->BeginRenderPass(m_FrameBuffer);
 			{
-				//m_SkyboxPipeline->ClearColors();
-
+				m_SkyboxPipeline->ClearColors();
 
 				{
 					struct PushConstant
@@ -268,37 +248,14 @@ namespace SmolEngine
 					m_SkyboxPipeline->Draw(36);
 				}
 
-				{
-					glm::mat4 trans;
-					CommandSystem::ComposeTransform(pos, rot, scale, true, trans);
-
-					struct PushConsant
-					{
-						glm::mat4 viewProj;
-						glm::mat4 trans;
-						glm::vec4 color;
-						glm::vec3 camPos;
-
-					} pc;
-
-					pc.viewProj = m_EditorCamera->GetViewProjection();
-					pc.trans = trans;
-					pc.color = m_AddColor;
-					pc.camPos = m_EditorCamera->GetPosition();
-
-					m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_Pipeline->Draw(m_TestMesh->m_VertexCount);
-				}
+				
 			}
 			m_SkyboxPipeline->EndRenderPass();
 			m_SkyboxPipeline->EndBufferSubmit();
-			m_Pipeline->EndBufferSubmit();
 			m_SkyboxPipeline->EndCommandBuffer();
 		}
 
-		return;
-		
-		// Geometry pass
+		// Model
 		{
 			m_Pipeline->BeginCommandBuffer(useMainCmdBuffer);
 			m_Pipeline->BeginBufferSubmit();
@@ -317,7 +274,6 @@ namespace SmolEngine
 			data[1].color = m_Light2.Color;
 			data[1].pos = m_Light2.Pos;
 			data[1].atr.r = m_Light2.intensity;
-
 			m_Pipeline->SumbitUniformBuffer(10, sizeof(data), &data);
 
 			m_Pipeline->BeginRenderPass(m_FrameBuffer);
@@ -343,6 +299,7 @@ namespace SmolEngine
 				m_Pipeline->Draw(m_TestMesh->m_VertexCount);
 			}
 			m_Pipeline->EndRenderPass();
+
 			m_Pipeline->EndBufferSubmit();
 			m_Pipeline->EndCommandBuffer();
 		}

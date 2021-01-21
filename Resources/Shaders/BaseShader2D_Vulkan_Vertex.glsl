@@ -16,14 +16,16 @@ struct BatchData
 	float ambientValue;
 	float textureID;
 	float textMode;
+	float lightSources;
 };
 
 
 layout(location = 22) out BatchData v_Data;
 
-layout (std140, binding = 0) uniform CameraData
+layout(push_constant) uniform LightEnvironment
 {
 	mat4 u_ViewProjection;
+	float u_LightSources;
 };
 
 void main()
@@ -34,6 +36,7 @@ void main()
 	v_Data.ambientValue = 1.0;
 	v_Data.textureID = a_TexIndex;
 	v_Data.textMode = a_TextMode;
+	v_Data.lightSources = u_LightSources;
 
 	gl_Position = u_ViewProjection * vec4(a_Position, 1);
 }
