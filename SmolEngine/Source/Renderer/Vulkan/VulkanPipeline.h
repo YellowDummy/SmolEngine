@@ -50,8 +50,7 @@ namespace SmolEngine
 
 	private:
 
-		void BuildDescriptors(VulkanShader* shader,
-			VulkanTexture* skybox, uint32_t DescriptorSets);
+		void BuildDescriptors(VulkanShader* shader, uint32_t DescriptorSets);
 
 		VkPrimitiveTopology GetVkTopology(DrawMode mode);
 

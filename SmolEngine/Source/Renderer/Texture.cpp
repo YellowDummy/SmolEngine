@@ -80,7 +80,7 @@ namespace SmolEngine
 		return GetID() == other.GetID();
 	}
 
-	Ref<Texture> Texture::Create(const uint32_t width, const uint32_t height)
+	Ref<Texture> Texture::Create(const uint32_t width, const uint32_t height, TextureFormat format)
 	{
 		Ref<Texture> texture = TexturesPool::AddTexture(width, height);
 
@@ -100,24 +100,25 @@ namespace SmolEngine
 
 	Ref<Texture> Texture::CreateWhiteTexture()
 	{
-		Ref<Texture> texture = TexturesPool::AddTexture(1, 1);
+		const uint32_t w = 1, h = 1;
+		Ref<Texture> texture = TexturesPool::AddTexture(w, h);
 
 		if (!texture->m_Initialized)
 		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
 
 			uint32_t whiteTextureData = 0xffffffff;
-			texture->m_OpenglTexture2D.Init(1, 1);
+			texture->m_OpenglTexture2D.Init(w, h);
 			texture->m_OpenglTexture2D.SetData(&whiteTextureData, sizeof(uint32_t));
 #else
-			texture->m_VulkanTexture.CreateWhiteTetxure(1, 1);
+			texture->m_VulkanTexture.GenWhiteTetxure(w, h);
 #endif
 			texture->m_Initialized = true;
 		}
 		return texture;
 	}
 
-	Ref<Texture> Texture::Create(const std::string& filePath)
+	Ref<Texture> Texture::Create(const std::string& filePath, TextureFormat format)
 	{
 		Ref<Texture> texture = TexturesPool::AddTexture(filePath);
 
@@ -127,7 +128,7 @@ namespace SmolEngine
 
 			texture->m_OpenglTexture2D.Init(filePath);
 #else
-			texture->m_VulkanTexture.CreateTexture(filePath);
+			texture->m_VulkanTexture.LoadTexture(filePath, format);
 #endif
 			texture->m_Initialized = true;
 		}

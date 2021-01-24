@@ -28,10 +28,11 @@ namespace SmolEngine
 		uint32_t Samplers = 10;
 		uint32_t DescriptorSets = 1;
 		std::string PipelineName = "";
-		Ref<CubeTexture> SkyBox = nullptr;
+
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
 		bool IsDepthTestEnabled = true;
+
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
 	};
 
@@ -46,7 +47,6 @@ namespace SmolEngine
 		uint32_t DescriptorSets = 1;
 
 		std::string PipelineName = "";
-		Ref<CubeTexture> SkyBox = nullptr;
 
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
@@ -135,8 +135,15 @@ namespace SmolEngine
 			m_IndexBuffers[bufferIndex]->CmdUpdateData(m_CommandBuffer, indices, sizeof(uint32_t) * count, offset);
 		}
 
+		bool UpdateVulkanImageDescriptor(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo, uint32_t descriptorSetIndex = 0)
+		{
+			return m_VulkanPipeline.m_Descriptors[descriptorSetIndex].UpdateImageResource(bindingPoint, imageInfo);
+		}
+
 #endif
-		bool Update2DTextures(const std::vector<Ref<Texture>>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
+		bool UpdateSamplers(const std::vector<Ref<Texture>>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
+
+		bool UpdateSampler(Ref<Texture>& tetxure, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
 
 		bool UpdateCubeMap(const Ref<Texture>& cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
 

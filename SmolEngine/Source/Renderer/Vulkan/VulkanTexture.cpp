@@ -14,8 +14,6 @@
 
 namespace SmolEngine
 {
-	static 	VkFormat Format = VK_FORMAT_R8G8B8A8_UNORM;
-
 	VulkanTexture::VulkanTexture()
 	{
 		m_Device = VulkanContext::GetDevice().GetLogicalDevice();
@@ -25,24 +23,32 @@ namespace SmolEngine
 	{
 		if (m_Device)
 		{
-			vkDestroyImage(m_Device, m_Image, nullptr);
-			vkDestroyImageView(m_Device, m_ImageView, nullptr);
-			vkDestroySampler(m_Device, m_Samper, nullptr);
-			vkFreeMemory(m_Device, m_DeviceMemory, nullptr);
+			if(m_Image != VK_NULL_HANDLE)
+				vkDestroyImage(m_Device, m_Image, nullptr);
+
+			if(m_ImageView != VK_NULL_HANDLE)
+				vkDestroyImageView(m_Device, m_ImageView, nullptr);
+
+			if(m_Samper != VK_NULL_HANDLE)
+				vkDestroySampler(m_Device, m_Samper, nullptr);
+
+			if(m_DeviceMemory != VK_NULL_HANDLE)
+				vkFreeMemory(m_Device, m_DeviceMemory, nullptr);
 		}
 	}
 
-	void VulkanTexture::CreateWhiteTetxure(uint32_t width, uint32_t height)
+	void VulkanTexture::GenWhiteTetxure(uint32_t width, uint32_t height)
 	{
 		uint32_t whiteTextureData = 0xffffffff;
-		CreateTexture(width, height, 1, &whiteTextureData, TextureType::Texture2D);
+		m_Format = GetImageFormat(TextureFormat::R8G8B8A8_UNORM);
+		CreateTexture(width, height, 1, &whiteTextureData);
 
 		m_Width = width;
 		m_Height = height;
 		m_IsCreated = true;
 	}
 
-	void VulkanTexture::CreateTexture(const std::string& filePath)
+	void VulkanTexture::LoadTexture(const std::string& filePath, TextureFormat format)
 	{
 		int height, width, channels;
 		stbi_set_flip_vertically_on_load(1);
@@ -57,8 +63,9 @@ namespace SmolEngine
 		}
 
 		const uint32_t mipLevels = floor(log2(std::max(width, height))) + 1;
+		m_Format = GetImageFormat(format);
 
-		CreateTexture(width, height, mipLevels, data , TextureType::Texture2D);
+		CreateTexture(width, height, mipLevels, data);
 		m_Width = width;
 		m_Height = height;
 		m_FilePath = filePath;
@@ -69,10 +76,11 @@ namespace SmolEngine
 		m_ID = hasher(filePath);
 	}
 
-	void VulkanTexture::CreateCubeMapKtx(const std::string& filePath)
+	void VulkanTexture::LoadCubeMap(const std::string& filePath, TextureFormat format)
 	{
 		ktxResult result;
 		ktxTexture* ktxTexture;
+		m_Format = GetImageFormat(format);
 
 		result = ktxTexture_CreateFromNamedFile(filePath.c_str(), KTX_TEXTURE_CREATE_LOAD_IMAGE_DATA_BIT, &ktxTexture);
 		assert(result == KTX_SUCCESS);
@@ -93,7 +101,7 @@ namespace SmolEngine
 		{
 			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
-			imageCreateInfo.format = Format;
+			imageCreateInfo.format = m_Format;
 			imageCreateInfo.mipLevels = mipLevels;
 			imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 			imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -211,7 +219,7 @@ namespace SmolEngine
 			view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 			// Cube map view type
 			view.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
-			view.format = Format;
+			view.format = m_Format;
 			view.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
 			view.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
 			// 6 array layers (faces)
@@ -227,11 +235,16 @@ namespace SmolEngine
 		m_DescriptorImageInfo.imageView = m_ImageView;
 		m_DescriptorImageInfo.sampler = m_Samper;
 
+		m_Width = width;
+		m_Height = height;
+		m_FilePath = filePath;
+		m_IsCreated = true;
+
 		stagingBuffer.Destroy();
 		ktxTexture_Destroy(ktxTexture);
 	}
 
-	VkImage VulkanTexture::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels,
+	VkImage VulkanTexture::CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,
 		VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
 		VkImageUsageFlags usage, VkDeviceMemory& imageMemory)
 	{
@@ -265,7 +278,7 @@ namespace SmolEngine
 		return image;
 	}
 
-	void VulkanTexture::CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data, TextureType type)
+	void VulkanTexture::CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data)
 	{
 		const VkDeviceSize size = width * height * 4;
 
@@ -273,7 +286,7 @@ namespace SmolEngine
 		stagingBuffer.Create(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
 		stagingBuffer.SetData(data, size);
 
-		m_Image = CreateImage(width, height, mipMaps, VK_SAMPLE_COUNT_1_BIT, Format,
+		m_Image = CreateVkImage(width, height, mipMaps, VK_SAMPLE_COUNT_1_BIT, m_Format,
 			VK_IMAGE_TILING_OPTIMAL,
 			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, m_DeviceMemory);
 
@@ -327,7 +340,7 @@ namespace SmolEngine
 
 		GenerateMipMaps(m_Image, width, height, mipMaps, subresourceRange);
 		m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		CreateSamplerAndImageView(type, mipMaps);
+		CreateSamplerAndImageView(mipMaps);
 
 #ifdef SMOLENGINE_EDITOR
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -442,7 +455,7 @@ namespace SmolEngine
 			1, &imageMemoryBarrier);
 	}
 
-	void VulkanTexture::CreateSamplerAndImageView(TextureType type, uint32_t mipMaps)
+	void VulkanTexture::CreateSamplerAndImageView(uint32_t mipMaps)
 	{
 		/// Samplers
 	    /// https://vulkan-tutorial.com/Texture_mapping/Image_view_and_sampler
@@ -480,13 +493,13 @@ namespace SmolEngine
 		VkImageViewCreateInfo imageViewCI = {};
 		{
 			imageViewCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			imageViewCI.viewType = GetVkImageViewType(type);
-			imageViewCI.format = Format;
+			imageViewCI.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			imageViewCI.format = m_Format;
 			imageViewCI.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
 			imageViewCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			imageViewCI.subresourceRange.baseMipLevel = 0;
 			imageViewCI.subresourceRange.baseArrayLayer = 0;
-			imageViewCI.subresourceRange.layerCount = GetImageArrayLayers(type);
+			imageViewCI.subresourceRange.layerCount = 1;
 			imageViewCI.subresourceRange.levelCount = mipMaps;
 			imageViewCI.image = m_Image;
 
@@ -616,33 +629,28 @@ namespace SmolEngine
 			1, &imageMemoryBarrier);
 	}
 
-	VkImageViewType VulkanTexture::GetVkImageViewType(TextureType type)
+	void VulkanTexture::SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageAspectFlags aspectMask, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
 	{
-		switch (type)
-		{
-		case SmolEngine::TextureType::Texture2D:
-			return VK_IMAGE_VIEW_TYPE_2D;
-		case SmolEngine::TextureType::Texture3D:
-			return VK_IMAGE_VIEW_TYPE_3D;
-		case SmolEngine::TextureType::CubeMap:
-			return VK_IMAGE_VIEW_TYPE_CUBE;
-		default:
-			return VK_IMAGE_VIEW_TYPE_2D;
-		}
+		VkImageSubresourceRange subresourceRange = {};
+		subresourceRange.aspectMask = aspectMask;
+		subresourceRange.baseMipLevel = 0;
+		subresourceRange.levelCount = 1;
+		subresourceRange.layerCount = 1;
+		SetImageLayout(cmdbuffer, image, oldImageLayout, newImageLayout, subresourceRange, srcStageMask, dstStageMask);
 	}
 
-	uint32_t VulkanTexture::GetImageArrayLayers(TextureType type)
+	VkFormat VulkanTexture::GetImageFormat(TextureFormat format)
 	{
-		switch (type)
+		switch (format)
 		{
-		case SmolEngine::TextureType::Texture2D:
-			return 1;
-		case SmolEngine::TextureType::Texture3D:
-			return 4;
-		case SmolEngine::TextureType::CubeMap:
-			return 6;
+		case SmolEngine::TextureFormat::R8_UNORM:
+			return VK_FORMAT_R8_UNORM;
+		case SmolEngine::TextureFormat::R8G8B8A8_UNORM:
+			return VK_FORMAT_R8G8B8A8_UNORM;
+		case SmolEngine::TextureFormat::R16G16B16A16_SFLOAT:
+			return VK_FORMAT_R16G16B16A16_SFLOAT;
 		default:
-			return 1;
+			return VK_FORMAT_R8G8B8A8_UNORM;
 		}
 	}
 

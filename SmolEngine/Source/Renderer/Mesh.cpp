@@ -38,6 +38,7 @@ namespace SmolEngine
         {
             glm::vec3 pos;
             glm::vec3 normals;
+            glm::vec4 tangent;
             glm::vec2 uvs;
             glm::vec4 color;
         };
@@ -48,6 +49,7 @@ namespace SmolEngine
         {
             { ShaderDataType::Float3, "aPos" },
             { ShaderDataType::Float3, "aNormal" },
+            { ShaderDataType::Float4, "aTangent" },
             { ShaderDataType::Float2, "aUV" },
             { ShaderDataType::Float4, "aColor" }
         };
@@ -58,6 +60,7 @@ namespace SmolEngine
             vertices[i].pos = data->vertices[i];
             vertices[i].color = data->colors[i];
             vertices[i].normals = data->normals[i];
+            vertices[i].tangent = glm::vec4(data->tangents[i], 1);
             vertices[i].uvs = data->uvs[i];
         }
 

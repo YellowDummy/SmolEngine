@@ -15,11 +15,12 @@ namespace SmolEngine
 {
 	class Mesh;
 
-	struct Light
+	struct UBOParams
 	{
-		glm::vec4 Pos = glm::vec4(1.0f);
-		glm::vec4 Color = glm::vec4(1.0f);
-		float intensity = 100;
+		glm::vec4 lights[4];
+		glm::vec4 lightsColors[4];
+		float exposure;
+		float gamma;
 	};
 
 	class PBRTestLayer : public Layer
@@ -52,6 +53,8 @@ namespace SmolEngine
 		Ref<Texture> m_Tetxure2;
 		Ref<Texture> m_Tetxure3;
 		Ref<Texture> m_Tetxure4;
+		Ref<Texture> m_Tetxure5;
+		Ref<Texture> m_Tetxure6;
 
 		Ref<CubeTexture> m_CubeTexture;
 
@@ -67,10 +70,10 @@ namespace SmolEngine
 		glm::vec3 rot = glm::vec3(0.0f);
 
 		Ref<EditorCamera> m_EditorCamera = nullptr;
-
 		glm::vec4 m_AddColor = glm::vec4(1);
 
-		Light m_Light = {};
-		Light m_Light2 = {};
+		bool m_RorateModel = true;
+
+		UBOParams m_UBOParams = {};
 	};
 }

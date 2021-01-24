@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Core.h"
-#include "Renderer/TextureTypes.h"
 #include "Renderer/Vulkan/Vulkan.h"
+#include "Renderer/TextureFormat.h"
 
 namespace SmolEngine
 {
@@ -13,17 +13,19 @@ namespace SmolEngine
 
 		~VulkanTexture();
 
-		/// Main
-		
-		void CreateWhiteTetxure(uint32_t width, uint32_t height);
+		/// Load
 
-		void CreateTexture(const std::string& filePath);
+		void LoadTexture(const std::string& filePath, TextureFormat format);
 
-		void CreateCubeMapKtx(const std::string& filePath);
+		void LoadCubeMap(const std::string& filePath, TextureFormat format);
 
-		/// Static
+		/// Gen
 
-		static VkImage CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels,
+		void GenWhiteTetxure(uint32_t width, uint32_t height);
+
+		/// Static Helpers
+
+		static VkImage CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,
 			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage,
 			VkDeviceMemory& imageMemory);
@@ -39,29 +41,7 @@ namespace SmolEngine
 			VkPipelineStageFlags dstStageMask,
 			VkImageSubresourceRange subresourceRange);
 
-		/// Getters
-		
-		const VkDescriptorImageInfo& GetVkDescriptorImageInfo() const;
-
-		uint32_t GetHeight() const;
-
-		uint32_t GetWidth() const;
-
-		size_t GetID() const;
-
-		void* GetImGuiTextureID() const;
-
-		bool IsActive() const;
-
-	private:
-
-		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data, TextureType type);
-
-		void CreateSamplerAndImageView(TextureType type, uint32_t mipMaps);
-
-		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps, VkImageSubresourceRange& range);
-
-		void SetImageLayout(VkCommandBuffer cmdbuffer,
+		static void SetImageLayout(VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkImageLayout oldImageLayout,
 			VkImageLayout newImageLayout,
@@ -69,33 +49,65 @@ namespace SmolEngine
 			VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
 			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
-		VkImageViewType GetVkImageViewType(TextureType type);
+		static void SetImageLayout(
+			VkCommandBuffer cmdbuffer,
+			VkImage image,
+			VkImageAspectFlags aspectMask,
+			VkImageLayout oldImageLayout,
+			VkImageLayout newImageLayout,
+			VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
-		uint32_t GetImageArrayLayers(TextureType type);
+		/// Getters
+		
+		const VkDescriptorImageInfo& GetVkDescriptorImageInfo() const;
+
+		void* GetImGuiTextureID() const;
+
+		uint32_t GetHeight() const;
+
+		uint32_t GetWidth() const;
+
+		bool IsActive() const;
+
+		size_t GetID() const;
+
 
 	private:
 
-		VkDescriptorImageInfo m_DescriptorImageInfo;
-		VkImage m_Image;
+		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps, VkImageSubresourceRange& range);
 
-		VkDevice m_Device;
-		VkSampler m_Samper;
-		VkImageView m_ImageView;
-		VkImageLayout m_ImageLayout;
-		VkDeviceMemory m_DeviceMemory;
+		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data);
 
-		std::string  m_FilePath = "";
+		void CreateSamplerAndImageView(uint32_t mipMaps);
 
-		void* m_ImGuiTextureID = nullptr;
-		bool m_IsCreated = false;
+		VkFormat GetImageFormat(TextureFormat format);
 
-		uint32_t m_Height = 0;
-		uint32_t m_Width = 0;
-		size_t m_ID = 0;
+	private:
+
+		VkDescriptorImageInfo        m_DescriptorImageInfo;
+		VkImage                      m_Image;
+		VkFormat                     m_Format;
+		 
+		VkDevice                     m_Device;
+		VkSampler                    m_Samper;
+		VkImageView                  m_ImageView;
+		VkImageLayout                m_ImageLayout;
+		VkDeviceMemory               m_DeviceMemory;
+
+		void*                       m_ImGuiTextureID = nullptr;
+		bool                        m_IsCreated = false;
+
+		uint32_t                    m_Height = 0;
+		uint32_t                    m_Width = 0;
+		size_t                      m_ID = 0;
+
+		std::string                 m_FilePath = "";
 
 	private:
 
 		friend class VulkanPipeline;
+		friend class VulkanPBR;
 		friend class VulkanDescriptor;
 	};
 }

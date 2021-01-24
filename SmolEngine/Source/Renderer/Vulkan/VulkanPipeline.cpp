@@ -26,7 +26,7 @@ namespace SmolEngine
 			return false;
 		}
 
-		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.Skybox, pipelineSpec.DescriptorSets);
+		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.DescriptorSets);
 		m_VulkanPipelineSpecification = pipelineSpec;
 		m_VulkanPipelineSpecification.Initialized = true;
 
@@ -347,8 +347,7 @@ namespace SmolEngine
 		return m_Descriptors[setIndex].GetDescriptorSets();
 	}
 
-	void VulkanPipeline::BuildDescriptors(VulkanShader* shader,
-		VulkanTexture* skybox, uint32_t DescriptorSets)
+	void VulkanPipeline::BuildDescriptors(VulkanShader* shader, uint32_t DescriptorSets)
 	{
 		m_Descriptors.clear();
 		if (m_DescriptorPool != VK_NULL_HANDLE)
@@ -405,7 +404,7 @@ namespace SmolEngine
 		{
 			m_Descriptors[i].GenDescriptorSet(shader, m_DescriptorPool);
 			m_Descriptors[i].GenUniformBuffersDescriptors(shader);
-			m_Descriptors[i].GenSamplersDescriptors(shader, skybox);
+			m_Descriptors[i].GenSamplersDescriptors(shader);
 		}
 	}
 

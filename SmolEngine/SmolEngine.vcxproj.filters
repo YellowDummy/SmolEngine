@@ -1491,9 +1491,6 @@
     <ClInclude Include="Source\Renderer\Texture.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\TextureTypes.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\TexturesPool.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
@@ -1591,6 +1588,12 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\CubeTexture.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanUtils.h" />
+    <ClInclude Include="Source\Renderer\TextureFormat.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanPBR.h" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1921,5 +1924,10 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\CubeTexture.cpp" />
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanUtils.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanPBR.cpp" />
+>>>>>>> Stashed changes
   </ItemGroup>
 </Project>

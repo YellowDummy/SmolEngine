@@ -158,7 +158,7 @@ namespace SmolEngine
 				continue;
 			}
 
-			s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, s_SamplersBindingPoint,  layer.LayerIndex);
+			s_Data->MainPipeline->UpdateSamplers(layer.TextureSlots, s_SamplersBindingPoint,  layer.LayerIndex);
 		}
 #endif
 
@@ -190,7 +190,7 @@ namespace SmolEngine
 		UploadLightUniforms();
 
 		// Binding textures
-		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, s_SamplersBindingPoint, layer.LayerIndex);
+		s_Data->MainPipeline->UpdateSamplers(layer.TextureSlots, s_SamplersBindingPoint, layer.LayerIndex);
 		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
 
 		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);

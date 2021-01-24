@@ -53,7 +53,7 @@ namespace SmolEngine
 
 		// Color attachment
 		{
-			m_OffscreenPass.color.image = VulkanTexture::CreateImage(m_Specification.Width, m_Specification.Height,
+			m_OffscreenPass.color.image = VulkanTexture::CreateVkImage(m_Specification.Width, m_Specification.Height,
 				1,
 				m_MSAASamples,
 				FB_COLOR_FORMAT,
@@ -86,7 +86,7 @@ namespace SmolEngine
 		{
 			if (!m_Specification.IsTargetsSwapchain) // overwise swapchain image will be used as resolve attachment
 			{
-				m_OffscreenPass.resolve.image = VulkanTexture::CreateImage(m_Specification.Width, m_Specification.Height,
+				m_OffscreenPass.resolve.image = VulkanTexture::CreateVkImage(m_Specification.Width, m_Specification.Height,
 					1,
 					VK_SAMPLE_COUNT_1_BIT,
 					FB_COLOR_FORMAT,
@@ -118,7 +118,7 @@ namespace SmolEngine
 
 		// Depth stencil attachment
 		{
-			m_OffscreenPass.depth.image = VulkanTexture::CreateImage(m_Specification.Width, m_Specification.Height,
+			m_OffscreenPass.depth.image = VulkanTexture::CreateVkImage(m_Specification.Width, m_Specification.Height,
 				1,
 				m_MSAASamples,
 				fbDepthFormat,

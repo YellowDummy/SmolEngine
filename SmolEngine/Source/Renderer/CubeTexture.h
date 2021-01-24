@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Renderer/TextureFormat.h"
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/OpenGL/OpenglTexture.h"
@@ -14,7 +15,7 @@ namespace SmolEngine
 	{
 	public:
 
-		static Ref<CubeTexture> Create(const std::string& filePath);
+		static Ref<CubeTexture> Create(const std::string& filePath, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 

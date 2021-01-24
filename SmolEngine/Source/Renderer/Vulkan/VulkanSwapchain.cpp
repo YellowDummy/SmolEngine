@@ -454,7 +454,7 @@ namespace SmolEngine
 		VkResult result = VK_ERROR_UNKNOWN;
 		m_DepthStencil = {};
 
-		m_DepthStencil.Image = VulkanTexture::CreateImage(m_Width, m_Height,
+		m_DepthStencil.Image = VulkanTexture::CreateVkImage(m_Width, m_Height,
 			1,
 			VK_SAMPLE_COUNT_1_BIT,
 			m_DepthBufferFormat,

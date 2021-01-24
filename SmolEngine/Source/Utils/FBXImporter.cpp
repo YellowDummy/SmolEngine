@@ -37,6 +37,7 @@ namespace SmolEngine
         out_data->normals.reserve(vertextCount);
         out_data->uvs.reserve(vertextCount);
         out_data->colors.reserve(vertextCount);
+        out_data->tangents.reserve(vertextCount);
 
         uint32_t startIndex = 0;
         for (uint32_t m = 0; m < scene->getMeshCount(); m++)
@@ -45,9 +46,17 @@ namespace SmolEngine
             const ofbx::Geometry* g = mesh->getGeometry();
 
             auto v_ptr = g->getVertices();
+            auto t_ptr = g->getTangents();
             auto n_ptr = g->getNormals();
             auto u_ptr = g->getUVs();
             auto c_ptr = g->getColors();
+
+            if (!t_ptr)
+            {
+                NATIVE_ERROR("Models don't have pre-calculated tangents / binormals");
+                assert(t_ptr);
+                return false;
+            }
 
             for (uint32_t i = 0; i < g->getVertexCount(); ++i)
             {
@@ -57,8 +66,11 @@ namespace SmolEngine
                 out_data->normals.push_back({ n_ptr->x, n_ptr->y, n_ptr->z });
                 n_ptr++;
 
-                out_data->uvs.push_back({ u_ptr->x, u_ptr->y});
+                out_data->uvs.push_back({ u_ptr->x, u_ptr->y });
                 u_ptr++;
+
+                out_data->tangents.push_back({ t_ptr->x, t_ptr->y, t_ptr->z });
+                t_ptr++;
 
                 c_ptr != nullptr ? out_data->colors.push_back({ c_ptr->w, c_ptr->x, c_ptr->y, c_ptr->z })
                     : out_data->colors.push_back({ 1.0f, 1.0f, 1.0f, 1.0f });

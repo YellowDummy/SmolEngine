@@ -2,7 +2,7 @@
 
 #include "Renderer/OpenGL/OpenglTexture.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
-#include "Renderer/TextureTypes.h"
+#include "Renderer/TextureFormat.h"
 
 #include <glm/glm.hpp>
 #include <string>
@@ -43,11 +43,13 @@ namespace SmolEngine
 
 		/// Factory
 
-		static Ref<Texture> Create(const uint32_t width, const uint32_t height);
+		static Ref<Texture> Create(const uint32_t width, const uint32_t height, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
+
+		static Ref<Texture> Create(const std::string& filePath, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
+
+		///
 
 		static Ref<Texture> CreateWhiteTexture();
-
-		static Ref<Texture> Create(const std::string& filePath);
 
 		static Ref<Texture> Create(FT_Bitmap* bitmap);
 

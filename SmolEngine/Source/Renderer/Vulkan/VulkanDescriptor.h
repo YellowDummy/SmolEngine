@@ -18,11 +18,13 @@ namespace SmolEngine
 
 		void GenUniformBuffersDescriptors(VulkanShader* shader);
 
-		void GenSamplersDescriptors(VulkanShader* shader, VulkanTexture* cubeMap);
+		void GenSamplersDescriptors(VulkanShader* shader);
 
 		// Update
 
 		bool Update2DSamplers(const std::vector<VulkanTexture*>& textures, uint32_t bindingPoint);
+
+		bool UpdateImageResource(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo);
 
 		bool UpdateCubeMap(const VulkanTexture* cubeMap, uint32_t bindingPoint);
 

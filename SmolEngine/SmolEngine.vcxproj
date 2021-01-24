@@ -660,7 +660,7 @@
     <ClInclude Include="Source\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Renderer\Text.h" />
     <ClInclude Include="Source\Renderer\Texture.h" />
-    <ClInclude Include="Source\Renderer\TextureTypes.h" />
+    <ClInclude Include="Source\Renderer\TextureFormat.h" />
     <ClInclude Include="Source\Renderer\TexturesPool.h" />
     <ClInclude Include="Source\Renderer\Vulkan\Vulkan.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanBuffer.h" />
@@ -673,6 +673,7 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanIndexBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanInstance.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanMemoryAllocator.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanPBR.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipeline.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipelineSpecification.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanRendererAPI.h" />
@@ -790,6 +791,7 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanIndexBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanInstance.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanMemoryAllocator.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanPBR.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanPipeline.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanRendererAPI.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSemaphore.cpp" />

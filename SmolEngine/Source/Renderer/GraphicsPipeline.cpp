@@ -110,7 +110,6 @@ namespace SmolEngine
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
-			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
 			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
 			pipelineSpecCI.IsDepthTestEnabled = pipelineInfo->IsDepthTestEnabled;
 		}
@@ -177,7 +176,6 @@ namespace SmolEngine
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
-			pipelineSpecCI.Skybox = pipelineInfo->SkyBox->GetVulkanTexture();
 			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
 			pipelineSpecCI.IsDepthTestEnabled = pipelineInfo->IsDepthTestEnabled;
 		}
@@ -537,7 +535,7 @@ namespace SmolEngine
 #endif
 	}
 
-	bool GraphicsPipeline::Update2DTextures(const std::vector<Ref<Texture>>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex)
+	bool GraphicsPipeline::UpdateSamplers(const std::vector<Ref<Texture>>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex)
 	{
 		m_Shader->Bind();
 		uint32_t index = 0;
@@ -563,6 +561,14 @@ namespace SmolEngine
 		return m_VulkanPipeline.UpdateSamplers2D(vkTextures, bindingPoint, descriptorSetIndex);
 #else
 		return true;
+#endif
+	}
+
+	bool GraphicsPipeline::UpdateSampler(Ref<Texture>& tetxure, uint32_t bindingPoint, uint32_t descriptorSetIndex)
+	{
+#ifndef SMOLENGINE_OPENGL_IMPL
+		return m_VulkanPipeline.m_Descriptors[descriptorSetIndex].UpdateImageResource(bindingPoint,
+			tetxure->GetVulkanTexture()->GetVkDescriptorImageInfo());
 #endif
 	}
 

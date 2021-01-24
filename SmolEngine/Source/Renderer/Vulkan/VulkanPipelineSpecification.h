@@ -15,7 +15,6 @@ namespace SmolEngine
 		VulkanSwapchain* TargetSwapchain = nullptr;
 		VulkanDevice* Device = nullptr;
 		VulkanShader* Shader = nullptr;
-		VulkanTexture* Skybox = nullptr;
 		BufferLayout BufferLayout = {};
 
 		std::vector<VulkanTexture*> Textures;

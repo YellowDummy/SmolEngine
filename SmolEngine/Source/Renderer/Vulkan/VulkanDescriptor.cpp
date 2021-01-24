@@ -4,6 +4,8 @@
 #include "Renderer/Texture.h"
 #include "Renderer/Vulkan/VulkanShader.h"
 #include "Renderer/Vulkan/VulkanContext.h"
+#include "Renderer/CubeTexture.h"
+#include "Renderer/Vulkan/VulkanPBR.h"
 
 namespace SmolEngine
 {
@@ -103,7 +105,7 @@ namespace SmolEngine
 		}
 	}
 
-	void VulkanDescriptor::GenSamplersDescriptors(VulkanShader* shader, VulkanTexture* cubeMap)
+	void VulkanDescriptor::GenSamplersDescriptors(VulkanShader* shader)
 	{
 		if (!shader->m_UniformResources.empty())
 		{
@@ -113,9 +115,12 @@ namespace SmolEngine
 
 			for (auto& [bindingPoint, res] : shader->m_UniformResources)
 			{
-				if (res.Dimension > 1) // cubeMap
+				if (res.Dimension == 3) // cubeMap
 				{
-					if (cubeMap != nullptr)
+					auto& skyBox = VulkanPBR::GetSkyBox();
+					assert(skyBox.IsActive());
+
+					if (skyBox.IsActive())
 					{
 						VkWriteDescriptorSet writeSet = {};
 						{
@@ -125,7 +130,7 @@ namespace SmolEngine
 							writeSet.dstBinding = res.BindingPoint;
 							writeSet.dstArrayElement = 0;
 							writeSet.descriptorCount = 1;
-							writeSet.pImageInfo = &cubeMap->m_DescriptorImageInfo;
+							writeSet.pImageInfo = &skyBox.m_DescriptorImageInfo;
 						}
 
 						m_WriteSets.push_back(writeSet);
@@ -190,6 +195,33 @@ namespace SmolEngine
 			bindingPoint, infos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
 		UpdateWriteSets();
+		return true;
+	}
+
+	bool VulkanDescriptor::UpdateImageResource(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo)
+	{
+		VkWriteDescriptorSet* writeSet = nullptr;
+		for (auto& set : m_WriteSets)
+		{
+			if (set.dstBinding == bindingPoint)
+			{
+				writeSet = &set;
+				break;
+			}
+		}
+
+		if (!writeSet)
+			return false;
+
+		writeSet->sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writeSet->dstSet = m_DescriptorSet;
+		writeSet->descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writeSet->dstBinding = bindingPoint;
+		writeSet->dstArrayElement = 0;
+		writeSet->descriptorCount = 1;
+		writeSet->pImageInfo = &imageInfo;
+
+		vkUpdateDescriptorSets(m_Device, 1, writeSet, 0, nullptr);
 		return true;
 	}
 
