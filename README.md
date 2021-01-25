@@ -2,13 +2,13 @@
 
 ![SmolEngine](https://i.imgur.com/ziZbEl0.png)
 
-## SmolEngine-TestPBR
+## SmolEngine-PBRTest
 ![SmolEngine](https://i.imgur.com/iz1qtff.png)
 ![SmolEngine](https://i.imgur.com/AAHqxqw.png)
 
 ## Core Features
 
-### implemented in first iteration
+### Implemented in first iteration
 
 - Native rendering API support (Vulkan/OpenGL)
 
