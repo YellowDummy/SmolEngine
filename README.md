@@ -3,41 +3,60 @@
 ![SmolEngine](https://i.imgur.com/ziZbEl0.png)
 
 ## SmolEngine-TestPBR
-![SmolEngine](https://i.imgur.com/LJy6QUx.png)
+![SmolEngine](https://i.imgur.com/iz1qtff.png)
+![SmolEngine](https://i.imgur.com/AAHqxqw.png)
 
 ## Core Features
 
-### Ready
+### implemented in first iteration
 
 - Native rendering API support (Vulkan/OpenGL)
 
-- 2D Workflow (batch renderer, physics, sprites, animations, UI, etc)
+- 2D Layered Batch Renderer
+
+- 2D Animations
 
 - Data-Oriented Entity Component System (ECS)
 
-- Scripting in C++
+- 3rd party 2D physics engine (Box2D)
 
-- Audio Engine
+- 3rd party audio engine (FMOD)
+
+- Debug Renderer
+
+- Level Editor
+
+- In-Game UI
+
+- Scripting in C++
 
 ### Features to come
 
 - Physically Based Rendering (PBR)
 
+- FBX and glTF formats support
+
+- 3rd party 3D physics engine (Bullet3 / PhysX)
+
+- Asset Manager
+
+- Build System
+
+- Material System
+
+- Particle System (2D/3D)
+
+- Scripting in C# / Java
+
 - Linux and Android support
 
 - Network Solution
-
-- 3D Workflow
-
-- C# Binding
 
 - Ray Tracing
 
 ## Limitations
 
 - Developed primarily by one person for learning purposes
-
-- At the moment only Windows is supported
 
 - At a very early stage
 
