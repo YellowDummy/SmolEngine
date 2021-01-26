@@ -559,23 +559,20 @@ namespace SmolEngine
 			{ ShaderDataType::Float, "a_TextureIndex"} // layout(location = 4)
 		});
 
-		VertexBufferCreateInfo vertexBufferCI = {};
-		{
-			vertexBufferCI.BufferLayot = &layout;
-			vertexBufferCI.Sizes = { sizeof(QuadVertex) * s_Data->MaxVertices };
-			vertexBufferCI.Stride = sizeof(QuadVertex);
+		//VertexBuffers
+		std::vector<Ref<VertexBuffer>> vertexBuffers;
+		uint32_t vertexBufferCount = 1;
 #ifndef SMOLENGINE_OPENGL_IMPL
-			vertexBufferCI.BuffersCount = s_Data->MaxLayers;
+		vertexBufferCount = s_Data->MaxLayers;
 #endif
-			vertexBufferCI.IsAllocateMemOnly = true;
+		vertexBuffers.resize(vertexBufferCount);
+		for (uint32_t i = 0; i < vertexBufferCount; ++i)
+		{
+			vertexBuffers[i] = VertexBuffer::Create(sizeof(QuadVertex) * s_Data->MaxVertices);
 		}
 
-		IndexBufferCreateInfo indexBufferCI = {};
-		{
-			indexBufferCI.IndicesCounts = { s_Data->MaxIndices };
-			indexBufferCI.BuffersCount = 1;
-			indexBufferCI.Indices = { quadIndices };
-		}
+		//IndexBuffers
+		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(quadIndices, s_Data->MaxIndices);
 
 		GraphicsPipelineShaderCreateInfo shaderCI = {};
 		{
@@ -585,14 +582,13 @@ namespace SmolEngine
 #else
 			shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/BaseShader2D_Vulkan_Vertex.glsl";
 			shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/BaseShader2D_Vulkan_Fragment.glsl";
-
 #endif
 		}
 
 		GraphicsPipelineCreateInfo graphicsPipelineCI = {};
 		{
-			graphicsPipelineCI.IndexBuffer = &indexBufferCI;
-			graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
+			graphicsPipelineCI.Stride = sizeof(QuadVertex);
+			graphicsPipelineCI.BufferLayot = &layout;
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 
 			graphicsPipelineCI.IsAlphaBlendingEnabled = true;
@@ -601,6 +597,11 @@ namespace SmolEngine
 		}
 
 		s_Data->MainPipeline->Create(&graphicsPipelineCI);
+
+		//
+		s_Data->MainPipeline->SetVertexBuffers(vertexBuffers);
+		s_Data->MainPipeline->SetIndexBuffers({ indexBuffer });
+
 		delete[] quadIndices;
 
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -652,26 +653,13 @@ namespace SmolEngine
 		LineVertex[0].Position = { 0.0f, 0.0f, 0.0f };
 		LineVertex[1].Position = { 0.0f, 0.0f, 0.0f };
 
-		VertexBufferCreateInfo vertexBufferCI = {};
-		{
-			vertexBufferCI.BuffersCount = 3;
-			vertexBufferCI.Sizes = { sizeof(QuadVertex), sizeof(DebugVertex) * nVertices, sizeof(LineVertex) };
-			vertexBufferCI.Vertices = { QuadVertex, CircleVertex, LineVertex };
+		// VertexBuffers
+		Ref<VertexBuffer> QuadBuffer = VertexBuffer::Create(QuadVertex, sizeof(QuadVertex));
+		Ref<VertexBuffer> CircleBuffer = VertexBuffer::Create(CircleVertex, sizeof(DebugVertex) * nVertices);
+		Ref<VertexBuffer> LineBuffer = VertexBuffer::Create(LineVertex, sizeof(LineVertex));
 
-			vertexBufferCI.BufferLayot = &layout;
-			vertexBufferCI.Stride = sizeof(DebugVertex);
-		}
-
-		IndexBufferCreateInfo indexBufferCI = {};
-		{
-			indexBufferCI.BuffersCount = 1;
-
-			indexBufferCI.IndicesCounts.resize(1);
-			indexBufferCI.IndicesCounts[0] = 6;
-
-			indexBufferCI.Indices.resize(1);
-			indexBufferCI.Indices[0] = quadIndices;
-		}
+		//IndexBuffers
+		Ref<IndexBuffer> QuadIndex = IndexBuffer::Create(quadIndices, 6);
 
 		GraphicsPipelineShaderCreateInfo shaderCI = {};
 		{
@@ -686,14 +674,19 @@ namespace SmolEngine
 
 		GraphicsPipelineCreateInfo graphicsPipelineCI = {};
 		{
-			graphicsPipelineCI.IndexBuffer = &indexBufferCI;
-			graphicsPipelineCI.VertexBuffer = &vertexBufferCI;
+			graphicsPipelineCI.Stride = sizeof(DebugVertex);
+			graphicsPipelineCI.BufferLayot = &layout;
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 			graphicsPipelineCI.PipelineDrawModes = { DrawMode::Line, DrawMode::Fan };
 			graphicsPipelineCI.PipelineName = "Renderer2D_Debug";
 		}
 
 		assert(s_Data->DebugPipeline->Create(&graphicsPipelineCI) == true);
+
+		//
+		s_Data->DebugPipeline->SetVertexBuffers({ QuadBuffer, CircleBuffer, LineBuffer });
+		s_Data->DebugPipeline->SetIndexBuffers({ QuadIndex });
+
 		delete[] CircleVertex;
 	}
 

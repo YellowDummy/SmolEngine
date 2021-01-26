@@ -21,36 +21,17 @@ namespace SmolEngine
 
 	struct GraphicsPipelineCreateInfo
 	{
-		IndexBufferCreateInfo* IndexBuffer = nullptr;
-		VertexBufferCreateInfo* VertexBuffer = nullptr;
-		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
-
-		uint32_t Samplers = 10;
-		uint32_t DescriptorSets = 1;
-		std::string PipelineName = "";
-
-		bool IsAlphaBlendingEnabled = false;
-		bool IsTargetsSwapchain = false;
-		bool IsDepthTestEnabled = true;
-
-		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
-	};
-
-	struct DynamicGraphicsPipelineCreateInfo
-	{
-		BufferLayout* BufferLayot = nullptr;
-		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
-		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
-
 		uint32_t Stride = 0;
-		uint32_t Samplers = 10;
 		uint32_t DescriptorSets = 1;
-
-		std::string PipelineName = "";
+		BufferLayout* BufferLayot = nullptr;
 
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
 		bool IsDepthTestEnabled = true;
+
+		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
+		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
+		std::string PipelineName = "";
 	};
 
 	class GraphicsPipeline
@@ -62,8 +43,6 @@ namespace SmolEngine
 		// Main
 
 		bool Create(const GraphicsPipelineCreateInfo* pipelineInfo);
-
-		bool Create(const DynamicGraphicsPipelineCreateInfo* pipelineInfo);
 
 		bool Reload();
 
@@ -115,9 +94,9 @@ namespace SmolEngine
 
 		// Update Resources
 
-		void SetDynamicVertexBuffers(std::vector<Ref<VertexBuffer>>& buffer);
+		void SetVertexBuffers(std::vector<Ref<VertexBuffer>> buffer);
 
-		void SetDynamicIndexBuffers(std::vector<Ref<IndexBuffer>>& buffer);
+		void SetIndexBuffers(std::vector<Ref<IndexBuffer>> buffer);
 
 		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0);
 

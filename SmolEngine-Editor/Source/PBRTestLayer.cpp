@@ -45,7 +45,7 @@ namespace SmolEngine
 				shaderCI.Textures = {  };
 			};
 
-			DynamicGraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
 				DynamicPipelineCI.BufferLayot = &m_TestMesh->m_Layout;
 				DynamicPipelineCI.PipelineName = "PBR_TEST";
@@ -58,8 +58,7 @@ namespace SmolEngine
 			bool result = m_Pipeline->Create(&DynamicPipelineCI);
 			assert(result == true);
 
-			std::vector<Ref<VertexBuffer>> buffer = { m_TestMesh->m_VertexBuffer };
-			m_Pipeline->SetDynamicVertexBuffers(buffer);
+			m_Pipeline->SetVertexBuffers({ m_TestMesh->m_VertexBuffer });
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 			m_Pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
@@ -93,7 +92,7 @@ namespace SmolEngine
 				{ ShaderDataType::Float3, "aPos" }
 			};
 
-			DynamicGraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
 				DynamicPipelineCI.BufferLayot = &laypot;
 				DynamicPipelineCI.PipelineName = "Skybox_Test";
@@ -166,8 +165,7 @@ namespace SmolEngine
 
 			Ref<VertexBuffer> skyBoxFB = VertexBuffer::Create(skyboxVertices, sizeof(skyboxVertices));
 
-			std::vector<Ref<VertexBuffer>> buffer = { skyBoxFB };
-			m_SkyboxPipeline->SetDynamicVertexBuffers(buffer);
+			m_SkyboxPipeline->SetVertexBuffers({ skyBoxFB });
 		}
 	}
 
