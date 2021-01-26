@@ -7,7 +7,6 @@
 #include "Renderer/Framebuffer.h"
 #include "Renderer/EditorCamera.h"
 
-#include "Renderer/Camera.h"
 #include "Renderer/GraphicsPipeline.h"
 
 namespace SmolEngine

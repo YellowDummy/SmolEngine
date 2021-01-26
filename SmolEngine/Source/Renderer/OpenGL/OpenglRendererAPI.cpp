@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "OpenglRendererAPI.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/Camera.h"
 #include "Core/SLog.h"
 
 #include <glad/glad.h>
@@ -86,9 +85,7 @@ namespace SmolEngine
 	void OpenglRendererAPI::DrawTriangle(const Ref<VertexArray> vertexArray, uint32_t count, size_t vertices)
 	{
 		if (vertices > 0)
-		{
-			glDrawArrays(GL_TRIANGLES, 1, vertices);
-		}
+			glDrawArrays(GL_TRIANGLES, 1, static_cast<GLsizei>(vertices));
 		else
 		{
 			uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
@@ -100,9 +97,7 @@ namespace SmolEngine
 	void OpenglRendererAPI::DrawLine(const Ref<VertexArray> vertexArray, uint32_t count, size_t vertices)
 	{
 		if (vertices > 0)
-		{
-			glDrawArrays(GL_LINE_STRIP, 1, vertices);
-		}
+			glDrawArrays(GL_LINE_STRIP, 1, static_cast<GLsizei>(vertices));
 		else
 		{
 			uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();
@@ -113,9 +108,7 @@ namespace SmolEngine
 	void OpenglRendererAPI::DrawFan(const Ref<VertexArray> vertexArray, uint32_t count, size_t vertices)
 	{
 		if (vertices > 0)
-		{
-			glDrawArrays(GL_LINE_LOOP, 1, vertices);
-		}
+			glDrawArrays(GL_LINE_LOOP, 1, static_cast<GLsizei>(vertices));
 		else
 		{
 			uint32_t count_t = count ? count : vertexArray->GetIndexBuffer()->GetCount();

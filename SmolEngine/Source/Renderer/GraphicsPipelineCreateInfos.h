@@ -23,7 +23,7 @@ namespace SmolEngine
 	struct VertexBufferCreateInfo
 	{
 		size_t Stride = 0;
-		size_t BuffersCount = 1;
+		uint32_t BuffersCount = 1;
 		bool IsAllocateMemOnly = false;
 		BufferLayout* BufferLayot = nullptr;
 

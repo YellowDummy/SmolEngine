@@ -15,14 +15,14 @@ namespace SmolEngine
 		HeadComponent(uint32_t id)
 			: BaseComponent(id) {}
 
-		HeadComponent(const std::string& name, const std::string tag, size_t id);
+		HeadComponent(const std::string& name, const std::string tag, uint32_t id);
 
 		/// Data
 
 		std::string Name = "";
 		std::string Tag = "";
 
-		size_t ID = 0;
+		uint32_t ID = 0;
 		bool IsEnabled = true;
 
 	private:

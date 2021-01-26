@@ -54,7 +54,7 @@ namespace SmolEngine
 
 		const std::string& GetTag() const;
 
-		const size_t GetID() const;
+		const uint32_t GetID() const;
 
 		const size_t GetComponentsCount() const;
 

@@ -51,7 +51,7 @@ namespace SmolEngine
 		FT_Library m_Library;
 
 		float m_xOffset = 0.0f;
-		int m_FontSize = 100.0f;
+		int m_FontSize = 100;
 
 		std::string m_Text = "";
 		std::vector<Character> m_Characters;

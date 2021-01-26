@@ -51,7 +51,7 @@ namespace SmolEngine
 
 		Ref<Actor> FindActorByTag(const std::string& tag);
 
-		Ref<Actor> FindActorByID(size_t id);
+		Ref<Actor> FindActorByID(uint32_t id);
 
 		/// Out-Properties
 

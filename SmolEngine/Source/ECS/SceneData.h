@@ -22,7 +22,7 @@ namespace SmolEngine
 
 	public:
 
-		std::unordered_map<size_t, Ref<Actor>> m_ActorPool;
+		std::unordered_map<uint32_t, Ref<Actor>> m_ActorPool;
 		std::unordered_map<std::string, std::string> m_AssetMap;
 
 		glm::vec2 m_Gravity = glm::vec2(0.0f, -9.81f);

@@ -74,12 +74,6 @@ namespace SmolEngine
 
 		static void SubmitLight2D(const glm::vec3& offset, const float radius, const glm::vec4& color, const float lightIntensity);
 
-		// Animation
-
-		static void DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue,
-			const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, const Ref<Texture>& texture,
-			float repeatValue = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-
 		// Framebuffer
 
 		static void DrawFrameBuffer(const uint32_t colorAttachmentID);

@@ -15,7 +15,6 @@
 #include "ECS/ComponentsCore.h"
 
 #include "Audio/AudioClip.h"
-#include "Audio/AudioSource.h"
 
 #include "UI/UIButton.h"
 #include "UI/UITextLabel.h"
@@ -263,7 +262,7 @@ namespace SmolEngine
 				{
 					if (m_Scene->m_InPlayMode)
 					{
-						size_t selectedActorID = 0;
+						uint32_t selectedActorID = 0;
 						if (m_SelectedActor != nullptr)
 						{
 							selectedActorID = m_SelectedActor->GetID();
@@ -901,7 +900,7 @@ namespace SmolEngine
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
 				{
 					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_Camera->OnResize(m_ViewPortSize.y, m_ViewPortSize.x);
+					m_Camera->OnResize(static_cast<uint32_t>(m_ViewPortSize.y), static_cast<uint32_t>(m_ViewPortSize.x));
 				}
 
 #ifdef SMOLENGINE_OPENGL_IMPL

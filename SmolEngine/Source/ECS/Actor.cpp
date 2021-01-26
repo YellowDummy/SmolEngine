@@ -51,7 +51,7 @@ namespace SmolEngine
 		return GetInfo()->Tag;
 	}
 
-	const size_t Actor::GetID() const
+	const uint32_t Actor::GetID() const
 	{
 		return GetInfo()->ID;
 	}

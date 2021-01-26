@@ -62,17 +62,16 @@ namespace SmolEngine
 
 	void UIButton::CalculatePos(const glm::vec2& screenCenter, const float zoomLevel)
 	{
-
 #ifdef SMOLENGINE_EDITOR
 
 		float x = fabs((screenCenter.x + (m_UCood.x * 100.0f) - 90.0f));
 		float y = fabs((-screenCenter.y + ((m_UCood.y * 100.0f) - ((1.0f * 100.0f) * 0.5f))));
 
-		maxX = (x + (m_Size.x * 50.0f));
-		maxY = (y + (m_Size.y * 50.0f));
+		maxX = static_cast<uint32_t>((x + (m_Size.x * 50.0f))); // why int?
+		maxY = static_cast<uint32_t>((y + (m_Size.y * 50.0f)));
 
-		minX = (x - (m_Size.x * 50.0f));
-		minY = (y - (m_Size.y * 50.0f));
+		minX = static_cast<uint32_t>((x - (m_Size.x * 50.0f)));
+		minY = static_cast<uint32_t>((y - (m_Size.y * 50.0f)));
 
 #else
 		auto& app = Application::GetApplication();

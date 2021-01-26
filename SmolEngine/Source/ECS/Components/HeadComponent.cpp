@@ -8,7 +8,7 @@ namespace SmolEngine
 
 	}
 
-	HeadComponent::HeadComponent(const std::string& name, const std::string tag, size_t id)
+	HeadComponent::HeadComponent(const std::string& name, const std::string tag, uint32_t id)
 		:
 		Name(name),
 		Tag(tag),

@@ -13,7 +13,6 @@
 
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/Camera.h"
 #include "Renderer/Texture.h"
 
 #include "ImGui/EditorConsole.h"
@@ -32,8 +31,6 @@ namespace SmolEngine
 		m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
 
 		float ar = 280.0f / 280.0f;
-		m_Camera = std::make_unique<CameraController>(ar);
-		m_Camera->SetZoom(1.0f);
 	}
 
 	void AnimationPanel::Update(bool& isOpened)
@@ -184,10 +181,10 @@ namespace SmolEngine
 
 						static float zoomLevel = 1.0f;
 						ImGui::InputFloat("Zoom Level", &zoomLevel);
-						if (m_Camera->m_ZoomLevel != zoomLevel)
-						{
-							m_Camera->SetZoom(zoomLevel);
-						}
+						//if (m_Camera->m_ZoomLevel != zoomLevel)
+						//{
+						//	m_Camera->SetZoom(zoomLevel);
+						//}
 
 						ImGui::BeginChild("Anim");
 						{
@@ -196,19 +193,18 @@ namespace SmolEngine
 								Animation2DSystem::DebugUpdate(m_AnimationClip.get());
 							}
 
-							m_Camera->GetFramebuffer()->Bind();
+							//m_Camera->GetFramebuffer()->Bind();
 							RendererCommand::SetClearColor({ 0.0f, 0.0f, 0.0, 1 });
 							RendererCommand::Clear();
 
 							if (m_AnimationClip->m_CurrentTexture != nullptr && m_AnimationClip->m_CurrentFrameKey)
 							{
 								auto frameKey = m_AnimationClip->m_CurrentFrameKey;
-								Renderer2D::DrawAnimation2DPreview(m_Camera->GetCamera(), 1.0f, { 0, 0, 1 }, frameKey->TextureScale, 0, m_AnimationClip->m_CurrentTexture, 1.0f, frameKey->TextureColor);
 							}
 
-							m_Camera->GetFramebuffer()->UnBind();
-							size_t textureID = m_Camera->GetFramebuffer()->GetColorAttachmentID();
-							ImGui::Image((void*)textureID, ImVec2{ 280, 280 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+							//m_Camera->GetFramebuffer()->UnBind();
+							//size_t textureID = m_Camera->GetFramebuffer()->GetColorAttachmentID();
+							//ImGui::Image((void*)textureID, ImVec2{ 280, 280 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 						}
 						ImGui::EndChild();
 					}
@@ -261,7 +257,7 @@ namespace SmolEngine
 						FileName = item.filename().u8string();
 
 						m_SelectedFrame = std::make_shared<Animation2DFrameKey>();
-						m_AnimationClip->m_Frames[m_AnimationClip->m_Frames.size()] = m_SelectedFrame;
+						m_AnimationClip->m_Frames[static_cast<int>(m_AnimationClip->m_Frames.size())] = m_SelectedFrame;
 
 						m_SelectedFrame->Texture = Texture::Create(FilePath);
 						m_SelectedFrame->TexturePath = FilePath;

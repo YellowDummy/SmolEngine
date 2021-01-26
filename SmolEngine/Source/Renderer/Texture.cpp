@@ -51,7 +51,7 @@ namespace SmolEngine
 
 		return m_OpenglTexture2D.GetID();
 #else
-		return m_VulkanTexture.GetID();
+		return static_cast<uint32_t>(m_VulkanTexture.GetID());
 #endif
 	}
 

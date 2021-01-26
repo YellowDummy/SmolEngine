@@ -51,7 +51,7 @@ namespace SmolEngine
 		}
 	}
 
-	void ScriptingSystem::ReloadScripts(entt::registry& registry, const std::unordered_map<size_t, Ref<Actor>>& actorPool)
+	void ScriptingSystem::ReloadScripts(entt::registry& registry, const std::unordered_map<uint32_t, Ref<Actor>>& actorPool)
 	{
 		const auto& view = registry.view<BehaviourComponent>();
 		view.each([&](BehaviourComponent& behaviour)

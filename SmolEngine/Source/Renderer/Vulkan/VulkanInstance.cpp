@@ -51,7 +51,10 @@ namespace SmolEngine
 	bool VulkanInstance::CreateInstance(const VkApplicationInfo& appInfo)
 	{
 		std::vector<const char*> instanceLayers = { "VK_LAYER_KHRONOS_validation" };
-		std::vector<const char*> instanceExt = { "VK_EXT_debug_report", VK_KHR_SURFACE_EXTENSION_NAME};
+		std::vector<const char*> instanceExt = { VK_KHR_SURFACE_EXTENSION_NAME };
+#ifdef SMOLENGINE_DEBUG
+		instanceExt.push_back("VK_EXT_debug_report");
+#endif
 
 #ifdef _WIN32
 		instanceExt.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
@@ -61,9 +64,9 @@ namespace SmolEngine
 		{
 			instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 			instanceInfo.pApplicationInfo = &appInfo;
-			instanceInfo.enabledExtensionCount = instanceExt.size();
+			instanceInfo.enabledExtensionCount = static_cast<uint32_t>(instanceExt.size());
 			instanceInfo.ppEnabledExtensionNames = instanceExt.data();
-			instanceInfo.enabledLayerCount = instanceLayers.size();
+			instanceInfo.enabledLayerCount = static_cast<uint32_t>(instanceLayers.size());
 			instanceInfo.ppEnabledLayerNames = instanceLayers.data();
 		}
 

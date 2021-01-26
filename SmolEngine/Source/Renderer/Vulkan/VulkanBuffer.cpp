@@ -69,7 +69,7 @@ namespace SmolEngine
 		VkResult bind_result = vkBindBufferMemory(device, m_Buffer, m_DeviceMemory, offset);
 		assert(bind_result == VK_SUCCESS);
 
-		m_Size = size;
+		m_Size = static_cast<uint32_t>(size);
 		vkUnmapMemory(device, m_DeviceMemory);
 	}
 
@@ -113,7 +113,7 @@ namespace SmolEngine
 
 		VkResult bind_result = vkBindBufferMemory(device, m_Buffer, m_DeviceMemory, offset);
 		assert(bind_result == VK_SUCCESS);
-		m_Size = size;
+		m_Size = static_cast<uint32_t>(size);
 	}
 
 	void VulkanBuffer::SetData(const void* data, size_t size, uint32_t offset)

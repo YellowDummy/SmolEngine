@@ -61,7 +61,7 @@ namespace SmolEngine
 			}
 
 			auto& component = m_SceneData.m_Registry.emplace<T>(actor, std::forward<Args>(args)...);
-			component.ComponentID = actor.m_ComponentsCount;
+			component.ComponentID = static_cast<uint32_t>(actor.m_ComponentsCount);
 			actor.m_ComponentsCount++;
 			return &component;
 		}
@@ -122,7 +122,7 @@ namespace SmolEngine
 
 		const std::unordered_map<std::string, std::string>& GetAssetMap();
 
-		std::unordered_map<size_t, Ref<Actor>>& GetActorPool();
+		std::unordered_map<uint32_t, Ref<Actor>>& GetActorPool();
 
 
 		std::vector<Ref<Actor>> GetActorList();
@@ -134,12 +134,12 @@ namespace SmolEngine
 
 		SceneData& GetSceneData();
 
-		std::unordered_map<std::string, size_t>& GetIDSet();
+		std::unordered_map<std::string, uint32_t>& GetIDSet();
 
 	private:
 
 		SceneData m_SceneData;
-		std::unordered_map<std::string, size_t> m_IDSet;
+		std::unordered_map<std::string, uint32_t> m_IDSet;
 
 	private:
 

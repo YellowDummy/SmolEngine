@@ -10,7 +10,6 @@
     <ClCompile Include="Source\Animation\AnimationClip.cpp" />
     <ClCompile Include="Source\Audio\AudioClip.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
-    <ClCompile Include="Source\Audio\AudioSource.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Core\AssetManager.cpp" />
     <ClCompile Include="Source\Core\EngineCommand.cpp" />
@@ -63,7 +62,6 @@
     <ClCompile Include="Source\Physics2D\Box2D\CollisionFilter2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\CollisionListener2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\RayCast2D.cpp" />
-    <ClCompile Include="Source\Renderer\Camera.cpp" />
     <ClCompile Include="Source\Renderer\CubeTexture.cpp" />
     <ClCompile Include="Source\Renderer\EditorCamera.cpp" />
     <ClCompile Include="Source\Renderer\Framebuffer.cpp" />
@@ -488,7 +486,6 @@
     <ClInclude Include="Source\Animation\AnimationClip.h" />
     <ClInclude Include="Source\Audio\AudioClip.h" />
     <ClInclude Include="Source\Audio\AudioEngine.h" />
-    <ClInclude Include="Source\Audio\AudioSource.h" />
     <ClInclude Include="Source\Core\Application.h" />
     <ClInclude Include="Source\Core\AssetManager.h" />
     <ClInclude Include="Source\Core\Core.h" />
@@ -555,7 +552,6 @@
     <ClInclude Include="Source\Physics2D\Box2D\RayCast2D.h" />
     <ClInclude Include="Source\Renderer\BufferElement.h" />
     <ClInclude Include="Source\Renderer\BufferLayout.h" />
-    <ClInclude Include="Source\Renderer\Camera.h" />
     <ClInclude Include="Source\Renderer\CubeTexture.h" />
     <ClInclude Include="Source\Renderer\EditorCamera.h" />
     <ClInclude Include="Source\Renderer\Framebuffer.h" />

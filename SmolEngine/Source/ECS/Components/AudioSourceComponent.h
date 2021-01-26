@@ -2,7 +2,6 @@
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
 #include "Audio/AudioClip.h"
-#include "Audio/AudioSource.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>

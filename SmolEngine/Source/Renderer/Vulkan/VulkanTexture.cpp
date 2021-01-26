@@ -62,7 +62,7 @@ namespace SmolEngine
 			}
 		}
 
-		const uint32_t mipLevels = floor(log2(std::max(width, height))) + 1;
+		const uint32_t mipLevels = static_cast<uint32_t>(floor(log2(std::max(width, height)))) + 1;
 		m_Format = GetImageFormat(format);
 
 		CreateTexture(width, height, mipLevels, data);
@@ -201,7 +201,7 @@ namespace SmolEngine
 			samplerCI.mipLodBias = 0.0f;
 			samplerCI.compareOp = VK_COMPARE_OP_NEVER;
 			samplerCI.minLod = 0.0f;
-			samplerCI.maxLod = mipLevels;
+			samplerCI.maxLod = static_cast<float>(mipLevels);
 			samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 			samplerCI.maxAnisotropy = 1.0f;
 			if (device.GetDeviceFeatures()->samplerAnisotropy)

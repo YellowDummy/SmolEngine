@@ -134,7 +134,7 @@ namespace SmolEngine
 						temp.FileName = fileName;
 						temp.FilePath = filePath;
 
-						ref->m_Scenes[ref->m_Scenes.size()] = temp;
+						ref->m_Scenes[static_cast<uint32_t>(ref->m_Scenes.size())] = temp;
 						ResetFileBrowser();
 					}
 

@@ -22,7 +22,7 @@ namespace SmolEngine
 		/// Data
 
 		Body2D Body;
-		size_t ActorID = 0;
+		uint32_t ActorID = 0;
 		bool ShowShape = true;
 
 	private:

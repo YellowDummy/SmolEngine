@@ -4,7 +4,6 @@
 #include "Renderer.h"
 #include "SmolEngineCore.h"
 
-#include "Renderer/Camera.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
@@ -244,7 +243,7 @@ namespace SmolEngine
 		} ps;
 
 		ps.cameraViewProj = s_Data->SceneData.viewProjectionMatrix;
-		ps.LightCount = s_Data->Light2DBufferSize;
+		ps.LightCount = static_cast<float>(s_Data->Light2DBufferSize);
 
 		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &ps);
 		s_Data->MainPipeline->DrawIndexed(DrawMode::Triangle, layer.LayerIndex, 0, layer.LayerIndex);
@@ -487,13 +486,6 @@ namespace SmolEngine
 			s_Data->LightBuffer[s_Data->Light2DBufferSize] = Light2DBuffer(color, { offset, 0 }, radius, lightIntensity);
 			s_Data->Light2DBufferSize++;
 		}
-	}
-
-	void Renderer2D::DrawAnimation2DPreview(Ref<OrthographicCamera> camera, float ambientValue, 
-		const glm::vec3& worldPos, const glm::vec2& scale, const float rotation, 
-		const Ref<Texture>& texture, float repeatValue, const glm::vec4& tintColor)
-	{
-
 	}
 
 	void Renderer2D::DrawFrameBuffer(const uint32_t colorAttachmentID)

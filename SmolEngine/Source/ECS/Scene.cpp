@@ -271,7 +271,7 @@ namespace SmolEngine
 			}
 		}
 
-		uint32_t index = actor->m_ComponentsCount;
+		int32_t index = static_cast<int32_t>(actor->m_ComponentsCount);
 		actor->m_ComponentsCount++;
 		ScriptInstance instance = {};
 		{
@@ -326,7 +326,7 @@ namespace SmolEngine
 			return false;
 		}
 
-		size_t id = m_IDSet[lastName];
+		uint32_t id = m_IDSet[lastName];
 		if (m_IDSet.erase(lastName) == 1)
 		{
 			m_IDSet[newName] = id;
@@ -409,7 +409,7 @@ namespace SmolEngine
 		return m_SceneData.m_AssetMap;
 	}
 
-	std::unordered_map<size_t, Ref<Actor>>& Scene::GetActorPool()
+	std::unordered_map<uint32_t, Ref<Actor>>& Scene::GetActorPool()
 	{
 		return m_SceneData.m_ActorPool;
 	}
@@ -450,7 +450,7 @@ namespace SmolEngine
 		return m_SceneData;
 	}
 
-	std::unordered_map<std::string, size_t>& Scene::GetIDSet()
+	std::unordered_map<std::string, uint32_t>& Scene::GetIDSet()
 	{
 		return m_IDSet;
 	}

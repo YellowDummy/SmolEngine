@@ -8,7 +8,6 @@
 
 namespace SmolEngine
 {
-	class OrthographicCamera;
 	class Shader;
 
 	class Renderer
@@ -18,10 +17,6 @@ namespace SmolEngine
 		Renderer(const Renderer&) = delete;
 
 		static void Init();
-
-		static void BeginScene(OrthographicCamera& cameraRef);
-
-		static void EndScene();
 
 		static void OnWidowResize(uint32_t width, uint32_t height);
 

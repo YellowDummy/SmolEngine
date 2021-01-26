@@ -255,8 +255,8 @@ namespace SmolEngine
 	{
 		auto& res_e = static_cast<WindowResizeEvent&>(e);
 
-		m_ViewportWidth = res_e.GetWidth();
-		m_ViewportHeight = res_e.GetHeight();
+		m_ViewportWidth = static_cast<float>(res_e.GetWidth());
+		m_ViewportHeight = static_cast<float>(res_e.GetHeight());
 		m_AspectRatio = m_ViewportHeight / m_ViewportWidth;
 
 		m_FrameBuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());

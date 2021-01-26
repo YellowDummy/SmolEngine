@@ -35,7 +35,6 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
-#include "Renderer/Camera.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/OpenGL/OpenglBuffer.h"

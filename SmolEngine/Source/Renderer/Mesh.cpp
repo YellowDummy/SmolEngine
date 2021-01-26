@@ -46,7 +46,7 @@ namespace SmolEngine
         };
 
         m_Stride = sizeof(Vertex);
-        m_VertexCount = data->vertices.size();
+        m_VertexCount = static_cast<uint32_t>(data->vertices.size());
         m_Layout =
         {
             { ShaderDataType::Float3, "aPos" },
@@ -66,8 +66,8 @@ namespace SmolEngine
             vertices[i].uvs = data->uvs[i];
         }
 
-        m_VertexBuffer = VertexBuffer::Create(vertices.data(), sizeof(Vertex) * vertices.size());
-        m_IndexBuffer = IndexBuffer::Create(data->indices.data(), data->indices.size());
+        m_VertexBuffer = VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(sizeof(Vertex) * vertices.size()));
+        m_IndexBuffer = IndexBuffer::Create(data->indices.data(), static_cast<uint32_t>(data->indices.size()));
         return true;
     }
 }

@@ -28,7 +28,7 @@ namespace SmolEngine
 		return WorldAdmin::GetSingleton()->GetActiveScene().FindActorByTag(tag);
 	}
 
-	Ref<Actor> BehaviourPrimitive::FindActorByID(size_t id)
+	Ref<Actor> BehaviourPrimitive::FindActorByID(uint32_t id)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene().FindActorByID(id);
 	}

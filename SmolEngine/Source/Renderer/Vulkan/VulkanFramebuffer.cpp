@@ -206,7 +206,7 @@ namespace SmolEngine
 				fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 				fbufCreateInfo.pNext = NULL;
 				fbufCreateInfo.renderPass = renderPass;
-				fbufCreateInfo.attachmentCount = attachments.size();
+				fbufCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
 				fbufCreateInfo.pAttachments = attachments.data();
 				fbufCreateInfo.width = m_Specification.Width;
 				fbufCreateInfo.height = m_Specification.Height;

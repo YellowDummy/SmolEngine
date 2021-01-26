@@ -138,7 +138,7 @@ namespace SmolEngine
         for (const auto& res : resources.uniform_buffers)
         {
             auto& type = compiler.get_type(res.base_type_id);
-            int bufferElements = type.member_types.size();
+            uint32_t bufferElements = static_cast<uint32_t>(type.member_types.size());
 
             UniformBuffer buffer = {};
             {
@@ -175,7 +175,7 @@ namespace SmolEngine
             VkPushConstantRange range = {};
             {
                 range.offset = 0;
-                range.size = compiler.get_declared_struct_size(type);
+                range.size = static_cast<uint32_t>(compiler.get_declared_struct_size(type));
                 range.stageFlags = GetVkShaderStage(shaderType);
             }
 

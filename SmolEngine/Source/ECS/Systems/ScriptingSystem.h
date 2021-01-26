@@ -26,6 +26,6 @@ namespace SmolEngine
 
 		static void OnDebugDraw(entt::registry& registry);
 
-		static void ReloadScripts(entt::registry& registry, const std::unordered_map<size_t, Ref<Actor>>& actorPool);
+		static void ReloadScripts(entt::registry& registry, const std::unordered_map<uint32_t, Ref<Actor>>& actorPool);
 	};
 }

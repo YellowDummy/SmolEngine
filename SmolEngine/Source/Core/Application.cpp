@@ -31,7 +31,7 @@ namespace SmolEngine
 		if (s_Instance != nullptr) 
 		{
 			NATIVE_ERROR("Application already instantiated");
-			abort;
+			abort();
 		}
 
 		s_Instance = this;

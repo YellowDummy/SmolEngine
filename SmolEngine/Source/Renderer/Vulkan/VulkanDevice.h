@@ -22,17 +22,17 @@ namespace SmolEngine
 
 		uint32_t GetMemoryTypeIndex(uint32_t typeBits, VkMemoryPropertyFlags memFlags) const;
 
-		const VkPhysicalDeviceMemoryProperties* const GetMemoryProperties() const;
+		const VkPhysicalDeviceMemoryProperties* GetMemoryProperties() const;
 
-		const VkPhysicalDeviceProperties* const GetDeviceProperties() const;
+		const VkPhysicalDeviceProperties* GetDeviceProperties() const;
 
-		const VkPhysicalDeviceFeatures* const GetDeviceFeatures() const;
+		const VkPhysicalDeviceFeatures* GetDeviceFeatures() const;
 
 		const VkSampleCountFlagBits GetMSAASamplesCount() const;
 
-		const VkPhysicalDevice const GetPhysicalDevice() const;
+		const VkPhysicalDevice GetPhysicalDevice() const;
 
-		const VkDevice const GetLogicalDevice() const;
+		const VkDevice GetLogicalDevice() const;
 
 		uint32_t GetQueueFamilyIndex() const;
 

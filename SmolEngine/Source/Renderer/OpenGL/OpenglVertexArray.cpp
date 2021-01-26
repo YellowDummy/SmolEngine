@@ -23,7 +23,7 @@ namespace SmolEngine
 		case ShaderDataType::Int4:     return GL_INT;
 		case ShaderDataType::Bool:     return GL_BOOL;
 
-		default:                     return 0; abort;
+		default:                     return 0; abort();
 		}
 	}
 

@@ -76,8 +76,8 @@ namespace SmolEngine
 
 	void UISystem::DrawAllElements(const CanvasComponent& canvas, const glm::vec3& cameraPos, const float zoomLevel)
 	{
-		float w = Application::GetApplication().GetWindowWidth();
-		float h = Application::GetApplication().GetWindowHeight();
+		float w = static_cast<float>(Application::GetApplication().GetWindowWidth());
+		float h = static_cast<float>(Application::GetApplication().GetWindowHeight());
 
 		glm::vec2 screenCenter = { w / 2.0f, h / 2.5f };
 

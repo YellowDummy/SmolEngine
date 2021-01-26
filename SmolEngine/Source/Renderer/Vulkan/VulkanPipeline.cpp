@@ -53,6 +53,7 @@ namespace SmolEngine
 		}
 
 		m_FilePath = "../Resources/Cached/" + pipelineSpec.Name;
+		return true;
 	}
 
 	bool VulkanPipeline::CreatePipeline(DrawMode mode)

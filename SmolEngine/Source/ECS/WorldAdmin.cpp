@@ -5,7 +5,6 @@
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/Camera.h"
 #include "Renderer/Text.h"
 
 #include "Core/AssetManager.h"
@@ -273,7 +272,7 @@ namespace SmolEngine
 		for (const auto pair : FramebufferSComponent::Get())
 		{
 			const auto& [key, framebuffer] = pair;
-			framebuffer->OnResize(width, height);
+			framebuffer->OnResize(static_cast<uint32_t>(width), static_cast<uint32_t>(height));
 		}
 
 		CameraSystem::OnResize(GetActiveScene().m_SceneData.m_Registry, width, height);

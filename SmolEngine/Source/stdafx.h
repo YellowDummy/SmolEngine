@@ -32,7 +32,6 @@
 #include "Renderer/RendererAPI.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Framebuffer.h"
-#include "Renderer/Camera.h"
 #include "Renderer/Shader.h"
 #include "Renderer/SubTexture.h"
 #include "Renderer/Texture.h"

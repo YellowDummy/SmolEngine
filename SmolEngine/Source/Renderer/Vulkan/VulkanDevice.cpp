@@ -118,7 +118,7 @@ namespace SmolEngine
 			deviceInfo.pQueueCreateInfos = &queueCreateInfo;
 			deviceInfo.queueCreateInfoCount = 1;
 			deviceInfo.pEnabledFeatures = &m_VkDeviceFeatures;
-			deviceInfo.enabledExtensionCount = m_ExtensionsList.size();
+			deviceInfo.enabledExtensionCount = static_cast<uint32_t>(m_ExtensionsList.size());
 			deviceInfo.ppEnabledExtensionNames = m_ExtensionsList.data();
 		}
 
@@ -206,17 +206,17 @@ return result == VK_SUCCESS;
 		m_MSAASamplesCount = sampleCount;
 	}
 
-	const VkPhysicalDeviceMemoryProperties* const VulkanDevice::GetMemoryProperties() const
+	const VkPhysicalDeviceMemoryProperties* VulkanDevice::GetMemoryProperties() const
 	{
 		return &m_VkMemoryProperties;
 	}
 
-	const VkPhysicalDeviceProperties* const VulkanDevice::GetDeviceProperties() const
+	const VkPhysicalDeviceProperties* VulkanDevice::GetDeviceProperties() const
 	{
 		return &m_VkDeviceProperties;
 	}
 
-	const VkPhysicalDeviceFeatures* const VulkanDevice::GetDeviceFeatures() const
+	const VkPhysicalDeviceFeatures* VulkanDevice::GetDeviceFeatures() const
 	{
 		return &m_VkDeviceFeatures;
 	}
@@ -226,12 +226,12 @@ return result == VK_SUCCESS;
 		return m_MSAASamplesCount;
 	}
 
-	const VkPhysicalDevice const VulkanDevice::GetPhysicalDevice() const
+	const VkPhysicalDevice VulkanDevice::GetPhysicalDevice() const
 	{
 		return m_VkPhysicalDevice;
 	}
 
-	const VkDevice const VulkanDevice::GetLogicalDevice() const
+	const VkDevice VulkanDevice::GetLogicalDevice() const
 	{
 		return m_VkLogicalDevice;
 	}

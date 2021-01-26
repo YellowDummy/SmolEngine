@@ -165,7 +165,7 @@ namespace SmolEngine
 		std::array<GLenum, 2> glShaderIDs;
 		if (shaderSources.size() < 2)
 		{
-			NATIVE_ERROR("Only 2 shaders supported, current size: {}", shaderSources.size()); abort;
+			NATIVE_ERROR("Only 2 shaders supported, current size: {}", shaderSources.size()); abort();
 		}
 
 		int glShaderIDIndex = 0;

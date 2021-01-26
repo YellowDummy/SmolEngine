@@ -199,7 +199,7 @@ namespace SmolEngine
 
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
-				MouseScrollEvent scrollEvent(xOffset, yOffset);
+				MouseScrollEvent scrollEvent(static_cast<float>(xOffset), static_cast<float>(yOffset));
 				Data.m_eventHandler->SendEvent(scrollEvent, EventType::S_MOUSE_SCROLL, EventCategory::S_EVENT_MOUSE);
 		});
 	
