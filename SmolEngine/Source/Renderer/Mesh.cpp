@@ -2,7 +2,9 @@
 #include "Mesh.h"
 
 #include "Utils/FBXImporter.h"
-#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "ECS/Systems/CommandSystem.h"
 
 #include <glm/glm.hpp>

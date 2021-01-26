@@ -4,7 +4,9 @@
 #include "OpenglShader.h"
 #include "Core/SLog.h"
 #include "glad/glad.h"
-#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "Renderer/Renderer.h"
 
 namespace SmolEngine

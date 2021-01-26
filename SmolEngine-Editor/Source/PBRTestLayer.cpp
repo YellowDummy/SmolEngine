@@ -276,8 +276,7 @@ namespace SmolEngine
 					} pc;
 
 					pc.proj = m_EditorCamera->GetProjection();
-					pc.model = glm::inverse(m_EditorCamera->GetViewMatrix());
-					pc.model[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+					pc.model = glm::mat4(glm::mat3(m_EditorCamera->GetViewMatrix()));
 					pc.exposure = m_UBOParams.exposure;
 					pc.gamma = m_UBOParams.gamma;
 

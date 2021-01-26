@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "Renderer/Texture.h"
 #include "Renderer/BufferLayout.h"
 #include "Renderer/Shader.h"

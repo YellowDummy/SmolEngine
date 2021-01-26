@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "OpenglVertexArray.h"
-#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "glad/glad.h"
 
 namespace SmolEngine

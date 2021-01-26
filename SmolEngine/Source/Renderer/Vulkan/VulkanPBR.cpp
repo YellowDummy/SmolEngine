@@ -8,7 +8,9 @@
 #include "Renderer/Vulkan/VulkanShader.h"
 #include "Renderer/Vulkan/VulkanCommandBuffer.h"
 #include "Renderer/BufferLayout.h"
-#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "Renderer/CubeTexture.h"
 
 namespace SmolEngine

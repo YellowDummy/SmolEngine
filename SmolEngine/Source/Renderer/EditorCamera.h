@@ -7,6 +7,7 @@
 namespace SmolEngine
 {
 	class Framebuffer;
+
 	enum class CameraType : uint16_t
 	{
 		Perspective,

@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-#include "Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 
 #include "Renderer/Shader.h"
 #include "Renderer/Camera.h"

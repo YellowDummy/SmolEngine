@@ -632,7 +632,7 @@
     <ClInclude Include="Source\Physics2D\Box2D\CollisionFilter2D.h" />
     <ClInclude Include="Source\Physics2D\Box2D\CollisionListener2D.h" />
     <ClInclude Include="Source\Physics2D\Box2D\RayCast2D.h" />
-    <ClInclude Include="Source\Renderer\Buffer.h" />
+    <ClInclude Include="Source\Renderer\VertexArray.h" />
     <ClInclude Include="Source\Renderer\BufferElement.h" />
     <ClInclude Include="Source\Renderer\BufferLayout.h" />
     <ClInclude Include="Source\Renderer\Camera.h" />
@@ -643,6 +643,7 @@
     <ClInclude Include="Source\Renderer\GraphicsContext.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipeline.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h" />
+    <ClInclude Include="Source\Renderer\IndexBuffer.h" />
     <ClInclude Include="Source\Renderer\Mesh.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglContext.h" />
@@ -662,6 +663,7 @@
     <ClInclude Include="Source\Renderer\Texture.h" />
     <ClInclude Include="Source\Renderer\TextureFormat.h" />
     <ClInclude Include="Source\Renderer\TexturesPool.h" />
+    <ClInclude Include="Source\Renderer\VertexBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\Vulkan.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandBuffer.h" />
@@ -758,13 +760,14 @@
     <ClCompile Include="Source\Physics2D\Box2D\CollisionFilter2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\CollisionListener2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\RayCast2D.cpp" />
-    <ClCompile Include="Source\Renderer\Buffer.cpp" />
+    <ClCompile Include="Source\Renderer\VertexArray.cpp" />
     <ClCompile Include="Source\Renderer\Camera.cpp" />
     <ClCompile Include="Source\Renderer\CubeTexture.cpp" />
     <ClCompile Include="Source\Renderer\EditorCamera.cpp" />
     <ClCompile Include="Source\Renderer\Framebuffer.cpp" />
     <ClCompile Include="Source\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="Source\Renderer\GraphicsPipeline.cpp" />
+    <ClCompile Include="Source\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Mesh.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglContext.cpp" />
@@ -781,6 +784,7 @@
     <ClCompile Include="Source\Renderer\Text.cpp" />
     <ClCompile Include="Source\Renderer\Texture.cpp" />
     <ClCompile Include="Source\Renderer\TexturesPool.cpp" />
+    <ClCompile Include="Source\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandPool.cpp" />

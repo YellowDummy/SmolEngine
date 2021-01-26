@@ -8,6 +8,9 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
+#include <cmath>
 
 namespace SmolEngine
 {
@@ -91,7 +94,9 @@ namespace SmolEngine
 			if (Input::IsKeyPressed(Key::LeftAlt))
 			{
 				if (Input::IsMouseButtonPressed(Mouse::ButtonLeft))
+				{
 					MouseRotate(deltaT);
+				}
 
 				if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
 					MouseZoom(deltaT.y);
@@ -206,7 +211,7 @@ namespace SmolEngine
 
 	void EditorCamera::MouseRotate(const glm::vec2& delta)
 	{
-		float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
+		float yawSign = GetUpDirection().y;
 		m_Yaw += yawSign * delta.x * RotationSpeed();
 		m_Pitch += delta.y * RotationSpeed();
 	}

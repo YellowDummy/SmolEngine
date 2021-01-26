@@ -5,7 +5,9 @@
 #include "SmolEngineCore.h"
 
 #include "Renderer/Camera.h"
-#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/OpenGL/OpenglShader.h"
 #include "Renderer/GraphicsPipeline.h"
