@@ -30,11 +30,12 @@ namespace SmolEngine
 		m_EditorCamera = std::make_shared<EditorCamera>(&cameraCI);
 		m_FrameBuffer = m_EditorCamera->GetFramebuffer();
 
-		m_Tetxure1 = Texture::Create("../Resources/glock_17_BaseColor.png");
-		m_Tetxure3 = Texture::Create("../Resources/glock_17_Normal.png");
-		m_Tetxure2 = Texture::Create("../Resources/glock_17_Metallic.png");
-		m_Tetxure4 = Texture::Create("../Resources/glock_17_Roughness.png");
-		m_TestMesh = Mesh::Create("../Resources/Glock_17.fbx");
+		m_Tetxure1 = Texture::Create("../Resources/SMGtextureSet_Base_Color.png");
+		m_Tetxure3 = Texture::Create("../Resources/SMGtextureSet_Normal_DirectX.png");
+		m_Tetxure2 = Texture::Create("../Resources/SMGtextureSet_Metallic.png");
+		m_Tetxure4 = Texture::Create("../Resources/SMGtextureSet_Roughness.png");
+
+		m_TestMesh = Mesh::Create("../Resources/30_SMG_LP.obj");
 
 		{
 			m_Pipeline = std::make_shared<GraphicsPipeline>();
@@ -59,6 +60,7 @@ namespace SmolEngine
 			assert(result == true);
 
 			m_Pipeline->SetVertexBuffers({ m_TestMesh->m_VertexBuffer });
+			m_Pipeline->SetIndexBuffers({ m_TestMesh->m_IndexBuffer });
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 			m_Pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
@@ -316,7 +318,7 @@ namespace SmolEngine
 				pc.camPos = m_EditorCamera->GetPosition();
 
 				m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-				m_Pipeline->Draw(m_TestMesh->m_VertexCount);
+				m_Pipeline->DrawIndexed();
 			}
 			m_Pipeline->EndRenderPass();
 

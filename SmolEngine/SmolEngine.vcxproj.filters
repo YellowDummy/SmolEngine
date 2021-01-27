@@ -1593,7 +1593,7 @@
     <ClInclude Include="Source\UI\UITextLabel.h">
       <Filter>Source\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utils\FBXImporter.h">
+    <ClInclude Include="Source\Utils\ModelImporter.h">
       <Filter>Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\stdafx.h">
@@ -1931,7 +1931,7 @@
     <ClCompile Include="Source\UI\UITextLabel.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utils\FBXImporter.cpp">
+    <ClCompile Include="Source\Utils\ModelImporter.cpp">
       <Filter>Source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">

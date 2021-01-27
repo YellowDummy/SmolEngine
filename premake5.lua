@@ -24,7 +24,6 @@ IncludeDir["yojimbo"] = "SmolEngine/Libraries/yojimbo"
 IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src"
 IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
 IncludeDir["imgizmo"] = "SmolEngine/Libraries/imgizmo/src"
-IncludeDir["openFBX"] = "SmolEngine/Libraries/openFBX/src"
 IncludeDir["ktx"] = "SmolEngine/Libraries/ktx/include"
 
 group "Dependencies"
@@ -35,7 +34,6 @@ include "SmolEngine/Libraries/yojimbo"
 include "SmolEngine/Libraries/box2d"
 include "SmolEngine/Libraries/rttr"
 include "SmolEngine/Libraries/spir_v_cross"
-include "SmolEngine/Libraries/openFBX"
 include "SmolEngine/Libraries/ktx"
 group ""
 
@@ -96,7 +94,6 @@ project "SmolEngine"
 		"%{IncludeDir.rttr}",
 		"%{IncludeDir.vulkan}",
 		"%{IncludeDir.imgizmo}",
-		"%{IncludeDir.openFBX}",
 		"%{IncludeDir.ktx}"
 	}
 
@@ -109,7 +106,6 @@ project "SmolEngine"
 		"Box2D",
 		"RTTR",
 		"SPIRV-Cross",
-		"OpenFBX",
 		"KTX-Tools",
 		
 		"SmolEngine/Libraries/vulkan/libs/vulkan-1.lib",
@@ -280,6 +276,7 @@ project "GameX"
 		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
+
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
@@ -376,8 +373,7 @@ project "GameX"
 		"%{IncludeDir.yojimbo}",
 		"%{IncludeDir.rttr}",
 		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.imgizmo}",
-		"%{IncludeDir.openFBX}"
+		"%{IncludeDir.imgizmo}"
 	}
 
 	links

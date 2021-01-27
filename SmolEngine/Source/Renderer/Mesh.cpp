@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Mesh.h"
 
-#include "Utils/FBXImporter.h"
+#include "Utils/ModelImporter.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
@@ -15,7 +15,7 @@ namespace SmolEngine
     {
         Ref<Mesh> mesh = nullptr;
         ImportedData* data = new ImportedData();
-        if (FBXImporter::Load(filePath, data))
+        if (ModelImporter::Load(filePath, data))
         {
             mesh = std::make_shared<Mesh>();
             mesh->Init(data);
