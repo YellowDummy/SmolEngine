@@ -172,12 +172,11 @@ namespace SmolEngine
 		VkCommandBuffer                   m_CommandBuffer = nullptr;
 		bool                              m_IsMainCmdBufferInUse = false;
 #endif
-
-		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
-		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;
-
 		Ref<VertexArray>                  m_VextexArray = nullptr;
 		Ref<Shader>                       m_Shader = nullptr;
 		Ref<Framebuffer>                  m_RenderpassFramebuffer = nullptr;
+
+		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
+		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;
 	};
 }

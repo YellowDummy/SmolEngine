@@ -98,7 +98,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\openFBX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -116,7 +116,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\openFBX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -138,7 +138,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_DEBUG;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\openFBX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -156,7 +156,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SE_RELEASE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Libraries\freetype\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\yojimbo;..\SmolEngine\Libraries\rttr\src;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\openFBX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

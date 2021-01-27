@@ -83,6 +83,8 @@ project "SmolEngine"
 		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/box2d/include",
+		"SmolEngine/Libraries/assimp/include",
+		
 		"%{prj.name}/Source",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
@@ -135,7 +137,6 @@ project "SmolEngine"
 		}
 
 	filter "configurations:Debug (Vulkan)"
-		defines "SE_DEBUG"
 		buildoptions "/MDd"
 		buildoptions "/bigobj"
 		buildoptions "/Zm500"
@@ -153,7 +154,10 @@ project "SmolEngine"
 			"SmolEngine/Libraries/vulkan/libs/machineIndependent_d.lib",
 			"SmolEngine/Libraries/vulkan/libs/genericCodeGen_d.lib",
 			"SmolEngine/Libraries/vulkan/libs/OGLCompiler_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib"
+			"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib",
+
+			"SmolEngine/Libraries/assimp/libs/assimp-vc142-mtd.lib",
+			"SmolEngine/Libraries/assimp/libs/zlibstaticd.lib"
 		}
 
 		defines
@@ -162,7 +166,6 @@ project "SmolEngine"
 		}
 
 	filter "configurations:Debug (OpenGL)"
-	defines "SE_DEBUG"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	buildoptions "/Zm500"
@@ -181,7 +184,10 @@ project "SmolEngine"
 		"SmolEngine/Libraries/vulkan/libs/machineIndependent_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/genericCodeGen_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/OGLCompiler_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib"
+		"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib",
+
+		"SmolEngine/Libraries/assimp/libs/assimp-vc142-mtd.lib",
+		"SmolEngine/Libraries/assimp/libs/zlibstaticd.lib"
 	}
 
 	defines
@@ -191,7 +197,6 @@ project "SmolEngine"
 	}
 
 	filter "configurations:Release (Vulkan)"
-		defines "SE_RELEASE"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		buildoptions "/Zm500"
@@ -209,11 +214,13 @@ project "SmolEngine"
 			"SmolEngine/Libraries/vulkan/libs/machineIndependent.lib",
 			"SmolEngine/Libraries/vulkan/libs/genericCodeGen.lib",
 			"SmolEngine/Libraries/vulkan/libs/OGLCompiler.lib",
-			"SmolEngine/Libraries/vulkan/libs/OSDependent.lib"
+			"SmolEngine/Libraries/vulkan/libs/OSDependent.lib",
+
+			"SmolEngine/Libraries/assimp/libs/assimp-vc142-mt.lib",
+			"SmolEngine/Libraries/assimp/libs/zlibstatic.lib"
 		}
 
 	filter "configurations:Release (OpenGL)"
-	defines "SE_RELEASE"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	buildoptions "/Zm500"
@@ -232,7 +239,10 @@ project "SmolEngine"
 		 "SmolEngine/Libraries/vulkan/libs/machineIndependent.lib",
 		 "SmolEngine/Libraries/vulkan/libs/genericCodeGen.lib",
 		 "SmolEngine/Libraries/vulkan/libs/OGLCompiler.lib",
-		 "SmolEngine/Libraries/vulkan/libs/OSDependent.lib"
+		 "SmolEngine/Libraries/vulkan/libs/OSDependent.lib",
+
+		 "SmolEngine/Libraries/assimp/libs/assimp-vc142-mt.lib",
+		 "SmolEngine/Libraries/assimp/libs/zlibstatic.lib"
 	   }
 
 	    defines
@@ -298,13 +308,11 @@ project "GameX"
 	--------------------------------------- Debug
 
 	filter "configurations:Debug (Vulkan)"
-	defines "SE_DEBUG"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	symbols "on"
 
 	filter "configurations:Debug (OpenGL)"
-	defines "SE_DEBUG"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	symbols "on"
@@ -317,13 +325,11 @@ project "GameX"
 	--------------------------------------- Release
 
 	filter "configurations:Release (Vulkan)"
-	defines "SE_RELEASE"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
 
 	filter "configurations:Release (OpenGL)"
-	defines "SE_RELEASE"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
@@ -361,6 +367,7 @@ project "GameX"
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
 		"SmolEngine/Libraries/freetype/include/",
+		
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
 		"%{IncludeDir.glm}",
@@ -392,13 +399,11 @@ project "GameX"
 	--------------------------------------- Debug
 
 	filter "configurations:Debug (Vulkan)"
-	defines "SE_DEBUG"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	symbols "on"
 
 	filter "configurations:Debug (OpenGL)"
-	defines "SE_DEBUG"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	symbols "on"
@@ -411,13 +416,11 @@ project "GameX"
 	--------------------------------------- Release
 
 	filter "configurations:Release (Vulkan)"
-	defines "SE_RELEASE"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
 
 	filter "configurations:Release (OpenGL)"
-	defines "SE_RELEASE"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"

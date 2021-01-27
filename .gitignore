@@ -36,6 +36,7 @@ bld/
 
 Config/
 SmolEngine/Libraries/vulkan/libs/
+SmolEngine/Libraries/assimp/libs/
 bin-int/Debug (OpenGL)-windows-x86_64/
 bin-int/Debug (Vulkan)-windows-x86_64/
 bin-int/Release (OpenGL)-windows-x86_64/
