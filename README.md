@@ -34,6 +34,8 @@
 
 - Physically Based Rendering (PBR)
 
+- Multithreading
+
 - 3rd party 3D physics engine (Bullet3 / PhysX)
 
 - 3D Animations
@@ -41,6 +43,8 @@
 - Asset Manager
 
 - Build System
+
+- Jobs System
 
 - Material System
 
