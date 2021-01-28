@@ -54,7 +54,7 @@ namespace SmolEngine
 			pipelineSpecCI.Device = &VulkanContext::GetDevice();
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
-			pipelineSpecCI.BufferLayout = *pipelineInfo->BufferLayot;
+			pipelineSpecCI.VertexInputLayots = pipelineInfo->VertexInputLayots;
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.Textures = std::move(textures);
 			pipelineSpecCI.Stride = pipelineInfo->Stride;
@@ -79,7 +79,7 @@ namespace SmolEngine
 #endif
 		m_State.DescriptorSets = pipelineInfo->DescriptorSets;
 		m_State.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
-		m_State.Layout = *pipelineInfo->BufferLayot;
+		m_State.VertexInputLayots = pipelineInfo->VertexInputLayots;
 		m_State.Stride = pipelineInfo->Stride;
 		m_State.PipelineName = pipelineInfo->PipelineName;
 		return true;

@@ -24,7 +24,6 @@ namespace SmolEngine
 	{
 		uint32_t Stride = 0;
 		uint32_t DescriptorSets = 1;
-		BufferLayout* BufferLayot = nullptr;
 
 		bool IsAlphaBlendingEnabled = false;
 		bool IsTargetsSwapchain = false;
@@ -32,6 +31,7 @@ namespace SmolEngine
 
 		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
+		std::vector<BufferLayout> VertexInputLayots;
 		std::string PipelineName = "";
 	};
 
@@ -159,7 +159,7 @@ namespace SmolEngine
 		struct PipelineState
 		{
 			std::vector<DrawMode> PipelineDrawModes;
-			BufferLayout Layout = {};
+			std::vector<BufferLayout> VertexInputLayots;
 			uint32_t Stride = 0;
 			uint32_t DescriptorSets = 1;
 

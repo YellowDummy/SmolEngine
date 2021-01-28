@@ -5,6 +5,7 @@
 #include "Renderer/Vulkan/VulkanDescriptor.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #include "Renderer/Vulkan/VulkanDescriptor.h"
+#include "Renderer/BufferElement.h"
 
 namespace SmolEngine
 {
@@ -51,6 +52,8 @@ namespace SmolEngine
 	private:
 
 		void BuildDescriptors(VulkanShader* shader, uint32_t DescriptorSets);
+
+		VkFormat GetVkInputFormat(ShaderDataType type);
 
 		VkPrimitiveTopology GetVkTopology(DrawMode mode);
 

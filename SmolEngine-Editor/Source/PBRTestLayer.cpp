@@ -49,7 +49,7 @@ namespace SmolEngine
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.BufferLayot = &m_TestMesh->m_Layout;
+				DynamicPipelineCI.VertexInputLayots = { m_TestMesh->m_Layout };
 				DynamicPipelineCI.PipelineName = "PBR_TEST";
 				DynamicPipelineCI.Stride = m_TestMesh->m_Stride;
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
@@ -97,7 +97,7 @@ namespace SmolEngine
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.BufferLayot = &laypot;
+				DynamicPipelineCI.VertexInputLayots = { laypot };
 				DynamicPipelineCI.PipelineName = "Skybox_Test";
 				DynamicPipelineCI.Stride = sizeof(SkyBoxData);
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;

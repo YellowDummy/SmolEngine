@@ -46,8 +46,6 @@ namespace SmolEngine
 		BufferElement(ShaderDataType _type, const std::string& _name, bool normalized = false)
 			:name(_name), type(_type), size(ShaderDataTypeSize(type)), offset(0), Normalized(normalized) {}
 
-		///
-
 		uint32_t GetComponentCount() const
 		{
 			switch (type)
@@ -68,20 +66,9 @@ namespace SmolEngine
 			}
 		}
 
-		///
-
 		std::string name;
-
-		///
-
 		ShaderDataType type;
-
-		///
-
 		uint32_t offset, size;
-
-		///
-
 		bool Normalized;
 	};
 

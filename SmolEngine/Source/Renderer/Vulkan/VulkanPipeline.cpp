@@ -20,7 +20,7 @@ namespace SmolEngine
 	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification& pipelineSpec)
 	{
 		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain ||
-			pipelineSpec.BufferLayout.GetElements().size() == 0 || pipelineSpec.DescriptorSets == 0)
+			pipelineSpec.VertexInputLayots.size() == 0|| pipelineSpec.DescriptorSets == 0)
 		{
 			assert(false);
 			return false;
@@ -168,16 +168,34 @@ namespace SmolEngine
 		vertexInputBinding.stride = m_VulkanPipelineSpecification.Stride;
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(m_VulkanPipelineSpecification.BufferLayout.GetElements().size());
+		uint32_t vertexInputAttributsCounts = 0;
+		for (const auto& layout : m_VulkanPipelineSpecification.VertexInputLayots)
 		{
-			uint32_t index = 0;
-			for (const auto& element : m_VulkanPipelineSpecification.BufferLayout.GetElements())
+			for (const auto& element : layout.GetElements())
 			{
-				vertexInputAttributs[index].binding = 0;
-				vertexInputAttributs[index].location = index;
-				vertexInputAttributs[index].format = VK_FORMAT_R32G32B32_SFLOAT; // TODO: add more formats!
-				vertexInputAttributs[index].offset = element.offset;
-				index++;
+				vertexInputAttributsCounts++;
+			}
+		}
+
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(vertexInputAttributsCounts);
+		{
+			vertexInputAttributsCounts = 0;
+			uint32_t binding = 0;
+			for (const auto& layout : m_VulkanPipelineSpecification.VertexInputLayots)
+			{
+				uint32_t location = 0;
+				for (const auto& element : layout.GetElements())
+				{
+					vertexInputAttributs[vertexInputAttributsCounts].binding = binding;
+					vertexInputAttributs[vertexInputAttributsCounts].location = location;
+					vertexInputAttributs[vertexInputAttributsCounts].format = GetVkInputFormat(element.type);
+					vertexInputAttributs[vertexInputAttributsCounts].offset = element.offset;
+
+					location++;
+					vertexInputAttributsCounts++;
+				}
+
+				binding++;
 			}
 		}
 
@@ -406,7 +424,45 @@ namespace SmolEngine
 			m_Descriptors[i].GenDescriptorSet(shader, m_DescriptorPool);
 			m_Descriptors[i].GenUniformBuffersDescriptors(shader);
 			m_Descriptors[i].GenSamplersDescriptors(shader);
+
 		}
+	}
+
+	//TODO: add more formats
+	VkFormat VulkanPipeline::GetVkInputFormat(ShaderDataType type)
+	{
+		switch (type)
+		{
+		case SmolEngine::ShaderDataType::None:
+			break;
+		case SmolEngine::ShaderDataType::Float:
+			return VK_FORMAT_R32_SFLOAT;
+		case SmolEngine::ShaderDataType::Float2:
+			return VK_FORMAT_R32G32_SFLOAT;
+		case SmolEngine::ShaderDataType::Float3:
+			return VK_FORMAT_R32G32B32_SFLOAT;
+		case SmolEngine::ShaderDataType::Float4:
+			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case SmolEngine::ShaderDataType::Mat3:
+			break;
+		case SmolEngine::ShaderDataType::Mat4:
+			break;
+		case SmolEngine::ShaderDataType::Int:
+			return VK_FORMAT_R32_SINT;
+		case SmolEngine::ShaderDataType::Int2:
+			return VK_FORMAT_R32G32_SINT;
+		case SmolEngine::ShaderDataType::Int3:
+			return VK_FORMAT_R32G32B32_SINT;
+		case SmolEngine::ShaderDataType::Int4:
+			return VK_FORMAT_R32G32B32A32_SINT;
+		case SmolEngine::ShaderDataType::Bool:
+			return VK_FORMAT_R32_SINT;
+		default:
+			break;
+		}
+
+		//temp
+		return VK_FORMAT_R32G32B32_SFLOAT;
 	}
 
 	VkPrimitiveTopology VulkanPipeline::GetVkTopology(DrawMode mode)
