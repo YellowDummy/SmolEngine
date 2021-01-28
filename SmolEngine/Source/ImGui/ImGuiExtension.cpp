@@ -5,9 +5,10 @@
 #include <../Libraries/imgui/imgui_internal.h>
 #include <../Libraries/imgui/misc/cpp/imgui_stdlib.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace ImGui
 {
-
 	void Extensions::TransformComponent(glm::vec3& wordPos, glm::vec3& scale, glm::vec3& rotation)
 	{
 		InputFloat3("Translation", wordPos);

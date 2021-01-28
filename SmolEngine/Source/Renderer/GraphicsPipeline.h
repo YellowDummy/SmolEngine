@@ -6,6 +6,7 @@
 #endif
 
 #include "Renderer/GraphicsPipelineCreateInfos.h"
+#include "Renderer/GraphicsContext.h"
 
 namespace SmolEngine
 {
@@ -175,6 +176,7 @@ namespace SmolEngine
 		Ref<VertexArray>                  m_VextexArray = nullptr;
 		Ref<Shader>                       m_Shader = nullptr;
 		Ref<Framebuffer>                  m_RenderpassFramebuffer = nullptr;
+		GraphicsContext*                  m_GraphicsContext;
 
 		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
 		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;

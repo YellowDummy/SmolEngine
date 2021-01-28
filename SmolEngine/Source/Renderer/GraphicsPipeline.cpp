@@ -6,9 +6,9 @@
 #include "Renderer/Vulkan/VulkanTexture.h"
 #endif
 
-#include "Renderer/RendererAPI.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/CubeTexture.h"
+#include "Renderer/GraphicsContext.h"
 
 namespace SmolEngine
 {
@@ -22,6 +22,7 @@ namespace SmolEngine
 		if (pipelineInfo->Stride < 1 || pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
 			return false;
 
+		m_GraphicsContext = GraphicsContext::GetSingleton();
 		m_Shader = std::make_shared<Shader>();
 		if (pipelineInfo->ShaderCreateInfo->UseSingleFile)
 			Shader::Create(m_Shader, pipelineInfo->ShaderCreateInfo->SingleFilePath);
@@ -195,8 +196,9 @@ namespace SmolEngine
 	void GraphicsPipeline::ClearColors(const glm::vec4& clearColors)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		RendererCommand::SetClearColor(clearColors);
-		RendererCommand::Clear();
+		OpenglRendererAPI* instance = m_GraphicsContext->GetOpenglRendererAPI();
+		instance->SetClearColor(clearColors);
+		instance->Clear();
 #else
 		if (!m_RenderpassFramebuffer)
 			return;
@@ -266,7 +268,8 @@ namespace SmolEngine
 
 		m_CommandBuffer = VulkanCommandBuffer::CreateSingleCommandBuffer();
 #else
-		RendererCommand::Reset();
+		OpenglRendererAPI* instance = m_GraphicsContext->GetOpenglRendererAPI();
+		instance->Init();
 #endif
 	}
 
@@ -295,16 +298,17 @@ namespace SmolEngine
 		m_VextexArray->SetIndexBuffer(m_IndexBuffers[indexBufferIndex]);
 		m_Shader->Bind();
 
+		OpenglRendererAPI* instance = m_GraphicsContext->GetOpenglRendererAPI();
 		switch (mode)
 		{
 		case SmolEngine::DrawMode::Triangle:
-			RendererCommand::DrawTriangle(m_VextexArray);
+			instance->DrawTriangle(m_VextexArray);
 			break;
 		case SmolEngine::DrawMode::Line:
-			RendererCommand::DrawLine(m_VextexArray);
+			instance->DrawLine(m_VextexArray);
 			break;
 		case SmolEngine::DrawMode::Fan:
-			RendererCommand::DrawFan(m_VextexArray);
+			instance->DrawFan(m_VextexArray);
 			break;
 		default:
 			break;
@@ -340,16 +344,17 @@ namespace SmolEngine
 		m_VextexArray->SetVertexBuffer(m_VertexBuffers[vertexBufferIndex]);
 		m_Shader->Bind();
 
+		OpenglRendererAPI* instance = m_GraphicsContext->GetOpenglRendererAPI();
 		switch (mode)
 		{
 		case SmolEngine::DrawMode::Triangle:
-			RendererCommand::DrawTriangle(m_VextexArray, 0, vertextCount);
+			instance->DrawTriangle(m_VextexArray, 0, vertextCount);
 			break;
 		case SmolEngine::DrawMode::Line:
-			RendererCommand::DrawLine(m_VextexArray, 0, vertextCount);
+			instance->DrawLine(m_VextexArray, 0, vertextCount);
 			break;
 		case SmolEngine::DrawMode::Fan:
-			RendererCommand::DrawFan(m_VextexArray, 0, vertextCount);
+			instance->DrawFan(m_VextexArray, 0, vertextCount);
 			break;
 		default:
 			break;
@@ -450,7 +455,9 @@ namespace SmolEngine
 
 	bool GraphicsPipeline::UpdateSampler(Ref<Texture>& tetxure, uint32_t bindingPoint, uint32_t descriptorSetIndex)
 	{
-#ifndef SMOLENGINE_OPENGL_IMPL
+#ifdef SMOLENGINE_OPENGL_IMPL
+		return false;
+#else
 		return m_VulkanPipeline.m_Descriptors[descriptorSetIndex].UpdateImageResource(bindingPoint,
 			tetxure->GetVulkanTexture()->GetVkDescriptorImageInfo());
 #endif

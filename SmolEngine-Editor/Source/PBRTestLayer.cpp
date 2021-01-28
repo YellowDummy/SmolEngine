@@ -34,6 +34,7 @@ namespace SmolEngine
 		m_Tetxure3 = Texture::Create("../Resources/SMGtextureSet_Normal_DirectX.png");
 		m_Tetxure2 = Texture::Create("../Resources/SMGtextureSet_Metallic.png");
 		m_Tetxure4 = Texture::Create("../Resources/SMGtextureSet_Roughness.png");
+		m_Tetxure5 = Texture::Create("../Resources/SMGtextureSet_AO.png");
 
 		m_TestMesh = Mesh::Create("../Resources/30_SMG_LP.obj");
 
@@ -70,7 +71,7 @@ namespace SmolEngine
 
 			m_Pipeline->UpdateSampler(m_Tetxure1, 5); //albedo
 			m_Pipeline->UpdateSampler(m_Tetxure3, 6); //normal
-			m_Pipeline->UpdateSampler(m_Tetxure1, 7); //ao
+			m_Pipeline->UpdateSampler(m_Tetxure5, 7); //ao
 			m_Pipeline->UpdateSampler(m_Tetxure2, 8); //metallic
 			m_Pipeline->UpdateSampler(m_Tetxure4, 9); //roughness
 		}
@@ -222,10 +223,9 @@ namespace SmolEngine
 					m_Pipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
 					m_Pipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
 #endif
-
 					m_Pipeline->UpdateSampler(m_Tetxure1, 5); //albedo
 					m_Pipeline->UpdateSampler(m_Tetxure3, 6); //normal
-					m_Pipeline->UpdateSampler(m_Tetxure1, 7); //ao
+					m_Pipeline->UpdateSampler(m_Tetxure5, 7); //ao
 					m_Pipeline->UpdateSampler(m_Tetxure2, 8); //metallic
 					m_Pipeline->UpdateSampler(m_Tetxure4, 9); //roughness
 				}

@@ -249,7 +249,7 @@ namespace SmolEngine
 		s_Data->MainPipeline->DrawIndexed(DrawMode::Triangle, layer.LayerIndex, 0, layer.LayerIndex);
 #else
 		// Binding textures
-		s_Data->MainPipeline->Update2DTextures(layer.TextureSlots, layer.LayerIndex);
+		s_Data->MainPipeline->UpdateSamplers(layer.TextureSlots, layer.LayerIndex);
 		s_Data->MainPipeline->UpdateVertextBuffer(layer.Base, dataSize);
 		s_Data->MainPipeline->DrawIndexed();
 #endif

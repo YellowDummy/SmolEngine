@@ -193,10 +193,6 @@ namespace SmolEngine
 								Animation2DSystem::DebugUpdate(m_AnimationClip.get());
 							}
 
-							//m_Camera->GetFramebuffer()->Bind();
-							RendererCommand::SetClearColor({ 0.0f, 0.0f, 0.0, 1 });
-							RendererCommand::Clear();
-
 							if (m_AnimationClip->m_CurrentTexture != nullptr && m_AnimationClip->m_CurrentFrameKey)
 							{
 								auto frameKey = m_AnimationClip->m_CurrentFrameKey;

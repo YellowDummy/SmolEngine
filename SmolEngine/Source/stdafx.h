@@ -14,14 +14,11 @@
 #include <sstream>
 #include <filesystem>
 
-
 #include <vector>
 #include <unordered_map>
 #include <map>
 #include <unordered_set>
 #include <string>
-#include <stack>
-
 
 #include "ECS/WorldAdmin.h"
 #include "ECS/Actor.h"
@@ -29,7 +26,6 @@
 #include "Audio/AudioEngine.h"
 
 #include "Renderer/Renderer2D.h"
-#include "Renderer/RendererAPI.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Shader.h"
@@ -39,13 +35,14 @@
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 
-#include "Renderer/OpenGL/OpenglRendererAPI.h"
-#include "Renderer/OpenGL/OpenglShader.h"
-#include "Renderer/OpenGL/OpenglTexture.h"
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
+#else
+#include "Renderer/OpenGL/OpenglRendererAPI.h"
+#include "Renderer/OpenGL/OpenglShader.h"
+#include "Renderer/OpenGL/OpenglTexture.h"
 #endif
 
 #include "ECS/Components/BehaviourComponent.h"
@@ -55,7 +52,7 @@
 #include "ECS/ComponentTuples/CameraBaseTuple.h"
 #include "ECS/ComponentTuples/SingletonTuple.h"
 
-#include "../../SmolEngine/Source/Core/Application.h"
+#include "Core/Application.h"
 
 #include "ImGui/AnimationPanel.h"
 #include "ImGui/BuildPanel.h"

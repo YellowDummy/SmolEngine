@@ -582,6 +582,9 @@
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Actor.h" />
+    <ClInclude Include="Source\ECS\Components\MaterialComponent.h" />
+    <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\CameraBaseTuple.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\DefaultBaseTuple.h" />
@@ -652,7 +655,6 @@
     <ClInclude Include="Source\Renderer\Renderer.h" />
     <ClInclude Include="Source\Renderer\Renderer2D.h" />
     <ClInclude Include="Source\Renderer\Renderer2DData.h" />
-    <ClInclude Include="Source\Renderer\RendererAPI.h" />
     <ClInclude Include="Source\Renderer\Shader.h" />
     <ClInclude Include="Source\Renderer\ShaderTypes.h" />
     <ClInclude Include="Source\Renderer\SubTexture.h" />
@@ -676,7 +678,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPBR.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipeline.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipelineSpecification.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanRendererAPI.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanShader.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanShaderResources.h" />
@@ -716,6 +717,9 @@
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\ECS\Actor.cpp" />
+    <ClCompile Include="Source\ECS\Components\MaterialComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
     <ClCompile Include="Source\ECS\ComponentTuples\CameraBaseTuple.cpp" />
     <ClCompile Include="Source\ECS\ComponentTuples\DefaultBaseTuple.cpp" />
     <ClCompile Include="Source\ECS\ComponentTuples\SingletonTuple.cpp" />
@@ -774,7 +778,6 @@
     <ClCompile Include="Source\Renderer\OpenGL\OpenglVertexArray.cpp" />
     <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="Source\Renderer\RendererAPI.cpp" />
     <ClCompile Include="Source\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Renderer\SubTexture.cpp" />
     <ClCompile Include="Source\Renderer\Text.cpp" />
@@ -794,7 +797,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanMemoryAllocator.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanPBR.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanPipeline.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanRendererAPI.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSemaphore.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanShader.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanStagingBuffer.cpp" />

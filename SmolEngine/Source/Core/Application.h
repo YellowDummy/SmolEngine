@@ -1,23 +1,20 @@
 #pragma once
+#include "Core.h"
+#include "Core/SLog.h"
+#include "Core/Time.h"
+#include "Core/EventHandler.h"
+#include "Core/LayerManager.h"
+
 #include <memory>
 #include <functional>
 
-#include "Core.h"
-#include "EventHandler.h"
-#include "LayerManager.h"
-#include "SLog.h"
-#include "Core/Time.h"
-
 namespace SmolEngine
 {
-	class ImGuiLayer;
-
-	class Window;
-
-	class UIText;
-
 	struct DeltaTime;
 
+	class ImGuiLayer;
+	class Window;
+	class UIText;
 
 	class Application
 	{
@@ -69,21 +66,19 @@ namespace SmolEngine
 
 		const uint32_t GetWindowWidth();
 
-	protected:
-
-		ImGuiLayer* m_ImGuiLayer;
-		UIText* m_UIText = nullptr;
-
-		Ref<LayerManager> m_LayerHandler = nullptr;
-		Ref<EventHandler> m_EventHandler = nullptr;
-		Ref<Window> m_Window = nullptr;
-
 	private:
 
-		static Application* s_Instance;
-		bool m_Running;
-		bool m_WindowMinimized;
-		float m_LastFrameTime;
+		ImGuiLayer*            m_ImGuiLayer = nullptr;
+		UIText*                m_UIText = nullptr;
+		Ref<LayerManager>      m_LayerHandler = nullptr;
+		Ref<EventHandler>      m_EventHandler = nullptr;
+		Ref<Window>            m_Window = nullptr;
+
+		bool                   m_Running = false;
+		bool                   m_WindowMinimized = false;
+		float                  m_LastFrameTime = 0.0f;
+
+		static Application*    s_Instance;
 	};
 
 	Application* CreateApp(); 	// Client side 

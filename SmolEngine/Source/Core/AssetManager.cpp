@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Core/AssetManager.h"
-#include "ECS/ComponentsCore.h"
 
+#include "ECS/ComponentsCore.h"
 #include "ECS/Systems/AudioSystem.h"
 #include "ECS/Systems/UISystem.h"
+
 #include "Animation/AnimationClip.h"
 #include "Audio/AudioEngine.h"
 

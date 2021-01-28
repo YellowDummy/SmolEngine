@@ -3,9 +3,11 @@
 
 #ifdef  SMOLENGINE_OPENGL_IMPL
 #include "Renderer/OpenGL/OpenglContext.h"
+#include "Renderer/OpenGL/OpenglRendererAPI.h"
 #else
 #include "Renderer/Vulkan/VulkanContext.h"
 #endif
+
 
 namespace SmolEngine 
 {
@@ -13,7 +15,13 @@ namespace SmolEngine
 	{
 	public:
 
+		GraphicsContext() = default;
+
+		~GraphicsContext();
+
 		/// Main
+
+		static void InitRenderers();
 		
 		void OnResize(uint32_t width, uint32_t height);
 
@@ -25,16 +33,20 @@ namespace SmolEngine
 
 		/// Getters
 
-#ifndef  SMOLENGINE_OPENGL_IMPL
-
+#ifdef  SMOLENGINE_OPENGL_IMPL
+		OpenglRendererAPI* GetOpenglRendererAPI() { return m_RendererAPI; }
+#else
 		VulkanContext& GetVulkanContext() { return m_VulkanContext; }
 #endif
+		static GraphicsContext* GetSingleton() { return s_Instance; }
 
 	private:
 
-#ifdef  SMOLENGINE_OPENGL_IMPL
+		inline static GraphicsContext* s_Instance = nullptr;
 
+#ifdef  SMOLENGINE_OPENGL_IMPL
 		OpenglContext m_OpenglContext = {};
+		OpenglRendererAPI* m_RendererAPI = nullptr;
 #else
 		VulkanContext m_VulkanContext = {};
 #endif

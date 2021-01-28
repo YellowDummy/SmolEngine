@@ -12,17 +12,10 @@
 
 namespace SmolEngine
 {
-	RendererAPI* RendererCommand::s_RendererAPI = new RendererAPI();
-
 	Renderer::SceneData* Renderer::m_SceneData = new SceneData;
 
 	void Renderer::Init()
 	{
-		RendererCommand::Init();
 	}
 
-	void Renderer::OnWidowResize(uint32_t width, uint32_t height)
-	{
-		RendererCommand::SetViewport(0, 0, width, height);
-	}
 }

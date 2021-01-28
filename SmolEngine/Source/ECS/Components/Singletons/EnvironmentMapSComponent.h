@@ -3,10 +3,8 @@
 
 namespace SmolEngine
 {
-	class VulkanRendererAPI
+	struct EnvironmentMapSComponent
 	{
-	public:
 
-		void Init();
 	};
 }

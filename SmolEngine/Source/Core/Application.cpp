@@ -2,31 +2,22 @@
 #include "Application.h"
 #include "GLFW/glfw3.h"
 
-#include "Tools.h"
-#include "Input.h"
-#include "Window.h"
+#include "Core/Tools.h"
+#include "Core/Input.h"
+#include "Core/Window.h"
 
 #include "ImGui/ImGuiLayer.h" 
 #include "Events/ApplicationEvent.h"
-#include "Renderer/Renderer.h"
+
+#include "Renderer/GraphicsContext.h"
 
 #include "../../../GameX/CppScriptingExamples.h"
-
-#include "Renderer/Vulkan/VulkanInstance.h"
-#include "Renderer/Vulkan/VulkanDevice.h"
 
 namespace SmolEngine 
 {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
-		:m_EventHandler(0),
-		m_LayerHandler(0), 
-		m_Window(0),
-		m_ImGuiLayer(0),
-		m_Running(true),
-		m_LastFrameTime(0.0f),
-		m_WindowMinimized(false)
 	{
 		if (s_Instance != nullptr) 
 		{
@@ -86,9 +77,7 @@ namespace SmolEngine
 		// Pushing Dear ImGui Layer
 		PushLayer(m_ImGuiLayer);
 #endif
-		// Initializing Platform Specific Renderer
-		RendererCommand::Init();
-
+		GraphicsContext::InitRenderers();
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
 		ClientInit();
@@ -99,14 +88,13 @@ namespace SmolEngine
 		WorldAdmin::GetSingleton()->Init();
 
 #ifndef SMOLENGINE_EDITOR
-
 		// Loading a scene with index 0 and starting the game
 		WorldAdmin::GetScene()->StartGame();
 #endif
-
 		timer.StopTimer();
 		NATIVE_INFO("Initialized successfully");
 
+		m_Running = true;
 		// Starting Main Loop
 		RunApp();
 	}
@@ -212,9 +200,7 @@ namespace SmolEngine
 		}
 
 		m_WindowMinimized = false; 
-
 		m_Window->ResizeContext(e.GetHeight(), e.GetWidth());
-		Renderer::OnWidowResize(e.GetHeight(), e.GetWidth());
 
 		// No need to block this event
 		return false;

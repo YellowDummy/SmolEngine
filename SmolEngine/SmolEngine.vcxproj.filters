@@ -1470,9 +1470,6 @@
     <ClInclude Include="Source\Renderer\Renderer2DData.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\RendererAPI.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\Shader.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
@@ -1542,9 +1539,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipelineSpecification.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanRendererAPI.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSemaphore.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1599,6 +1593,9 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
+    <ClInclude Include="Source\ECS\Components\MaterialComponent.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1832,9 +1829,6 @@
     <ClCompile Include="Source\Renderer\Renderer2D.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer\RendererAPI.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Renderer\Shader.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
@@ -1892,9 +1886,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanPipeline.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanRendererAPI.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSemaphore.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1937,5 +1928,8 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\MaterialComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
   </ItemGroup>
 </Project>

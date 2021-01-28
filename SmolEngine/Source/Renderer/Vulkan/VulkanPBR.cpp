@@ -13,6 +13,11 @@
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/CubeTexture.h"
 
+#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace SmolEngine
 {
 #define M_PI       3.14159265358979323846   // pi
@@ -907,7 +912,9 @@ namespace SmolEngine
 						vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelinelayout, 0, 1, &descriptorset, 0, NULL);
 
 						VkDeviceSize offsets[1] = { 0 };
+#ifndef SMOLENGINE_OPENGL_IMPL
 						vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &skyBoxFB->GetVulkanVertexBuffer().GetBuffer(), offsets);
+#endif
 
 						vkCmdDraw(cmdBuffer, 36, 1, 0, 0);
 
@@ -1524,7 +1531,9 @@ namespace SmolEngine
 						vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelinelayout, 0, 1, &descriptorset, 0, NULL);
 
 						VkDeviceSize offsets[1] = { 0 };
+#ifndef SMOLENGINE_OPENGL_IMPL
 						vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &skyBoxFB->GetVulkanVertexBuffer().GetBuffer(), offsets);
+#endif
 
 						vkCmdDraw(cmdBuffer, 36, 1, 0, 0);
 

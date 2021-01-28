@@ -2,6 +2,8 @@
 
 #include "Core/Core.h"
 
+#include <glm/glm.hpp>
+
 namespace SmolEngine
 {
 	class OrthographicCamera;
