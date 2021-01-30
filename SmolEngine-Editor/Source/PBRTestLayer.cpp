@@ -6,7 +6,8 @@
 #include "Renderer/Shader.h"
 #include "Renderer/CubeTexture.h"
 #include "Renderer/Mesh.h"
-#include "Renderer/Renderer2D.h"
+#include "Renderer/SharedUtils.h"
+
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
@@ -44,14 +45,21 @@ namespace SmolEngine
 			{
 				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/PBR_Vulkan_Vertex.glsl";
 				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/PBR_Vulkan_Fragment.glsl";
-				shaderCI.Textures = {  };
+			};
+
+			BufferLayout mainLayout =
+			{
+				{ ShaderDataType::Float3, "aPos" },
+				{ ShaderDataType::Float3, "aNormal" },
+				{ ShaderDataType::Float4, "aTangent" },
+				{ ShaderDataType::Float2, "aUV" },
+				{ ShaderDataType::Float4, "aColor" }
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.VertexInputLayots = { m_TestMesh->m_Layout };
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo( sizeof(PBRVertex), mainLayout) };
 				DynamicPipelineCI.PipelineName = "PBR_TEST";
-				DynamicPipelineCI.Stride = m_TestMesh->m_Stride;
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.IsTargetsSwapchain = true;
 				DynamicPipelineCI.IsDepthTestEnabled = true;
@@ -82,7 +90,6 @@ namespace SmolEngine
 			{
 				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Skybox_Vulkan_Vertex.glsl";
 				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Skybox_Vulkan_Frag.glsl";
-				shaderCI.Textures = {  };
 			};
 
 			struct SkyBoxData
@@ -90,16 +97,15 @@ namespace SmolEngine
 				glm::vec3 pos;
 			};
 
-			BufferLayout laypot =
+			BufferLayout layout =
 			{
 				{ ShaderDataType::Float3, "aPos" }
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.VertexInputLayots = { laypot };
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo( sizeof(SkyBoxData), layout) };
 				DynamicPipelineCI.PipelineName = "Skybox_Test";
-				DynamicPipelineCI.Stride = sizeof(SkyBoxData);
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.IsTargetsSwapchain = true;
 				DynamicPipelineCI.IsDepthTestEnabled = false;

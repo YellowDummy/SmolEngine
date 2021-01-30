@@ -5,6 +5,11 @@
 #include "ECS/ComponentsCore.h"
 #include "Scripting/SystemRegistry.h"
 
+#include "ECS/ComponentTuples/SingletonTuple.h"
+#include "ECS/ComponentTuples/CameraBaseTuple.h"
+#include "ECS/ComponentTuples/DefaultBaseTuple.h"
+#include "ImGui/EditorConsole.h"
+
 namespace SmolEngine
 {
 	void Scene::Init(const std::string& filePath)

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "GraphicsContext.h"
 
+#include "Renderer/Renderer.h"
+#include "Renderer/Renderer2D.h"
+
 namespace SmolEngine
 {
 	void GraphicsContext::Setup(GLFWwindow* window, uint32_t* width, uint32_t* height)

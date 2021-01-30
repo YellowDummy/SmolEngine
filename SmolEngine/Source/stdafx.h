@@ -23,42 +23,7 @@
 #include "ECS/WorldAdmin.h"
 #include "ECS/Actor.h"
 
-#include "Audio/AudioEngine.h"
-
-#include "Renderer/Renderer2D.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/Framebuffer.h"
-#include "Renderer/Shader.h"
-#include "Renderer/SubTexture.h"
-#include "Renderer/Texture.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/IndexBuffer.h"
-
-
-#ifndef SMOLENGINE_OPENGL_IMPL
-#include "Renderer/Vulkan/Vulkan.h"
-#include "Renderer/Vulkan/VulkanContext.h"
-#else
-#include "Renderer/OpenGL/OpenglRendererAPI.h"
-#include "Renderer/OpenGL/OpenglShader.h"
-#include "Renderer/OpenGL/OpenglTexture.h"
-#endif
-
-#include "ECS/Components/BehaviourComponent.h"
-#include "ECS/Components/Light2DSourceComponent.h"
-
-#include "ECS/ComponentTuples/DefaultBaseTuple.h"
-#include "ECS/ComponentTuples/CameraBaseTuple.h"
-#include "ECS/ComponentTuples/SingletonTuple.h"
-
 #include "Core/Application.h"
-
-#include "ImGui/AnimationPanel.h"
-#include "ImGui/BuildPanel.h"
-#include "ImGui/EditorConsole.h"
-#include "ImGui/ImGuiLayer.h"
-#include "ImGui/FileBrowser/imfilebrowser.h"
 
 #include <../../SmolEngine/Libraries/cereal/include/cereal/cereal.hpp>
 #include <../../SmolEngine/Libraries/cereal/include/cereal/types/polymorphic.hpp>

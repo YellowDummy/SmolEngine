@@ -36,7 +36,7 @@ namespace SmolEngine
 
 		~VulkanSwapchain();
 
-		/// Main
+		/// Init
 
 		bool Init(VulkanInstance* instance, VulkanDevice* device, GLFWwindow* window);
 
@@ -44,21 +44,31 @@ namespace SmolEngine
 
 		void Create(uint32_t* width, uint32_t* height, bool vSync = false);
 
-		void OnResize(uint32_t width, uint32_t height, VulkanCommandBuffer* commandBuffer);
-
 		void CleanUp();
 
 		void ClearColors(VkCommandBuffer cmdBuffer, const glm::vec4& color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+
+		/// Main
 
 		VkResult AcquireNextImage(VkSemaphore presentCompleteSemaphore);
 
 		VkResult QueuePresent(VkQueue queue, VkSemaphore waitSemaphore = VK_NULL_HANDLE);
 
+		/// Events
+
+		void OnResize(uint32_t width, uint32_t height, VulkanCommandBuffer* commandBuffer);
+
 		/// Getters
 
 		const VkFramebuffer GetCurrentFramebuffer() const;
 
+		const VkSwapchainKHR& GetVkSwapchain() const;
+
 		const VkRenderPass GetVkRenderPass() const;
+
+		const VkSurfaceKHR GetVkSurface() const;
+
+		const VkFormat& GetColorFormat() const;
 
 		uint32_t GetCurrentBufferIndex() const;
 
@@ -67,12 +77,6 @@ namespace SmolEngine
 		uint32_t GetHeight() const;
 
 		uint32_t GetWidth() const;
-
-		const VkSurfaceKHR GetVkSurface() const;
-
-		const VkFormat& GetColorFormat() const;
-
-		const VkSwapchainKHR& GetVkSwapchain() const;
 
 	private:
 
@@ -94,35 +98,32 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<VkImage> m_Images;
-		std::vector<VkFramebuffer> m_Framebuffers;
-		std::vector<SwapchainBuffer> m_Buffers;
+		DepthStencil                       m_DepthStencil = {};
+		VkClearAttachment                  m_ClearAttachments[2] = {};
 
-		DepthStencil m_DepthStencil = {};
-		VkClearAttachment m_ClearAttachments[2] = {};
+		VkFormat                           m_ColorFormat = VK_FORMAT_B8G8R8A8_UNORM;
+		VkFormat                           m_DepthBufferFormat = VK_FORMAT_B8G8R8A8_UNORM;
+		VkColorSpaceKHR                    m_ColorSpace = VkColorSpaceKHR::VK_COLORSPACE_SRGB_NONLINEAR_KHR;
 
-		VkFormat m_ColorFormat = VK_FORMAT_B8G8R8A8_UNORM;
-		VkFormat m_DepthBufferFormat = VK_FORMAT_B8G8R8A8_UNORM;
-		VkColorSpaceKHR m_ColorSpace = VkColorSpaceKHR::VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+		VkRenderPass                       m_RenderPass = nullptr;
+		VkSwapchainKHR                     m_Swapchain = nullptr;
+		VkPipelineCache                    m_PipelineCash = nullptr;
+		VulkanInstance*                    m_Instance = nullptr;
+		VulkanDevice*                      m_Device = nullptr;
+		VkSurfaceKHR                       m_Surface = nullptr;
+		VkSurfaceFormatKHR*                m_SurfaceFormat = nullptr;
+		VkPresentModeKHR*                  m_PresentMode =  nullptr;
 
-		VkRenderPass m_RenderPass = nullptr;
+		uint32_t                           m_PresentModeCount = 0;
+		uint32_t                           m_SurfaceFormatCount = 0;
+		uint32_t                           m_ImageCount = 0;
+		uint32_t                           m_Width = 0, m_Height = 0;
+		uint32_t                           m_QueueNodeIndex = UINT32_MAX;
+		uint32_t                           m_CurrentBufferIndex = 0;
 
-		VkSwapchainKHR m_Swapchain = nullptr;
-		VkPipelineCache m_PipelineCash = nullptr;
-
-		VulkanInstance* m_Instance = nullptr;
-		VulkanDevice* m_Device = nullptr;
-
-		VkSurfaceKHR m_Surface = nullptr;
-		VkSurfaceFormatKHR* m_SurfaceFormat = nullptr;
-		VkPresentModeKHR* m_PresentMode =  nullptr;
-
-		uint32_t m_PresentModeCount = 0;
-		uint32_t m_SurfaceFormatCount = 0;
-		uint32_t m_ImageCount = 0;
-		uint32_t m_Width = 0, m_Height = 0;
-		uint32_t m_QueueNodeIndex = UINT32_MAX;
-		uint32_t m_CurrentBufferIndex = 0;
+		std::vector<VkImage>               m_Images;
+		std::vector<VkFramebuffer>         m_Framebuffers;
+		std::vector<SwapchainBuffer>       m_Buffers;
 
 	private:
 

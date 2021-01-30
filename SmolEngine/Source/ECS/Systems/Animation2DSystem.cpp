@@ -6,6 +6,7 @@
 #include "Core/AssetManager.h"
 
 #include "Core/SLog.h"
+#include "ImGui/EditorConsole.h"
 
 namespace SmolEngine
 {

@@ -587,8 +587,7 @@ namespace SmolEngine
 
 		GraphicsPipelineCreateInfo graphicsPipelineCI = {};
 		{
-			graphicsPipelineCI.Stride = sizeof(QuadVertex);
-			graphicsPipelineCI.VertexInputLayots = { layout };
+			graphicsPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(QuadVertex), layout, false) };
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 
 			graphicsPipelineCI.IsAlphaBlendingEnabled = true;
@@ -674,8 +673,7 @@ namespace SmolEngine
 
 		GraphicsPipelineCreateInfo graphicsPipelineCI = {};
 		{
-			graphicsPipelineCI.Stride = sizeof(DebugVertex);
-			graphicsPipelineCI.VertexInputLayots = { layout };
+			graphicsPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(DebugVertex), layout, false) };
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 			graphicsPipelineCI.PipelineDrawModes = { DrawMode::Line, DrawMode::Fan };
 			graphicsPipelineCI.PipelineName = "Renderer2D_Debug";

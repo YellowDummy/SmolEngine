@@ -31,10 +31,10 @@ namespace SmolEngine
 
 	private:
 
-		VkSubmitInfo m_SubmitInfo = {};
-		VkSemaphore m_PresentComplete = nullptr;
-		VkSemaphore m_RenderComplete = nullptr;
+		VkSubmitInfo             m_SubmitInfo = {};
+		VkSemaphore              m_PresentComplete = nullptr;
+		VkSemaphore              m_RenderComplete = nullptr;
 
-		std::vector<VkFence> m_WaitFences;
+		std::vector<VkFence>     m_WaitFences;
 	};
 }

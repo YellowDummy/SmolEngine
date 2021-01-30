@@ -16,9 +16,7 @@ namespace SmolEngine
 
 		~VulkanCommandBuffer();
 
-		/// 
 		/// Main
-		/// 
 		
 		bool Init(VulkanDevice* device, VulkanCommandPool* commandPool, VulkanSwapchain* targetSwapchain);
 
@@ -32,9 +30,7 @@ namespace SmolEngine
 
 		static const VkCommandBuffer CreateSingleCommandBuffer(bool oneCommand = true);
 
-		/// 
 		/// Getters
-		/// 
 
 		const VkCommandBuffer GetVkCommandBuffer() const;
 
@@ -45,10 +41,8 @@ namespace SmolEngine
 	private:
 
 
-		VulkanSwapchain* m_TargetSwapchain = nullptr;
-
-		VulkanCommandPool* m_CommandPool = nullptr;
-
-		VulkanDevice* m_Device = nullptr;
+		VulkanSwapchain*           m_TargetSwapchain = nullptr;
+		VulkanCommandPool*         m_CommandPool = nullptr;
+		VulkanDevice*              m_Device = nullptr;
 	};
 }

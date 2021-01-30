@@ -19,7 +19,7 @@ namespace SmolEngine
 
 	bool GraphicsPipeline::Create(const GraphicsPipelineCreateInfo* pipelineInfo)
 	{
-		if (pipelineInfo->Stride < 1 || pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
+		if (pipelineInfo->VertexInputInfos.size() == 0 || pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
 			return false;
 
 		m_GraphicsContext = GraphicsContext::GetSingleton();
@@ -39,25 +39,14 @@ namespace SmolEngine
 		m_VextexArray = VertexArray::Create();
 #else
 		m_VulkanPipeline = {};
-		std::vector<VulkanTexture*> textures(pipelineInfo->ShaderCreateInfo->Textures.size());
-		{
-			uint32_t index = 0;
-			for (const auto& texture : pipelineInfo->ShaderCreateInfo->Textures)
-			{
-				textures[index] = texture->GetVulkanTexture();
-				index++;
-			}
-		}
 
 		VulkanPipelineSpecification pipelineSpecCI = {};
 		{
 			pipelineSpecCI.Device = &VulkanContext::GetDevice();
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
 			pipelineSpecCI.TargetSwapchain = &VulkanContext::GetSwapchain();
-			pipelineSpecCI.VertexInputLayots = pipelineInfo->VertexInputLayots;
+			pipelineSpecCI.VertexInputInfos = pipelineInfo->VertexInputInfos;
 			pipelineSpecCI.Shader = m_Shader->GetVulkanShader();
-			pipelineSpecCI.Textures = std::move(textures);
-			pipelineSpecCI.Stride = pipelineInfo->Stride;
 			pipelineSpecCI.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
 			pipelineSpecCI.DescriptorSets = pipelineInfo->DescriptorSets;
 			pipelineSpecCI.Name = pipelineInfo->PipelineName;
@@ -79,8 +68,7 @@ namespace SmolEngine
 #endif
 		m_State.DescriptorSets = pipelineInfo->DescriptorSets;
 		m_State.IsAlphaBlendingEnabled = pipelineInfo->IsAlphaBlendingEnabled;
-		m_State.VertexInputLayots = pipelineInfo->VertexInputLayots;
-		m_State.Stride = pipelineInfo->Stride;
+		m_State.VertexInputInfos = pipelineInfo->VertexInputInfos;
 		m_State.PipelineName = pipelineInfo->PipelineName;
 		return true;
 	}

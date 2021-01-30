@@ -7,6 +7,7 @@
 
 #include "Animation/AnimationClip.h"
 #include "Audio/AudioEngine.h"
+#include "ImGui/EditorConsole.h"
 
 namespace SmolEngine
 {

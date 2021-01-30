@@ -5,7 +5,13 @@
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #endif
 
-#include "Renderer/GraphicsPipelineCreateInfos.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
+#include "Renderer/Texture.h"
+#include "Renderer/SharedUtils.h"
+#include "Renderer/Shader.h"
+#include "Renderer/ShaderTypes.h"
 #include "Renderer/GraphicsContext.h"
 
 namespace SmolEngine
@@ -20,9 +26,17 @@ namespace SmolEngine
 		Fan
 	};
 
+	struct GraphicsPipelineShaderCreateInfo
+	{
+		std::unordered_map<ShaderType, std::string> FilePaths;
+		std::string SingleFilePath = "";
+
+		bool Optimize = false;
+		bool UseSingleFile = false;
+	};
+
 	struct GraphicsPipelineCreateInfo
 	{
-		uint32_t Stride = 0;
 		uint32_t DescriptorSets = 1;
 
 		bool IsAlphaBlendingEnabled = false;
@@ -31,7 +45,7 @@ namespace SmolEngine
 
 		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
 		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
-		std::vector<BufferLayout> VertexInputLayots;
+		std::vector<VertexInputInfo> VertexInputInfos;
 		std::string PipelineName = "";
 	};
 
@@ -159,8 +173,8 @@ namespace SmolEngine
 		struct PipelineState
 		{
 			std::vector<DrawMode> PipelineDrawModes;
-			std::vector<BufferLayout> VertexInputLayots;
-			uint32_t Stride = 0;
+			std::vector<VertexInputInfo> VertexInputInfos;
+
 			uint32_t DescriptorSets = 1;
 
 			bool IsAlphaBlendingEnabled = false;

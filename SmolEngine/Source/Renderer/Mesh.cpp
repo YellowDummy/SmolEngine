@@ -5,6 +5,7 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
+#include "Renderer/SharedUtils.h"
 #include "ECS/Systems/CommandSystem.h"
 
 #include <glm/glm.hpp>
@@ -36,37 +37,19 @@ namespace SmolEngine
     bool Mesh::Init(ImportedData* data)
     {
         Free();
-        struct Vertex
-        {
-            glm::vec3 pos;
-            glm::vec3 normals;
-            glm::vec4 tangent;
-            glm::vec2 uvs;
-            glm::vec4 color;
-        };
-
-        m_Stride = sizeof(Vertex);
         m_VertexCount = static_cast<uint32_t>(data->vertices.size());
-        m_Layout =
-        {
-            { ShaderDataType::Float3, "aPos" },
-            { ShaderDataType::Float3, "aNormal" },
-            { ShaderDataType::Float4, "aTangent" },
-            { ShaderDataType::Float2, "aUV" },
-            { ShaderDataType::Float4, "aColor" }
-        };
 
-        std::vector<Vertex> vertices(data->vertices.size());
+        std::vector<PBRVertex> vertices(data->vertices.size());
         for (uint32_t i = 0; i < data->vertices.size(); ++i)
         {
-            vertices[i].pos = data->vertices[i];
-            vertices[i].color = data->colors[i];
-            vertices[i].normals = data->normals[i];
-            vertices[i].tangent = glm::vec4(data->tangents[i], 1);
-            vertices[i].uvs = data->uvs[i];
+            vertices[i].Pos = data->vertices[i];
+            vertices[i].Color = data->colors[i];
+            vertices[i].Normals = data->normals[i];
+            vertices[i].Tangent = glm::vec4(data->tangents[i], 1);
+            vertices[i].UVs = data->uvs[i];
         }
 
-        m_VertexBuffer = VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(sizeof(Vertex) * vertices.size()));
+        m_VertexBuffer = VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(sizeof(PBRVertex) * vertices.size()));
         m_IndexBuffer = IndexBuffer::Create(data->indices.data(), static_cast<uint32_t>(data->indices.size()));
         return true;
     }

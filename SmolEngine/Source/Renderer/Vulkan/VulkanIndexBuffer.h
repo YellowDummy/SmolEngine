@@ -38,8 +38,8 @@ namespace SmolEngine
 
 	private:
 
-		uint32_t m_ElementsCount = 0;
-		VulkanBuffer m_IndexBuffer = {};
+		uint32_t           m_ElementsCount = 0;
+		VulkanBuffer       m_IndexBuffer = {};
 
 	};
 }

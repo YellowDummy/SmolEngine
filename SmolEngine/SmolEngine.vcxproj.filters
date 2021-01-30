@@ -1431,9 +1431,6 @@
     <ClInclude Include="Source\Renderer\GraphicsPipeline.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\GraphicsPipelineCreateInfos.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\IndexBuffer.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
@@ -1596,6 +1593,7 @@
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
     <ClInclude Include="Source\ECS\Components\MaterialComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
+    <ClInclude Include="Source\Renderer\SharedUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">

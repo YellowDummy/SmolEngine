@@ -23,6 +23,9 @@
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
+#include "ECS/ComponentTuples/SingletonTuple.h"
+#include "ECS/ComponentTuples/CameraBaseTuple.h"
+#include "ECS/ComponentTuples/DefaultBaseTuple.h"
 
 #include "Renderer/EditorCamera.h"
 #include "Animation/AnimationClip.h"

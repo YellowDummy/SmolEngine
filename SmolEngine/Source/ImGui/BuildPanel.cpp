@@ -4,6 +4,7 @@
 
 #include "ImGui/EditorConsole.h"
 #include "Core/AssetManager.h"
+#include "ECS/Components/Singletons/ProjectConfigSComponent.h"
 
 #include <cereal/archives/json.hpp>
 #include <cstdlib>

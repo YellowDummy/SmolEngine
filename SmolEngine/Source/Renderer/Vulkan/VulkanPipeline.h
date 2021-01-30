@@ -61,19 +61,18 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<VulkanDescriptor> m_Descriptors;
-		std::vector<VkDescriptorSetLayout> m_SetLayout;
+		VkPipelineLayout                                m_PipelineLayout = VK_NULL_HANDLE;
+		VkRenderPass                                    m_TargetRenderPass = nullptr;
+		VkDevice                                        m_Device = nullptr;
 
-		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
-		VkRenderPass m_TargetRenderPass = nullptr;
-		VkDevice m_Device = nullptr;
+		VkDescriptorPool                                m_DescriptorPool = nullptr;
+		VulkanPipelineSpecification                     m_VulkanPipelineSpecification = {};
 
-		std::unordered_map<DrawMode, VkPipelineCache> m_PipelineCaches;
-		std::unordered_map<DrawMode, VkPipeline> m_Pipelines;
-		std::string m_FilePath = "";
-
-		VkDescriptorPool m_DescriptorPool = nullptr;
-		VulkanPipelineSpecification m_VulkanPipelineSpecification = {};
+		std::vector<VulkanDescriptor>                   m_Descriptors;
+		std::vector<VkDescriptorSetLayout>              m_SetLayout;
+		std::unordered_map<DrawMode, VkPipelineCache>   m_PipelineCaches;
+		std::unordered_map<DrawMode, VkPipeline>        m_Pipelines;
+		std::string                                     m_FilePath = "";
 		
 	private:
 

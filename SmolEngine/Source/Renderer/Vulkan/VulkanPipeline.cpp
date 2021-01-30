@@ -20,7 +20,7 @@ namespace SmolEngine
 	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification& pipelineSpec)
 	{
 		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain ||
-			pipelineSpec.VertexInputLayots.size() == 0|| pipelineSpec.DescriptorSets == 0)
+			pipelineSpec.VertexInputInfos.size() == 0|| pipelineSpec.DescriptorSets == 0)
 		{
 			assert(false);
 			return false;
@@ -158,52 +158,55 @@ namespace SmolEngine
 		multisampleState.minSampleShading = 0.2f;
 		multisampleState.pSampleMask = nullptr;
 
-		// Vertex input descriptions
-		// Specifies the vertex input parameters for a pipeline
-
-		// Vertex input binding
-		// This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
-		VkVertexInputBindingDescription vertexInputBinding = {};
-		vertexInputBinding.binding = 0;
-		vertexInputBinding.stride = m_VulkanPipelineSpecification.Stride;
-		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
 		uint32_t vertexInputAttributsCounts = 0;
-		for (const auto& layout : m_VulkanPipelineSpecification.VertexInputLayots)
+		for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
 		{
-			for (const auto& element : layout.GetElements())
+			for (const auto& element : inputInfo.Layout.GetElements())
 			{
 				vertexInputAttributsCounts++;
 			}
 		}
 
+		std::vector<VkVertexInputBindingDescription> vertexInputBindings(m_VulkanPipelineSpecification.VertexInputInfos.size());
 		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(vertexInputAttributsCounts);
 		{
 			vertexInputAttributsCounts = 0;
-			uint32_t binding = 0;
-			for (const auto& layout : m_VulkanPipelineSpecification.VertexInputLayots)
+			uint32_t index = 0;
+			uint32_t location = 0;
+			for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
 			{
-				uint32_t location = 0;
-				for (const auto& element : layout.GetElements())
+				// Vertex input binding
+				// This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
 				{
-					vertexInputAttributs[vertexInputAttributsCounts].binding = binding;
-					vertexInputAttributs[vertexInputAttributsCounts].location = location;
-					vertexInputAttributs[vertexInputAttributsCounts].format = GetVkInputFormat(element.type);
-					vertexInputAttributs[vertexInputAttributsCounts].offset = element.offset;
-
-					location++;
-					vertexInputAttributsCounts++;
+					vertexInputBindings[index].binding = index;
+					vertexInputBindings[index].stride = inputInfo.Stride;
+					vertexInputBindings[index].inputRate = inputInfo.IsInputRateInstance ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;
 				}
 
-				binding++;
+				// Vertex input descriptions
+				// Specifies the vertex input parameters for a pipeline
+				{
+					for (const auto& element : inputInfo.Layout.GetElements())
+					{
+						vertexInputAttributs[vertexInputAttributsCounts].binding = index;
+						vertexInputAttributs[vertexInputAttributsCounts].location = location;
+						vertexInputAttributs[vertexInputAttributsCounts].format = GetVkInputFormat(element.type);
+						vertexInputAttributs[vertexInputAttributsCounts].offset = element.offset;
+
+						location++;
+						vertexInputAttributsCounts++;
+					}
+				}
+
+				index++;
 			}
 		}
 
 		// Vertex input state used for pipeline creation
 		VkPipelineVertexInputStateCreateInfo vertexInputState = {};
 		vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputState.vertexBindingDescriptionCount = 1;
-		vertexInputState.pVertexBindingDescriptions = &vertexInputBinding;
+		vertexInputState.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindings.size());
+		vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
 		vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
 		vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
 

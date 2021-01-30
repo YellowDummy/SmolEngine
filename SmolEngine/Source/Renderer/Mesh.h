@@ -26,12 +26,10 @@ namespace SmolEngine
 
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-		BufferLayout m_Layout = {};
 
 		uint32_t m_VertexCount = 0;
-		uint32_t m_Stride = 0;
 
-		std::vector<Texture> m_Textures;
+		std::vector<Ref<Texture>> m_Textures;
 
 	private:
 

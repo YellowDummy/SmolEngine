@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Renderer/BufferLayout.h"
+#include "Renderer/SharedUtils.h"
 #include "Renderer/Vulkan/VulkanSwapchain.h"
 #include "Renderer/Vulkan/VulkanShader.h"
 #include "Renderer/Vulkan/VulkanDevice.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
+
 
 namespace SmolEngine
 {
@@ -12,23 +13,20 @@ namespace SmolEngine
 
 	struct VulkanPipelineSpecification
 	{
-		VulkanSwapchain* TargetSwapchain = nullptr;
-		VulkanDevice* Device = nullptr;
-		VulkanShader* Shader = nullptr;
+		VulkanSwapchain*                TargetSwapchain = nullptr;
+		VulkanDevice*                   Device = nullptr;
+		VulkanShader*                   Shader = nullptr;
 
-		std::vector<BufferLayout> VertexInputLayots;
+		std::vector<VertexInputInfo>    VertexInputInfos;
+		std::vector<DrawMode>           PipelineDrawModes;
+		std::string                     Name = "";
 
-		std::vector<VulkanTexture*> Textures;
-		std::vector<DrawMode> PipelineDrawModes;
-		std::string Name = "";
+		bool                            IsAlphaBlendingEnabled = false;
+		bool                            IsTargetsSwapchain = false;
+		bool                            IsDepthTestEnabled = true;
+		bool                            Initialized = false; //don't use!
 
-		bool IsAlphaBlendingEnabled = false;
-		bool IsTargetsSwapchain = false;
-		bool IsDepthTestEnabled = true;
-		bool Initialized = false; //don't use!
-
-		uint32_t DescriptorSets = 1;
-		uint32_t Stride = 0;
-		uint32_t Samplers = 10;
+		uint32_t                        DescriptorSets = 1;
+		uint32_t                        Samplers = 10;
 	};
 }

@@ -61,17 +61,16 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<VkPushConstantRange> m_VkPushConstantRanges;
+		std::vector<VkPushConstantRange>                    m_VkPushConstantRanges;
+		std::unordered_map<size_t, UniformResource>         m_UniformResources;
+		std::vector<VkPipelineShaderStageCreateInfo>        m_PipelineShaderStages;
+		std::unordered_map<size_t, UniformBuffer>           m_UniformBuffers;
+		std::unordered_map<ShaderType, std::string>         m_FilePaths;
+		std::unordered_map<ShaderType, VkShaderModule>      m_ShaderModules;
 
-		std::unordered_map<size_t, UniformResource> m_UniformResources;
-		std::vector<VkPipelineShaderStageCreateInfo> m_PipelineShaderStages;
-		std::unordered_map<size_t, UniformBuffer> m_UniformBuffers;
-		std::unordered_map<ShaderType, std::string> m_FilePaths;
-		std::unordered_map<ShaderType, VkShaderModule> m_ShaderModules;
-
-		bool m_Optimize = false;
-		bool m_IsPrecompiled = false;
-		size_t m_MinUboAlignment = 0;
+		bool                                                m_Optimize = false;
+		bool                                                m_IsPrecompiled = false;
+		size_t                                              m_MinUboAlignment = 0;
 
 	private:
 

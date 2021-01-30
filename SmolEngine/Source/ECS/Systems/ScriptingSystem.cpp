@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "ScriptingSystem.h"
 
+#include "ECS/Components/BehaviourComponent.h"
+#include "Scripting/BehaviourPrimitive.h"
+
 namespace SmolEngine
 {
 	void ScriptingSystem::OnSceneBegin(entt::registry& registry)
