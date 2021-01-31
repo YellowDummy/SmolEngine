@@ -34,11 +34,15 @@
 
 - Physically Based Rendering (PBR)
 
-- Multithreading
+- Multi sampled deferred shading
+
+- Post-processing
 
 - 3rd party 3D physics engine (Bullet3 / PhysX)
 
 - 3D Animations
+
+- Multithreading
 
 - Asset Manager
 
@@ -48,9 +52,9 @@
 
 - Material System
 
-- Particle System (2D/3D)
+- Particle System (2D and 3D)
 
-- Scripting in C# / Java
+- Scripting in C#
 
 - Android support
 
