@@ -375,7 +375,7 @@ namespace SmolEngine
         }
     }
 
-    const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::GetVkPipelineShaderStages() const
+    std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::GetVkPipelineShaderStages()
     {
         return m_PipelineShaderStages;
     }

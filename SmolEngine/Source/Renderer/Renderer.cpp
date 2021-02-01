@@ -6,6 +6,7 @@
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/GraphicsPipeline.h"
 #include "Renderer/Shader.h"
+#include "Renderer/SharedUtils.h"
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/OpenGL/OpenglShader.h"
@@ -16,10 +17,39 @@
 
 namespace SmolEngine
 {
+	static const uint32_t s_MaxInstances = 8192;
+	static const uint32_t s_MaxPackages = 12000;
+
+	struct InstancePackage
+	{
+		Ref<Mesh>                        Mesh = nullptr;
+		uint32_t                         Count = 0;
+
+		std::array<PBRVertexInstanced,
+			s_MaxInstances>              Buffer;
+	};
+
 	struct RendererData
 	{
-		Ref<GraphicsPipeline> m_MainPipeline = nullptr;
-		Ref<GraphicsPipeline> m_SkyboxPipeline = nullptr;
+		RendererData()
+		{
+			Packages.reserve(s_MaxPackages);
+		}
+
+		// Pipelines
+		Ref<GraphicsPipeline>            m_MainPipeline = nullptr;
+		Ref<GraphicsPipeline>            m_SkyboxPipeline = nullptr;
+
+		// Instance Data
+		std::unordered_map<Ref<Mesh>,
+			InstancePackage>             Packages;
+
+		// Scene Data
+		struct CurrentSceneData
+		{
+			glm::mat4                    ViewProjectionMatrix = glm::mat4(1.0);
+			Ref<Framebuffer>             TargetFramebuffer = nullptr;
+		}                                SceneData = {};
 	};
 
 	static RendererData* s_Data = nullptr;
@@ -52,32 +82,18 @@ namespace SmolEngine
 
 	}
 
+	void Renderer::Flush()
+	{
+
+	}
+
+	void Renderer::StartNewBacth()
+	{
+
+	}
+
 	void Renderer::SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation,
-		const glm::vec3& scale, const Ref<Mesh>& mesh, const MaterialComponent& material)
-	{
-
-	}
-
-	void Renderer::SubmitCube(const glm::vec3& pos, const glm::vec3& rotation,
-		const glm::vec3& scale, const MaterialComponent& material)
-	{
-
-	}
-
-	void Renderer::SubmitSphere(const glm::vec3& pos, const glm::vec3& rotation,
-		const glm::vec3& scale, const MaterialComponent& material)
-	{
-
-	}
-
-	void Renderer::SubmitPlane(const glm::vec3& pos, const glm::vec3& rotation,
-		const glm::vec3& scale, const MaterialComponent& material)
-	{
-
-	}
-
-	void Renderer::SubmitCapsule(const glm::vec3& pos, const glm::vec3& rotation,
-		const glm::vec3& scale, const MaterialComponent& material)
+		const glm::vec3& scale, const Ref<Mesh>& mesh, const PBRMaterial& PBRmaterial)
 	{
 
 	}
@@ -119,7 +135,7 @@ namespace SmolEngine
 		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
 
 		// Material vertex = instanced
-		VertexInputInfo vertexMaterial(sizeof(PBRMaterialVertex), materialLayout, true);
+		VertexInputInfo vertexMaterial(sizeof(PBRVertexInstanced), materialLayout, true);
 
 		GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 		{

@@ -96,8 +96,23 @@ namespace SmolEngine
 
 		// Color blend state describes how blend factors are calculated (if used)
 		// We need one blend attachment state per color attachment (even if blending is not used)
-		VkPipelineColorBlendAttachmentState blendAttachmentState[1] = {};
+		std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentState;
+		if (m_VulkanPipelineSpecification.IsUseMRT)
 		{
+			blendAttachmentState.resize(3);
+
+			blendAttachmentState[0].colorWriteMask = 0xf;
+			blendAttachmentState[0].blendEnable = VK_FALSE;
+
+			blendAttachmentState[1].colorWriteMask = 0xf;
+			blendAttachmentState[1].blendEnable = VK_FALSE;
+
+			blendAttachmentState[2].colorWriteMask = 0xf;
+			blendAttachmentState[2].blendEnable = VK_FALSE;
+		}
+		else
+		{
+			blendAttachmentState.resize(1);
 			blendAttachmentState[0].colorWriteMask = 0xf;
 			blendAttachmentState[0].blendEnable = VK_FALSE;
 			if (m_VulkanPipelineSpecification.IsAlphaBlendingEnabled)
@@ -114,8 +129,8 @@ namespace SmolEngine
 
 		VkPipelineColorBlendStateCreateInfo colorBlendState = {};
 		colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-		colorBlendState.attachmentCount = 1;
-		colorBlendState.pAttachments = blendAttachmentState;
+		colorBlendState.attachmentCount = static_cast<uint32_t>(blendAttachmentState.size());
+		colorBlendState.pAttachments = blendAttachmentState.data();
 
 		// Viewport state sets the number of viewports and scissor used in this pipeline
 		// Note: This is actually overridden by the dynamic states (see below)
@@ -210,6 +225,32 @@ namespace SmolEngine
 		vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
 		vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
 
+		if (m_VulkanPipelineSpecification.IsUseMRT)
+		{
+			auto& stages = shader->GetVkPipelineShaderStages();
+			for (auto& stage : stages)
+			{
+				if (stage.stage == VK_SHADER_STAGE_FRAGMENT_BIT)
+				{
+					// Use specialization constants to pass number of samples to the shader (used for MSAA resolve)
+					VkSpecializationMapEntry specializationEntry{};
+					specializationEntry.constantID = 0;
+					specializationEntry.offset = 0;
+					specializationEntry.size = sizeof(uint32_t);
+
+					uint32_t specializationData = VulkanContext::GetDevice().GetMSAASamplesCount();
+
+					VkSpecializationInfo specializationInfo;
+					specializationInfo.mapEntryCount = 1;
+					specializationInfo.pMapEntries = &specializationEntry;
+					specializationInfo.dataSize = sizeof(specializationData);
+					specializationInfo.pData = &specializationData;
+
+					stage.pSpecializationInfo = &specializationInfo;
+					break;
+				}
+			}
+		}
 
 		// Set pipeline shader stage info
 		pipelineCreateInfo.stageCount = static_cast<uint32_t>(shader->GetVkPipelineShaderStages().size());

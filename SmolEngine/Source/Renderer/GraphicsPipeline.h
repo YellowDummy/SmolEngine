@@ -28,25 +28,27 @@ namespace SmolEngine
 
 	struct GraphicsPipelineShaderCreateInfo
 	{
-		std::unordered_map<ShaderType, std::string> FilePaths;
-		std::string SingleFilePath = "";
+		bool                                 Optimize = false;
+		bool                                 UseSingleFile = false;
 
-		bool Optimize = false;
-		bool UseSingleFile = false;
+		std::unordered_map<ShaderType,
+			std::string>                     FilePaths;
+		std::string                          SingleFilePath = "";
+
 	};
 
 	struct GraphicsPipelineCreateInfo
 	{
-		uint32_t DescriptorSets = 1;
+		bool                                 IsAlphaBlendingEnabled = false;
+		bool                                 IsTargetsSwapchain = false;
+		bool                                 IsDepthTestEnabled = true;
+		bool                                 IsUseMRT = false;
 
-		bool IsAlphaBlendingEnabled = false;
-		bool IsTargetsSwapchain = false;
-		bool IsDepthTestEnabled = true;
-
-		GraphicsPipelineShaderCreateInfo* ShaderCreateInfo = nullptr;
-		std::vector<DrawMode> PipelineDrawModes = { DrawMode::Triangle };
-		std::vector<VertexInputInfo> VertexInputInfos;
-		std::string PipelineName = "";
+		uint32_t                             DescriptorSets = 1;
+		GraphicsPipelineShaderCreateInfo*    ShaderCreateInfo = nullptr;
+		std::vector<DrawMode>                PipelineDrawModes = { DrawMode::Triangle };
+		std::vector<VertexInputInfo>         VertexInputInfos;
+		std::string                          PipelineName = "";
 	};
 
 	class GraphicsPipeline
@@ -172,13 +174,12 @@ namespace SmolEngine
 
 		struct PipelineState
 		{
-			std::vector<DrawMode> PipelineDrawModes;
-			std::vector<VertexInputInfo> VertexInputInfos;
+			std::vector<DrawMode>         PipelineDrawModes;
+			std::vector<VertexInputInfo>  VertexInputInfos;
 
-			uint32_t DescriptorSets = 1;
-
-			bool IsAlphaBlendingEnabled = false;
-			std::string PipelineName = "";
+			uint32_t                      DescriptorSets = 1;
+			std::string                   PipelineName = "";
+			bool                          IsAlphaBlendingEnabled = false;
 
 		}                                 m_State = {};
 

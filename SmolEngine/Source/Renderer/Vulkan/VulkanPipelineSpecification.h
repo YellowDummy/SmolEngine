@@ -24,6 +24,7 @@ namespace SmolEngine
 		bool                            IsAlphaBlendingEnabled = false;
 		bool                            IsTargetsSwapchain = false;
 		bool                            IsDepthTestEnabled = true;
+		bool                            IsUseMRT = false;
 		bool                            Initialized = false; //don't use!
 
 		uint32_t                        DescriptorSets = 1;

@@ -45,7 +45,6 @@ namespace SmolEngine
 			if (swapchain_initialized)
 			{
 				m_MSAARenderPassFramebuffer = CreateRenderPass(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-				m_2DRenderPass = CreateRenderPass(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, true);
 				m_MSAARenderPassSwapchain = CreateRenderPass(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
 				m_Swapchain.Create(width, height);
@@ -198,7 +197,7 @@ namespace SmolEngine
 		VK_CHECK_RESULT(vkWaitForFences(m_Device.GetLogicalDevice(), 1, &m_Semaphore.GetVkFences()[m_Swapchain.GetCurrentBufferIndex()], VK_TRUE, DEFAULT_FENCE_TIME_OUT));
 	}
 
-	VkRenderPass VulkanContext::CreateRenderPass(VkImageLayout finalResolveLayout, bool is2D)
+	VkRenderPass VulkanContext::CreateRenderPass(VkImageLayout finalResolveLayout, bool is2D, bool isDeffered)
 	{
 		VkRenderPass renderPass = nullptr;
 		VkFormat fbDepthFormat;
@@ -251,6 +250,50 @@ namespace SmolEngine
 			attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		}
+		if (isDeffered)
+		{
+			attachments.resize(4);
+
+			// Position
+			attachments[0].format = VK_FORMAT_R16G16B16A16_SFLOAT;
+			attachments[0].samples = MSAASamplesCount;
+			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[0].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+			// Normal
+			attachments[1].format = VK_FORMAT_R16G16B16A16_SFLOAT;
+			attachments[1].samples = MSAASamplesCount;
+			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[1].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+			// Color
+			attachments[2].format = FB_COLOR_FORMAT;
+			attachments[2].samples = MSAASamplesCount;
+			attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[2].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+			// Depth
+			attachments[3].format = fbDepthFormat;
+			attachments[2].samples = MSAASamplesCount;
+			attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[2].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 		}
 		else
 		{

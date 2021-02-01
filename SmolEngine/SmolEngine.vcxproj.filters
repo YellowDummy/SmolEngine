@@ -1594,6 +1594,7 @@
     <ClInclude Include="Source\ECS\Components\MaterialComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\Renderer\SharedUtils.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1929,5 +1930,6 @@
     <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\MaterialComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp" />
   </ItemGroup>
 </Project>

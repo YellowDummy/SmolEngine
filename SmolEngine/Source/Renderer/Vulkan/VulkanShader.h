@@ -35,7 +35,7 @@ namespace SmolEngine
 
 		static VkShaderStageFlagBits GetVkShaderStage(ShaderType type);
 
-		const std::vector<VkPipelineShaderStageCreateInfo>& GetVkPipelineShaderStages() const;
+		std::vector<VkPipelineShaderStageCreateInfo>& GetVkPipelineShaderStages();
 
 	private:
 

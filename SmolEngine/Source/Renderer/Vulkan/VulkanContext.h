@@ -57,7 +57,7 @@ namespace SmolEngine
 
 	private:
 
-		VkRenderPass CreateRenderPass(VkImageLayout finalResolveLayout, bool is2D = false);
+		VkRenderPass CreateRenderPass(VkImageLayout finalResolveLayout, bool is2D = false, bool isDeffered = false);
 
 
 	private:
@@ -72,6 +72,7 @@ namespace SmolEngine
 		inline static VulkanDevice              m_Device = {};
 		inline static VkRenderPass              m_MSAARenderPassFramebuffer = nullptr;
 		inline static VkRenderPass              m_MSAARenderPassSwapchain = nullptr;
+		inline static VkRenderPass              m_DefferedMSAARenderPass;
 		inline static VkRenderPass              m_2DRenderPass = nullptr;
 		GLFWwindow*                             m_Window = nullptr;
 

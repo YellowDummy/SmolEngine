@@ -19,8 +19,15 @@ namespace SmolEngine
 	{
 		FrameBufferAttachment color, depth, resolve;
 
-		VkSampler sampler;
 		VkClearAttachment clearAttachments[3] = {};
+	};
+
+	struct DeferredPass
+	{
+		FrameBufferAttachment position, normals, color, depth, resolve;
+		VkDescriptorImageInfo positionImageInfo, normalsImageInfo, colorImageInfo;
+
+		VkClearAttachment clearAttachments[5] = {};
 	};
 
 	class VulkanFramebuffer
@@ -41,7 +48,13 @@ namespace SmolEngine
 
 		bool Create(uint32_t width, uint32_t height);
 
+		bool CreateDeferred();
+
 		void FreeResources();
+
+		void AddAttachment(uint32_t width, uint32_t height, VkSampleCountFlagBits samples,
+			VkImageUsageFlags imageUsage,
+			VkFormat format, VkImage& image, VkImageView& imageView, VkDeviceMemory& mem, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 
 	public:
 
@@ -63,9 +76,11 @@ namespace SmolEngine
 
 		FramebufferSpecification              m_Specification = {};
 		OffscreenPass                         m_OffscreenPass = {};
+		DeferredPass                          m_DeferredPass = {};
 		std::vector<VkFramebuffer>            m_VkFrameBuffers;
 		void*                                 m_ImGuiTextureID = nullptr;
 		VkDevice                              m_Device = nullptr;
+		VkSampler                             m_Sampler = nullptr;
 		VkSampleCountFlagBits                 m_MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
 	private:

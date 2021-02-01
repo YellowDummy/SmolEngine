@@ -53,6 +53,7 @@ namespace SmolEngine
 			pipelineSpecCI.PipelineDrawModes = pipelineInfo->PipelineDrawModes;
 			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
 			pipelineSpecCI.IsDepthTestEnabled = pipelineInfo->IsDepthTestEnabled;
+			pipelineSpecCI.IsUseMRT = pipelineInfo->IsUseMRT;
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))

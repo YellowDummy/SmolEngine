@@ -5,9 +5,10 @@ namespace SmolEngine
 {
 	struct FramebufferSpecification
 	{
-		int32_t Width = 0;
-		int32_t Height = 0;
+		int32_t    Width = 0;
+		int32_t    Height = 0;
 
-		bool IsTargetsSwapchain = false;
+		bool       IsTargetsSwapchain = false;
+		bool       IsUseMRT = false;
 	};
 }
