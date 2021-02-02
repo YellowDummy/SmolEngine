@@ -32,35 +32,34 @@
 
 ### Features to come
 
-- Physically Based Rendering (PBR)
+- Renderer:
 
-- Multi sampled deferred shading
+    Physically Based Rendering (PBR), Multi sampled deferred shading, Real-Time Ray Tracing (Vulkan), Post-processing,
+    3D Animations, Multithreading, Materials (user's shaders), Sprite Atlases
 
-- Post-processing
+- Systems:
 
-- 3rd party 3D physics engine (Bullet3 / PhysX)
+    Build System, Jobs System, Particles System (2D and 3D), Network Solution
+    
+- Physics:
+   
+    3rd party 3D physics engine (PhysX)
 
-- 3D Animations
+- Assets:
+   
+    .sAsset format, Asset Manager
+  
+- Tools:
 
-- Multithreading
+    Tile Map Editor
+  
+- Scripting
 
-- Asset Manager
+    C# Binding
+  
+- Platforms:
 
-- Build System
-
-- Jobs System
-
-- Material System
-
-- Particle System (2D and 3D)
-
-- Scripting in C#
-
-- Android support
-
-- Network Solution
-
-- Ray Tracing
+    Android Support
 
 ## Limitations
 
@@ -74,7 +73,7 @@
 ### Windows
 1. Install Vulkan SDK (1.2 or higher)
 2. Call Win-GenProject.bat or run ```premake5 vs2019```
-3. Go to Libraries\vulkan and extract libs.7z
-4. Go to Libraries\assimp and extract libs.7z
-5. Go to Libraries\fmod\libs and copy all dll's to output folder
+3. Extract libs.7z in Libraries\vulkan
+4. Extract libs.7z in Libraries\assimp
+5. Copy all dll's from Libraries\fmod\libs to output (bin\) folder
 6. Under configuration properties makes sure that Yojimbo project is set to "build"
