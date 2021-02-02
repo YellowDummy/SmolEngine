@@ -10,7 +10,6 @@ namespace SmolEngine
 		std::vector<uint32_t>             Indices;
 	};
 
-
 	class ModelImporter
 	{
 	public:

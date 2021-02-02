@@ -8,6 +8,34 @@ namespace SmolEngine
 	{
 	public:
 
+		static void Init();
 
+		static void Free();
+
+		// Getters
+
+		inline static VkRenderPass GetVkRenderPassFramebufferLayout() { return m_MSAARenderPassFramebuffer; }
+
+		inline static VkRenderPass GetVkRenderPassSwapchainLayout() { return m_MSAARenderPassSwapchain; }
+
+		inline static VkRenderPass GetVkRenderDeferredLayout() { return m_MSAADeferredRenderPass; }
+
+	private:
+
+		struct RenderPassCI
+		{
+			VkImageLayout                 ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			VkImageLayout                 ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			VkImageLayout                 DepthAttachmentFinalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+			bool                          IsUseMRT = false;
+		};
+
+		static void CreateRenderPass(RenderPassCI& renderPassCI, VkRenderPass& renderPass);
+
+	private:
+
+		inline static VkRenderPass        m_MSAARenderPassFramebuffer = nullptr;
+		inline static VkRenderPass        m_MSAARenderPassSwapchain = nullptr;
+		inline static VkRenderPass        m_MSAADeferredRenderPass = nullptr;
 	};
 }

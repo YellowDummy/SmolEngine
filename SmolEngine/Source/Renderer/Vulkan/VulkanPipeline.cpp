@@ -2,6 +2,7 @@
 #include "VulkanPipeline.h"
 
 #include "Renderer/GraphicsPipeline.h"
+#include "Renderer/Vulkan/VulkanRenderPass.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #include "Renderer/Vulkan/VulkanContext.h"
 
@@ -30,8 +31,8 @@ namespace SmolEngine
 		m_VulkanPipelineSpecification = pipelineSpec;
 		m_VulkanPipelineSpecification.Initialized = true;
 
-		pipelineSpec.IsTargetsSwapchain ? m_TargetRenderPass = VulkanContext::GetVkRenderPassSwapchainLayout() :
-			m_TargetRenderPass = VulkanContext::GetVkRenderPassFramebufferLayout();
+		pipelineSpec.IsTargetsSwapchain ? m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout() :
+			m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
 
 		m_SetLayout.clear();
 		m_SetLayout.reserve(m_Descriptors.size());

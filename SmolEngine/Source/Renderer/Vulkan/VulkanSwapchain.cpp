@@ -679,6 +679,11 @@ namespace SmolEngine
 		return m_ColorFormat;
 	}
 
+	const VkFormat& VulkanSwapchain::GetDepthFormat() const
+	{
+		return m_DepthBufferFormat;
+	}
+
 	const VkSwapchainKHR& VulkanSwapchain::GetVkSwapchain() const
 	{
 		return m_Swapchain;

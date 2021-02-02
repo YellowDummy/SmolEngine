@@ -3,6 +3,7 @@
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/Vulkan/VulkanContext.h"
+#include "Renderer/Vulkan/VulkanRenderPass.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
 #endif
 
@@ -128,11 +129,11 @@ namespace SmolEngine
 
 		uint32_t width = framebuffer->GetSpecification().Width;
 		uint32_t height = framebuffer->GetSpecification().Height;
-		VkRenderPass selectedPass = VulkanContext::GetVkRenderPassFramebufferLayout();
+		VkRenderPass selectedPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
 		VkFramebuffer selectedFramebuffer = framebuffer->GetVulkanFramebuffer().GetCurrentVkFramebuffer();
 
 		if (framebuffer->GetSpecification().IsTargetsSwapchain)
-			selectedPass = VulkanContext::GetVkRenderPassSwapchainLayout();
+			selectedPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout();
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		{

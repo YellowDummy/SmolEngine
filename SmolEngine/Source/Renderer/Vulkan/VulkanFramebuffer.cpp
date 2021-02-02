@@ -2,6 +2,7 @@
 #include "VulkanFramebuffer.h"
 
 #include "Renderer/Vulkan/VulkanContext.h"
+#include "Renderer/Vulkan/VulkanRenderPass.h"
 #include "Renderer/Vulkan/VulkanMemoryAllocator.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
 
@@ -136,8 +137,8 @@ namespace SmolEngine
 			VkFramebufferCreateInfo fbufCreateInfo = {};
 			{
 				VkRenderPass renderPass = nullptr;
-				m_Specification.IsTargetsSwapchain ? renderPass = renderPass = VulkanContext::GetVkRenderPassSwapchainLayout() :
-					renderPass = VulkanContext::GetVkRenderPassFramebufferLayout();
+				m_Specification.IsTargetsSwapchain ? renderPass = renderPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout() :
+					renderPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
 
 				fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 				fbufCreateInfo.pNext = NULL;

@@ -70,6 +70,8 @@ namespace SmolEngine
 
 		const VkFormat& GetColorFormat() const;
 
+		const VkFormat& GetDepthFormat() const;
+
 		uint32_t GetCurrentBufferIndex() const;
 
 		uint32_t& GetCurrentBufferIndexRef();
