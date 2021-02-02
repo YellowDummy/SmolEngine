@@ -50,8 +50,8 @@ namespace SmolEngine
 
 	private:
 
-		static Ref<AssetManager> s_Instance;
-		static Ref<ShaderLib> s_ShaderLib;
+		static Ref<AssetManager>       s_Instance;
+		static Ref<ShaderLib>          s_ShaderLib;
 
 	};
 }

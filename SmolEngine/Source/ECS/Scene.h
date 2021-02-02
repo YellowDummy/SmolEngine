@@ -124,12 +124,11 @@ namespace SmolEngine
 
 		std::unordered_map<uint32_t, Ref<Actor>>& GetActorPool();
 
+		void GetActorList(std::vector<Ref<Actor>>& outList);
 
-		std::vector<Ref<Actor>> GetActorList();
+		void GetSortedActorList(std::vector<Ref<Actor>>& outList);
 
-		std::vector<Ref<Actor>> GetSortedActorList();
-
-		std::vector<Ref<Actor>> GetActorListByTag(const std::string& tag);
+		void GetActorListByTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
 
 
 		SceneData& GetSceneData();
@@ -138,8 +137,8 @@ namespace SmolEngine
 
 	private:
 
-		SceneData m_SceneData;
-		std::unordered_map<std::string, uint32_t> m_IDSet;
+		SceneData                                  m_SceneData;
+		std::unordered_map<std::string, uint32_t>  m_IDSet;
 
 	private:
 

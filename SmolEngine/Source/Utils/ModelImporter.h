@@ -1,16 +1,13 @@
 #pragma once
 #include "Core/Core.h"
+#include "Renderer/SharedUtils.h"
 
 namespace SmolEngine
 {
 	struct ImportedData
 	{
-		std::vector<glm::vec4> colors;
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec3> normals;
-		std::vector<glm::vec3> tangents;
-		std::vector<glm::vec2> uvs;
-		std::vector<uint32_t> indices;
+		std::vector<PBRVertex>            VertexData;
+		std::vector<uint32_t>             Indices;
 	};
 
 

@@ -19,7 +19,7 @@ namespace SmolEngine
 		Data.Title = info.Title;
 		Data.Height = info.Height;
 		Data.Width = info.Width;
-		Data.m_eventHandler = info.EventHandler;
+		Data.m_EventHandler = info.EventHandler;
 
 		WidnowInit(Data.Title, Data.Width, Data.Height);
 	}
@@ -136,19 +136,20 @@ namespace SmolEngine
 
 		// Callbacks
 
+		//TODO: swap height and width
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int height, int width)
 		{
 				Data.Height = height;
 				Data.Width = width;
 
 				WindowResizeEvent resizeEvent(Data);
-				Data.m_eventHandler->SendEvent(resizeEvent, EventType::S_WINDOW_RESIZE, EventCategory::S_EVENT_APPLICATION);
+				Data.m_EventHandler->SendEvent(resizeEvent, EventType::S_WINDOW_RESIZE, EventCategory::S_EVENT_APPLICATION);
 		});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) 
 		{
 				WindowCloseEvent closeEvent;
-				Data.m_eventHandler->SendEvent(closeEvent, EventType::S_WINDOW_CLOSE, EventCategory::S_EVENT_APPLICATION);
+				Data.m_EventHandler->SendEvent(closeEvent, EventType::S_WINDOW_CLOSE, EventCategory::S_EVENT_APPLICATION);
 		});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow * window, int key, int scancode, int action, int mods)
@@ -159,17 +160,17 @@ namespace SmolEngine
 				{
 				case GLFW_PRESS:
 				{
-					Data.m_eventHandler->SendEvent(keyEvent, EventType::S_KEY_PRESS, EventCategory::S_EVENT_KEYBOARD, action, key);
+					Data.m_EventHandler->SendEvent(keyEvent, EventType::S_KEY_PRESS, EventCategory::S_EVENT_KEYBOARD, action, key);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					Data.m_eventHandler->SendEvent(keyEvent, EventType::S_KEY_RELEASE, EventCategory::S_EVENT_KEYBOARD, action, key);
+					Data.m_EventHandler->SendEvent(keyEvent, EventType::S_KEY_RELEASE, EventCategory::S_EVENT_KEYBOARD, action, key);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					Data.m_eventHandler->SendEvent(keyEvent, EventType::S_KEY_REPEAT, EventCategory::S_EVENT_KEYBOARD, action, key);
+					Data.m_EventHandler->SendEvent(keyEvent, EventType::S_KEY_REPEAT, EventCategory::S_EVENT_KEYBOARD, action, key);
 					break;
 				}
 				default:
@@ -185,12 +186,12 @@ namespace SmolEngine
 				{
 				case GLFW_PRESS:
 				{
-					Data.m_eventHandler->SendEvent(mouseButton, EventType::S_MOUSE_PRESS, EventCategory::S_EVENT_MOUSE, action, button);
+					Data.m_EventHandler->SendEvent(mouseButton, EventType::S_MOUSE_PRESS, EventCategory::S_EVENT_MOUSE, action, button);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					Data.m_eventHandler->SendEvent(mouseButton, EventType::S_MOUSE_RELEASE, EventCategory::S_EVENT_MOUSE, action, button);
+					Data.m_EventHandler->SendEvent(mouseButton, EventType::S_MOUSE_RELEASE, EventCategory::S_EVENT_MOUSE, action, button);
 					break;
 				}
 				}
@@ -200,14 +201,14 @@ namespace SmolEngine
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
 				MouseScrollEvent scrollEvent(static_cast<float>(xOffset), static_cast<float>(yOffset));
-				Data.m_eventHandler->SendEvent(scrollEvent, EventType::S_MOUSE_SCROLL, EventCategory::S_EVENT_MOUSE);
+				Data.m_EventHandler->SendEvent(scrollEvent, EventType::S_MOUSE_SCROLL, EventCategory::S_EVENT_MOUSE);
 		});
 	
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) 
 		{
 				MouseMoveEvent mouseEvent(xPos, yPos);
-				Data.m_eventHandler->SendEvent(mouseEvent, EventType::S_MOUSE_MOVE, EventCategory::S_EVENT_MOUSE);
+				Data.m_EventHandler->SendEvent(mouseEvent, EventType::S_MOUSE_MOVE, EventCategory::S_EVENT_MOUSE);
 		});
 
 	}
@@ -223,6 +224,4 @@ namespace SmolEngine
 		NATIVE_INFO("VSync enabled: {0}", enabled);
 		enabled ? glfwSwapInterval(1) : glfwSwapInterval(0);
 	}
-
-
 }

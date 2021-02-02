@@ -1420,7 +1420,9 @@ namespace SmolEngine
 
 				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					for (const auto& actor : m_Scene->GetActiveScene().GetSortedActorList())
+					std::vector<Ref<Actor>> actors;
+					m_Scene->GetActiveScene().GetSortedActorList(actors);
+					for (const auto& actor : actors)
 					{
 						auto result = actor->GetName().find(name);
 						if (result == std::string::npos)

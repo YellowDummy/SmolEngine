@@ -53,6 +53,11 @@ namespace SmolEngine
 
 		Ref<Actor> FindActorByID(uint32_t id);
 
+
+		void GetActors(std::vector<Ref<Actor>>& outList);
+
+		void GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
+
 		/// Out-Properties
 
 		void PushOutProperty(const char* keyName, std::any val, OutValueType type);
@@ -65,11 +70,11 @@ namespace SmolEngine
 
 	private:
 
-		Ref<Actor> m_Actor = nullptr;
+		Ref<Actor>                                        m_Actor = nullptr;
 
-		std::unordered_map<const char*, float*> m_OutFloatVariables;
-		std::unordered_map<const char*, int*> m_OutIntVariables;
-		std::unordered_map<const char*, std::string*> m_OutStringVariables;
+		std::unordered_map<const char*, float*>           m_OutFloatVariables;
+		std::unordered_map<const char*, int*>             m_OutIntVariables;
+		std::unordered_map<const char*, std::string*>     m_OutStringVariables;
 
 	private:
 

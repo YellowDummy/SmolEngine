@@ -66,14 +66,14 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<Ref<Actor>> m_Childs;
-		Ref<Actor> m_Parent = nullptr;
-		entt::entity m_Entity;
-		ActorBaseType m_ActorType = ActorBaseType::DefaultBase;
+		Ref<Actor>                       m_Parent = nullptr;
+		entt::entity                     m_Entity;
+		ActorBaseType                    m_ActorType = ActorBaseType::DefaultBase;
 
-		size_t m_Index = 0;
-		size_t m_ComponentsCount = 0;
-		bool m_showComponentUI = false;
+		size_t                           m_Index = 0;
+		size_t                           m_ComponentsCount = 0;
+		bool                             m_showComponentUI = false;
+		std::vector<Ref<Actor>>          m_Childs;
 
 	private:
 

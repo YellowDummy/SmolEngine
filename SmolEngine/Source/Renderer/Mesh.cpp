@@ -12,6 +12,7 @@
 
 namespace SmolEngine
 {
+    //TODO: add staging buffer
     Ref<Mesh> Mesh::Create(const std::string& filePath)
     {
         Ref<Mesh> mesh = nullptr;
@@ -37,20 +38,10 @@ namespace SmolEngine
     bool Mesh::Init(ImportedData* data)
     {
         Free();
-        m_VertexCount = static_cast<uint32_t>(data->vertices.size());
+        m_VertexCount = static_cast<uint32_t>(data->VertexData.size());
+        m_VertexBuffer = VertexBuffer::Create(data->VertexData.data(), static_cast<uint32_t>(sizeof(PBRVertex) * data->VertexData.size()));
+        m_IndexBuffer = IndexBuffer::Create(data->Indices.data(), static_cast<uint32_t>(data->Indices.size()));
 
-        std::vector<PBRVertex> vertices(data->vertices.size());
-        for (uint32_t i = 0; i < data->vertices.size(); ++i)
-        {
-            vertices[i].Pos = data->vertices[i];
-            vertices[i].Color = data->colors[i];
-            vertices[i].Normals = data->normals[i];
-            vertices[i].Tangent = glm::vec4(data->tangents[i], 1);
-            vertices[i].UVs = data->uvs[i];
-        }
-
-        m_VertexBuffer = VertexBuffer::Create(vertices.data(), static_cast<uint32_t>(sizeof(PBRVertex) * vertices.size()));
-        m_IndexBuffer = IndexBuffer::Create(data->indices.data(), static_cast<uint32_t>(data->indices.size()));
         return true;
     }
 }

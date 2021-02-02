@@ -16,6 +16,7 @@ namespace SmolEngine
 	{
 		std::filesystem::path p(filePath);
 		m_SceneData = SceneData(filePath, p.filename().string());
+		m_SceneData.Prepare();
 		LoadSingletons();
 	}
 
@@ -69,6 +70,7 @@ namespace SmolEngine
 		AddComponent<TransformComponent>(*actorRef.get());
 		m_IDSet[name] = id;
 		m_SceneData.m_ActorPool[id] = actorRef;
+		m_SceneData.m_ActorList.push_back(actorRef);
 
 		return actorRef;
 	}
@@ -77,25 +79,31 @@ namespace SmolEngine
 	{
 		auto& result = m_IDSet.find(name);
 		if (result == m_IDSet.end())
-		{
 			return nullptr;
-		}
 
 		return FindActorByID(result->second);
 	}
 
 	Ref<Actor> Scene::FindActorByTag(const std::string& tag)
 	{
-		return nullptr;
+		Ref<Actor> actor = nullptr;
+		for (const auto& obj : m_SceneData.m_ActorList)
+		{
+			if (obj->GetTag() == tag)
+			{
+				actor = obj;
+				break;
+			}
+		}
+
+		return actor;
 	}
 
 	Ref<Actor> Scene::FindActorByID(const uint32_t id)
 	{
 		auto& result = m_SceneData.m_ActorPool.find(id);
 		if (result != m_SceneData.m_ActorPool.end())
-		{
 			return result->second;
-		}
 
 		return nullptr;
 	}
@@ -118,9 +126,6 @@ namespace SmolEngine
 
 	void Scene::DeleteActor(Ref<Actor>& actor)
 	{
-		bool result_id = m_IDSet.erase(actor->GetName());
-		bool result_pool = m_SceneData.m_ActorPool.erase(actor->GetID());
-
 		m_SceneData.m_Registry.remove_if_exists<DefaultBaseTuple>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<CameraBaseTuple>(*actor);
 
@@ -132,6 +137,11 @@ namespace SmolEngine
 		m_SceneData.m_Registry.remove_if_exists<Light2DSourceComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<CanvasComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<AudioSourceComponent>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
+
+		m_IDSet.erase(actor->GetName());
+		m_SceneData.m_ActorPool.erase(actor->GetID());
+		std::remove(m_SceneData.m_ActorList.begin(), m_SceneData.m_ActorList.end(), actor);
 		actor = nullptr;
 	}
 
@@ -245,6 +255,14 @@ namespace SmolEngine
 
 		// Loading Singletons-Components
 		LoadSingletons();
+
+		// Updating ActorList
+		m_SceneData.m_ActorList.clear();
+		m_SceneData.m_ActorList.reserve(m_SceneData.m_ActorPool.size());
+		for (const auto& [key, actor] : m_SceneData.m_ActorPool)
+		{
+			m_SceneData.m_ActorList.push_back(actor);
+		}
 
 		// Reloading Assets
 
@@ -419,36 +437,37 @@ namespace SmolEngine
 		return m_SceneData.m_ActorPool;
 	}
 
-	std::vector<Ref<Actor>> Scene::GetActorList()
+	void Scene::GetActorList(std::vector<Ref<Actor>>& outList)
 	{
-		std::vector<Ref<Actor>> temp;
-		return temp;
+		outList = m_SceneData.m_ActorList;
 	}
 
-	std::vector<Ref<Actor>> Scene::GetActorListByTag(const std::string& tag)
+	void Scene::GetSortedActorList(std::vector<Ref<Actor>>& outList)
 	{
-		std::vector<Ref<Actor>> temp;
-		return temp;
-	}
-
-	std::vector<Ref<Actor>> Scene::GetSortedActorList()
-	{
-		std::vector<Ref<Actor>> temp;
-		for (uint32_t i = 0; i < m_SceneData.m_ActorPool.size(); ++i)
+		outList.reserve(m_SceneData.m_ActorPool.size());
+		for (uint32_t i = 0; i < m_SceneData.m_ActorList.size(); ++i)
 		{
-			for (const auto& pair : m_SceneData.m_ActorPool)
+			for (const auto& actor : m_SceneData.m_ActorList)
 			{
-				auto [key, actor] = pair;
-
 				if (actor->m_Index == i)
 				{
-					temp.push_back(actor);
+					outList.push_back(actor);
 				}
 			}
 		}
-
-		return temp;
 	}
+
+	void Scene::GetActorListByTag(const std::string& tag, std::vector<Ref<Actor>>& outList)
+	{
+		for (const auto& actor : m_SceneData.m_ActorList)
+		{
+			if (actor->GetTag() == tag)
+			{
+				outList.push_back(actor);
+			}
+		}
+	}
+
 
 	SceneData& Scene::GetSceneData()
 	{

@@ -16,20 +16,17 @@ namespace SmolEngine
 
 		}
 
-		std::string Title;
-
-		unsigned int Width, Height;
-
-		Ref<EventHandler> m_eventHandler;
+		std::string         Title;
+		uint32_t            Width, Height;
+		Ref<EventHandler>   m_EventHandler;
 	};
 
 	struct WindowCreateInfo
 	{
-		uint32_t Width = 0;
-		uint32_t Height = 0;
-
-		Ref<EventHandler> EventHandler = nullptr;
-		std::string Title = "";
+		uint32_t            Width = 0;
+		uint32_t            Height = 0;
+		Ref<EventHandler>   EventHandler = nullptr;
+		std::string         Title = "";
 	};
 
 	static WindowData Data;

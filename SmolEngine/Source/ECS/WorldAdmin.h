@@ -93,14 +93,12 @@ namespace SmolEngine
 
 	private:
 
-		inline static Ref<WorldAdmin> s_World = std::make_shared<WorldAdmin>();
-
-		std::unordered_map<size_t, Scene> m_SceneMap;
-		size_t m_ActiveSceneID = 0;
-
-		Ref<EditorCameraController> m_EditorCamera = nullptr;
-		Ref<SubTexture2D> m_TestSub = nullptr;
-		bool m_InPlayMode = false;
+		inline static Ref<WorldAdmin>        s_World = std::make_shared<WorldAdmin>();
+		Ref<EditorCameraController>          m_EditorCamera = nullptr;
+		Ref<SubTexture2D>                    m_TestSub = nullptr;
+		bool                                 m_InPlayMode = false;
+		size_t                               m_ActiveSceneID = 0;
+		std::unordered_map<size_t, Scene>    m_SceneMap;
 
 	private:
 

@@ -33,6 +33,16 @@ namespace SmolEngine
 		return WorldAdmin::GetSingleton()->GetActiveScene().FindActorByID(id);
 	}
 
+	void BehaviourPrimitive::GetActors(std::vector<Ref<Actor>>& outList)
+	{
+		return WorldAdmin::GetSingleton()->GetActiveScene().GetActorList(outList);
+	}
+
+	void BehaviourPrimitive::GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList)
+	{
+		return WorldAdmin::GetSingleton()->GetActiveScene().GetActorListByTag(tag, outList);
+	}
+
 	void BehaviourPrimitive::PushOutProperty(const char* keyName, std::any val, OutValueType type)
 	{
 		switch (type)
