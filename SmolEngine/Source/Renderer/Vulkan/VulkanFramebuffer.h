@@ -18,16 +18,13 @@ namespace SmolEngine
 	struct OffscreenPass
 	{
 		FrameBufferAttachment color, depth;
-		std::array<VkClearAttachment, 2> clearAttachments;
 	};
 
 	struct DeferredPass
 	{
-		FrameBufferAttachment position, normals, color, depth;
-		VkDescriptorImageInfo positionImageInfo, normalsImageInfo, colorImageInfo;
+		FrameBufferAttachment position, normals, pbr, color, depth;
+		VkDescriptorImageInfo positionImageInfo, normalsImageInfo, pbrImageInfo, colorImageInfo;
 		VkSemaphore semaphore;
-
-		std::array<VkClearAttachment, 4> clearAttachments;
 	};
 
 	class VulkanFramebuffer
@@ -48,7 +45,7 @@ namespace SmolEngine
 
 		bool Create(uint32_t width, uint32_t height);
 
-		bool CreateDeferred();
+		bool CreateDeferred(uint32_t width, uint32_t height);
 
 		void CreateSampler();
 
@@ -68,11 +65,15 @@ namespace SmolEngine
 
 		/// Getters
 
+		const std::vector<VkClearAttachment>& GetClearAttachments() const;
+
 		const FramebufferSpecification& GetSpecification() const;
 
 		const VkFramebuffer GetCurrentVkFramebuffer() const;
 
 		const OffscreenPass& GetOffscreenPass() const;
+
+		const DeferredPass& GetDeferredPass() const;
 
 		void* GetImGuiTextureID() const;
 
@@ -81,13 +82,15 @@ namespace SmolEngine
 		FramebufferSpecification              m_Specification = {};
 		OffscreenPass                         m_OffscreenPass = {};
 		DeferredPass                          m_DeferredPass = {};
-		std::vector<VkFramebuffer>            m_VkFrameBuffers;
 		void*                                 m_ImGuiTextureID = nullptr;
 		VkDevice                              m_Device = nullptr;
 		VkSampler                             m_Sampler = nullptr;
 		VkSampleCountFlagBits                 m_MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 		VkFormat                              m_ColorFormat;
 		VkFormat                              m_DepthFormat;
+		const uint32_t                        m_DeferredDim = 2048;
+		std::vector<VkFramebuffer>            m_VkFrameBuffers;
+		std::vector<VkClearAttachment>        m_ClearAttachments;
 
 	private:
 

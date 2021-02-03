@@ -88,7 +88,7 @@ namespace SmolEngine
 			uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle,
-			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0, bool zeroVertexInput = false);
 
 		// Submit
 

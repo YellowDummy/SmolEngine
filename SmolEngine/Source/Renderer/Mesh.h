@@ -16,6 +16,12 @@ namespace SmolEngine
 
 		static Ref<Mesh> Create(const std::string& filePath);
 
+		// Getters
+
+		Ref<VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
+
+		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
+
 	private:
 
 		void Free();
@@ -24,16 +30,14 @@ namespace SmolEngine
 
 	private:
 
-		Ref<VertexBuffer> m_VertexBuffer = nullptr;
-		Ref<IndexBuffer> m_IndexBuffer = nullptr;
+		Ref<VertexBuffer>                  m_VertexBuffer = nullptr;
+		Ref<IndexBuffer>                   m_IndexBuffer = nullptr;
 
-		uint32_t m_VertexCount = 0;
-
-		std::vector<Ref<Texture>> m_Textures;
+		uint32_t                           m_VertexCount = 0;
+		std::vector<Ref<Texture>>          m_Textures;
 
 	private:
 
 		friend class Renderer;
-		friend class PBRTestLayer;
 	};
 }

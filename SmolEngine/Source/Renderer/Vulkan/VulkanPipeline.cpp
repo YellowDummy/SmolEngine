@@ -20,8 +20,7 @@ namespace SmolEngine
 
 	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification& pipelineSpec)
 	{
-		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain ||
-			pipelineSpec.VertexInputInfos.size() == 0|| pipelineSpec.DescriptorSets == 0)
+		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain || pipelineSpec.DescriptorSets == 0)
 		{
 			assert(false);
 			return false;
@@ -103,7 +102,7 @@ namespace SmolEngine
 		std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentState;
 		if (m_VulkanPipelineSpecification.IsUseMRT)
 		{
-			blendAttachmentState.resize(3);
+			blendAttachmentState.resize(4);
 
 			blendAttachmentState[0].colorWriteMask = 0xf;
 			blendAttachmentState[0].blendEnable = VK_FALSE;
@@ -113,6 +112,9 @@ namespace SmolEngine
 
 			blendAttachmentState[2].colorWriteMask = 0xf;
 			blendAttachmentState[2].blendEnable = VK_FALSE;
+
+			blendAttachmentState[3].colorWriteMask = 0xf;
+			blendAttachmentState[3].blendEnable = VK_FALSE;
 		}
 		else
 		{
@@ -228,10 +230,13 @@ namespace SmolEngine
 		// Vertex input state used for pipeline creation
 		VkPipelineVertexInputStateCreateInfo vertexInputState = {};
 		vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputState.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindings.size());
-		vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
-		vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
-		vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
+		if (m_VulkanPipelineSpecification.VertexInputInfos.size() > 0)
+		{
+			vertexInputState.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindings.size());
+			vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
+			vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
+			vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
+		}
 
 		if (m_VulkanPipelineSpecification.IsUseMRT)
 		{

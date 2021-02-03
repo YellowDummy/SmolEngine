@@ -4,6 +4,7 @@
 #include "EditorLayer.h"
 #include "VulkanTestLayer.h"
 #include "RaytracingTestLayer.h"
+#include "DeferredRenderingTest.h"
 #include "PBRTestLayer.h"
 
 
@@ -24,9 +25,10 @@ namespace SmolEngine
 		auto& app = Application::GetApplication();
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-		//app.PushLayer(new EditorLayer);
+		app.PushLayer(new EditorLayer);
 #else
-		app.PushLayer(new PBRTestLayer);
+		//app.PushLayer(new PBRTestLayer);
+		app.PushLayer(new DeferredRenderingTest);
 #endif
 		//app.PushLayer(new EditorLayer);
 		EDITOR_INFO("Initialized successfully");

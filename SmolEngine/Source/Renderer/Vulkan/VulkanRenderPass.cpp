@@ -54,7 +54,7 @@ namespace SmolEngine
 
         if (renderPassCI.IsUseMRT)
         {
-			attachments.resize(4);
+			attachments.resize(5);
 
 			// Position
 			attachments[0].format = VK_FORMAT_R16G16B16A16_SFLOAT;
@@ -76,8 +76,8 @@ namespace SmolEngine
 			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[1].finalLayout = renderPassCI.ColorAttachmentFinalLayout;
 
-			// Color
-			attachments[2].format = colorFormat;
+			// PBR: Metallic, Roughness, AO
+			attachments[2].format = VK_FORMAT_R16G16B16A16_SFLOAT;
 			attachments[2].samples = MSAASamplesCount;
 			attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -86,15 +86,25 @@ namespace SmolEngine
 			attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[2].finalLayout = renderPassCI.ColorAttachmentFinalLayout;
 
-			// Depth
-			attachments[3].format = depthFormat;
+			// Color
+			attachments[3].format = colorFormat;
 			attachments[3].samples = MSAASamplesCount;
 			attachments[3].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			attachments[3].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[3].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[3].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachments[3].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 			attachments[3].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			attachments[3].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
+			attachments[3].finalLayout = renderPassCI.ColorAttachmentFinalLayout;
+
+			// Depth
+			attachments[4].format = depthFormat;
+			attachments[4].samples = MSAASamplesCount;
+			attachments[4].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[4].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[4].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[4].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[4].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[4].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
         }
         else
         {
@@ -123,7 +133,7 @@ namespace SmolEngine
 		std::vector<VkAttachmentReference> colorReferences;
 		if (renderPassCI.IsUseMRT)
 		{
-			colorReferences.resize(3);
+			colorReferences.resize(4);
 
 			colorReferences[0].attachment = 0;
 			colorReferences[0].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
@@ -133,6 +143,9 @@ namespace SmolEngine
 
 			colorReferences[2].attachment = 2;
 			colorReferences[2].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+			colorReferences[3].attachment = 3;
+			colorReferences[3].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 		}
 		else
@@ -144,7 +157,7 @@ namespace SmolEngine
 
 		VkAttachmentReference depthReference = {};
 		{
-			depthReference.attachment = renderPassCI.IsUseMRT ? 3 : 1;
+			depthReference.attachment = renderPassCI.IsUseMRT ? 4 : 1;
 			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		}
 
@@ -183,7 +196,7 @@ namespace SmolEngine
 			renderPassInfo.pAttachments = attachments.data();
 			renderPassInfo.subpassCount = 1;
 			renderPassInfo.pSubpasses = &subpass;
-			renderPassInfo.dependencyCount = 2;
+			renderPassInfo.dependencyCount = static_cast<uint32_t>(dependencies.size());
 			renderPassInfo.pDependencies = dependencies.data();
 		}
 

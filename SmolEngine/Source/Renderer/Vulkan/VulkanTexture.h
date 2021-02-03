@@ -23,6 +23,8 @@ namespace SmolEngine
 
 		void GenWhiteTetxure(uint32_t width, uint32_t height);
 
+		void GenWhiteTetxureMultisampled(uint32_t width, uint32_t height);
+
 		/// Static Helpers
 
 		static VkImage CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,

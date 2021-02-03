@@ -68,8 +68,8 @@ namespace SmolEngine
 			bool result = m_Pipeline->Create(&DynamicPipelineCI);
 			assert(result == true);
 
-			m_Pipeline->SetVertexBuffers({ m_TestMesh->m_VertexBuffer });
-			m_Pipeline->SetIndexBuffers({ m_TestMesh->m_IndexBuffer });
+			m_Pipeline->SetVertexBuffers({ m_TestMesh->GetVertexBuffer() });
+			m_Pipeline->SetIndexBuffers({ m_TestMesh->GetIndexBuffer() });
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 			m_Pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());

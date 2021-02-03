@@ -20,7 +20,7 @@ namespace SmolEngine
 
 	bool GraphicsPipeline::Create(const GraphicsPipelineCreateInfo* pipelineInfo)
 	{
-		if (pipelineInfo->VertexInputInfos.size() == 0 || pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
+		if (pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
 			return false;
 
 		m_GraphicsContext = GraphicsContext::GetSingleton();
@@ -125,29 +125,31 @@ namespace SmolEngine
 			m_RenderpassFramebuffer->Bind();
 #else
 		std::vector<VkClearValue> clearValues;
-		if (m_RenderpassFramebuffer)
-		{
-			if (m_RenderpassFramebuffer->GetSpecification().IsUseMRT)
-			{
-				clearValues.resize(4);
-				clearValues[0].color = clearValues[1].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
-				clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
-				clearValues[3].depthStencil = { 1.0f, 0 };
-			}
-			else
-			{
-				clearValues.resize(2);
-				clearValues[1].depthStencil = { 1.0f, 0 };
-			}
-		}
-
-		uint32_t width = framebuffer->GetSpecification().Width;
-		uint32_t height = framebuffer->GetSpecification().Height;
+		const FramebufferSpecification& specs = framebuffer->GetSpecification();
+		uint32_t width = specs.Width;
+		uint32_t height = specs.Height;
 		VkRenderPass selectedPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
 		VkFramebuffer selectedFramebuffer = framebuffer->GetVulkanFramebuffer().GetCurrentVkFramebuffer();
 
-		if (framebuffer->GetSpecification().IsTargetsSwapchain)
-			selectedPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout();
+		if (specs.IsUseMRT)
+		{
+			clearValues.resize(5);
+			clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[1].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[3].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[4].depthStencil = { 1.0f, 0 };
+
+			selectedPass = VulkanRenderPass::GetVkRenderPassDeferredLayout();
+		}
+		else
+		{
+			clearValues.resize(2);
+			clearValues[1].depthStencil = { 1.0f, 0 };
+
+			if (specs.IsTargetsSwapchain)
+				selectedPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout();
+		}
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		{
@@ -214,10 +216,11 @@ namespace SmolEngine
 		clearRect.rect.extent = { (uint32_t)m_RenderpassFramebuffer->GetSpecification().Width, 
 			(uint32_t)m_RenderpassFramebuffer->GetSpecification().Height };
 
-		auto& vkFrameBuffer = m_RenderpassFramebuffer->GetVulkanFramebuffer();
-		vkFrameBuffer.SetClearColors(clearColors);
-		vkCmdClearAttachments(m_CommandBuffer, static_cast<uint32_t>(vkFrameBuffer.m_OffscreenPass.clearAttachments.size()), 
-			vkFrameBuffer.m_OffscreenPass.clearAttachments.data(), 1, &clearRect);
+		auto& framebuffer = m_RenderpassFramebuffer->GetVulkanFramebuffer();
+		framebuffer.SetClearColors(clearColors);
+
+		vkCmdClearAttachments(m_CommandBuffer, static_cast<uint32_t>(framebuffer.GetClearAttachments().size()),
+			framebuffer.GetClearAttachments().data(), 1, &clearRect);
 #endif
 	}
 
@@ -342,7 +345,7 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::Draw(uint32_t vertextCount, DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex)
+	void GraphicsPipeline::Draw(uint32_t vertextCount, DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex, bool zeroVertexInput)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_VextexArray->Bind();
@@ -371,8 +374,11 @@ namespace SmolEngine
 		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
 		// Bind Vertex Buffer
-		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);
+		if (!zeroVertexInput)
+		{
+			VkDeviceSize offsets[1] = { 0 };
+			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);
+		}
 
 		// Bind descriptor sets describing shader binding points
 		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);

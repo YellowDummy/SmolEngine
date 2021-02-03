@@ -48,6 +48,11 @@ namespace SmolEngine
 		m_IsCreated = true;
 	}
 
+	void VulkanTexture::GenWhiteTetxureMultisampled(uint32_t width, uint32_t height)
+	{
+
+	}
+
 	void VulkanTexture::LoadTexture(const std::string& filePath, TextureFormat format)
 	{
 		int height, width, channels;

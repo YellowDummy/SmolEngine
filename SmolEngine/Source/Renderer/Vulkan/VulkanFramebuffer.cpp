@@ -20,7 +20,7 @@ namespace SmolEngine
 
 	VulkanFramebuffer::~VulkanFramebuffer()
 	{
-		FreeResources();
+		//FreeResources();
 	}
 
 	bool VulkanFramebuffer::Create(uint32_t width, uint32_t height)
@@ -97,39 +97,49 @@ namespace SmolEngine
 
 		// Clear
 		{
-			m_OffscreenPass.clearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_OffscreenPass.clearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_OffscreenPass.clearAttachments[0].colorAttachment = 0;
+			if (m_ClearAttachments.size() > 0)
+				m_ClearAttachments.clear();
 
-			m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			m_OffscreenPass.clearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
+			m_ClearAttachments.resize(2);
+
+			m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[0].colorAttachment = 0;
+
+			m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_ClearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
 		}
 
 		return result == VK_SUCCESS;
 	}
 
-	bool VulkanFramebuffer::CreateDeferred()
+	bool VulkanFramebuffer::CreateDeferred(uint32_t width, uint32_t height)
 	{
-#define FB_DIM 2048
-
 		// Position
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
+			AddAttachment(width, height, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
 				m_DeferredPass.position.image, m_DeferredPass.position.view, m_DeferredPass.position.mem);
 		}
 
 		// Normals
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
+			AddAttachment(width, height, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
 				m_DeferredPass.normals.image, m_DeferredPass.normals.view, m_DeferredPass.normals.mem);
+		}
+
+		// PBR
+		{
+			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+			AddAttachment(width, height, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
+				m_DeferredPass.pbr.image, m_DeferredPass.pbr.view, m_DeferredPass.pbr.mem);
 		}
 
 		// Albedo (color)
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, m_ColorFormat,
+			AddAttachment(width, height, m_MSAASamples, usage, m_ColorFormat,
 				m_DeferredPass.color.image, m_DeferredPass.color.view, m_DeferredPass.color.mem);
 		}
 
@@ -137,7 +147,7 @@ namespace SmolEngine
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, m_DepthFormat,
+			AddAttachment(width, height, m_MSAASamples, usage, m_DepthFormat,
 				m_DeferredPass.depth.image, m_DeferredPass.depth.view, m_DeferredPass.depth.mem, imageAspect);
 		}
 
@@ -146,12 +156,13 @@ namespace SmolEngine
 
 		// Framebuffer 
 		{
-			std::vector<VkImageView> attachments(4);
+			std::vector<VkImageView> attachments(5);
 			{
 				attachments[0] = m_DeferredPass.position.view;
 				attachments[1] = m_DeferredPass.normals.view;
-				attachments[2] = m_DeferredPass.color.view;
-				attachments[3] = m_DeferredPass.depth.view;
+				attachments[2] = m_DeferredPass.pbr.view;
+				attachments[3] = m_DeferredPass.color.view;
+				attachments[4] = m_DeferredPass.depth.view;
 			}
 
 			VkFramebufferCreateInfo fbufCreateInfo = {};
@@ -161,8 +172,8 @@ namespace SmolEngine
 				fbufCreateInfo.renderPass = VulkanRenderPass::GetVkRenderPassDeferredLayout();
 				fbufCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
 				fbufCreateInfo.pAttachments = attachments.data();
-				fbufCreateInfo.width = FB_DIM;
-				fbufCreateInfo.height = FB_DIM;
+				fbufCreateInfo.width = width;
+				fbufCreateInfo.height = height;
 				fbufCreateInfo.layers = 1;
 			}
 
@@ -172,20 +183,29 @@ namespace SmolEngine
 
 		// Clear
 		{
-			m_DeferredPass.clearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_DeferredPass.clearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_DeferredPass.clearAttachments[0].colorAttachment = 0;
+			if (m_ClearAttachments.size() > 0)
+				m_ClearAttachments.clear();
 
-			m_DeferredPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_DeferredPass.clearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_DeferredPass.clearAttachments[1].colorAttachment = 1;
+			m_ClearAttachments.resize(5);
 
-			m_DeferredPass.clearAttachments[2].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_DeferredPass.clearAttachments[2].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_DeferredPass.clearAttachments[2].colorAttachment = 2;
+			m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[0].colorAttachment = 0;
 
-			m_DeferredPass.clearAttachments[3].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			m_DeferredPass.clearAttachments[3].clearValue.depthStencil = { 1.0f, 0 };
+			m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[1].colorAttachment = 1;
+
+			m_ClearAttachments[2].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[2].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[2].colorAttachment = 2;
+
+			m_ClearAttachments[3].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[3].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[3].colorAttachment = 3;
+
+			m_ClearAttachments[4].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_ClearAttachments[4].clearValue.depthStencil = { 1.0f, 0 };
 		}
 
 		// Create a semaphore used to synchronize offscreen rendering and usage
@@ -203,11 +223,19 @@ namespace SmolEngine
 			m_DeferredPass.normalsImageInfo.imageView = m_DeferredPass.normals.view;
 			m_DeferredPass.normalsImageInfo.sampler = m_Sampler;
 
+			//PBR
+			m_DeferredPass.pbrImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			m_DeferredPass.pbrImageInfo.imageView = m_DeferredPass.pbr.view;
+			m_DeferredPass.pbrImageInfo.sampler = m_Sampler;
+
 			//Albedo (color)
 			m_DeferredPass.colorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			m_DeferredPass.colorImageInfo.imageView = m_DeferredPass.color.view;
 			m_DeferredPass.colorImageInfo.sampler = m_Sampler;
 		}
+
+		m_Specification.Width = width;
+		m_Specification.Height = height;
 
 		return true;
 	}
@@ -248,7 +276,7 @@ namespace SmolEngine
 		m_MSAASamples = VulkanContext::GetDevice().GetMSAASamplesCount();
 
 		bool result = false;
-		data.IsUseMRT ? result = CreateDeferred() : result = Create(data.Width, data.Height);
+		data.IsUseMRT ? result = CreateDeferred(m_DeferredDim, m_DeferredDim) : result = Create(data.Width, data.Height);
 		return result;
 	}
 
@@ -273,6 +301,7 @@ namespace SmolEngine
 		{
 			FreeAttachment(m_DeferredPass.position);
 			FreeAttachment(m_DeferredPass.normals);
+			FreeAttachment(m_DeferredPass.pbr);
 			FreeAttachment(m_DeferredPass.color);
 			FreeAttachment(m_DeferredPass.depth);
 		}
@@ -339,14 +368,20 @@ namespace SmolEngine
 	{
 		if (m_Specification.IsUseMRT)
 		{
-			m_DeferredPass.clearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
-			m_DeferredPass.clearAttachments[1].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
-			m_DeferredPass.clearAttachments[2].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_ClearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_ClearAttachments[1].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_ClearAttachments[2].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_ClearAttachments[3].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
 		}
 		else
 		{
-			m_OffscreenPass.clearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_ClearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
 		}
+	}
+
+	const std::vector<VkClearAttachment>& VulkanFramebuffer::GetClearAttachments() const
+	{
+		return m_ClearAttachments;
 	}
 
 	const FramebufferSpecification& VulkanFramebuffer::GetSpecification() const
@@ -370,5 +405,10 @@ namespace SmolEngine
 	void* VulkanFramebuffer::GetImGuiTextureID() const
 	{
 		return m_ImGuiTextureID;
+	}
+
+	const DeferredPass& VulkanFramebuffer::GetDeferredPass() const
+	{
+		return m_DeferredPass;
 	}
 }
