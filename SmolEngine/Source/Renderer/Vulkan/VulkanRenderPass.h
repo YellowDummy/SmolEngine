@@ -18,7 +18,7 @@ namespace SmolEngine
 
 		inline static VkRenderPass GetVkRenderPassSwapchainLayout() { return m_MSAARenderPassSwapchain; }
 
-		inline static VkRenderPass GetVkRenderDeferredLayout() { return m_MSAADeferredRenderPass; }
+		inline static VkRenderPass GetVkRenderPassDeferredLayout() { return m_MSAADeferredRenderPass; }
 
 	private:
 

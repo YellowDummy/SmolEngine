@@ -202,7 +202,8 @@ namespace SmolEngine
 
 		auto& vkFrameBuffer = m_RenderpassFramebuffer->GetVulkanFramebuffer();
 		vkFrameBuffer.SetClearColors(clearColors);
-		vkCmdClearAttachments(m_CommandBuffer, 3, vkFrameBuffer.m_OffscreenPass.clearAttachments, 1, &clearRect);
+		vkCmdClearAttachments(m_CommandBuffer, static_cast<uint32_t>(vkFrameBuffer.m_OffscreenPass.clearAttachments.size()), 
+			vkFrameBuffer.m_OffscreenPass.clearAttachments.data(), 1, &clearRect);
 #endif
 	}
 

@@ -1,20 +1,11 @@
 #pragma once
-
-#include "ECS/Scene.h"
+#include "Core/Core.h"
+#include "Core/Time.h"
 #include "Core/EventHandler.h"
-#include "Audio/AudioEngine.h"
-#include "Core/Application.h"
+#include "ECS/Scene.h"
 
-#include "ECS/ComponentTuples/BaseTuple.h"
-
-#include <string>
-#include <utility>
-#include <vector>
-#include <type_traits>
-#include <functional>
-#include <box2d/b2_world.h>
-#include <map>
-#include <cereal/types/unordered_map.hpp>
+#include <glm/glm.hpp>
+#include <unordered_map>
 
 namespace SmolEngine
 { 

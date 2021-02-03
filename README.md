@@ -34,7 +34,7 @@
 
 - Renderer:
 
-    Physically Based Rendering (PBR), Multi sampled deferred shading, Real-Time Ray Tracing (Vulkan), Post-processing,
+    Physically Based Rendering (PBR), Multi Sampled Deferred Shading, Real-Time Ray Tracing (Vulkan), Post-processing,
     3D Animations, Multithreading, Materials (user's shaders), Sprite Atlases
 
 - Systems:

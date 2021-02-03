@@ -10,16 +10,16 @@
 
 namespace SmolEngine
 {
-#define FB_COLOR_FORMAT VK_FORMAT_B8G8R8A8_UNORM
-
 	VulkanFramebuffer::VulkanFramebuffer()
 	{
 		m_Device = VulkanContext::GetDevice().GetLogicalDevice();
+		m_ColorFormat = VulkanContext::GetSwapchain().GetColorFormat();
+		m_DepthFormat = VulkanContext::GetSwapchain().GetDepthFormat();
 	}
 
 	VulkanFramebuffer::~VulkanFramebuffer()
 	{
-
+		FreeResources();
 	}
 
 	bool VulkanFramebuffer::Create(uint32_t width, uint32_t height)
@@ -28,34 +28,10 @@ namespace SmolEngine
 		m_Specification.Width = width;
 		m_Specification.Height = height;
 
-		VkFormat fbDepthFormat;
-		std::vector<VkFormat> depthFormats = {
-				VK_FORMAT_D32_SFLOAT_S8_UINT,
-				VK_FORMAT_D32_SFLOAT,
-				VK_FORMAT_D24_UNORM_S8_UINT,
-				VK_FORMAT_D16_UNORM_S8_UINT,
-				VK_FORMAT_D16_UNORM
-		};
-
-		bool formatfound = false;
-		for (auto& format : depthFormats)
-		{
-			VkFormatProperties formatProps;
-			vkGetPhysicalDeviceFormatProperties(VulkanContext::GetDevice().GetPhysicalDevice(), format, &formatProps);
-			// Format must support depth stencil attachment for optimal tiling
-			if (formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
-			{
-				fbDepthFormat = format;
-				formatfound = true;
-				break;
-			}
-		}
-		assert(formatfound == true);
-
 		// Color attachment
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, FB_COLOR_FORMAT,
+			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, m_ColorFormat,
 				m_OffscreenPass.color.image, m_OffscreenPass.color.view, m_OffscreenPass.color.mem);
 		}
 
@@ -64,7 +40,7 @@ namespace SmolEngine
 			if (!m_Specification.IsTargetsSwapchain) // overwise swapchain image will be used as resolve attachment
 			{
 				VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-				AddAttachment(m_Specification.Width, m_Specification.Height, VK_SAMPLE_COUNT_1_BIT, usage, FB_COLOR_FORMAT,
+				AddAttachment(m_Specification.Width, m_Specification.Height, VK_SAMPLE_COUNT_1_BIT, usage, m_ColorFormat,
 					m_OffscreenPass.resolve.image, m_OffscreenPass.resolve.view, m_OffscreenPass.resolve.mem);
 			}
 		}
@@ -73,65 +49,20 @@ namespace SmolEngine
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, fbDepthFormat,
+			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, m_DepthFormat,
 				m_OffscreenPass.depth.image, m_OffscreenPass.depth.view, m_OffscreenPass.depth.mem, imageAspect);
 		}
 
 		// Sampler
-		{
-			VkSamplerCreateInfo samplerCI = {};
-			{
-				auto& device = VulkanContext::GetDevice();
-
-				samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-				samplerCI.magFilter = VK_FILTER_LINEAR;
-				samplerCI.minFilter = VK_FILTER_LINEAR;
-				samplerCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-				samplerCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-				samplerCI.addressModeV = samplerCI.addressModeU;
-				samplerCI.addressModeW = samplerCI.addressModeU;
-				samplerCI.mipLodBias = 0.0f;
-				samplerCI.maxAnisotropy = 1.0f;
-				samplerCI.minLod = 0.0f;
-				samplerCI.maxLod = 1.0f;
-				samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-				samplerCI.maxAnisotropy = 1.0f;
-				if (device.GetDeviceFeatures()->samplerAnisotropy)
-				{
-					samplerCI.maxAnisotropy = device.GetDeviceProperties()->limits.maxSamplerAnisotropy;
-					samplerCI.anisotropyEnable = VK_TRUE;
-				}
-
-				result = vkCreateSampler(m_Device, &samplerCI, nullptr, &m_Sampler);
-				VK_CHECK_RESULT(result);
-			}
-		}
+		CreateSampler();
 
 		// Framebuffer creation
 		{
-			std::vector<VkImageView> attachments;
-
-			if (m_Specification.IsUseMRT)
+			std::vector<VkImageView> attachments(3);
 			{
-				
-			}
-			else
-			{
-				attachments.resize(3);
 				attachments[0] = m_OffscreenPass.color.view;
 				attachments[1] = m_OffscreenPass.resolve.view;
 				attachments[2] = m_OffscreenPass.depth.view;
-
-				m_OffscreenPass.clearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				m_OffscreenPass.clearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-				m_OffscreenPass.clearAttachments[0].colorAttachment = 0;
-
-				m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				m_OffscreenPass.clearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-				m_OffscreenPass.clearAttachments[1].colorAttachment = 0;
-
-				m_OffscreenPass.clearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-				m_OffscreenPass.clearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };
 			}
 
 			VkFramebufferCreateInfo fbufCreateInfo = {};
@@ -174,42 +105,26 @@ namespace SmolEngine
 			}
 		}
 
+		// Clear
+		{
+			m_OffscreenPass.clearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_OffscreenPass.clearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_OffscreenPass.clearAttachments[0].colorAttachment = 0;
+
+			m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_OffscreenPass.clearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_OffscreenPass.clearAttachments[1].colorAttachment = 0;
+
+			m_OffscreenPass.clearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_OffscreenPass.clearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };
+		}
+
 		return result == VK_SUCCESS;
 	}
 
 	bool VulkanFramebuffer::CreateDeferred()
 	{
 #define FB_DIM 2048
-		VkFormat fbDepthFormat;
-		{
-			std::vector<VkFormat> depthFormats = {
-			  VK_FORMAT_D32_SFLOAT_S8_UINT,
-		      VK_FORMAT_D32_SFLOAT,
-		      VK_FORMAT_D24_UNORM_S8_UINT,
-		      VK_FORMAT_D16_UNORM_S8_UINT,
-		      VK_FORMAT_D16_UNORM
-			};
-
-			bool formatfound = false;
-			for (auto& format : depthFormats)
-			{
-				VkFormatProperties formatProps;
-				vkGetPhysicalDeviceFormatProperties(VulkanContext::GetDevice().GetPhysicalDevice(), format, &formatProps);
-				// Format must support depth stencil attachment for optimal tiling
-				if (formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
-				{
-					fbDepthFormat = format;
-					formatfound = true;
-					break;
-				}
-			}
-
-			if (!formatfound)
-			{
-				return false;
-				assert(formatfound == true);
-			}
-		}
 
 		// Position
 		{
@@ -228,7 +143,7 @@ namespace SmolEngine
 		// Albedo (color)
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, FB_COLOR_FORMAT,
+			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, m_ColorFormat,
 				m_DeferredPass.color.image, m_DeferredPass.color.view, m_DeferredPass.color.mem);
 		}
 
@@ -236,56 +151,105 @@ namespace SmolEngine
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, fbDepthFormat,
+			AddAttachment(FB_DIM, FB_DIM, m_MSAASamples, usage, m_DepthFormat,
 				m_DeferredPass.depth.image, m_DeferredPass.depth.view, m_DeferredPass.depth.mem, imageAspect);
 		}
 
 		// Sampler
+		CreateSampler();
+
+		// Framebuffer 
 		{
-			VkSamplerCreateInfo samplerCI = {};
+			std::vector<VkImageView> attachments(4);
 			{
-				auto& device = VulkanContext::GetDevice();
-
-				samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-				samplerCI.magFilter = VK_FILTER_NEAREST;
-				samplerCI.minFilter = VK_FILTER_NEAREST;
-				samplerCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-				samplerCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-				samplerCI.addressModeV = samplerCI.addressModeU;
-				samplerCI.addressModeW = samplerCI.addressModeU;
-				samplerCI.mipLodBias = 0.0f;
-				samplerCI.maxAnisotropy = 1.0f;
-				samplerCI.minLod = 0.0f;
-				samplerCI.maxLod = 1.0f;
-				samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-				samplerCI.maxAnisotropy = 1.0f;
-				if (device.GetDeviceFeatures()->samplerAnisotropy)
-				{
-					samplerCI.maxAnisotropy = device.GetDeviceProperties()->limits.maxSamplerAnisotropy;
-					samplerCI.anisotropyEnable = VK_TRUE;
-				}
-
-				VK_CHECK_RESULT(vkCreateSampler(m_Device, &samplerCI, nullptr, &m_Sampler));
+				attachments[0] = m_DeferredPass.position.view;
+				attachments[1] = m_DeferredPass.normals.view;
+				attachments[2] = m_DeferredPass.color.view;
+				attachments[3] = m_DeferredPass.depth.view;
 			}
+
+			VkFramebufferCreateInfo fbufCreateInfo = {};
+			{
+				fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+				fbufCreateInfo.pNext = NULL;
+				fbufCreateInfo.renderPass = VulkanRenderPass::GetVkRenderPassDeferredLayout();
+				fbufCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+				fbufCreateInfo.pAttachments = attachments.data();
+				fbufCreateInfo.width = FB_DIM;
+				fbufCreateInfo.height = FB_DIM;
+				fbufCreateInfo.layers = 1;
+			}
+
+			m_VkFrameBuffers.resize(1);
+			VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[0]));
 		}
 
+		// Clear
+		{
+			m_DeferredPass.clearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_DeferredPass.clearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_DeferredPass.clearAttachments[0].colorAttachment = 0;
 
-		//Position
-		m_DeferredPass.positionImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		m_DeferredPass.positionImageInfo.imageView = m_DeferredPass.position.view;
-		m_DeferredPass.positionImageInfo.sampler = m_Sampler;
+			m_DeferredPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_DeferredPass.clearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_DeferredPass.clearAttachments[1].colorAttachment = 1;
 
-		//Normals
-		m_DeferredPass.normalsImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		m_DeferredPass.normalsImageInfo.imageView = m_DeferredPass.normals.view;
-		m_DeferredPass.normalsImageInfo.sampler = m_Sampler;
+			m_DeferredPass.clearAttachments[2].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_DeferredPass.clearAttachments[2].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_DeferredPass.clearAttachments[2].colorAttachment = 2;
 
-		//Albedo (color)
-		m_DeferredPass.colorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		m_DeferredPass.colorImageInfo.imageView = m_DeferredPass.color.view;
-		m_DeferredPass.colorImageInfo.sampler = m_Sampler;
+			m_DeferredPass.clearAttachments[3].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_DeferredPass.clearAttachments[3].clearValue.depthStencil = { 1.0f, 0 };
+		}
+
+		// DescriptorImageInfo
+		{
+			//Position
+			m_DeferredPass.positionImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			m_DeferredPass.positionImageInfo.imageView = m_DeferredPass.position.view;
+			m_DeferredPass.positionImageInfo.sampler = m_Sampler;
+
+			//Normals
+			m_DeferredPass.normalsImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			m_DeferredPass.normalsImageInfo.imageView = m_DeferredPass.normals.view;
+			m_DeferredPass.normalsImageInfo.sampler = m_Sampler;
+
+			//Albedo (color)
+			m_DeferredPass.colorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			m_DeferredPass.colorImageInfo.imageView = m_DeferredPass.color.view;
+			m_DeferredPass.colorImageInfo.sampler = m_Sampler;
+		}
 
 		return true;
+	}
+
+	void VulkanFramebuffer::CreateSampler()
+	{
+		VkSamplerCreateInfo samplerCI = {};
+		{
+			auto& device = VulkanContext::GetDevice();
+
+			samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			samplerCI.magFilter = VK_FILTER_NEAREST;
+			samplerCI.minFilter = VK_FILTER_NEAREST;
+			samplerCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			samplerCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+			samplerCI.addressModeV = samplerCI.addressModeU;
+			samplerCI.addressModeW = samplerCI.addressModeU;
+			samplerCI.mipLodBias = 0.0f;
+			samplerCI.maxAnisotropy = 1.0f;
+			samplerCI.minLod = 0.0f;
+			samplerCI.maxLod = 1.0f;
+			samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+			samplerCI.maxAnisotropy = 1.0f;
+			if (device.GetDeviceFeatures()->samplerAnisotropy)
+			{
+				samplerCI.maxAnisotropy = device.GetDeviceProperties()->limits.maxSamplerAnisotropy;
+				samplerCI.anisotropyEnable = VK_TRUE;
+			}
+
+			VK_CHECK_RESULT(vkCreateSampler(m_Device, &samplerCI, nullptr, &m_Sampler));
+		}
 	}
 
 	bool VulkanFramebuffer::Init(const FramebufferSpecification& data)
@@ -294,60 +258,35 @@ namespace SmolEngine
 		m_Specification = data;
 		m_MSAASamples = VulkanContext::GetDevice().GetMSAASamplesCount();
 
-		return Create(data.Width, data.Height);
+		bool result = false;
+		data.IsUseMRT ? result = CreateDeferred() : result = Create(data.Width, data.Height);
+		return result;
 	}
 
 	void VulkanFramebuffer::OnResize(uint32_t width, uint32_t height)
 	{
-		FreeResources();
-		Create(width, height);
+		if (!m_Specification.IsUseMRT)
+		{
+			FreeResources();
+			Create(width, height);
+		}
 	}
 
 	void VulkanFramebuffer::FreeResources()
 	{
-		// Color attachment
-
-		if (m_OffscreenPass.color.view != VK_NULL_HANDLE)
+		// Offscreen
 		{
-			vkDestroyImageView(m_Device, m_OffscreenPass.color.view, nullptr);
-		}
-		if (m_OffscreenPass.color.image != VK_NULL_HANDLE)
-		{
-			vkDestroyImage(m_Device, m_OffscreenPass.color.image, nullptr);
-		}
-		if (m_OffscreenPass.color.mem != VK_NULL_HANDLE)
-		{
-			vkFreeMemory(m_Device, m_OffscreenPass.color.mem, nullptr);
+			FreeAttachment(m_OffscreenPass.color);
+			FreeAttachment(m_OffscreenPass.depth);
+			FreeAttachment(m_OffscreenPass.resolve);
 		}
 
-		// Resolve attachment
-
-		if (m_OffscreenPass.resolve.view != VK_NULL_HANDLE)
+		// Deferred
 		{
-			vkDestroyImageView(m_Device, m_OffscreenPass.resolve.view, nullptr);
-		}
-		if (m_OffscreenPass.resolve.image != VK_NULL_HANDLE)
-		{
-			vkDestroyImage(m_Device, m_OffscreenPass.resolve.image, nullptr);
-		}
-		if (m_OffscreenPass.resolve.mem != VK_NULL_HANDLE)
-		{
-			vkFreeMemory(m_Device, m_OffscreenPass.resolve.mem, nullptr);
-		}
-
-		// Depth attachment
-
-		if (m_OffscreenPass.depth.view != VK_NULL_HANDLE)
-		{
-			vkDestroyImageView(m_Device, m_OffscreenPass.depth.view, nullptr);
-		}
-		if (m_OffscreenPass.depth.image != VK_NULL_HANDLE)
-		{
-			vkDestroyImage(m_Device, m_OffscreenPass.depth.image, nullptr);
-		}
-		if (m_OffscreenPass.depth.mem != VK_NULL_HANDLE)
-		{
-			vkFreeMemory(m_Device, m_OffscreenPass.depth.mem, nullptr);
+			FreeAttachment(m_DeferredPass.position);
+			FreeAttachment(m_DeferredPass.normals);
+			FreeAttachment(m_DeferredPass.color);
+			FreeAttachment(m_DeferredPass.depth);
 		}
 
 		if (m_Sampler != VK_NULL_HANDLE)
@@ -394,6 +333,18 @@ namespace SmolEngine
 
 			VK_CHECK_RESULT(vkCreateImageView(m_Device, &colorImageViewCI, nullptr, &imageView));
 		}
+	}
+
+	void VulkanFramebuffer::FreeAttachment(FrameBufferAttachment& framebuffer)
+	{
+		if (framebuffer.view != VK_NULL_HANDLE)
+			vkDestroyImageView(m_Device, framebuffer.view, nullptr);
+
+		if (framebuffer.image != VK_NULL_HANDLE)
+			vkDestroyImage(m_Device, framebuffer.image, nullptr);
+
+		if (framebuffer.mem != VK_NULL_HANDLE)
+			vkFreeMemory(m_Device, framebuffer.mem, nullptr);
 	}
 
 	void VulkanFramebuffer::SetClearColors(const glm::vec4& clearColors)

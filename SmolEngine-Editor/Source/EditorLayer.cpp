@@ -42,6 +42,7 @@
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Systems/CommandSystem.h"
+#include "ECS/Scene.h"
 
 
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -1193,7 +1194,7 @@ namespace SmolEngine
 				ImGui::PopID();
 				ImGui::NewLine();
 
-				ImGui::BeginChild("ComponentText", { ImGui::GetWindowSize().x - 30.0f, 100 }, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+				ImGui::BeginChild("ComponentText", { ImGui::GetWindowSize().x - 30.0f, 100 }, false, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 				for (auto str : list)
 				{
 					auto result = str.find(name);

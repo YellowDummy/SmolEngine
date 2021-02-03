@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "WorldAdmin.h"
 
-#include "ECS/ComponentsCore.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/EditorCamera.h"
 #include "Renderer/Text.h"
 
 #include "Core/AssetManager.h"
@@ -15,6 +15,10 @@
 #include "Physics2D/Box2D/CollisionListener2D.h"
 #include "Scripting/BehaviourPrimitive.h"
 
+#include "Audio/AudioEngine.h"
+#include "Animation/AnimationClip.h"
+
+#include "ECS/ComponentsCore.h"
 #include "ECS/Systems/RendererSystem.h"
 #include "ECS/Systems/Physics2DSystem.h"
 #include "ECS/Systems/AudioSystem.h"
@@ -23,20 +27,15 @@
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
+#include "ECS/ComponentTuples/BaseTuple.h"
 #include "ECS/ComponentTuples/SingletonTuple.h"
 #include "ECS/ComponentTuples/CameraBaseTuple.h"
 #include "ECS/ComponentTuples/DefaultBaseTuple.h"
 
-#include "Renderer/EditorCamera.h"
-#include "Animation/AnimationClip.h"
-
-#include <filesystem>
-#include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
 #include <rttr/registration.h>
-
-
+#include <box2d/b2_world.h>
 
 namespace SmolEngine
 {

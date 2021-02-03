@@ -19,15 +19,15 @@ namespace SmolEngine
 	{
 		FrameBufferAttachment color, depth, resolve;
 
-		VkClearAttachment clearAttachments[3] = {};
+		std::array<VkClearAttachment, 3> clearAttachments;
 	};
 
 	struct DeferredPass
 	{
-		FrameBufferAttachment position, normals, color, depth, resolve;
+		FrameBufferAttachment position, normals, color, depth;
 		VkDescriptorImageInfo positionImageInfo, normalsImageInfo, colorImageInfo;
 
-		VkClearAttachment clearAttachments[5] = {};
+		std::array<VkClearAttachment, 4> clearAttachments;
 	};
 
 	class VulkanFramebuffer
@@ -50,11 +50,15 @@ namespace SmolEngine
 
 		bool CreateDeferred();
 
+		void CreateSampler();
+
 		void FreeResources();
 
 		void AddAttachment(uint32_t width, uint32_t height, VkSampleCountFlagBits samples,
 			VkImageUsageFlags imageUsage,
 			VkFormat format, VkImage& image, VkImageView& imageView, VkDeviceMemory& mem, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
+
+		void FreeAttachment(FrameBufferAttachment& framebuffer);
 
 	public:
 
@@ -82,6 +86,8 @@ namespace SmolEngine
 		VkDevice                              m_Device = nullptr;
 		VkSampler                             m_Sampler = nullptr;
 		VkSampleCountFlagBits                 m_MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+		VkFormat                              m_ColorFormat;
+		VkFormat                              m_DepthFormat;
 
 	private:
 

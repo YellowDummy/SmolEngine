@@ -34,6 +34,9 @@ namespace SmolEngine
 		pipelineSpec.IsTargetsSwapchain ? m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout() :
 			m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
 
+		if (pipelineSpec.IsUseMRT)
+			m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassDeferredLayout();
+
 		m_SetLayout.clear();
 		m_SetLayout.reserve(m_Descriptors.size());
 		for (auto& descriptor : m_Descriptors)
