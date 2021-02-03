@@ -6,28 +6,25 @@ namespace SmolEngine
 {
     void VulkanRenderPass::Init()
     {
-		// Standart MSAA Offscreen
+		// Offscreen
 		{
 			RenderPassCI info = {};
-			info.IsUseMRT = false;
 
-			CreateRenderPass(info, m_MSAARenderPassFramebuffer);
+			CreateRenderPass(info, m_RenderPassFramebuffer);
 		}
 
-		// Standart MSAA Swapchain
+		// Swapchain
 		{
 			RenderPassCI info = {};
-			info.IsUseMRT = false;
-			info.ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-			CreateRenderPass(info, m_MSAARenderPassSwapchain);
+			CreateRenderPass(info, m_RenderPassSwapchain);
 		}
 
 		// Deferred MSAA
 		{
 			RenderPassCI info = {};
 			info.IsUseMRT = true;
-			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 			CreateRenderPass(info, m_MSAADeferredRenderPass);
 		}
@@ -40,11 +37,11 @@ namespace SmolEngine
         if (m_MSAADeferredRenderPass != VK_NULL_HANDLE)
             vkDestroyRenderPass(device, m_MSAADeferredRenderPass, nullptr);
 
-        if (m_MSAARenderPassFramebuffer != VK_NULL_HANDLE)
-            vkDestroyRenderPass(device, m_MSAARenderPassFramebuffer, nullptr);
+        if (m_RenderPassFramebuffer != VK_NULL_HANDLE)
+            vkDestroyRenderPass(device, m_RenderPassFramebuffer, nullptr);
 
-        if (m_MSAARenderPassSwapchain != VK_NULL_HANDLE)
-            vkDestroyRenderPass(device, m_MSAARenderPassSwapchain, nullptr);
+        if (m_RenderPassSwapchain != VK_NULL_HANDLE)
+            vkDestroyRenderPass(device, m_RenderPassSwapchain, nullptr);
     }
 
     void VulkanRenderPass::CreateRenderPass(RenderPassCI& renderPassCI, VkRenderPass& renderPass)
@@ -101,10 +98,10 @@ namespace SmolEngine
         }
         else
         {
-			attachments.resize(3);
-			// Multisampled attachment that we render to
+			attachments.resize(2);
+
 			attachments[0].format = colorFormat;
-			attachments[0].samples = MSAASamplesCount;
+			attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
 			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -112,26 +109,14 @@ namespace SmolEngine
 			attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[0].finalLayout = renderPassCI.ColorAttachmentFinalLayout;
 
-			// This is the frame buffer attachment to where the multisampled image
-			// will be resolved to and which will be presented to the swapchain
-			attachments[1].format = colorFormat;
+			attachments[1].format = depthFormat;
 			attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			attachments[1].finalLayout = renderPassCI.ResolveAttachmentFinalLayout;
-
-			// Multisampled depth attachment we render to
-			attachments[2].format = depthFormat;
-			attachments[2].samples = MSAASamplesCount;
-			attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-			attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-			attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-			attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			attachments[2].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
+			attachments[1].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
         }
 
 
@@ -159,27 +144,15 @@ namespace SmolEngine
 
 		VkAttachmentReference depthReference = {};
 		{
-			depthReference.attachment = renderPassCI.IsUseMRT ? 3 : 2;
+			depthReference.attachment = renderPassCI.IsUseMRT ? 3 : 1;
 			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		}
-
-		VkAttachmentReference resolveReference = {};
-		{
-			resolveReference.attachment = 1;
-			resolveReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		}
-
 
 		VkSubpassDescription subpass = {};
 		{
 			subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 			subpass.colorAttachmentCount = static_cast<uint32_t>(colorReferences.size());
 			subpass.pColorAttachments = colorReferences.data();
-
-			// Pass our resolve attachments to the sub pass
-			if (!renderPassCI.IsUseMRT)
-				subpass.pResolveAttachments = &resolveReference;
-
 			subpass.pDepthStencilAttachment = &depthReference;
 		}
 

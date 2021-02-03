@@ -17,15 +17,15 @@ namespace SmolEngine
 
 	struct OffscreenPass
 	{
-		FrameBufferAttachment color, depth, resolve;
-
-		std::array<VkClearAttachment, 3> clearAttachments;
+		FrameBufferAttachment color, depth;
+		std::array<VkClearAttachment, 2> clearAttachments;
 	};
 
 	struct DeferredPass
 	{
 		FrameBufferAttachment position, normals, color, depth;
 		VkDescriptorImageInfo positionImageInfo, normalsImageInfo, colorImageInfo;
+		VkSemaphore semaphore;
 
 		std::array<VkClearAttachment, 4> clearAttachments;
 	};

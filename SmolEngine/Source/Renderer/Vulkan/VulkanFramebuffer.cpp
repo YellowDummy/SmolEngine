@@ -5,6 +5,7 @@
 #include "Renderer/Vulkan/VulkanRenderPass.h"
 #include "Renderer/Vulkan/VulkanMemoryAllocator.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
+#include "Renderer/Vulkan/VulkanSemaphore.h"
 
 #include "../Libraries/imgui/examples/imgui_impl_vulkan.h"
 
@@ -30,26 +31,16 @@ namespace SmolEngine
 
 		// Color attachment
 		{
-			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, m_ColorFormat,
+			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+			AddAttachment(m_Specification.Width, m_Specification.Height, VK_SAMPLE_COUNT_1_BIT, usage, m_ColorFormat,
 				m_OffscreenPass.color.image, m_OffscreenPass.color.view, m_OffscreenPass.color.mem);
-		}
-
-		// Resolve attachment
-		{
-			if (!m_Specification.IsTargetsSwapchain) // overwise swapchain image will be used as resolve attachment
-			{
-				VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-				AddAttachment(m_Specification.Width, m_Specification.Height, VK_SAMPLE_COUNT_1_BIT, usage, m_ColorFormat,
-					m_OffscreenPass.resolve.image, m_OffscreenPass.resolve.view, m_OffscreenPass.resolve.mem);
-			}
 		}
 
 		// Depth stencil attachment
 		{
-			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+			VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, m_DepthFormat,
+			AddAttachment(m_Specification.Width, m_Specification.Height, VK_SAMPLE_COUNT_1_BIT, usage, m_DepthFormat,
 				m_OffscreenPass.depth.image, m_OffscreenPass.depth.view, m_OffscreenPass.depth.mem, imageAspect);
 		}
 
@@ -58,11 +49,10 @@ namespace SmolEngine
 
 		// Framebuffer creation
 		{
-			std::vector<VkImageView> attachments(3);
+			std::vector<VkImageView> attachments(2);
 			{
 				attachments[0] = m_OffscreenPass.color.view;
-				attachments[1] = m_OffscreenPass.resolve.view;
-				attachments[2] = m_OffscreenPass.depth.view;
+				attachments[1] = m_OffscreenPass.depth.view;
 			}
 
 			VkFramebufferCreateInfo fbufCreateInfo = {};
@@ -88,7 +78,7 @@ namespace SmolEngine
 
 				VkDescriptorImageInfo imageInfo = {};
 				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				imageInfo.imageView = m_OffscreenPass.resolve.view;
+				imageInfo.imageView = m_OffscreenPass.color.view;
 				imageInfo.sampler = m_Sampler;
 
 				m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(imageInfo);
@@ -99,7 +89,7 @@ namespace SmolEngine
 				m_VkFrameBuffers.resize(count);
 				for (uint32_t i = 0; i < count; ++i)
 				{
-					attachments[1] = VulkanContext::GetSwapchain().m_Buffers[i].View;
+					attachments[0] = VulkanContext::GetSwapchain().m_Buffers[i].View;
 					VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[i]));
 				}
 			}
@@ -111,12 +101,8 @@ namespace SmolEngine
 			m_OffscreenPass.clearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
 			m_OffscreenPass.clearAttachments[0].colorAttachment = 0;
 
-			m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_OffscreenPass.clearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_OffscreenPass.clearAttachments[1].colorAttachment = 0;
-
-			m_OffscreenPass.clearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			m_OffscreenPass.clearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };
+			m_OffscreenPass.clearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_OffscreenPass.clearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
 		}
 
 		return result == VK_SUCCESS;
@@ -202,6 +188,9 @@ namespace SmolEngine
 			m_DeferredPass.clearAttachments[3].clearValue.depthStencil = { 1.0f, 0 };
 		}
 
+		// Create a semaphore used to synchronize offscreen rendering and usage
+		VulkanSemaphore::CreateVkSemaphore(m_DeferredPass.semaphore);
+
 		// DescriptorImageInfo
 		{
 			//Position
@@ -278,7 +267,6 @@ namespace SmolEngine
 		{
 			FreeAttachment(m_OffscreenPass.color);
 			FreeAttachment(m_OffscreenPass.depth);
-			FreeAttachment(m_OffscreenPass.resolve);
 		}
 
 		// Deferred
@@ -349,8 +337,16 @@ namespace SmolEngine
 
 	void VulkanFramebuffer::SetClearColors(const glm::vec4& clearColors)
 	{
-		m_OffscreenPass.clearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
-		m_OffscreenPass.clearAttachments[1].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+		if (m_Specification.IsUseMRT)
+		{
+			m_DeferredPass.clearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_DeferredPass.clearAttachments[1].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+			m_DeferredPass.clearAttachments[2].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+		}
+		else
+		{
+			m_OffscreenPass.clearAttachments[0].clearValue = { { clearColors.r,  clearColors.g,  clearColors.b,  clearColors.a } };
+		}
 	}
 
 	const FramebufferSpecification& VulkanFramebuffer::GetSpecification() const

@@ -19,6 +19,10 @@ namespace SmolEngine
 		
 		bool Init(const VulkanDevice* device, const VulkanCommandBuffer* commandBuffer);
 
+		/// Helpres
+
+		static void CreateVkSemaphore(VkSemaphore& outSemapthore);
+
 		/// Getters
 
 		const VkSemaphore GetPresentCompleteSemaphore() const;

@@ -124,8 +124,22 @@ namespace SmolEngine
 		if(m_RenderpassFramebuffer)
 			m_RenderpassFramebuffer->Bind();
 #else
-		VkClearValue clearValues[3];
-		clearValues[2].depthStencil = { 1.0f, 0 };
+		std::vector<VkClearValue> clearValues;
+		if (m_RenderpassFramebuffer)
+		{
+			if (m_RenderpassFramebuffer->GetSpecification().IsUseMRT)
+			{
+				clearValues.resize(4);
+				clearValues[0].color = clearValues[1].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+				clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+				clearValues[3].depthStencil = { 1.0f, 0 };
+			}
+			else
+			{
+				clearValues.resize(2);
+				clearValues[1].depthStencil = { 1.0f, 0 };
+			}
+		}
 
 		uint32_t width = framebuffer->GetSpecification().Width;
 		uint32_t height = framebuffer->GetSpecification().Height;
@@ -142,8 +156,8 @@ namespace SmolEngine
 			renderPassBeginInfo.framebuffer = selectedFramebuffer;
 			renderPassBeginInfo.renderArea.extent.width = width;
 			renderPassBeginInfo.renderArea.extent.height = height;
-			renderPassBeginInfo.clearValueCount = 3;
-			renderPassBeginInfo.pClearValues = clearValues;
+			renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+			renderPassBeginInfo.pClearValues = clearValues.data();
 		}
 
 		vkCmdBeginRenderPass(m_CommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);

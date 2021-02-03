@@ -172,10 +172,14 @@ namespace SmolEngine
 		// Multi sampling state
 		VkPipelineMultisampleStateCreateInfo multisampleState = {};
 		multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
-		multisampleState.sampleShadingEnable = VK_TRUE;
-		multisampleState.minSampleShading = 0.2f;
-		multisampleState.pSampleMask = nullptr;
+		multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+		if (m_VulkanPipelineSpecification.IsUseMRT)
+		{
+			multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
+			multisampleState.sampleShadingEnable = VK_TRUE;
+			multisampleState.minSampleShading = 0.2f;
+			multisampleState.pSampleMask = nullptr;
+		}
 
 		uint32_t vertexInputAttributsCounts = 0;
 		for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
@@ -268,7 +272,6 @@ namespace SmolEngine
 		pipelineCreateInfo.pMultisampleState = &multisampleState;
 		pipelineCreateInfo.pViewportState = &viewportState;
 		pipelineCreateInfo.pDepthStencilState = &depthStencilState;
-		pipelineCreateInfo.renderPass = m_TargetRenderPass;
 		pipelineCreateInfo.pDynamicState = &dynamicState;
 
 		std::string name = std::string(m_FilePath + "_pipeline_" + std::to_string(m_PipelineCaches.size()) + ".cached");

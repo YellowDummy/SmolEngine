@@ -3,6 +3,7 @@
 
 #include "Renderer/Vulkan/VulkanCommandBuffer.h"
 #include "Renderer/Vulkan/VulkanDevice.h"
+#include "Renderer/Vulkan/VulkanContext.h"
 
 namespace SmolEngine
 {
@@ -61,6 +62,17 @@ namespace SmolEngine
         }
 
         return true;
+    }
+
+    void VulkanSemaphore::CreateVkSemaphore(VkSemaphore& outSemapthore)
+    {
+        VkSemaphoreCreateInfo semaphoreCreateInfo = {};
+        {
+            semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+        }
+
+        VK_CHECK_RESULT(vkCreateSemaphore(VulkanContext::GetDevice().GetLogicalDevice(),
+            &semaphoreCreateInfo, nullptr, &outSemapthore));
     }
 
     const VkSemaphore VulkanSemaphore::GetPresentCompleteSemaphore() const
