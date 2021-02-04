@@ -9,11 +9,10 @@ layout (binding = 5) uniform samplerCube samplerIrradiance;
 layout (binding = 6) uniform sampler2D samplerBRDFLUT;
 layout (binding = 7) uniform samplerCube prefilteredMap;
 
-layout (constant_id = 0) const int NUM_SAMPLES = 8;
-
 layout (location = 0) in vec2 inUV;
-
 layout (location = 0) out vec4 outFragcolor;
+
+ivec2 UV = ivec2(0, 0);
 
 struct Params
 {
@@ -28,7 +27,23 @@ layout (std140, binding = 15) uniform UBOParams
     Params ubo;
 };
 
+layout (constant_id = 0) const int NUM_SAMPLES = 8;
+
+// Manual resolve for MSAA samples 
+vec4 resolve(sampler2DMS tex, ivec2 uv)
+{
+	vec4 result = vec4(0.0);	   
+	for (int i = 0; i < NUM_SAMPLES; i++)
+	{
+		vec4 val = texelFetch(tex, uv, i); 
+		result += val;
+	}    
+	// Average resolved samples
+	return result / float(NUM_SAMPLES);
+}
+
 #define PI 3.1415926535897932384626433832795
+#define ALBEDO pow(resolve(samplerAlbedo, UV).rgb, vec3(2.2))
 
 // From http://filmicgames.com/archives/75
 vec3 Uncharted2Tonemap(vec3 x)
@@ -83,7 +98,7 @@ vec3 prefilteredReflection(vec3 R, float roughness)
 	return mix(a, b, lod - lodf);
 }
 
-vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float roughness, vec3 albedo)
+vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float roughness)
 {
 	// Precalculate vectors and dot products	
 	vec3 H = normalize (V + L);
@@ -102,26 +117,13 @@ vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float
 		vec3 F = F_Schlick(dotNV, F0);		
 		vec3 spec = D * F * G / (4.0 * dotNL * dotNV + 0.001);		
 		vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);			
-		color += (kD * albedo / PI + spec) * dotNL;
+		color += (kD * ALBEDO / PI + spec) * dotNL;
 	}
 
 	return color;
 }
 
-// Manual resolve for MSAA samples 
-vec4 resolve(sampler2DMS tex, ivec2 uv)
-{
-	vec4 result = vec4(0.0);	   
-	for (int i = 0; i < NUM_SAMPLES; i++)
-	{
-		vec4 val = texelFetch(tex, uv, i); 
-		result += val;
-	}    
-	// Average resolved samples
-	return result / float(NUM_SAMPLES);
-}
-
-vec3 calculateLighting(vec3 pos, vec3 normal, vec4 albedo)
+vec3 calculateLighting(vec3 pos, vec3 normal)
 {
 	vec3 result = vec3(0.0);
 
@@ -145,12 +147,12 @@ vec3 calculateLighting(vec3 pos, vec3 normal, vec4 albedo)
 		// Diffuse part
 		vec3 N = normalize(normal);
 		float NdotL = max(0.0, dot(N, L));
-		vec3 diff = ubo.lightColors[i].rgb * albedo.rgb * NdotL * atten;
+		vec3 diff = ubo.lightColors[i].rgb * ALBEDO * NdotL * atten;
 
 		// Specular part
 		vec3 R = reflect(-L, N);
 		float NdotR = max(0.0, dot(R, V));
-		vec3 spec = ubo.lightColors[i].rgb * albedo.a * pow(NdotR, 8.0) * atten;
+		vec3 spec = ubo.lightColors[i].rgb * 1.0 * pow(NdotR, 8.0) * atten;
 
 		result += diff + spec;	
 	}
@@ -161,61 +163,58 @@ vec3 calculateLighting(vec3 pos, vec3 normal, vec4 albedo)
 void main() 
 {
 	ivec2 attDim = textureSize(samplerPosition);
-	ivec2 UV = ivec2(inUV * attDim);
+	UV = ivec2(inUV * attDim);
+
+	// Getters
+
+    vec3 alb = resolve(samplerAlbedo, UV).rgb;
+	vec3 pos =  resolve(samplerPosition, UV).rgb;
+	vec3 N = resolve(samplerNormal, UV).rgb;
+	vec3 pbrParams = resolve(samplerPBR, UV).rgb;
+
+	float metallic = pbrParams.x;
+    float roughness = pbrParams.y;
+    vec3 ao = vec3(pbrParams.z * pbrParams.z * pbrParams.z , pbrParams.z  * pbrParams.z * pbrParams.z, pbrParams.z * pbrParams.z * pbrParams.z);
+
+	//
+
+	vec3 V = normalize(ubo.viewPos.xyz - pos);
+	vec3 R = reflect(-V, N); 
+
+	vec3 F0 = vec3(0.04); 
+	F0 = mix(F0, ALBEDO, metallic);
+
+	vec3 Lo = vec3(0.0);
+	for(int i = 0; i < ubo.lights[i].length(); i++) 
+	{
+		vec3 L = normalize(ubo.lights[i].xyz - pos);
+		Lo += specularContribution(L, V, N, F0, metallic, roughness);
+	} 
+
+	vec2 brdf = texture(samplerBRDFLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+	vec3 reflection = prefilteredReflection(R, roughness).rgb;	
+	vec3 irradiance = texture(samplerIrradiance, N).rgb;
+
+	// Diffuse based on irradiance
+	vec3 diffuse = irradiance * ALBEDO;	
+
+	vec3 F = F_SchlickR(max(dot(N, V), 0.0), F0, roughness);
+
+	// Specular reflectance
+	vec3 specular = reflection * (F * brdf.x + brdf.y);
 
 	// Ambient part
-
-	vec4 resolvedAlb = resolve(samplerAlbedo, UV);
-    vec3 alb = pow(resolvedAlb.rgb, vec3(2.2));
-	vec3 fragColor = vec3(0.0);
+	vec3 kD = 1.0 - F;
+	kD *= 1.0 - metallic;	  
+	vec3 ambient = (kD * diffuse + specular) * ao;
 	
-	// Calualte lighting for every MSAA sample
-	for (int i = 0; i < NUM_SAMPLES; i++)
-	{ 
-		vec3 pos = texelFetch(samplerPosition, UV, i).rgb;
-		vec3 normal = texelFetch(samplerNormal, UV, i).rgb;
-		vec4 albedo = texelFetch(samplerAlbedo, UV, i);
-        vec4 pbrParams = texelFetch(samplerPBR, UV, i);
+	vec3 color = ambient + Lo;
 
-        vec3 V = normalize(ubo.viewPos - vec4(pos, 1)).rgb;
-	    vec3 R = reflect(-V, normal); 
+	// Tone mapping
+	color = Uncharted2Tonemap(color * 4.0);
+	color = color * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
+	// Gamma correction
+	color = pow(color, vec3(1.0f / 2.0));
 
-        float metallic = pbrParams.r;
-        float roughness = pbrParams.g;
-        vec3 ao = vec3(pbrParams.b, pbrParams.b, pbrParams.b);
-
-        vec3 F0 = vec3(0.04); 
-        F0 = mix(F0, alb, metallic);
-
-        vec3 Lo = vec3(0.0);
-	    for(int i = 0; i < ubo.lights.length(); i++)
-        {
-            vec3 L = normalize(ubo.lights[i].xyz - ubo.viewPos.xyz);
-		    Lo += specularContribution(L, V, normal, F0, metallic, roughness, alb);
-        }
-
-        vec2 brdf = texture(samplerBRDFLUT, vec2(max(dot(normal, V), 0.0), roughness)).rg;
-        vec3 reflection = prefilteredReflection(R, roughness).rgb;	
-        vec3 irradiance = texture(samplerIrradiance, normal).rgb;
-
-        // Diffuse based on irradiance
-	    vec3 diffuse = irradiance * alb;
-
-        vec3 F = F_SchlickR(max(dot(normal, V), 0.0), F0, roughness);
-
-        // Specular reflectance
-        vec3 specular = reflection * (F * brdf.x + brdf.y);
-
-	    // Ambient part
-        vec3 kD = 1.0 - F;
-	    kD *= 1.0 - metallic;	  
-	    vec3 ambient = (kD * diffuse + specular) * ao;
-	    vec3 color = ambient + Lo;
-
-		fragColor += color;
-	}
-
-	fragColor = alb.rgb + fragColor / float(NUM_SAMPLES);
-   
-	outFragcolor = vec4(fragColor, 1.0);	
+	outFragcolor = vec4(color, 1.0);
 }

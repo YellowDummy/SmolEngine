@@ -121,6 +121,7 @@ namespace SmolEngine
 			blendAttachmentState.resize(1);
 			blendAttachmentState[0].colorWriteMask = 0xf;
 			blendAttachmentState[0].blendEnable = VK_FALSE;
+
 			if (m_VulkanPipelineSpecification.IsAlphaBlendingEnabled)
 			{
 				blendAttachmentState[0].blendEnable = VK_TRUE;
@@ -174,14 +175,10 @@ namespace SmolEngine
 		// Multi sampling state
 		VkPipelineMultisampleStateCreateInfo multisampleState = {};
 		multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-		if (m_VulkanPipelineSpecification.IsUseMRT)
-		{
-			multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
-			multisampleState.sampleShadingEnable = VK_TRUE;
-			multisampleState.minSampleShading = 0.2f;
-			multisampleState.pSampleMask = nullptr;
-		}
+		multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
+		multisampleState.sampleShadingEnable = VK_TRUE;
+		multisampleState.minSampleShading = 0.2f;
+		multisampleState.pSampleMask = nullptr;
 
 		uint32_t vertexInputAttributsCounts = 0;
 		for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
@@ -236,33 +233,6 @@ namespace SmolEngine
 			vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
 			vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
 			vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
-		}
-
-		if (m_VulkanPipelineSpecification.IsUseMRT)
-		{
-			auto& stages = shader->GetVkPipelineShaderStages();
-			for (auto& stage : stages)
-			{
-				if (stage.stage == VK_SHADER_STAGE_FRAGMENT_BIT)
-				{
-					// Use specialization constants to pass number of samples to the shader (used for MSAA resolve)
-					VkSpecializationMapEntry specializationEntry{};
-					specializationEntry.constantID = 0;
-					specializationEntry.offset = 0;
-					specializationEntry.size = sizeof(uint32_t);
-
-					uint32_t specializationData = VulkanContext::GetDevice().GetMSAASamplesCount();
-
-					VkSpecializationInfo specializationInfo;
-					specializationInfo.mapEntryCount = 1;
-					specializationInfo.pMapEntries = &specializationEntry;
-					specializationInfo.dataSize = sizeof(specializationData);
-					specializationInfo.pData = &specializationData;
-
-					stage.pSpecializationInfo = &specializationInfo;
-					break;
-				}
-			}
 		}
 
 		// Set pipeline shader stage info

@@ -13,7 +13,7 @@ namespace SmolEngine
 {
 	struct UBOMRTParams
 	{
-		glm::vec4 lights[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)} };
+		glm::vec4 lights[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)} };
 		glm::vec4 lightsColors[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)} };
 		glm::vec4 viewPos;
 		float radius = 2.0f;

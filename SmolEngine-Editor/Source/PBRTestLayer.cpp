@@ -262,7 +262,6 @@ namespace SmolEngine
 	{
 		bool useMainCmdBuffer = true; // executed at swapbuffers() inside VulkanContex class
 
-
 		// Skybox
 		{
 			m_SkyboxPipeline->BeginCommandBuffer(useMainCmdBuffer);

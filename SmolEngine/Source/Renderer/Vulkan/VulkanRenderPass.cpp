@@ -6,17 +6,18 @@ namespace SmolEngine
 {
     void VulkanRenderPass::Init()
     {
-		// Offscreen
+		// MSAA Offscreen
 		{
 			RenderPassCI info = {};
+			info.ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 			CreateRenderPass(info, m_RenderPassFramebuffer);
 		}
 
-		// Swapchain
+		// MSAA Swapchain
 		{
 			RenderPassCI info = {};
-			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			info.ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 			CreateRenderPass(info, m_RenderPassSwapchain);
 		}
@@ -24,6 +25,7 @@ namespace SmolEngine
 		// Deferred MSAA
 		{
 			RenderPassCI info = {};
+			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			info.IsUseMRT = true;
 
 			CreateRenderPass(info, m_MSAADeferredRenderPass);
@@ -108,10 +110,11 @@ namespace SmolEngine
         }
         else
         {
-			attachments.resize(2);
+			attachments.resize(3);
 
+			// Multisampled color attachment that we render to
 			attachments[0].format = colorFormat;
-			attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+			attachments[0].samples = MSAASamplesCount;
 			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -119,14 +122,26 @@ namespace SmolEngine
 			attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[0].finalLayout = renderPassCI.ColorAttachmentFinalLayout;
 
-			attachments[1].format = depthFormat;
+			// This is the frame buffer attachment to where the multisampled image
+			// will be resolved to and which will be presented to the swapchain
+			attachments[1].format = colorFormat;
 			attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
 			attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			attachments[1].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
+			attachments[1].finalLayout = renderPassCI.ResolveAttachmentFinalLayout;
+
+			// Multisampled depth attachment we render to
+			attachments[2].format = depthFormat;
+			attachments[2].samples = MSAASamplesCount;
+			attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[2].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
         }
 
 
@@ -157,8 +172,15 @@ namespace SmolEngine
 
 		VkAttachmentReference depthReference = {};
 		{
-			depthReference.attachment = renderPassCI.IsUseMRT ? 4 : 1;
+			depthReference.attachment = renderPassCI.IsUseMRT ? 4 : 2;
 			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		}
+
+		// Resolve attachment reference for the color attachment
+		VkAttachmentReference resolveReference = {};
+		{
+			resolveReference.attachment = 1;
+			resolveReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		}
 
 		VkSubpassDescription subpass = {};
@@ -167,6 +189,9 @@ namespace SmolEngine
 			subpass.colorAttachmentCount = static_cast<uint32_t>(colorReferences.size());
 			subpass.pColorAttachments = colorReferences.data();
 			subpass.pDepthStencilAttachment = &depthReference;
+
+			if (!renderPassCI.IsUseMRT)
+				subpass.pResolveAttachments = &resolveReference;
 		}
 
 		// Use subpass dependencies for attachment layout transitions

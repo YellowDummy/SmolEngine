@@ -144,8 +144,8 @@ namespace SmolEngine
 		}
 		else
 		{
-			clearValues.resize(2);
-			clearValues[1].depthStencil = { 1.0f, 0 };
+			clearValues.resize(3);
+			clearValues[2].depthStencil = { 1.0f, 0 };
 
 			if (specs.IsTargetsSwapchain)
 				selectedPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout();

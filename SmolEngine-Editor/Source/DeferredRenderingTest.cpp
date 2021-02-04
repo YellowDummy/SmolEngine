@@ -183,7 +183,7 @@ namespace SmolEngine
 			m_CombinationPipeline->BeginCommandBuffer(true);
 			m_CombinationPipeline->BeginBufferSubmit();
 
-			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 0) * glm::vec4(-1.0f, 1.0f, -1.0f, 1.0f);
+			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 1);
 
 			m_CombinationPipeline->SumbitUniformBuffer(15, sizeof(UBOMRTParams), &m_Params);
 

@@ -24,7 +24,8 @@ namespace SmolEngine
 
 		struct RenderPassCI
 		{
-			VkImageLayout                 ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			VkImageLayout                 ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			VkImageLayout                 ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			VkImageLayout                 DepthAttachmentFinalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 			bool                          IsUseMRT = false;
 		};

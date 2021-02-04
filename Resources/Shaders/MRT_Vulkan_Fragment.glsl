@@ -35,10 +35,11 @@ void main()
 	float roughness = texture(roughnessMap, inUV).r;
     float ao = texture(aoMap, inUV).r;
 
-    vec4 pbrResult = vec4(metallic, roughness, ao, 1);
-
 	outAlbedo = vec4(albedo, 1.0);
     outNormal = vec4(N, 1.0);
     outPosition = vec4(inWorldPos, 1.0);
-    outPBR = pbrResult;
+
+    outPBR.x =  metallic;
+	outPBR.y =  roughness;
+	outPBR.z = ao;
 }
