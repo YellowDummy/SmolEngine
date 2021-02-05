@@ -133,28 +133,28 @@ namespace SmolEngine
 		// Position
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(width, height, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
+			AddAttachment(width, height, VK_SAMPLE_COUNT_1_BIT, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
 				m_DeferredPass.position.image, m_DeferredPass.position.view, m_DeferredPass.position.mem);
 		}
 
 		// Normals
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(width, height, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
+			AddAttachment(width, height, VK_SAMPLE_COUNT_1_BIT, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
 				m_DeferredPass.normals.image, m_DeferredPass.normals.view, m_DeferredPass.normals.mem);
 		}
 
 		// PBR
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(width, height, m_MSAASamples, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
+			AddAttachment(width, height, VK_SAMPLE_COUNT_1_BIT, usage, VK_FORMAT_R16G16B16A16_SFLOAT,
 				m_DeferredPass.pbr.image, m_DeferredPass.pbr.view, m_DeferredPass.pbr.mem);
 		}
 
 		// Albedo (color)
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-			AddAttachment(width, height, m_MSAASamples, usage, m_ColorFormat,
+			AddAttachment(width, height, VK_SAMPLE_COUNT_1_BIT, usage, m_ColorFormat,
 				m_DeferredPass.color.image, m_DeferredPass.color.view, m_DeferredPass.color.mem);
 		}
 
@@ -162,7 +162,7 @@ namespace SmolEngine
 		{
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			AddAttachment(width, height, m_MSAASamples, usage, m_DepthFormat,
+			AddAttachment(width, height, VK_SAMPLE_COUNT_1_BIT, usage, m_DepthFormat,
 				m_DeferredPass.depth.image, m_DeferredPass.depth.view, m_DeferredPass.depth.mem, imageAspect);
 		}
 

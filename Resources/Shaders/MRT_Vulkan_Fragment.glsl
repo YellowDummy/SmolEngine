@@ -24,18 +24,18 @@ vec3 calculateNormal()
 	vec3 T = normalize(inTangent.xyz);
 	vec3 B = normalize(cross(N, T));
 	mat3 TBN = mat3(T, B, N);
-	return normalize(TBN * tangentNormal);
+
+	return TBN * normalize(texture(normalMap, inUV).xyz * 2.0 - vec3(1.0));
 }
 
 void main()
 {		
 	vec3 N = calculateNormal();
-    vec3 albedo = texture(albedoMap, inUV).rgb;
 	float metallic = texture(metallicMap, inUV).r;
 	float roughness = texture(roughnessMap, inUV).r;
     float ao = texture(aoMap, inUV).r;
 
-	outAlbedo = vec4(albedo, 1.0);
+	outAlbedo = texture(albedoMap, inUV);
     outNormal = vec4(N, 1.0);
     outPosition = vec4(inWorldPos, 1.0);
 

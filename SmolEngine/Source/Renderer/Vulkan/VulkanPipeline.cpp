@@ -83,19 +83,24 @@ namespace SmolEngine
 		// Input assembly state describes how primitives are assembled
 		// This pipeline will assemble vertex data as a triangle lists (though we only use one triangle)
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
-		inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssemblyState.topology = GetVkTopology(mode);
+		{
+			inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+			inputAssemblyState.topology = GetVkTopology(mode);
+			inputAssemblyState.primitiveRestartEnable = VK_FALSE;
+		}
 
 		// Rasterization state
 		VkPipelineRasterizationStateCreateInfo rasterizationState = {};
-		rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		rasterizationState.polygonMode = GetVkPolygonMode(mode);
-		rasterizationState.cullMode = VK_CULL_MODE_NONE;
-		rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-		rasterizationState.depthClampEnable = VK_TRUE;
-		rasterizationState.rasterizerDiscardEnable = VK_FALSE;
-		rasterizationState.depthBiasEnable = VK_FALSE;
-		rasterizationState.lineWidth = 1.0f;
+		{
+			rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+			rasterizationState.polygonMode = GetVkPolygonMode(mode);
+			rasterizationState.cullMode = GetVkCullMode(mode);
+			rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+			rasterizationState.depthClampEnable = VK_TRUE;
+			rasterizationState.rasterizerDiscardEnable = VK_FALSE;
+			rasterizationState.depthBiasEnable = VK_FALSE;
+			rasterizationState.lineWidth = 1.0f;
+		}
 
 		// Color blend state describes how blend factors are calculated (if used)
 		// We need one blend attachment state per color attachment (even if blending is not used)
@@ -135,50 +140,65 @@ namespace SmolEngine
 		}
 
 		VkPipelineColorBlendStateCreateInfo colorBlendState = {};
-		colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-		colorBlendState.attachmentCount = static_cast<uint32_t>(blendAttachmentState.size());
-		colorBlendState.pAttachments = blendAttachmentState.data();
+		{
+			colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+			colorBlendState.attachmentCount = static_cast<uint32_t>(blendAttachmentState.size());
+			colorBlendState.pAttachments = blendAttachmentState.data();
+		}
 
 		// Viewport state sets the number of viewports and scissor used in this pipeline
 		// Note: This is actually overridden by the dynamic states (see below)
 		VkPipelineViewportStateCreateInfo viewportState = {};
-		viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-		viewportState.viewportCount = 1;
-		viewportState.scissorCount = 1;
+		{
+			viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+			viewportState.viewportCount = 1;
+			viewportState.scissorCount = 1;
+		}
 
 		// Enable dynamic states
 		// Most states are baked into the pipeline, but there are still a few dynamic states that can be changed within a command buffer
 		// To be able to change these we need do specify which dynamic states will be changed using this pipeline. Their actual states are set later on in the command buffer.
 		// For this example we will set the viewport and scissor using dynamic states
-		std::vector<VkDynamicState> dynamicStateEnables;
-		dynamicStateEnables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
-		dynamicStateEnables.push_back(VK_DYNAMIC_STATE_SCISSOR);
 		VkPipelineDynamicStateCreateInfo dynamicState = {};
-		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-		dynamicState.pDynamicStates = dynamicStateEnables.data();
-		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStateEnables.size());
+		std::vector<VkDynamicState> dynamicStateEnables;
+		{
+			dynamicStateEnables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
+			dynamicStateEnables.push_back(VK_DYNAMIC_STATE_SCISSOR);
+
+			dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+			dynamicState.pDynamicStates = dynamicStateEnables.data();
+			dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStateEnables.size());
+		}
 
 		// Depth and stencil state containing depth and stencil compare and test operations
 		// We only use depth tests and want depth tests and writes to be enabled and compare with less or equal
 		VkPipelineDepthStencilStateCreateInfo depthStencilState = {};
-		depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencilState.depthTestEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;;
-		depthStencilState.depthWriteEnable = VK_TRUE;
-		depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-		depthStencilState.depthBoundsTestEnable = VK_FALSE;
-		depthStencilState.back.failOp = VK_STENCIL_OP_KEEP;
-		depthStencilState.back.passOp = VK_STENCIL_OP_KEEP;
-		depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
-		depthStencilState.stencilTestEnable = VK_FALSE;
-		depthStencilState.front = depthStencilState.back;
+		{
+			depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+			depthStencilState.depthTestEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;
+			depthStencilState.depthWriteEnable = VK_TRUE;
+			depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+			depthStencilState.depthBoundsTestEnable = VK_FALSE;
+			depthStencilState.back.failOp = VK_STENCIL_OP_KEEP;
+			depthStencilState.back.passOp = VK_STENCIL_OP_KEEP;
+			depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
+			depthStencilState.stencilTestEnable = VK_FALSE;
+		}
 
 		// Multi sampling state
 		VkPipelineMultisampleStateCreateInfo multisampleState = {};
-		multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
-		multisampleState.sampleShadingEnable = VK_TRUE;
-		multisampleState.minSampleShading = 0.2f;
-		multisampleState.pSampleMask = nullptr;
+		{
+			multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+			multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+
+			if (!m_VulkanPipelineSpecification.IsUseMRT)
+			{
+				multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
+				multisampleState.sampleShadingEnable = VK_TRUE;
+				multisampleState.minSampleShading = 0.2f;
+				multisampleState.pSampleMask = nullptr;
+			}
+		}
 
 		uint32_t vertexInputAttributsCounts = 0;
 		for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
@@ -226,13 +246,15 @@ namespace SmolEngine
 
 		// Vertex input state used for pipeline creation
 		VkPipelineVertexInputStateCreateInfo vertexInputState = {};
-		vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		if (m_VulkanPipelineSpecification.VertexInputInfos.size() > 0)
 		{
-			vertexInputState.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindings.size());
-			vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
-			vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
-			vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
+			vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+			if (m_VulkanPipelineSpecification.VertexInputInfos.size() > 0)
+			{
+				vertexInputState.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindings.size());
+				vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
+				vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributs.size());
+				vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
+			}
 		}
 
 		// Set pipeline shader stage info
@@ -501,6 +523,8 @@ namespace SmolEngine
 			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
 		case SmolEngine::DrawMode::Fan:
 			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
+		case SmolEngine::DrawMode::Screen:
+			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		default:
 			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		}
@@ -516,8 +540,27 @@ namespace SmolEngine
 			return VkPolygonMode::VK_POLYGON_MODE_LINE;
 		case SmolEngine::DrawMode::Fan:
 			return VkPolygonMode::VK_POLYGON_MODE_LINE;
+		case SmolEngine::DrawMode::Screen:
+			return VK_POLYGON_MODE_FILL;
 		default:
 			return VkPolygonMode::VK_POLYGON_MODE_FILL;
+		}
+	}
+
+	VkCullModeFlags VulkanPipeline::GetVkCullMode(DrawMode mode)
+	{
+		switch (mode)
+		{
+		case SmolEngine::DrawMode::Triangle:
+			return VK_CULL_MODE_BACK_BIT;
+		case SmolEngine::DrawMode::Line:
+			return VK_CULL_MODE_BACK_BIT;
+		case SmolEngine::DrawMode::Fan:
+			return VK_CULL_MODE_BACK_BIT;
+		case SmolEngine::DrawMode::Screen:
+			return VK_CULL_MODE_FRONT_BIT;
+		default:
+			return VK_CULL_MODE_BACK_BIT;
 		}
 	}
 }

@@ -115,7 +115,7 @@ namespace SmolEngine
 			m_VextexArray = nullptr;
 	}
 
-	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer>& framebuffer)
+	void GraphicsPipeline::BeginRenderPass(Ref<Framebuffer>& framebuffer, bool verticalFlip)
 	{
 		m_RenderpassFramebuffer = framebuffer;
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -166,12 +166,22 @@ namespace SmolEngine
 
 		// Update dynamic viewport state
 		VkViewport viewport = {};
-		viewport.x = 0;
-		viewport.y = (float)height;
-		viewport.height = -(float)height;
-		viewport.width = (float)width;
-		viewport.minDepth = (float)0.0f;
-		viewport.maxDepth = (float)1.0f;
+		if (verticalFlip)
+		{
+			viewport.x = 0;
+			viewport.y = (float)height;
+			viewport.height = -(float)height;
+			viewport.width = (float)width;
+			viewport.minDepth = (float)0.0f;
+			viewport.maxDepth = (float)1.0f;
+		}
+		else
+		{
+			viewport.height = (float)height;
+			viewport.width = (float)width;
+			viewport.minDepth = (float)0.0f;
+			viewport.maxDepth = (float)1.0f;
+		}
 		vkCmdSetViewport(m_CommandBuffer, 0, 1, &viewport);
 
 		// Update dynamic scissor state
@@ -345,7 +355,7 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::Draw(uint32_t vertextCount, DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex, bool zeroVertexInput)
+	void GraphicsPipeline::Draw(uint32_t vertextCount, DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_VextexArray->Bind();
@@ -374,7 +384,7 @@ namespace SmolEngine
 		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
 		// Bind Vertex Buffer
-		if (!zeroVertexInput)
+		if (mode != DrawMode::Screen)
 		{
 			VkDeviceSize offsets[1] = { 0 };
 			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);

@@ -1,9 +1,9 @@
 #version 450
 
-layout (binding = 1) uniform sampler2DMS samplerPosition;
-layout (binding = 2) uniform sampler2DMS samplerNormal;
-layout (binding = 3) uniform sampler2DMS samplerAlbedo;
-layout (binding = 4) uniform sampler2DMS samplerPBR;
+layout (binding = 1) uniform sampler2D samplerPosition;
+layout (binding = 2) uniform sampler2D samplerNormal;
+layout (binding = 3) uniform sampler2D samplerAlbedo;
+layout (binding = 4) uniform sampler2D samplerPBR;
 
 layout (binding = 5) uniform samplerCube samplerIrradiance;
 layout (binding = 6) uniform sampler2D samplerBRDFLUT;
@@ -11,8 +11,6 @@ layout (binding = 7) uniform samplerCube prefilteredMap;
 
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outFragcolor;
-
-ivec2 UV = ivec2(0, 0);
 
 struct Params
 {
@@ -28,22 +26,11 @@ layout (std140, binding = 15) uniform UBOParams
 };
 
 layout (constant_id = 0) const int NUM_SAMPLES = 8;
+layout (constant_id = 1) const float MAX_REFLECTION_LOD = 9.0;
 
-// Manual resolve for MSAA samples 
-vec4 resolve(sampler2DMS tex, ivec2 uv)
-{
-	vec4 result = vec4(0.0);	   
-	for (int i = 0; i < NUM_SAMPLES; i++)
-	{
-		vec4 val = texelFetch(tex, uv, i); 
-		result += val;
-	}    
-	// Average resolved samples
-	return result / float(NUM_SAMPLES);
-}
 
 #define PI 3.1415926535897932384626433832795
-#define ALBEDO pow(resolve(samplerAlbedo, UV).rgb, vec3(2.2))
+#define ALBEDO pow(texture(samplerAlbedo, inUV).rgb, vec3(2.2))
 
 // From http://filmicgames.com/archives/75
 vec3 Uncharted2Tonemap(vec3 x)
@@ -89,7 +76,6 @@ vec3 F_SchlickR(float cosTheta, vec3 F0, float roughness)
 
 vec3 prefilteredReflection(vec3 R, float roughness)
 {
-	const float MAX_REFLECTION_LOD = 9.0; // todo: param/const
 	float lod = roughness * MAX_REFLECTION_LOD;
 	float lodf = floor(lod);
 	float lodc = ceil(lod);
@@ -160,21 +146,18 @@ vec3 calculateLighting(vec3 pos, vec3 normal)
 	return result;
 }
 
+
 void main() 
 {
-	ivec2 attDim = textureSize(samplerPosition);
-	UV = ivec2(inUV * attDim);
-
 	// Getters
-
-    vec3 alb = resolve(samplerAlbedo, UV).rgb;
-	vec3 pos =  resolve(samplerPosition, UV).rgb;
-	vec3 N = resolve(samplerNormal, UV).rgb;
-	vec3 pbrParams = resolve(samplerPBR, UV).rgb;
+	
+	vec3 pos = texture(samplerPosition, inUV).rgb;
+	vec3 N =  texture(samplerNormal, inUV).rgb;
+	vec3 pbrParams = texture(samplerPBR, inUV).rgb;
 
 	float metallic = pbrParams.x;
     float roughness = pbrParams.y;
-    vec3 ao = vec3(pbrParams.z * pbrParams.z * pbrParams.z , pbrParams.z  * pbrParams.z * pbrParams.z, pbrParams.z * pbrParams.z * pbrParams.z);
+    vec3 ao = vec3(pbrParams.z , pbrParams.z, pbrParams.z);
 
 	//
 

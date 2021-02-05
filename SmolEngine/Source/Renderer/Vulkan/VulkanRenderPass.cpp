@@ -60,7 +60,7 @@ namespace SmolEngine
 
 			// Position
 			attachments[0].format = VK_FORMAT_R16G16B16A16_SFLOAT;
-			attachments[0].samples = MSAASamplesCount;
+			attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
 			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -70,7 +70,7 @@ namespace SmolEngine
 
 			// Normal
 			attachments[1].format = VK_FORMAT_R16G16B16A16_SFLOAT;
-			attachments[1].samples = MSAASamplesCount;
+			attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
 			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -80,7 +80,7 @@ namespace SmolEngine
 
 			// PBR: Metallic, Roughness, AO
 			attachments[2].format = VK_FORMAT_R16G16B16A16_SFLOAT;
-			attachments[2].samples = MSAASamplesCount;
+			attachments[2].samples = VK_SAMPLE_COUNT_1_BIT;
 			attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -90,7 +90,7 @@ namespace SmolEngine
 
 			// Color
 			attachments[3].format = colorFormat;
-			attachments[3].samples = MSAASamplesCount;
+			attachments[3].samples = VK_SAMPLE_COUNT_1_BIT;
 			attachments[3].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			attachments[3].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 			attachments[3].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -100,7 +100,7 @@ namespace SmolEngine
 
 			// Depth
 			attachments[4].format = depthFormat;
-			attachments[4].samples = MSAASamplesCount;
+			attachments[4].samples = VK_SAMPLE_COUNT_1_BIT;
 			attachments[4].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			attachments[4].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 			attachments[4].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;

@@ -24,6 +24,7 @@ layout (location = 4) out vec4 outTangent;
 void main()
 {
 	vec3 locPos = vec3(model * vec4(a_Position, 1.0));
+	
 	outWorldPos = locPos;
 	outNormal = mat3(model) * a_Normal;
 	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);

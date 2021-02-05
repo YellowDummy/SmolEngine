@@ -59,6 +59,8 @@ namespace SmolEngine
 
 		VkPolygonMode GetVkPolygonMode(DrawMode mode);
 
+		VkCullModeFlags GetVkCullMode(DrawMode mode);
+
 	private:
 
 		VkPipelineLayout                                m_PipelineLayout = VK_NULL_HANDLE;

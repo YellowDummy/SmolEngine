@@ -17,6 +17,7 @@ layout (location = 0) out vec3 outWorldPos;
 layout (location = 1) out vec3 outNormal;
 layout (location = 2) out vec2 outUV;
 layout (location = 3) out vec4 outTangent;
+layout (location = 4) out vec4 outCamPos;
 
 void main()
 {

@@ -85,6 +85,7 @@ namespace SmolEngine
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
 				DynamicPipelineCI.VertexInputInfos = {  };
+				DynamicPipelineCI.PipelineDrawModes = { DrawMode::Screen };
 				DynamicPipelineCI.PipelineName = "Deferred_Rendering_Combination";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.IsTargetsSwapchain = true;
@@ -183,15 +184,15 @@ namespace SmolEngine
 			m_CombinationPipeline->BeginCommandBuffer(true);
 			m_CombinationPipeline->BeginBufferSubmit();
 
-			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 1);
+			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 0);
 
 			m_CombinationPipeline->SumbitUniformBuffer(15, sizeof(UBOMRTParams), &m_Params);
 
-			m_CombinationPipeline->BeginRenderPass(m_EditorCamera->GetFramebuffer());
+			m_CombinationPipeline->BeginRenderPass(m_EditorCamera->GetFramebuffer(), false);
 			{
 				m_CombinationPipeline->ClearColors();
 
-				m_CombinationPipeline->Draw(3, DrawMode::Triangle, 0, 0, true);
+				m_CombinationPipeline->Draw(3, DrawMode::Screen);
 			}
 			m_CombinationPipeline->EndRenderPass();
 			m_CombinationPipeline->EndBufferSubmit();
