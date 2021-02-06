@@ -16,7 +16,9 @@ namespace SmolEngine
 		glm::vec4 lights[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)} };
 		glm::vec4 lightsColors[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)} };
 		glm::vec4 viewPos;
+
 		float radius = 2.0f;
+		int mode = 0;
 	};
 
 	class DeferredRenderingTest : public Layer
@@ -53,6 +55,7 @@ namespace SmolEngine
 		Ref<GraphicsPipeline>            m_CombinationPipeline = nullptr;
 
 		Ref<Framebuffer>                 m_DeferredFrameBuffer = nullptr;
+		Ref<Framebuffer>                 m_SkyboxFrameBuffer = nullptr;
 		Ref<EditorCamera>                m_EditorCamera = nullptr;
 
 		glm::vec3                        m_Pos = glm::vec3(1.0f);
@@ -61,6 +64,7 @@ namespace SmolEngine
 		glm::vec4                        m_AddColor = glm::vec4(1);
 
 		bool                             m_RorateModel = true;
+		int                              m_DrawMode = 0;
 		UBOMRTParams                     m_Params = {};
 	};
 }

@@ -18,6 +18,7 @@ namespace SmolEngine
 	struct OffscreenPass
 	{
 		FrameBufferAttachment color, depth, resolve;
+		VkDescriptorImageInfo colorImageInfo;
 	};
 
 	struct DeferredPass

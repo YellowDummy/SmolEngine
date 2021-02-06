@@ -6,6 +6,7 @@
 #include "Renderer/Vulkan/VulkanMemoryAllocator.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
 #include "Renderer/Vulkan/VulkanSemaphore.h"
+#include "Renderer/Framebuffer.h"
 
 #include "../Libraries/imgui/examples/imgui_impl_vulkan.h"
 
@@ -20,7 +21,7 @@ namespace SmolEngine
 
 	VulkanFramebuffer::~VulkanFramebuffer()
 	{
-		//FreeResources();
+		FreeResources();
 	}
 
 	bool VulkanFramebuffer::Create(uint32_t width, uint32_t height)
@@ -31,14 +32,16 @@ namespace SmolEngine
 
 		// Color attachment
 		{
-			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			VkImageUsageFlags usage = m_Specification.IsUseMSAA ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT :
+				VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+
 			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, m_ColorFormat,
 				m_OffscreenPass.color.image, m_OffscreenPass.color.view, m_OffscreenPass.color.mem);
 		}
 
 		// Resolve attachment
 		{
-			if (!m_Specification.IsTargetsSwapchain)
+			if (!m_Specification.IsTargetsSwapchain && m_Specification.IsUseMSAA)
 			{
 				VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 				AddAttachment(m_Specification.Width, m_Specification.Height, VK_SAMPLE_COUNT_1_BIT, usage, m_ColorFormat,
@@ -48,7 +51,9 @@ namespace SmolEngine
 
 		// Depth stencil attachment
 		{
-			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+			VkImageUsageFlags usage = m_Specification.IsUseMSAA ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+				: VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 			AddAttachment(m_Specification.Width, m_Specification.Height, m_MSAASamples, usage, m_DepthFormat,
 				m_OffscreenPass.depth.image, m_OffscreenPass.depth.view, m_OffscreenPass.depth.mem, imageAspect);
@@ -59,18 +64,27 @@ namespace SmolEngine
 
 		// Framebuffer creation
 		{
-			std::vector<VkImageView> attachments(3);
+			std::vector<VkImageView> attachments;
+
+			if (m_Specification.IsUseMSAA)
 			{
+				attachments.resize(3);
 				attachments[0] = m_OffscreenPass.color.view;
 				attachments[1] = m_OffscreenPass.resolve.view;
 				attachments[2] = m_OffscreenPass.depth.view;
+			}
+			else
+			{
+				attachments.resize(2);
+				attachments[0] = m_OffscreenPass.color.view;
+				attachments[1] = m_OffscreenPass.depth.view;
 			}
 
 			VkFramebufferCreateInfo fbufCreateInfo = {};
 			{
 				VkRenderPass renderPass = nullptr;
-				m_Specification.IsTargetsSwapchain ? renderPass = renderPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout() :
-					renderPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
+
+				renderPass = VulkanRenderPass::GetRenderPass(m_Specification.IsTargetsSwapchain, m_Specification.IsUseMSAA, false);
 
 				fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 				fbufCreateInfo.pNext = NULL;
@@ -87,12 +101,12 @@ namespace SmolEngine
 				m_VkFrameBuffers.resize(1);
 				VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[0]));
 
-				VkDescriptorImageInfo imageInfo = {};
-				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				imageInfo.imageView = m_OffscreenPass.resolve.view;
-				imageInfo.sampler = m_Sampler;
+				m_OffscreenPass.colorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				m_Specification.IsUseMSAA ? m_OffscreenPass.colorImageInfo.imageView = m_OffscreenPass.resolve.view :
+					m_OffscreenPass.colorImageInfo.imageView = m_OffscreenPass.color.view;
+				m_OffscreenPass.colorImageInfo.sampler = m_Sampler;
 
-				m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(imageInfo);
+				m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_OffscreenPass.colorImageInfo);
 			}
 			else
 			{
@@ -100,7 +114,8 @@ namespace SmolEngine
 				m_VkFrameBuffers.resize(count);
 				for (uint32_t i = 0; i < count; ++i)
 				{
-					attachments[1] = VulkanContext::GetSwapchain().m_Buffers[i].View;
+					uint32_t index = m_Specification.IsUseMSAA ? 1 : 0;
+					attachments[index] = VulkanContext::GetSwapchain().m_Buffers[i].View;
 					VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[i]));
 				}
 			}
@@ -111,18 +126,31 @@ namespace SmolEngine
 			if (m_ClearAttachments.size() > 0)
 				m_ClearAttachments.clear();
 
-			m_ClearAttachments.resize(3);
+			if (m_Specification.IsUseMSAA)
+			{
+				m_ClearAttachments.resize(3);
 
-			m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_ClearAttachments[0].colorAttachment = 0;
+				m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+				m_ClearAttachments[0].colorAttachment = 0;
 
-			m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_ClearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
-			m_ClearAttachments[1].colorAttachment = 0;
+				m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				m_ClearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
 
-			m_ClearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			m_ClearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };
+				m_ClearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+				m_ClearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };
+			}
+			else
+			{
+				m_ClearAttachments.resize(2);
+
+				m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+				m_ClearAttachments[0].colorAttachment = 0;
+
+				m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+				m_ClearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
+			}
 		}
 
 		return result == VK_SUCCESS;
@@ -288,7 +316,7 @@ namespace SmolEngine
 	{
 		m_OffscreenPass = {};
 		m_Specification = data;
-		m_MSAASamples = VulkanContext::GetDevice().GetMSAASamplesCount();
+		m_MSAASamples = data.IsUseMSAA ? VulkanContext::GetDevice().GetMSAASamplesCount(): VK_SAMPLE_COUNT_1_BIT;
 
 		bool result = false;
 		data.IsUseMRT ? result = CreateDeferred(m_DeferredDim, m_DeferredDim) : result = Create(data.Width, data.Height);

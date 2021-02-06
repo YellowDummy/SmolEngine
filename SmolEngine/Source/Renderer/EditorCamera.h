@@ -60,6 +60,10 @@ namespace SmolEngine
 
 		float GetYaw() const { return m_Yaw; }
 
+		float GetNearClip() const { return m_NearClip; }
+
+		float GetFarClip() const { return m_FarClip; }
+
 		glm::vec3 GetForwardDirection() const;
 
 		glm::vec3 GetRightDirection() const;

@@ -21,6 +21,9 @@ namespace SmolEngine
 {
 	void PBRTestLayer::OnAttach()
 	{
+#ifdef SMOLENGINE_OPENL_IMPL // Vulkan support only
+		return;
+#endif
 		VulkanPBR::Init("../Resources/Textures/gcanyon_cube.ktx", TextureFormat::R16G16B16A16_SFLOAT);
 
 		EditorCameraCreateInfo cameraCI = {};
@@ -269,7 +272,7 @@ namespace SmolEngine
 
 			m_SkyboxPipeline->BeginRenderPass(m_FrameBuffer);
 			{
-				m_SkyboxPipeline->ClearColors();
+				//m_SkyboxPipeline->ClearColors();
 
 				{
 					struct PushConstant

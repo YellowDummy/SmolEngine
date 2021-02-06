@@ -3,6 +3,8 @@
 
 namespace SmolEngine
 {
+	class Framebuffer;
+
 	struct FramebufferSpecification
 	{
 		int32_t    Width = 0;
@@ -10,5 +12,7 @@ namespace SmolEngine
 
 		bool       IsTargetsSwapchain = false;
 		bool       IsUseMRT = false;
+		bool       IsUseMSAA = true;
+
 	};
 }

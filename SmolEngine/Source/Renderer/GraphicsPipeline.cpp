@@ -18,7 +18,7 @@ namespace SmolEngine
 		Destroy();
 	}
 
-	bool GraphicsPipeline::Create(const GraphicsPipelineCreateInfo* pipelineInfo)
+	bool GraphicsPipeline::Create(GraphicsPipelineCreateInfo* pipelineInfo)
 	{
 		if (pipelineInfo->DescriptorSets < 1 || !pipelineInfo->ShaderCreateInfo)
 			return false;
@@ -41,6 +41,9 @@ namespace SmolEngine
 #else
 		m_VulkanPipeline = {};
 
+		if (pipelineInfo->IsUseMSAA && pipelineInfo->IsUseMRT)
+			pipelineInfo->IsUseMSAA = false;
+
 		VulkanPipelineSpecification pipelineSpecCI = {};
 		{
 			pipelineSpecCI.Device = &VulkanContext::GetDevice();
@@ -55,6 +58,9 @@ namespace SmolEngine
 			pipelineSpecCI.IsTargetsSwapchain = pipelineInfo->IsTargetsSwapchain;
 			pipelineSpecCI.IsDepthTestEnabled = pipelineInfo->IsDepthTestEnabled;
 			pipelineSpecCI.IsUseMRT = pipelineInfo->IsUseMRT;
+			pipelineSpecCI.IsUseMSAA = pipelineInfo->IsUseMSAA;
+			pipelineSpecCI.MinDepth = pipelineInfo->MinDepth;
+			pipelineSpecCI.MaxDepth = pipelineInfo->MaxDepth;
 		}
 
 		if (!m_VulkanPipeline.Invalidate(pipelineSpecCI))
@@ -128,7 +134,7 @@ namespace SmolEngine
 		const FramebufferSpecification& specs = framebuffer->GetSpecification();
 		uint32_t width = specs.Width;
 		uint32_t height = specs.Height;
-		VkRenderPass selectedPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
+		VkRenderPass selectedPass = VulkanRenderPass::GetRenderPass(specs.IsTargetsSwapchain, specs.IsUseMSAA, specs.IsUseMRT);
 		VkFramebuffer selectedFramebuffer = framebuffer->GetVulkanFramebuffer().GetCurrentVkFramebuffer();
 
 		if (specs.IsUseMRT)
@@ -139,16 +145,13 @@ namespace SmolEngine
 			clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
 			clearValues[3].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
 			clearValues[4].depthStencil = { 1.0f, 0 };
-
-			selectedPass = VulkanRenderPass::GetVkRenderPassDeferredLayout();
 		}
 		else
 		{
 			clearValues.resize(3);
+			clearValues[0].color = { { 0.4f, 0.5f, 0.5f, 1.0f } };
+			clearValues[1].color = { { 0.4f, 0.5f, 0.5f, 1.0f } };
 			clearValues[2].depthStencil = { 1.0f, 0 };
-
-			if (specs.IsTargetsSwapchain)
-				selectedPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout();
 		}
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};

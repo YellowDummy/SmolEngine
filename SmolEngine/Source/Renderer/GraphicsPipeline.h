@@ -40,10 +40,16 @@ namespace SmolEngine
 
 	struct GraphicsPipelineCreateInfo
 	{
+		//TODO: Add flags
+
 		bool                                 IsAlphaBlendingEnabled = false;
 		bool                                 IsTargetsSwapchain = false;
 		bool                                 IsDepthTestEnabled = true;
+		bool                                 IsUseMSAA = true;
 		bool                                 IsUseMRT = false;
+
+		float                                MinDepth = 0.0f;
+		float                                MaxDepth = 1.0f;
 
 		uint32_t                             DescriptorSets = 1;
 		GraphicsPipelineShaderCreateInfo*    ShaderCreateInfo = nullptr;
@@ -60,7 +66,7 @@ namespace SmolEngine
 
 		// Main
 
-		bool Create(const GraphicsPipelineCreateInfo* pipelineInfo);
+		bool Create(GraphicsPipelineCreateInfo* pipelineInfo);
 
 		bool Reload();
 
@@ -154,6 +160,16 @@ namespace SmolEngine
 		const VulkanShader* GetVulkanShader() const
 		{
 			return m_Shader->GetVulkanShader();
+		}
+
+		VkCommandBuffer GetVkCommandBuffer() const
+		{
+			return m_CommandBuffer;
+		}
+
+		void SetCommandBuffer(VkCommandBuffer cmdBuffer)
+		{
+			m_CommandBuffer = cmdBuffer;
 		}
 #endif
 

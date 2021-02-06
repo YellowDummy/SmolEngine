@@ -6,29 +6,50 @@ namespace SmolEngine
 {
     void VulkanRenderPass::Init()
     {
+		// Offscreen
+		{
+			RenderPassCI info = {};
+			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			info.IsUseMSAA = false;
+
+			CreateRenderPass(info, m_RenderPassFramebuffer);
+		}
+
 		// MSAA Offscreen
 		{
 			RenderPassCI info = {};
 			info.ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			info.IsUseMSAA = true;
 
-			CreateRenderPass(info, m_RenderPassFramebuffer);
+			CreateRenderPass(info, m_MSAARenderPassFramebuffer);
+		}
+
+		// Swapchain
+		{
+			RenderPassCI info = {};
+			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			info.IsUseMSAA = false;
+
+			CreateRenderPass(info, m_RenderPassSwapchain);
 		}
 
 		// MSAA Swapchain
 		{
 			RenderPassCI info = {};
 			info.ResolveAttachmentFinalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			info.IsUseMSAA = true;
 
-			CreateRenderPass(info, m_RenderPassSwapchain);
+			CreateRenderPass(info, m_MSAARenderPassSwapchain);
 		}
 
-		// Deferred MSAA
+		// Deferred Pass
 		{
 			RenderPassCI info = {};
 			info.ColorAttachmentFinalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			info.IsUseMRT = true;
+			info.IsUseMSAA = false;
 
-			CreateRenderPass(info, m_MSAADeferredRenderPass);
+			CreateRenderPass(info, m_DeferredRenderPass);
 		}
     }
 
@@ -36,17 +57,41 @@ namespace SmolEngine
     {
         VkDevice device = VulkanContext::GetDevice().GetLogicalDevice();
 
-        if (m_MSAADeferredRenderPass != VK_NULL_HANDLE)
-            vkDestroyRenderPass(device, m_MSAADeferredRenderPass, nullptr);
+        if (m_DeferredRenderPass != VK_NULL_HANDLE)
+            vkDestroyRenderPass(device, m_DeferredRenderPass, nullptr);
 
         if (m_RenderPassFramebuffer != VK_NULL_HANDLE)
             vkDestroyRenderPass(device, m_RenderPassFramebuffer, nullptr);
 
+		if (m_MSAARenderPassFramebuffer != VK_NULL_HANDLE)
+			vkDestroyRenderPass(device, m_MSAARenderPassFramebuffer, nullptr);
+
         if (m_RenderPassSwapchain != VK_NULL_HANDLE)
             vkDestroyRenderPass(device, m_RenderPassSwapchain, nullptr);
+
+		if (m_MSAARenderPassSwapchain != VK_NULL_HANDLE)
+			vkDestroyRenderPass(device, m_MSAARenderPassSwapchain, nullptr);
     }
 
-    void VulkanRenderPass::CreateRenderPass(RenderPassCI& renderPassCI, VkRenderPass& renderPass)
+	VkRenderPass& VulkanRenderPass::GetRenderPass(bool targetsSwapchain, bool useMSAA, bool useMRT)
+	{
+		if (useMRT)
+			return m_DeferredRenderPass;
+
+		if (targetsSwapchain && useMSAA)
+			return m_MSAARenderPassSwapchain;
+
+		if (targetsSwapchain && !useMSAA)
+			return m_RenderPassSwapchain;
+
+		if (!targetsSwapchain && useMSAA)
+			return m_MSAARenderPassFramebuffer;
+
+		if (!targetsSwapchain && !useMSAA)
+			return m_RenderPassFramebuffer;
+	}
+
+	void VulkanRenderPass::CreateRenderPass(RenderPassCI& renderPassCI, VkRenderPass& renderPass)
     {
 		VkDevice device = VulkanContext::GetDevice().GetLogicalDevice();
 		VkFormat depthFormat = VulkanContext::GetSwapchain().GetDepthFormat();
@@ -108,7 +153,7 @@ namespace SmolEngine
 			attachments[4].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[4].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
         }
-        else
+        else if(renderPassCI.IsUseMSAA)
         {
 			attachments.resize(3);
 
@@ -143,6 +188,28 @@ namespace SmolEngine
 			attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachments[2].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
         }
+		else
+		{
+			attachments.resize(2);
+
+			attachments[0].format = colorFormat;
+			attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+			attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[0].finalLayout = renderPassCI.ColorAttachmentFinalLayout;
+
+			attachments[1].format = depthFormat;
+			attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+			attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			attachments[1].finalLayout = renderPassCI.DepthAttachmentFinalLayout;
+		}
 
 
 		std::vector<VkAttachmentReference> colorReferences;
@@ -172,7 +239,19 @@ namespace SmolEngine
 
 		VkAttachmentReference depthReference = {};
 		{
-			depthReference.attachment = renderPassCI.IsUseMRT ? 4 : 2;
+			if (renderPassCI.IsUseMRT)
+			{
+				depthReference.attachment = 4;
+			}
+			if (renderPassCI.IsUseMSAA)
+			{
+				depthReference.attachment = 2;
+			}
+			if(!renderPassCI.IsUseMSAA && !renderPassCI.IsUseMRT)
+			{
+				depthReference.attachment = 1;
+			}
+
 			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		}
 
@@ -190,7 +269,7 @@ namespace SmolEngine
 			subpass.pColorAttachments = colorReferences.data();
 			subpass.pDepthStencilAttachment = &depthReference;
 
-			if (!renderPassCI.IsUseMRT)
+			if (renderPassCI.IsUseMSAA)
 				subpass.pResolveAttachments = &resolveReference;
 		}
 

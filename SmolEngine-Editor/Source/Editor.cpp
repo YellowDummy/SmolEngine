@@ -4,7 +4,7 @@
 #include "EditorLayer.h"
 #include "VulkanTestLayer.h"
 #include "RaytracingTestLayer.h"
-#include "DeferredRenderingTest.h"
+#include "DeferredRenderingTestLayer.h"
 #include "PBRTestLayer.h"
 
 
@@ -33,7 +33,6 @@ namespace SmolEngine
 		//app.PushLayer(new EditorLayer);
 		EDITOR_INFO("Initialized successfully");
 	}
-
 
 	Application* CreateApp()
 	{

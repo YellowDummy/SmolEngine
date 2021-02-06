@@ -30,11 +30,7 @@ namespace SmolEngine
 		m_VulkanPipelineSpecification = pipelineSpec;
 		m_VulkanPipelineSpecification.Initialized = true;
 
-		pipelineSpec.IsTargetsSwapchain ? m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassSwapchainLayout() :
-			m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassFramebufferLayout();
-
-		if (pipelineSpec.IsUseMRT)
-			m_TargetRenderPass = VulkanRenderPass::GetVkRenderPassDeferredLayout();
+		m_TargetRenderPass = VulkanRenderPass::GetRenderPass(pipelineSpec.IsTargetsSwapchain, pipelineSpec.IsUseMSAA, pipelineSpec.IsUseMRT);
 
 		m_SetLayout.clear();
 		m_SetLayout.reserve(m_Descriptors.size());
@@ -176,13 +172,13 @@ namespace SmolEngine
 		{
 			depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 			depthStencilState.depthTestEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;
-			depthStencilState.depthWriteEnable = VK_TRUE;
+			depthStencilState.depthWriteEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;
 			depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 			depthStencilState.depthBoundsTestEnable = VK_FALSE;
-			depthStencilState.back.failOp = VK_STENCIL_OP_KEEP;
-			depthStencilState.back.passOp = VK_STENCIL_OP_KEEP;
 			depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
 			depthStencilState.stencilTestEnable = VK_FALSE;
+			depthStencilState.minDepthBounds = m_VulkanPipelineSpecification.MinDepth;
+			depthStencilState.maxDepthBounds = m_VulkanPipelineSpecification.MaxDepth;
 		}
 
 		// Multi sampling state
@@ -191,7 +187,7 @@ namespace SmolEngine
 			multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 			multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
-			if (!m_VulkanPipelineSpecification.IsUseMRT)
+			if (m_VulkanPipelineSpecification.IsUseMSAA)
 			{
 				multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
 				multisampleState.sampleShadingEnable = VK_TRUE;

@@ -21,10 +21,14 @@ namespace SmolEngine
 		std::vector<DrawMode>           PipelineDrawModes;
 		std::string                     Name = "";
 
+		float                           MinDepth = 0.0f;
+		float                           MaxDepth = 1.0f;
+
 		bool                            IsAlphaBlendingEnabled = false;
 		bool                            IsTargetsSwapchain = false;
 		bool                            IsDepthTestEnabled = true;
 		bool                            IsUseMRT = false;
+		bool                            IsUseMSAA = true;
 		bool                            Initialized = false; //don't use!
 
 		uint32_t                        DescriptorSets = 1;

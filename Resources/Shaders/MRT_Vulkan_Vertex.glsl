@@ -11,13 +11,17 @@ layout(push_constant) uniform CameraData
 	mat4 projection;
 	mat4 model;
 	mat4 view;
+
+	float nearPlane;
+	float farPlane;
 };
 
 layout (location = 0) out vec3 outWorldPos;
 layout (location = 1) out vec3 outNormal;
 layout (location = 2) out vec2 outUV;
 layout (location = 3) out vec4 outTangent;
-layout (location = 4) out vec4 outCamPos;
+layout (location = 4) out float outNearPlane;
+layout (location = 5) out float outFarPlane;
 
 void main()
 {
@@ -27,6 +31,8 @@ void main()
 	outNormal = mat3(model) * a_Normal;
 	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
 	outUV = a_UV;
+	outNearPlane = nearPlane;
+	outFarPlane = farPlane;
 
 	gl_Position =  projection * view * vec4(outWorldPos, 1.0);
 }

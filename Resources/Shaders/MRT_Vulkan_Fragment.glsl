@@ -4,6 +4,8 @@ layout (location = 0) in vec3 inWorldPos;
 layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inUV;
 layout (location = 3) in vec4 inTangent;
+layout (location = 4) in float inNearPlane;
+layout (location = 5) in float inFarPlane;
 
 layout (binding = 5) uniform sampler2D albedoMap;
 layout (binding = 6) uniform sampler2D normalMap;
@@ -28,6 +30,12 @@ vec3 calculateNormal()
 	return TBN * normalize(texture(normalMap, inUV).xyz * 2.0 - vec3(1.0));
 }
 
+float linearDepth(float depth)
+{
+	float z = depth * 2.0f - 1.0f; 
+	return (2.0f * inNearPlane * inFarPlane) / (inFarPlane + inNearPlane - z * (inFarPlane - inNearPlane));	
+}
+
 void main()
 {		
 	vec3 N = calculateNormal();
@@ -37,7 +45,7 @@ void main()
 
 	outAlbedo = texture(albedoMap, inUV);
     outNormal = vec4(N, 1.0);
-    outPosition = vec4(inWorldPos, 1.0);
+    outPosition = vec4(inWorldPos, linearDepth(gl_FragCoord.z));
 
     outPBR.x =  metallic;
 	outPBR.y =  roughness;

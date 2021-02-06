@@ -32,4 +32,6 @@ void main()
 	color = pow(color, vec3(1.0f / v_Gamma));
 	
 	o_color = vec4(color, 1.0);
+
+	gl_FragDepth = 1.0;
 }

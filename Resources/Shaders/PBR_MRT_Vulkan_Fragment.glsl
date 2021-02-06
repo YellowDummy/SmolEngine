@@ -1,5 +1,6 @@
 #version 450
 
+layout (binding = 0) uniform sampler2D samplerSkybox;
 layout (binding = 1) uniform sampler2D samplerPosition;
 layout (binding = 2) uniform sampler2D samplerNormal;
 layout (binding = 3) uniform sampler2D samplerAlbedo;
@@ -18,6 +19,7 @@ struct Params
 	vec4 lightColors[4];
     vec4 viewPos;
 	float radius;
+	int displayMode;
 };
 
 layout (std140, binding = 15) uniform UBOParams 
@@ -150,6 +152,13 @@ vec3 calculateLighting(vec3 pos, vec3 normal)
 void main() 
 {
 	// Getters
+
+	float depth = texture(samplerPosition, inUV).a;
+	if(depth == 0)
+	{
+		outFragcolor = texture(samplerSkybox, inUV);
+		return;
+	}
 	
 	vec3 pos = texture(samplerPosition, inUV).rgb;
 	vec3 N =  texture(samplerNormal, inUV).rgb;
@@ -158,6 +167,28 @@ void main()
 	float metallic = pbrParams.x;
     float roughness = pbrParams.y;
     vec3 ao = vec3(pbrParams.z , pbrParams.z, pbrParams.z);
+
+	if (ubo.displayMode > 0) {
+		switch (ubo.displayMode) {
+			case 1: 
+				outFragcolor = vec4(pos, 1);
+				break;
+			case 2: 
+				outFragcolor = vec4(N, 1);
+				break;
+			case 3: 
+				outFragcolor = vec4(ALBEDO, 1);
+				break;
+			case 4: 
+				outFragcolor = vec4(texture(samplerAlbedo, inUV).aaa, 1);
+				break;
+			case 5: 
+				outFragcolor = vec4(metallic, roughness, ao.z, 1);
+				break;
+		}
+
+		return;
+	}
 
 	//
 
@@ -197,7 +228,7 @@ void main()
 	color = Uncharted2Tonemap(color * 4.0);
 	color = color * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
 	// Gamma correction
-	color = pow(color, vec3(1.0f / 2.0));
+	color = pow(color, vec3(1.0f / 2.5));
 
 	outFragcolor = vec4(color, 1.0);
 }
