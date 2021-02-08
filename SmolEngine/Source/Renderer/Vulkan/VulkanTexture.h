@@ -21,9 +21,9 @@ namespace SmolEngine
 
 		/// Gen
 
-		void GenWhiteTetxure(uint32_t width, uint32_t height);
+		void GenTexture(const void* data, uint32_t size, uint32_t width, uint32_t height, TextureFormat format);
 
-		void GenWhiteTetxureMultisampled(uint32_t width, uint32_t height);
+		void GenWhiteTetxure(uint32_t width, uint32_t height);
 
 		/// Static Helpers
 
@@ -79,7 +79,9 @@ namespace SmolEngine
 
 		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps, VkImageSubresourceRange& range);
 
-		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data);
+		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, const void* data);
+
+		void CreateFromBuffer(const void* data, VkDeviceSize size, uint32_t width, uint32_t height);
 
 		void CreateSamplerAndImageView(uint32_t mipMaps);
 

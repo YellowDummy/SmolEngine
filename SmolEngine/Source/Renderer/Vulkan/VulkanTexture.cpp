@@ -37,6 +37,13 @@ namespace SmolEngine
 		}
 	}
 
+	void VulkanTexture::GenTexture(const void* data, uint32_t size, uint32_t width, uint32_t height, TextureFormat format)
+	{
+		m_Format = GetImageFormat(format);
+		CreateFromBuffer(data, size, width, height);
+		m_IsCreated = true;
+	}
+
 	void VulkanTexture::GenWhiteTetxure(uint32_t width, uint32_t height)
 	{
 		uint32_t whiteTextureData = 0xffffffff;
@@ -46,11 +53,6 @@ namespace SmolEngine
 		m_Width = width;
 		m_Height = height;
 		m_IsCreated = true;
-	}
-
-	void VulkanTexture::GenWhiteTetxureMultisampled(uint32_t width, uint32_t height)
-	{
-
 	}
 
 	void VulkanTexture::LoadTexture(const std::string& filePath, TextureFormat format)
@@ -283,7 +285,7 @@ namespace SmolEngine
 		return image;
 	}
 
-	void VulkanTexture::CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, void* data)
+	void VulkanTexture::CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, const void* data)
 	{
 		const VkDeviceSize size = width * height * 4;
 
@@ -352,6 +354,70 @@ namespace SmolEngine
 		m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_DescriptorImageInfo);
 #endif
 #endif
+	}
+
+	void VulkanTexture::CreateFromBuffer(const void* data, VkDeviceSize size, uint32_t width, uint32_t height)
+	{
+		m_Width = width;
+		m_Height = height;
+
+		VulkanBuffer stagingBuffer;
+		stagingBuffer.Create(size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+		stagingBuffer.SetData(data, size);
+
+		m_Image = CreateVkImage(width, height, 1, VK_SAMPLE_COUNT_1_BIT, m_Format,
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, m_DeviceMemory);
+
+		VkImageSubresourceRange subresourceRange = {};
+		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		subresourceRange.levelCount = 1;
+		subresourceRange.layerCount = 1;
+
+		VkCommandBuffer cmdBuffer = VulkanContext::GetCommandBuffer().CreateSingleCommandBuffer();
+		{
+			// Optimal image will be used as destination for the copy, so we must transfer from our initial undefined image layout to the transfer destination layout
+			InsertImageMemoryBarrier(
+				cmdBuffer,
+				m_Image,
+				0,
+				VK_ACCESS_TRANSFER_WRITE_BIT,
+				VK_IMAGE_LAYOUT_UNDEFINED,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				VK_PIPELINE_STAGE_TRANSFER_BIT,
+				VK_PIPELINE_STAGE_TRANSFER_BIT,
+				subresourceRange);
+
+			// Copy the first mip of the chain, remaining mips will be generated
+			VkBufferImageCopy bufferCopyRegion = {};
+			bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			bufferCopyRegion.imageSubresource.mipLevel = 0;
+			bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
+			bufferCopyRegion.imageSubresource.layerCount = 1;
+			bufferCopyRegion.imageExtent.width = width;
+			bufferCopyRegion.imageExtent.height = height;
+			bufferCopyRegion.imageExtent.depth = 1;
+
+			vkCmdCopyBufferToImage(cmdBuffer, stagingBuffer.GetBuffer(), m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferCopyRegion);
+
+			// Transition first mip level to transfer source for read during blit
+			InsertImageMemoryBarrier(
+				cmdBuffer,
+				m_Image,
+				VK_ACCESS_TRANSFER_WRITE_BIT,
+				VK_ACCESS_TRANSFER_READ_BIT,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+				VK_PIPELINE_STAGE_TRANSFER_BIT,
+				VK_PIPELINE_STAGE_TRANSFER_BIT,
+				subresourceRange);
+
+		}
+		VulkanContext::GetCommandBuffer().EndSingleCommandBuffer(cmdBuffer);
+		stagingBuffer.Destroy();
+
+		m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		CreateSamplerAndImageView(1);
 	}
 
 	void VulkanTexture::GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipLevel, VkImageSubresourceRange& range)
@@ -654,6 +720,8 @@ namespace SmolEngine
 			return VK_FORMAT_R8G8B8A8_UNORM;
 		case SmolEngine::TextureFormat::R16G16B16A16_SFLOAT:
 			return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case SmolEngine::TextureFormat::R32G32B32A32_SFLOAT:
+			return  VK_FORMAT_R32G32B32A32_SFLOAT;
 		default:
 			return VK_FORMAT_R8G8B8A8_UNORM;
 		}

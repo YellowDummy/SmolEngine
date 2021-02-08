@@ -23,8 +23,7 @@ namespace SmolEngine
 	{
 		Triangle,
 		Line,
-		Fan,
-		Screen
+		Fan
 	};
 
 	struct GraphicsPipelineShaderCreateInfo
@@ -77,7 +76,7 @@ namespace SmolEngine
 
 		// Render Pass
 
-		void BeginRenderPass(Ref<Framebuffer>& framebuffer, bool verticalFlip = true);
+		void BeginRenderPass(Ref<Framebuffer>& framebuffe);
 
 		void EndRenderPass();
 

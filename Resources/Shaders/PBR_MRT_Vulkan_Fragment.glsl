@@ -5,10 +5,12 @@ layout (binding = 1) uniform sampler2D samplerPosition;
 layout (binding = 2) uniform sampler2D samplerNormal;
 layout (binding = 3) uniform sampler2D samplerAlbedo;
 layout (binding = 4) uniform sampler2D samplerPBR;
+layout (binding = 5) uniform sampler2D samplerSSAO;
+layout (binding = 6) uniform sampler2D samplerSSAOBlur;
 
-layout (binding = 5) uniform samplerCube samplerIrradiance;
-layout (binding = 6) uniform sampler2D samplerBRDFLUT;
-layout (binding = 7) uniform samplerCube prefilteredMap;
+layout (binding = 7) uniform samplerCube samplerIrradiance;
+layout (binding = 8) uniform sampler2D samplerBRDFLUT;
+layout (binding = 9) uniform samplerCube prefilteredMap;
 
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outFragcolor;
@@ -20,6 +22,7 @@ struct Params
     vec4 viewPos;
 	float radius;
 	int displayMode;
+	int ssaoEnabled;
 };
 
 layout (std140, binding = 15) uniform UBOParams 
@@ -27,8 +30,7 @@ layout (std140, binding = 15) uniform UBOParams
     Params ubo;
 };
 
-layout (constant_id = 0) const int NUM_SAMPLES = 8;
-layout (constant_id = 1) const float MAX_REFLECTION_LOD = 9.0;
+layout (constant_id = 0) const float MAX_REFLECTION_LOD = 9.0;
 
 
 #define PI 3.1415926535897932384626433832795
@@ -166,7 +168,7 @@ void main()
 
 	float metallic = pbrParams.x;
     float roughness = pbrParams.y;
-    vec3 ao = vec3(pbrParams.z , pbrParams.z, pbrParams.z);
+    vec3 ao = ubo.ssaoEnabled == 1 ? texture(samplerSSAOBlur, inUV).rrr : pbrParams.zzz;
 
 	if (ubo.displayMode > 0) {
 		switch (ubo.displayMode) {
@@ -179,8 +181,8 @@ void main()
 			case 3: 
 				outFragcolor = vec4(ALBEDO, 1);
 				break;
-			case 4: 
-				outFragcolor = vec4(texture(samplerAlbedo, inUV).aaa, 1);
+			case 4:
+				outFragcolor = vec4(ao, 1);
 				break;
 			case 5: 
 				outFragcolor = vec4(metallic, roughness, ao.z, 1);

@@ -19,6 +19,7 @@ namespace SmolEngine
 
 		float radius = 2.0f;
 		int mode = 0;
+		bool ssaoEnabled = true;
 	};
 
 	class DeferredRenderingTest : public Layer
@@ -46,16 +47,21 @@ namespace SmolEngine
 		Ref<Texture>                     m_Tetxure4 = nullptr;
 		Ref<Texture>                     m_Tetxure5 = nullptr;
 		Ref<Texture>                     m_Tetxure6 = nullptr;
+		Ref<Texture>                     m_SSAONoise = nullptr;
 
 		Ref<CubeTexture>                 m_CubeTexture = nullptr;
 		Ref<Mesh>                        m_TestMesh = nullptr;
 
 		Ref<GraphicsPipeline>            m_Pipeline = nullptr;
+		Ref<GraphicsPipeline>            m_SSAOPipeline = nullptr;
+		Ref<GraphicsPipeline>            m_SSAOBlurPipeline = nullptr;
 		Ref<GraphicsPipeline>            m_SkyboxPipeline = nullptr;
 		Ref<GraphicsPipeline>            m_CombinationPipeline = nullptr;
 
 		Ref<Framebuffer>                 m_DeferredFrameBuffer = nullptr;
 		Ref<Framebuffer>                 m_SkyboxFrameBuffer = nullptr;
+		Ref<Framebuffer>                 m_SSAOFrameBuffer = nullptr;
+		Ref<Framebuffer>                 m_SSAOBlurFrameBuffer = nullptr;
 		Ref<EditorCamera>                m_EditorCamera = nullptr;
 
 		glm::vec3                        m_Pos = glm::vec3(1.0f);
@@ -64,7 +70,6 @@ namespace SmolEngine
 		glm::vec4                        m_AddColor = glm::vec4(1);
 
 		bool                             m_RorateModel = true;
-		int                              m_DrawMode = 0;
 		UBOMRTParams                     m_Params = {};
 	};
 }

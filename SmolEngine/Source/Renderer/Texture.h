@@ -47,6 +47,9 @@ namespace SmolEngine
 
 		static Ref<Texture> Create(const std::string& filePath, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
 
+		static Ref<Texture> Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height,
+			TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
+
 		///
 
 		static Ref<Texture> CreateWhiteTexture();

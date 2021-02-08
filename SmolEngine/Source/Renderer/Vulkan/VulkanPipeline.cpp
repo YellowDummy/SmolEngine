@@ -519,8 +519,6 @@ namespace SmolEngine
 			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
 		case SmolEngine::DrawMode::Fan:
 			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
-		case SmolEngine::DrawMode::Screen:
-			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		default:
 			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		}
@@ -536,8 +534,6 @@ namespace SmolEngine
 			return VkPolygonMode::VK_POLYGON_MODE_LINE;
 		case SmolEngine::DrawMode::Fan:
 			return VkPolygonMode::VK_POLYGON_MODE_LINE;
-		case SmolEngine::DrawMode::Screen:
-			return VK_POLYGON_MODE_FILL;
 		default:
 			return VkPolygonMode::VK_POLYGON_MODE_FILL;
 		}
@@ -553,8 +549,6 @@ namespace SmolEngine
 			return VK_CULL_MODE_BACK_BIT;
 		case SmolEngine::DrawMode::Fan:
 			return VK_CULL_MODE_BACK_BIT;
-		case SmolEngine::DrawMode::Screen:
-			return VK_CULL_MODE_FRONT_BIT;
 		default:
 			return VK_CULL_MODE_BACK_BIT;
 		}

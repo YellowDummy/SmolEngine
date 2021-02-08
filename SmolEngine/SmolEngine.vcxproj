@@ -657,6 +657,7 @@
     <ClInclude Include="Source\Renderer\Shader.h" />
     <ClInclude Include="Source\Renderer\ShaderTypes.h" />
     <ClInclude Include="Source\Renderer\SharedUtils.h" />
+    <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Renderer\Text.h" />
     <ClInclude Include="Source\Renderer\Texture.h" />
@@ -780,6 +781,7 @@
     <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Renderer\Renderer2D.cpp" />
     <ClCompile Include="Source\Renderer\Shader.cpp" />
+    <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
     <ClCompile Include="Source\Renderer\SubTexture.cpp" />
     <ClCompile Include="Source\Renderer\Text.cpp" />
     <ClCompile Include="Source\Renderer\Texture.cpp" />

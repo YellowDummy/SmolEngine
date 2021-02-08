@@ -1595,6 +1595,7 @@
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\Renderer\SharedUtils.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
+    <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1931,5 +1932,6 @@
     <ClCompile Include="Source\ECS\Components\MaterialComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp" />
+    <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
   </ItemGroup>
 </Project>

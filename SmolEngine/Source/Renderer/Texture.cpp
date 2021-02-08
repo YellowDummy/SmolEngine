@@ -135,6 +135,20 @@ namespace SmolEngine
 		return texture;
 	}
 
+	Ref<Texture> Texture::Create(const void* data, uint32_t size, const uint32_t width,
+		const uint32_t height, TextureFormat format)
+	{
+		Ref<Texture> texture = nullptr;
+#ifdef  SMOLENGINE_OPENGL_IMPL
+#else
+		texture = std::make_shared<Texture>();
+		texture->m_VulkanTexture.GenTexture(data, size, width, height, format);
+
+		texture->m_Initialized = true;
+#endif
+		return texture;
+	}
+
 	Ref<Texture> Texture::Create(FT_Bitmap* bitmap)
 	{
 		Ref<Texture> texture = std::make_shared<Texture>();

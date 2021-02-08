@@ -11,6 +11,7 @@
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
+#include "Renderer/SSAOGenerator.h"
 
 #include "Renderer/Vulkan/VulkanPBR.h"
 
@@ -23,32 +24,93 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENL_IMPL // Vulkan support only
 		return;
 #endif
+		//SSAO
+
+		struct SSAOTempUbo
+		{
+			std::array<glm::vec4, 64> kernel;
+		} ssaoTempData;
+
+		SSAOGenerator::Generate(m_SSAONoise, ssaoTempData.kernel);
 
 		VulkanPBR::Init("../Resources/Textures/gcanyon_cube.ktx", TextureFormat::R16G16B16A16_SFLOAT);
 
+		// Editor Camera
 		EditorCameraCreateInfo cameraCI = {};
 		{
 			cameraCI.IsFramebufferTargetsSwapchain = true;
+			m_EditorCamera = std::make_shared<EditorCamera>(&cameraCI);
 		}
 
-		m_EditorCamera = std::make_shared<EditorCamera>(&cameraCI);
-
+		// MRT Framebufefr
 		FramebufferSpecification MRTframebefferSpec = {};
-		MRTframebefferSpec.IsUseMRT = true;
-		m_DeferredFrameBuffer = Framebuffer::Create(MRTframebefferSpec);
+		{
+			MRTframebefferSpec.IsUseMRT = true;
+			m_DeferredFrameBuffer = Framebuffer::Create(MRTframebefferSpec);
+		}
 
+		// SSAO Framebuffer
+		FramebufferSpecification SSAOFramebuffer = {};
+		{
+			SSAOFramebuffer.Height = 2048;
+			SSAOFramebuffer.Width = 2048;
+			SSAOFramebuffer.IsUseMSAA = false;
+			m_SSAOFrameBuffer = Framebuffer::Create(SSAOFramebuffer);
+		}
+
+		// SSAO Blur Framebuffer
+		FramebufferSpecification SSAOBlurFramebuffer = {};
+		{
+			SSAOBlurFramebuffer.Height = 2048;
+			SSAOBlurFramebuffer.Width = 2048;
+			SSAOBlurFramebuffer.IsUseMSAA = false;
+			m_SSAOBlurFrameBuffer = Framebuffer::Create(SSAOBlurFramebuffer);
+		}
+
+		// SkyBox Framebuffer
 		FramebufferSpecification SkyBoxFramebuffer = {};
-		SkyBoxFramebuffer.Height = 2048;
-		SkyBoxFramebuffer.Width = 2048;
-		SkyBoxFramebuffer.IsUseMSAA = false;
-		m_SkyboxFrameBuffer = Framebuffer::Create(SkyBoxFramebuffer);
+		{
+			SkyBoxFramebuffer.Height = 2048;
+			SkyBoxFramebuffer.Width = 2048;
+			SkyBoxFramebuffer.IsUseMSAA = false;
+			m_SkyboxFrameBuffer = Framebuffer::Create(SkyBoxFramebuffer);
+		}
 
-		m_Tetxure1 = Texture::Create("../Resources/SMGtextureSet_Base_Color.png");
-		m_Tetxure3 = Texture::Create("../Resources/SMGtextureSet_Normal_DirectX.png");
-		m_Tetxure2 = Texture::Create("../Resources/SMGtextureSet_Metallic.png");
-		m_Tetxure4 = Texture::Create("../Resources/SMGtextureSet_Roughness.png");
-		m_Tetxure5 = Texture::Create("../Resources/SMGtextureSet_AO.png");
+		// Model Textures
+		{
+			m_Tetxure1 = Texture::Create("../Resources/SMGtextureSet_Base_Color.png");
+			m_Tetxure3 = Texture::Create("../Resources/SMGtextureSet_Normal_DirectX.png");
+			m_Tetxure2 = Texture::Create("../Resources/SMGtextureSet_Metallic.png");
+			m_Tetxure4 = Texture::Create("../Resources/SMGtextureSet_Roughness.png");
+			m_Tetxure5 = Texture::Create("../Resources/SMGtextureSet_AO.png");
+		}
 
+		float quadVertices[] = {
+			// positions   // texCoords
+			-1.0f, -1.0f,  0.0f, 0.0f,
+			 1.0f, -1.0f,  1.0f, 0.0f,
+			 1.0f,  1.0f,  1.0f, 1.0f,
+			-1.0f,  1.0f,  0.0f, 1.0f
+		};
+
+		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+
+		struct FullSreenData
+		{
+			glm::vec2 pos;
+			glm::vec2 uv;
+		};
+
+		BufferLayout FullSreenlayout =
+		{
+			{ ShaderDataType::Float2, "aPos" },
+			{ ShaderDataType::Float2, "aUV" },
+		};
+
+		auto FullScreenVB = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
+		auto FullScreenID = IndexBuffer::Create(squareIndices, 6);
+
+		// Model
 		m_TestMesh = Mesh::Create("../Resources/30_SMG_LP.obj");
 
 		// MRT
@@ -88,6 +150,77 @@ namespace SmolEngine
 			m_Pipeline->UpdateSampler(m_Tetxure5, 7); //ao
 			m_Pipeline->UpdateSampler(m_Tetxure2, 8); //metallic
 			m_Pipeline->UpdateSampler(m_Tetxure4, 9); //roughness
+		}
+
+		// SSAO + SSAO Blur
+		{
+			// SSAO
+			{
+				m_SSAOPipeline = std::make_shared<GraphicsPipeline>();
+
+				GraphicsPipelineShaderCreateInfo shaderCI = {};
+				{
+					shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
+					shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/SSAO_Vulkan_Fragment.glsl";
+				};
+
+				GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+				{
+					DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(FullSreenData), FullSreenlayout) };
+					DynamicPipelineCI.PipelineName = "SSAO_Pipeline";
+					DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+					DynamicPipelineCI.IsDepthTestEnabled = false;
+					DynamicPipelineCI.IsUseMSAA = false;
+				}
+
+				bool result = m_SSAOPipeline->Create(&DynamicPipelineCI);
+				assert(result == true);
+
+				m_SSAOPipeline->SumbitUniformBuffer(25, sizeof(SSAOTempUbo), &ssaoTempData);
+				m_SSAOPipeline->UpdateSampler(m_SSAONoise, 2);
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+				auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer().GetDeferredPass();
+
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(0, pass.positionImageInfo);
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(1, pass.normalsImageInfo);
+#endif
+
+				m_SSAOPipeline->SetVertexBuffers({ FullScreenVB });
+				m_SSAOPipeline->SetIndexBuffers({ FullScreenID });
+			}
+
+			// Blur
+			{
+				m_SSAOBlurPipeline = std::make_shared<GraphicsPipeline>();
+
+				GraphicsPipelineShaderCreateInfo shaderCI = {};
+				{
+					shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
+					shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/SSAO_Blur_Vulkan_Fragment.glsl";
+				};
+
+				GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+				{
+					DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(FullSreenData), FullSreenlayout) };
+					DynamicPipelineCI.PipelineName = "SSAO_Blur_Pipeline";
+					DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+					DynamicPipelineCI.IsDepthTestEnabled = false;
+					DynamicPipelineCI.IsUseMSAA = false;
+				}
+
+				bool result = m_SSAOBlurPipeline->Create(&DynamicPipelineCI);
+				assert(result == true);
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+				auto& imageInfo = m_SSAOFrameBuffer->GetVulkanFramebuffer().GetOffscreenPass().colorImageInfo;
+				m_SSAOBlurPipeline->UpdateVulkanImageDescriptor(0, imageInfo);
+#endif
+			}
+
+			m_SSAOBlurPipeline->SetVertexBuffers({ FullScreenVB });
+			m_SSAOBlurPipeline->SetIndexBuffers({ FullScreenID });
+
 		}
 
 		// Skybox
@@ -165,7 +298,6 @@ namespace SmolEngine
 				-1.0f, -1.0f,  1.0f,
 				 1.0f, -1.0f,  1.0f
 			};
-
 			Ref<VertexBuffer> skyBoxFB = VertexBuffer::Create(skyboxVertices, sizeof(skyboxVertices));
 			m_SkyboxPipeline->SetVertexBuffers({ skyBoxFB });
 		}
@@ -176,14 +308,13 @@ namespace SmolEngine
 
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/PBR_MRT_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
 				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/PBR_MRT_Vulkan_Fragment.glsl";
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.VertexInputInfos = {  };
-				DynamicPipelineCI.PipelineDrawModes = { DrawMode::Screen };
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(FullSreenData), FullSreenlayout) };
 				DynamicPipelineCI.PipelineName = "Deferred_Rendering_Combination";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.IsTargetsSwapchain = true;
@@ -191,6 +322,9 @@ namespace SmolEngine
 
 			bool result = m_CombinationPipeline->Create(&DynamicPipelineCI);
 			assert(result == true);
+
+			m_CombinationPipeline->SetVertexBuffers({ FullScreenVB });
+			m_CombinationPipeline->SetIndexBuffers({ FullScreenID });
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 
@@ -201,14 +335,14 @@ namespace SmolEngine
 			m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.normalsImageInfo);
 			m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.colorImageInfo);
 			m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.pbrImageInfo);
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(5, m_SSAOFrameBuffer->GetVulkanFramebuffer().GetOffscreenPass().colorImageInfo);
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(6, m_SSAOBlurFrameBuffer->GetVulkanFramebuffer().GetOffscreenPass().colorImageInfo);
 
 
-
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(5, VulkanPBR::GetIrradianceImageInfo());
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(6, VulkanPBR::GetBRDFLUTImageInfo());
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(7, VulkanPBR::GetPrefilteredCubeImageInfo());
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(7, VulkanPBR::GetIrradianceImageInfo());
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(8, VulkanPBR::GetBRDFLUTImageInfo());
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(9, VulkanPBR::GetPrefilteredCubeImageInfo());
 #endif
-
 		}
 	}
 
@@ -229,11 +363,12 @@ namespace SmolEngine
 
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("Rotate Model", &m_RorateModel);
+		ImGui::Checkbox("SSAO Enabled", &m_Params.ssaoEnabled);
 
 		ImGui::NewLine();
-		std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Specular", "PBRParams" };
+		std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Ambient Occlusion", "PBRParams" };
 		uint32_t itemCount = static_cast<uint32_t>(charitems.size());
-		bool res = ImGui::Combo("Display", &m_DrawMode, &charitems[0], itemCount, itemCount);
+		bool res = ImGui::Combo("Display", &m_Params.mode, &charitems[0], itemCount, itemCount);
 
 		ImGui::End();
 	}
@@ -254,8 +389,6 @@ namespace SmolEngine
 			// MRT
 			{
 				m_Pipeline->BeginCommandBuffer();
-				m_Pipeline->BeginBufferSubmit();
-
 				m_Pipeline->BeginRenderPass(m_DeferredFrameBuffer);
 #ifndef SMOLENGINE_OPENGL_IMPL
 				cmdBuffer = m_Pipeline->GetVkCommandBuffer();
@@ -285,17 +418,13 @@ namespace SmolEngine
 					m_Pipeline->DrawIndexed();
 				}
 				m_Pipeline->EndRenderPass();
-
-				m_Pipeline->EndBufferSubmit();
 			}
-	
+
 			// Skybox
 			{
 #ifndef SMOLENGINE_OPENGL_IMPL
 				m_SkyboxPipeline->SetCommandBuffer(cmdBuffer);
 #endif
-				m_SkyboxPipeline->BeginBufferSubmit();
-
 				m_SkyboxPipeline->BeginRenderPass(m_SkyboxFrameBuffer);
 				{
 					m_SkyboxPipeline->ClearColors();
@@ -317,9 +446,46 @@ namespace SmolEngine
 					m_SkyboxPipeline->Draw(36);
 				}
 				m_SkyboxPipeline->EndRenderPass();
-				m_SkyboxPipeline->EndBufferSubmit();
 			}
 
+			if (m_Params.ssaoEnabled)
+			{
+				// SSAO
+				{
+#ifndef SMOLENGINE_OPENGL_IMPL
+					m_SSAOPipeline->SetCommandBuffer(cmdBuffer);
+#endif
+					m_SSAOPipeline->BeginRenderPass(m_SSAOFrameBuffer);
+					{
+						m_SSAOPipeline->ClearColors();
+
+						struct PushConstant
+						{
+							glm::mat4 proj;
+
+						} pc;
+
+						pc.proj = m_EditorCamera->GetProjection();
+
+						m_SSAOPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
+						m_SSAOPipeline->DrawIndexed();
+					}
+					m_SSAOPipeline->EndRenderPass();
+				}
+
+				// SSAO Blur
+				{
+#ifndef SMOLENGINE_OPENGL_IMPL
+					m_SSAOBlurPipeline->SetCommandBuffer(cmdBuffer);
+#endif
+					m_SSAOBlurPipeline->BeginRenderPass(m_SSAOBlurFrameBuffer);
+					{
+						m_SSAOBlurPipeline->ClearColors();
+						m_SSAOBlurPipeline->DrawIndexed();
+					}
+					m_SSAOBlurPipeline->EndRenderPass();
+				}
+			}
 
 			m_Pipeline->EndCommandBuffer(); // Submit work and wait 
 		}
@@ -330,15 +496,13 @@ namespace SmolEngine
 			m_CombinationPipeline->BeginBufferSubmit();
 
 			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 0);
-			m_Params.mode = m_DrawMode;
 
 			m_CombinationPipeline->SumbitUniformBuffer(15, sizeof(UBOMRTParams), &m_Params);
 
-			m_CombinationPipeline->BeginRenderPass(m_EditorCamera->GetFramebuffer(), false);
+			m_CombinationPipeline->BeginRenderPass(m_EditorCamera->GetFramebuffer());
 			{
 				m_CombinationPipeline->ClearColors();
-
-				m_CombinationPipeline->Draw(3, DrawMode::Screen);
+				m_CombinationPipeline->DrawIndexed();
 			}
 			m_CombinationPipeline->EndRenderPass();
 			m_CombinationPipeline->EndBufferSubmit();

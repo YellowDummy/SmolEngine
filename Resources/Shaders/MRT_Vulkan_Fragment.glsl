@@ -20,20 +20,17 @@ layout (location = 3) out vec4 outAlbedo;
 
 vec3 calculateNormal()
 {
-	vec3 tangentNormal = texture(normalMap, inUV).xyz * 2.0 - 1.0;
-
 	vec3 N = normalize(inNormal);
 	vec3 T = normalize(inTangent.xyz);
 	vec3 B = normalize(cross(N, T));
 	mat3 TBN = mat3(T, B, N);
 
-	return TBN * normalize(texture(normalMap, inUV).xyz * 2.0 - vec3(1.0));
+	return TBN * normalize(texture(normalMap, inUV).xyz * 2.0 -1);
 }
 
 float linearDepth(float depth)
 {
-	float z = depth * 2.0f - 1.0f; 
-	return (2.0f * inNearPlane * inFarPlane) / (inFarPlane + inNearPlane - z * (inFarPlane - inNearPlane));	
+	return (2.0 * inNearPlane * inFarPlane) / (inFarPlane + inNearPlane - depth * (inFarPlane - inNearPlane));	
 }
 
 void main()
@@ -44,7 +41,7 @@ void main()
     float ao = texture(aoMap, inUV).r;
 
 	outAlbedo = texture(albedoMap, inUV);
-    outNormal = vec4(N, 1.0);
+    outNormal = vec4(N, 1);
     outPosition = vec4(inWorldPos, linearDepth(gl_FragCoord.z));
 
     outPBR.x =  metallic;

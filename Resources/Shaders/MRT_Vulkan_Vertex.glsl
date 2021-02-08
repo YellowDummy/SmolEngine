@@ -25,6 +25,20 @@ layout (location = 5) out float outFarPlane;
 
 void main()
 {
+	outWorldPos = vec3(model * vec4(a_Position, 1.0));
+
+	// Normal in view space
+	outNormal = mat3(model) * a_Normal;
+
+	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
+	outUV = a_UV;
+	outNearPlane = nearPlane;
+	outFarPlane = farPlane;
+
+	gl_Position =  projection * view * vec4(outWorldPos, 1.0);
+
+	return;
+
 	vec3 locPos = vec3(model * vec4(a_Position, 1.0));
 	
 	outWorldPos = locPos;
@@ -33,6 +47,4 @@ void main()
 	outUV = a_UV;
 	outNearPlane = nearPlane;
 	outFarPlane = farPlane;
-
-	gl_Position =  projection * view * vec4(outWorldPos, 1.0);
 }
