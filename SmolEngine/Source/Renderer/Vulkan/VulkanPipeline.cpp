@@ -196,19 +196,9 @@ namespace SmolEngine
 			}
 		}
 
-		uint32_t vertexInputAttributsCounts = 0;
-		for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
-		{
-			for (const auto& element : inputInfo.Layout.GetElements())
-			{
-				vertexInputAttributsCounts++;
-			}
-		}
-
 		std::vector<VkVertexInputBindingDescription> vertexInputBindings(m_VulkanPipelineSpecification.VertexInputInfos.size());
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs(vertexInputAttributsCounts);
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs;
 		{
-			vertexInputAttributsCounts = 0;
 			uint32_t index = 0;
 			uint32_t location = 0;
 			for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
@@ -224,15 +214,43 @@ namespace SmolEngine
 				// Vertex input descriptions
 				// Specifies the vertex input parameters for a pipeline
 				{
+
 					for (const auto& element : inputInfo.Layout.GetElements())
 					{
-						vertexInputAttributs[vertexInputAttributsCounts].binding = index;
-						vertexInputAttributs[vertexInputAttributsCounts].location = location;
-						vertexInputAttributs[vertexInputAttributsCounts].format = GetVkInputFormat(element.type);
-						vertexInputAttributs[vertexInputAttributsCounts].offset = element.offset;
+						if (element.type == ShaderDataType::Mat3 || element.type == ShaderDataType::Mat4)
+						{
+							uint32_t count = 0;
+							uint32_t offset = vertexInputAttributs[location - 1].offset;
+							element.type == ShaderDataType::Mat3 ? count = 3 : count = 4;
 
+							for (uint32_t i = 0; i < count; ++i)
+							{
+								offset += count * 4;
+								VkVertexInputAttributeDescription inputAttributeDescription;
+								{
+									inputAttributeDescription.binding = index;
+									inputAttributeDescription.location = location;
+									inputAttributeDescription.format = GetVkInputFormat(element.type);
+									inputAttributeDescription.offset = offset;
+								}
+
+								vertexInputAttributs.emplace_back(inputAttributeDescription);
+								location++;
+							}
+
+							continue;
+						}
+
+						VkVertexInputAttributeDescription inputAttributeDescription;
+						{
+							inputAttributeDescription.binding = index;
+							inputAttributeDescription.location = location;
+							inputAttributeDescription.format = GetVkInputFormat(element.type);
+							inputAttributeDescription.offset = element.offset;
+						}
+
+						vertexInputAttributs.emplace_back(inputAttributeDescription);
 						location++;
-						vertexInputAttributsCounts++;
 					}
 				}
 
@@ -418,37 +436,54 @@ namespace SmolEngine
 			vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 		}
 
-		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes(2);
-		uint32_t unformsBufferSize = 1;
-		uint32_t resourcesBufferSize = 1;
-
-		if (shader->m_UniformBuffers.size() > 0)
-			unformsBufferSize = static_cast<uint32_t>(shader->m_UniformBuffers.size());
-
-		if (shader->m_UniformResources.size() > 0)
-			resourcesBufferSize = static_cast<uint32_t>(shader->m_UniformResources.size());
+		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes;
 
 		// UBO
+		if ((shader->m_UniformBuffers.size() > 0))
 		{
-			VkDescriptorPoolSize tempPoolSize = {};
+			VkDescriptorPoolSize poolSize = {};
 			{
-				tempPoolSize.descriptorCount = unformsBufferSize;
-				tempPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-
+			     poolSize.descriptorCount = static_cast<uint32_t>(shader->m_UniformBuffers.size());
+				 poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 			}
 
-			DescriptorPoolSizes[0] = tempPoolSize;
+			DescriptorPoolSizes.push_back(poolSize);
+		}
+
+		// Storage Buffer
+		if (shader->m_StorageBuffers.size() > 0)
+		{
+			VkDescriptorPoolSize poolSize = {};
+			{
+				poolSize.descriptorCount = static_cast<uint32_t>(shader->m_StorageBuffers.size());
+				poolSize.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+			}
+
+			DescriptorPoolSizes.push_back(poolSize);
 		}
 
 		// Samplers
+		if(shader->m_UniformResources.size())
 		{
-			VkDescriptorPoolSize tempPoolSize = {};
+			VkDescriptorPoolSize poolSize = {};
 			{
-				tempPoolSize.descriptorCount = resourcesBufferSize;
-				tempPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				poolSize.descriptorCount = static_cast<uint32_t>(shader->m_UniformResources.size());
+				poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			}
 
-			DescriptorPoolSizes[1] = tempPoolSize;
+			DescriptorPoolSizes.push_back(poolSize);
+		}
+
+		if (shader->m_UniformResources.size() == 0 && 
+			shader->m_UniformBuffers.size() == 0 && shader->m_StorageBuffers.size() == 0)
+		{
+			// dummy
+			VkDescriptorPoolSize poolSize = {};
+			{
+				poolSize.descriptorCount = 1;
+				poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			}
+			DescriptorPoolSizes.push_back(poolSize);
 		}
 
 		VkDescriptorPoolCreateInfo descriptorPoolInfo = {};
@@ -467,12 +502,11 @@ namespace SmolEngine
 		{
 			m_Descriptors[i].GenDescriptorSet(shader, m_DescriptorPool);
 			m_Descriptors[i].GenUniformBuffersDescriptors(shader);
+			m_Descriptors[i].GenStorageBufferDescriptors(shader);
 			m_Descriptors[i].GenSamplersDescriptors(shader);
-
 		}
 	}
 
-	//TODO: add more formats
 	VkFormat VulkanPipeline::GetVkInputFormat(ShaderDataType type)
 	{
 		switch (type)
@@ -488,9 +522,9 @@ namespace SmolEngine
 		case SmolEngine::ShaderDataType::Float4:
 			return VK_FORMAT_R32G32B32A32_SFLOAT;
 		case SmolEngine::ShaderDataType::Mat3:
-			break;
+			return VK_FORMAT_R32G32B32_SFLOAT;
 		case SmolEngine::ShaderDataType::Mat4:
-			break;
+			return VK_FORMAT_R32G32B32A32_SFLOAT;
 		case SmolEngine::ShaderDataType::Int:
 			return VK_FORMAT_R32_SINT;
 		case SmolEngine::ShaderDataType::Int2:
@@ -505,7 +539,6 @@ namespace SmolEngine
 			break;
 		}
 
-		//temp
 		return VK_FORMAT_R32G32B32_SFLOAT;
 	}
 

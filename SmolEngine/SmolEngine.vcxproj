@@ -642,6 +642,7 @@
     <ClInclude Include="Source\Renderer\FramebufferSpecification.h" />
     <ClInclude Include="Source\Renderer\GraphicsContext.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipeline.h" />
+    <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h" />
     <ClInclude Include="Source\Renderer\IndexBuffer.h" />
     <ClInclude Include="Source\Renderer\Mesh.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h" />

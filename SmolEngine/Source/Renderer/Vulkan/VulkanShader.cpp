@@ -16,7 +16,7 @@ namespace SmolEngine
 
     }
 
-    bool VulkanShader::Init(const std::string& vertexPath, const std::string& fragmentPath, bool usePrecompiledBinaries, bool optimize, const std::string& computePath)
+    bool VulkanShader::Init(GraphicsPipelineShaderCreateInfo* shaderCI)
     {
         shaderc::Compiler compiler;
         shaderc::CompileOptions options;
@@ -25,24 +25,29 @@ namespace SmolEngine
 
         options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
 
-        if (optimize)
+        if(shaderCI->Optimize)
             options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
+        const auto& vexrtex =  shaderCI->FilePaths[ShaderType::Vertex];
+        const auto& frag = shaderCI->FilePaths[ShaderType::Fragment];
+        const auto& compute = shaderCI->FilePaths[ShaderType::Compute];
+
+        // temp
+        bool precompiledBinaries = false;
+
         // Vertex
-        assert(LoadOrCompile(compiler, options, vertexPath, shaderc_shader_kind::shaderc_vertex_shader, usePrecompiledBinaries, binaryData) == true);
+        assert(LoadOrCompile(compiler, options, vexrtex, shaderc_shader_kind::shaderc_vertex_shader, precompiledBinaries, binaryData) == true);
 
         // Fragment
-        assert(LoadOrCompile(compiler, options, fragmentPath, shaderc_shader_kind::shaderc_fragment_shader, usePrecompiledBinaries, binaryData) == true);
+        assert(LoadOrCompile(compiler, options, frag, shaderc_shader_kind::shaderc_fragment_shader, precompiledBinaries, binaryData) == true);
 
         // Compute 
-        if (!computePath.empty())
+        if (!compute.empty())
         {
-            assert(LoadOrCompile(compiler, options, computePath, shaderc_shader_kind::shaderc_compute_shader, usePrecompiledBinaries, binaryData) == true);
+            assert(LoadOrCompile(compiler, options, compute, shaderc_shader_kind::shaderc_compute_shader, precompiledBinaries, binaryData) == true);
         }
-        
-        m_IsPrecompiled = usePrecompiledBinaries;
-        m_Optimize = optimize;
 
+        m_Info = *shaderCI;
         return true;
     }
 
@@ -53,9 +58,9 @@ namespace SmolEngine
         m_PipelineShaderStages.clear();
         m_VkPushConstantRanges.clear();
 
-        if (!m_FilePaths.empty())
+        if (!m_Info.FilePaths.empty())
         {
-            return Init(m_FilePaths[ShaderType::Vertex], m_FilePaths[ShaderType::Fragment], false, m_Optimize, m_FilePaths[ShaderType::Compute]);
+            return Init(&m_Info);
         }
 
         return false;
@@ -78,7 +83,21 @@ namespace SmolEngine
         }
 
         NATIVE_ERROR("UBO not found, binding point: {}", bindingPoint);
-        abort(); // temp
+        assert(false);
+    }
+
+    void VulkanShader::SetStorageBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset)
+    {
+        const auto& result = m_StorageBuffers.find(bindingPoint);
+        if (result != m_StorageBuffers.end())
+        {
+            auto& buffer = result->second;
+            buffer.VkBuffer.SetData(data, size, offset);
+            return;
+        }
+
+        NATIVE_ERROR("Storage buffer not found, binding point: {}", bindingPoint);
+        assert(false);
     }
 
     bool VulkanShader::SaveSPIRVBinaries(const std::string& filePath, const std::vector<uint32_t>& data)
@@ -165,8 +184,24 @@ namespace SmolEngine
             }
 
             m_UniformBuffers[buffer.BindingPoint] = std::move(buffer);
-
             bufferIndex++;
+        }
+
+        for (const auto& res : resources.storage_buffers)
+        {
+            auto& type = compiler.get_type(res.base_type_id);
+            uint32_t bufferElements = static_cast<uint32_t>(type.member_types.size());
+
+            StorageBuffer buffer;
+            {
+                buffer.Name = res.name;
+                buffer.BindingPoint = compiler.get_decoration(res.id, spv::DecorationBinding);
+                buffer.Size = compiler.get_declared_struct_size(type);
+                buffer.StageFlags = GetVkShaderStage(shaderType);
+                buffer.Members = bufferElements;
+            }
+
+            m_StorageBuffers[buffer.BindingPoint] = std::move(buffer);
         }
 
         for (const auto& res : resources.push_constant_buffers)
@@ -209,7 +244,6 @@ namespace SmolEngine
             return false;
 
         ShaderType type = GetShaderType(shaderType);
-        m_FilePaths[type] = filePath;
 
         if (usePrecompiledBinaries)
         {

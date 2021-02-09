@@ -6,11 +6,14 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/EditorCamera.h"
+#include "Renderer/SharedUtils.h"
 
 #include "Renderer/GraphicsPipeline.h"
 
 namespace SmolEngine
 {
+	class VertexBuffer;
+
 	struct UBOMRTParams
 	{
 		glm::vec4 lights[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)} };
@@ -19,7 +22,7 @@ namespace SmolEngine
 
 		float radius = 2.0f;
 		int mode = 0;
-		bool ssaoEnabled = true;
+		int ssaoEnabled;
 	};
 
 	class DeferredRenderingTest : public Layer
@@ -70,6 +73,11 @@ namespace SmolEngine
 		glm::vec4                        m_AddColor = glm::vec4(1);
 
 		bool                             m_RorateModel = true;
+		bool                             m_SSAOEnabled = true;
 		UBOMRTParams                     m_Params = {};
+
+		std::vector<PBRVertexInstanced>  m_Instances;
+		std::vector<glm::mat4>           m_ModelViews;
+		Ref<VertexBuffer>                m_InstanceVB = nullptr;
 	};
 }

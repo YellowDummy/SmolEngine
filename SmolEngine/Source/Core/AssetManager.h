@@ -46,12 +46,9 @@ namespace SmolEngine
 
 		static std::string GetCachedPath(const std::string& filePath, CachedPathType type);
 
-		static Ref<ShaderLib> GetShaderLib() { return s_ShaderLib; }
-
 	private:
 
 		static Ref<AssetManager>       s_Instance;
-		static Ref<ShaderLib>          s_ShaderLib;
 
 	};
 }

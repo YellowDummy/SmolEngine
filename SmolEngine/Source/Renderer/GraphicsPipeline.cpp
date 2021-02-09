@@ -9,6 +9,7 @@
 
 #include "Renderer/Framebuffer.h"
 #include "Renderer/CubeTexture.h"
+#include "Renderer/Mesh.h"
 #include "Renderer/GraphicsContext.h"
 
 namespace SmolEngine
@@ -25,16 +26,11 @@ namespace SmolEngine
 
 		m_GraphicsContext = GraphicsContext::GetSingleton();
 		m_Shader = std::make_shared<Shader>();
+
 		if (pipelineInfo->ShaderCreateInfo->UseSingleFile)
 			Shader::Create(m_Shader, pipelineInfo->ShaderCreateInfo->SingleFilePath);
 		else
-		{
-			const auto& vexrtex = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Vertex];
-			const auto& frag = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Fragment];
-			const auto& compute = pipelineInfo->ShaderCreateInfo->FilePaths[ShaderType::Compute];
-
-			Shader::Create(m_Shader, vexrtex, frag, pipelineInfo->ShaderCreateInfo->Optimize, compute);
-		}
+			Shader::Create(m_Shader, pipelineInfo->ShaderCreateInfo);
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_VextexArray = VertexArray::Create();
@@ -391,12 +387,49 @@ namespace SmolEngine
 #endif
 	}
 
+	void GraphicsPipeline::DrawInstanced(const Ref<Mesh>& mesh, const std::vector<Ref<VertexBuffer>>& instanceVB, uint32_t instances,
+		DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex)
+	{
+#ifdef SMOLENGINE_OPENGL_IMP
+
+#else
+		// Bind the rendering pipeline
+		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
+
+		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
+
+		// Bind Mesh Vertex Buffer
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &mesh->GetVertexBuffer()->GetVulkanVertexBuffer().GetBuffer(), offsets);
+
+		// Bind Instance Vertex  Buffer
+		for (uint32_t i = 0; i < static_cast<uint32_t>(instanceVB.size()); ++i)
+		{
+			vkCmdBindVertexBuffers(m_CommandBuffer, i + 1, 1, &instanceVB[i]->GetVulkanVertexBuffer().GetBuffer(), offsets);
+		}
+
+		// Bind Index Buffer
+		vkCmdBindIndexBuffer(m_CommandBuffer, mesh->GetIndexBuffer()->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+		// Bind descriptor sets describing shader binding points
+		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
+		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
+			&descriptorSets, 0, nullptr);
+
+		// Draw indexed
+		vkCmdDrawIndexed(m_CommandBuffer, mesh->GetIndexBuffer()->GetCount(), instances, 0, 0, 0);
+#endif
+	}
+
 	void GraphicsPipeline::SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
 	{
-#ifndef SMOLENGINE_OPENGL_IMPL
 		m_Shader->SumbitUniformBuffer(bindingPoint, data, size, offset);
-#endif
+	}
 
+	void GraphicsPipeline::SubmitStorageBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
+	{
+		m_Shader->SumbitStorageBuffer(bindingPoint, data, size, offset);
 	}
 
 	void GraphicsPipeline::SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data)

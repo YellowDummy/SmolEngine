@@ -28,8 +28,9 @@ namespace SmolEngine
 	void VulkanDescriptor::GenDescriptorSet(VulkanShader* shader, VkDescriptorPool pool)
 	{
 		std::vector< VkDescriptorSetLayoutBinding> layouts;
-		layouts.reserve(shader->m_UniformResources.size() + shader->m_UniformResources.size());
+		layouts.reserve(shader->m_UniformBuffers.size() + shader->m_UniformResources.size() + shader->m_StorageBuffers.size());
 
+		// ubo
 		for (auto& uboInfo : shader->m_UniformBuffers)
 		{
 			auto& [bindingPoint, buffer] = uboInfo;
@@ -45,26 +46,52 @@ namespace SmolEngine
 			buffer.VkBuffer.Create(buffer.Size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 			buffer.DesriptorBufferInfo.buffer = buffer.VkBuffer.GetBuffer();
 			buffer.DesriptorBufferInfo.offset = 0;
-			buffer.DesriptorBufferInfo.range = buffer.VkBuffer.GetSize();
+			buffer.DesriptorBufferInfo.range = buffer.Size;
 
 			layouts.push_back(layoutBinding);
 		}
 
-		if (!shader->m_UniformResources.empty())
+		// storage buffers
+		for (auto& [key,storageBuffer] : shader->m_StorageBuffers)
 		{
-			for (auto& info : shader->m_UniformResources)
+			auto& pos = shader->m_Info.StorageBuffersSizes.find(key);
+			if (pos == shader->m_Info.StorageBuffersSizes.end())
 			{
-				auto& [bindingPoint, res] = info;
-				VkDescriptorSetLayoutBinding layoutBinding = {};
-				{
-					layoutBinding.binding = res.BindingPoint;
-					layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					res.ArraySize > 0 ? layoutBinding.descriptorCount = res.ArraySize : layoutBinding.descriptorCount = 1;
-					layoutBinding.stageFlags = res.StageFlags;
-				}
-
-				layouts.push_back(layoutBinding);
+				NATIVE_ERROR("Storage buffer sizes are not provided! Use StorageBuffersSizes");
+				abort();
 			}
+
+			VkDescriptorSetLayoutBinding layoutBinding = {};
+			{
+				layoutBinding.binding = storageBuffer.BindingPoint;
+				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				layoutBinding.descriptorCount =storageBuffer.Members;
+				layoutBinding.stageFlags = storageBuffer.StageFlags;
+			}
+
+			storageBuffer.VkBuffer.Create(pos->second, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+				VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+
+			storageBuffer.DesriptorBufferInfo.buffer = storageBuffer.VkBuffer.GetBuffer();
+			storageBuffer.DesriptorBufferInfo.offset = 0;
+			storageBuffer.DesriptorBufferInfo.range = pos->second;
+
+			layouts.push_back(layoutBinding);
+		}
+
+		// samplers
+		for (auto& info : shader->m_UniformResources)
+		{
+			auto& [bindingPoint, res] = info;
+			VkDescriptorSetLayoutBinding layoutBinding = {};
+			{
+				layoutBinding.binding = res.BindingPoint;
+				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				res.ArraySize > 0 ? layoutBinding.descriptorCount = res.ArraySize : layoutBinding.descriptorCount = 1;
+				layoutBinding.stageFlags = res.StageFlags;
+			}
+
+			layouts.push_back(layoutBinding);
 		}
 
 		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
@@ -89,80 +116,87 @@ namespace SmolEngine
 
 	void VulkanDescriptor::GenUniformBuffersDescriptors(VulkanShader* shader)
 	{
-		if (!shader->m_UniformBuffers.empty())
+		for (auto& uboInfo : shader->m_UniformBuffers)
 		{
-			for (auto& uboInfo : shader->m_UniformBuffers)
-			{
-				auto& [bindingPoint, buffer] = uboInfo;
+			auto& [bindingPoint, buffer] = uboInfo;
 
-				m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
-					buffer.BindingPoint, &buffer.DesriptorBufferInfo));
+			m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
+				buffer.BindingPoint, &buffer.DesriptorBufferInfo));
 
-				vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
+			vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 
-				NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
-			}
+			NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
+		}
+	}
+
+	void VulkanDescriptor::GenStorageBufferDescriptors(VulkanShader* shader)
+	{
+		for (auto& [key, storageBuffer] : shader->m_StorageBuffers)
+		{
+			m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
+				storageBuffer.BindingPoint, &storageBuffer.DesriptorBufferInfo, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER));
+
+			vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
+
+			NATIVE_WARN("Created Storage Buffer {}: Members Count: {}, Binding Point: {}", storageBuffer.Name,
+				storageBuffer.Members, storageBuffer.BindingPoint);
 		}
 	}
 
 	void VulkanDescriptor::GenSamplersDescriptors(VulkanShader* shader)
 	{
-		if (!shader->m_UniformResources.empty())
-		{
 #ifndef SMOLENGINE_OPENGL_IMPL
-			m_ImageInfo = Texture::CreateWhiteTexture()->GetVulkanTexture()->m_DescriptorImageInfo;
+		m_ImageInfo = Texture::CreateWhiteTexture()->GetVulkanTexture()->m_DescriptorImageInfo;
 #endif
-
-			for (auto& [bindingPoint, res] : shader->m_UniformResources)
+		for (auto& [bindingPoint, res] : shader->m_UniformResources)
+		{
+			if (res.Dimension == 3) // cubeMap
 			{
-				if (res.Dimension == 3) // cubeMap
+				auto& skyBox = VulkanPBR::GetSkyBox();
+				assert(skyBox.IsActive());
+
+				if (skyBox.IsActive())
 				{
-					auto& skyBox = VulkanPBR::GetSkyBox();
-					assert(skyBox.IsActive());
-
-					if (skyBox.IsActive())
+					VkWriteDescriptorSet writeSet = {};
 					{
-						VkWriteDescriptorSet writeSet = {};
-						{
-							writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-							writeSet.dstSet = m_DescriptorSet;
-							writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-							writeSet.dstBinding = res.BindingPoint;
-							writeSet.dstArrayElement = 0;
-							writeSet.descriptorCount = 1;
-							writeSet.pImageInfo = &skyBox.m_DescriptorImageInfo;
-						}
-
-						m_WriteSets.push_back(writeSet);
-
-						auto& kek = m_WriteSets.back();
-						vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
+						writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+						writeSet.dstSet = m_DescriptorSet;
+						writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+						writeSet.dstBinding = res.BindingPoint;
+						writeSet.dstArrayElement = 0;
+						writeSet.descriptorCount = 1;
+						writeSet.pImageInfo = &skyBox.m_DescriptorImageInfo;
 					}
-					else
-					{
-						NATIVE_ERROR("GraphicsPipeline: Skybox is nullptr!");
-						abort();
-					}
-				}
-				else // sampler2d
-				{
-					std::vector<VkDescriptorImageInfo> infos;
 
-					if (res.ArraySize > 0)
-					{
-						infos.resize(res.ArraySize);
-						for (uint32_t i = 0; i < res.ArraySize; ++i)
-						{
-							infos[i] = m_ImageInfo;
-						}
-					}
-					else
-						infos.push_back(m_ImageInfo);
+					m_WriteSets.push_back(writeSet);
 
-					m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
-						res.BindingPoint, infos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+					auto& kek = m_WriteSets.back();
 					vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 				}
+				else
+				{
+					NATIVE_ERROR("GraphicsPipeline: Skybox is nullptr!");
+					abort();
+				}
+			}
+			else // sampler2d
+			{
+				std::vector<VkDescriptorImageInfo> infos;
+
+				if (res.ArraySize > 0)
+				{
+					infos.resize(res.ArraySize);
+					for (uint32_t i = 0; i < res.ArraySize; ++i)
+					{
+						infos[i] = m_ImageInfo;
+					}
+				}
+				else
+					infos.push_back(m_ImageInfo);
+
+				m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
+					res.BindingPoint, infos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+				vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 			}
 		}
 	}
@@ -182,19 +216,25 @@ namespace SmolEngine
 		if (!writeSet)
 			return false;
 
-		std::vector<VkDescriptorImageInfo> infos(textures.size());
-		for (uint32_t i = 0; i < textures.size(); ++i)
+		std::vector<VkDescriptorImageInfo> infos(writeSet->descriptorCount);
+		for (uint32_t i = 0; i < writeSet->descriptorCount; ++i)
 		{
-			if (textures[i])
-				infos[i] = textures[i]->m_DescriptorImageInfo;
-			else
-				infos[i] = m_ImageInfo;
+			if (textures.size() > i)
+			{
+				if (textures[i])
+				{
+					infos[i] = textures[i]->m_DescriptorImageInfo;
+					continue;
+				}
+			}
+
+			infos[i] = m_ImageInfo;
 		}
 
 		*writeSet = CreateWriteSet(m_DescriptorSet,
 			bindingPoint, infos, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
-		UpdateWriteSets();
+		vkUpdateDescriptorSets(m_Device, 1, writeSet, 0, nullptr);
 		return true;
 	}
 
@@ -270,7 +310,7 @@ namespace SmolEngine
 			writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			writeSet.dstSet = descriptorSet;
 			writeSet.dstBinding = binding;
-			writeSet.dstArrayElement = 0; // temp
+			writeSet.dstArrayElement = 0;
 			writeSet.descriptorType = descriptorType;
 			writeSet.descriptorCount = 1;
 			writeSet.pBufferInfo = descriptorBufferInfo;

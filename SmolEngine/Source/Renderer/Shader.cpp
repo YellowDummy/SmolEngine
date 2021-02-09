@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Shader.h"
 
-#include "Renderer/Renderer.h"
+#include "Renderer/GraphicsPipelineShaderCreateInfo.h"
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
@@ -22,13 +22,11 @@ namespace SmolEngine
 #endif
 	}
 
-	void Shader::Create(Ref<Shader>& outShader, const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
+	void Shader::Create(Ref<Shader>& outShader, GraphicsPipelineShaderCreateInfo* shader)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
-		outShader->m_OpenglShader.Init(vertexPath, fragmentPath, vertexPath);
 #else
-		bool precompiled = false; // temp
-		assert(outShader->m_VulkanShader.Init(vertexPath, fragmentPath, precompiled, optimize, computePath) == true);
+		assert(outShader->m_VulkanShader.Init(shader) == true);
 #endif
 	}
 
@@ -134,6 +132,14 @@ namespace SmolEngine
 #endif
 	}
 
+	void Shader::SumbitStorageBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset)
+	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+#else
+		m_VulkanShader.SetStorageBuffer(bindPoint, data, size, offset);
+#endif
+	}
+
 	uint32_t Shader::GetProgramID()
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
@@ -151,46 +157,5 @@ namespace SmolEngine
 		// Vulkan
 		return std::string("empty");
 #endif
-	}
-
-	void ShaderLib::AddElement(const Ref<Shader>& element)
-	{
-		auto name = element->GetName();
-
-		if (!NameExist(name))
-		{
-			m_ShaderMap[name] = element;
-			NATIVE_INFO("Shader Library -> Added new Shader <{}>", name);
-		}
-		else
-		{
-			NATIVE_WARN("Shader Library -> Shader <{}> already exist!", name);
-		}
-	}
-
-	Ref<Shader> ShaderLib::GetElement(const std::string& shaderName)
-	{
-		return m_ShaderMap[shaderName];
-	}
-
-	Ref<Shader> ShaderLib::Load(const std::string& filePath)
-	{
-		auto shader = std::make_shared<Shader>();
-		Shader::Create(shader, filePath);
-		AddElement(shader);
-		return shader;
-	}
-
-	Ref<Shader> ShaderLib::Load(const std::string& vertexPath, const std::string& fragmentPath, bool optimize, const std::string& computePath)
-	{
-		auto shader = std::make_shared<Shader>();
-		Shader::Create(shader, vertexPath, fragmentPath, optimize, computePath);
-		AddElement(shader);
-		return shader;
-	}
-
-	bool ShaderLib::NameExist(const std::string& name)
-	{
-		return m_ShaderMap.find(name) != m_ShaderMap.end();
 	}
 }

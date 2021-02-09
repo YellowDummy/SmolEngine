@@ -18,6 +18,8 @@ namespace SmolEngine
 
 		void GenUniformBuffersDescriptors(VulkanShader* shader);
 
+		void GenStorageBufferDescriptors(VulkanShader* shader);
+
 		void GenSamplersDescriptors(VulkanShader* shader);
 
 		// Update

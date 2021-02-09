@@ -185,7 +185,10 @@ void main()
 				outFragcolor = vec4(ao, 1);
 				break;
 			case 5: 
-				outFragcolor = vec4(metallic, roughness, ao.z, 1);
+				outFragcolor = vec4(metallic, metallic, metallic, 1);
+				break;
+			case 6: 
+				outFragcolor = vec4(roughness, roughness, roughness, 1);
 				break;
 		}
 

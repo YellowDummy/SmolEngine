@@ -1596,6 +1596,7 @@
     <ClInclude Include="Source\Renderer\SharedUtils.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
     <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
+    <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">

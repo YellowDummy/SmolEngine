@@ -5,36 +5,26 @@
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #endif
 
+#include "Renderer/GraphicsPipelineShaderCreateInfo.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/Texture.h"
 #include "Renderer/SharedUtils.h"
 #include "Renderer/Shader.h"
-#include "Renderer/ShaderTypes.h"
 #include "Renderer/GraphicsContext.h"
 
 namespace SmolEngine
 {
 	class Framebuffer;
 	class CubeTexture;
+	class Mesh;
 
 	enum class DrawMode : uint16_t
 	{
 		Triangle,
 		Line,
 		Fan
-	};
-
-	struct GraphicsPipelineShaderCreateInfo
-	{
-		bool                                 Optimize = false;
-		bool                                 UseSingleFile = false;
-
-		std::unordered_map<ShaderType,
-			std::string>                     FilePaths;
-		std::string                          SingleFilePath = "";
-
 	};
 
 	struct GraphicsPipelineCreateInfo
@@ -96,6 +86,10 @@ namespace SmolEngine
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle,
 			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
+		void DrawInstanced(const Ref<Mesh>& mesh, const std::vector<Ref<VertexBuffer>>& instanceVB,
+			uint32_t instances, DrawMode mode = DrawMode::Triangle,
+			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+
 		// Submit
 
 		void BeginBufferSubmit();
@@ -103,6 +97,8 @@ namespace SmolEngine
 		void EndBufferSubmit();
 
 		void SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
+
+		void SubmitStorageBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 
 		template<typename T>
 		void SumbitUniform(const std::string& name, const void* data, uint32_t arrayElements = 0, size_t size = 0)

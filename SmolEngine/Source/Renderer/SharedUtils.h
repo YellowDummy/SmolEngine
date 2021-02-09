@@ -30,16 +30,19 @@ namespace SmolEngine
 
 	struct PBRVertexInstanced
 	{
-		glm::vec3           Position;
-		glm::vec3           Rotation;
-		glm::vec3           Scale;
+		int          UseAlbedroMap = 0;
+		int          UseNormalMap = 0;
+		int          UseMetallicMap = 0;
+		int          UseRoughnessMap = 0;
+		int          UseAOMap = 0;
+			         
+		int          AlbedroMapIndex = 0;
+		int          NormalMapIndex = 0;
+		int          MetallicMapIndex = 0;
+		int          RoughnessMapIndex = 0;
+		int          AOMapIndex = 0;
 
-		float               Albedo = 0.1f;
-		float               Metallic = 0.1f;
-		float               Roughness = 0.1f;
-
-		int                 AlbedoSamplerIndex = 0;
-		int                 MetallicSamplerIndex = 0;
-		int                 RoughnessSamplerIndex = 0;
+		float        Metallic = 0;
+		float        Roughness = 0;
 	};
 }

@@ -15,6 +15,8 @@
 
 namespace SmolEngine
 {
+	struct GraphicsPipelineShaderCreateInfo;
+
 	class Shader
 	{
 	public:
@@ -33,7 +35,9 @@ namespace SmolEngine
 
 		///  Uniforms
 
-		void SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset = 0);
+		void SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset);
+
+		void SumbitStorageBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset);
 
 		template<typename T>
 		void SumbitUniform(const std::string& name, const void* data, uint32_t count = 0, uint32_t size = 0)
@@ -102,17 +106,13 @@ namespace SmolEngine
 
 	public:
 
-		///
 		/// Getters
-		/// 
 
 		uint32_t GetProgramID();
 
 		const std::string& GetName();
 
-		/// 
 		/// Operators
-		/// 
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 
@@ -127,61 +127,18 @@ namespace SmolEngine
 		VulkanShader* GetVulkanShader() { return &m_VulkanShader; }
 #endif
 
-		///
 		/// Factory
-		/// 
 
 		static void Create(Ref<Shader>& outShader, const std::string& filePath);
 
-		static void Create(Ref<Shader>& outShader, const std::string& vertexPath, const std::string& fragmentPath, bool optimize = false, const std::string& computePath = "");
+		static void Create(Ref<Shader>& outShader, GraphicsPipelineShaderCreateInfo* shader);
 
 	private:
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 		OpenglShader m_OpenglShader = {};
 #else
 		VulkanShader m_VulkanShader = {};
-
-#endif // SMOLENGINE_OPENGL_IMPL
-	};
-
-	class ShaderLib
-	{
-	public:
-
-		ShaderLib() = default;
-
-		ShaderLib(const ShaderLib&) = delete;
-
-		///
-		/// Main
-		/// 
-
-		void AddElement(const Ref<Shader>& element);
-
-		///
-		/// Getters
-		/// 
-
-		Ref<Shader> GetElement(const std::string& shaderName);
-
-		///
-		/// Load
-		/// 
-
-		Ref<Shader> Load(const std::string& filePath);
-
-		Ref<Shader> Load(const std::string& vertexPath, const std::string& fragmentPath, bool optimize = false, const std::string& computePath = "");
-
-	private:
-
-		bool NameExist(const std::string& name);
-
-	private:
-
-		std::unordered_map<std::string, Ref<Shader>> m_ShaderMap;
-
-		std::unordered_map<std::string, Ref<Shader>>::iterator it = m_ShaderMap.begin();
+#endif 
 	};
 }

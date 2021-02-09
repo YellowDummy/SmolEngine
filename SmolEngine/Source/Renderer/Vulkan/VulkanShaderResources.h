@@ -21,6 +21,18 @@ namespace SmolEngine
 		spirv_cross::SPIRType Type;
 	};
 
+	struct StorageBuffer
+	{
+		std::string Name = "";
+		VkShaderStageFlags StageFlags;
+		VkDescriptorBufferInfo DesriptorBufferInfo;
+		VulkanBuffer VkBuffer = {};
+
+		uint32_t BindingPoint = 0;
+		uint32_t Members = 0;
+		size_t Size = 0;
+	};
+
 	struct UniformBuffer
 	{
 		std::string Name = "";

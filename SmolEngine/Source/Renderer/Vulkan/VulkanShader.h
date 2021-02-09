@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Core.h"
-#include "Renderer/ShaderTypes.h"
+#include "Renderer/GraphicsPipelineShaderCreateInfo.h"
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanShaderResources.h"
 #include "Renderer/Vulkan/VulkanDescriptor.h"
@@ -21,13 +21,15 @@ namespace SmolEngine
 
 		/// Init
 		
-		bool Init(const std::string& vertexPath, const std::string& fragmentPath, bool usePrecompiledBinaries = false, bool optimize = false, const std::string& computePath = "");
+		bool Init(GraphicsPipelineShaderCreateInfo* shaderCI);
 
 		bool Reload();
 
-		/// Uniforms
+		/// Setters
 		
 		void SetUniformBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset = 0);
+
+		void SetStorageBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset = 0);
 
 		/// Getters
 
@@ -61,16 +63,15 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<VkPushConstantRange>                    m_VkPushConstantRanges;
-		std::unordered_map<size_t, UniformResource>         m_UniformResources;
-		std::vector<VkPipelineShaderStageCreateInfo>        m_PipelineShaderStages;
-		std::unordered_map<size_t, UniformBuffer>           m_UniformBuffers;
-		std::unordered_map<ShaderType, std::string>         m_FilePaths;
-		std::unordered_map<ShaderType, VkShaderModule>      m_ShaderModules;
-
-		bool                                                m_Optimize = false;
-		bool                                                m_IsPrecompiled = false;
+		GraphicsPipelineShaderCreateInfo                    m_Info = {};
 		size_t                                              m_MinUboAlignment = 0;
+
+		std::unordered_map<uint32_t, UniformResource>       m_UniformResources;
+		std::unordered_map<uint32_t, UniformBuffer>         m_UniformBuffers;
+		std::unordered_map<uint32_t, StorageBuffer>         m_StorageBuffers;
+		std::unordered_map<ShaderType, VkShaderModule>      m_ShaderModules;
+		std::vector<VkPushConstantRange>                    m_VkPushConstantRanges;
+		std::vector<VkPipelineShaderStageCreateInfo>        m_PipelineShaderStages;
 
 	private:
 

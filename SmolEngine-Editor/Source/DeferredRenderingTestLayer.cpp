@@ -6,7 +6,6 @@
 #include "Renderer/Shader.h"
 #include "Renderer/CubeTexture.h"
 #include "Renderer/Mesh.h"
-#include "Renderer/SharedUtils.h"
 
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
@@ -24,6 +23,65 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENL_IMPL // Vulkan support only
 		return;
 #endif
+		// Instance Data
+
+		PBRVertexInstanced instanceOne = {};
+		{
+			instanceOne.UseAlbedroMap = true;
+			instanceOne.UseAOMap = true;
+			instanceOne.UseMetallicMap = true;
+			instanceOne.UseNormalMap = true;
+			instanceOne.UseRoughnessMap = true;
+
+			instanceOne.AlbedroMapIndex = 0;
+			instanceOne.AOMapIndex = 0;
+			instanceOne.MetallicMapIndex = 0;
+			instanceOne.NormalMapIndex = 0;
+			instanceOne.RoughnessMapIndex = 0;
+		}
+
+		PBRVertexInstanced instanceTwo = {};
+		{
+			instanceTwo.UseAlbedroMap = false;
+			instanceTwo.UseAOMap = false;
+			instanceTwo.UseMetallicMap = false;
+			instanceTwo.UseNormalMap = false;
+			instanceTwo.UseRoughnessMap = false;
+
+			instanceTwo.Roughness = 0.1f;
+			instanceTwo.Metallic = 0.2f;
+		}
+
+		BufferLayout PBRInstanceLayout =
+		{
+			{ ShaderDataType::Int, "useAlbedroMap" },
+			{ ShaderDataType::Int, "useNormalMap" },
+			{ ShaderDataType::Int, "useMetallicMap" },
+			{ ShaderDataType::Int, "useUseRoughnessMap" },
+			{ ShaderDataType::Int, "useUseAOMap" },
+
+			{ ShaderDataType::Int, "AlbedroIndex" },
+			{ ShaderDataType::Int, "NormalIndex" },
+			{ ShaderDataType::Int, "MetallicIndex" },
+			{ ShaderDataType::Int, "RoughnessIndex" },
+			{ ShaderDataType::Int, "AOIndex" },
+
+			{ ShaderDataType::Float, "Metallic" },
+			{ ShaderDataType::Float, "Roughness" }
+		};
+
+		m_Instances.resize(2);
+		m_Instances[0] = instanceOne;
+		m_Instances[1] = instanceTwo;
+
+		m_ModelViews.resize(2);
+		CommandSystem::ComposeTransform(m_Pos, m_Rot, m_Scale, true, m_ModelViews[0]);
+		CommandSystem::ComposeTransform(m_Pos + glm::vec3(2, 4, 4), m_Rot, m_Scale, true, m_ModelViews[1]);
+
+		m_InstanceVB = VertexBuffer::Create(m_Instances.data(),
+			static_cast<uint32_t>(sizeof(PBRVertexInstanced) * m_Instances.size()));
+
+
 		//SSAO
 
 		struct SSAOTempUbo
@@ -120,6 +178,7 @@ namespace SmolEngine
 			{
 				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/MRT_Vulkan_Vertex.glsl";
 				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/MRT_Vulkan_Fragment.glsl";
+				shaderCI.StorageBuffersSizes[25] = { sizeof(glm::mat4) * 2 };
 			};
 
 			BufferLayout mainLayout =
@@ -133,7 +192,9 @@ namespace SmolEngine
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(PBRVertex), mainLayout) };
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(PBRVertex), mainLayout),
+					VertexInputInfo(sizeof(PBRVertexInstanced), PBRInstanceLayout, true) };
+
 				DynamicPipelineCI.PipelineName = "Deferred_Rendering";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.IsUseMRT = true;
@@ -142,14 +203,16 @@ namespace SmolEngine
 			bool result = m_Pipeline->Create(&DynamicPipelineCI);
 			assert(result == true);
 
+			m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * 2, m_ModelViews.data());
+
 			m_Pipeline->SetVertexBuffers({ m_TestMesh->GetVertexBuffer() });
 			m_Pipeline->SetIndexBuffers({ m_TestMesh->GetIndexBuffer() });
 
-			m_Pipeline->UpdateSampler(m_Tetxure1, 5); //albedo
-			m_Pipeline->UpdateSampler(m_Tetxure3, 6); //normal
-			m_Pipeline->UpdateSampler(m_Tetxure5, 7); //ao
-			m_Pipeline->UpdateSampler(m_Tetxure2, 8); //metallic
-			m_Pipeline->UpdateSampler(m_Tetxure4, 9); //roughness
+			m_Pipeline->UpdateSamplers({ m_Tetxure1 }, 5); //albedo
+			m_Pipeline->UpdateSamplers({ m_Tetxure3 }, 6); //normal
+			m_Pipeline->UpdateSamplers({ m_Tetxure5 }, 7); //ao
+			m_Pipeline->UpdateSamplers({ m_Tetxure2 }, 8); //metallic
+			m_Pipeline->UpdateSamplers({ m_Tetxure4 }, 9); //roughness
 		}
 
 		// SSAO + SSAO Blur
@@ -363,10 +426,10 @@ namespace SmolEngine
 
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("Rotate Model", &m_RorateModel);
-		ImGui::Checkbox("SSAO Enabled", &m_Params.ssaoEnabled);
+		ImGui::Checkbox("SSAO Enabled", &m_SSAOEnabled);
 
 		ImGui::NewLine();
-		std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Ambient Occlusion", "PBRParams" };
+		std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Ambient Occlusion", "Metallic", "Roughness" };
 		uint32_t itemCount = static_cast<uint32_t>(charitems.size());
 		bool res = ImGui::Combo("Display", &m_Params.mode, &charitems[0], itemCount, itemCount);
 
@@ -400,7 +463,6 @@ namespace SmolEngine
 					struct PushConsant
 					{
 						glm::mat4 proj;
-						glm::mat4 model;
 						glm::mat4 view;
 
 						float nearPlane;
@@ -412,10 +474,9 @@ namespace SmolEngine
 					pc.view = m_EditorCamera->GetViewMatrix();
 					pc.nearPlane = m_EditorCamera->GetNearClip();
 					pc.farPlane = m_EditorCamera->GetFarClip();
-					pc.model = trans;
 
 					m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_Pipeline->DrawIndexed();
+					m_Pipeline->DrawInstanced(m_TestMesh, { m_InstanceVB }, 2);
 				}
 				m_Pipeline->EndRenderPass();
 			}
@@ -448,7 +509,7 @@ namespace SmolEngine
 				m_SkyboxPipeline->EndRenderPass();
 			}
 
-			if (m_Params.ssaoEnabled)
+			if (m_SSAOEnabled)
 			{
 				// SSAO
 				{
@@ -496,6 +557,8 @@ namespace SmolEngine
 			m_CombinationPipeline->BeginBufferSubmit();
 
 			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 0);
+
+			m_SSAOEnabled ? m_Params.ssaoEnabled = 1 : m_Params.ssaoEnabled = 0;
 
 			m_CombinationPipeline->SumbitUniformBuffer(15, sizeof(UBOMRTParams), &m_Params);
 
