@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Shared.h"
 #include "Renderer/Vulkan/VulkanSwapchain.h"
 #include "Renderer/Vulkan/VulkanShader.h"
 #include "Renderer/Vulkan/VulkanDevice.h"

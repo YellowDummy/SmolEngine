@@ -577,7 +577,7 @@ namespace SmolEngine
 		switch (mode)
 		{
 		case SmolEngine::DrawMode::Triangle:
-			return VK_CULL_MODE_BACK_BIT;
+			return VK_CULL_MODE_NONE;
 		case SmolEngine::DrawMode::Line:
 			return VK_CULL_MODE_BACK_BIT;
 		case SmolEngine::DrawMode::Fan:

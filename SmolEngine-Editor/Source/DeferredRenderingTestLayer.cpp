@@ -11,7 +11,7 @@
 #include "Renderer/Vulkan/VulkanContext.h"
 #include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #include "Renderer/SSAOGenerator.h"
-
+#include "Renderer/MaterialLibrary.h"
 #include "Renderer/Vulkan/VulkanPBR.h"
 
 #include "ECS/Systems/CommandSystem.h"
@@ -23,64 +23,29 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENL_IMPL // Vulkan support only
 		return;
 #endif
-		// Instance Data
+		// Create materials
 
-		PBRVertexInstanced instanceOne = {};
-		{
-			instanceOne.UseAlbedroMap = true;
-			instanceOne.UseAOMap = true;
-			instanceOne.UseMetallicMap = true;
-			instanceOne.UseNormalMap = true;
-			instanceOne.UseRoughnessMap = true;
+		MaterialCreateInfo materialCI = {};
+		materialCI.Name = "Default Material";
+		assert(MaterialLibrary::GetSinglenton()->Add(&materialCI) > -1);
+		auto material_ = MaterialLibrary::GetSinglenton()->GetMaterial(0);
+		material_->m_MaterialProperties.Roughness = 0.9f;
+		material_->m_MaterialProperties.Metallic = 1.0f;
 
-			instanceOne.AlbedroMapIndex = 0;
-			instanceOne.AOMapIndex = 0;
-			instanceOne.MetallicMapIndex = 0;
-			instanceOne.NormalMapIndex = 0;
-			instanceOne.RoughnessMapIndex = 0;
-		}
+		MaterialCreateInfo chairMaterialCI = {};
+		materialCI.Name = "WoodenChair Material";
+		int32_t id = MaterialLibrary::GetSinglenton()->Add(&materialCI);
+		auto material = MaterialLibrary::GetSinglenton()->GetMaterial(id);
 
-		PBRVertexInstanced instanceTwo = {};
-		{
-			instanceTwo.UseAlbedroMap = false;
-			instanceTwo.UseAOMap = false;
-			instanceTwo.UseMetallicMap = false;
-			instanceTwo.UseNormalMap = false;
-			instanceTwo.UseRoughnessMap = false;
+		material->m_MaterialProperties.UseAlbedroMap = true;
+		material->m_MaterialProperties.UseAOMap = false;
+		material->m_MaterialProperties.UseMetallicMap = true;
+		material->m_MaterialProperties.UseRoughnessMap = true;
+		material->m_MaterialProperties.UseNormalMap = true;
 
-			instanceTwo.Roughness = 0.1f;
-			instanceTwo.Metallic = 0.2f;
-		}
-
-		BufferLayout PBRInstanceLayout =
-		{
-			{ ShaderDataType::Int, "useAlbedroMap" },
-			{ ShaderDataType::Int, "useNormalMap" },
-			{ ShaderDataType::Int, "useMetallicMap" },
-			{ ShaderDataType::Int, "useUseRoughnessMap" },
-			{ ShaderDataType::Int, "useUseAOMap" },
-
-			{ ShaderDataType::Int, "AlbedroIndex" },
-			{ ShaderDataType::Int, "NormalIndex" },
-			{ ShaderDataType::Int, "MetallicIndex" },
-			{ ShaderDataType::Int, "RoughnessIndex" },
-			{ ShaderDataType::Int, "AOIndex" },
-
-			{ ShaderDataType::Float, "Metallic" },
-			{ ShaderDataType::Float, "Roughness" }
-		};
-
-		m_Instances.resize(2);
-		m_Instances[0] = instanceOne;
-		m_Instances[1] = instanceTwo;
-
-		m_ModelViews.resize(2);
-		CommandSystem::ComposeTransform(m_Pos, m_Rot, m_Scale, true, m_ModelViews[0]);
-		CommandSystem::ComposeTransform(m_Pos + glm::vec3(2, 4, 4), m_Rot, m_Scale, true, m_ModelViews[1]);
-
-		m_InstanceVB = VertexBuffer::Create(m_Instances.data(),
-			static_cast<uint32_t>(sizeof(PBRVertexInstanced) * m_Instances.size()));
-
+		// Models buffer
+		m_ModelViews.resize(1);
+		CommandSystem::ComposeTransform(m_Pos, m_Rot, glm::vec3(0.5f, 0.5f, 0.5f), true, m_ModelViews[0]);
 
 		//SSAO
 
@@ -136,19 +101,19 @@ namespace SmolEngine
 
 		// Model Textures
 		{
-			m_Tetxure1 = Texture::Create("../Resources/SMGtextureSet_Base_Color.png");
-			m_Tetxure3 = Texture::Create("../Resources/SMGtextureSet_Normal_DirectX.png");
-			m_Tetxure2 = Texture::Create("../Resources/SMGtextureSet_Metallic.png");
-			m_Tetxure4 = Texture::Create("../Resources/SMGtextureSet_Roughness.png");
-			m_Tetxure5 = Texture::Create("../Resources/SMGtextureSet_AO.png");
+			m_Tetxure1 = Texture::Create("../Resources/WoodenChair_01_16-bit_Diffuse.png");
+			m_Tetxure3 = Texture::Create("../Resources/WoodenChair_01_16-bit_Normal.png");
+			m_Tetxure2 = Texture::Create("../Resources/WoodenChair_01_16-bit_Metallic.png");
+			m_Tetxure4 = Texture::Create("../Resources/WoodenChair_01_16-bit_Roughness.png");
+			m_Tetxure5 = Texture::Create("../Resources/WoodenChair_01_16-bit_Height.png");
 		}
 
 		float quadVertices[] = {
 			// positions   // texCoords
-			-1.0f, -1.0f,  0.0f, 0.0f,
-			 1.0f, -1.0f,  1.0f, 0.0f,
-			 1.0f,  1.0f,  1.0f, 1.0f,
-			-1.0f,  1.0f,  0.0f, 1.0f
+			-1.0f, -1.0f,  0.0f, 1.0f,
+			 1.0f, -1.0f,  1.0f, 1.0f,
+			 1.0f,  1.0f,  1.0f, 0.0f,
+			-1.0f,  1.0f,  0.0f, 0.0f
 		};
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -169,7 +134,9 @@ namespace SmolEngine
 		auto FullScreenID = IndexBuffer::Create(squareIndices, 6);
 
 		// Model
-		m_TestMesh = Mesh::Create("../Resources/30_SMG_LP.obj");
+		m_TestMesh = Mesh::Create("../Resources/WoodenChair_01.FBX");
+
+		m_SponzaMesh = Mesh::Create("../Resources/sponza.glb");
 
 		// MRT
 		{
@@ -178,7 +145,9 @@ namespace SmolEngine
 			{
 				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/MRT_Vulkan_Vertex.glsl";
 				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/MRT_Vulkan_Fragment.glsl";
-				shaderCI.StorageBuffersSizes[25] = { sizeof(glm::mat4) * 2 };
+
+				shaderCI.StorageBuffersSizes[25] = { sizeof(glm::mat4) * m_ModelViews.size() };
+				shaderCI.StorageBuffersSizes[26] = { sizeof(Material) * 1000 };
 			};
 
 			BufferLayout mainLayout =
@@ -192,8 +161,7 @@ namespace SmolEngine
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(PBRVertex), mainLayout),
-					VertexInputInfo(sizeof(PBRVertexInstanced), PBRInstanceLayout, true) };
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(PBRVertex), mainLayout) };
 
 				DynamicPipelineCI.PipelineName = "Deferred_Rendering";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
@@ -203,10 +171,10 @@ namespace SmolEngine
 			bool result = m_Pipeline->Create(&DynamicPipelineCI);
 			assert(result == true);
 
-			m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * 2, m_ModelViews.data());
+			m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
 
-			m_Pipeline->SetVertexBuffers({ m_TestMesh->GetVertexBuffer() });
-			m_Pipeline->SetIndexBuffers({ m_TestMesh->GetIndexBuffer() });
+			//m_Pipeline->SetVertexBuffers({ m_TestMesh->GetVertexBuffer() });
+			//m_Pipeline->SetIndexBuffers({ m_TestMesh->GetIndexBuffer() });
 
 			m_Pipeline->UpdateSamplers({ m_Tetxure1 }, 5); //albedo
 			m_Pipeline->UpdateSamplers({ m_Tetxure3 }, 6); //normal
@@ -425,13 +393,24 @@ namespace SmolEngine
 			m_Rot.y += 0.0005f;
 
 		ImGui::Begin("Settings");
-		ImGui::Checkbox("Rotate Model", &m_RorateModel);
 		ImGui::Checkbox("SSAO Enabled", &m_SSAOEnabled);
 
 		ImGui::NewLine();
-		std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Ambient Occlusion", "Metallic", "Roughness" };
-		uint32_t itemCount = static_cast<uint32_t>(charitems.size());
-		bool res = ImGui::Combo("Display", &m_Params.mode, &charitems[0], itemCount, itemCount);
+		{
+			std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Ambient Occlusion", "Metallic", "Roughness" };
+			uint32_t itemCount = static_cast<uint32_t>(charitems.size());
+			bool res = ImGui::Combo("Display", &m_Params.mode, &charitems[0], itemCount, itemCount);
+		}
+
+		ImGui::NewLine();
+		{
+			std::vector<const char*> MaterialsItems = { "Default", "Chair" };
+			uint32_t itemCount = static_cast<uint32_t>(MaterialsItems.size());
+			bool res = ImGui::Combo("Material", &m_MaterialIndex, &MaterialsItems[0], itemCount, itemCount);
+		}
+
+		ImGui::InputFloat("Metallic", &MaterialLibrary::GetSinglenton()->GetMaterial(0)->m_MaterialProperties.Metallic);
+		ImGui::InputFloat("Roughness", &MaterialLibrary::GetSinglenton()->GetMaterial(0)->m_MaterialProperties.Roughness);
 
 		ImGui::End();
 	}
@@ -451,6 +430,12 @@ namespace SmolEngine
 
 			// MRT
 			{
+				// Update materials
+				void* data = nullptr;
+				uint32_t size = 0;
+				MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
+				m_Pipeline->SubmitStorageBuffer(26, size, data);
+
 				m_Pipeline->BeginCommandBuffer();
 				m_Pipeline->BeginRenderPass(m_DeferredFrameBuffer);
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -468,6 +453,9 @@ namespace SmolEngine
 						float nearPlane;
 						float farPlane;
 
+						int modelIndex;
+						int materialIndex;
+
 					} pc;
 
 					pc.proj = m_EditorCamera->GetProjection();
@@ -475,8 +463,11 @@ namespace SmolEngine
 					pc.nearPlane = m_EditorCamera->GetNearClip();
 					pc.farPlane = m_EditorCamera->GetFarClip();
 
+					pc.modelIndex = 0;
+					pc.materialIndex = m_MaterialIndex;
+
 					m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_Pipeline->DrawInstanced(m_TestMesh, { m_InstanceVB }, 2);
+					m_Pipeline->DrawMesh(m_TestMesh);
 				}
 				m_Pipeline->EndRenderPass();
 			}

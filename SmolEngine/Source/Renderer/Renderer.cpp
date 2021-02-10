@@ -6,7 +6,7 @@
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/GraphicsPipeline.h"
 #include "Renderer/Shader.h"
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Shared.h"
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/OpenGL/OpenglShader.h"
@@ -24,9 +24,6 @@ namespace SmolEngine
 	{
 		Ref<Mesh>                        Mesh = nullptr;
 		uint32_t                         Count = 0;
-
-		std::array<PBRVertexInstanced,
-			s_MaxInstances>              Buffer;
 	};
 
 	struct RendererData
@@ -133,9 +130,6 @@ namespace SmolEngine
 
 		// Main vertex - no intance rate
 		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
-
-		// Material vertex = instanced
-		VertexInputInfo vertexMaterial(sizeof(PBRVertexInstanced), materialLayout, true);
 
 		GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 		{

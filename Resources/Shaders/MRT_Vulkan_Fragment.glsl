@@ -58,7 +58,8 @@ vec3 calculateNormal()
 
 float linearDepth(float depth)
 {
-	return (2.0 * inNearPlane * inFarPlane) / (inFarPlane + inNearPlane - depth * (inFarPlane - inNearPlane));	
+	float z = depth * 2.0f - 1.0f; 
+	return (2.0 * inNearPlane * inFarPlane) / (inFarPlane + inNearPlane - z * (inFarPlane - inNearPlane));	
 }
 
 void main()

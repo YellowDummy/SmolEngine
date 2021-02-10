@@ -1593,10 +1593,12 @@
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
     <ClInclude Include="Source\ECS\Components\MaterialComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
-    <ClInclude Include="Source\Renderer\SharedUtils.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
     <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h" />
+    <ClInclude Include="Source\Renderer\Material.h" />
+    <ClInclude Include="Source\Renderer\Shared.h" />
+    <ClInclude Include="Source\Renderer\MaterialLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1934,5 +1936,7 @@
     <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp" />
     <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
+    <ClCompile Include="Source\Renderer\Material.cpp" />
+    <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
   </ItemGroup>
 </Project>

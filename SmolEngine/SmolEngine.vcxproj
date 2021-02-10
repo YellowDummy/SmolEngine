@@ -644,6 +644,8 @@
     <ClInclude Include="Source\Renderer\GraphicsPipeline.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h" />
     <ClInclude Include="Source\Renderer\IndexBuffer.h" />
+    <ClInclude Include="Source\Renderer\Material.h" />
+    <ClInclude Include="Source\Renderer\MaterialLibrary.h" />
     <ClInclude Include="Source\Renderer\Mesh.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglContext.h" />
@@ -657,7 +659,7 @@
     <ClInclude Include="Source\Renderer\Renderer2DData.h" />
     <ClInclude Include="Source\Renderer\Shader.h" />
     <ClInclude Include="Source\Renderer\ShaderTypes.h" />
-    <ClInclude Include="Source\Renderer\SharedUtils.h" />
+    <ClInclude Include="Source\Renderer\Shared.h" />
     <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Renderer\Text.h" />
@@ -771,6 +773,8 @@
     <ClCompile Include="Source\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="Source\Renderer\GraphicsPipeline.cpp" />
     <ClCompile Include="Source\Renderer\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Renderer\Material.cpp" />
+    <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
     <ClCompile Include="Source\Renderer\Mesh.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglContext.cpp" />

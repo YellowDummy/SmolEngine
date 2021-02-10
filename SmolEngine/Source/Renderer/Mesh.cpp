@@ -5,7 +5,7 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Material.h"
 #include "ECS/Systems/CommandSystem.h"
 
 #include <glm/glm.hpp>
@@ -33,15 +33,44 @@ namespace SmolEngine
             m_IndexBuffer->Destory();
         if (m_VertexBuffer)
             m_VertexBuffer->Destory();
+
+        for (auto& subMeshes: m_SubMeshes)
+            subMeshes->Free();
+
+        if (m_SubMeshes.size() != 0)
+            m_SubMeshes.clear();
     }
 
     bool Mesh::Init(ImportedData* data)
     {
         Free();
-        m_VertexCount = static_cast<uint32_t>(data->VertexData.size());
-        m_VertexBuffer = VertexBuffer::Create(data->VertexData.data(), static_cast<uint32_t>(sizeof(PBRVertex) * data->VertexData.size()));
-        m_IndexBuffer = IndexBuffer::Create(data->Indices.data(), static_cast<uint32_t>(data->Indices.size()));
+        if (data->Components.size() > 1)
+            m_SubMeshes.reserve(data->Components.size() - 1);
+
+        for (uint32_t i = 0; i < static_cast<uint32_t>(data->Components.size()); ++i)
+        {
+            auto& component = data->Components[i];
+
+            // Main
+            if (i == 0)
+            {
+                CreateVertexAndIndexBuffers(component);
+                continue;
+            }
+
+            // Sub
+            Ref<Mesh> mesh = std::make_shared<Mesh>();
+            mesh->CreateVertexAndIndexBuffers(component);
+            m_SubMeshes.emplace_back(mesh);
+        }
 
         return true;
+    }
+
+    void Mesh::CreateVertexAndIndexBuffers(ImportedComponent& component)
+    {
+        m_VertexCount = static_cast<uint32_t>(component.VertexData.size());
+        m_VertexBuffer = VertexBuffer::Create(component.VertexData.data(), static_cast<uint32_t>(sizeof(PBRVertex) * component.VertexData.size()));
+        m_IndexBuffer = IndexBuffer::Create(component.Indices.data(), static_cast<uint32_t>(component.Indices.size()));
     }
 }

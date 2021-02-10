@@ -6,7 +6,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/CubeTexture.h"
 #include "Renderer/Mesh.h"
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Shared.h"
 
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"

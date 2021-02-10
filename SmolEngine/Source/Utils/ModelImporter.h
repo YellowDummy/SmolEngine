@@ -1,13 +1,18 @@
 #pragma once
 #include "Core/Core.h"
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Shared.h"
 
 namespace SmolEngine
 {
-	struct ImportedData
+	struct ImportedComponent
 	{
 		std::vector<PBRVertex>            VertexData;
 		std::vector<uint32_t>             Indices;
+	};
+
+	struct ImportedData
+	{
+		std::vector<ImportedComponent>    Components;
 	};
 
 	class ModelImporter

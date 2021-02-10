@@ -6,7 +6,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/EditorCamera.h"
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Shared.h"
 
 #include "Renderer/GraphicsPipeline.h"
 
@@ -54,6 +54,7 @@ namespace SmolEngine
 
 		Ref<CubeTexture>                 m_CubeTexture = nullptr;
 		Ref<Mesh>                        m_TestMesh = nullptr;
+		Ref<Mesh>                        m_SponzaMesh = nullptr;
 
 		Ref<GraphicsPipeline>            m_Pipeline = nullptr;
 		Ref<GraphicsPipeline>            m_SSAOPipeline = nullptr;
@@ -67,16 +68,16 @@ namespace SmolEngine
 		Ref<Framebuffer>                 m_SSAOBlurFrameBuffer = nullptr;
 		Ref<EditorCamera>                m_EditorCamera = nullptr;
 
-		glm::vec3                        m_Pos = glm::vec3(1.0f);
+		glm::vec3                        m_Pos = glm::vec3(0.0f);
 		glm::vec3                        m_Scale = glm::vec3(1.0f);
 		glm::vec3                        m_Rot = glm::vec3(0.0f);
 		glm::vec4                        m_AddColor = glm::vec4(1);
 
 		bool                             m_RorateModel = true;
 		bool                             m_SSAOEnabled = true;
+		int                              m_MaterialIndex = 0;
 		UBOMRTParams                     m_Params = {};
 
-		std::vector<PBRVertexInstanced>  m_Instances;
 		std::vector<glm::mat4>           m_ModelViews;
 		Ref<VertexBuffer>                m_InstanceVB = nullptr;
 	};

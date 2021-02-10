@@ -10,7 +10,7 @@
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/Texture.h"
-#include "Renderer/SharedUtils.h"
+#include "Renderer/Shared.h"
 #include "Renderer/Shader.h"
 #include "Renderer/GraphicsContext.h"
 
@@ -86,9 +86,7 @@ namespace SmolEngine
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle,
 			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
-		void DrawInstanced(const Ref<Mesh>& mesh, const std::vector<Ref<VertexBuffer>>& instanceVB,
-			uint32_t instances, DrawMode mode = DrawMode::Triangle,
-			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+		void DrawMesh(const Ref<Mesh>& mesh, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
 
 		// Submit
 

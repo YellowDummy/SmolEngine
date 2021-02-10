@@ -321,25 +321,18 @@ namespace SmolEngine
 			break;
 		}
 #else
-		// Bind the rendering pipeline
-		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
-
 		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
-		// Bind Vertex Buffer
 		VkDeviceSize offsets[1] = { 0 };
 		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);
 
-		// Bind Index Buffer
 		vkCmdBindIndexBuffer(m_CommandBuffer, m_IndexBuffers[indexBufferIndex]->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-		// Bind descriptor sets describing shader binding points
 		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
 		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
 			&descriptorSets, 0, nullptr);
 
-		// Draw indexed
 		vkCmdDrawIndexed(m_CommandBuffer, m_IndexBuffers[indexBufferIndex]->GetVulkanIndexBuffer().GetCount(), 1, 0, 0, 1);
 #endif
 	}
@@ -367,59 +360,40 @@ namespace SmolEngine
 			break;
 		}
 #else
-		// Bind the rendering pipeline
-		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
-
 		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
-		// Bind Vertex Buffer
 		VkDeviceSize offsets[1] = { 0 };
 		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &m_VertexBuffers[vertexBufferIndex]->GetVulkanVertexBuffer().GetBuffer(), offsets);
 
-		// Bind descriptor sets describing shader binding points
 		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
 		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
 			&descriptorSets, 0, nullptr);
 
-		// Draw
 		vkCmdDraw(m_CommandBuffer, vertextCount, 1, 0, 0);
 #endif
 	}
 
-	void GraphicsPipeline::DrawInstanced(const Ref<Mesh>& mesh, const std::vector<Ref<VertexBuffer>>& instanceVB, uint32_t instances,
-		DrawMode mode, uint32_t vertexBufferIndex, uint32_t descriptorSetIndex)
+	void GraphicsPipeline::DrawMesh(const Ref<Mesh>& mesh, DrawMode mode, uint32_t descriptorSetIndex)
 	{
-#ifdef SMOLENGINE_OPENGL_IMP
-
-#else
-		// Bind the rendering pipeline
-		// The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
-
 		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
-		// Bind Mesh Vertex Buffer
-		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &mesh->GetVertexBuffer()->GetVulkanVertexBuffer().GetBuffer(), offsets);
-
-		// Bind Instance Vertex  Buffer
-		for (uint32_t i = 0; i < static_cast<uint32_t>(instanceVB.size()); ++i)
-		{
-			vkCmdBindVertexBuffers(m_CommandBuffer, i + 1, 1, &instanceVB[i]->GetVulkanVertexBuffer().GetBuffer(), offsets);
-		}
-
-		// Bind Index Buffer
-		vkCmdBindIndexBuffer(m_CommandBuffer, mesh->GetIndexBuffer()->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-		// Bind descriptor sets describing shader binding points
 		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
 		vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			m_VulkanPipeline.GetVkPipelineLayot(), 0, 1,
 			&descriptorSets, 0, nullptr);
 
-		// Draw indexed
-		vkCmdDrawIndexed(m_CommandBuffer, mesh->GetIndexBuffer()->GetCount(), instances, 0, 0, 0);
-#endif
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &mesh->GetVertexBuffer()->GetVulkanVertexBuffer().GetBuffer(), offsets);
+		vkCmdBindIndexBuffer(m_CommandBuffer, mesh->GetIndexBuffer()->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+		vkCmdDrawIndexed(m_CommandBuffer, mesh->GetIndexBuffer()->GetCount(), 1, 0, 0, 0);
+
+		for (auto& subMesh : mesh->GetSubMeshes())
+		{
+			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &subMesh->GetVertexBuffer()->GetVulkanVertexBuffer().GetBuffer(), offsets);
+			vkCmdBindIndexBuffer(m_CommandBuffer, subMesh->GetIndexBuffer()->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			vkCmdDrawIndexed(m_CommandBuffer, subMesh->GetIndexBuffer()->GetCount(), 1, 0, 0, 0);
+		}
 	}
 
 	void GraphicsPipeline::SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)

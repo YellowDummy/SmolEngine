@@ -1,39 +1,49 @@
 #version 460 core
 
-// binding 1 - mesh
 layout(location = 0)  in vec3 a_Position;
 layout(location = 1)  in vec3 a_Normal;
 layout(location = 2)  in vec4 a_Tangent;
 layout(location = 3)  in vec2 a_UV;
 layout(location = 4)  in vec4 a_Color;
 
-// binding 2 - instance input rate
-layout(location = 5)  in int a_UseAlbedroMap;
-layout(location = 6)  in int a_UseNormalMap;
-layout(location = 7)  in int a_UseMetallicMap;
-layout(location = 8)  in int a_UseRoughnessMap;
-layout(location = 9)  in int a_UseAOMap;
+struct MaterialData
+{
+   int UseAlbedroMap;
+   int UseNormalMap;
+   int UseMetallicMap;
+   int UseRoughnessMap;
+   int UseAOMap;
+   
+   int AlbedroMapIndex;
+   int NormalMapIndex;
+   int MetallicMapIndex;
+   int RoughnessMapIndex;
+   int AOMapIndex;
+   
+   float Metallic;
+   float Roughness;
+   float Ambient;
+   float Specular;
+};
 
-layout(location = 10) in int a_AlbedroMapIndex;
-layout(location = 11) in int a_NormalMapIndex;
-layout(location = 12) in int a_MetallicMapIndex;
-layout(location = 13) in int a_RoughnessMapIndex;
-layout(location = 14) in int a_AOMapIndex;
-
-layout(location = 15) in float a_Metallic;
-layout(location = 16) in float a_Roughness;
-
-struct InstanceData
+struct ModelData
 {
 	mat4 model;
 };
 
-//all object matrices
-layout(std140, binding = 25) readonly buffer ObjectBuffer
+// all object matrices
+layout(std140, binding = 25) readonly buffer ModelBuffer
 {   
-	InstanceData objects[];
+	ModelData models[];
 
-} objectBuffer;
+} modelsBuffer;
+
+// all object materials
+layout(std140, binding = 26) readonly buffer ObjectBuffer
+{   
+	MaterialData materials[];
+
+} materialBuffer;
 
 layout(push_constant) uniform CameraData
 {
@@ -42,6 +52,9 @@ layout(push_constant) uniform CameraData
 
 	float nearPlane;
 	float farPlane;
+
+	int modelIndex;
+	int materialIndex;
 };
 
 // out values
@@ -74,11 +87,11 @@ layout (location = 20)  out mat3 outTBN;
 
 void main()
 {
-	mat4 model = objectBuffer.objects[gl_InstanceIndex].model;
+	mat4 model = modelsBuffer.models[modelIndex].model;
 
-	outWorldPos = vec3(model  * vec4(a_Position, 1.0));
-	outNormal = mat3(model) * a_Normal;
-	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
+	outWorldPos = vec3(model * vec4(a_Position, 0.0));
+	outNormal =  vec3(model * vec4(a_Normal, 0.0));
+	outTangent = vec4(vec3(model * vec4(a_Tangent.xyz, 0.0)).rgb, a_Tangent.w);
 	outUV = a_UV;
 
 	// TBN matrix
@@ -90,22 +103,22 @@ void main()
 
 	outNearPlane = nearPlane;
 	outFarPlane = farPlane;
-	outRoughness = a_Roughness;
-	outMetallic = a_Metallic;
+	outRoughness = materialBuffer.materials[materialIndex].Roughness;
+	outMetallic = materialBuffer.materials[materialIndex].Metallic;
 
 	// states
-	outUseAlbedroMap = a_UseAlbedroMap;
-	outUseNormalMap = a_UseNormalMap;
-	outUseMetallicMap = a_UseMetallicMap;
-	outUseRoughnessMap = a_UseRoughnessMap;
-	outUseAOMap = a_UseAOMap;
+	outUseAlbedroMap = materialBuffer.materials[materialIndex].UseAlbedroMap;
+	outUseNormalMap = materialBuffer.materials[materialIndex].UseNormalMap;
+	outUseMetallicMap = materialBuffer.materials[materialIndex].UseMetallicMap;
+	outUseRoughnessMap = materialBuffer.materials[materialIndex].UseRoughnessMap;
+	outUseAOMap = materialBuffer.materials[materialIndex].UseAOMap;
 
 	// index
-	outAlbedroMapIndex = a_AlbedroMapIndex;
-	outNormalMapIndex = a_NormalMapIndex;
-	outMetallicMapIndex = a_MetallicMapIndex;
-	outRoughnessMapIndex = a_RoughnessMapIndex;
-	outAOMapIndex = a_AOMapIndex;
+	outAlbedroMapIndex = materialBuffer.materials[gl_InstanceIndex].AlbedroMapIndex;
+	outNormalMapIndex = materialBuffer.materials[gl_InstanceIndex].NormalMapIndex;
+	outMetallicMapIndex = materialBuffer.materials[gl_InstanceIndex].MetallicMapIndex;
+	outRoughnessMapIndex = materialBuffer.materials[gl_InstanceIndex].RoughnessMapIndex;
+	outAOMapIndex = materialBuffer.materials[gl_InstanceIndex].AOMapIndex;
 
 	gl_Position =  projection * view * vec4(outWorldPos, 1.0);
 }
