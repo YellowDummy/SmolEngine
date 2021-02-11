@@ -28,6 +28,8 @@ namespace SmolEngine
 
 		Material* GetMaterial(uint32_t ID);
 
+		std::vector<Material>& GetMaterials();
+
 		void GetMaterialsPtr(void*& data, uint32_t& size);
 
 	private:

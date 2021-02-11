@@ -1464,13 +1464,7 @@
     <ClInclude Include="Source\Renderer\Renderer2D.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\Renderer2DData.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\Shader.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\ShaderTypes.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\SubTexture.h">
@@ -1480,9 +1474,6 @@
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Texture.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\TextureFormat.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\TexturesPool.h">
@@ -1531,9 +1522,6 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipeline.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanPipelineSpecification.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSemaphore.h">
@@ -1599,6 +1587,10 @@
     <ClInclude Include="Source\Renderer\Material.h" />
     <ClInclude Include="Source\Renderer\Shared.h" />
     <ClInclude Include="Source\Renderer\MaterialLibrary.h" />
+    <ClInclude Include="Source\Renderer\RendererShared.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\FilePaths.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">

@@ -1,9 +1,13 @@
 #include "stdafx.h"
 #include "VulkanPipeline.h"
 
+#include "Core/FilePaths.h"
+
 #include "Renderer/GraphicsPipeline.h"
+#include "Renderer/Framebuffer.h"
+
 #include "Renderer/Vulkan/VulkanRenderPass.h"
-#include "Renderer/Vulkan/VulkanPipelineSpecification.h"
+#include "Renderer/Vulkan/VulkanShader.h"
 #include "Renderer/Vulkan/VulkanContext.h"
 
 namespace SmolEngine
@@ -15,23 +19,18 @@ namespace SmolEngine
 
 	VulkanPipeline::~VulkanPipeline()
 	{
-		m_VulkanPipelineSpecification = {};
+
 	}
 
-	bool VulkanPipeline::Invalidate(VulkanPipelineSpecification& pipelineSpec)
+	bool VulkanPipeline::Invalidate(GraphicsPipelineCreateInfo* pipelineSpec, VulkanShader* shader)
 	{
-		if(!pipelineSpec.Device || !pipelineSpec.Shader || !pipelineSpec.TargetSwapchain || pipelineSpec.DescriptorSets == 0)
-		{
-			assert(false);
-			return false;
-		}
+		m_PipelineSpecification = pipelineSpec;
+		m_Shader = shader;
+		BuildDescriptors(shader, pipelineSpec->DescriptorSets);
 
-		BuildDescriptors(pipelineSpec.Shader, pipelineSpec.DescriptorSets);
-		m_VulkanPipelineSpecification = pipelineSpec;
-		m_VulkanPipelineSpecification.Initialized = true;
-
-		m_TargetRenderPass = VulkanRenderPass::GetRenderPass(pipelineSpec.IsTargetsSwapchain, pipelineSpec.IsUseMSAA, pipelineSpec.IsUseMRT);
-
+#ifndef SMOLENGINE_OPENGL_IMPL
+		m_TargetRenderPass = pipelineSpec->TargetFramebuffer->GetVulkanFramebuffer().GetRenderPass();
+#endif
 		m_SetLayout.clear();
 		m_SetLayout.reserve(m_Descriptors.size());
 		for (auto& descriptor : m_Descriptors)
@@ -45,21 +44,18 @@ namespace SmolEngine
 			pipelineLayoutCI.pNext = nullptr;
 			pipelineLayoutCI.setLayoutCount = static_cast<uint32_t>(m_SetLayout.size());
 			pipelineLayoutCI.pSetLayouts = m_SetLayout.data();
-			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(pipelineSpec.Shader->m_VkPushConstantRanges.size());
-			pipelineLayoutCI.pPushConstantRanges = pipelineSpec.Shader->m_VkPushConstantRanges.data();
+			pipelineLayoutCI.pushConstantRangeCount = static_cast<uint32_t>(shader->m_VkPushConstantRanges.size());
+			pipelineLayoutCI.pPushConstantRanges = shader->m_VkPushConstantRanges.data();
 
-			VK_CHECK_RESULT(vkCreatePipelineLayout(pipelineSpec.Device->GetLogicalDevice(), &pipelineLayoutCI, nullptr, &m_PipelineLayout));
+			VK_CHECK_RESULT(vkCreatePipelineLayout(m_Device, &pipelineLayoutCI, nullptr, &m_PipelineLayout));
 		}
 
-		m_FilePath = "../Resources/Cached/" + pipelineSpec.Name;
+		m_FilePath = "../Resources/Cached/" + pipelineSpec->PipelineName;
 		return true;
 	}
 
 	bool VulkanPipeline::CreatePipeline(DrawMode mode)
 	{
-		const auto& shader = m_VulkanPipelineSpecification.Shader;
-		const auto& swapchain = m_VulkanPipelineSpecification.TargetSwapchain;
-
 		// Create the graphics pipeline
 		// Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
 		// A pipeline is then stored and hashed on the GPU making pipeline changes very fast
@@ -101,37 +97,27 @@ namespace SmolEngine
 		// Color blend state describes how blend factors are calculated (if used)
 		// We need one blend attachment state per color attachment (even if blending is not used)
 		std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentState;
-		if (m_VulkanPipelineSpecification.IsUseMRT)
 		{
-			blendAttachmentState.resize(4);
+			uint32_t count = static_cast<uint32_t>(m_PipelineSpecification->TargetFramebuffer->GetSpecification().Attachments.size());
+			blendAttachmentState.resize(count);
 
-			blendAttachmentState[0].colorWriteMask = 0xf;
-			blendAttachmentState[0].blendEnable = VK_FALSE;
-
-			blendAttachmentState[1].colorWriteMask = 0xf;
-			blendAttachmentState[1].blendEnable = VK_FALSE;
-
-			blendAttachmentState[2].colorWriteMask = 0xf;
-			blendAttachmentState[2].blendEnable = VK_FALSE;
-
-			blendAttachmentState[3].colorWriteMask = 0xf;
-			blendAttachmentState[3].blendEnable = VK_FALSE;
-		}
-		else
-		{
-			blendAttachmentState.resize(1);
-			blendAttachmentState[0].colorWriteMask = 0xf;
-			blendAttachmentState[0].blendEnable = VK_FALSE;
-
-			if (m_VulkanPipelineSpecification.IsAlphaBlendingEnabled)
+			for (uint32_t i = 0; i < count; ++i)
 			{
-				blendAttachmentState[0].blendEnable = VK_TRUE;
-				blendAttachmentState[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-				blendAttachmentState[0].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-				blendAttachmentState[0].colorBlendOp = VK_BLEND_OP_ADD;
-				blendAttachmentState[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-				blendAttachmentState[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-				blendAttachmentState[0].alphaBlendOp = VK_BLEND_OP_ADD;
+				auto& attachment = m_PipelineSpecification->TargetFramebuffer->GetSpecification().Attachments[i];
+				if (attachment.bAlphaBlending)
+				{
+					blendAttachmentState[i].blendEnable = VK_TRUE;
+					blendAttachmentState[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+					blendAttachmentState[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+					blendAttachmentState[i].colorBlendOp = VK_BLEND_OP_ADD;
+					blendAttachmentState[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+					blendAttachmentState[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+					blendAttachmentState[i].alphaBlendOp = VK_BLEND_OP_ADD;
+					continue;
+				}
+
+				blendAttachmentState[i].colorWriteMask = 0xf;
+				blendAttachmentState[i].blendEnable = VK_FALSE;
 			}
 		}
 
@@ -171,14 +157,14 @@ namespace SmolEngine
 		VkPipelineDepthStencilStateCreateInfo depthStencilState = {};
 		{
 			depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-			depthStencilState.depthTestEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;
-			depthStencilState.depthWriteEnable = m_VulkanPipelineSpecification.IsDepthTestEnabled ? VK_TRUE : VK_FALSE;
+			depthStencilState.depthTestEnable = m_PipelineSpecification->bDepthTestEnabled ? VK_TRUE : VK_FALSE;
+			depthStencilState.depthWriteEnable = m_PipelineSpecification->bDepthTestEnabled ? VK_TRUE : VK_FALSE;
 			depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 			depthStencilState.depthBoundsTestEnable = VK_FALSE;
 			depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
 			depthStencilState.stencilTestEnable = VK_FALSE;
-			depthStencilState.minDepthBounds = m_VulkanPipelineSpecification.MinDepth;
-			depthStencilState.maxDepthBounds = m_VulkanPipelineSpecification.MaxDepth;
+			depthStencilState.minDepthBounds = m_PipelineSpecification->MinDepth;
+			depthStencilState.maxDepthBounds = m_PipelineSpecification->MaxDepth;
 		}
 
 		// Multi sampling state
@@ -187,21 +173,23 @@ namespace SmolEngine
 			multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 			multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
-			if (m_VulkanPipelineSpecification.IsUseMSAA)
+			if (m_PipelineSpecification->TargetFramebuffer->GetSpecification().bUseMSAA)
 			{
-				multisampleState.rasterizationSamples = VulkanContext::GetDevice().GetMSAASamplesCount();
+#ifndef SMOLEGNINE_OPENGL_IMPL
+				multisampleState.rasterizationSamples = m_PipelineSpecification->TargetFramebuffer->GetVulkanFramebuffer().GetMSAASamples();
+#endif
 				multisampleState.sampleShadingEnable = VK_TRUE;
 				multisampleState.minSampleShading = 0.2f;
 				multisampleState.pSampleMask = nullptr;
 			}
 		}
 
-		std::vector<VkVertexInputBindingDescription> vertexInputBindings(m_VulkanPipelineSpecification.VertexInputInfos.size());
+		std::vector<VkVertexInputBindingDescription> vertexInputBindings(m_PipelineSpecification->VertexInputInfos.size());
 		std::vector<VkVertexInputAttributeDescription> vertexInputAttributs;
 		{
 			uint32_t index = 0;
 			uint32_t location = 0;
-			for (const auto& inputInfo : m_VulkanPipelineSpecification.VertexInputInfos)
+			for (const auto& inputInfo : m_PipelineSpecification->VertexInputInfos)
 			{
 				// Vertex input binding
 				// This example uses a single vertex input binding at binding point 0 (see vkCmdBindVertexBuffers)
@@ -217,11 +205,11 @@ namespace SmolEngine
 
 					for (const auto& element : inputInfo.Layout.GetElements())
 					{
-						if (element.type == ShaderDataType::Mat3 || element.type == ShaderDataType::Mat4)
+						if (element.type == DataTypes::Mat3 || element.type == DataTypes::Mat4)
 						{
 							uint32_t count = 0;
 							uint32_t offset = vertexInputAttributs[location - 1].offset;
-							element.type == ShaderDataType::Mat3 ? count = 3 : count = 4;
+							element.type == DataTypes::Mat3 ? count = 3 : count = 4;
 
 							for (uint32_t i = 0; i < count; ++i)
 							{
@@ -262,7 +250,7 @@ namespace SmolEngine
 		VkPipelineVertexInputStateCreateInfo vertexInputState = {};
 		{
 			vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-			if (m_VulkanPipelineSpecification.VertexInputInfos.size() > 0)
+			if (m_PipelineSpecification->VertexInputInfos.size() > 0)
 			{
 				vertexInputState.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindings.size());
 				vertexInputState.pVertexBindingDescriptions = vertexInputBindings.data();
@@ -272,8 +260,8 @@ namespace SmolEngine
 		}
 
 		// Set pipeline shader stage info
-		pipelineCreateInfo.stageCount = static_cast<uint32_t>(shader->GetVkPipelineShaderStages().size());
-		pipelineCreateInfo.pStages = shader->GetVkPipelineShaderStages().data();
+		pipelineCreateInfo.stageCount = static_cast<uint32_t>(m_Shader->GetVkPipelineShaderStages().size());
+		pipelineCreateInfo.pStages = m_Shader->GetVkPipelineShaderStages().data();
 
 		// Assign the pipeline states to the pipeline creation info structure
 		pipelineCreateInfo.pVertexInputState = &vertexInputState;
@@ -300,19 +288,16 @@ namespace SmolEngine
 
 	bool VulkanPipeline::ReCreate()
 	{
-		if (m_VulkanPipelineSpecification.Initialized)
+		Destroy();
+		if (Invalidate(m_PipelineSpecification, m_Shader))
 		{
-			Destroy();
-			if (Invalidate(m_VulkanPipelineSpecification))
+			for (auto mode : m_PipelineSpecification->PipelineDrawModes)
 			{
-				for (auto mode : m_VulkanPipelineSpecification.PipelineDrawModes)
-				{
-					CreatePipeline(mode);
-				}
-				return true;
+				CreatePipeline(mode);
 			}
-
+			return true;
 		}
+
 		return false;
 	}
 
@@ -350,11 +335,10 @@ namespace SmolEngine
 		{
 			size_t size = 0;
 			void* data = nullptr;
-			const auto& device = m_VulkanPipelineSpecification.Device->GetLogicalDevice();
 
-			vkGetPipelineCacheData(device, m_PipelineCaches[mode], &size, nullptr);
+			vkGetPipelineCacheData(m_Device, m_PipelineCaches[mode], &size, nullptr);
 			data = (char*)malloc(sizeof(char) * size);
-			vkGetPipelineCacheData(device, m_PipelineCaches[mode], &size, data);
+			vkGetPipelineCacheData(m_Device, m_PipelineCaches[mode], &size, data);
 
 			size_t result = fwrite(data, sizeof(char), size, f);
 			if (result != size)
@@ -507,33 +491,33 @@ namespace SmolEngine
 		}
 	}
 
-	VkFormat VulkanPipeline::GetVkInputFormat(ShaderDataType type)
+	VkFormat VulkanPipeline::GetVkInputFormat(DataTypes type)
 	{
 		switch (type)
 		{
-		case SmolEngine::ShaderDataType::None:
+		case SmolEngine::DataTypes::None:
 			break;
-		case SmolEngine::ShaderDataType::Float:
+		case SmolEngine::DataTypes::Float:
 			return VK_FORMAT_R32_SFLOAT;
-		case SmolEngine::ShaderDataType::Float2:
+		case SmolEngine::DataTypes::Float2:
 			return VK_FORMAT_R32G32_SFLOAT;
-		case SmolEngine::ShaderDataType::Float3:
+		case SmolEngine::DataTypes::Float3:
 			return VK_FORMAT_R32G32B32_SFLOAT;
-		case SmolEngine::ShaderDataType::Float4:
+		case SmolEngine::DataTypes::Float4:
 			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case SmolEngine::ShaderDataType::Mat3:
+		case SmolEngine::DataTypes::Mat3:
 			return VK_FORMAT_R32G32B32_SFLOAT;
-		case SmolEngine::ShaderDataType::Mat4:
+		case SmolEngine::DataTypes::Mat4:
 			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case SmolEngine::ShaderDataType::Int:
+		case SmolEngine::DataTypes::Int:
 			return VK_FORMAT_R32_SINT;
-		case SmolEngine::ShaderDataType::Int2:
+		case SmolEngine::DataTypes::Int2:
 			return VK_FORMAT_R32G32_SINT;
-		case SmolEngine::ShaderDataType::Int3:
+		case SmolEngine::DataTypes::Int3:
 			return VK_FORMAT_R32G32B32_SINT;
-		case SmolEngine::ShaderDataType::Int4:
+		case SmolEngine::DataTypes::Int4:
 			return VK_FORMAT_R32G32B32A32_SINT;
-		case SmolEngine::ShaderDataType::Bool:
+		case SmolEngine::DataTypes::Bool:
 			return VK_FORMAT_R32_SINT;
 		default:
 			break;
@@ -577,7 +561,7 @@ namespace SmolEngine
 		switch (mode)
 		{
 		case SmolEngine::DrawMode::Triangle:
-			return VK_CULL_MODE_NONE;
+			return VK_CULL_MODE_BACK_BIT;
 		case SmolEngine::DrawMode::Line:
 			return VK_CULL_MODE_BACK_BIT;
 		case SmolEngine::DrawMode::Fan:

@@ -44,6 +44,11 @@ namespace SmolEngine
 		return &m_Materials[ID];
 	}
 
+	std::vector<Material>& MaterialLibrary::GetMaterials()
+	{
+		return m_Materials;
+	}
+
 	void MaterialLibrary::GetMaterialsPtr(void*& data, uint32_t& size)
 	{
 		data = m_Materials.data();

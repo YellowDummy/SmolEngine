@@ -80,6 +80,8 @@ namespace SmolEngine
 
 	void Renderer2D::Init()
 	{
+		return; // FIX
+
 		s_Data = new Renderer2DStorage();
 
 		s_Data->QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -99,7 +101,7 @@ namespace SmolEngine
 #endif
 
 		s_Data->MainPipeline->BeginCommandBuffer();
-		s_Data->MainPipeline->BeginRenderPass(targetFramebuffer);
+		s_Data->MainPipeline->BeginRenderPass();
 		{
 			s_Data->MainPipeline->ClearColors();
 		}
@@ -163,7 +165,7 @@ namespace SmolEngine
 		}
 #endif
 
-		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+		s_Data->MainPipeline->BeginRenderPass();
 		{
 			// Iterating over all layers
 			for (auto& layer : s_Data->Layers)
@@ -194,7 +196,7 @@ namespace SmolEngine
 		s_Data->MainPipeline->UpdateSamplers(layer.TextureSlots, s_SamplersBindingPoint, layer.LayerIndex);
 		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
 
-		s_Data->MainPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+		s_Data->MainPipeline->BeginRenderPass();
 		{
 			DrawLayer(layer);
 		}
@@ -406,7 +408,7 @@ namespace SmolEngine
 	{
 		s_Data->DebugPipeline->BeginCommandBuffer();
 		s_Data->DebugPipeline->BeginBufferSubmit();
-		s_Data->DebugPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+		s_Data->DebugPipeline->BeginRenderPass();
 	}
 
 	void Renderer2D::EndDebug()
@@ -472,7 +474,7 @@ namespace SmolEngine
 		{
 			s_Data->DebugPipeline->CmdUpdateVertextBuffer(&LineVertex, sizeof(LineVertex), bufferIndex);
 		}
-		s_Data->DebugPipeline->BeginRenderPass(s_Data->SceneData.targetFramebuffer);
+		s_Data->DebugPipeline->BeginRenderPass();
 		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
 
 #endif
@@ -552,11 +554,11 @@ namespace SmolEngine
 
 		BufferLayout layout(
 		{
-			{ ShaderDataType::Float3, "a_Position" }, // layout(location = 0)
-			{ ShaderDataType::Float4, "a_Color"},
-			{ ShaderDataType::Float2, "a_TexCoord" },
-			{ ShaderDataType::Float, "a_TextMode"},
-			{ ShaderDataType::Float, "a_TextureIndex"} // layout(location = 4)
+			{ DataTypes::Float3, "a_Position" }, // layout(location = 0)
+			{ DataTypes::Float4, "a_Color"},
+			{ DataTypes::Float2, "a_TexCoord" },
+			{ DataTypes::Float, "a_TextMode"},
+			{ DataTypes::Float, "a_TextureIndex"} // layout(location = 4)
 		});
 
 		//VertexBuffers
@@ -590,7 +592,6 @@ namespace SmolEngine
 			graphicsPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(QuadVertex), layout, false) };
 			graphicsPipelineCI.ShaderCreateInfo = &shaderCI;
 
-			graphicsPipelineCI.IsAlphaBlendingEnabled = true;
 			graphicsPipelineCI.DescriptorSets = Renderer2DStorage::MaxLayers;
 			graphicsPipelineCI.PipelineName = "Renderer2D_Main";
 		}
@@ -626,7 +627,7 @@ namespace SmolEngine
 		s_Data->DebugPipeline = std::make_shared<GraphicsPipeline>();
 		BufferLayout layout(
 		{
-			{ ShaderDataType::Float3, "a_Position" }
+			{ DataTypes::Float3, "a_Position" }
 		});
 
 		/// Quad
@@ -679,7 +680,7 @@ namespace SmolEngine
 			graphicsPipelineCI.PipelineName = "Renderer2D_Debug";
 		}
 
-		assert(s_Data->DebugPipeline->Create(&graphicsPipelineCI) == true);
+		s_Data->DebugPipeline->Create(&graphicsPipelineCI);
 
 		//
 		s_Data->DebugPipeline->SetVertexBuffers({ QuadBuffer, CircleBuffer, LineBuffer });

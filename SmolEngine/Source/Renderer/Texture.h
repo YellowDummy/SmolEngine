@@ -2,7 +2,7 @@
 
 #include "Renderer/OpenGL/OpenglTexture.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
-#include "Renderer/TextureFormat.h"
+#include "Renderer/Shared.h"
 
 #include <glm/glm.hpp>
 #include <string>

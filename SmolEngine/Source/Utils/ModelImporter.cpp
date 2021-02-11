@@ -8,6 +8,8 @@
 
 namespace SmolEngine
 {
+    // TODO: Add materials and animations
+
     bool ModelImporter::Load(const std::string& filePath, ImportedData* out_data)
     {
         Assimp::Importer importer;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Renderer2DData.h"
+#include "Renderer/RendererShared.h"
 
 /// 07.11.2020
 /// 

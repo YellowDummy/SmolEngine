@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Renderer/Vulkan/Vulkan.h"
-#include "Renderer/TextureFormat.h"
+#include "Renderer/Shared.h"
 
 namespace SmolEngine
 {

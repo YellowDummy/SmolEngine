@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Core.h"
-#include "Renderer/ShaderTypes.h"
+#include "Renderer/Shared.h"
 
 #include <unordered_map>
 #include <string>

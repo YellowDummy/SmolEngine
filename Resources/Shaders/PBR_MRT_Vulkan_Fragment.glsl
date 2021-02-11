@@ -156,7 +156,7 @@ void main()
 	// Getters
 
 	float depth = texture(samplerPosition, inUV).a;
-	if(depth == 0)
+	if(depth == 1)
 	{
 		outFragcolor = texture(samplerSkybox, inUV);
 		return;
@@ -204,7 +204,7 @@ void main()
 	F0 = mix(F0, ALBEDO, metallic);
 
 	vec3 Lo = vec3(0.0);
-	for(int i = 0; i < ubo.lights[i].length(); i++) 
+	for(int i = 0; i < ubo.lights.length(); i++) 
 	{
 		vec3 L = normalize(ubo.lights[i].xyz - pos);
 		Lo += specularContribution(L, V, N, F0, metallic, roughness);

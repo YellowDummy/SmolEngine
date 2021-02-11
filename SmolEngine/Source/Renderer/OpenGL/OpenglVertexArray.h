@@ -38,9 +38,9 @@ namespace SmolEngine
 
 	private:
 
-		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
-		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-		uint32_t m_RendererID = UINT32_MAX;
-		bool m_IsInitialized = false;
+		std::vector<Ref<VertexBuffer>>         m_VertexBuffers;
+		Ref<IndexBuffer>                       m_IndexBuffer = nullptr;
+		uint32_t                               m_RendererID = UINT32_MAX;
+		bool                                   m_IsInitialized = false;
 	};
 }

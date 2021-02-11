@@ -7,21 +7,21 @@
 
 namespace SmolEngine
 {
-	static GLenum ShaderDataTypeToOpenGL(ShaderDataType type)
+	static GLenum ShaderDataTypeToOpenGL(DataTypes type)
 	{
 		switch (type)
 		{
-		case ShaderDataType::Float:    return GL_FLOAT;
-		case ShaderDataType::Float2:   return GL_FLOAT;
-		case ShaderDataType::Float3:   return GL_FLOAT;
-		case ShaderDataType::Float4:   return GL_FLOAT;
-		case ShaderDataType::Mat3:     return GL_FLOAT;
-		case ShaderDataType::Mat4:     return GL_FLOAT;
-		case ShaderDataType::Int:      return GL_INT;
-		case ShaderDataType::Int2:     return GL_INT;
-		case ShaderDataType::Int3:     return GL_INT;
-		case ShaderDataType::Int4:     return GL_INT;
-		case ShaderDataType::Bool:     return GL_BOOL;
+		case DataTypes::Float:    return GL_FLOAT;
+		case DataTypes::Float2:   return GL_FLOAT;
+		case DataTypes::Float3:   return GL_FLOAT;
+		case DataTypes::Float4:   return GL_FLOAT;
+		case DataTypes::Mat3:     return GL_FLOAT;
+		case DataTypes::Mat4:     return GL_FLOAT;
+		case DataTypes::Int:      return GL_INT;
+		case DataTypes::Int2:     return GL_INT;
+		case DataTypes::Int3:     return GL_INT;
+		case DataTypes::Int4:     return GL_INT;
+		case DataTypes::Bool:     return GL_BOOL;
 
 		default:                     return 0; abort();
 		}

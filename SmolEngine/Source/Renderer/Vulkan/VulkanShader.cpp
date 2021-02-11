@@ -376,8 +376,6 @@ namespace SmolEngine
         {
             return ShaderType::Compute;
         }
-        default:
-            return ShaderType::Invalid;
         }
     }
 

@@ -3,15 +3,16 @@
 
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanDescriptor.h"
-#include "Renderer/Vulkan/VulkanPipelineSpecification.h"
-#include "Renderer/Vulkan/VulkanDescriptor.h"
 #include "Renderer/BufferElement.h"
 
 namespace SmolEngine
 {
 	class VulkanShader;
 	class VulkanTexture;
+	class VulkanShader;
 	enum class DrawMode : uint16_t;
+
+	struct GraphicsPipelineCreateInfo;
 
 	class VulkanPipeline
 	{
@@ -23,7 +24,7 @@ namespace SmolEngine
 
 		/// Main
 		
-		bool Invalidate(VulkanPipelineSpecification& pipelineSpec);
+		bool Invalidate(GraphicsPipelineCreateInfo* pipelineSpec, VulkanShader* shader);
 
 		bool CreatePipeline(DrawMode mode);
 
@@ -53,7 +54,7 @@ namespace SmolEngine
 
 		void BuildDescriptors(VulkanShader* shader, uint32_t DescriptorSets);
 
-		VkFormat GetVkInputFormat(ShaderDataType type);
+		VkFormat GetVkInputFormat(DataTypes type);
 
 		VkPrimitiveTopology GetVkTopology(DrawMode mode);
 
@@ -66,9 +67,10 @@ namespace SmolEngine
 		VkPipelineLayout                                m_PipelineLayout = VK_NULL_HANDLE;
 		VkRenderPass                                    m_TargetRenderPass = nullptr;
 		VkDevice                                        m_Device = nullptr;
+		VulkanShader*                                   m_Shader = nullptr;
 
 		VkDescriptorPool                                m_DescriptorPool = nullptr;
-		VulkanPipelineSpecification                     m_VulkanPipelineSpecification = {};
+		GraphicsPipelineCreateInfo*                     m_PipelineSpecification = nullptr;
 
 		std::vector<VulkanDescriptor>                   m_Descriptors;
 		std::vector<VkDescriptorSetLayout>              m_SetLayout;

@@ -49,9 +49,6 @@ namespace SmolEngine
 				m_Semaphore.Init(&m_Device, &m_CommandBuffer);
 
 				m_Swapchain.Prepare(*width, *height);
-
-				// Creates render passes
-				VulkanRenderPass::Init();
 			}
 		}
 

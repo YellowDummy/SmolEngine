@@ -2,7 +2,6 @@
 #include "Core/Core.h"
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/Vulkan/VulkanPipeline.h"
-#include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #endif
 
 #include "Renderer/GraphicsPipelineShaderCreateInfo.h"
@@ -27,18 +26,25 @@ namespace SmolEngine
 		Fan
 	};
 
+	enum class PipelineCreateResult : uint16_t
+	{
+		SUCCESS,
+		ERROR_INVALID_CREATE_INFO,
+		ERROR_PIPELINE_NOT_INVALIDATED,
+		ERROR_PIPELINE_NOT_CREATED,
+		ERROR_SHADER_NOT_RELOADED
+	};
+
 	struct GraphicsPipelineCreateInfo
 	{
 		//TODO: Add flags
 
-		bool                                 IsAlphaBlendingEnabled = false;
-		bool                                 IsTargetsSwapchain = false;
-		bool                                 IsDepthTestEnabled = true;
-		bool                                 IsUseMSAA = true;
-		bool                                 IsUseMRT = false;
+		bool                                 bDepthTestEnabled = true;
 
 		float                                MinDepth = 0.0f;
 		float                                MaxDepth = 1.0f;
+
+		Ref<Framebuffer>                     TargetFramebuffer = nullptr;
 
 		uint32_t                             DescriptorSets = 1;
 		GraphicsPipelineShaderCreateInfo*    ShaderCreateInfo = nullptr;
@@ -55,9 +61,9 @@ namespace SmolEngine
 
 		// Main
 
-		bool Create(GraphicsPipelineCreateInfo* pipelineInfo);
+		PipelineCreateResult Create(GraphicsPipelineCreateInfo* pipelineInfo);
 
-		bool Reload();
+		PipelineCreateResult Reload();
 
 
 		void Destroy();
@@ -66,7 +72,7 @@ namespace SmolEngine
 
 		// Render Pass
 
-		void BeginRenderPass(Ref<Framebuffer>& framebuffe);
+		void BeginRenderPass();
 
 		void EndRenderPass();
 
@@ -182,17 +188,6 @@ namespace SmolEngine
 
 	private:
 
-		struct PipelineState
-		{
-			std::vector<DrawMode>         PipelineDrawModes;
-			std::vector<VertexInputInfo>  VertexInputInfos;
-
-			uint32_t                      DescriptorSets = 1;
-			std::string                   PipelineName = "";
-			bool                          IsAlphaBlendingEnabled = false;
-
-		}                                 m_State = {};
-
 #ifndef SMOLENGINE_OPENGL_IMPL
 		VulkanPipeline                    m_VulkanPipeline = {};
 		VkCommandBuffer                   m_CommandBuffer = nullptr;
@@ -200,8 +195,8 @@ namespace SmolEngine
 #endif
 		Ref<VertexArray>                  m_VextexArray = nullptr;
 		Ref<Shader>                       m_Shader = nullptr;
-		Ref<Framebuffer>                  m_RenderpassFramebuffer = nullptr;
-		GraphicsContext*                  m_GraphicsContext;
+		GraphicsContext*                  m_GraphicsContext = nullptr;
+		GraphicsPipelineCreateInfo        m_PiplineCreateInfo;
 
 		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
 		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;

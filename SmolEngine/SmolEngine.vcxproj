@@ -573,6 +573,7 @@
     <ClInclude Include="Source\Core\EngineCommand.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
     <ClInclude Include="Source\Core\EventHandler.h" />
+    <ClInclude Include="Source\Core\FilePaths.h" />
     <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\Core\InputCodes.h" />
     <ClInclude Include="Source\Core\Layer.h" />
@@ -656,15 +657,13 @@
     <ClInclude Include="Source\Renderer\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="Source\Renderer\Renderer.h" />
     <ClInclude Include="Source\Renderer\Renderer2D.h" />
-    <ClInclude Include="Source\Renderer\Renderer2DData.h" />
+    <ClInclude Include="Source\Renderer\RendererShared.h" />
     <ClInclude Include="Source\Renderer\Shader.h" />
-    <ClInclude Include="Source\Renderer\ShaderTypes.h" />
     <ClInclude Include="Source\Renderer\Shared.h" />
     <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Renderer\Text.h" />
     <ClInclude Include="Source\Renderer\Texture.h" />
-    <ClInclude Include="Source\Renderer\TextureFormat.h" />
     <ClInclude Include="Source\Renderer\TexturesPool.h" />
     <ClInclude Include="Source\Renderer\VertexArray.h" />
     <ClInclude Include="Source\Renderer\VertexBuffer.h" />
@@ -681,7 +680,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanMemoryAllocator.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPBR.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipeline.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanPipelineSpecification.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanShader.h" />

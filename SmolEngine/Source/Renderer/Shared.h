@@ -27,4 +27,20 @@ namespace SmolEngine
 		glm::vec2          UVs;
 		glm::vec4          Color;
 	};
+
+	enum class ShaderType : uint32_t
+	{
+		Vertex,
+		Fragment,
+		Compute,
+		Geometry
+	};
+
+	enum class TextureFormat
+	{
+		R8_UNORM,
+		R8G8B8A8_UNORM,
+		R32G32B32A32_SFLOAT,
+		R16G16B16A16_SFLOAT // HDR
+	};
 }

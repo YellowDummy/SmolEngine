@@ -48,7 +48,6 @@
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
-#include "Renderer/Vulkan/VulkanPipelineSpecification.h"
 #endif
 
 #include "Renderer/Mesh.h"
@@ -62,7 +61,6 @@ namespace SmolEngine
 			editorCamCI.Type = CameraType::Ortho;
 			editorCamCI.NearClip = -1.0f;
 			editorCamCI.FarClip = 1.0f;
-			editorCamCI.IsFramebufferTargetsSwapchain = false;
 		}
 
 		m_Camera = std::make_shared<EditorCamera>(&editorCamCI);

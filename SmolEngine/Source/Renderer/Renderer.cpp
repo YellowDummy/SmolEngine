@@ -114,19 +114,19 @@ namespace SmolEngine
 
 		BufferLayout mainLayout =
 		{
-			{ ShaderDataType::Float3, "aPos" },
-			{ ShaderDataType::Float3, "aNormal" },
-			{ ShaderDataType::Float4, "aTangent" },
-			{ ShaderDataType::Float2, "aUV" },
-			{ ShaderDataType::Float4, "aColor" }
+			{ DataTypes::Float3, "aPos" },
+			{ DataTypes::Float3, "aNormal" },
+			{ DataTypes::Float4, "aTangent" },
+			{ DataTypes::Float2, "aUV" },
+			{ DataTypes::Float4, "aColor" }
 		};
 
 		BufferLayout materialLayout =
 		{
-			{ ShaderDataType::Float, "aAlbedo" },
-			{ ShaderDataType::Float, "aMetallic" },
-			{ ShaderDataType::Float, "aRoughness" },
-		};
+			{ DataTypes::Float, "aAlbedo" },
+			{ DataTypes::Float, "aMetallic" },
+			{ DataTypes::Float, "aRoughness" },
+		};			  
 
 		// Main vertex - no intance rate
 		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
@@ -136,12 +136,10 @@ namespace SmolEngine
 			DynamicPipelineCI.VertexInputInfos = { vertexMain };
 			DynamicPipelineCI.PipelineName = "PBR_TEST";
 			DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-			DynamicPipelineCI.IsTargetsSwapchain = true;
-			DynamicPipelineCI.IsDepthTestEnabled = true;
 		}
 
-		bool result = s_Data->m_MainPipeline->Create(&DynamicPipelineCI);
-		assert(result == true);
+		auto result = s_Data->m_MainPipeline->Create(&DynamicPipelineCI);
+		assert(result == PipelineCreateResult::SUCCESS);
 	}
 
 	void Renderer::InitSkyBoxPipeline()
@@ -160,7 +158,7 @@ namespace SmolEngine
 
 		BufferLayout layout =
 		{
-			{ ShaderDataType::Float3, "aPos" }
+			{ DataTypes::Float3, "aPos" }
 		};
 
 		GraphicsPipelineCreateInfo DynamicPipelineCI = {};
@@ -168,12 +166,10 @@ namespace SmolEngine
 			DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(SkyBoxData), layout, false) };
 			DynamicPipelineCI.PipelineName = "Skybox_Test";
 			DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-			DynamicPipelineCI.IsTargetsSwapchain = true;
-			DynamicPipelineCI.IsDepthTestEnabled = false;
 		}
 
-		bool result = s_Data->m_SkyboxPipeline->Create(&DynamicPipelineCI);
-		assert(result == true);
+		auto result = s_Data->m_SkyboxPipeline->Create(&DynamicPipelineCI);
+		assert(result == PipelineCreateResult::SUCCESS);
 
 		float skyboxVertices[] = {
 			// positions          

@@ -8,24 +8,19 @@
 
 namespace SmolEngine
 {
-	struct FrameBufferAttachment 
+	struct VulkanFramebufferAttachment
 	{
-		VkImage image;
-		VkDeviceMemory mem;
-		VkImageView view;
+		VkImage                image;
+		VkDeviceMemory         mem;
+		VkImageView            view;
 	};
 
-	struct OffscreenPass
+	struct Attachment
 	{
-		FrameBufferAttachment color, depth, resolve;
-		VkDescriptorImageInfo colorImageInfo;
-	};
+		VulkanFramebufferAttachment   AttachmentVkInfo;
+		VkDescriptorImageInfo         ImageInfo;
 
-	struct DeferredPass
-	{
-		FrameBufferAttachment position, normals, pbr, color, depth;
-		VkDescriptorImageInfo positionImageInfo, normalsImageInfo, pbrImageInfo, colorImageInfo;
-		VkSemaphore semaphore;
+		void*                         ImGuiID = nullptr;
 	};
 
 	class VulkanFramebuffer
@@ -46,8 +41,6 @@ namespace SmolEngine
 
 		bool Create(uint32_t width, uint32_t height);
 
-		bool CreateDeferred(uint32_t width, uint32_t height);
-
 		void CreateSampler();
 
 		void FreeResources();
@@ -56,7 +49,7 @@ namespace SmolEngine
 			VkImageUsageFlags imageUsage,
 			VkFormat format, VkImage& image, VkImageView& imageView, VkDeviceMemory& mem, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 
-		void FreeAttachment(FrameBufferAttachment& framebuffer);
+		void FreeAttachment(Attachment& framebuffer);
 
 	public:
 
@@ -68,30 +61,40 @@ namespace SmolEngine
 
 		const std::vector<VkClearAttachment>& GetClearAttachments() const;
 
+		const std::vector<VkClearValue>& GetClearValues() const;
+
 		const FramebufferSpecification& GetSpecification() const;
 
 		const VkFramebuffer GetCurrentVkFramebuffer() const;
 
-		const OffscreenPass& GetOffscreenPass() const;
+		static VkFormat GetAttachmentFormat(AttachmentFormat format);
 
-		const DeferredPass& GetDeferredPass() const;
+		VkRenderPass GetRenderPass() const;
 
-		void* GetImGuiTextureID() const;
+		VkSampleCountFlagBits GetMSAASamples() const;
+
+		Attachment* GetAttachment(uint32_t index = 0);
+
+		Attachment* GetAttachment(std::string& name);
 
 	private:
 
-		FramebufferSpecification              m_Specification = {};
-		OffscreenPass                         m_OffscreenPass = {};
-		DeferredPass                          m_DeferredPass = {};
-		void*                                 m_ImGuiTextureID = nullptr;
-		VkDevice                              m_Device = nullptr;
-		VkSampler                             m_Sampler = nullptr;
-		VkSampleCountFlagBits                 m_MSAASamples = VK_SAMPLE_COUNT_1_BIT;
-		VkFormat                              m_ColorFormat;
-		VkFormat                              m_DepthFormat;
-		const uint32_t                        m_DeferredDim = 2048;
-		std::vector<VkFramebuffer>            m_VkFrameBuffers;
-		std::vector<VkClearAttachment>        m_ClearAttachments;
+		Attachment                                       m_ResolveAttachment = {};
+		Attachment                                       m_DepthAttachment = {};
+											             
+		FramebufferSpecification                         m_Specification = {};
+		VkDevice                                         m_Device = nullptr;
+		VkSampler                                        m_Sampler = nullptr;
+		VkSampleCountFlagBits                            m_MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+		VkFormat                                         m_ColorFormat;
+		VkFormat                                         m_DepthFormat;
+		VkRenderPass                                     m_RenderPass = nullptr;
+											             
+		std::vector<VkFramebuffer>                       m_VkFrameBuffers;
+		std::vector<VkClearAttachment>                   m_ClearAttachments;
+		std::vector<VkClearValue>                        m_ClearValues;
+		std::vector<Attachment>                          m_ColorAttachments;
+		std::unordered_map<std::string, uint32_t>        m_ColorAttachmentsMap;
 
 	private:
 

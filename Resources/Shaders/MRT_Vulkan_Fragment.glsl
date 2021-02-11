@@ -52,7 +52,7 @@ vec3 calculateNormal()
 	}
 	else
 	{
-		return inTBN[2];
+		return normalize(inTBN[2]);
 	}
 }
 
@@ -66,7 +66,7 @@ void main()
 {		
 	vec3 N = calculateNormal();
 	float metallic = inUseMetallicMap == 1? texture(metallicMap[inMetallicMapIndex], inUV).r : inMetallic;
-	float roughness = inUseRoughnessMap ==1 ? texture(roughnessMap[inRoughnessMapIndex], inUV).r : inRoughness;
+	float roughness = inUseRoughnessMap == 1 ? texture(roughnessMap[inRoughnessMapIndex], inUV).r : inRoughness;
     float ao = inUseAOMap == 1? texture(aoMap[inAOMapIndex], inUV).r : 1.0;
 
 	outAlbedo = inUseAlbedroMap == 1? texture(albedoMap[inAlbedroMapIndex], inUV) : inColor;

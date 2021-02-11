@@ -25,12 +25,6 @@ namespace SmolEngine
 			m_Type = createInfo->Type;
 		}
 
-		FramebufferSpecification spec;
-		spec.IsTargetsSwapchain = createInfo ? createInfo->IsFramebufferTargetsSwapchain : false;
-		spec.Width = Application::GetApplication().GetWindowWidth();
-		spec.Height = Application::GetApplication().GetWindowHeight();
-		m_FrameBuffer = Framebuffer::Create(spec);
-
 		switch (m_Type)
 		{
 		case CameraType::Ortho:
@@ -150,6 +144,11 @@ namespace SmolEngine
 		}
 	}
 
+	void EditorCamera::SetFramebuffers(std::vector<Ref<Framebuffer>> framebuffers)
+	{
+		m_FrameBuffers = framebuffers;
+	}
+
 	glm::vec3 EditorCamera::GetForwardDirection() const
 	{
 		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
@@ -170,9 +169,12 @@ namespace SmolEngine
 		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
 	}
 
-	Ref<Framebuffer>& EditorCamera::GetFramebuffer()
+	Ref<Framebuffer> EditorCamera::GetFramebuffer(uint32_t index)
 	{
-		return m_FrameBuffer;
+		if (index > m_FrameBuffers.size() - 1)
+			return nullptr;
+
+		return m_FrameBuffers[index];
 	}
 
 	const CameraType EditorCamera::GetType() const
@@ -259,7 +261,9 @@ namespace SmolEngine
 		m_ViewportHeight = static_cast<float>(res_e.GetHeight());
 		m_AspectRatio = m_ViewportHeight / m_ViewportWidth;
 
-		m_FrameBuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());
+		for (auto& framebuffer : m_FrameBuffers)
+			framebuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());
+
 		SetCameraType(m_Type);
 		return false;
 	}
@@ -285,7 +289,9 @@ namespace SmolEngine
 		}
 		}
 
-		m_FrameBuffer->OnResize(width, height);
+		for (auto& framebuffer : m_FrameBuffers)
+			framebuffer->OnResize(width, height);
+
 		SetCameraType(m_Type);
 		return false;
 	}

@@ -16,12 +16,11 @@ namespace SmolEngine
 
 	struct EditorCameraCreateInfo
 	{
-		float FOV = 75.0f;
-		float NearClip = 0.1f;
-		float FarClip = 1000.0f;
+		float             FOV = 75.0f;
+		float             NearClip = 0.1f;
+		float             FarClip = 1000.0f;
 
-		CameraType Type = CameraType::Perspective;
-		bool IsFramebufferTargetsSwapchain = false;
+		CameraType        Type = CameraType::Perspective;
 	};
 
 	class EditorCamera
@@ -43,6 +42,8 @@ namespace SmolEngine
 		void SetViewportSize(float width, float height);
 
 		void SetCameraType(CameraType type);
+
+		void SetFramebuffers(std::vector<Ref<Framebuffer>> framebuffers);
 
 		// Getters
 
@@ -72,7 +73,7 @@ namespace SmolEngine
 
 		glm::quat GetOrientation() const;
 
-		Ref<Framebuffer>& GetFramebuffer();
+		Ref<Framebuffer> GetFramebuffer(uint32_t index = 0);
 
 		const CameraType GetType() const ;
 
@@ -112,26 +113,26 @@ namespace SmolEngine
 
 	private:
 
-		glm::mat4          m_Projection = glm::mat4(0.0f);
-		glm::mat4          m_ViewMatrix = glm::mat4(0.0f);
-		glm::vec3          m_Position = glm::vec3(0.0f);
-		glm::vec3          m_FocalPoint = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec2          m_InitialMousePosition = glm::vec2(0.0f);
-						   
-		float              m_FOV = 75.0f;
-		float              m_AspectRatio = 1.778f;
-		float              m_NearClip = 0.1f;
-		float              m_FarClip = 1000.0f;
-		float              m_Distance = 6.0f;
-		float              m_Pitch = 0.0f, m_Yaw = 0.0f;
-		float              m_ViewportWidth = 1280;
-		float              m_ViewportHeight = 720;
-		float              m_RotationSpeed = 0.8f;
-		float              m_MaxZoomSpeed = 100.0f;
-		float              m_2DSpeed = 1.0f;
+		glm::mat4                       m_Projection = glm::mat4(0.0f);
+		glm::mat4                       m_ViewMatrix = glm::mat4(0.0f);
+		glm::vec3                       m_Position = glm::vec3(0.0f);
+		glm::vec3                       m_FocalPoint = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec2                       m_InitialMousePosition = glm::vec2(0.0f);
+						                
+		float                           m_FOV = 75.0f;
+		float                           m_AspectRatio = 1.778f;
+		float                           m_NearClip = 0.1f;
+		float                           m_FarClip = 1000.0f;
+		float                           m_Distance = 6.0f;
+		float                           m_Pitch = 0.0f, m_Yaw = 0.0f;
+		float                           m_ViewportWidth = 1280;
+		float                           m_ViewportHeight = 720;
+		float                           m_RotationSpeed = 0.8f;
+		float                           m_MaxZoomSpeed = 100.0f;
+		float                           m_2DSpeed = 1.0f;
 
-		Ref<Framebuffer>   m_FrameBuffer = nullptr;
-		CameraType         m_Type = CameraType::Perspective;
+		std::vector<Ref<Framebuffer>>   m_FrameBuffers;
+		CameraType                      m_Type = CameraType::Perspective;
 
 	private:
 

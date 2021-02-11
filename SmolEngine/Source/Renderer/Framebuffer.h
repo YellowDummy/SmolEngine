@@ -34,7 +34,7 @@ namespace SmolEngine
 
 		uint32_t GetColorAttachmentID() const;
 
-		void* GetImGuiTextureID() const;
+		void* GetImGuiTextureID(uint32_t index = 0);
 
 		uint32_t GetRendererID() const;
 

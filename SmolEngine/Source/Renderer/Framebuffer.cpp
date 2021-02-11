@@ -68,13 +68,13 @@ namespace SmolEngine
 #endif
 	}
 
-	void* Framebuffer::GetImGuiTextureID() const
+	void* Framebuffer::GetImGuiTextureID(uint32_t index)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 
 		return reinterpret_cast<void*>(m_OpenglFramebuffer.GetColorAttachmentID());
 #else
-		return m_VulkanFrameBuffer.GetImGuiTextureID();
+		return m_VulkanFrameBuffer.GetAttachment(index)->ImGuiID;
 #endif
 	}
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Core.h"
-#include "Renderer/TextureFormat.h"
+#include "Renderer/Shared.h"
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/OpenGL/OpenglTexture.h"

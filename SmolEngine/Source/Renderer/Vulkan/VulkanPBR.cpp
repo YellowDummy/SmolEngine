@@ -724,7 +724,7 @@ namespace SmolEngine
 
 				BufferLayout layout(
 					{
-						{ ShaderDataType::Float3, "a_Position" }
+						{ DataTypes::Float3, "a_Position" }
 					});
 
 				struct VertexData
@@ -1349,7 +1349,7 @@ namespace SmolEngine
 
 				BufferLayout layout(
 					{
-						{ ShaderDataType::Float3, "a_Position" }
+						{ DataTypes::Float3, "a_Position" }
 					});
 
 				struct VertexData
