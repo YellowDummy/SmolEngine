@@ -14,15 +14,16 @@ namespace SmolEngine
 {
 	class VertexBuffer;
 
-	struct UBOMRTParams
+	struct SkyLights
 	{
-		glm::vec4 lights[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)}, {glm::vec4(255,255,255,1.0)} };
-		glm::vec4 lightsColors[4] = { {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)}, {glm::vec4(1.0,1.0,1.0,1.0)} };
-		glm::vec4 viewPos;
+		glm::vec4 light = glm::vec4(25.0, 25.0, 25.0, 1.0);
+	};
 
+	struct PointLights
+	{
+		glm::vec4 light = glm::vec4(0.0, 0.0, 0.0, 1.0);
+		glm::vec4 color = glm::vec4(0.2f, 0.5f, 0.2f, 1.0f);
 		float radius = 2.0f;
-		int mode = 0;
-		int ssaoEnabled;
 	};
 
 	class DeferredRenderingTest : public Layer
@@ -52,9 +53,14 @@ namespace SmolEngine
 		Ref<Texture>                     m_Tetxure6 = nullptr;
 		Ref<Texture>                     m_SSAONoise = nullptr;
 
+		Ref<Texture>                     m_BrickAlbedro = nullptr;
+		Ref<Texture>                     m_BrickNormal = nullptr;
+		Ref<Texture>                     m_BrickRoughness = nullptr;
+
 		Ref<CubeTexture>                 m_CubeTexture = nullptr;
 		Ref<Mesh>                        m_TestMesh = nullptr;
 		Ref<Mesh>                        m_SponzaMesh = nullptr;
+		Ref<Mesh>                        m_PlaneMesh = nullptr;
 
 		Ref<GraphicsPipeline>            m_Pipeline = nullptr;
 		Ref<GraphicsPipeline>            m_SSAOPipeline = nullptr;
@@ -76,7 +82,9 @@ namespace SmolEngine
 		bool                             m_RorateModel = true;
 		bool                             m_SSAOEnabled = true;
 		int                              m_MaterialIndex = 0;
-		UBOMRTParams                     m_Params = {};
+		int                              m_DisplayMode = 0;
+		PointLights                      m_PointLights = {};
+		SkyLights                        m_SkyLights = {};
 
 		std::vector<glm::mat4>           m_ModelViews;
 		Ref<VertexBuffer>                m_InstanceVB = nullptr;

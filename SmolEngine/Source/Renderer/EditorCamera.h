@@ -19,7 +19,11 @@ namespace SmolEngine
 		float             FOV = 75.0f;
 		float             NearClip = 0.1f;
 		float             FarClip = 1000.0f;
+		float             Speed = 1.0f;
+		float             Pitch = 0.0f;
+		float             Yaw = 0.0f;
 
+		glm::vec3         WorldPos = glm::vec3(0, 0, 0);
 		CameraType        Type = CameraType::Perspective;
 	};
 
@@ -54,6 +58,8 @@ namespace SmolEngine
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 
 		const glm::vec3& GetPosition() const { return m_Position; }
+
+		const glm::vec3& GetFPoint() const { return m_FocalPoint; }
 
 		float GetDistance() const { return m_Distance; }
 
@@ -129,7 +135,7 @@ namespace SmolEngine
 		float                           m_ViewportHeight = 720;
 		float                           m_RotationSpeed = 0.8f;
 		float                           m_MaxZoomSpeed = 100.0f;
-		float                           m_2DSpeed = 1.0f;
+		float                           m_Speed = 2.0f;
 
 		std::vector<Ref<Framebuffer>>   m_FrameBuffers;
 		CameraType                      m_Type = CameraType::Perspective;

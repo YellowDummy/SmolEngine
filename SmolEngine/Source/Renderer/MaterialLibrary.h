@@ -24,19 +24,25 @@ namespace SmolEngine
 
 		// Getters
 
-		static MaterialLibrary* GetSinglenton();
+		void GetMaterialsPtr(void*& data, uint32_t& size);
 
 		Material* GetMaterial(uint32_t ID);
 
 		std::vector<Material>& GetMaterials();
 
-		void GetMaterialsPtr(void*& data, uint32_t& size);
+		static MaterialLibrary* GetSinglenton();
+
+	private:
+
+		void Init();
 
 	private:
 
 		static MaterialLibrary*       s_Instance;
-
+		bool                          m_Initialized = false;
 		uint32_t                      m_MaterialsCount = 0;
+		uint32_t                      m_ReserveSize = 1000;
+
 		std::vector<Material>         m_Materials;
 		std::unordered_map<size_t,
 			std::string>              m_Hasher;

@@ -74,9 +74,9 @@ namespace SmolEngine
 
 			attachments[lastImageViewIndex] = vkInfo.AttachmentVkInfo.view;
 
-			m_ClearValues[lastImageViewIndex].color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearValues[lastImageViewIndex].color = { { 0.0f, 0.0f, 0.0f, 1.0f} };
 			m_ClearAttachments[lastImageViewIndex].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			m_ClearAttachments[lastImageViewIndex].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[lastImageViewIndex].clearValue.color = { { 0.0f, 0.0f, 0.0f, 1.0f} };
 			m_ClearAttachments[lastImageViewIndex].colorAttachment = lastImageViewIndex;
 			if(info.Name != "")
 				m_ColorAttachmentsMap[info.Name] = lastImageViewIndex;
@@ -103,7 +103,7 @@ namespace SmolEngine
 
 			attachments[lastImageViewIndex] = m_ResolveAttachment.AttachmentVkInfo.view;
 
-			m_ClearValues[lastImageViewIndex].color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearValues[lastImageViewIndex].color = { { 0.0f, 0.0f, 0.0f, 1.0f} };
 			m_ClearAttachments[lastImageViewIndex].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			m_ClearAttachments[lastImageViewIndex].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
 			m_ColorAttachmentsMap["Resolve"] = lastImageViewIndex;
@@ -295,22 +295,48 @@ namespace SmolEngine
 	{
 		switch (format)
 		{
-		case SmolEngine::AttachmentFormat::Float: 			return VK_FORMAT_R16_SFLOAT;
-		case SmolEngine::AttachmentFormat::Float2: 			return VK_FORMAT_R16G16_SFLOAT;
-		case SmolEngine::AttachmentFormat::Float3: 			return VK_FORMAT_R16G16B16_SFLOAT;
-		case SmolEngine::AttachmentFormat::Float4: 			return VK_FORMAT_R16G16B16A16_SFLOAT;
 
-		case SmolEngine::AttachmentFormat::Int: 			return VK_FORMAT_R16_SINT;
-		case SmolEngine::AttachmentFormat::Int2:			return VK_FORMAT_R16G16_SINT;
-		case SmolEngine::AttachmentFormat::Int3:			return VK_FORMAT_R16G16B16_SINT;
-		case SmolEngine::AttachmentFormat::Int4:			return VK_FORMAT_R16G16B16A16_SINT;
+		case SmolEngine::AttachmentFormat::UNORM_8:			    return VK_FORMAT_R8_UNORM;
+		case SmolEngine::AttachmentFormat::UNORM2_8: 			return VK_FORMAT_R8G8_UNORM;
+		case SmolEngine::AttachmentFormat::UNORM3_8: 			return VK_FORMAT_R8G8B8_UNORM;
+		case SmolEngine::AttachmentFormat::UNORM4_8: 			return VK_FORMAT_R8G8B8A8_UNORM;
 
-		case SmolEngine::AttachmentFormat::Color:			return VulkanContext::GetSwapchain().GetColorFormat();
+		case SmolEngine::AttachmentFormat::UNORM_16:			return VK_FORMAT_R16_UNORM;
+		case SmolEngine::AttachmentFormat::UNORM2_16: 			return VK_FORMAT_R16G16_UNORM;
+		case SmolEngine::AttachmentFormat::UNORM3_16: 			return VK_FORMAT_R16G16B16_UNORM;
+		case SmolEngine::AttachmentFormat::UNORM4_16: 			return VK_FORMAT_R16G16B16A16_UNORM;
+
+		case SmolEngine::AttachmentFormat::SFloat_16: 			return VK_FORMAT_R16_SFLOAT;
+		case SmolEngine::AttachmentFormat::SFloat2_16: 			return VK_FORMAT_R16G16_SFLOAT;
+		case SmolEngine::AttachmentFormat::SFloat3_16: 			return VK_FORMAT_R16G16B16_SFLOAT;
+		case SmolEngine::AttachmentFormat::SFloat4_16: 			return VK_FORMAT_R16G16B16A16_SFLOAT;
+
+		case SmolEngine::AttachmentFormat::SFloat_32: 			return VK_FORMAT_R32_SFLOAT;
+		case SmolEngine::AttachmentFormat::SFloat2_32: 			return VK_FORMAT_R32G32_SFLOAT;
+		case SmolEngine::AttachmentFormat::SFloat3_32: 			return VK_FORMAT_R32G32B32_SFLOAT;
+		case SmolEngine::AttachmentFormat::SFloat4_32: 			return VK_FORMAT_R32G32B32A32_SFLOAT;
+
+		case SmolEngine::AttachmentFormat::SInt_8: 			    return VK_FORMAT_R8_SINT;
+		case SmolEngine::AttachmentFormat::SInt2_8:			    return VK_FORMAT_R8G8_SINT;
+		case SmolEngine::AttachmentFormat::SInt3_8:			    return VK_FORMAT_R8G8B8_SINT;
+		case SmolEngine::AttachmentFormat::SInt4_8:			    return VK_FORMAT_R8G8B8A8_SINT;
+															    
+		case SmolEngine::AttachmentFormat::SInt_16: 			return VK_FORMAT_R16_SINT;
+		case SmolEngine::AttachmentFormat::SInt2_16:			return VK_FORMAT_R16G16_SINT;
+		case SmolEngine::AttachmentFormat::SInt3_16:			return VK_FORMAT_R16G16B16_SINT;
+		case SmolEngine::AttachmentFormat::SInt4_16:			return VK_FORMAT_R16G16B16A16_SINT;
+															    
+		case SmolEngine::AttachmentFormat::SInt_32: 			return VK_FORMAT_R32_SINT;
+		case SmolEngine::AttachmentFormat::SInt2_32:			return VK_FORMAT_R32G32_SINT;
+		case SmolEngine::AttachmentFormat::SInt3_32:			return VK_FORMAT_R32G32B32_SINT;
+		case SmolEngine::AttachmentFormat::SInt4_32:			return VK_FORMAT_R32G32B32A32_SINT;
+
+		case SmolEngine::AttachmentFormat::Color:			    return VulkanContext::GetSwapchain().GetColorFormat();
 		default:
 			break;
 		}
 
-		return VK_FORMAT_R32G32B32_SFLOAT;
+		return VulkanContext::GetSwapchain().GetColorFormat();
 	}
 
 	VkRenderPass VulkanFramebuffer::GetRenderPass() const

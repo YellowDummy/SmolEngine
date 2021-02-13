@@ -8,26 +8,26 @@ layout (location = 2)  in vec2 inUV;
 layout (location = 3)  in vec4 inTangent;
 layout (location = 4)  in vec4 inColor;
 
-layout (location = 6)  in float inNearPlane;
-layout (location = 7)  in float inFarPlane;
+layout (location = 5)  in float inNearPlane;
+layout (location = 6)  in float inFarPlane;
 
-layout (location = 8)  flat in int inUseAlbedroMap;
-layout (location = 9)  flat in int inUseNormalMap;
-layout (location = 10) flat in int inUseMetallicMap;
-layout (location = 11) flat in int inUseRoughnessMap;
-layout (location = 12) flat in int inUseAOMap;
+layout (location = 7)  flat in int inUseAlbedroMap;
+layout (location = 8)  flat in int inUseNormalMap;
+layout (location = 9)  flat in int inUseMetallicMap;
+layout (location = 10) flat in int inUseRoughnessMap;
+layout (location = 11) flat in int inUseAOMap;
 
-layout (location = 13) flat in int inAlbedroMapIndex;
-layout (location = 14) flat in int inNormalMapIndex;
-layout (location = 15) flat in int inMetallicMapIndex;
-layout (location = 16) flat in int inRoughnessMapIndex;
-layout (location = 17) flat in int inAOMapIndex;
+layout (location = 12) flat in int inAlbedroMapIndex;
+layout (location = 13) flat in int inNormalMapIndex;
+layout (location = 14) flat in int inMetallicMapIndex;
+layout (location = 15) flat in int inRoughnessMapIndex;
+layout (location = 16) flat in int inAOMapIndex;
 
-layout (location = 18) in float inMetallic;
-layout (location = 19) in float inRoughness;
+layout (location = 17) in float inMetallic;
+layout (location = 18) in float inRoughness;
+layout (location = 19) in float inPDepth;
 
 layout (location = 20) in mat3 inTBN;
-
 
 // uniforms
 
@@ -48,18 +48,13 @@ vec3 calculateNormal()
 {
     if(inUseNormalMap == 1)
 	{
-		return inTBN * normalize(texture(normalMap[inNormalMapIndex], inUV).xyz * 2.0 -1);
+		vec3 tangentNormal = texture(normalMap[inNormalMapIndex], inUV).xyz * 2.0 - 1.0;
+		return normalize(inTBN * tangentNormal);
 	}
 	else
 	{
 		return normalize(inTBN[2]);
 	}
-}
-
-float linearDepth(float depth)
-{
-	float z = depth * 2.0f - 1.0f; 
-	return (2.0 * inNearPlane * inFarPlane) / (inFarPlane + inNearPlane - z * (inFarPlane - inNearPlane));	
 }
 
 void main()
@@ -71,7 +66,7 @@ void main()
 
 	outAlbedo = inUseAlbedroMap == 1? texture(albedoMap[inAlbedroMapIndex], inUV) : inColor;
     outNormal = vec4(N, 1);
-    outPosition = vec4(inWorldPos, linearDepth(gl_FragCoord.z));
+    outPosition = vec4(inWorldPos, inPDepth);
 
     outPBR.x =  metallic;
 	outPBR.y =  roughness;

@@ -7,12 +7,15 @@ namespace SmolEngine
 
 	int32_t MaterialLibrary::Add(MaterialCreateInfo* infoCI)
 	{
-		int32_t materialID = -1;
-		std::hash<std::string> hasher;
-		size_t hash = hasher(infoCI->Name);
+		if (!m_Initialized)
+			Init();
 
+		int32_t materialID = -1;
 		if (infoCI->Name == "")
 			return materialID;
+
+		std::hash<std::string> hasher;
+		size_t hash = hasher(infoCI->Name);
 
 		auto& pos = m_Hasher.find(hash);
 		if (pos != m_Hasher.end())
@@ -36,9 +39,15 @@ namespace SmolEngine
 		return s_Instance;
 	}
 
+	void MaterialLibrary::Init()
+	{
+		m_Materials.reserve(m_ReserveSize);
+		m_Initialized = true;
+	}
+
 	Material* MaterialLibrary::GetMaterial(uint32_t ID)
 	{
-		if (ID > m_MaterialsCount)
+		if (ID > m_MaterialsCount || !m_Initialized)
 			return nullptr;
 
 		return &m_Materials[ID];

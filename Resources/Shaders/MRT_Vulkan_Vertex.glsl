@@ -66,34 +66,42 @@ layout (location = 2)  out vec2 outUV;
 layout (location = 3)  out vec4 outTangent;
 layout (location = 4)  out vec4 outColor;
 
-layout (location = 6)  out float outNearPlane;
-layout (location = 7)  out float outFarPlane;
+layout (location = 5)  out float outNearPlane;
+layout (location = 6)  out float outFarPlane;
 
-layout (location = 8)  out int outUseAlbedroMap;
-layout (location = 9)  out int outUseNormalMap;
-layout (location = 10) out int outUseMetallicMap;
-layout (location = 11) out int outUseRoughnessMap;
-layout (location = 12) out int outUseAOMap;
+layout (location = 7)  out int outUseAlbedroMap;
+layout (location = 8)  out int outUseNormalMap;
+layout (location = 9) out int outUseMetallicMap;
+layout (location = 10) out int outUseRoughnessMap;
+layout (location = 11) out int outUseAOMap;
 
-layout (location = 13) out int outAlbedroMapIndex;
-layout (location = 14) out int outNormalMapIndex;
-layout (location = 15) out int outMetallicMapIndex;
-layout (location = 16) out int outRoughnessMapIndex;
-layout (location = 17) out int outAOMapIndex;
+layout (location = 12) out int outAlbedroMapIndex;
+layout (location = 13) out int outNormalMapIndex;
+layout (location = 14) out int outMetallicMapIndex;
+layout (location = 15) out int outRoughnessMapIndex;
+layout (location = 16) out int outAOMapIndex;
 
-layout (location = 18)  out float outMetallic;
-layout (location = 19)  out float outRoughness;
+layout (location = 17)  out float outMetallic;
+layout (location = 18)  out float outRoughness;
+layout (location = 19)  out float outPDepth;
 
 layout (location = 20)  out mat3 outTBN;
+
+float linearDepth()
+{
+	float z = 0 * 2.0f - 1.0f; 
+	return (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane - nearPlane));
+}
 
 void main()
 {
 	mat4 model = modelsBuffer.models[modelIndex].model;
 
 	outWorldPos = vec3(model * vec4(a_Position, 1.0));
-	outNormal =  vec3(mat3(model) * a_Normal);
+	outNormal =  mat3(model) * a_Normal;
 	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
 	outUV = a_UV;
+	outPDepth = linearDepth();
 	
 	float c =  materialBuffer.materials[materialIndex].Albedo;
 	outColor = vec4(c, c, c, 1);

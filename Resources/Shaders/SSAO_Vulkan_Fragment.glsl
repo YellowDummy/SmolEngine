@@ -5,8 +5,7 @@ layout (binding = 1) uniform sampler2D samplerNormal;
 layout (binding = 2) uniform sampler2D ssaoNoise;
 
 layout (constant_id = 0) const int SSAO_KERNEL_SIZE = 64;
-layout (constant_id = 1) const float SSAO_RADIUS = 1.0;
-
+layout (constant_id = 1) const float SSAO_RADIUS = 10;
 
 struct Kernel
 {
@@ -21,6 +20,7 @@ layout (binding = 25) uniform UBOSSAOKernel
 layout(push_constant) uniform CameraData
 {
 	mat4 projection;
+	mat4 view;
 };
 
 layout (location = 0) in vec2 inUV;
@@ -33,7 +33,7 @@ void main()
 	vec2 flippedUV = vec2(inUV.s, 1.0 - inUV.t);
 
     // Get G-Buffer values
-	vec3 fragPos = vec3(mat4(0) * vec4(texture(samplerPositionDepth, flippedUV).rgb, 1));
+	vec3 fragPos = vec3(mat4(0.0) * vec4(texture(samplerPositionDepth, flippedUV).rgb, 1));
 	vec3 normal = normalize(texture(samplerNormal, flippedUV).rgb * 2.0 - 1.0);
 	normal *= 0.5 + 0.5;
 
@@ -63,7 +63,13 @@ void main()
 		offset.xyz /= offset.w; 
 		offset.xyz = offset.xyz * 0.5f + 0.5f; 
 		
-		float sampleDepth = -texture(samplerPositionDepth, offset.xy).w; 
+		float res = texture(samplerPositionDepth, offset.xy).w;
+		if(res == 0.0)
+		{
+			res = 1.0;
+		}
+
+		float sampleDepth = -res; 
 
 		float rangeCheck = smoothstep(0.0f, 1.0f, SSAO_RADIUS / abs(fragPos.z - sampleDepth));
 		occlusion += (sampleDepth >= samplePos.z + bias ? 1.0f : 0.0f) * rangeCheck;           

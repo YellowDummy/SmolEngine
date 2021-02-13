@@ -23,18 +23,27 @@ namespace SmolEngine
 			m_NearClip = createInfo->NearClip;
 			m_FarClip = createInfo->FarClip;
 			m_Type = createInfo->Type;
+			m_Yaw = createInfo->Yaw;
+			m_Pitch = createInfo->Pitch;
+			m_Position = createInfo->WorldPos;
 		}
 
 		switch (m_Type)
 		{
 		case CameraType::Ortho:
 		{
+			if(createInfo)
+				m_Speed = createInfo->Speed != 1.0 ? createInfo->Speed : 1.0f;
+
 			m_Projection = glm::ortho(-m_AspectRatio * m_Distance, m_AspectRatio * m_Distance, -m_Distance, m_Distance, m_NearClip, m_FarClip);
 			UpdateViewOrtho();
 			break;
 		}
 		case CameraType::Perspective:
 		{
+			if (createInfo)
+				m_Speed = createInfo->Speed != 1.0 ? createInfo->Speed : 5.0f;
+
 			m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
 			UpdateViewPerspective();
 			break;
@@ -44,39 +53,43 @@ namespace SmolEngine
 
 	void EditorCamera::OnUpdate(DeltaTime delta)
 	{
+		float speed = m_Speed;
+		if (Input::IsKeyPressed(KeyCode::LeftShift))
+			speed *= 2;
+
 		switch (m_Type)
 		{
 		case CameraType::Ortho:
 		{
 			if (Input::IsKeyPressed(S_KEY_D))
-				m_Position.x += m_2DSpeed * delta;
+				m_Position.x += speed * delta;
 
 			else if (Input::IsKeyPressed(S_KEY_A))
-				m_Position.x -= m_2DSpeed * delta;
+				m_Position.x -= speed * delta;
 
 			else if (Input::IsKeyPressed(S_KEY_W))
-				m_Position.y += m_2DSpeed * delta;
+				m_Position.y += speed * delta;
 
 			else if (Input::IsKeyPressed(S_KEY_S))
-				m_Position.y -= m_2DSpeed * delta;
+				m_Position.y -= speed * delta;
 
-			m_2DSpeed = m_Distance;
+			speed = m_Distance;
 			UpdateViewOrtho();
 			break;
 		}
 		case CameraType::Perspective:
 		{
 			if (Input::IsKeyPressed(Key::W))
-				m_FocalPoint += (GetForwardDirection() / 100.0f);
+				m_FocalPoint += (GetForwardDirection() * delta.GetTime()) * speed;
 
 			if (Input::IsKeyPressed(Key::S))
-				m_FocalPoint -= (GetForwardDirection() / 100.0f);
+				m_FocalPoint -= (GetForwardDirection() * delta.GetTime()) * speed;
 
 			if (Input::IsKeyPressed(Key::D))
-				m_FocalPoint += GetRightDirection() / 175.0f;
+				m_FocalPoint += (GetRightDirection() * delta.GetTime()) * speed;
 
 			if (Input::IsKeyPressed(Key::A))
-				m_FocalPoint -= GetRightDirection() / 175.0f;
+				m_FocalPoint -= (GetRightDirection() * delta.GetTime()) * speed;
 
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 deltaT = (mouse - m_InitialMousePosition) * 0.003f;

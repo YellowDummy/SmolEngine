@@ -19,9 +19,9 @@ namespace SmolEngine
 		uint32_t lastAttachmentIndex = 0;
 		for (uint32_t i = 0; i < renderPassInfo->NumColorAttachments; ++i)
 		{
-			VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			if (!framebufferSpec->Attachments[i].bClearOp)
-				loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			if (framebufferSpec->Attachments[i].bClearOp)
+				loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;;
 
 			VkImageLayout layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			if (framebufferSpec->bTargetsSwapchain)

@@ -9,15 +9,40 @@ namespace SmolEngine
 	{
 		None,
 
-		Float, 
-		Float2, 
-		Float3, 
-		Float4,
+		UNORM_8,
+		UNORM2_8, 
+		UNORM3_8, 
+		UNORM4_8,
 
-		Int, 
-		Int2, 
-		Int3, 
-		Int4,
+		UNORM_16,
+		UNORM2_16,
+		UNORM3_16,
+		UNORM4_16,
+
+		SFloat_16,
+		SFloat2_16,
+		SFloat3_16,
+		SFloat4_16,
+
+		SFloat_32,
+		SFloat2_32,
+		SFloat3_32,
+		SFloat4_32,
+
+		SInt_8, 
+		SInt2_8, 
+		SInt3_8, 
+		SInt4_8,
+
+		SInt_16,
+		SInt2_16,
+		SInt3_16,
+		SInt4_16,
+
+		SInt_32,
+		SInt2_32,
+		SInt3_32,
+		SInt4_32,
 
 		Color
 	};
@@ -44,8 +69,7 @@ namespace SmolEngine
 				                                   
 		bool                                       bTargetsSwapchain = false;
 		bool                                       bUsedByImGui = false;
-		bool                                       bUseMRT = false;
-		bool                                       bUseMSAA = true;
+		bool                                       bUseMSAA = false;
 		bool                                       bResizable = true;
 
 		FramebufferAttachment                      ResolveAttachment;

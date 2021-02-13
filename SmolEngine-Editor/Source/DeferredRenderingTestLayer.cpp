@@ -2,6 +2,7 @@
 #include "DeferredRenderingTestLayer.h"
 #include "Core/Application.h"
 #include "Core/Window.h"
+#include "Core/FilePaths.h"
 
 #include "Renderer/Shader.h"
 #include "Renderer/CubeTexture.h"
@@ -25,14 +26,14 @@ namespace SmolEngine
 		// Create materials
 
 		MaterialCreateInfo materialCI = {};
-		materialCI.Name = "Default Material";
+		materialCI.Name = "Brick";
 		assert(MaterialLibrary::GetSinglenton()->Add(&materialCI) > -1);
 		auto material_ = MaterialLibrary::GetSinglenton()->GetMaterial(0);
-		material_->m_MaterialProperties.Roughness = 0.9f;
 		material_->m_MaterialProperties.Metallic = 1.0f;
 
+
 		MaterialCreateInfo chairMaterialCI = {};
-		materialCI.Name = "WoodenChair Material";
+		materialCI.Name = "Wooden Chair";
 		int32_t id = MaterialLibrary::GetSinglenton()->Add(&materialCI);
 		auto material = MaterialLibrary::GetSinglenton()->GetMaterial(id);
 
@@ -44,7 +45,7 @@ namespace SmolEngine
 
 		// Models buffer
 		m_ModelViews.resize(1);
-		CommandSystem::ComposeTransform(m_Pos, m_Rot, glm::vec3(0.5f, 0.5f, 0.5f), true, m_ModelViews[0]);
+		CommandSystem::ComposeTransform(m_Pos, m_Rot, m_Scale, true, m_ModelViews[0]);
 
 		//SSAO
 
@@ -85,10 +86,10 @@ namespace SmolEngine
 			MRTframebefferSpec.Width = 2048;
 
 			MRTframebefferSpec.Attachments.resize(4);
-			MRTframebefferSpec.Attachments[0] = FramebufferAttachment(AttachmentFormat::Float4, true, "Position");
-			MRTframebefferSpec.Attachments[1] = FramebufferAttachment(AttachmentFormat::Float4, true, "Normals"); 
-			MRTframebefferSpec.Attachments[2] = FramebufferAttachment(AttachmentFormat::Float4, true, "Pbr"); 
-			MRTframebefferSpec.Attachments[3] = FramebufferAttachment(AttachmentFormat::Color,  true, "Albedro");
+			MRTframebefferSpec.Attachments[0] = FramebufferAttachment(AttachmentFormat::SFloat4_32, true, "Position");
+			MRTframebefferSpec.Attachments[1] = FramebufferAttachment(AttachmentFormat::UNORM4_8, true, "Normals"); 
+			MRTframebefferSpec.Attachments[2] = FramebufferAttachment(AttachmentFormat::UNORM4_8, true, "Pbr");
+			MRTframebefferSpec.Attachments[3] = FramebufferAttachment(AttachmentFormat::UNORM4_8,  true, "Albedro");
 
 			m_DeferredFrameBuffer = Framebuffer::Create(MRTframebefferSpec);
 		}
@@ -100,7 +101,7 @@ namespace SmolEngine
 			SSAOFramebuffer.Width = 2048;
 			SSAOFramebuffer.bUseMSAA = false;
 			SSAOFramebuffer.bTargetsSwapchain = false;
-			SSAOFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+			SSAOFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::UNORM_8, true) };
 
 			m_SSAOFrameBuffer = Framebuffer::Create(SSAOFramebuffer);
 		}
@@ -112,7 +113,7 @@ namespace SmolEngine
 			SSAOBlurFramebuffer.Width = 2048;
 			SSAOBlurFramebuffer.bUseMSAA = false;
 			SSAOBlurFramebuffer.bTargetsSwapchain = false;
-			SSAOBlurFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+			SSAOBlurFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::UNORM_8, true) };
 
 			m_SSAOBlurFrameBuffer = Framebuffer::Create(SSAOBlurFramebuffer);
 		}
@@ -124,18 +125,22 @@ namespace SmolEngine
 			SkyBoxFramebuffer.Width = 2048;
 			SkyBoxFramebuffer.bUseMSAA = false;
 			SkyBoxFramebuffer.bTargetsSwapchain = false;
-			SkyBoxFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::Color) };
+			SkyBoxFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
 
 			m_SkyboxFrameBuffer = Framebuffer::Create(SkyBoxFramebuffer);
 		}
 
-		// Model Textures
+		// Load Textures
 		{
-			m_Tetxure1 = Texture::Create("../Resources/WoodenChair_01_16-bit_Diffuse.png");
-			m_Tetxure3 = Texture::Create("../Resources/WoodenChair_01_16-bit_Normal.png");
-			m_Tetxure2 = Texture::Create("../Resources/WoodenChair_01_16-bit_Metallic.png");
-			m_Tetxure4 = Texture::Create("../Resources/WoodenChair_01_16-bit_Roughness.png");
-			m_Tetxure5 = Texture::Create("../Resources/WoodenChair_01_16-bit_Height.png");
+			m_Tetxure1 = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
+			m_Tetxure3 = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
+			m_Tetxure2 = Texture::Create(Resources + "WoodenChair_01_16-bit_Metallic.png");
+			m_Tetxure4 = Texture::Create(Resources + "WoodenChair_01_16-bit_Roughness.png");
+			m_Tetxure5 = Texture::Create(Resources + "WoodenChair_01_16-bit_Height.png");
+
+			m_BrickAlbedro = Texture::Create(Resources + "bricks_diffuse.png");
+			m_BrickNormal = Texture::Create(Resources + "bricks_normal.png");
+			m_BrickRoughness = Texture::Create(Resources + "bricks_roughness.png");
 		}
 
 		float quadVertices[] = {
@@ -164,8 +169,9 @@ namespace SmolEngine
 		auto FullScreenID = IndexBuffer::Create(squareIndices, 6);
 
 		// Model
-		m_TestMesh = Mesh::Create("../Resources/WoodenChair_01.FBX");
-		m_SponzaMesh = Mesh::Create("../Resources/sponza.glb");
+		m_TestMesh = Mesh::Create(Resources + "WoodenChair_01.FBX");
+		m_SponzaMesh = Mesh::Create(Resources + "sponza.glb");
+		m_PlaneMesh = Mesh::Create(Resources + "plane.glb");
 
 		// MRT
 		{
@@ -202,11 +208,11 @@ namespace SmolEngine
 
 			m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
 
-			m_Pipeline->UpdateSamplers({ m_Tetxure1 }, 5); //albedo
-			m_Pipeline->UpdateSamplers({ m_Tetxure3 }, 6); //normal
+			m_Pipeline->UpdateSamplers({ m_Tetxure1, m_BrickAlbedro }, 5); //albedo
+			m_Pipeline->UpdateSamplers({ m_Tetxure3, m_BrickNormal }, 6); //normal
 			m_Pipeline->UpdateSamplers({ m_Tetxure5 }, 7); //ao
 			m_Pipeline->UpdateSamplers({ m_Tetxure2 }, 8); //metallic
-			m_Pipeline->UpdateSamplers({ m_Tetxure4 }, 9); //roughness
+			m_Pipeline->UpdateSamplers({ m_Tetxure4, m_BrickRoughness }, 9); //roughness
 		}
 
 		// SSAO + SSAO Blur
@@ -377,6 +383,9 @@ namespace SmolEngine
 			auto result = m_CombinationPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
 
+			m_CombinationPipeline->SumbitUniformBuffer(16, sizeof(SkyLights), &m_SkyLights);
+			m_CombinationPipeline->SumbitUniformBuffer(17, sizeof(PointLights), &m_PointLights);
+
 			m_CombinationPipeline->SetVertexBuffers({ FullScreenVB });
 			m_CombinationPipeline->SetIndexBuffers({ FullScreenID });
 
@@ -422,7 +431,7 @@ namespace SmolEngine
 		{
 			std::vector<const char*> charitems = { "Final composition", "Position", "Normals", "Albedo", "Ambient Occlusion", "Metallic", "Roughness" };
 			uint32_t itemCount = static_cast<uint32_t>(charitems.size());
-			bool res = ImGui::Combo("Display", &m_Params.mode, &charitems[0], itemCount, itemCount);
+			bool res = ImGui::Combo("Display", &m_DisplayMode, &charitems[0], itemCount, itemCount);
 		}
 
 		ImGui::NewLine();
@@ -433,16 +442,21 @@ namespace SmolEngine
 		}
 
 		uint32_t index = 0;
-		for (auto material: MaterialLibrary::GetSinglenton()->GetMaterials())
+		for (auto& material: MaterialLibrary::GetSinglenton()->GetMaterials())
 		{
 			std::string name = "Material " + std::to_string(index);
+			ImGui::PushID(name.c_str());
 			ImGui::Text(name.c_str());
 
 			ImGui::InputFloat("Albedro", &material.m_MaterialProperties.Albedo);
 			ImGui::InputFloat("Metallic", &material.m_MaterialProperties.Metallic);
 			ImGui::InputFloat("Roughness", &material.m_MaterialProperties.Roughness);
 
+			void* mBool = &material.m_MaterialProperties.UseAlbedroMap;
+			ImGui::Checkbox("Use Albedro Map", static_cast<bool*>(mBool));
+			ImGui::PopID();
 			ImGui::NewLine();
+			index++;
 		}
 
 		ImGui::End();
@@ -457,9 +471,10 @@ namespace SmolEngine
 
 	void DeferredRenderingTest::BuildTestCommandBuffer()
 	{
+		bool useMainCmdBuffer = true;
+		VkCommandBuffer cmdBuffer;
 		// Offscreen MRT + SkyBox
 		{
-			VkCommandBuffer cmdBuffer;
 
 			// MRT
 			{
@@ -469,7 +484,7 @@ namespace SmolEngine
 				MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
 				m_Pipeline->SubmitStorageBuffer(26, size, data);
 
-				m_Pipeline->BeginCommandBuffer();
+				m_Pipeline->BeginCommandBuffer(useMainCmdBuffer);
 				m_Pipeline->BeginRenderPass();
 #ifndef SMOLENGINE_OPENGL_IMPL
 				cmdBuffer = m_Pipeline->GetVkCommandBuffer();
@@ -512,8 +527,6 @@ namespace SmolEngine
 #endif
 				m_SkyboxPipeline->BeginRenderPass();
 				{
-					m_SkyboxPipeline->ClearColors();
-
 					struct PushConstant
 					{
 						glm::mat4 proj;
@@ -545,10 +558,12 @@ namespace SmolEngine
 						struct PushConstant
 						{
 							glm::mat4 proj;
+							glm::mat4 view;
 
 						} pc;
 
 						pc.proj = m_EditorCamera->GetProjection();
+						pc.view = m_EditorCamera->GetViewMatrix();
 
 						m_SSAOPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
 						m_SSAOPipeline->DrawIndexed();
@@ -568,30 +583,34 @@ namespace SmolEngine
 					m_SSAOBlurPipeline->EndRenderPass();
 				}
 			}
-
-			m_Pipeline->EndCommandBuffer(); // Submit work and wait 
 		}
 
 		// Final + Lighting
 		{
-			m_CombinationPipeline->BeginCommandBuffer(true);
-			m_CombinationPipeline->BeginBufferSubmit();
-
-			m_Params.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 0);
-
-			m_SSAOEnabled ? m_Params.ssaoEnabled = 1 : m_Params.ssaoEnabled = 0;
-
-			m_CombinationPipeline->SumbitUniformBuffer(15, sizeof(UBOMRTParams), &m_Params);
-
+#ifndef SMOLENGINE_OPENGL_IMPL
+		m_CombinationPipeline->SetCommandBuffer(cmdBuffer);
+#endif
 			m_CombinationPipeline->BeginRenderPass();
 			{
-				//m_CombinationPipeline->ClearColors();
+				struct  PushConstant
+				{
+					glm::vec4 viewPos;
+					glm::mat4 view;
+					int displayMode;
+					int ssaoEnabled;
+				}pc;
+
+				//NATIVE_ERROR("x: {}, y: {}, z: {}", m_EditorCamera->GetPosition().x, m_EditorCamera->GetPosition().y, m_EditorCamera->GetPosition().z);
+
+				pc.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 1);
+				pc.view = m_EditorCamera->GetViewMatrix();
+				pc.displayMode = m_DisplayMode;
+				pc.ssaoEnabled = m_SSAOEnabled ? 1 : 0;
+
+				m_CombinationPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
 				m_CombinationPipeline->DrawIndexed();
 			}
 			m_CombinationPipeline->EndRenderPass();
-			m_CombinationPipeline->EndBufferSubmit();
-			m_CombinationPipeline->EndCommandBuffer();
 		}
-		
 	}
 }

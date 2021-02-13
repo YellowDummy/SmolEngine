@@ -15,19 +15,35 @@ layout (binding = 9) uniform samplerCube prefilteredMap;
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outFragcolor;
 
-struct Params
+layout(push_constant) uniform CameraData
 {
-    vec4 lights[4];
-	vec4 lightColors[4];
-    vec4 viewPos;
-	float radius;
+	vec4 viewPos;
+	mat4 view;
+
 	int displayMode;
 	int ssaoEnabled;
 };
 
-layout (std140, binding = 15) uniform UBOParams 
+struct SkyLightData
 {
-    Params ubo;
+	vec4 light;
+};
+
+struct PointLightData
+{
+	vec4 light;
+	vec4 color;
+	float radius;
+};
+
+layout (std140, binding = 16) uniform SkyLightUBO 
+{
+    SkyLightData SkyLight;
+};
+
+layout (std140, binding = 17) uniform PointLightUBO 
+{
+    PointLightData PointLight;
 };
 
 layout (constant_id = 0) const float MAX_REFLECTION_LOD = 9.0;
@@ -113,14 +129,14 @@ vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float
 	return color;
 }
 
-vec3 calculateLighting(vec3 pos, vec3 normal)
+vec3 CalculatePointLighting(vec3 pos, vec3 normal)
 {
 	vec3 result = vec3(0.0);
 
-	for(int i = 0; i < ubo.lights.length(); ++i)
+	for(int i = 0; i < 1; ++i) // temp
 	{
 		// Vector to light
-		vec3 L = ubo.lights[i].xyz - pos;
+		vec3 L = PointLight.light.xyz - pos;
 		// Distance from light to fragment position
 		float dist = length(L);
 
@@ -132,24 +148,23 @@ vec3 calculateLighting(vec3 pos, vec3 normal)
 		L = normalize(L);
 
 		// Attenuation
-		float atten = ubo.radius / (pow(dist, 2.0) + 1.0);
+		float atten = PointLight.radius / (pow(dist, 2.0) + 1.0);
 
 		// Diffuse part
 		vec3 N = normalize(normal);
 		float NdotL = max(0.0, dot(N, L));
-		vec3 diff = ubo.lightColors[i].rgb * ALBEDO * NdotL * atten;
+		vec3 diff = PointLight.color.rgb * ALBEDO * NdotL * atten;
 
 		// Specular part
 		vec3 R = reflect(-L, N);
 		float NdotR = max(0.0, dot(R, V));
-		vec3 spec = ubo.lightColors[i].rgb * 1.0 * pow(NdotR, 8.0) * atten;
+		vec3 spec = PointLight.color.rgb * 1.0 * pow(NdotR, 8.0) * atten;
 
 		result += diff + spec;	
 	}
 
 	return result;
 }
-
 
 void main() 
 {
@@ -162,16 +177,16 @@ void main()
 		return;
 	}
 	
-	vec3 pos = texture(samplerPosition, inUV).rgb;
+	vec3 pos = vec3(view * vec4(texture(samplerPosition, inUV).rgb, 0));
 	vec3 N =  texture(samplerNormal, inUV).rgb;
-	vec3 pbrParams = texture(samplerPBR, inUV).rgb;
+	vec3 pbrParams = texture(samplerPBR, inUV).rgb * 2.0 - 1.0;
 
 	float metallic = pbrParams.x;
     float roughness = pbrParams.y;
-    vec3 ao = ubo.ssaoEnabled == 1 ? texture(samplerSSAOBlur, inUV).rrr : pbrParams.zzz;
+    vec3 ao = ssaoEnabled == 1 ? texture(samplerSSAOBlur, inUV).rrr : pbrParams.zzz;
 
-	if (ubo.displayMode > 0) {
-		switch (ubo.displayMode) {
+	if (displayMode > 0) {
+		switch (displayMode) {
 			case 1: 
 				outFragcolor = vec4(pos, 1);
 				break;
@@ -197,16 +212,16 @@ void main()
 
 	//
 
-	vec3 V = normalize(ubo.viewPos.xyz - pos);
+	vec3 V = normalize(viewPos.xyz - pos);
 	vec3 R = reflect(-V, N); 
 
 	vec3 F0 = vec3(0.04); 
 	F0 = mix(F0, ALBEDO, metallic);
 
 	vec3 Lo = vec3(0.0);
-	for(int i = 0; i < ubo.lights.length(); i++) 
+	for(int i = 0; i < 1; i++) 
 	{
-		vec3 L = normalize(ubo.lights[i].xyz - pos);
+		vec3 L = normalize(SkyLight.light.xyz - pos);
 		Lo += specularContribution(L, V, N, F0, metallic, roughness);
 	} 
 
