@@ -98,6 +98,7 @@ void main()
 	mat4 model = modelsBuffer.models[modelIndex].model;
 
 	outWorldPos = vec3(model * vec4(a_Position, 1.0));
+	
 	outNormal =  mat3(model) * a_Normal;
 	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
 	outUV = a_UV;

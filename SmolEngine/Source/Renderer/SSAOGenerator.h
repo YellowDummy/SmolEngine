@@ -11,7 +11,7 @@ namespace SmolEngine
 	{
 	public:
 
-		static void Generate(Ref<Texture>& out_NoiseTexture, std::array<glm::vec4, 64>& out_Kernel);
+		static void Generate(Ref<Texture>& out_NoiseTexture, std::array<glm::vec4, 32>& out_Kernel);
 
 	private:
 

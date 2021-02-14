@@ -6,10 +6,10 @@
 
 namespace SmolEngine
 {
-	void SSAOGenerator::Generate(Ref<Texture>& out_NoiseTexture, std::array<glm::vec4, 64>& out_Kernel)
+	void SSAOGenerator::Generate(Ref<Texture>& out_NoiseTexture, std::array<glm::vec4, 32>& out_Kernel)
 	{
 		// Sample kernel
-		const uint32_t kernelCount = 64;
+		const uint32_t kernelCount = 32;
 		std::default_random_engine rndEngine((unsigned)time(nullptr));
 		std::uniform_real_distribution<float> rndDist(0.0f, 1.0f);
 

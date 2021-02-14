@@ -51,7 +51,7 @@ namespace SmolEngine
 
 		struct SSAOTempUbo
 		{
-			std::array<glm::vec4, 64> kernel;
+			std::array<glm::vec4, 32> kernel;
 		} ssaoTempData;
 
 		SSAOGenerator::Generate(m_SSAONoise, ssaoTempData.kernel);
@@ -87,9 +87,9 @@ namespace SmolEngine
 
 			MRTframebefferSpec.Attachments.resize(4);
 			MRTframebefferSpec.Attachments[0] = FramebufferAttachment(AttachmentFormat::SFloat4_32, true, "Position");
-			MRTframebefferSpec.Attachments[1] = FramebufferAttachment(AttachmentFormat::UNORM4_8, true, "Normals"); 
-			MRTframebefferSpec.Attachments[2] = FramebufferAttachment(AttachmentFormat::UNORM4_8, true, "Pbr");
-			MRTframebefferSpec.Attachments[3] = FramebufferAttachment(AttachmentFormat::UNORM4_8,  true, "Albedro");
+			MRTframebefferSpec.Attachments[1] = FramebufferAttachment(AttachmentFormat::SFloat4_32, true, "Normals");
+			MRTframebefferSpec.Attachments[2] = FramebufferAttachment(AttachmentFormat::SFloat4_32, true, "Pbr");
+			MRTframebefferSpec.Attachments[3] = FramebufferAttachment(AttachmentFormat::SFloat4_32,  true, "Albedro");
 
 			m_DeferredFrameBuffer = Framebuffer::Create(MRTframebefferSpec);
 		}
@@ -97,8 +97,8 @@ namespace SmolEngine
 		// SSAO Framebuffer
 		FramebufferSpecification SSAOFramebuffer = {};
 		{
-			SSAOFramebuffer.Height = 2048;
-			SSAOFramebuffer.Width = 2048;
+			SSAOFramebuffer.Width = Application::GetApplication().GetWindowWidth();
+			SSAOFramebuffer.Height = Application::GetApplication().GetWindowHeight();
 			SSAOFramebuffer.bUseMSAA = false;
 			SSAOFramebuffer.bTargetsSwapchain = false;
 			SSAOFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::UNORM_8, true) };
@@ -109,8 +109,8 @@ namespace SmolEngine
 		// SSAO Blur Framebuffer
 		FramebufferSpecification SSAOBlurFramebuffer = {};
 		{
-			SSAOBlurFramebuffer.Height = 2048;
-			SSAOBlurFramebuffer.Width = 2048;
+			SSAOBlurFramebuffer.Width = Application::GetApplication().GetWindowWidth();
+			SSAOBlurFramebuffer.Height = Application::GetApplication().GetWindowHeight();
 			SSAOBlurFramebuffer.bUseMSAA = false;
 			SSAOBlurFramebuffer.bTargetsSwapchain = false;
 			SSAOBlurFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::UNORM_8, true) };
@@ -172,6 +172,52 @@ namespace SmolEngine
 		m_TestMesh = Mesh::Create(Resources + "WoodenChair_01.FBX");
 		m_SponzaMesh = Mesh::Create(Resources + "sponza.glb");
 		m_PlaneMesh = Mesh::Create(Resources + "plane.glb");
+
+		// Default PBR
+		{
+			m_PBRPipeline = std::make_shared<GraphicsPipeline>();
+			GraphicsPipelineShaderCreateInfo shaderCI = {};
+			{
+				shaderCI.FilePaths[ShaderType::Vertex] = Resources + "Shaders/PBR_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = Resources + "Shaders/PBR_Vulkan_Fragment.glsl";
+			};
+
+			BufferLayout mainLayout =
+			{
+				{ DataTypes::Float3, "aPos" },
+				{ DataTypes::Float3, "aNormal" },
+				{ DataTypes::Float4, "aTangent" },
+				{ DataTypes::Float2, "aUV" },
+				{ DataTypes::Float4, "aColor" }
+			};
+
+
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			{
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(PBRVertex), mainLayout) };
+
+				DynamicPipelineCI.PipelineName = "PBR_Rendering";
+				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+				DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
+			}
+
+			auto result = m_PBRPipeline->Create(&DynamicPipelineCI);
+			assert(result == PipelineCreateResult::SUCCESS);
+
+			m_PBRPipeline->UpdateSampler(m_Tetxure1, 5); //albedo
+			m_PBRPipeline->UpdateSampler(m_Tetxure3, 6); //normal
+			m_PBRPipeline->UpdateSampler(m_Tetxure5, 7); //ao
+			m_PBRPipeline->UpdateSampler( m_Tetxure2, 8); //metallic
+			m_PBRPipeline->UpdateSampler(m_Tetxure4, 9); //roughness
+
+			m_PBRPipeline->SumbitUniformBuffer(12, sizeof(PBRParams), &m_PBRParams);
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+			m_PBRPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
+			m_PBRPipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
+			m_PBRPipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
+#endif
+		}
 
 		// MRT
 		{
@@ -425,6 +471,50 @@ namespace SmolEngine
 			m_Rot.y += 0.0005f;
 
 		ImGui::Begin("Settings");
+
+		if (ImGui::Button("Reload MRT Shader"))
+		{
+			if (m_Pipeline->Reload() == PipelineCreateResult::SUCCESS)
+			{
+				m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
+
+				m_Pipeline->UpdateSamplers({ m_Tetxure1, m_BrickAlbedro }, 5); //albedo
+				m_Pipeline->UpdateSamplers({ m_Tetxure3, m_BrickNormal }, 6); //normal
+				m_Pipeline->UpdateSamplers({ m_Tetxure5 }, 7); //ao
+				m_Pipeline->UpdateSamplers({ m_Tetxure2 }, 8); //metallic
+				m_Pipeline->UpdateSamplers({ m_Tetxure4, m_BrickRoughness }, 9); //roughness
+
+				auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer();
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(0, pass.GetAttachment(std::string("Position"))->ImageInfo);
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Normals"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Position"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(std::string("Normals"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(std::string("Pbr"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(std::string("Albedro"))->ImageInfo);
+			}
+		}
+
+		if (ImGui::Button("Reload Combination Shader"))
+		{
+			if (m_CombinationPipeline->Reload() == PipelineCreateResult::SUCCESS)
+			{
+				auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer();
+
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(0, m_SkyboxFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Position"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(std::string("Normals"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(std::string("Pbr"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(std::string("Albedro"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(5, m_SSAOFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(6, m_SSAOBlurFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
+
+
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(7, VulkanPBR::GetIrradianceImageInfo());
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(8, VulkanPBR::GetBRDFLUTImageInfo());
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(9, VulkanPBR::GetPrefilteredCubeImageInfo());
+			}
+		}
+
 		ImGui::Checkbox("SSAO Enabled", &m_SSAOEnabled);
 
 		ImGui::NewLine();
@@ -471,6 +561,36 @@ namespace SmolEngine
 
 	void DeferredRenderingTest::BuildTestCommandBuffer()
 	{
+		static bool defPBR = false;
+		if (defPBR)
+		{
+			// Default PBR Test
+			{
+				m_PBRPipeline->BeginCommandBuffer(true);
+				m_PBRPipeline->BeginRenderPass();
+				{
+					struct PushConsant
+					{
+						glm::mat4 proj;
+						glm::mat4 model;
+						glm::mat4 view;
+
+						glm::vec3 camPos;
+					} pc;
+
+					pc.proj = m_EditorCamera->GetProjection();
+					pc.model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					pc.view = m_EditorCamera->GetViewMatrix();
+					pc.camPos = m_EditorCamera->GetPosition();
+
+					m_PBRPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
+					m_PBRPipeline->DrawMesh(m_SponzaMesh);
+				}
+				m_PBRPipeline->EndRenderPass();
+			}
+			return;
+		}
+
 		bool useMainCmdBuffer = true;
 		VkCommandBuffer cmdBuffer;
 		// Offscreen MRT + SkyBox
@@ -515,7 +635,7 @@ namespace SmolEngine
 					pc.materialIndex = m_MaterialIndex;
 
 					m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_Pipeline->DrawMesh(m_TestMesh);
+					m_Pipeline->DrawMesh(m_PlaneMesh);
 				}
 				m_Pipeline->EndRenderPass();
 			}
@@ -600,9 +720,7 @@ namespace SmolEngine
 					int ssaoEnabled;
 				}pc;
 
-				//NATIVE_ERROR("x: {}, y: {}, z: {}", m_EditorCamera->GetPosition().x, m_EditorCamera->GetPosition().y, m_EditorCamera->GetPosition().z);
-
-				pc.viewPos = glm::vec4(m_EditorCamera->GetPosition(), 1);
+				pc.viewPos = glm::vec4(m_EditorCamera->GetPosition(),  1) ;
 				pc.view = m_EditorCamera->GetViewMatrix();
 				pc.displayMode = m_DisplayMode;
 				pc.ssaoEnabled = m_SSAOEnabled ? 1 : 0;

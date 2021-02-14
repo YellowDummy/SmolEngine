@@ -48,7 +48,7 @@ layout (std140, binding = 17) uniform PointLightUBO
 
 layout (constant_id = 0) const float MAX_REFLECTION_LOD = 9.0;
 
-
+#define AMBIENT 1.0
 #define PI 3.1415926535897932384626433832795
 #define ALBEDO pow(texture(samplerAlbedo, inUV).rgb, vec3(2.2))
 
@@ -177,9 +177,9 @@ void main()
 		return;
 	}
 	
-	vec3 pos = vec3(view * vec4(texture(samplerPosition, inUV).rgb, 0));
+	vec3 pos = texture(samplerPosition, inUV).rgb;
 	vec3 N =  texture(samplerNormal, inUV).rgb;
-	vec3 pbrParams = texture(samplerPBR, inUV).rgb * 2.0 - 1.0;
+	vec3 pbrParams = texture(samplerPBR, inUV).rgb;
 
 	float metallic = pbrParams.x;
     float roughness = pbrParams.y;
@@ -213,7 +213,8 @@ void main()
 	//
 
 	vec3 V = normalize(viewPos.xyz - pos);
-	vec3 R = reflect(-V, N); 
+	vec3 R = reflect(V, N); 
+
 
 	vec3 F0 = vec3(0.04); 
 	F0 = mix(F0, ALBEDO, metallic);
@@ -238,8 +239,8 @@ void main()
 	vec3 specular = reflection * (F * brdf.x + brdf.y);
 
 	// Ambient part
-	vec3 kD = 1.0 - F;
-	kD *= 1.0 - metallic;	  
+	vec3 kD = AMBIENT - F;
+	kD *= AMBIENT - metallic;	  
 	vec3 ambient = (kD * diffuse + specular) * ao;
 	
 	vec3 color = ambient + Lo;

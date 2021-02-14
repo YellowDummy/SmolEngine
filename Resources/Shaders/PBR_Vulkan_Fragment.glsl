@@ -8,13 +8,13 @@ layout (location = 4) in vec4 inTangent;
 
 struct Params
 {
-    vec4 lights[4];
-	vec4 lightColors[4];
+    vec4 lights;
+	vec4 lightColors;
 	float exposure;
 	float gamma;
 };
 
-layout (std140, binding = 15) uniform UBOParams 
+layout (std140, binding = 12) uniform UBOParams 
 {
     Params uboParams;
 };
@@ -88,7 +88,7 @@ vec3 prefilteredReflection(vec3 R, float roughness)
 	return mix(a, b, lod - lodf);
 }
 
-vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float roughness, vec3 lightColor)
+vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float roughness)
 {
 	// Precalculate vectors and dot products	
 	vec3 H = normalize (V + L);
@@ -110,7 +110,7 @@ vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float
 		color += (kD * ALBEDO / PI + spec) * dotNL;
 	}
 
-	return color * lightColor;
+	return color;
 }
 
 vec3 calculateNormal()
@@ -138,9 +138,9 @@ void main()
 	F0 = mix(F0, ALBEDO, metallic);
 
 	vec3 Lo = vec3(0.0);
-	for(int i = 0; i < uboParams.lights[i].length(); i++) {
-		vec3 L = normalize(uboParams.lights[i].xyz - inWorldPos);
-		Lo += specularContribution(L, V, N, F0, metallic, roughness, uboParams.lightColors[i].rgb);
+	for(int i = 0; i < 1; i++) {
+		vec3 L = normalize(uboParams.lights.xyz - inWorldPos);
+		Lo += specularContribution(L, V, N, F0, metallic, roughness);
 	}   
 	
 	vec2 brdf = texture(samplerBRDFLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;

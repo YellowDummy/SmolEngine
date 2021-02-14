@@ -14,14 +14,22 @@ namespace SmolEngine
 {
 	class VertexBuffer;
 
+	struct PBRParams
+	{
+		glm::vec4 lights = glm::vec4(-15.0, -15 * 0.5f, -15, 1.0f);
+		glm::vec4 lightColors = glm::vec4(0.2f, 0.5f, 0.2f, 1.0f);
+		float exposure = 2.5;
+		float gamm = 4;
+	};
+
 	struct SkyLights
 	{
-		glm::vec4 light = glm::vec4(25.0, 25.0, 25.0, 1.0);
+		glm::vec4 light = glm::vec4(-15.0, -15 * 0.5f, -15, 1.0f);
 	};
 
 	struct PointLights
 	{
-		glm::vec4 light = glm::vec4(0.0, 0.0, 0.0, 1.0);
+		glm::vec4 light = glm::vec4(-15.0, -15 * 0.5f, -15, 1.0f);
 		glm::vec4 color = glm::vec4(0.2f, 0.5f, 0.2f, 1.0f);
 		float radius = 2.0f;
 	};
@@ -67,6 +75,7 @@ namespace SmolEngine
 		Ref<GraphicsPipeline>            m_SSAOBlurPipeline = nullptr;
 		Ref<GraphicsPipeline>            m_SkyboxPipeline = nullptr;
 		Ref<GraphicsPipeline>            m_CombinationPipeline = nullptr;
+		Ref<GraphicsPipeline>            m_PBRPipeline = nullptr;
 
 		Ref<Framebuffer>                 m_DeferredFrameBuffer = nullptr;
 		Ref<Framebuffer>                 m_SkyboxFrameBuffer = nullptr;
@@ -85,6 +94,7 @@ namespace SmolEngine
 		int                              m_DisplayMode = 0;
 		PointLights                      m_PointLights = {};
 		SkyLights                        m_SkyLights = {};
+		PBRParams                        m_PBRParams = {};
 
 		std::vector<glm::mat4>           m_ModelViews;
 		Ref<VertexBuffer>                m_InstanceVB = nullptr;

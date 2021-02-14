@@ -48,12 +48,12 @@ vec3 calculateNormal()
 {
     if(inUseNormalMap == 1)
 	{
-		vec3 tangentNormal = texture(normalMap[inNormalMapIndex], inUV).xyz * 2.0 - 1.0;
-		return normalize(inTBN * tangentNormal);
+		vec3 tangentNormal = texture(normalMap[inNormalMapIndex], inUV).xyz * 2.0 - vec3(1.0);
+		return inTBN * normalize(tangentNormal);
 	}
 	else
 	{
-		return normalize(inTBN[2]);
+		return inTBN[2];
 	}
 }
 
