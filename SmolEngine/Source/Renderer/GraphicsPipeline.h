@@ -48,9 +48,9 @@ namespace SmolEngine
 
 		uint32_t                             DescriptorSets = 1;
 		GraphicsPipelineShaderCreateInfo*    ShaderCreateInfo = nullptr;
+		std::string                          PipelineName = "";
 		std::vector<DrawMode>                PipelineDrawModes = { DrawMode::Triangle };
 		std::vector<VertexInputInfo>         VertexInputInfos;
-		std::string                          PipelineName = "";
 	};
 
 	class GraphicsPipeline
@@ -92,7 +92,8 @@ namespace SmolEngine
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle,
 			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
-		void DrawMesh(const Ref<Mesh>& mesh, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
+		void DrawMesh(const Ref<Mesh>& mesh, DrawMode mode = DrawMode::Triangle,
+			uint32_t instances = 1, uint32_t descriptorSetIndex = 0);
 
 		// Submit
 
@@ -100,12 +101,12 @@ namespace SmolEngine
 
 		void EndBufferSubmit();
 
-		void SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
+		void SubmitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 
 		void SubmitStorageBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 
 		template<typename T>
-		void SumbitUniform(const std::string& name, const void* data, uint32_t arrayElements = 0, size_t size = 0)
+		void SubmitUniform(const std::string& name, const void* data, uint32_t arrayElements = 0, size_t size = 0)
 		{
 #ifdef SMOLENGINE_OPENGL_IMPL
 			m_Shader->Bind();
@@ -113,7 +114,7 @@ namespace SmolEngine
 #endif
 		}
 
-		void SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data);
+		void SubmitPushConstant(ShaderType shaderStage, size_t size, const void* data);
 
 		// Update Resources
 

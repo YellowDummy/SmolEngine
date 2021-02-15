@@ -19,7 +19,6 @@ namespace SmolEngine
 
 		float        Metallic = 0;
 		float        Roughness = 0;
-		float        Ambient = 1.0f;
 		float        Albedo = 1.0f;
 		float        Specular = 9.0f;
 	};

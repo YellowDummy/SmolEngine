@@ -210,7 +210,7 @@ namespace SmolEngine
 			m_PBRPipeline->UpdateSampler( m_Tetxure2, 8); //metallic
 			m_PBRPipeline->UpdateSampler(m_Tetxure4, 9); //roughness
 
-			m_PBRPipeline->SumbitUniformBuffer(12, sizeof(PBRParams), &m_PBRParams);
+			m_PBRPipeline->SubmitUniformBuffer(12, sizeof(PBRParams), &m_PBRParams);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 			m_PBRPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
@@ -284,7 +284,7 @@ namespace SmolEngine
 				auto result = m_SSAOPipeline->Create(&DynamicPipelineCI);
 				assert(result == PipelineCreateResult::SUCCESS);
 
-				m_SSAOPipeline->SumbitUniformBuffer(25, sizeof(SSAOTempUbo), &ssaoTempData);
+				m_SSAOPipeline->SubmitUniformBuffer(25, sizeof(SSAOTempUbo), &ssaoTempData);
 				m_SSAOPipeline->UpdateSampler(m_SSAONoise, 2);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -429,8 +429,8 @@ namespace SmolEngine
 			auto result = m_CombinationPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
 
-			m_CombinationPipeline->SumbitUniformBuffer(16, sizeof(SkyLights), &m_SkyLights);
-			m_CombinationPipeline->SumbitUniformBuffer(17, sizeof(PointLights), &m_PointLights);
+			m_CombinationPipeline->SubmitUniformBuffer(16, sizeof(SkyLights), &m_SkyLights);
+			m_CombinationPipeline->SubmitUniformBuffer(17, sizeof(PointLights), &m_PointLights);
 
 			m_CombinationPipeline->SetVertexBuffers({ FullScreenVB });
 			m_CombinationPipeline->SetIndexBuffers({ FullScreenID });
@@ -583,7 +583,7 @@ namespace SmolEngine
 					pc.view = m_EditorCamera->GetViewMatrix();
 					pc.camPos = m_EditorCamera->GetPosition();
 
-					m_PBRPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
+					m_PBRPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
 					m_PBRPipeline->DrawMesh(m_SponzaMesh);
 				}
 				m_PBRPipeline->EndRenderPass();
@@ -634,7 +634,7 @@ namespace SmolEngine
 					pc.modelIndex = 0;
 					pc.materialIndex = m_MaterialIndex;
 
-					m_Pipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
+					m_Pipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
 					m_Pipeline->DrawMesh(m_PlaneMesh);
 				}
 				m_Pipeline->EndRenderPass();
@@ -660,7 +660,7 @@ namespace SmolEngine
 					pc.exposure = 4;
 					pc.gamma = 2.5f;
 
-					m_SkyboxPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
+					m_SkyboxPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
 					m_SkyboxPipeline->Draw(36);
 				}
 				m_SkyboxPipeline->EndRenderPass();
@@ -685,7 +685,7 @@ namespace SmolEngine
 						pc.proj = m_EditorCamera->GetProjection();
 						pc.view = m_EditorCamera->GetViewMatrix();
 
-						m_SSAOPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
+						m_SSAOPipeline->SubmitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
 						m_SSAOPipeline->DrawIndexed();
 					}
 					m_SSAOPipeline->EndRenderPass();
@@ -725,7 +725,7 @@ namespace SmolEngine
 				pc.displayMode = m_DisplayMode;
 				pc.ssaoEnabled = m_SSAOEnabled ? 1 : 0;
 
-				m_CombinationPipeline->SumbitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
+				m_CombinationPipeline->SubmitPushConstant(ShaderType::Fragment, sizeof(PushConstant), &pc);
 				m_CombinationPipeline->DrawIndexed();
 			}
 			m_CombinationPipeline->EndRenderPass();

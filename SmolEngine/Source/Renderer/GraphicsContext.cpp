@@ -6,16 +6,14 @@
 
 namespace SmolEngine
 {
-	void GraphicsContext::Setup(GLFWwindow* window, uint32_t* width, uint32_t* height)
+	void GraphicsContext::SetupWindow(GLFWwindow* window, uint32_t* width, uint32_t* height)
 	{
 		s_Instance = this;
-
 #ifdef  SMOLENGINE_OPENGL_IMPL
 		m_OpenglContext.Setup(window);
 #else
 		m_VulkanContext.Setup(window, width, height);
 #endif
-
 	}
 
 	GraphicsContext::~GraphicsContext()
@@ -23,7 +21,7 @@ namespace SmolEngine
 		s_Instance = nullptr;
 	}
 
-	void GraphicsContext::InitRenderers()
+	void GraphicsContext::Init()
 	{
 		Renderer2D::Init();
 #ifdef  SMOLENGINE_OPENGL_IMPL

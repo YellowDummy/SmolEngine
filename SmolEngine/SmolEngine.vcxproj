@@ -657,6 +657,7 @@
     <ClInclude Include="Source\Renderer\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="Source\Renderer\Renderer.h" />
     <ClInclude Include="Source\Renderer\Renderer2D.h" />
+    <ClInclude Include="Source\Renderer\RendererDeferred.h" />
     <ClInclude Include="Source\Renderer\RendererShared.h" />
     <ClInclude Include="Source\Renderer\Shader.h" />
     <ClInclude Include="Source\Renderer\Shared.h" />
@@ -783,6 +784,7 @@
     <ClCompile Include="Source\Renderer\OpenGL\OpenglVertexArray.cpp" />
     <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="Source\Renderer\RendererDeferred.cpp" />
     <ClCompile Include="Source\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
     <ClCompile Include="Source\Renderer\SubTexture.cpp" />

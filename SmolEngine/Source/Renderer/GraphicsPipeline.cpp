@@ -323,8 +323,10 @@ namespace SmolEngine
 #endif
 	}
 
-	void GraphicsPipeline::DrawMesh(const Ref<Mesh>& mesh, DrawMode mode, uint32_t descriptorSetIndex)
+	void GraphicsPipeline::DrawMesh(const Ref<Mesh>& mesh, DrawMode mode, uint32_t instances, uint32_t descriptorSetIndex)
 	{
+#ifdef SMOLENGINE_OPENGL_IMPL
+#else
 		vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VulkanPipeline.GetVkPipeline(mode));
 
 		const auto& descriptorSets = m_VulkanPipeline.GetVkDescriptorSets(descriptorSetIndex);
@@ -335,17 +337,11 @@ namespace SmolEngine
 		VkDeviceSize offsets[1] = { 0 };
 		vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &mesh->GetVertexBuffer()->GetVulkanVertexBuffer().GetBuffer(), offsets);
 		vkCmdBindIndexBuffer(m_CommandBuffer, mesh->GetIndexBuffer()->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-		vkCmdDrawIndexed(m_CommandBuffer, mesh->GetIndexBuffer()->GetCount(), 1, 0, 0, 0);
-
-		for (auto& subMesh : mesh->GetSubMeshes())
-		{
-			vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &subMesh->GetVertexBuffer()->GetVulkanVertexBuffer().GetBuffer(), offsets);
-			vkCmdBindIndexBuffer(m_CommandBuffer, subMesh->GetIndexBuffer()->GetVulkanIndexBuffer().GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-			vkCmdDrawIndexed(m_CommandBuffer, subMesh->GetIndexBuffer()->GetCount(), 1, 0, 0, 0);
-		}
+		vkCmdDrawIndexed(m_CommandBuffer, mesh->GetIndexBuffer()->GetCount(), instances, 0, 0, 0);
+#endif
 	}
 
-	void GraphicsPipeline::SumbitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
+	void GraphicsPipeline::SubmitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
 	{
 		m_Shader->SumbitUniformBuffer(bindingPoint, data, size, offset);
 	}
@@ -355,7 +351,7 @@ namespace SmolEngine
 		m_Shader->SumbitStorageBuffer(bindingPoint, data, size, offset);
 	}
 
-	void GraphicsPipeline::SumbitPushConstant(ShaderType shaderStage, size_t size, const void* data)
+	void GraphicsPipeline::SubmitPushConstant(ShaderType shaderStage, size_t size, const void* data)
 	{
 #ifndef SMOLENGINE_OPENGL_IMPL
 		vkCmdPushConstants(m_CommandBuffer, m_VulkanPipeline.GetVkPipelineLayot(), VulkanShader::GetVkShaderStage(shaderStage),

@@ -8,6 +8,7 @@
 #include "Renderer/Vulkan/VulkanContext.h"
 #endif
 
+#include "Framebuffer.h"
 
 namespace SmolEngine 
 {
@@ -20,12 +21,12 @@ namespace SmolEngine
 		~GraphicsContext();
 
 		/// Main
-
-		static void InitRenderers();
 		
 		void OnResize(uint32_t width, uint32_t height);
 
-		void Setup(GLFWwindow* window, uint32_t* width, uint32_t* height);
+		void Init();
+
+		void SetupWindow(GLFWwindow* window, uint32_t* width, uint32_t* height);
 
 		void SwapBuffers();
 
@@ -42,14 +43,13 @@ namespace SmolEngine
 
 	private:
 
-		inline static GraphicsContext* s_Instance = nullptr;
+		inline static GraphicsContext*       s_Instance = nullptr;
 
 #ifdef  SMOLENGINE_OPENGL_IMPL
-		OpenglContext m_OpenglContext = {};
-		OpenglRendererAPI* m_RendererAPI = nullptr;
+		OpenglContext                        m_OpenglContext = {};
+		OpenglRendererAPI*                   m_RendererAPI = nullptr;
 #else
-		VulkanContext m_VulkanContext = {};
+		VulkanContext                        m_VulkanContext = {};
 #endif
-
 	};
 }

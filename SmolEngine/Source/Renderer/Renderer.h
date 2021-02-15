@@ -6,32 +6,40 @@
 namespace SmolEngine
 {
 	class Mesh;
-	struct PBRMaterial;
+	class Framebuffer;
 
 	class Renderer
 	{
 	public:
 
-		/// Init
+		// Init
 
 		static void Init();
 
 		static void Shutdown();
 
-		/// Main
+		// Main
 
-		static void BeginScene(const glm::mat4& viewProj);
+		static void BeginScene(const glm::mat4& proj, const glm::mat4& view, const glm::vec3& camPos);
 
 		static void EndScene();
 
-		/// Submit
+		// Submit
 
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation,
-			const glm::vec3& scale, const Ref<Mesh>& mesh, const PBRMaterial& PBRmaterial);
+			const glm::vec3& scale, const Ref<Mesh>& mesh);
 
-		/// Events
+		// Getters
 
-		static void OnNewLevelLoaded();
+		static Ref<Framebuffer> GetFramebuffer();
+
+	private:
+
+		// Helpers
+
+		static bool OnNewLevelLoaded();
+
+		static bool UpdateMaterials();
 
 	private:
 
@@ -43,8 +51,12 @@ namespace SmolEngine
 
 		static void InitPBR();
 
-		static void InitMainPipeline();
+		static void InitPipelines();
 
-		static void InitSkyBoxPipeline();
+		static void InitFramebuffers();
+
+	private:
+
+		friend class Renderer3DTestLayer; // temp
 	};
 }

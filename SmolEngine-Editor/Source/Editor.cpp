@@ -5,6 +5,7 @@
 #include "VulkanTestLayer.h"
 #include "RaytracingTestLayer.h"
 #include "DeferredRenderingTestLayer.h"
+#include "Renderer3DTestLayer.h"
 
 namespace SmolEngine
 {
@@ -25,7 +26,8 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		app.PushLayer(new EditorLayer);
 #else
-		app.PushLayer(new DeferredRenderingTest);
+		app.PushLayer(new Renderer3DTestLayer);
+		//app.PushLayer(new DeferredRenderingTest);
 #endif
 		//app.PushLayer(new EditorLayer);
 		EDITOR_INFO("Initialized successfully");

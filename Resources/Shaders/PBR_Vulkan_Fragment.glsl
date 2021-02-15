@@ -1,10 +1,27 @@
 #version 450
 
-layout (location = 0) in vec3 inWorldPos;
-layout (location = 1) in vec3 inNormal;
-layout (location = 2) in vec3 inCameraPos;
-layout (location = 3) in vec2 inUV;
-layout (location = 4) in vec4 inTangent;
+layout (location = 0)  in vec3 inWorldPos;
+layout (location = 1)  in vec3 inNormal;
+layout (location = 2)  in vec3 inCameraPos;
+layout (location = 3)  in vec2 inUV;
+layout (location = 4)  in vec4 inTangent;
+
+layout (location = 5)  flat in int inUseAlbedroMap;
+layout (location = 6)  flat in int inUseNormalMap;
+layout (location = 7)  flat in int inUseMetallicMap;
+layout (location = 8)  flat in int inUseRoughnessMap;
+layout (location = 9)  flat in int inUseAOMap;
+
+layout (location = 10) flat in int inAlbedroMapIndex;
+layout (location = 11) flat in int inNormalMapIndex;
+layout (location = 12) flat in int inMetallicMapIndex;
+layout (location = 13) flat in int inRoughnessMapIndex;
+layout (location = 14) flat in int inAOMapIndex;
+
+layout (location = 15) in float inMetallic;
+layout (location = 16) in float inRoughness;
+layout (location = 17) in vec4 inColor;
+layout (location = 18) in mat3 inTBN;
 
 struct Params
 {
@@ -19,22 +36,22 @@ layout (std140, binding = 12) uniform UBOParams
     Params uboParams;
 };
 
-
 layout (binding = 2) uniform samplerCube samplerIrradiance;
 layout (binding = 3) uniform sampler2D samplerBRDFLUT;
 layout (binding = 4) uniform samplerCube prefilteredMap;
 
-layout (binding = 5) uniform sampler2D albedoMap;
-layout (binding = 6) uniform sampler2D normalMap;
-layout (binding = 7) uniform sampler2D aoMap;
-layout (binding = 8) uniform sampler2D metallicMap;
-layout (binding = 9) uniform sampler2D roughnessMap;
+layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 
 layout (location = 0) out vec4 outColor;
 
 #define PI 3.1415926535897932384626433832795
-#define ALBEDO pow(texture(albedoMap, inUV).rgb, vec3(2.2))
+
+vec3 GetAlbedro()
+{
+	vec3 alb = inUseAlbedroMap == 1 ? texture(texturesMap[inAlbedroMapIndex], inUV).rgb: inColor.rgb;
+	return pow(alb, vec3(2.2));
+}
 
 // From http://filmicgames.com/archives/75
 vec3 Uncharted2Tonemap(vec3 x)
@@ -107,7 +124,7 @@ vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float
 		vec3 F = F_Schlick(dotNV, F0);		
 		vec3 spec = D * F * G / (4.0 * dotNL * dotNV + 0.001);		
 		vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);			
-		color += (kD * ALBEDO / PI + spec) * dotNL;
+		color += (kD * GetAlbedro() / PI + spec) * dotNL;
 	}
 
 	return color;
@@ -115,13 +132,15 @@ vec3 specularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float
 
 vec3 calculateNormal()
 {
-	vec3 tangentNormal = texture(normalMap, inUV).xyz * 2.0 - 1.0;
-
-	vec3 N = normalize(inNormal);
-	vec3 T = normalize(inTangent.xyz);
-	vec3 B = normalize(cross(N, T));
-	mat3 TBN = mat3(T, B, N);
-	return normalize(TBN * tangentNormal);
+    if(inUseNormalMap == 1)
+	{
+		vec3 tangentNormal = texture(texturesMap[inNormalMapIndex], inUV).xyz * 2.0 - vec3(1.0);
+		return inTBN * normalize(tangentNormal);
+	}
+	else
+	{
+		return inTBN[2];
+	}
 }
 
 void main()
@@ -129,13 +148,14 @@ void main()
 	vec3 N = calculateNormal();
 
 	vec3 V = normalize(inCameraPos - inWorldPos);
-	vec3 R = reflect(-V, N); 
+	vec3 R = reflect(V, N); 
 
-	float metallic = texture(metallicMap, inUV).r;
-	float roughness = texture(roughnessMap, inUV).r;
+	float metallic = inUseMetallicMap == 1 ? texture(texturesMap[inMetallicMapIndex], inUV).r : inMetallic;
+	float roughness = inUseRoughnessMap == 1 ? texture(texturesMap[inRoughnessMapIndex], inUV).r: inRoughness;
+	vec3 ao = inUseAOMap == 1 ? texture(texturesMap[inAOMapIndex], inUV).rrr : vec3(1, 1, 1);
 
 	vec3 F0 = vec3(0.04); 
-	F0 = mix(F0, ALBEDO, metallic);
+	F0 = mix(F0, GetAlbedro(), metallic);
 
 	vec3 Lo = vec3(0.0);
 	for(int i = 0; i < 1; i++) {
@@ -148,7 +168,7 @@ void main()
 	vec3 irradiance = texture(samplerIrradiance, N).rgb;
 
 	// Diffuse based on irradiance
-	vec3 diffuse = irradiance * ALBEDO;	
+	vec3 diffuse = irradiance * GetAlbedro();	
 
 	vec3 F = F_SchlickR(max(dot(N, V), 0.0), F0, roughness);
 
@@ -158,7 +178,7 @@ void main()
 	// Ambient part
 	vec3 kD = 1.0 - F;
 	kD *= 1.0 - metallic;	  
-	vec3 ambient = (kD * diffuse + specular) * texture(aoMap, inUV).rrr;
+	vec3 ambient = (kD * diffuse + specular) * ao;
 	
 	vec3 color = ambient + Lo;
 

@@ -194,7 +194,7 @@ namespace SmolEngine
 
 		// Binding textures
 		s_Data->MainPipeline->UpdateSamplers(layer.TextureSlots, s_SamplersBindingPoint, layer.LayerIndex);
-		s_Data->MainPipeline->SumbitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
+		s_Data->MainPipeline->SubmitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
 
 		s_Data->MainPipeline->BeginRenderPass();
 		{
@@ -247,7 +247,7 @@ namespace SmolEngine
 		ps.cameraViewProj = s_Data->SceneData.viewProjectionMatrix;
 		ps.LightCount = static_cast<float>(s_Data->Light2DBufferSize);
 
-		s_Data->MainPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &ps);
+		s_Data->MainPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &ps);
 		s_Data->MainPipeline->DrawIndexed(DrawMode::Triangle, layer.LayerIndex, 0, layer.LayerIndex);
 #else
 		// Binding textures
@@ -277,7 +277,7 @@ namespace SmolEngine
 		}
 			
 #else
-		s_Data->MainPipeline->SumbitUniformBuffer(1, sizeof(Light2DBuffer) * (s_Data->Light2DBufferSize + 1), s_Data->LightBuffer);
+		s_Data->MainPipeline->SubmitUniformBuffer(1, sizeof(Light2DBuffer) * (s_Data->Light2DBufferSize + 1), s_Data->LightBuffer);
 #endif
 	}
 
@@ -429,7 +429,7 @@ namespace SmolEngine
 		s_Data->DebugPipeline->SumbitUniform<glm::mat4>("u_Transform", &s_Data->DebugPushConstant.transform);
 		s_Data->DebugPipeline->SumbitUniform<glm::vec4>("u_Color", &s_Data->DebugPushConstant.color);
 #else
-		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
+		s_Data->DebugPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
 #endif
 		s_Data->DebugPipeline->DrawIndexed(DrawMode::Line);
 	}
@@ -445,7 +445,7 @@ namespace SmolEngine
 		s_Data->DebugPipeline->SumbitUniform<glm::mat4>("u_Transform", &s_Data->DebugPushConstant.transform);
 		s_Data->DebugPipeline->SumbitUniform<glm::vec4>("u_Color", &s_Data->DebugPushConstant.color);
 #else
-		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
+		s_Data->DebugPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
 #endif
 		s_Data->DebugPipeline->Draw(3000, DrawMode::Fan, 1);
 	}
@@ -475,7 +475,7 @@ namespace SmolEngine
 			s_Data->DebugPipeline->CmdUpdateVertextBuffer(&LineVertex, sizeof(LineVertex), bufferIndex);
 		}
 		s_Data->DebugPipeline->BeginRenderPass();
-		s_Data->DebugPipeline->SumbitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
+		s_Data->DebugPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(s_Data->DebugPushConstant), &s_Data->DebugPushConstant);
 
 #endif
 		s_Data->DebugPipeline->Draw(2, DrawMode::Line, bufferIndex);

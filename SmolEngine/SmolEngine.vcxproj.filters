@@ -1591,6 +1591,7 @@
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\FilePaths.h" />
+    <ClInclude Include="Source\Renderer\RendererDeferred.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1930,5 +1931,6 @@
     <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
     <ClCompile Include="Source\Renderer\Material.cpp" />
     <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
+    <ClCompile Include="Source\Renderer\RendererDeferred.cpp" />
   </ItemGroup>
 </Project>

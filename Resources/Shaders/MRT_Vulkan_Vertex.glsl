@@ -22,7 +22,6 @@ struct MaterialData
    
    float Metallic;
    float Roughness;
-   float Ambient;
    float Albedo;
    float Specular;
 };

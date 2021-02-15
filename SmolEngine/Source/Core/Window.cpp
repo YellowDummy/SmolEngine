@@ -110,7 +110,7 @@ namespace SmolEngine
 		Data.Height = height;
 
 		m_Context = new GraphicsContext();
-		m_Context->Setup(m_Window, &Data.Width, &Data.Height);
+		m_Context->SetupWindow(m_Window, &Data.Width, &Data.Height);
 
 #ifndef SMOLENGINE_EDITOR
 
