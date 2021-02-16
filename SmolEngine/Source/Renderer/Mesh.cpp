@@ -27,6 +27,18 @@ namespace SmolEngine
         return mesh;
     }
 
+    void Mesh::SetMaterialID(int32_t ID, bool submeshes)
+    {
+        m_MaterialID = ID;
+        if (submeshes)
+        {
+            for (auto& mesh : m_SubMeshes)
+            {
+                mesh->SetMaterialID(ID);
+            }
+        }
+    }
+
     void Mesh::Free()
     {
         if (m_IndexBuffer)

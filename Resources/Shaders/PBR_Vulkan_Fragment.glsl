@@ -144,11 +144,11 @@ vec3 calculateNormal()
 }
 
 void main()
-{		
+{	
 	vec3 N = calculateNormal();
 
 	vec3 V = normalize(inCameraPos - inWorldPos);
-	vec3 R = reflect(V, N); 
+	vec3 R = reflect(-V, N); 
 
 	float metallic = inUseMetallicMap == 1 ? texture(texturesMap[inMetallicMapIndex], inUV).r : inMetallic;
 	float roughness = inUseRoughnessMap == 1 ? texture(texturesMap[inRoughnessMapIndex], inUV).r: inRoughness;

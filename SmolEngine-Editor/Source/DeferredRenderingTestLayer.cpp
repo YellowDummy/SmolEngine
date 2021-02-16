@@ -29,20 +29,12 @@ namespace SmolEngine
 		materialCI.Name = "Brick";
 		assert(MaterialLibrary::GetSinglenton()->Add(&materialCI) > -1);
 		auto material_ = MaterialLibrary::GetSinglenton()->GetMaterial(0);
-		material_->m_MaterialProperties.Metallic = 1.0f;
 
 
 		MaterialCreateInfo chairMaterialCI = {};
 		materialCI.Name = "Wooden Chair";
 		int32_t id = MaterialLibrary::GetSinglenton()->Add(&materialCI);
 		auto material = MaterialLibrary::GetSinglenton()->GetMaterial(id);
-
-		material->m_MaterialProperties.UseAlbedroMap = true;
-		material->m_MaterialProperties.UseAOMap = false;
-		material->m_MaterialProperties.UseMetallicMap = true;
-		material->m_MaterialProperties.UseRoughnessMap = true;
-		material->m_MaterialProperties.UseNormalMap = true;
-
 		// Models buffer
 		m_ModelViews.resize(1);
 		CommandSystem::ComposeTransform(m_Pos, m_Rot, m_Scale, true, m_ModelViews[0]);
@@ -531,24 +523,6 @@ namespace SmolEngine
 			bool res = ImGui::Combo("Material", &m_MaterialIndex, &MaterialsItems[0], itemCount, itemCount);
 		}
 
-		uint32_t index = 0;
-		for (auto& material: MaterialLibrary::GetSinglenton()->GetMaterials())
-		{
-			std::string name = "Material " + std::to_string(index);
-			ImGui::PushID(name.c_str());
-			ImGui::Text(name.c_str());
-
-			ImGui::InputFloat("Albedro", &material.m_MaterialProperties.Albedo);
-			ImGui::InputFloat("Metallic", &material.m_MaterialProperties.Metallic);
-			ImGui::InputFloat("Roughness", &material.m_MaterialProperties.Roughness);
-
-			void* mBool = &material.m_MaterialProperties.UseAlbedroMap;
-			ImGui::Checkbox("Use Albedro Map", static_cast<bool*>(mBool));
-			ImGui::PopID();
-			ImGui::NewLine();
-			index++;
-		}
-
 		ImGui::End();
 	}
 
@@ -584,7 +558,7 @@ namespace SmolEngine
 					pc.camPos = m_EditorCamera->GetPosition();
 
 					m_PBRPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_PBRPipeline->DrawMesh(m_SponzaMesh);
+					m_PBRPipeline->DrawMesh(m_SponzaMesh.get());
 				}
 				m_PBRPipeline->EndRenderPass();
 			}
@@ -635,7 +609,7 @@ namespace SmolEngine
 					pc.materialIndex = m_MaterialIndex;
 
 					m_Pipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_Pipeline->DrawMesh(m_PlaneMesh);
+					m_Pipeline->DrawMesh(m_PlaneMesh.get());
 				}
 				m_Pipeline->EndRenderPass();
 			}

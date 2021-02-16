@@ -23,22 +23,22 @@ namespace SmolEngine
 
 		Material newMaterial = {};
 		{
-			newMaterial.m_MaterialProperties.Metallic = infoCI->Metallic;
-			newMaterial.m_MaterialProperties.Roughness = infoCI->Roughness;
-			newMaterial.m_MaterialProperties.Albedo = infoCI->Albedro;
-			newMaterial.m_MaterialProperties.Specular = infoCI->Specular;
+			newMaterial.m_MaterialProperties.PBRValues.x = infoCI->Metallic;
+			newMaterial.m_MaterialProperties.PBRValues.y = infoCI->Roughness;
+			newMaterial.m_MaterialProperties.PBRValues.z = infoCI->Albedro;
+			newMaterial.m_MaterialProperties.PBRValues.w = infoCI->Specular;
 
-			newMaterial.m_MaterialProperties.UseAlbedroMap = infoCI->Textures[MaterialTexture::Albedro] != nullptr ? true : false;
-			newMaterial.m_MaterialProperties.UseNormalMap = infoCI->Textures[MaterialTexture::Normal] != nullptr ? true : false;
-			newMaterial.m_MaterialProperties.UseMetallicMap = infoCI->Textures[MaterialTexture::Metallic] != nullptr ? true : false;
-			newMaterial.m_MaterialProperties.UseRoughnessMap = infoCI->Textures[MaterialTexture::Roughness] != nullptr ? true : false;
-			newMaterial.m_MaterialProperties.UseAOMap = infoCI->Textures[MaterialTexture::AO] != nullptr ? true : false;
+			newMaterial.m_MaterialProperties.States_1.x = infoCI->Textures[MaterialTexture::Albedro] != nullptr ? true : false;
+			newMaterial.m_MaterialProperties.States_1.y = infoCI->Textures[MaterialTexture::Normal] != nullptr ? true : false;
+			newMaterial.m_MaterialProperties.States_1.z = infoCI->Textures[MaterialTexture::Metallic] != nullptr ? true : false;
+			newMaterial.m_MaterialProperties.States_1.w = infoCI->Textures[MaterialTexture::Roughness] != nullptr ? true : false;
+			newMaterial.m_MaterialProperties.States_2.x = infoCI->Textures[MaterialTexture::AO] != nullptr ? true : false;
 
-			newMaterial.m_MaterialProperties.AlbedroMapIndex = AddTexture(infoCI->Textures[MaterialTexture::Albedro]);
-			newMaterial.m_MaterialProperties.NormalMapIndex = AddTexture(infoCI->Textures[MaterialTexture::Normal]);
-			newMaterial.m_MaterialProperties.MetallicMapIndex = AddTexture(infoCI->Textures[MaterialTexture::Metallic]);
-			newMaterial.m_MaterialProperties.RoughnessMapIndex = AddTexture(infoCI->Textures[MaterialTexture::Roughness]);
-			newMaterial.m_MaterialProperties.AOMapIndex = AddTexture(infoCI->Textures[MaterialTexture::AO]);
+			newMaterial.m_MaterialProperties.Indexes_1.x = AddTexture(infoCI->Textures[MaterialTexture::Albedro]);
+			newMaterial.m_MaterialProperties.Indexes_1.y = AddTexture(infoCI->Textures[MaterialTexture::Normal]);
+			newMaterial.m_MaterialProperties.Indexes_1.z = AddTexture(infoCI->Textures[MaterialTexture::Metallic]);
+			newMaterial.m_MaterialProperties.Indexes_1.w = AddTexture(infoCI->Textures[MaterialTexture::Roughness]);
+			newMaterial.m_MaterialProperties.Indexes_2.x = AddTexture(infoCI->Textures[MaterialTexture::AO]);
 		}
 
 		materialID = m_MaterialIndex;

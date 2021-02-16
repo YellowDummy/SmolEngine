@@ -6,6 +6,7 @@
 #include "Renderer/EditorCamera.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/MaterialLibrary.h"
+
 #include <imgui/imgui.h>
 
 namespace SmolEngine
@@ -23,20 +24,34 @@ namespace SmolEngine
 		}
 
 		// Create Materials
-		MaterialCreateInfo materialCI = {};
-		{
-			materialCI.Name = "Chair";
-			materialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
-			materialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
-			materialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "WoodenChair_01_16-bit_Metallic.png");
-			materialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "WoodenChair_01_16-bit_Roughness.png");
-		}
-		assert(MaterialLibrary::GetSinglenton()->Add(&materialCI) != -1);
+
+		int32_t chairID = 0;
+		int32_t defaultID = 0;
+
+		// Default
+		MaterialCreateInfo DefaultMaterialCI = {};
+		DefaultMaterialCI.Name = "Default";
+
+		defaultID = MaterialLibrary::GetSinglenton()->Add(&DefaultMaterialCI);
+
+		// Chair
+		MaterialCreateInfo ChairMaterialCI = {};
+		ChairMaterialCI.Name = "Chair";
+		ChairMaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
+		ChairMaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
+		ChairMaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "WoodenChair_01_16-bit_Metallic.png");
+		ChairMaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "WoodenChair_01_16-bit_Roughness.png");
+
+		chairID = MaterialLibrary::GetSinglenton()->Add(&ChairMaterialCI);
 
 		Renderer::UpdateMaterials();
 
 		// Load Models
+		m_ChairMesh = Mesh::Create(Resources + "WoodenChair_01.FBX");
 		m_CubeMesh = Mesh::Create(Resources + "cube.glb");
+
+		m_ChairMesh->SetMaterialID(chairID, true);
+		m_CubeMesh->SetMaterialID(defaultID, true);
 	}
 
 	void Renderer3DTestLayer::OnDetach()
@@ -61,7 +76,10 @@ namespace SmolEngine
 
 		Renderer::BeginScene(m_EditorCamera->GetProjection(), m_EditorCamera->GetViewMatrix(), m_EditorCamera->GetPosition());
 		{
-
+			Renderer::SubmitMesh({ 0, -5, 0 }, { 0, 0, 0 }, { 100, 1, 100 }, m_CubeMesh);
+			Renderer::SubmitMesh({ 1, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
+			Renderer::SubmitMesh({ -20, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
+			Renderer::SubmitMesh({ 20, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
 		}
 		Renderer::EndScene();
 	}

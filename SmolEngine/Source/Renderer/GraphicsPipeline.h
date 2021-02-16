@@ -92,7 +92,7 @@ namespace SmolEngine
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle,
 			uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 
-		void DrawMesh(const Ref<Mesh>& mesh, DrawMode mode = DrawMode::Triangle,
+		void DrawMesh(Mesh* mesh, DrawMode mode = DrawMode::Triangle,
 			uint32_t instances = 1, uint32_t descriptorSetIndex = 0);
 
 		// Submit

@@ -8,28 +8,19 @@ layout(location = 4) in vec4 a_Color;
 
 struct MaterialData
 {
-   int UseAlbedroMap;
-   int UseNormalMap;
-   int UseMetallicMap;
-   int UseRoughnessMap;
-   int UseAOMap;
-   
-   int AlbedroMapIndex;
-   int NormalMapIndex;
-   int MetallicMapIndex;
-   int RoughnessMapIndex;
-   int AOMapIndex;
-   
-   float Metallic;
-   float Roughness;
-   float Albedo;
-   float Specular;
+   ivec4 TextureStates;
+   ivec4 TextureStates_2;
+
+   ivec4 TextureIndexes;
+   ivec4 TextureIndexes_2;
+
+   vec4  PBRValues;
 };
 
 struct ShaderData
 {
-	int materialIndex;
 	mat4 model;
+	vec4 addData;
 };
 
 struct SceneData
@@ -87,7 +78,7 @@ layout (location = 18) out mat3 outTBN;
 void main()
 {
 	mat4 model = shaderDataBuffer.data[dataOffset + gl_InstanceIndex].model;
-	int materialIndex = shaderDataBuffer.data[dataOffset + gl_InstanceIndex].materialIndex;
+	int materialIndex = int(shaderDataBuffer.data[dataOffset + gl_InstanceIndex].addData.x);
 
 	outWorldPos = vec3(model * vec4(a_Position, 1.0));
 	outNormal =  mat3(model) * a_Normal;
@@ -102,24 +93,24 @@ void main()
 	outTBN = mat3(T, B, N);
 
 	// PBR Params
-	outRoughness = materialBuffer.materials[materialIndex].Roughness;
-	outMetallic = materialBuffer.materials[materialIndex].Metallic;
-	float c =  materialBuffer.materials[materialIndex].Albedo;
+	outMetallic = materialBuffer.materials[materialIndex].PBRValues.x;
+	outRoughness = materialBuffer.materials[materialIndex].PBRValues.y;
+	float c =  materialBuffer.materials[materialIndex].PBRValues.z;
 	outColor = vec4(c, c, c, 1);
 
 	// states
-	outUseAlbedroMap = materialBuffer.materials[materialIndex].UseAlbedroMap;
-	outUseNormalMap = materialBuffer.materials[materialIndex].UseNormalMap;
-	outUseMetallicMap = materialBuffer.materials[materialIndex].UseMetallicMap;
-	outUseRoughnessMap = materialBuffer.materials[materialIndex].UseRoughnessMap;
-	outUseAOMap = materialBuffer.materials[materialIndex].UseAOMap;
+	outUseAlbedroMap = materialBuffer.materials[materialIndex].TextureStates.x;
+	outUseNormalMap = materialBuffer.materials[materialIndex].TextureStates.y;
+	outUseMetallicMap = materialBuffer.materials[materialIndex].TextureStates.z;
+	outUseRoughnessMap = materialBuffer.materials[materialIndex].TextureStates.w;
+	outUseAOMap = materialBuffer.materials[materialIndex].TextureStates_2.x;
 
 	// index
-	outAlbedroMapIndex = materialBuffer.materials[materialIndex].AlbedroMapIndex;
-	outNormalMapIndex = materialBuffer.materials[materialIndex].NormalMapIndex;
-	outMetallicMapIndex = materialBuffer.materials[materialIndex].MetallicMapIndex;
-	outRoughnessMapIndex = materialBuffer.materials[materialIndex].RoughnessMapIndex;
-	outAOMapIndex = materialBuffer.materials[materialIndex].AOMapIndex;
+	outAlbedroMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.x;
+	outNormalMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.y;
+	outMetallicMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.z;
+	outRoughnessMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.w;
+	outAOMapIndex = materialBuffer.materials[materialIndex].TextureIndexes_2.x;
 
 	gl_Position =  sceneData.data.projection * sceneData.data.view * vec4(outWorldPos, 1.0);
 }

@@ -1,26 +1,21 @@
 #pragma once
 #include "Core/Core.h"
 
+#include <glm/glm.hpp>
+
 namespace SmolEngine
 {
 	struct MaterialProperties
 	{
-		int          UseAlbedroMap = false;
-		int          UseNormalMap = false;
-		int          UseMetallicMap = false;
-		int          UseRoughnessMap = false;
-		int          UseAOMap = false;
+		// x - albedro, y = normal, z = metallic, w = roughness, state_2 x = AO
 
-		int          AlbedroMapIndex = 0;
-		int          NormalMapIndex = 0;
-		int          MetallicMapIndex = 0;
-		int          RoughnessMapIndex = 0;
-		int          AOMapIndex = 0;
+		glm::ivec4   States_1;
+		glm::ivec4   States_2;
 
-		float        Metallic = 0;
-		float        Roughness = 0;
-		float        Albedo = 1.0f;
-		float        Specular = 9.0f;
+		glm::ivec4   Indexes_1;
+		glm::ivec4   Indexes_2;
+
+		glm::vec4    PBRValues;
 	};
 
 	class Material

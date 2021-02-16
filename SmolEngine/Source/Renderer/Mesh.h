@@ -39,7 +39,7 @@ namespace SmolEngine
 
 		// Setters
 
-		void SetMaterialID(int32_t ID) { m_MaterialID = ID; }
+		void SetMaterialID(int32_t ID, bool submeshes = false);
 
 	private:
 

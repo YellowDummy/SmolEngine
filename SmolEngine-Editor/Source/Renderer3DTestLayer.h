@@ -25,6 +25,7 @@ namespace SmolEngine
 	private:
 
 		Ref<EditorCamera>   m_EditorCamera = nullptr;
+		Ref<Mesh>           m_ChairMesh = nullptr;
 		Ref<Mesh>           m_CubeMesh = nullptr;
 	};
 }
