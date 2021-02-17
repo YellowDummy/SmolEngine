@@ -8,7 +8,8 @@
 ### Implemented in first iteration
 
 - Renderering: Native rendering API support (Vulkan/OpenGL), Physically Based Rendering (PBR), 
-  Multi Sampled Deferred Shading, 2D/3D Renderer, 2D Animations
+  Multi Sampled Deferred Shading, Multisample Anti-Aliasing (MSAA),
+  Screen Space Ambient Occlusion (SSAO), 2D/3D Renderer, 2D Animations
   
 - Integrations: 3rd party 2D physics engine (Box2D), 3rd party audio engine (FMOD)
 
