@@ -129,6 +129,24 @@ namespace SmolEngine
 			m_ClearAttachments[lastImageViewIndex].clearValue.depthStencil = { 1.0f, 0 };
 		}
 
+		// temp
+		if (m_Specification.bTargetsSwapchain)
+		{
+			m_ClearAttachments.clear();
+			m_ClearAttachments.resize(3);
+
+			m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[0].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[0].colorAttachment = 0;
+
+			m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[1].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			m_ClearAttachments[1].colorAttachment = 0;
+
+			m_ClearAttachments[2].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_ClearAttachments[2].clearValue.depthStencil = { 1.0f, 0 };
+		}
+
 		// Render pass
 		if (m_RenderPass == VK_NULL_HANDLE)
 		{

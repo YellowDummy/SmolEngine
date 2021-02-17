@@ -3,6 +3,8 @@
 #include "Core/Layer.h"
 #include "Renderer/Renderer.h"
 
+#include <glm/glm.hpp>
+
 namespace SmolEngine
 {
 	class EditorCamera;
@@ -27,5 +29,12 @@ namespace SmolEngine
 		Ref<EditorCamera>   m_EditorCamera = nullptr;
 		Ref<Mesh>           m_ChairMesh = nullptr;
 		Ref<Mesh>           m_CubeMesh = nullptr;
+		Ref<Mesh>           m_SponzaMesh = nullptr;
+
+		glm::vec3           m_Pos = glm::vec3(-15.0, -15 * 0.5f, -15);
+		glm::vec4           m_Color = glm::vec4(1);
+		float               m_Ambient = 1.0f;
+		float               m_Gamma = 2.5f;
+		float               m_Exposure = 4.0f;
 	};
 }

@@ -123,6 +123,7 @@ namespace SmolEngine
                     }
                 }
 
+                component.Name = node->mName.C_Str();
                 out_data->Components.emplace_back(component);
             }
         }

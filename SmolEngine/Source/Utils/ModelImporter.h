@@ -6,6 +6,7 @@ namespace SmolEngine
 {
 	struct ImportedComponent
 	{
+		std::string                       Name;
 		std::vector<PBRVertex>            VertexData;
 		std::vector<uint32_t>             Indices;
 	};

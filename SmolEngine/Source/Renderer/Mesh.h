@@ -25,6 +25,12 @@ namespace SmolEngine
 
 		static Ref<Mesh> Create(const std::string& filePath);
 
+		// Find
+
+		Ref<Mesh> FindSubMeshByIndex(uint32_t index);
+
+		Ref<Mesh> FindSubMeshByName(const std::string& name);
+
 		// Getters
 
 		Ref<VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
@@ -57,6 +63,7 @@ namespace SmolEngine
 		Ref<VertexBuffer>                  m_VertexBuffer = nullptr;
 		Ref<IndexBuffer>                   m_IndexBuffer = nullptr;
 
+		std::string                        m_Name = "";
 		std::vector<Ref<Mesh>>             m_SubMeshes;
 
 	private:

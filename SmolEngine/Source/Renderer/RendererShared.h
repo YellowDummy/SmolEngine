@@ -15,6 +15,12 @@ namespace SmolEngine
 		Circle
 	};
 
+	struct DirectionalLightBuffer
+	{
+		glm::vec4 Position;
+		glm::vec4 Color;
+	};
+
 	struct QuadVertex
 	{
 		glm::vec3 Position = glm::vec3(1.0f);

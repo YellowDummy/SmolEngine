@@ -27,6 +27,25 @@ namespace SmolEngine
         return mesh;
     }
 
+    Ref<Mesh> Mesh::FindSubMeshByIndex(uint32_t index)
+    {
+        if (index >= m_SubMeshes.size())
+            return nullptr;
+
+        return m_SubMeshes[index];
+    }
+
+    Ref<Mesh> Mesh::FindSubMeshByName(const std::string& name)
+    {
+        for (auto& sub : m_SubMeshes)
+        {
+            if (sub->m_Name == name)
+                return sub;
+        }
+
+        return nullptr;
+    }
+
     void Mesh::SetMaterialID(int32_t ID, bool submeshes)
     {
         m_MaterialID = ID;
@@ -81,6 +100,7 @@ namespace SmolEngine
 
     void Mesh::CreateVertexAndIndexBuffers(ImportedComponent& component)
     {
+        m_Name = component.Name;
         m_VertexCount = static_cast<uint32_t>(component.VertexData.size());
         m_VertexBuffer = VertexBuffer::Create(component.VertexData.data(), static_cast<uint32_t>(sizeof(PBRVertex) * component.VertexData.size()));
         m_IndexBuffer = IndexBuffer::Create(component.Indices.data(), static_cast<uint32_t>(component.Indices.size()));

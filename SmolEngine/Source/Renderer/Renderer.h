@@ -29,6 +29,16 @@ namespace SmolEngine
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation,
 			const glm::vec3& scale, const Ref<Mesh>& mesh);
 
+		static void SubmitDirectionalLight(const glm::vec3& pos, const glm::vec4& color);
+
+		// Setters
+
+		static void SetAmbientMixer(float value);
+
+		static void SetGamma(float value);
+
+		static void SetExposure(float value);
+
 		// Getters
 
 		static Ref<Framebuffer> GetFramebuffer();

@@ -6,7 +6,7 @@ layout(location = 0) in vec3 v_WorldPos;
 layout(location = 1) in float v_Gamma;
 layout(location = 2) in float v_Exposure;
 
-layout (binding = 15) uniform samplerCube samplerCubeMap;
+layout (binding = 1) uniform samplerCube samplerCubeMap;
 
 // From http://filmicworlds.com/blog/filmic-tonemapping-operators/
 vec3 Uncharted2Tonemap(vec3 color)

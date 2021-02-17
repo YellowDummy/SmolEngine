@@ -157,8 +157,6 @@ namespace SmolEngine
 		instance->SetClearColor(clearColors);
 		instance->Clear();
 #else
-		if (m_PiplineCreateInfo.TargetFramebuffer->GetSpecification().bTargetsSwapchain)
-			return;
 
 		VkClearRect clearRect = {};
 		clearRect.layerCount = 1;

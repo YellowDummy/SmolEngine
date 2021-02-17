@@ -11,6 +11,7 @@
 #include "Renderer/Mesh.h"
 #include "Renderer/Texture.h"
 #include "Renderer/MaterialLibrary.h"
+#include "Renderer/RendererShared.h"
 
 #ifdef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/OpenGL/OpenglShader.h"
@@ -23,36 +24,36 @@
 
 namespace SmolEngine
 {
-	static const size_t s_MaxInstances = 200;
-	static const size_t s_MaxPackages = 1200;
-	static const size_t s_ShaderDataMaxCount = s_MaxPackages * s_MaxInstances;
+	static const size_t                  s_MaxInstances = 500;
+	static const size_t                  s_MaxPackages = 1200;
+	static const size_t                  s_MaxDirectionalLights = 1000;
+	static const size_t                  s_InstanceDataMaxCount = s_MaxPackages * s_MaxInstances;
 
-	struct DrawElement
+	struct CommandBuffer
 	{
-		uint32_t                        m_Count = 0;
-		uint32_t                        m_DataOffset = 0;
-		Mesh*                           m_Mesh = nullptr;
-	};
-
-	struct ShaderData
-	{
-		glm::mat4                       Model = glm::mat4(0.0f);
-		glm::vec4                       AddData = glm::vec4(0);
-	};
-
-	struct InstancePackage
-	{
-		struct Package
-		{
+		uint32_t                         InstancesCount = 0;
+		uint32_t                         Offset = 0;
+		Mesh*                            Mesh = nullptr;
+	};									 
+										 
+	struct InstancesData
+	{									 
+		glm::mat4                        ModelView = glm::mat4(0.0f);
+		glm::vec4                        Params = glm::vec4(0);
+	};									 
+										 
+	struct InstancePackage				 
+	{									 
+		struct Package					 
+		{								 
 			int32_t                      MaterialID = 0;
 			glm::vec3                    WorldPos = glm::vec3(0.0f);
 			glm::vec3                    Rotation = glm::vec3(0.0f);
 			glm::vec3                    Scale = glm::vec3(0.0f);
-		};
-
-		uint32_t                         m_CurrentIndex = 0;
-		std::array<Package,
-			s_MaxPackages>               m_Data;
+		};								 
+										 
+		uint32_t                         CurrentIndex = 0;
+		Package                          Data[s_MaxInstances];
 	};
 
 	struct RendererData
@@ -80,14 +81,17 @@ namespace SmolEngine
 
 		// Instance Data
 		uint32_t                         m_Objects = 0;
-		uint32_t                         m_ShaderDataIndex = 0;
+		uint32_t                         m_InstanceDataIndex = 0;
 		uint32_t                         m_UsedMeshesIndex = 0;
 		uint32_t                         m_DrawListIndex = 0;
+		uint32_t                         m_DirectionalLightIndex = 0;
 		uint32_t                         m_MaxObjects = s_MaxPackages;
 
+		// Buffers
 		Mesh*                            m_UsedMeshes[s_MaxPackages];
-		ShaderData                       m_ShaderData[s_ShaderDataMaxCount];
-		DrawElement                      m_DrawList[s_MaxPackages];
+		InstancesData                    m_InstancesData[s_InstanceDataMaxCount];
+		CommandBuffer                    m_DrawList[s_MaxPackages];
+		DirectionalLightBuffer           m_DirectionalLights[s_MaxDirectionalLights];
 
 		std::unordered_map<Mesh*,
 			InstancePackage>             m_Packages;
@@ -97,19 +101,23 @@ namespace SmolEngine
 		{
 			glm::mat4                    Projection = glm::mat4(1.0f);
 			glm::mat4                    View = glm::mat4(1.0f);
-			glm::vec3                    CamPos = glm::vec3(1.0f);
+			glm::mat4                    SkyBoxMatrix = glm::mat4(1.0f);
+			glm::vec4                    CamPos = glm::vec4(1.0f);
+
+			glm::vec4                    Params = glm::vec4(2.5f, 4.0f, 1.0f, 1.0f);
 		};
 
 		struct PushConstant
 		{
 			int                          DataOffset = 0;
+			int                          DirectionalLights = 0;
 		};
 
 		SceneData                        m_SceneData = {};
 		PushConstant                     m_MainPushConstant = {};
 
-		const size_t                     SceneDataSize = sizeof(SceneData);
-		const size_t                     PushConstantSize = sizeof(PushConstant);
+		const size_t                     m_SceneDataSize = sizeof(SceneData);
+		const size_t                     m_PushConstantSize = sizeof(PushConstant);
 	};
 
 	static RendererData* s_Data = nullptr;
@@ -133,7 +141,8 @@ namespace SmolEngine
 	{
 		s_Data->m_SceneData.View = view;
 		s_Data->m_SceneData.Projection = proj;
-		s_Data->m_SceneData.CamPos = camPos;
+		s_Data->m_SceneData.CamPos = glm::vec4(camPos, 1);
+		s_Data->m_SceneData.SkyBoxMatrix = glm::mat4(glm::mat3(view));
 
 		s_Data->m_MainPipeline->BeginCommandBuffer(true);
 #if 0
@@ -153,65 +162,47 @@ namespace SmolEngine
 		s_Data->m_MainPipeline->EndCommandBuffer();
 	}
 
-	bool Renderer::OnNewLevelLoaded()
-	{
-		return false;
-	}
-
-	bool Renderer::UpdateMaterials()
-	{
-		if (!s_Data->m_IsInitialized)
-			return false;
-
-		s_Data->m_MainPipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), s_Data->m_TexturesBinding);
-		void* data = nullptr;
-		uint32_t size = 0;
-		MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
-		s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_MaterialsBinding, size, data);
-
-		return true;
-	}
-
-	Ref<Framebuffer> Renderer::GetFramebuffer()
-	{
-		return s_Data->m_Framebuffer;
-	}
-
 	void Renderer::Flush()
 	{
 		for (uint32_t i = 0; i < s_Data->m_UsedMeshesIndex; ++i)
 		{
-			// getting values
-			auto& drawElement = s_Data->m_DrawList[s_Data->m_DrawListIndex];
+			// Getting values
+			auto& cmd = s_Data->m_DrawList[s_Data->m_DrawListIndex];
 			Mesh* mesh = s_Data->m_UsedMeshes[i];
 			auto& instance = s_Data->m_Packages[mesh];
 
-			// setting draw list
-			drawElement.m_DataOffset = s_Data->m_ShaderDataIndex;
-			drawElement.m_Mesh = mesh;
-			drawElement.m_Count = instance.m_CurrentIndex;
+			// Setting draw list command
+			cmd.Offset = s_Data->m_InstanceDataIndex;
+			cmd.Mesh = mesh;
+			cmd.InstancesCount = instance.CurrentIndex;
 
-			for (uint32_t x = 0; x < instance.m_CurrentIndex; ++x)
+			for (uint32_t x = 0; x < instance.CurrentIndex; ++x)
 			{
-				auto& package = instance.m_Data[x];
-				auto& shaderData = s_Data->m_ShaderData[s_Data->m_ShaderDataIndex];
+				auto& package = instance.Data[x];
+				auto& shaderData = s_Data->m_InstancesData[s_Data->m_InstanceDataIndex];
 
-				shaderData.AddData.x = package.MaterialID;
-				CommandSystem::ComposeTransform(package.WorldPos, package.Rotation, package.Scale, true, shaderData.Model);
-
-				s_Data->m_ShaderDataIndex++;
+				shaderData.Params.x = package.MaterialID;
+				CommandSystem::ComposeTransform(package.WorldPos, package.Rotation, package.Scale, true, shaderData.ModelView);
+				s_Data->m_InstanceDataIndex++;
 			}
 
-			// resetting values
-			instance.m_CurrentIndex = 0;
-
+			instance.CurrentIndex = 0;
 			s_Data->m_DrawListIndex++;
 		}
 
+		// Updates UBOs and SSBOs 
 		s_Data->m_MainPipeline->BeginBufferSubmit();
 		{
+			// Updates scene data
+			s_Data->m_MainPipeline->SubmitUniformBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
+			// FIX:
+			s_Data->m_SkyboxPipeline->SubmitUniformBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
+
+			// Updates Directional Lights
+			s_Data->m_MainPipeline->SubmitStorageBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
+
 			// Updates model views and material indexes
-			s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_ShaderDataBinding, sizeof(ShaderData) * s_Data->m_ShaderDataIndex, &s_Data->m_ShaderData);
+			s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_ShaderDataBinding, sizeof(InstancesData) * s_Data->m_InstanceDataIndex, &s_Data->m_InstancesData);
 
 #ifdef SMOLENGINE_EDITOR
 			// Update materials
@@ -220,24 +211,33 @@ namespace SmolEngine
 			MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
 			s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_MaterialsBinding, size, data);
 #endif
-			// Updates scene data
-			s_Data->m_MainPipeline->SubmitUniformBuffer(s_Data->m_SceneDataBinding, s_Data->SceneDataSize, &s_Data->m_SceneData);
 		}
 
+		// SkyBox
+		s_Data->m_SkyboxPipeline->BeginCommandBuffer(true);
+		s_Data->m_SkyboxPipeline->BeginRenderPass();
+		{
+			s_Data->m_SkyboxPipeline->ClearColors();
+			s_Data->m_SkyboxPipeline->Draw(36);
+		}
+		s_Data->m_SkyboxPipeline->EndRenderPass();
+
+		// Main
 		s_Data->m_MainPipeline->BeginRenderPass();
 		{
 			for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
 			{
-				auto& element = s_Data->m_DrawList[i];
+				auto& cmd = s_Data->m_DrawList[i];
 
-				s_Data->m_MainPushConstant.DataOffset = element.m_DataOffset;
-				s_Data->m_MainPipeline->SubmitPushConstant(ShaderType::Vertex, s_Data->PushConstantSize, &s_Data->m_MainPushConstant);
-				s_Data->m_MainPipeline->DrawMesh(element.m_Mesh, DrawMode::Triangle, element.m_Count);
+				s_Data->m_MainPushConstant.DataOffset = cmd.Offset;
+				s_Data->m_MainPushConstant.DirectionalLights = s_Data->m_DirectionalLightIndex;
+				s_Data->m_MainPipeline->SubmitPushConstant(ShaderType::Vertex, s_Data->m_PushConstantSize, &s_Data->m_MainPushConstant);
+				s_Data->m_MainPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount);
 
 				// resetting values
-				element.m_Count = 0;
-				element.m_DataOffset = 0;
-				element.m_Mesh = nullptr;
+				cmd.InstancesCount = 0;
+				cmd.Offset = 0;
+				cmd.Mesh = nullptr;
 			}
 		}
 		s_Data->m_MainPipeline->EndRenderPass();
@@ -247,7 +247,8 @@ namespace SmolEngine
 	void Renderer::StartNewBacth()
 	{
 		s_Data->m_Objects = 0;
-		s_Data->m_ShaderDataIndex = 0;
+		s_Data->m_InstanceDataIndex = 0;
+		s_Data->m_DirectionalLightIndex = 0;
 		s_Data->m_DrawListIndex = 0;
 		s_Data->m_UsedMeshesIndex = 0;
 	}
@@ -259,24 +260,49 @@ namespace SmolEngine
 			StartNewBacth();
 
 		auto& instance = s_Data->m_Packages[mesh.get()];
-		if(instance.m_CurrentIndex >= s_MaxInstances)
+		if(instance.CurrentIndex >= s_MaxInstances)
 			StartNewBacth();
 
-		auto& package = instance.m_Data[instance.m_CurrentIndex];
+		auto& package = instance.Data[instance.CurrentIndex];
 
 		package.MaterialID = mesh->GetMaterialID();
 		package.WorldPos = pos;
 		package.Rotation = rotation;
 		package.Scale = scale;
+		instance.CurrentIndex++;
 
 		s_Data->m_UsedMeshes[s_Data->m_UsedMeshesIndex] = mesh.get();
-
-		instance.m_CurrentIndex++;
 		s_Data->m_UsedMeshesIndex++;
 		s_Data->m_Objects++;
 
 		for (auto& sub : mesh->GetSubMeshes())
 			SubmitMesh(pos, rotation, scale, sub);
+	}
+
+	void Renderer::SubmitDirectionalLight(const glm::vec3& pos, const glm::vec4& color)
+	{
+		uint32_t index = s_Data->m_DirectionalLightIndex;
+		if (index >= s_MaxDirectionalLights)
+			return; // temp;
+
+		s_Data->m_DirectionalLights[index].Color = color;
+		s_Data->m_DirectionalLights[index].Position = glm::vec4(pos, 1);
+		s_Data->m_DirectionalLightIndex++;
+	}
+
+	void Renderer::SetAmbientMixer(float value)
+	{
+		s_Data->m_SceneData.Params.z = value;
+	}
+
+	void Renderer::SetGamma(float value)
+	{
+		s_Data->m_SceneData.Params.y = value;
+	}
+
+	void Renderer::SetExposure(float value)
+	{
+		s_Data->m_SceneData.Params.x = value;
 	}
 
 	void Renderer::InitPBR()
@@ -297,8 +323,9 @@ namespace SmolEngine
 				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/PBR_Vulkan_Vertex.glsl";
 				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/PBR_Vulkan_Fragment.glsl";
 
-				shaderCI.StorageBuffersSizes[25] = { sizeof(ShaderData) * s_ShaderDataMaxCount };
+				shaderCI.StorageBuffersSizes[25] = { sizeof(InstancesData) * s_InstanceDataMaxCount };
 				shaderCI.StorageBuffersSizes[26] = { sizeof(Material) * 1000 };
+				shaderCI.StorageBuffersSizes[28] = { sizeof(DirectionalLightBuffer) * s_MaxDirectionalLights };
 			};
 
 			BufferLayout mainLayout =
@@ -322,25 +349,12 @@ namespace SmolEngine
 
 			auto result = s_Data->m_MainPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
-
-			struct PBRParams
-			{
-				glm::vec4 lights = glm::vec4(-15.0, -15 * 0.5f, -15, 1.0f);
-				glm::vec4 lightColors = glm::vec4(0.2f, 0.5f, 0.2f, 1.0f);
-				float exposure = 2.5;
-				float gamm = 4;
-
-			} tempData;
-
-			s_Data->m_MainPipeline->SubmitUniformBuffer(12, sizeof(PBRParams), &tempData);
 #ifndef SMOLENGINE_OPENGL_IMPL
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
 #endif
 		}
-
-		return; // temp
 
 		// Sky Box
 		{
@@ -363,13 +377,18 @@ namespace SmolEngine
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
-				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(SkyBoxData), layout, false) };
+				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(SkyBoxData), layout) };
 				DynamicPipelineCI.PipelineName = "Skybox_Test";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+				DynamicPipelineCI.TargetFramebuffer = s_Data->m_Framebuffer;
 			}
 
 			auto result = s_Data->m_SkyboxPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
+#ifndef SMOLENGINE_OPENGL_IMPL
+			s_Data->m_SkyboxPipeline->UpdateVulkanImageDescriptor(1, VulkanPBR::GetSkyBox().GetVkDescriptorImageInfo());
+#endif
+
 
 			float skyboxVertices[] = {
 				// positions          
@@ -429,9 +448,34 @@ namespace SmolEngine
 			framebufferCI.Height = Application::GetApplication().GetWindowHeight();
 			framebufferCI.bUseMSAA = true;
 			framebufferCI.bTargetsSwapchain = true;
-			framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+			framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color) };
 
 			s_Data->m_Framebuffer = Framebuffer::Create(framebufferCI);
 		}
 	}
+
+	bool Renderer::OnNewLevelLoaded()
+	{
+		return false;
+	}
+
+	bool Renderer::UpdateMaterials()
+	{
+		if (!s_Data->m_IsInitialized)
+			return false;
+
+		s_Data->m_MainPipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), s_Data->m_TexturesBinding);
+		void* data = nullptr;
+		uint32_t size = 0;
+		MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
+		s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_MaterialsBinding, size, data);
+
+		return true;
+	}
+
+	Ref<Framebuffer> Renderer::GetFramebuffer()
+	{
+		return s_Data->m_Framebuffer;
+	}
+
 }

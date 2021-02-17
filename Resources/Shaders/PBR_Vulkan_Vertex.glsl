@@ -20,14 +20,16 @@ struct MaterialData
 struct ShaderData
 {
 	mat4 model;
-	vec4 addData;
+	vec4 data;
 };
 
 struct SceneData
 {
 	mat4 projection;
 	mat4 view;
-	vec3 camPos;
+	mat4 skyBoxMatrix;
+	vec4 camPos;
+	vec4 params;
 };
 
 layout(std140, binding = 25) readonly buffer ShaderDataBuffer
@@ -50,6 +52,7 @@ layout (std140, binding = 27) uniform SceneDataBuffer
 layout(push_constant) uniform CameraData
 {
 	int dataOffset;
+	int directionalLights;
 };
 
 layout (location = 0)  out vec3 outWorldPos;
@@ -72,19 +75,29 @@ layout (location = 14) out int outAOMapIndex;
 
 layout (location = 15) out float outMetallic;
 layout (location = 16) out float outRoughness;
-layout (location = 17) out vec4 outColor;
-layout (location = 18) out mat3 outTBN;
+layout (location = 17) out float outExposure;
+layout (location = 18) out float outGamma;
+layout (location = 19) out float outAmbient;
+
+layout (location = 20) out int outDirectionalLightCount;
+
+layout (location = 21) out vec4 outColor;
+layout (location = 22) out mat3 outTBN;
 
 void main()
 {
 	mat4 model = shaderDataBuffer.data[dataOffset + gl_InstanceIndex].model;
-	int materialIndex = int(shaderDataBuffer.data[dataOffset + gl_InstanceIndex].addData.x);
+	int materialIndex = int(shaderDataBuffer.data[dataOffset + gl_InstanceIndex].data.x);
 
 	outWorldPos = vec3(model * vec4(a_Position, 1.0));
 	outNormal =  mat3(model) * a_Normal;
 	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
+	outCameraPos = vec4(sceneData.data.view * sceneData.data.camPos).rgb;
 	outUV = a_UV;
-	outCameraPos = sceneData.data.camPos;
+	outExposure = sceneData.data.params.x;
+	outGamma = sceneData.data.params.y;
+	outAmbient = sceneData.data.params.z;
+	outDirectionalLightCount = directionalLights;
 
 	// TBN matrix
 	vec3 N = normalize(outNormal);
