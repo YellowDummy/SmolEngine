@@ -1,6 +1,6 @@
 ## SmolEngine
 
-![SmolEngine](https://i.imgur.com/PpqcXEJ.png)
+![SmolEngine](https://i.imgur.com/U4A5J7V.png)
 ![SmolEngine](https://i.imgur.com/iHBPll5.png)
 
 ## Core Features
@@ -23,7 +23,7 @@
 
 ### Features to come
 
-- Renderering: Real-Time Ray Tracing (Vulkan), Post-processing,
+- Renderering: Cascaded Shadow Mapping, Real-Time Ray Tracing (Vulkan), Post-processing,
     3D Animations, Multithreading, Materials (user's shaders), Sprite Atlases
 
 - Systems: Build System, Jobs System, Particles System (2D and 3D), Network Solution, Asset Manager
