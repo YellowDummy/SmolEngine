@@ -1,65 +1,39 @@
-## SmolEngine-Editor
+## SmolEngine
 
-![SmolEngine](https://i.imgur.com/ziZbEl0.png)
-
-## SmolEngine-PBRTest
-![SmolEngine](https://i.imgur.com/OnnZqr6.png)
-![SmolEngine](https://i.imgur.com/iz1qtff.png)
+![SmolEngine](https://i.imgur.com/PpqcXEJ.png)
+![SmolEngine](https://i.imgur.com/iHBPll5.png)
 
 ## Core Features
 
 ### Implemented in first iteration
 
-- Native rendering API support (Vulkan/OpenGL)
+- Renderering: Native rendering API support (Vulkan/OpenGL), Physically Based Rendering (PBR), 
+  Multi Sampled Deferred Shading, 2D/3D Renderer, 2D Animations
+  
+- Integrations: 3rd party 2D physics engine (Box2D), 3rd party audio engine (FMOD)
 
-- Data-Oriented Entity Component System (ECS)
+- Systems: Data-Oriented Entity Component System (ECS)
 
-- 2D Layered Batch Renderer / 2D Debug Renderer
+- Scripting: C++
 
-- 3rd party 2D physics engine (Box2D)
+- Tools: Level Editor
 
 - 3D-file-formats: .dae, .fbx, .glFT, .3ds, .ase, .obj
 
-- 2D Animations
-
-- 3rd party audio engine (FMOD)
-
-- In-Game UI
-
-- Level Editor
-
-- Scripting in C++
-
 ### Features to come
 
-- Renderer:
-
-    Physically Based Rendering (PBR), Multi Sampled Deferred Shading, Real-Time Ray Tracing (Vulkan), Post-processing,
+- Renderering: Real-Time Ray Tracing (Vulkan), Post-processing,
     3D Animations, Multithreading, Materials (user's shaders), Sprite Atlases
 
-- Systems:
-
-    Build System, Jobs System, Particles System (2D and 3D), Network Solution
+- Systems: Build System, Jobs System, Particles System (2D and 3D), Network Solution, Asset Manager
     
-- Physics:
-   
-    3rd party 3D physics engine (PhysX)
-
-- Assets:
-   
-    .sAsset format, Asset Manager
+- Integrations: 3rd party 3D physics engine (PhysX)
   
-- Tools:
-
-    Tile Map Editor
+- Tools: Tile Map Editor
   
-- Scripting
-
-    C# Binding
+- Scripting: C# Binding
   
-- Platforms:
-
-    Android Support
+- Platforms: Android Support
 
 ## Limitations
 
