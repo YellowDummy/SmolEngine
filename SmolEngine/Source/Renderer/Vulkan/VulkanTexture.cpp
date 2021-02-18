@@ -253,7 +253,7 @@ namespace SmolEngine
 
 	VkImage VulkanTexture::CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,
 		VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkDeviceMemory& imageMemory)
+		VkImageUsageFlags usage, VkDeviceMemory& imageMemory, uint32_t arrayLayers)
 	{
 		auto device = VulkanContext::GetDevice().GetLogicalDevice();
 		VkImage image = VK_NULL_HANDLE;
@@ -265,7 +265,7 @@ namespace SmolEngine
 			imageCI.format = format;
 			imageCI.mipLevels = mipLevels;
 			imageCI.extent.depth = 1;
-			imageCI.arrayLayers = 1;
+			imageCI.arrayLayers = arrayLayers;
 			imageCI.samples = numSamples;
 			imageCI.tiling = tiling;
 			imageCI.sharingMode = VK_SHARING_MODE_EXCLUSIVE;

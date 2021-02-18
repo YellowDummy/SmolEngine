@@ -36,5 +36,7 @@ namespace SmolEngine
 		float               m_Ambient = 1.0f;
 		float               m_Gamma = 2.5f;
 		float               m_Exposure = 4.0f;
+
+		int32_t             m_TestMaterial = 0;
 	};
 }

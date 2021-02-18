@@ -122,6 +122,7 @@ void main()
 	float metallic = inUseMetallicMap == 1 ? texture(texturesMap[inMetallicMapIndex], inUV).r : inMetallic;
 	float roughness = inUseRoughnessMap == 1 ? texture(texturesMap[inRoughnessMapIndex], inUV).r: inRoughness;
 	vec3 ao = inUseAOMap == 1 ? texture(texturesMap[inAOMapIndex], inUV).rrr : vec3(1, 1, 1);
+	
 	// Outgoing light direction (vector from world-space fragment position to the "eye").
 	vec3 Lo = normalize(inCameraPos - inWorldPos);
 
@@ -165,7 +166,7 @@ void main()
 		vec3 diffuseBRDF = kd * GetAlbedro();
 
 		// Cook-Torrance specular microfacet BRDF.
-		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * cosLo);
+		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * 0.8);
 
 		// Total contribution for this light.
 		directLighting += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
@@ -175,7 +176,8 @@ void main()
 	vec3 ambientLighting;
 	{
 		// Sample diffuse irradiance at normal direction.
-		vec3 irradiance = texture(samplerIrradiance, N).rgb;
+		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
+		vec3 modifier = vec3(10, 10, 10);
 
 		// Calculate Fresnel term for ambient lighting.
 		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
@@ -184,7 +186,7 @@ void main()
 		vec3 F = fresnelSchlick(F0, cosLo);
 
 		// Get diffuse contribution factor (as with direct lighting).
-		vec3 kd = mix(vec3(1.0) - F, vec3(0.0), metallic);
+		vec3 kd = mix(vec3(1.0), F, metallic);
 
 		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
 		vec3 diffuseIBL = kd * GetAlbedro() * irradiance;
@@ -197,7 +199,7 @@ void main()
 		vec2 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, roughness)).rg;
 
 		// Total specular IBL contribution.
-		vec3 specularIBL = (F0 * specularBRDF.x + specularBRDF.y) * specularIrradiance;
+		vec3 specularIBL = (F0 * modifier * specularBRDF.x + specularBRDF.y) * specularIrradiance;
 
 		// Total ambient lighting contribution.
 		ambientLighting = mix(diffuseIBL, specularIBL, 0.04);

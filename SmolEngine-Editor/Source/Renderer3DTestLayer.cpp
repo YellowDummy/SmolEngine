@@ -28,6 +28,7 @@ namespace SmolEngine
 
 		int32_t chairID = 0;
 		int32_t defaultID = 0;
+		int32_t glassID = 0;
 		int32_t sponzaBase = 0;
 		int32_t sponzaRoof = 0;
 		int32_t sponzaLion = 0;
@@ -42,13 +43,19 @@ namespace SmolEngine
 		int32_t sponzaFlagPole = 0;
 
 		// Default
-		MaterialCreateInfo DefaultMaterialCI = {};
-		DefaultMaterialCI.Name = "Default";
+		MaterialCreateInfo MaterialCI = {};
+		MaterialCI.Name = "Default";
 
-		defaultID = MaterialLibrary::GetSinglenton()->Add(&DefaultMaterialCI);
+		defaultID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
+
+		// Test
+		MaterialCI.Name = "Test";
+		MaterialCI.Metallic = 1.0f;
+		MaterialCI.Roughness = 0.2f;
+
+		m_TestMaterial = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// Chair
-		MaterialCreateInfo MaterialCI = {};
 		MaterialCI.Name = "Chair";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
@@ -61,7 +68,7 @@ namespace SmolEngine
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Albedo.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Normal.PNG");
 		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Roughness.PNG");
-		MaterialCI.Metallic =1.0f;
+		MaterialCI.Metallic = 1.0f;
 
 		sponzaBase = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
@@ -236,6 +243,11 @@ namespace SmolEngine
 	void Renderer3DTestLayer::OnImGuiRender()
 	{
 		ImGui::Begin("Settings");
+
+		ImGui::InputFloat("Metallic", &MaterialLibrary::GetSinglenton()->GetMaterial(std::string("Test"))->m_MaterialProperties.PBRValues.x);
+		ImGui::InputFloat("Roughness", &MaterialLibrary::GetSinglenton()->GetMaterial(std::string("Test"))->m_MaterialProperties.PBRValues.y);
+
+		ImGui::InputFloat("Gamma", &m_Gamma);
 		ImGui::InputFloat("Ambient", &m_Ambient);
 		ImGui::InputFloat("Gamma", &m_Gamma);
 		ImGui::InputFloat("Exposure", &m_Exposure);
@@ -256,7 +268,7 @@ namespace SmolEngine
 			Renderer::SubmitDirectionalLight(m_Pos, m_Color);
 
 			Renderer::SubmitMesh({ 0, -4, 0 }, { 0, 0, 0 }, { 100, 1, 100 }, m_CubeMesh);
-			Renderer::SubmitMesh({ 0, 100, 0 }, { 0, 0, 0 }, { 10, 10,10 }, m_CubeMesh);
+			Renderer::SubmitMesh({ 0, 20, -50 }, { 0, 0, 0 }, { 10, 10,10 }, m_CubeMesh, m_TestMaterial);
 			Renderer::SubmitMesh({ 1, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
 			Renderer::SubmitMesh({ -20, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
 			Renderer::SubmitMesh({ 20, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);

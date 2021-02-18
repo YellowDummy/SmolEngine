@@ -41,7 +41,9 @@ namespace SmolEngine
 
 		bool Create(uint32_t width, uint32_t height);
 
-		void CreateSampler();
+		bool CreateCascade(uint32_t width, uint32_t height);
+
+		void CreateSampler(VkFilter filer = VK_FILTER_NEAREST);
 
 		void FreeResources();
 
@@ -93,8 +95,8 @@ namespace SmolEngine
 		std::vector<VkFramebuffer>                       m_VkFrameBuffers;
 		std::vector<VkClearAttachment>                   m_ClearAttachments;
 		std::vector<VkClearValue>                        m_ClearValues;
-		std::vector<Attachment>                          m_ColorAttachments;
-		std::unordered_map<std::string, uint32_t>        m_ColorAttachmentsMap;
+		std::vector<Attachment>                          m_Attachments;
+		std::unordered_map<std::string, uint32_t>        m_AttachmentsMap;
 
 	private:
 

@@ -43,6 +43,7 @@ namespace SmolEngine
 
 		materialID = m_MaterialIndex;
 		m_Materials.emplace_back(newMaterial);
+		m_MaterialTable[infoCI->Name] = materialID;
 		m_MaterialIndex++;
 
 		return materialID;
@@ -82,6 +83,18 @@ namespace SmolEngine
 			return nullptr;
 
 		return &m_Materials[ID];
+	}
+
+	Material* MaterialLibrary::GetMaterial(std::string& name)
+	{
+		if (!m_Initialized)
+			return nullptr;
+
+		auto& it = m_MaterialTable.find(name);
+		if (it == m_MaterialTable.end())
+			return nullptr;
+
+		return &m_Materials[it->second];
 	}
 
 	std::vector<Material>& MaterialLibrary::GetMaterials()

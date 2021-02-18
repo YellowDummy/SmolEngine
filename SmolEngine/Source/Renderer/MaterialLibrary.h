@@ -40,6 +40,8 @@ namespace SmolEngine
 
 		Material* GetMaterial(uint32_t ID);
 
+		Material* GetMaterial(std::string& name);
+
 		std::vector<Material>& GetMaterials();
 
 		const std::vector<Ref<Texture>>& GetTextures() const;
@@ -62,6 +64,8 @@ namespace SmolEngine
 		std::vector<Material>         m_Materials;
 		std::vector<Ref<Texture>>     m_Textures;
 
+		std::unordered_map<std::string,
+			uint32_t>                 m_MaterialTable;
 		std::unordered_map<size_t,
 			std::string>              m_Hasher;
 	};

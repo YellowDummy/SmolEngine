@@ -30,7 +30,7 @@ namespace SmolEngine
 		static VkImage CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,
 			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage,
-			VkDeviceMemory& imageMemory);
+			VkDeviceMemory& imageMemory, uint32_t arrayLayers = 1);
 
 		static void InsertImageMemoryBarrier(
 			VkCommandBuffer cmdbuffer,

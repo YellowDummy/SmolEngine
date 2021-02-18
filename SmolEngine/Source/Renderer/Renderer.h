@@ -27,7 +27,7 @@ namespace SmolEngine
 		// Submit
 
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation,
-			const glm::vec3& scale, const Ref<Mesh>& mesh);
+			const glm::vec3& scale, const Ref<Mesh>& mesh, int32_t materialID = -1);
 
 		static void SubmitDirectionalLight(const glm::vec3& pos, const glm::vec4& color);
 
@@ -50,6 +50,8 @@ namespace SmolEngine
 		static bool OnNewLevelLoaded();
 
 		static bool UpdateMaterials();
+
+		static void Reset();
 
 	private:
 

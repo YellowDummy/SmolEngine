@@ -88,7 +88,7 @@ namespace SmolEngine
 			rasterizationState.polygonMode = GetVkPolygonMode(mode);
 			rasterizationState.cullMode = GetVkCullMode(mode);
 			rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-			rasterizationState.depthClampEnable = VK_TRUE;
+			rasterizationState.depthClampEnable = VulkanContext::GetDevice().GetDeviceFeatures()->depthClamp;
 			rasterizationState.rasterizerDiscardEnable = VK_FALSE;
 			rasterizationState.depthBiasEnable = VK_FALSE;
 			rasterizationState.lineWidth = 1.0f;

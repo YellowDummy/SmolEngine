@@ -92,7 +92,7 @@ void main()
 	outWorldPos = vec3(model * vec4(a_Position, 1.0));
 	outNormal =  mat3(model) * a_Normal;
 	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
-	outCameraPos = vec4(sceneData.data.view * sceneData.data.camPos).rgb;
+	outCameraPos = sceneData.data.camPos.rgb;
 	outUV = a_UV;
 	outExposure = sceneData.data.params.x;
 	outGamma = sceneData.data.params.y;

@@ -44,7 +44,8 @@ namespace SmolEngine
 		SInt3_32,
 		SInt4_32,
 
-		Color
+		Color,
+		Depth
 	};
 
 	struct FramebufferAttachment
@@ -66,11 +67,14 @@ namespace SmolEngine
 		int32_t                                    Width = 0;
 		int32_t                                    Height = 0;
 		int32_t                                    NumDependencies = 1;
+		int32_t                                    NumArrayLayers = 1;
 				                                   
 		bool                                       bTargetsSwapchain = false;
 		bool                                       bUsedByImGui = false;
 		bool                                       bUseMSAA = false;
 		bool                                       bResizable = true;
+
+		bool                                       bUsingCascadeObject = false;
 
 		FramebufferAttachment                      ResolveAttachment;
 		std::vector<FramebufferAttachment>         Attachments;
