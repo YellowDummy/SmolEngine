@@ -24,16 +24,11 @@ layout (location = 17) in float inExposure;
 layout (location = 18) in float inGamma;
 layout (location = 19) in float inAmbient;
 
-layout (location = 20) flat in int inDirectionalLightCount;
+layout (location = 20) flat in uint inDirectionalLightCount;
+layout (location = 21) flat in uint inPointLightCount;
 
-layout (location = 21) in vec4 inColor;
-layout (location = 22) in mat3 inTBN;
-
-layout (binding = 2) uniform samplerCube samplerIrradiance;
-layout (binding = 3) uniform sampler2D samplerBRDFLUT;
-layout (binding = 4) uniform samplerCube prefilteredMap;
-
-layout (binding = 24) uniform sampler2D texturesMap[4096];
+layout (location = 22) in vec4 inColor;
+layout (location = 23) in mat3 inTBN;
 
 struct DirectionalLightBuffer
 {
@@ -41,10 +36,28 @@ struct DirectionalLightBuffer
 	vec4 color;
 };
 
+struct PointLightBuffer
+{
+    vec4 position;
+	vec4 color;
+	vec4 params;
+};
+
 layout(std140, binding = 28) readonly buffer DirectionalLightStorage
 {   
 	DirectionalLightBuffer directionalLights[];
 };
+
+layout(std140, binding = 29) readonly buffer PointLightStorage
+{   
+	PointLightBuffer pointLights[];
+};
+
+layout (binding = 2) uniform samplerCube samplerIrradiance;
+layout (binding = 3) uniform sampler2D samplerBRDFLUT;
+layout (binding = 4) uniform samplerCube prefilteredMap;
+
+layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 layout (location = 0) out vec4 outColor;
 
@@ -134,6 +147,39 @@ void main()
 	vec3 F0 = vec3(0.04); 
 	F0 = mix(F0, GetAlbedro(), metallic);
 
+    // Ambient lighting (IBL).
+	vec3 ambientLighting;
+	{
+		// Sample diffuse irradiance at normal direction.
+		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
+		vec3 modifier = vec3(10, 10, 10);
+
+		// Calculate Fresnel term for ambient lighting.
+		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
+		// use cosLo instead of angle with light's half-vector (cosLh above).
+		// See: https://seblagarde.wordpress.com/2011/08/17/hello-world/
+		vec3 F = fresnelSchlick(F0, cosLo);
+
+		// Get diffuse contribution factor (as with direct lighting).
+		vec3 kd = mix(vec3(1.0), F, metallic);
+
+		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
+		vec3 diffuseIBL = kd * GetAlbedro() * irradiance;
+
+		// Sample pre-filtered specular reflection environment at correct mipmap level.
+		int specularTextureLevels = textureQueryLevels(prefilteredMap);
+		vec3 specularIrradiance = textureLod(prefilteredMap, Lr, roughness * specularTextureLevels).rgb;
+
+		// Split-sum approximation factors for Cook-Torrance specular BRDF.
+		vec2 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, roughness)).rg;
+
+		// Total specular IBL contribution.
+		vec3 specularIBL = (F0 * modifier * specularBRDF.x + specularBRDF.y) * specularIrradiance;
+
+		// Total ambient lighting contribution.
+		ambientLighting = mix(diffuseIBL, specularIBL, 0.04);
+	}
+	
 	// Direct lighting calculation for analytical lights.
 	vec3 directLighting = vec3(0);
 	for(int i=0; i< inDirectionalLightCount; ++i)
@@ -172,40 +218,24 @@ void main()
 		directLighting += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
 	}
 
-    // Ambient lighting (IBL).
-	vec3 ambientLighting;
+	// Point lighting calculation
+	vec3 pointLighting = vec3(0);
+	for(int i=0; i< inPointLightCount; ++i)
 	{
-		// Sample diffuse irradiance at normal direction.
-		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
-		vec3 modifier = vec3(10, 10, 10);
+		float constantAtt = pointLights[i].params.x;
+		float linearAtt = pointLights[i].params.y;
+		float expAtt = pointLights[i].params.z;
 
-		// Calculate Fresnel term for ambient lighting.
-		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
-		// use cosLo instead of angle with light's half-vector (cosLh above).
-		// See: https://seblagarde.wordpress.com/2011/08/17/hello-world/
-		vec3 F = fresnelSchlick(F0, cosLo);
+	    vec3 posToLight = inWorldPos - pointLights[i].position.xyz;
+	    float dist = length(posToLight);
+	    posToLight = normalize(posToLight);
+		float diffuse = max(0.0, dot(N, -posToLight));
 
-		// Get diffuse contribution factor (as with direct lighting).
-		vec3 kd = mix(vec3(1.0), F, metallic);
-
-		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
-		vec3 diffuseIBL = kd * GetAlbedro() * irradiance;
-
-		// Sample pre-filtered specular reflection environment at correct mipmap level.
-		int specularTextureLevels = textureQueryLevels(prefilteredMap);
-		vec3 specularIrradiance = textureLod(prefilteredMap, Lr, roughness * specularTextureLevels).rgb;
-
-		// Split-sum approximation factors for Cook-Torrance specular BRDF.
-		vec2 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, roughness)).rg;
-
-		// Total specular IBL contribution.
-		vec3 specularIBL = (F0 * modifier * specularBRDF.x + specularBRDF.y) * specularIrradiance;
-
-		// Total ambient lighting contribution.
-		ambientLighting = mix(diffuseIBL, specularIBL, 0.04);
+		float attTotal = constantAtt + linearAtt * dist + expAtt * dist * dist;
+		pointLighting += pointLights[i].color.rgb * (ambientLighting + diffuse) / attTotal;
 	}
-	
-	vec3 color = directLighting + ambientLighting;
+
+	vec3 color = pointLighting + directLighting + ambientLighting;
 
 	// Tone mapping
 	color = Uncharted2Tonemap(color * inExposure);

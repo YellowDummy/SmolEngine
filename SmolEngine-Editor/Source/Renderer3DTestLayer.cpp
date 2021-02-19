@@ -26,6 +26,7 @@ namespace SmolEngine
 
 		// Create Materials
 
+		int32_t floorID = 0;
 		int32_t chairID = 0;
 		int32_t defaultID = 0;
 		int32_t glassID = 0;
@@ -48,7 +49,19 @@ namespace SmolEngine
 
 		defaultID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
+		// Floor
+		MaterialCI = {};
+		MaterialCI.Name = "Floor";
+		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "rusty_metal_7_basecolor.png");
+		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "rusty_metal_7_normal.png");
+		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "rusty_metal_7_metallic.png");
+		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "rusty_metal_7_roughness.png");
+		MaterialCI.Textures[MaterialTexture::AO] = Texture::Create(Resources + "rusty_metal_7_ambientocclusion.png");
+
+		floorID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
+
 		// Test
+		MaterialCI = {};
 		MaterialCI.Name = "Test";
 		MaterialCI.Metallic = 1.0f;
 		MaterialCI.Roughness = 0.2f;
@@ -56,6 +69,7 @@ namespace SmolEngine
 		m_TestMaterial = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// Chair
+		MaterialCI = {};
 		MaterialCI.Name = "Chair";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
@@ -64,6 +78,7 @@ namespace SmolEngine
 		chairID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaBase
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaBase";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Albedo.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Normal.PNG");
@@ -73,6 +88,7 @@ namespace SmolEngine
 		sponzaBase = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaRoof
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaRoof";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Roof_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Roof_normal.PNG");
@@ -82,6 +98,7 @@ namespace SmolEngine
 		sponzaRoof = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaLion
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaLion";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Lion_Albedo.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Lion_Normal.PNG");
@@ -91,6 +108,7 @@ namespace SmolEngine
 		sponzaLion = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaFlowers
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaFlowers";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/VasePlant_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/VasePlant_normal.PNG");
@@ -100,6 +118,7 @@ namespace SmolEngine
 		sponzaFlowers = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaVase
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaVase";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Vase_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Vase_normal.PNG");
@@ -109,6 +128,7 @@ namespace SmolEngine
 		sponzaVase = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaCurtainRed
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaCurtainRed";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Curtain_Red_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Curtain_Red_normal.PNG");
@@ -118,6 +138,7 @@ namespace SmolEngine
 		sponzaCurtainRed = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaCurtainGreen
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaCurtainGreen";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Curtain_Green_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Curtain_Green_normal.PNG");
@@ -127,6 +148,7 @@ namespace SmolEngine
 		sponzaCurtainGreen = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaCurtainBlue
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaCurtainBlue";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Curtain_Blue_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Curtain_Blue_normal.PNG");
@@ -136,6 +158,7 @@ namespace SmolEngine
 		sponzaCurtainBlue = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaThorn
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaThorn";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Thorn_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Thorn_normal.PNG");
@@ -145,6 +168,7 @@ namespace SmolEngine
 		sponzaThorn =  MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		//SponzaBrazier
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaBrazier";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/VaseHanging_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/VaseHanging_normal.PNG");
@@ -154,6 +178,7 @@ namespace SmolEngine
 		sponzaBrazier = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaChain
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaChain";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/ChainTexture_Albedo.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/ChainTexture_Normal.PNG");
@@ -163,6 +188,7 @@ namespace SmolEngine
 		sponzaChain = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// FlagPole
+		MaterialCI = {};
 		MaterialCI.Name = "SponzaFlagPole";
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_FlagPole_diffuse.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_FlagPole_normal.PNG");
@@ -180,7 +206,7 @@ namespace SmolEngine
 
 		// Set Materials
 		m_ChairMesh->SetMaterialID(chairID, true);
-		m_CubeMesh->SetMaterialID(defaultID, true);
+		m_CubeMesh->SetMaterialID(floorID, true);
 		m_SponzaMesh->SetMaterialID(defaultID, true);
 
 		m_SponzaMesh->SetMaterialID(sponzaBase);
@@ -265,6 +291,7 @@ namespace SmolEngine
 		Renderer::BeginScene(m_EditorCamera->GetProjection(), m_EditorCamera->GetViewMatrix(), m_EditorCamera->GetPosition());
 		{
 
+			Renderer::SubmitPointLight({ 0, 0, 0 }, { 0.2, 0.3, 0.3, 1.0 }, 0.5f, 0.1f, 0.0080f);
 			Renderer::SubmitDirectionalLight(m_Pos, m_Color);
 
 			Renderer::SubmitMesh({ 0, -4, 0 }, { 0, 0, 0 }, { 100, 1, 100 }, m_CubeMesh);

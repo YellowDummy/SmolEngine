@@ -51,8 +51,9 @@ layout (std140, binding = 27) uniform SceneDataBuffer
 
 layout(push_constant) uniform CameraData
 {
-	int dataOffset;
-	int directionalLights;
+	uint dataOffset;
+	uint directionalLights;
+	uint pointLights;
 };
 
 layout (location = 0)  out vec3 outWorldPos;
@@ -79,10 +80,11 @@ layout (location = 17) out float outExposure;
 layout (location = 18) out float outGamma;
 layout (location = 19) out float outAmbient;
 
-layout (location = 20) out int outDirectionalLightCount;
+layout (location = 20) out uint outDirectionalLightCount;
+layout (location = 21) out uint outPointLightCount;
 
-layout (location = 21) out vec4 outColor;
-layout (location = 22) out mat3 outTBN;
+layout (location = 22) out vec4 outColor;
+layout (location = 23) out mat3 outTBN;
 
 void main()
 {
@@ -98,6 +100,7 @@ void main()
 	outGamma = sceneData.data.params.y;
 	outAmbient = sceneData.data.params.z;
 	outDirectionalLightCount = directionalLights;
+	outPointLightCount = pointLights;
 
 	// TBN matrix
 	vec3 N = normalize(outNormal);

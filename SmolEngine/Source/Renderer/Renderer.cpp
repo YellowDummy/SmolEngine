@@ -27,6 +27,7 @@ namespace SmolEngine
 	static const size_t                  s_MaxInstances = 500;
 	static const size_t                  s_MaxPackages = 1200;
 	static const size_t                  s_MaxDirectionalLights = 1000;
+	static const size_t                  s_MaxPointLights = 1000;
 	static const size_t                  s_InstanceDataMaxCount = s_MaxPackages * s_MaxInstances;
 
 	struct CommandBuffer
@@ -87,6 +88,7 @@ namespace SmolEngine
 		uint32_t                         m_UsedMeshesIndex = 0;
 		uint32_t                         m_DrawListIndex = 0;
 		uint32_t                         m_DirectionalLightIndex = 0;
+		uint32_t                         m_PointLightIndex = 0;
 		uint32_t                         m_MaxObjects = s_MaxPackages;
 
 		// Buffers
@@ -94,6 +96,7 @@ namespace SmolEngine
 		InstanceData                     m_InstancesData[s_InstanceDataMaxCount];
 		CommandBuffer                    m_DrawList[s_MaxPackages];
 		DirectionalLightBuffer           m_DirectionalLights[s_MaxDirectionalLights];
+		PointLightBuffer                 m_PointLights[s_MaxPointLights];
 
 		std::unordered_map<Mesh*,
 			InstancePackage>             m_Packages;
@@ -111,8 +114,9 @@ namespace SmolEngine
 
 		struct PushConstant
 		{
-			int                          DataOffset = 0;
-			int                          DirectionalLights = 0;
+			uint32_t                          DataOffset = 0;
+			uint32_t                          DirectionalLights = 0;
+			uint32_t                          PointLights = 0;
 		};
 
 		SceneData                        m_SceneData = {};
@@ -201,6 +205,9 @@ namespace SmolEngine
 			// Updates Directional Lights
 			s_Data->m_MainPipeline->SubmitStorageBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
 
+			// Updates Point Lights
+			s_Data->m_MainPipeline->SubmitStorageBuffer(29, sizeof(PointLightBuffer) * s_Data->m_PointLightIndex, &s_Data->m_PointLights);
+
 			// Updates model views and material indexes
 			s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_ShaderDataBinding, sizeof(InstanceData) * s_Data->m_InstanceDataIndex, &s_Data->m_InstancesData);
 
@@ -230,6 +237,8 @@ namespace SmolEngine
 
 				s_Data->m_MainPushConstant.DataOffset = cmd.Offset;
 				s_Data->m_MainPushConstant.DirectionalLights = s_Data->m_DirectionalLightIndex;
+				s_Data->m_MainPushConstant.PointLights = s_Data->m_PointLightIndex;
+
 				s_Data->m_MainPipeline->SubmitPushConstant(ShaderType::Vertex, s_Data->m_PushConstantSize, &s_Data->m_MainPushConstant);
 				s_Data->m_MainPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount);
 
@@ -299,6 +308,20 @@ namespace SmolEngine
 		s_Data->m_DirectionalLightIndex++;
 	}
 
+	void Renderer::SubmitPointLight(const glm::vec3& pos, const glm::vec4& color, float constant, float linear, float exp)
+	{
+		uint32_t index = s_Data->m_PointLightIndex;
+		if (index >= s_MaxPointLights)
+			return; // temp;
+
+		s_Data->m_PointLights[index].Color = color;
+		s_Data->m_PointLights[index].Position = glm::vec4(pos, 1);
+		s_Data->m_PointLights[index].Params.x = constant;
+		s_Data->m_PointLights[index].Params.y = linear;
+		s_Data->m_PointLights[index].Params.z = exp;
+		s_Data->m_PointLightIndex++;
+	}
+
 	void Renderer::SetAmbientMixer(float value)
 	{
 		s_Data->m_SceneData.Params.z = value;
@@ -335,6 +358,7 @@ namespace SmolEngine
 				shaderCI.StorageBuffersSizes[25] = { sizeof(InstanceData) * s_InstanceDataMaxCount };
 				shaderCI.StorageBuffersSizes[26] = { sizeof(Material) * 1000 };
 				shaderCI.StorageBuffersSizes[28] = { sizeof(DirectionalLightBuffer) * s_MaxDirectionalLights };
+				shaderCI.StorageBuffersSizes[29] = { sizeof(PointLightBuffer) * s_MaxPointLights };
 			};
 
 			BufferLayout mainLayout =
@@ -387,7 +411,7 @@ namespace SmolEngine
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
 				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(SkyBoxData), layout) };
-				DynamicPipelineCI.PipelineName = "Skybox_Test";
+				DynamicPipelineCI.PipelineName = "Skybox_Pipiline";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.TargetFramebuffer = s_Data->m_Framebuffer;
 			}
@@ -447,6 +471,38 @@ namespace SmolEngine
 			Ref<VertexBuffer> skyBoxFB = VertexBuffer::Create(skyboxVertices, sizeof(skyboxVertices));
 			s_Data->m_SkyboxPipeline->SetVertexBuffers({ skyBoxFB });
 		}
+
+		// Depth Pass
+		{
+			s_Data->m_DepthPassPipeline = std::make_unique<GraphicsPipeline>();
+			GraphicsPipelineShaderCreateInfo shaderCI = {};
+			{
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/DepthPass_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/DepthPass_Vulkan_Fragment.glsl";
+			};
+
+			BufferLayout layout =
+			{
+				{ DataTypes::Float3, "aPos" },
+				{ DataTypes::Float3, "aNormal" },
+				{ DataTypes::Float4, "aTangent" },
+				{ DataTypes::Float2, "aUV" },
+				{ DataTypes::Float4, "aColor" }
+			};
+
+			VertexInputInfo vertexMain(sizeof(PBRVertex), layout);
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			{
+				DynamicPipelineCI.VertexInputInfos = { vertexMain };
+				DynamicPipelineCI.PipelineName = "DepthPass_Pipeline";
+				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+				DynamicPipelineCI.TargetFramebuffer = s_Data->m_CascadeFramebuffer;
+				DynamicPipelineCI.DescriptorSets = 4;
+
+				auto result = s_Data->m_DepthPassPipeline->Create(&DynamicPipelineCI);
+				assert(result == PipelineCreateResult::SUCCESS);
+			}
+		}
 	}
 
 	void Renderer::InitFramebuffers()
@@ -500,6 +556,7 @@ namespace SmolEngine
 		s_Data->m_Objects = 0;
 		s_Data->m_InstanceDataIndex = 0;
 		s_Data->m_DirectionalLightIndex = 0;
+		s_Data->m_PointLightIndex = 0;
 		s_Data->m_DrawListIndex = 0;
 		s_Data->m_UsedMeshesIndex = 0;
 	}

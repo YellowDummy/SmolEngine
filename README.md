@@ -7,7 +7,7 @@
 
 ### Implemented in first iteration
 
-- Renderering: Native rendering API support (Vulkan/OpenGL), Physically Based Rendering (PBR), 
+- Rendering: Native rendering API support (Vulkan/OpenGL), Physically Based Rendering (PBR), 
   Multi Sampled Deferred Shading, Multisample Anti-Aliasing (MSAA),
   Screen Space Ambient Occlusion (SSAO), 2D/3D Renderer, 2D Animations
   
@@ -23,7 +23,7 @@
 
 ### Features to come
 
-- Renderering: Cascaded Shadow Mapping, Real-Time Ray Tracing (Vulkan), Post-processing,
+- Rendering: Cascaded Shadow Mapping, Real-Time Ray Tracing (Vulkan), Post-processing,
     3D Animations, Multithreading, Materials (user's shaders), Sprite Atlases
 
 - Systems: Build System, Jobs System, Particles System (2D and 3D), Network Solution, Asset Manager

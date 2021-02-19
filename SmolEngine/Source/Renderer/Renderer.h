@@ -31,6 +31,8 @@ namespace SmolEngine
 
 		static void SubmitDirectionalLight(const glm::vec3& pos, const glm::vec4& color);
 
+		static void SubmitPointLight(const glm::vec3& pos, const glm::vec4& color, float constant, float linear, float exp);
+
 		// Setters
 
 		static void SetAmbientMixer(float value);

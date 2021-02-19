@@ -21,6 +21,13 @@ namespace SmolEngine
 		glm::vec4 Color;
 	};
 
+	struct PointLightBuffer
+	{
+		glm::vec4 Position;
+		glm::vec4 Color;
+		glm::vec4 Params; // x = Constant, y = Linear, z = Exp
+	};
+
 	struct QuadVertex
 	{
 		glm::vec3 Position = glm::vec3(1.0f);
