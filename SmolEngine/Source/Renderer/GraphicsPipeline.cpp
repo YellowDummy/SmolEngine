@@ -5,6 +5,7 @@
 #include "Renderer/Vulkan/VulkanContext.h"
 #include "Renderer/Vulkan/VulkanRenderPass.h"
 #include "Renderer/Vulkan/VulkanTexture.h"
+#include "Renderer/Vulkan/VulkanBufferPool.h"
 #endif
 
 #include "Renderer/Framebuffer.h"
@@ -185,11 +186,6 @@ namespace SmolEngine
 		{
 			indexBuffer->GetVulkanIndexBuffer().MapMemory();
 		}
-
-		for (auto& [binding, ubo] : m_Shader->GetVulkanShader()->m_UniformBuffers)
-		{
-			ubo.VkBuffer.MapMemory();
-		}
 #endif
 	}
 
@@ -205,11 +201,15 @@ namespace SmolEngine
 		{
 			indexBuffer->GetVulkanIndexBuffer().UnMapMemory();
 		}
+#endif
+	}
 
-		for (auto& [binding, ubo] : m_Shader->GetVulkanShader()->m_UniformBuffers)
-		{
-			ubo.VkBuffer.UnMapMemory();
-		}
+	void GraphicsPipeline::SubmitBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
+	{
+#ifndef SMOLENGINE_OPENGL_IMPL
+		VulkanBuffer* buffer = VulkanBufferPool::GetSingleton()->GetBuffer(bindingPoint);
+		if (buffer)
+			buffer->SetData(data, size, offset);
 #endif
 	}
 
@@ -341,16 +341,6 @@ namespace SmolEngine
 
 		vkCmdDrawIndexed(m_CommandBuffer, mesh->GetIndexBuffer()->GetCount(), instances, 0, 0, 0);
 #endif
-	}
-
-	void GraphicsPipeline::SubmitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
-	{
-		m_Shader->SumbitUniformBuffer(bindingPoint, data, size, offset);
-	}
-
-	void GraphicsPipeline::SubmitStorageBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset)
-	{
-		m_Shader->SumbitStorageBuffer(bindingPoint, data, size, offset);
 	}
 
 	void GraphicsPipeline::SubmitPushConstant(ShaderType shaderStage, size_t size, const void* data)

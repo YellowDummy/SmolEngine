@@ -101,9 +101,7 @@ namespace SmolEngine
 
 		void EndBufferSubmit();
 
-		void SubmitUniformBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
-
-		void SubmitStorageBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
+		void SubmitBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 
 		template<typename T>
 		void SubmitUniform(const std::string& name, const void* data, uint32_t arrayElements = 0, size_t size = 0)

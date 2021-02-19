@@ -202,7 +202,7 @@ namespace SmolEngine
 			m_PBRPipeline->UpdateSampler( m_Tetxure2, 8); //metallic
 			m_PBRPipeline->UpdateSampler(m_Tetxure4, 9); //roughness
 
-			m_PBRPipeline->SubmitUniformBuffer(12, sizeof(PBRParams), &m_PBRParams);
+			m_PBRPipeline->SubmitBuffer(12, sizeof(PBRParams), &m_PBRParams);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 			m_PBRPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
@@ -244,7 +244,7 @@ namespace SmolEngine
 			auto result = m_Pipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
 
-			m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
+			m_Pipeline->SubmitBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
 
 			m_Pipeline->UpdateSamplers({ m_Tetxure1, m_BrickAlbedro }, 5); //albedo
 			m_Pipeline->UpdateSamplers({ m_Tetxure3, m_BrickNormal }, 6); //normal
@@ -276,7 +276,7 @@ namespace SmolEngine
 				auto result = m_SSAOPipeline->Create(&DynamicPipelineCI);
 				assert(result == PipelineCreateResult::SUCCESS);
 
-				m_SSAOPipeline->SubmitUniformBuffer(25, sizeof(SSAOTempUbo), &ssaoTempData);
+				m_SSAOPipeline->SubmitBuffer(25, sizeof(SSAOTempUbo), &ssaoTempData);
 				m_SSAOPipeline->UpdateSampler(m_SSAONoise, 2);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -421,8 +421,8 @@ namespace SmolEngine
 			auto result = m_CombinationPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
 
-			m_CombinationPipeline->SubmitUniformBuffer(16, sizeof(SkyLights), &m_SkyLights);
-			m_CombinationPipeline->SubmitUniformBuffer(17, sizeof(PointLights), &m_PointLights);
+			m_CombinationPipeline->SubmitBuffer(16, sizeof(SkyLights), &m_SkyLights);
+			m_CombinationPipeline->SubmitBuffer(17, sizeof(PointLights), &m_PointLights);
 
 			m_CombinationPipeline->SetVertexBuffers({ FullScreenVB });
 			m_CombinationPipeline->SetIndexBuffers({ FullScreenID });
@@ -468,7 +468,7 @@ namespace SmolEngine
 		{
 			if (m_Pipeline->Reload() == PipelineCreateResult::SUCCESS)
 			{
-				m_Pipeline->SubmitStorageBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
+				m_Pipeline->SubmitBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
 
 				m_Pipeline->UpdateSamplers({ m_Tetxure1, m_BrickAlbedro }, 5); //albedo
 				m_Pipeline->UpdateSamplers({ m_Tetxure3, m_BrickNormal }, 6); //normal
@@ -576,7 +576,7 @@ namespace SmolEngine
 				void* data = nullptr;
 				uint32_t size = 0;
 				MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
-				m_Pipeline->SubmitStorageBuffer(26, size, data);
+				m_Pipeline->SubmitBuffer(26, size, data);
 
 				m_Pipeline->BeginCommandBuffer(useMainCmdBuffer);
 				m_Pipeline->BeginRenderPass();

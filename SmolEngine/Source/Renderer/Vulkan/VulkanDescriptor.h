@@ -16,9 +16,7 @@ namespace SmolEngine
 
 		void GenDescriptorSet(VulkanShader* shader, VkDescriptorPool pool);
 
-		void GenUniformBuffersDescriptors(VulkanShader* shader);
-
-		void GenStorageBufferDescriptors(VulkanShader* shader);
+		void GenBuffersDescriptors(VulkanShader* shader);
 
 		void GenSamplersDescriptors(VulkanShader* shader);
 

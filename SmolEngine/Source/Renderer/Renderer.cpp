@@ -198,25 +198,23 @@ namespace SmolEngine
 		s_Data->m_MainPipeline->BeginBufferSubmit();
 		{
 			// Updates scene data
-			s_Data->m_MainPipeline->SubmitUniformBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
-			// FIX:
-			s_Data->m_SkyboxPipeline->SubmitUniformBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
+			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
 
 			// Updates Directional Lights
-			s_Data->m_MainPipeline->SubmitStorageBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
+			s_Data->m_MainPipeline->SubmitBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
 
 			// Updates Point Lights
-			s_Data->m_MainPipeline->SubmitStorageBuffer(29, sizeof(PointLightBuffer) * s_Data->m_PointLightIndex, &s_Data->m_PointLights);
+			s_Data->m_MainPipeline->SubmitBuffer(29, sizeof(PointLightBuffer) * s_Data->m_PointLightIndex, &s_Data->m_PointLights);
 
 			// Updates model views and material indexes
-			s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_ShaderDataBinding, sizeof(InstanceData) * s_Data->m_InstanceDataIndex, &s_Data->m_InstancesData);
+			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_ShaderDataBinding, sizeof(InstanceData) * s_Data->m_InstanceDataIndex, &s_Data->m_InstancesData);
 
 #ifdef SMOLENGINE_EDITOR
 			// Update materials
 			void* data = nullptr;
 			uint32_t size = 0;
 			MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
-			s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_MaterialsBinding, size, data);
+			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_MaterialsBinding, size, data);
 #endif
 		}
 
@@ -421,8 +419,6 @@ namespace SmolEngine
 #ifndef SMOLENGINE_OPENGL_IMPL
 			s_Data->m_SkyboxPipeline->UpdateVulkanImageDescriptor(1, VulkanPBR::GetSkyBox().GetVkDescriptorImageInfo());
 #endif
-
-
 			float skyboxVertices[] = {
 				// positions          
 				-1.0f,  1.0f, -1.0f,
@@ -546,7 +542,7 @@ namespace SmolEngine
 		void* data = nullptr;
 		uint32_t size = 0;
 		MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
-		s_Data->m_MainPipeline->SubmitStorageBuffer(s_Data->m_MaterialsBinding, size, data);
+		s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_MaterialsBinding, size, data);
 
 		return true;
 	}

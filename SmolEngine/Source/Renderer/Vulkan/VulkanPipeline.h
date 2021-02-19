@@ -32,6 +32,8 @@ namespace SmolEngine
 
 		void Destroy();
 
+		// Update Descriptors
+
 		bool UpdateSamplers2D(const std::vector<VulkanTexture*>& textures, uint32_t bindingPoint, uint32_t setIndex = 0);
 
 		bool UpdateCubeMap(const VulkanTexture* cubeMap, uint32_t bindingPoint, uint32_t setIndex = 0);

@@ -421,29 +421,40 @@ namespace SmolEngine
 		}
 
 		std::vector< VkDescriptorPoolSize> DescriptorPoolSizes;
-
-		// UBO
-		if ((shader->m_UniformBuffers.size() > 0))
+		if ((shader->m_Buffers.size() > 0))
 		{
-			VkDescriptorPoolSize poolSize = {};
+			uint32_t UBOcount = 0;
+			uint32_t SSBOcount = 0;
+
+			for (auto& [binding, buffer] : shader->m_Buffers)
 			{
-			     poolSize.descriptorCount = static_cast<uint32_t>(shader->m_UniformBuffers.size());
-				 poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				if (buffer.Type == ShaderBufferType::Uniform)
+					UBOcount++;
+				else
+					SSBOcount++;
 			}
 
-			DescriptorPoolSizes.push_back(poolSize);
-		}
-
-		// Storage Buffer
-		if (shader->m_StorageBuffers.size() > 0)
-		{
-			VkDescriptorPoolSize poolSize = {};
+			if (UBOcount > 0)
 			{
-				poolSize.descriptorCount = static_cast<uint32_t>(shader->m_StorageBuffers.size());
-				poolSize.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				VkDescriptorPoolSize poolSize = {};
+				{
+					poolSize.descriptorCount = UBOcount;
+					poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				}
+
+				DescriptorPoolSizes.push_back(poolSize);
 			}
 
-			DescriptorPoolSizes.push_back(poolSize);
+			if (SSBOcount > 0)
+			{
+				VkDescriptorPoolSize poolSize = {};
+				{
+					poolSize.descriptorCount = SSBOcount;
+					poolSize.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				}
+
+				DescriptorPoolSizes.push_back(poolSize);
+			}
 		}
 
 		// Samplers
@@ -459,7 +470,7 @@ namespace SmolEngine
 		}
 
 		if (shader->m_UniformResources.size() == 0 && 
-			shader->m_UniformBuffers.size() == 0 && shader->m_StorageBuffers.size() == 0)
+			shader->m_Buffers.size() == 0)
 		{
 			// dummy
 			VkDescriptorPoolSize poolSize = {};
@@ -485,8 +496,7 @@ namespace SmolEngine
 		for (uint32_t i = 0; i < DescriptorSets; ++i)
 		{
 			m_Descriptors[i].GenDescriptorSet(shader, m_DescriptorPool);
-			m_Descriptors[i].GenUniformBuffersDescriptors(shader);
-			m_Descriptors[i].GenStorageBufferDescriptors(shader);
+			m_Descriptors[i].GenBuffersDescriptors(shader);
 			m_Descriptors[i].GenSamplersDescriptors(shader);
 		}
 	}

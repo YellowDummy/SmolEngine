@@ -4,6 +4,7 @@
 #include "Renderer/Texture.h"
 #include "Renderer/Vulkan/VulkanShader.h"
 #include "Renderer/Vulkan/VulkanContext.h"
+#include "Renderer/Vulkan/VulkanBufferPool.h"
 #include "Renderer/CubeTexture.h"
 #include "Renderer/Vulkan/VulkanPBR.h"
 
@@ -28,58 +29,24 @@ namespace SmolEngine
 	void VulkanDescriptor::GenDescriptorSet(VulkanShader* shader, VkDescriptorPool pool)
 	{
 		std::vector< VkDescriptorSetLayoutBinding> layouts;
-		layouts.reserve(shader->m_UniformBuffers.size() + shader->m_UniformResources.size() + shader->m_StorageBuffers.size());
+		layouts.reserve(shader->m_Buffers.size() + shader->m_UniformResources.size());
 
-		// ubo
-		for (auto& uboInfo : shader->m_UniformBuffers)
+		for (auto& [bindingPoint, buffer] : shader->m_Buffers)
 		{
-			auto& [bindingPoint, buffer] = uboInfo;
+			VkDescriptorType type = buffer.Type == ShaderBufferType::Uniform ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER : VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 
 			VkDescriptorSetLayoutBinding layoutBinding = {};
 			{
 				layoutBinding.binding = buffer.BindingPoint;
-				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				layoutBinding.descriptorType = type;
 				layoutBinding.descriptorCount = static_cast<uint32_t>(buffer.Uniforms.size());
 				layoutBinding.stageFlags = buffer.StageFlags;
 			}
 
-			buffer.VkBuffer.Create(buffer.Size, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-			buffer.DesriptorBufferInfo.buffer = buffer.VkBuffer.GetBuffer();
-			buffer.DesriptorBufferInfo.offset = 0;
-			buffer.DesriptorBufferInfo.range = buffer.Size;
-
 			layouts.push_back(layoutBinding);
 		}
 
-		// storage buffers
-		for (auto& [key,storageBuffer] : shader->m_StorageBuffers)
-		{
-			auto& pos = shader->m_Info.StorageBuffersSizes.find(key);
-			if (pos == shader->m_Info.StorageBuffersSizes.end())
-			{
-				NATIVE_ERROR("Storage buffer sizes are not provided! Use StorageBuffersSizes");
-				abort();
-			}
-
-			VkDescriptorSetLayoutBinding layoutBinding = {};
-			{
-				layoutBinding.binding = storageBuffer.BindingPoint;
-				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-				layoutBinding.descriptorCount =storageBuffer.Members;
-				layoutBinding.stageFlags = storageBuffer.StageFlags;
-			}
-
-			storageBuffer.VkBuffer.Create(pos->second, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-				VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-
-			storageBuffer.DesriptorBufferInfo.buffer = storageBuffer.VkBuffer.GetBuffer();
-			storageBuffer.DesriptorBufferInfo.offset = 0;
-			storageBuffer.DesriptorBufferInfo.range = pos->second;
-
-			layouts.push_back(layoutBinding);
-		}
-
-		// samplers
+		// Samplers
 		for (auto& info : shader->m_UniformResources)
 		{
 			auto& [bindingPoint, res] = info;
@@ -114,32 +81,39 @@ namespace SmolEngine
 		}
 	}
 
-	void VulkanDescriptor::GenUniformBuffersDescriptors(VulkanShader* shader)
+	void VulkanDescriptor::GenBuffersDescriptors(VulkanShader* shader)
 	{
-		for (auto& uboInfo : shader->m_UniformBuffers)
+		for (auto& [key, buffer] : shader->m_Buffers)
 		{
-			auto& [bindingPoint, buffer] = uboInfo;
+			VkDescriptorBufferInfo descriptorBufferInfo = {};
+			size_t dataSize = buffer.Size;
+			VkDescriptorType type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			VkBufferUsageFlags usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+			VkMemoryPropertyFlags mem = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT; // temp
 
+			if (buffer.Type == ShaderBufferType::Storage)
+			{
+				type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+
+				auto& it = shader->m_Info.StorageBuffersSizes.find(buffer.BindingPoint);
+				if (it == shader->m_Info.StorageBuffersSizes.end() && !VulkanBufferPool::GetSingleton()->IsBindingExist(buffer.BindingPoint))
+				{
+					NATIVE_ERROR("Storage buffer dataSize must be declared inside GraphicsPipelineShaderCreateInfo!");
+					abort();
+				}
+
+				dataSize = it->second;
+			}
+
+			VulkanBufferPool::GetSingleton()->Add(dataSize, buffer.BindingPoint, mem,
+				usage, descriptorBufferInfo);
 			m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
-				buffer.BindingPoint, &buffer.DesriptorBufferInfo));
-
+				buffer.BindingPoint, &descriptorBufferInfo, type));
 			vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 
-			NATIVE_WARN("Created UBO {}: Members Count: {}, Binding Point: {}", buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
-		}
-	}
-
-	void VulkanDescriptor::GenStorageBufferDescriptors(VulkanShader* shader)
-	{
-		for (auto& [key, storageBuffer] : shader->m_StorageBuffers)
-		{
-			m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
-				storageBuffer.BindingPoint, &storageBuffer.DesriptorBufferInfo, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER));
-
-			vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
-
-			NATIVE_WARN("Created Storage Buffer {}: Members Count: {}, Binding Point: {}", storageBuffer.Name,
-				storageBuffer.Members, storageBuffer.BindingPoint);
+			NATIVE_WARN("Created " + buffer.ObjectName + " {}: Members Count: {}, Binding Point: {}",
+				buffer.Name, buffer.Uniforms.size(), buffer.BindingPoint);
 		}
 	}
 

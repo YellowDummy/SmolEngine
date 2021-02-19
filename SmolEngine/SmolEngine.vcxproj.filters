@@ -1542,9 +1542,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanTexture.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanUniformBufferPool.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanUtils.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1592,6 +1589,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\FilePaths.h" />
     <ClInclude Include="Source\Renderer\RendererDeferred.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1897,9 +1897,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanTexture.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanUniformBufferPool.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanUtils.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1932,5 +1929,8 @@
     <ClCompile Include="Source\Renderer\Material.cpp" />
     <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
     <ClCompile Include="Source\Renderer\RendererDeferred.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

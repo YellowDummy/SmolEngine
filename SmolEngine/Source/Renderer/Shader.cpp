@@ -122,24 +122,6 @@ namespace SmolEngine
 #endif
 	}
 
-	void Shader::SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset)
-	{
-#ifdef SMOLENGINE_OPENGL_IMPL
-		//m_OpenglShader.SumbitUniformBuffer(name, data, size);
-#else
-		m_VulkanShader.SetUniformBuffer(bindPoint, data, size, offset);
-
-#endif
-	}
-
-	void Shader::SumbitStorageBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset)
-	{
-#ifdef SMOLENGINE_OPENGL_IMPL
-#else
-		m_VulkanShader.SetStorageBuffer(bindPoint, data, size, offset);
-#endif
-	}
-
 	uint32_t Shader::GetProgramID()
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL

@@ -53,7 +53,7 @@ namespace SmolEngine
 
     bool VulkanShader::Reload()
     {
-        m_UniformBuffers.clear();
+        m_Buffers.clear();
         m_UniformResources.clear();
         m_PipelineShaderStages.clear();
         m_VkPushConstantRanges.clear();
@@ -64,40 +64,6 @@ namespace SmolEngine
         }
 
         return false;
-    }
-
-    void VulkanShader::SetUniformBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset)
-    {
-        const auto& result = m_UniformBuffers.find(bindingPoint);
-        if (result != m_UniformBuffers.end())
-        {
-            size_t dynamicAlignment = size;
-            if (size > 0)
-            {
-                dynamicAlignment = (dynamicAlignment + m_MinUboAlignment - 1) & ~(m_MinUboAlignment - 1);
-            }
-
-            auto& buffer = result->second;
-            buffer.VkBuffer.SetData(data, size, offset);
-            return;
-        }
-
-        NATIVE_ERROR("UBO not found, binding point: {}", bindingPoint);
-        assert(false);
-    }
-
-    void VulkanShader::SetStorageBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset)
-    {
-        const auto& result = m_StorageBuffers.find(bindingPoint);
-        if (result != m_StorageBuffers.end())
-        {
-            auto& buffer = result->second;
-            buffer.VkBuffer.SetData(data, size, offset);
-            return;
-        }
-
-        NATIVE_ERROR("Storage buffer not found, binding point: {}", bindingPoint);
-        assert(false);
     }
 
     bool VulkanShader::SaveSPIRVBinaries(const std::string& filePath, const std::vector<uint32_t>& data)
@@ -159,9 +125,11 @@ namespace SmolEngine
             auto& type = compiler.get_type(res.base_type_id);
             uint32_t bufferElements = static_cast<uint32_t>(type.member_types.size());
 
-            UniformBuffer buffer = {};
+            ShaderBuffer buffer = {};
             {
+                buffer.Type = ShaderBufferType::Uniform;
                 buffer.Name = res.name;
+                buffer.ObjectName = "UBO";
                 buffer.BindingPoint = compiler.get_decoration(res.id, spv::DecorationBinding);
                 buffer.Size = compiler.get_declared_struct_size(type);
                 buffer.Index = bufferIndex;
@@ -183,7 +151,7 @@ namespace SmolEngine
                 buffer.Uniforms.push_back(uniform);
             }
 
-            m_UniformBuffers[buffer.BindingPoint] = std::move(buffer);
+            m_Buffers[buffer.BindingPoint] = std::move(buffer);
             bufferIndex++;
         }
 
@@ -192,16 +160,34 @@ namespace SmolEngine
             auto& type = compiler.get_type(res.base_type_id);
             uint32_t bufferElements = static_cast<uint32_t>(type.member_types.size());
 
-            StorageBuffer buffer;
+            ShaderBuffer buffer = {};
             {
+                buffer.Type = ShaderBufferType::Storage;
                 buffer.Name = res.name;
+                buffer.ObjectName = "SSBO";
                 buffer.BindingPoint = compiler.get_decoration(res.id, spv::DecorationBinding);
                 buffer.Size = compiler.get_declared_struct_size(type);
+                buffer.Index = bufferIndex;
                 buffer.StageFlags = GetVkShaderStage(shaderType);
-                buffer.Members = bufferElements;
+
+                buffer.Uniforms.reserve(bufferElements);
             }
 
-            m_StorageBuffers[buffer.BindingPoint] = std::move(buffer);
+            for (uint32_t i = 0; i < bufferElements; ++i)
+            {
+                Uniform uniform = {};
+                {
+                    uniform.Name = compiler.get_member_name(type.self, i);
+                    uniform.Type = compiler.get_type(type.member_types[i]);
+                    uniform.Size = compiler.get_declared_struct_member_size(type, i);
+                    uniform.Offset = compiler.type_struct_member_offset(type, i);
+                }
+
+                buffer.Uniforms.push_back(uniform);
+            }
+
+            m_Buffers[buffer.BindingPoint] = std::move(buffer);
+            bufferIndex++;
         }
 
         for (const auto& res : resources.push_constant_buffers)
@@ -376,6 +362,8 @@ namespace SmolEngine
         {
             return ShaderType::Compute;
         }
+        default:
+            return ShaderType::Vertex;
         }
     }
 

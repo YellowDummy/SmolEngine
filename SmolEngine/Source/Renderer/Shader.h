@@ -35,10 +35,6 @@ namespace SmolEngine
 
 		///  Uniforms
 
-		void SumbitUniformBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset);
-
-		void SumbitStorageBuffer(size_t bindPoint, const void* data, size_t size, uint32_t offset);
-
 		template<typename T>
 		void SumbitUniform(const std::string& name, const void* data, uint32_t count = 0, uint32_t size = 0)
 		{

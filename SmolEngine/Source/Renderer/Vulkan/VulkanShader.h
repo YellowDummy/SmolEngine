@@ -25,12 +25,6 @@ namespace SmolEngine
 
 		bool Reload();
 
-		/// Setters
-		
-		void SetUniformBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset = 0);
-
-		void SetStorageBuffer(size_t bindingPoint, const void* data, size_t size, uint32_t offset = 0);
-
 		/// Getters
 
 		static ShaderType GetShaderType(shaderc_shader_kind shadercType);
@@ -67,8 +61,7 @@ namespace SmolEngine
 		size_t                                              m_MinUboAlignment = 0;
 
 		std::unordered_map<uint32_t, UniformResource>       m_UniformResources;
-		std::unordered_map<uint32_t, UniformBuffer>         m_UniformBuffers;
-		std::unordered_map<uint32_t, StorageBuffer>         m_StorageBuffers;
+		std::unordered_map<uint32_t, ShaderBuffer>          m_Buffers;
 		std::unordered_map<ShaderType, VkShaderModule>      m_ShaderModules;
 		std::vector<VkPushConstantRange>                    m_VkPushConstantRanges;
 		std::vector<VkPipelineShaderStageCreateInfo>        m_PipelineShaderStages;

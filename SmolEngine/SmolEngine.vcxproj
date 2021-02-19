@@ -688,7 +688,7 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanStagingBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSwapchain.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanTexture.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanUniformBufferPool.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanUtils.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Scripting\BehaviourPrimitive.h" />
@@ -811,7 +811,7 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanStagingBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSwapchain.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanTexture.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanUniformBufferPool.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanUtils.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Scripting\BehaviourPrimitive.cpp" />

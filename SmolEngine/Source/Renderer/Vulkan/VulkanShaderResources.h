@@ -11,52 +11,41 @@
 
 namespace SmolEngine
 {
+	enum class ShaderBufferType : uint16_t
+	{
+		Uniform,
+		Storage
+	};
+
 	struct Uniform
 	{
-		std::string Name = "";
-
-		size_t Size = 0;
-		size_t Offset = 0;
-
-		spirv_cross::SPIRType Type;
+		spirv_cross::SPIRType            Type;
+		size_t                           Size = 0;
+		size_t                           Offset = 0;
+		std::string                      Name = "";
 	};
 
-	struct StorageBuffer
+	struct ShaderBuffer
 	{
-		std::string Name = "";
-		VkShaderStageFlags StageFlags;
-		VkDescriptorBufferInfo DesriptorBufferInfo;
-		VulkanBuffer VkBuffer = {};
+		VkShaderStageFlags               StageFlags;
+		ShaderBufferType                 Type;
 
-		uint32_t BindingPoint = 0;
-		uint32_t Members = 0;
-		size_t Size = 0;
-	};
+		uint32_t                         BindingPoint = 0;
+		size_t                           Size = 0;
+		size_t                           Index = 0;
+		std::string                      Name = "";
+		std::string                      ObjectName = "";
+		std::vector<Uniform>             Uniforms;
 
-	struct UniformBuffer
-	{
-		std::string Name = "";
-
-		VulkanBuffer VkBuffer = {};
-		VkDescriptorBufferInfo DesriptorBufferInfo;
-		VkShaderStageFlags StageFlags;
-
-		std::vector<Uniform> Uniforms;
-
-		size_t Size = 0;
-		size_t Index = 0;
-
-		uint32_t BindingPoint = 0;
 	};
 
 	struct UniformResource
 	{
-		uint32_t Location = 0;
-		uint32_t BindingPoint = 0;
-		uint32_t Dimension = 0;
-		uint32_t Sampler = 0;
-		uint32_t ArraySize = 0;
-
-		VkShaderStageFlags StageFlags;
+		VkShaderStageFlags               StageFlags;
+		uint32_t                         Location = 0;
+		uint32_t                         BindingPoint = 0;
+		uint32_t                         Dimension = 0;
+		uint32_t                         Sampler = 0;
+		uint32_t                         ArraySize = 0;
 	};
 }

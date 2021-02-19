@@ -194,7 +194,7 @@ namespace SmolEngine
 
 		// Binding textures
 		s_Data->MainPipeline->UpdateSamplers(layer.TextureSlots, s_SamplersBindingPoint, layer.LayerIndex);
-		s_Data->MainPipeline->SubmitUniformBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
+		s_Data->MainPipeline->SubmitBuffer(0, sizeof(glm::mat4), &s_Data->SceneData.viewProjectionMatrix);
 
 		s_Data->MainPipeline->BeginRenderPass();
 		{
@@ -277,7 +277,7 @@ namespace SmolEngine
 		}
 			
 #else
-		s_Data->MainPipeline->SubmitUniformBuffer(1, sizeof(Light2DBuffer) * (s_Data->Light2DBufferSize + 1), s_Data->LightBuffer);
+		s_Data->MainPipeline->SubmitBuffer(1, sizeof(Light2DBuffer) * (s_Data->Light2DBufferSize + 1), s_Data->LightBuffer);
 #endif
 	}
 
