@@ -22,8 +22,13 @@
 
 #include "ECS/Systems/CommandSystem.h"
 
+#define GLM_ENABLE_EXPERIMENTAL 
+#include <glm/gtx/dual_quaternion.hpp>
+
 namespace SmolEngine
 {
+#define SHADOW_MAP_CASCADE_COUNT 4
+
 	static const size_t                  s_MaxInstances = 500;
 	static const size_t                  s_MaxPackages = 1200;
 	static const size_t                  s_MaxDirectionalLights = 1000;
@@ -110,13 +115,17 @@ namespace SmolEngine
 			glm::vec4                    CamPos = glm::vec4(1.0f);
 
 			glm::vec4                    Params = glm::vec4(2.5f, 4.0f, 1.0f, 1.0f);
+			glm::vec4                    CascadeSplits = glm::vec4(0, 0, 0, 0);
 		};
+
+		float                            m_NearClip;
+		float                            m_FarClip;
 
 		struct PushConstant
 		{
-			uint32_t                          DataOffset = 0;
-			uint32_t                          DirectionalLights = 0;
-			uint32_t                          PointLights = 0;
+			uint32_t                     DataOffset = 0;
+			uint32_t                     DirectionalLights = 0;
+			uint32_t                     PointLights = 0;
 		};
 
 		SceneData                        m_SceneData = {};
@@ -124,6 +133,15 @@ namespace SmolEngine
 
 		const size_t                     m_SceneDataSize = sizeof(SceneData);
 		const size_t                     m_PushConstantSize = sizeof(PushConstant);
+
+		// Shadowmap Cascade 
+
+		struct CacadeViewProj
+		{
+			glm::mat4                    ViewProjMatrix[SHADOW_MAP_CASCADE_COUNT];
+		};
+
+		CacadeViewProj                   m_Cascades;
 	};
 
 	static RendererData* s_Data = nullptr;
@@ -143,19 +161,17 @@ namespace SmolEngine
 		delete s_Data;
 	}
 
-	void Renderer::BeginScene(const glm::mat4& proj, const glm::mat4& view, const glm::vec3& camPos)
+	void Renderer::BeginScene(const BeginSceneInfo& info)
 	{
-		s_Data->m_SceneData.View = view;
-		s_Data->m_SceneData.Projection = proj;
-		s_Data->m_SceneData.CamPos = glm::vec4(camPos, 1);
-		s_Data->m_SceneData.SkyBoxMatrix = glm::mat4(glm::mat3(view));
+		s_Data->m_SceneData.View = info.view;
+		s_Data->m_SceneData.Projection = info.proj;
+		s_Data->m_SceneData.CamPos = glm::vec4(info.pos, 1);
+		s_Data->m_SceneData.SkyBoxMatrix = glm::mat4(glm::mat3(info.view));
+		s_Data->m_NearClip = info.nearClip;
+		s_Data->m_FarClip = info.farClip;
 
 		s_Data->m_MainPipeline->BeginCommandBuffer(true);
-		s_Data->m_MainPipeline->BeginRenderPass();
-		{
-			s_Data->m_MainPipeline->ClearColors();
-		}
-		s_Data->m_MainPipeline->EndRenderPass();
+		s_Data->m_SkyboxPipeline->BeginCommandBuffer(true);
 
 		Reset();
 	}
@@ -163,6 +179,7 @@ namespace SmolEngine
 	void Renderer::EndScene()
 	{
 		Flush();
+		s_Data->m_SkyboxPipeline->EndCommandBuffer();
 		s_Data->m_MainPipeline->EndCommandBuffer();
 	}
 
@@ -194,9 +211,14 @@ namespace SmolEngine
 			s_Data->m_DrawListIndex++;
 		}
 
+
 		// Updates UBOs and SSBOs 
 		s_Data->m_MainPipeline->BeginBufferSubmit();
 		{
+			// Updates Cascade ViewProj data
+			UpdateCascades();
+			s_Data->m_DepthPassPipeline->SubmitBuffer(1, sizeof(glm::mat4) * SHADOW_MAP_CASCADE_COUNT, &s_Data->m_Cascades);
+
 			// Updates scene data
 			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
 
@@ -218,10 +240,39 @@ namespace SmolEngine
 #endif
 		}
 
+#ifndef SMOLENGINE_OPENGL_IMPL
+		// Test Depth Pass
+		s_Data->m_DepthPassPipeline->BeginCommandBuffer(true);
+		{
+			for (uint32_t index = 0; index < SHADOW_MAP_CASCADE_COUNT; ++index)
+			{
+				s_Data->m_DepthPassPipeline->BeginRenderPass(index);
+				{
+					for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
+					{
+						auto& cmd = s_Data->m_DrawList[i];
+
+						struct PushConstant
+						{
+							uint32_t offset;
+							uint32_t cascadeIndex;
+						} pc;
+
+						pc.offset = cmd.Offset;
+						pc.cascadeIndex = index;
+						s_Data->m_DepthPassPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
+						s_Data->m_DepthPassPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount, index);
+					}
+				}
+				s_Data->m_DepthPassPipeline->EndRenderPass();
+			}
+		}
+#endif
+
 		// SkyBox
-		s_Data->m_SkyboxPipeline->BeginCommandBuffer(true);
 		s_Data->m_SkyboxPipeline->BeginRenderPass();
 		{
+			s_Data->m_SkyboxPipeline->ClearColors();
 			s_Data->m_SkyboxPipeline->Draw(36);
 		}
 		s_Data->m_SkyboxPipeline->EndRenderPass();
@@ -302,7 +353,7 @@ namespace SmolEngine
 			return; // temp;
 
 		s_Data->m_DirectionalLights[index].Color = color;
-		s_Data->m_DirectionalLights[index].Position = glm::vec4(pos, 1);
+		s_Data->m_DirectionalLights[index].Position = normalize(glm::vec4(pos, 1));
 		s_Data->m_DirectionalLightIndex++;
 	}
 
@@ -313,7 +364,7 @@ namespace SmolEngine
 			return; // temp;
 
 		s_Data->m_PointLights[index].Color = color;
-		s_Data->m_PointLights[index].Position = glm::vec4(pos, 1);
+		s_Data->m_PointLights[index].Position = normalize(glm::vec4(pos, 1));
 		s_Data->m_PointLights[index].Params.x = constant;
 		s_Data->m_PointLights[index].Params.y = linear;
 		s_Data->m_PointLights[index].Params.z = exp;
@@ -384,6 +435,8 @@ namespace SmolEngine
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
+
+			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(23, s_Data->m_CascadeFramebuffer->GetVulkanFramebuffer().GetDethAttachment()->ImageInfo);
 #endif
 		}
 
@@ -493,7 +546,7 @@ namespace SmolEngine
 				DynamicPipelineCI.PipelineName = "DepthPass_Pipeline";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.TargetFramebuffer = s_Data->m_CascadeFramebuffer;
-				DynamicPipelineCI.DescriptorSets = 4;
+				DynamicPipelineCI.DescriptorSets = SHADOW_MAP_CASCADE_COUNT;
 
 				auto result = s_Data->m_DepthPassPipeline->Create(&DynamicPipelineCI);
 				assert(result == PipelineCreateResult::SUCCESS);
@@ -522,7 +575,7 @@ namespace SmolEngine
 				framebufferCI.Width = 4096;
 				framebufferCI.Height = 4096;
 				framebufferCI.bUsingCascadeObject = true;
-				framebufferCI.NumArrayLayers = 4;
+				framebufferCI.NumArrayLayers = SHADOW_MAP_CASCADE_COUNT;
 				s_Data->m_CascadeFramebuffer = Framebuffer::Create(framebufferCI);
 			}
 		}
@@ -539,12 +592,98 @@ namespace SmolEngine
 			return false;
 
 		s_Data->m_MainPipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), s_Data->m_TexturesBinding);
+		s_Data->m_DepthPassPipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), s_Data->m_TexturesBinding);
+
 		void* data = nullptr;
 		uint32_t size = 0;
 		MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
 		s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_MaterialsBinding, size, data);
 
 		return true;
+	}
+
+	void Renderer::UpdateCascades()
+	{
+		float cascadeSplits[SHADOW_MAP_CASCADE_COUNT];
+
+		float nearClip = s_Data->m_NearClip;
+		float farClip = s_Data->m_FarClip;
+		float clipRange = farClip - nearClip;
+
+		float minZ = nearClip;
+		float maxZ = nearClip + clipRange;
+
+		float range = maxZ - minZ;
+		float ratio = maxZ / minZ;
+		float cascadeSplitLambda = 0.95f;
+
+		// Calculate split depths based on view camera frustum
+		// Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
+		for (uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++) {
+			float p = (i + 1) / static_cast<float>(SHADOW_MAP_CASCADE_COUNT);
+			float log = minZ * std::pow(ratio, p);
+			float uniform = minZ + range * p;
+			float d = cascadeSplitLambda * (log - uniform) + uniform;
+			cascadeSplits[i] = (d - nearClip) / clipRange;
+		}
+
+		// Calculate orthographic projection matrix for each cascade
+		float lastSplitDist = 0.0;
+		for (uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++) {
+			float splitDist = cascadeSplits[i];
+
+			glm::vec3 frustumCorners[8] = {
+				glm::vec3(-1.0f,  1.0f, -1.0f),
+				glm::vec3(1.0f,  1.0f, -1.0f),
+				glm::vec3(1.0f, -1.0f, -1.0f),
+				glm::vec3(-1.0f, -1.0f, -1.0f),
+				glm::vec3(-1.0f,  1.0f,  1.0f),
+				glm::vec3(1.0f,  1.0f,  1.0f),
+				glm::vec3(1.0f, -1.0f,  1.0f),
+				glm::vec3(-1.0f, -1.0f,  1.0f),
+			};
+
+			// Project frustum corners into world space
+			glm::mat4 invCam = glm::inverse(s_Data->m_SceneData.Projection * s_Data->m_SceneData.View);
+			for (uint32_t i = 0; i < 8; i++) {
+				glm::vec4 invCorner = invCam * glm::vec4(frustumCorners[i], 1.0f);
+				frustumCorners[i] = invCorner / invCorner.w;
+			}
+
+			for (uint32_t i = 0; i < 4; i++) {
+				glm::vec3 dist = frustumCorners[i + 4] - frustumCorners[i];
+				frustumCorners[i + 4] = frustumCorners[i] + (dist * splitDist);
+				frustumCorners[i] = frustumCorners[i] + (dist * lastSplitDist);
+			}
+
+			// Get frustum center
+			glm::vec3 frustumCenter = glm::vec3(0.0f);
+			for (uint32_t i = 0; i < 8; i++) {
+				frustumCenter += frustumCorners[i];
+			}
+			frustumCenter /= 8.0f;
+
+			float radius = 0.0f;
+			for (uint32_t i = 0; i < 8; i++) {
+				float distance = glm::length(frustumCorners[i] - frustumCenter);
+				radius = glm::max(radius, distance);
+			}
+			radius = std::ceil(radius * 16.0f) / 16.0f;
+
+			glm::vec3 maxExtents = glm::vec3(radius);
+			glm::vec3 minExtents = -maxExtents;
+
+			glm::vec3 lightDir = normalize(-s_Data->m_DirectionalLights[0].Position);
+			glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f, maxExtents.z - minExtents.z);
+
+			// Store split distance and matrix in cascade
+
+			s_Data->m_SceneData.CascadeSplits[i] = (s_Data->m_NearClip + splitDist * clipRange);
+			s_Data->m_Cascades.ViewProjMatrix[i] = lightOrthoMatrix * lightViewMatrix;
+
+			lastSplitDist = cascadeSplits[i];
+		}
 	}
 
 	void Renderer::Reset()

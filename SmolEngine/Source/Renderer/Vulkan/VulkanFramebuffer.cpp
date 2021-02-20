@@ -192,6 +192,12 @@ namespace SmolEngine
 			attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 			attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
+			m_ClearAttachments.resize(1);
+			m_ClearValues.resize(1);
+			m_ClearValues[0].depthStencil = { 1.0f, 0 };
+			m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+			m_ClearAttachments[0].clearValue.depthStencil = { 1.0f, 0 };
+
 			VkAttachmentReference depthReference = {};
 			depthReference.attachment = 0;
 			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -485,6 +491,11 @@ namespace SmolEngine
 		return m_MSAASamples;
 	}
 
+	const uint32_t VulkanFramebuffer::GetAttachmentCount() const
+	{
+		return static_cast<uint32_t>(m_Attachments.size());
+	}
+
 	Attachment* VulkanFramebuffer::GetAttachment(uint32_t index)
 	{
 		if (m_Specification.bUseMSAA)
@@ -500,6 +511,11 @@ namespace SmolEngine
 			return &m_Attachments[it->second];
 
 		return nullptr;
+	}
+
+	Attachment* VulkanFramebuffer::GetDethAttachment()
+	{
+		return &m_DepthAttachment;
 	}
 
 	void VulkanFramebuffer::SetClearColors(const glm::vec4& clearColors)
@@ -533,6 +549,11 @@ namespace SmolEngine
 		uint32_t index;
 		m_Specification.bTargetsSwapchain ? index = VulkanContext::GetSwapchain().GetCurrentBufferIndex() :
 			index = 0;
+		return m_VkFrameBuffers[index];
+	}
+
+	const VkFramebuffer VulkanFramebuffer::GetVkFramebuffer(uint32_t index) const
+	{
 		return m_VkFrameBuffers[index];
 	}
 }

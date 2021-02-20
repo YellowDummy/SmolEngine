@@ -72,7 +72,7 @@ namespace SmolEngine
 
 		// Render Pass
 
-		void BeginRenderPass();
+		void BeginRenderPass(uint32_t framebufferIndex = 0);
 
 		void EndRenderPass();
 

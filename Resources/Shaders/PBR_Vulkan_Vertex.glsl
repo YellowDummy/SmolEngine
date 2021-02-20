@@ -30,6 +30,7 @@ struct SceneData
 	mat4 skyBoxMatrix;
 	vec4 camPos;
 	vec4 params;
+	vec4 cascadeSplits;
 };
 
 layout(std140, binding = 25) readonly buffer ShaderDataBuffer
@@ -84,7 +85,8 @@ layout (location = 20) out uint outDirectionalLightCount;
 layout (location = 21) out uint outPointLightCount;
 
 layout (location = 22) out vec4 outColor;
-layout (location = 23) out mat3 outTBN;
+layout (location = 23) out vec4 outCascadeSplits;
+layout (location = 24) out mat3 outTBN;
 
 void main()
 {
@@ -101,6 +103,7 @@ void main()
 	outAmbient = sceneData.data.params.z;
 	outDirectionalLightCount = directionalLights;
 	outPointLightCount = pointLights;
+	outCascadeSplits = sceneData.data.cascadeSplits;
 
 	// TBN matrix
 	vec3 N = normalize(outNormal);

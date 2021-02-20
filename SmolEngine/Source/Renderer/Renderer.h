@@ -8,6 +8,16 @@ namespace SmolEngine
 	class Mesh;
 	class Framebuffer;
 
+	struct BeginSceneInfo
+	{
+		float          nearClip;
+		float          farClip;
+
+		glm::vec3      pos;
+		glm::mat4      proj;
+		glm::mat4      view;
+	};
+
 	class Renderer
 	{
 	public:
@@ -20,7 +30,7 @@ namespace SmolEngine
 
 		// Main
 
-		static void BeginScene(const glm::mat4& proj, const glm::mat4& view, const glm::vec3& camPos);
+		static void BeginScene(const BeginSceneInfo& info);
 
 		static void EndScene();
 
@@ -52,6 +62,8 @@ namespace SmolEngine
 		static bool OnNewLevelLoaded();
 
 		static bool UpdateMaterials();
+
+		static void UpdateCascades();
 
 		static void Reset();
 

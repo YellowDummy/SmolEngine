@@ -69,15 +69,22 @@ namespace SmolEngine
 
 		const VkFramebuffer GetCurrentVkFramebuffer() const;
 
+		const VkFramebuffer GetVkFramebuffer(uint32_t index) const;
+
 		static VkFormat GetAttachmentFormat(AttachmentFormat format);
 
 		VkRenderPass GetRenderPass() const;
 
 		VkSampleCountFlagBits GetMSAASamples() const;
 
+		const uint32_t GetAttachmentCount() const;
+
 		Attachment* GetAttachment(uint32_t index = 0);
 
 		Attachment* GetAttachment(std::string& name);
+
+		Attachment* GetDethAttachment();
+
 
 	private:
 

@@ -27,7 +27,7 @@ namespace SmolEngine
 
 		/// Static Helpers
 
-		static VkImage CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,
+		static VkImage CreateVkImage(uint32_t width, uint32_t height, int32_t mipLevels,
 			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage,
 			VkDeviceMemory& imageMemory, uint32_t arrayLayers = 1);
@@ -77,7 +77,7 @@ namespace SmolEngine
 
 	private:
 
-		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipMaps, VkImageSubresourceRange& range);
+		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, int32_t mipMaps, VkImageSubresourceRange& range);
 
 		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, const void* data);
 

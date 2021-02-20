@@ -288,9 +288,16 @@ namespace SmolEngine
 
 		Renderer::SetGamma(m_Gamma);
 		Renderer::SetExposure(m_Exposure);
-		Renderer::BeginScene(m_EditorCamera->GetProjection(), m_EditorCamera->GetViewMatrix(), m_EditorCamera->GetPosition());
-		{
 
+		static BeginSceneInfo info;
+		info.view = m_EditorCamera->GetViewMatrix();
+		info.proj = m_EditorCamera->GetProjection();
+		info.pos = m_EditorCamera->GetPosition();
+		info.nearClip = m_EditorCamera->GetNearClip();
+		info.farClip = m_EditorCamera->GetFarClip();
+
+		Renderer::BeginScene(info);
+		{
 			Renderer::SubmitPointLight({ 0, 0, 0 }, { 0.2, 0.3, 0.3, 1.0 }, 0.5f, 0.1f, 0.0080f);
 			Renderer::SubmitDirectionalLight(m_Pos, m_Color);
 

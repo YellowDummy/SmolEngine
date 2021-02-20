@@ -31,7 +31,7 @@ namespace SmolEngine
 		Ref<Mesh>           m_CubeMesh = nullptr;
 		Ref<Mesh>           m_SponzaMesh = nullptr;
 
-		glm::vec3           m_Pos = glm::vec3(-15.0, -15 * 0.5f, -15);
+		glm::vec3           m_Pos = glm::vec3(-15.0, 20, -15);
 		glm::vec4           m_Color = glm::vec4(1);
 		float               m_Ambient = 1.0f;
 		float               m_Gamma = 2.5f;

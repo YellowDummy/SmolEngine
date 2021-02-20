@@ -94,7 +94,7 @@ namespace SmolEngine
 			m_VextexArray = nullptr;
 	}
 
-	void GraphicsPipeline::BeginRenderPass()
+	void GraphicsPipeline::BeginRenderPass(uint32_t framebufferIndex)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_Shader->Bind();
@@ -110,7 +110,7 @@ namespace SmolEngine
 		{
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 			renderPassBeginInfo.renderPass = vkframebuffer.GetRenderPass();
-			renderPassBeginInfo.framebuffer = vkframebuffer.GetCurrentVkFramebuffer();
+			renderPassBeginInfo.framebuffer = framebufferIndex == 0 ? vkframebuffer.GetCurrentVkFramebuffer(): vkframebuffer.GetVkFramebuffer(framebufferIndex);
 			renderPassBeginInfo.renderArea.extent.width = width;
 			renderPassBeginInfo.renderArea.extent.height = height;
 			renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(vkframebuffer.GetClearValues().size());

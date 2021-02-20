@@ -251,7 +251,7 @@ namespace SmolEngine
 		ktxTexture_Destroy(ktxTexture);
 	}
 
-	VkImage VulkanTexture::CreateVkImage(uint32_t width, uint32_t height, uint32_t mipLevels,
+	VkImage VulkanTexture::CreateVkImage(uint32_t width, uint32_t height, int32_t mipLevels,
 		VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
 		VkImageUsageFlags usage, VkDeviceMemory& imageMemory, uint32_t arrayLayers)
 	{
@@ -420,7 +420,7 @@ namespace SmolEngine
 		CreateSamplerAndImageView(1);
 	}
 
-	void VulkanTexture::GenerateMipMaps(VkImage image, int32_t width, int32_t height, uint32_t mipLevel, VkImageSubresourceRange& range)
+	void VulkanTexture::GenerateMipMaps(VkImage image, int32_t width, int32_t height, int32_t mipLevel, VkImageSubresourceRange& range)
 	{
 		VkCommandBuffer blitCmd = VulkanContext::GetCommandBuffer().CreateSingleCommandBuffer();
 		{
