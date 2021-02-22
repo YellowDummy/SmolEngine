@@ -30,11 +30,12 @@ layout (location = 21) flat in uint inPointLightCount;
 
 layout (location = 22) in vec4 inColor;
 layout (location = 23) in vec4 inCascadeSplits;
-layout (location = 24) in mat3 inTBN;
+layout (location = 24) in vec3 inViewPos;
+layout (location = 25) in mat3 inTBN;
 
 const mat4 biasMat = mat4( 
 	0.5, 0.0, 0.0, 0.0,
-	0.0, 0.5, 0.0, 0.0,
+	0.0, -0.5, 0.0, 0.0,
 	0.0, 0.0, 1.0, 0.0,
 	0.5, 0.5, 0.0, 1.0 
 );
@@ -272,20 +273,21 @@ void main()
 		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * 0.8);
 
 		uint cascadeIndex = 0;
-		for(uint b = 0; b < SHADOW_MAP_CASCADE_COUNT - 1; ++b) 
-		{
-		if(inCameraPos.z < inCascadeSplits[b]) 
-		{	
+	    for(uint b = 0; b < SHADOW_MAP_CASCADE_COUNT - 1; ++b) 
+	    {
+	       if(inViewPos.z < inCascadeSplits[b]) 
+	       {	
 			cascadeIndex = b + 1;
-		}
-		}
-		
-		// Depth compare for shadowing
+	       }
+	    }
+
+	    // Depth compare for shadowing
 	    vec4 shadowCoord = (biasMat * cascadeViewProjMat.viewProj[cascadeIndex]) * vec4(inWorldPos, 1.0);
-		float shadow = filterPCF(shadowCoord / shadowCoord.w, cascadeIndex);
+	    float shadow =  filterPCF(shadowCoord / shadowCoord.w, cascadeIndex);
 
 		// Total contribution for this light.
-		directLighting += (diffuseBRDF + specularBRDF) * Lradiance * cosLi * shadow;
+		directLighting += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+		directLighting *= shadow;
 	}
 
 	// Point lighting calculation

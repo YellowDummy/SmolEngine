@@ -86,7 +86,7 @@ namespace SmolEngine
 		{
 			rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 			rasterizationState.polygonMode = GetVkPolygonMode(mode);
-			rasterizationState.cullMode = GetVkCullMode(mode);
+			rasterizationState.cullMode = GetVkCullMode(m_PipelineSpecification->PipelineCullMode);
 			rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 			rasterizationState.depthClampEnable = VulkanContext::GetDevice().GetDeviceFeatures()->depthClamp;
 			rasterizationState.rasterizerDiscardEnable = VK_FALSE;
@@ -505,32 +505,18 @@ namespace SmolEngine
 	{
 		switch (type)
 		{
-		case SmolEngine::DataTypes::None:
-			break;
-		case SmolEngine::DataTypes::Float:
-			return VK_FORMAT_R32_SFLOAT;
-		case SmolEngine::DataTypes::Float2:
-			return VK_FORMAT_R32G32_SFLOAT;
-		case SmolEngine::DataTypes::Float3:
-			return VK_FORMAT_R32G32B32_SFLOAT;
-		case SmolEngine::DataTypes::Float4:
-			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case SmolEngine::DataTypes::Mat3:
-			return VK_FORMAT_R32G32B32_SFLOAT;
-		case SmolEngine::DataTypes::Mat4:
-			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case SmolEngine::DataTypes::Int:
-			return VK_FORMAT_R32_SINT;
-		case SmolEngine::DataTypes::Int2:
-			return VK_FORMAT_R32G32_SINT;
-		case SmolEngine::DataTypes::Int3:
-			return VK_FORMAT_R32G32B32_SINT;
-		case SmolEngine::DataTypes::Int4:
-			return VK_FORMAT_R32G32B32A32_SINT;
-		case SmolEngine::DataTypes::Bool:
-			return VK_FORMAT_R32_SINT;
-		default:
-			break;
+		case SmolEngine::DataTypes::None:			break;
+		case SmolEngine::DataTypes::Float:			return VK_FORMAT_R32_SFLOAT;
+		case SmolEngine::DataTypes::Float2:			return VK_FORMAT_R32G32_SFLOAT;
+		case SmolEngine::DataTypes::Float3:			return VK_FORMAT_R32G32B32_SFLOAT;
+		case SmolEngine::DataTypes::Float4:			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case SmolEngine::DataTypes::Mat3:			return VK_FORMAT_R32G32B32_SFLOAT;
+		case SmolEngine::DataTypes::Mat4:			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case SmolEngine::DataTypes::Int:			return VK_FORMAT_R32_SINT;
+		case SmolEngine::DataTypes::Int2:			return VK_FORMAT_R32G32_SINT;
+		case SmolEngine::DataTypes::Int3:			return VK_FORMAT_R32G32B32_SINT;
+		case SmolEngine::DataTypes::Int4:			return VK_FORMAT_R32G32B32A32_SINT;
+		case SmolEngine::DataTypes::Bool:			return VK_FORMAT_R32_SINT;
 		}
 
 		return VK_FORMAT_R32G32B32_SFLOAT;
@@ -540,14 +526,10 @@ namespace SmolEngine
 	{
 		switch (mode)
 		{
-		case SmolEngine::DrawMode::Triangle:
-			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		case SmolEngine::DrawMode::Line:
-			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
-		case SmolEngine::DrawMode::Fan:
-			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
-		default:
-			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case SmolEngine::DrawMode::Triangle:	    return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case SmolEngine::DrawMode::Line:			return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+		case SmolEngine::DrawMode::Fan:			    return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
+		default:			                        return VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		}
 	}
 
@@ -555,29 +537,21 @@ namespace SmolEngine
 	{
 		switch (mode)
 		{
-		case SmolEngine::DrawMode::Triangle:
-			return VkPolygonMode::VK_POLYGON_MODE_FILL;
-		case SmolEngine::DrawMode::Line:
-			return VkPolygonMode::VK_POLYGON_MODE_LINE;
-		case SmolEngine::DrawMode::Fan:
-			return VkPolygonMode::VK_POLYGON_MODE_LINE;
-		default:
-			return VkPolygonMode::VK_POLYGON_MODE_FILL;
+		case SmolEngine::DrawMode::Triangle:		return VkPolygonMode::VK_POLYGON_MODE_FILL;
+		case SmolEngine::DrawMode::Line:			return VkPolygonMode::VK_POLYGON_MODE_LINE;
+		case SmolEngine::DrawMode::Fan:			    return VkPolygonMode::VK_POLYGON_MODE_LINE;
+		default:			                        return VkPolygonMode::VK_POLYGON_MODE_FILL;
 		}
 	}
 
-	VkCullModeFlags VulkanPipeline::GetVkCullMode(DrawMode mode)
+	VkCullModeFlags VulkanPipeline::GetVkCullMode(CullMode mode)
 	{
 		switch (mode)
 		{
-		case SmolEngine::DrawMode::Triangle:
-			return VK_CULL_MODE_BACK_BIT;
-		case SmolEngine::DrawMode::Line:
-			return VK_CULL_MODE_BACK_BIT;
-		case SmolEngine::DrawMode::Fan:
-			return VK_CULL_MODE_BACK_BIT;
-		default:
-			return VK_CULL_MODE_BACK_BIT;
+		case SmolEngine::CullMode::Back: 			return VK_CULL_MODE_BACK_BIT;
+		case SmolEngine::CullMode::Front: 			return VK_CULL_MODE_FRONT_BIT;
+		case SmolEngine::CullMode::None: 			return VK_CULL_MODE_NONE;
+		default:			                        return VK_CULL_MODE_BACK_BIT;
 		}
 	}
 }

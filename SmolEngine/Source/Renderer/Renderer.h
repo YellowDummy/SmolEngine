@@ -18,6 +18,15 @@ namespace SmolEngine
 		glm::mat4      view;
 	};
 
+	struct DebugViewInfo
+	{
+		bool           bShowCascades = false;
+		bool           bShowMRT = false;
+
+		uint32_t       mrtAttachmentIndex = 0;
+		uint32_t       cascadeIndex = 0;
+	};
+
 	class Renderer
 	{
 	public:
@@ -45,11 +54,16 @@ namespace SmolEngine
 
 		// Setters
 
+		static void SetDebugViewParams(DebugViewInfo& info);
+
+		static void SetActiveDebugView(bool value);
+
 		static void SetAmbientMixer(float value);
+
+		static void SetExposure(float value);
 
 		static void SetGamma(float value);
 
-		static void SetExposure(float value);
 
 		// Getters
 

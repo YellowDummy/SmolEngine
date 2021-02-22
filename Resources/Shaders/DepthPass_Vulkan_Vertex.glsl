@@ -72,5 +72,5 @@ void main()
 	outUV = a_UV;
 	outColor = a_Color;
 
-	gl_Position =  cascadeViewProjMat.viewProj[cascadeIndex] * vec4(pos, 1.0);
+	gl_Position = cascadeViewProjMat.viewProj[cascadeIndex] * vec4(pos, 1.0);
 }

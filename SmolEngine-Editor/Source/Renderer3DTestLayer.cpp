@@ -270,6 +270,11 @@ namespace SmolEngine
 	{
 		ImGui::Begin("Settings");
 
+		ImGui::Checkbox("Debug View", &m_EnableDebugView);
+		if(m_EnableDebugView)
+			ImGui::DragInt("CascadeIndex", &m_Cuscade, 0.1f, 0, 3);
+
+		ImGui::NewLine();
 		ImGui::InputFloat("Metallic", &MaterialLibrary::GetSinglenton()->GetMaterial(std::string("Test"))->m_MaterialProperties.PBRValues.x);
 		ImGui::InputFloat("Roughness", &MaterialLibrary::GetSinglenton()->GetMaterial(std::string("Test"))->m_MaterialProperties.PBRValues.y);
 
@@ -286,8 +291,10 @@ namespace SmolEngine
 	{
 		m_EditorCamera->OnUpdate(deltaTime);
 
+		// States
 		Renderer::SetGamma(m_Gamma);
 		Renderer::SetExposure(m_Exposure);
+		Renderer::SetActiveDebugView(m_EnableDebugView);
 
 		static BeginSceneInfo info;
 		info.view = m_EditorCamera->GetViewMatrix();
@@ -296,8 +303,15 @@ namespace SmolEngine
 		info.nearClip = m_EditorCamera->GetNearClip();
 		info.farClip = m_EditorCamera->GetFarClip();
 
+		static DebugViewInfo debugView;
+		debugView.bShowCascades = true;
+		debugView.cascadeIndex = m_Cuscade;
+
 		Renderer::BeginScene(info);
 		{
+			if (m_EnableDebugView)
+				Renderer::SetDebugViewParams(debugView);
+
 			Renderer::SubmitPointLight({ 0, 0, 0 }, { 0.2, 0.3, 0.3, 1.0 }, 0.5f, 0.1f, 0.0080f);
 			Renderer::SubmitDirectionalLight(m_Pos, m_Color);
 

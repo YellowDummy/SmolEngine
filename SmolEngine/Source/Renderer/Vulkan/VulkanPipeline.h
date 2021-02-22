@@ -11,6 +11,7 @@ namespace SmolEngine
 	class VulkanTexture;
 	class VulkanShader;
 	enum class DrawMode : uint16_t;
+	enum class CullMode : uint16_t;
 
 	struct GraphicsPipelineCreateInfo;
 
@@ -62,7 +63,7 @@ namespace SmolEngine
 
 		VkPolygonMode GetVkPolygonMode(DrawMode mode);
 
-		VkCullModeFlags GetVkCullMode(DrawMode mode);
+		VkCullModeFlags GetVkCullMode(CullMode mode);
 
 	private:
 

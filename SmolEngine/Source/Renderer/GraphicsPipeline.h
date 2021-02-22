@@ -26,6 +26,13 @@ namespace SmolEngine
 		Fan
 	};
 
+	enum class CullMode : uint16_t
+	{
+		None,
+		Back,
+		Front
+	};
+
 	enum class PipelineCreateResult : uint16_t
 	{
 		SUCCESS,
@@ -39,14 +46,15 @@ namespace SmolEngine
 	{
 		//TODO: Add flags
 
+		CullMode                             PipelineCullMode = CullMode::Back;
+
 		bool                                 bDepthTestEnabled = true;
 
 		float                                MinDepth = 0.0f;
 		float                                MaxDepth = 1.0f;
+		uint32_t                             DescriptorSets = 1;
 
 		Ref<Framebuffer>                     TargetFramebuffer = nullptr;
-
-		uint32_t                             DescriptorSets = 1;
 		GraphicsPipelineShaderCreateInfo*    ShaderCreateInfo = nullptr;
 		std::string                          PipelineName = "";
 		std::vector<DrawMode>                PipelineDrawModes = { DrawMode::Triangle };

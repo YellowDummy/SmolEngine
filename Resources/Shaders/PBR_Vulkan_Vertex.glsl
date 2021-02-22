@@ -86,7 +86,9 @@ layout (location = 21) out uint outPointLightCount;
 
 layout (location = 22) out vec4 outColor;
 layout (location = 23) out vec4 outCascadeSplits;
-layout (location = 24) out mat3 outTBN;
+layout (location = 24) out vec3 outViewPos;
+
+layout (location = 25) out mat3 outTBN;
 
 void main()
 {
@@ -104,6 +106,7 @@ void main()
 	outDirectionalLightCount = directionalLights;
 	outPointLightCount = pointLights;
 	outCascadeSplits = sceneData.data.cascadeSplits;
+	outViewPos = vec4( sceneData.data.view * vec4(outWorldPos, 1.0)).xyz;
 
 	// TBN matrix
 	vec3 N = normalize(outNormal);
