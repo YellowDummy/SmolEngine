@@ -4,6 +4,7 @@
 #include "Core/FilePaths.h"
 
 #include "Renderer/EditorCamera.h"
+#include "Renderer/GraphicsContext.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/MaterialLibrary.h"
 
@@ -14,14 +15,15 @@ namespace SmolEngine
 {
 	void Renderer3DTestLayer::OnAttach()
 	{
-		// Init Renderer
-		Renderer::Init();
+		GraphicsContextInitInfo GCInfo = {};
+		GCInfo.bMSAA = true;
+		GCInfo.bTargetsSwapchain = true;
+		assert(GraphicsContext::Init(GCInfo) == true);
 
 		// Editor Camera
 		EditorCameraCreateInfo cameraCI = {};
 		{
 			m_EditorCamera = std::make_shared<EditorCamera>(&cameraCI);
-			m_EditorCamera->SetFramebuffers({ Renderer::GetFramebuffer() });
 		}
 
 		// Create Materials
@@ -49,17 +51,6 @@ namespace SmolEngine
 
 		defaultID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
-		// Floor
-		MaterialCI = {};
-		MaterialCI.Name = "Floor";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "rusty_metal_7_basecolor.png");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "rusty_metal_7_normal.png");
-		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "rusty_metal_7_metallic.png");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "rusty_metal_7_roughness.png");
-		MaterialCI.Textures[MaterialTexture::AO] = Texture::Create(Resources + "rusty_metal_7_ambientocclusion.png");
-
-		floorID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
-
 		// Test
 		MaterialCI = {};
 		MaterialCI.Name = "Test";
@@ -83,7 +74,7 @@ namespace SmolEngine
 		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Albedo.PNG");
 		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Normal.PNG");
 		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Roughness.PNG");
-		MaterialCI.Metallic = 1.0f;
+		MaterialCI.Metallic = 0.2f;
 
 		sponzaBase = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
@@ -206,8 +197,7 @@ namespace SmolEngine
 
 		// Set Materials
 		m_ChairMesh->SetMaterialID(chairID, true);
-		m_CubeMesh->SetMaterialID(floorID, true);
-		m_SponzaMesh->SetMaterialID(defaultID, true);
+		m_CubeMesh->SetMaterialID(defaultID, true);
 
 		m_SponzaMesh->SetMaterialID(sponzaBase);
 
@@ -304,24 +294,24 @@ namespace SmolEngine
 		info.farClip = m_EditorCamera->GetFarClip();
 
 		static DebugViewInfo debugView;
-		debugView.bShowCascades = true;
-		debugView.cascadeIndex = m_Cuscade;
+		debugView.bShowOmniCube = true;
 
 		Renderer::BeginScene(info);
 		{
 			if (m_EnableDebugView)
 				Renderer::SetDebugViewParams(debugView);
 
-			Renderer::SubmitPointLight({ 0, 0, 0 }, { 0.2, 0.3, 0.3, 1.0 }, 0.5f, 0.1f, 0.0080f);
+			//Renderer::SubmitPointLight({ 0, 0, 0 }, { 0.2, 0.3, 0.3, 1.0 }, 0.5f, 0.1f, 0.0080f);
 			Renderer::SubmitDirectionalLight(m_Pos, m_Color);
 
-			Renderer::SubmitMesh({ 0, -4, 0 }, { 0, 0, 0 }, { 100, 1, 100 }, m_CubeMesh);
+			Renderer::SubmitMesh({ 0, -4, 0 }, { 0.0f, 0, 0 }, { 100, 1, 100 }, m_CubeMesh);
 			Renderer::SubmitMesh({ 0, 20, -50 }, { 0, 0, 0 }, { 10, 10,10 }, m_CubeMesh, m_TestMaterial);
+
 			Renderer::SubmitMesh({ 1, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
 			Renderer::SubmitMesh({ -20, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
 			Renderer::SubmitMesh({ 20, 1, 1 }, { 0, 0, 0 }, { 0.2, 0.2, 0.2 }, m_ChairMesh);
 
-			Renderer::SubmitMesh({ 0, 1, 200 }, { 0, 0, 0 }, { 5, 5, 5 }, m_SponzaMesh);
+			Renderer::SubmitMesh({ 0, 50, -200 }, { 0, 0, 0 }, {5, 5,5 }, m_SponzaMesh);
 		}
 		Renderer::EndScene();
 	}

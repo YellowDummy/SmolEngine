@@ -97,19 +97,25 @@ namespace SmolEngine
 				usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 
 				auto& it = shader->m_Info.StorageBuffersSizes.find(buffer.BindingPoint);
-				if (it == shader->m_Info.StorageBuffersSizes.end() && !VulkanBufferPool::GetSingleton()->IsBindingExist(buffer.BindingPoint))
+				if (it != shader->m_Info.StorageBuffersSizes.end())
+					dataSize = it->second;
+				else
 				{
-					NATIVE_ERROR("Storage buffer dataSize must be declared inside GraphicsPipelineShaderCreateInfo!");
-					abort();
+					if (!VulkanBufferPool::GetSingleton()->IsBindingExist(buffer.BindingPoint))
+					{
+						NATIVE_ERROR("Storage buffer dataSize must be declared inside GraphicsPipelineShaderCreateInfo!");
+						continue;
+					}
 				}
 
-				dataSize = it->second;
 			}
 
 			VulkanBufferPool::GetSingleton()->Add(dataSize, buffer.BindingPoint, mem,
 				usage, descriptorBufferInfo);
+
 			m_WriteSets.push_back(CreateWriteSet(m_DescriptorSet,
 				buffer.BindingPoint, &descriptorBufferInfo, type));
+
 			vkUpdateDescriptorSets(m_Device, 1, &m_WriteSets.back(), 0, nullptr);
 
 			NATIVE_WARN("Created " + buffer.ObjectName + " {}: Members Count: {}, Binding Point: {}",

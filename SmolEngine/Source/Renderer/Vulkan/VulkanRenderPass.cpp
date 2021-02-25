@@ -26,6 +26,8 @@ namespace SmolEngine
 			VkImageLayout layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			if (framebufferSpec->bTargetsSwapchain)
 				layout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+			if (framebufferSpec->bUseMSAA && !framebufferSpec->bTargetsSwapchain)
+				layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 			// attachment
 			attachments[lastAttachmentIndex].format = VulkanFramebuffer::GetAttachmentFormat(framebufferSpec->Attachments[i].Format);
@@ -94,14 +96,14 @@ namespace SmolEngine
 			subpass.pColorAttachments = colorReferences.data();
 			subpass.pDepthStencilAttachment = depthReferences.data();
 
-			if (framebufferSpec->bUseMSAA)
+			if (framebufferSpec->bUseMSAA && renderPassInfo->NumResolveAttachments > 0)
 				subpass.pResolveAttachments = resolveReferences.data();
 		}
 
-		std::vector<VkSubpassDependency> dependencies(framebufferSpec->NumDependencies * 2);
+		std::vector<VkSubpassDependency> dependencies(framebufferSpec->NumSubpassDependencies * 2);
 		{
 			uint32_t subPassIndex = 0;
-			for (uint32_t i = 0; i < framebufferSpec->NumDependencies * 2; ++i)
+			for (uint32_t i = 0; i < framebufferSpec->NumSubpassDependencies * 2; ++i)
 			{
 				dependencies[i].srcSubpass = VK_SUBPASS_EXTERNAL;
 				dependencies[i].dstSubpass = subPassIndex;

@@ -20,11 +20,10 @@ namespace SmolEngine
 
 	struct DebugViewInfo
 	{
-		bool           bShowCascades = false;
+		bool           bShowOmniCube = false;
 		bool           bShowMRT = false;
 
 		uint32_t       mrtAttachmentIndex = 0;
-		uint32_t       cascadeIndex = 0;
 	};
 
 	class Renderer
@@ -64,7 +63,6 @@ namespace SmolEngine
 
 		static void SetGamma(float value);
 
-
 		// Getters
 
 		static Ref<Framebuffer> GetFramebuffer();
@@ -76,8 +74,6 @@ namespace SmolEngine
 		static bool OnNewLevelLoaded();
 
 		static bool UpdateMaterials();
-
-		static void UpdateCascades();
 
 		static void Reset();
 
@@ -94,6 +90,8 @@ namespace SmolEngine
 		static void InitPipelines();
 
 		static void InitFramebuffers();
+
+		static glm::mat4 CalculateDepthMVP(const glm::vec4& lightPos);
 
 	private:
 

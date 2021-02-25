@@ -1,5 +1,5 @@
 #version 450
-#define SHADOW_MAP_CASCADE_COUNT 4
+#define ambient 0.1
 
 layout (location = 0)  in vec3 inWorldPos;
 layout (location = 1)  in vec3 inNormal;
@@ -29,16 +29,9 @@ layout (location = 20) flat in uint inDirectionalLightCount;
 layout (location = 21) flat in uint inPointLightCount;
 
 layout (location = 22) in vec4 inColor;
-layout (location = 23) in vec4 inCascadeSplits;
-layout (location = 24) in vec3 inViewPos;
+layout (location = 23) in vec4 inShadowCoord;
+layout (location = 24) in vec4 inRawPos;
 layout (location = 25) in mat3 inTBN;
-
-const mat4 biasMat = mat4( 
-	0.5, 0.0, 0.0, 0.0,
-	0.0, -0.5, 0.0, 0.0,
-	0.0, 0.0, 1.0, 0.0,
-	0.5, 0.5, 0.0, 1.0 
-);
 
 struct DirectionalLightBuffer
 {
@@ -53,16 +46,6 @@ struct PointLightBuffer
 	vec4 params;
 };
 
-struct CascadeViewProjMat
-{
-	mat4[SHADOW_MAP_CASCADE_COUNT] viewProj;
-};
-
-layout (binding = 1) uniform UBO 
-{
-	CascadeViewProjMat cascadeViewProjMat;
-};
-
 layout(std140, binding = 28) readonly buffer DirectionalLightStorage
 {   
 	DirectionalLightBuffer directionalLights[];
@@ -73,11 +56,11 @@ layout(std140, binding = 29) readonly buffer PointLightStorage
 	PointLightBuffer pointLights[];
 };
 
+layout (binding = 1) uniform sampler2D shadowMap;
 layout (binding = 2) uniform samplerCube samplerIrradiance;
 layout (binding = 3) uniform sampler2D samplerBRDFLUT;
 layout (binding = 4) uniform samplerCube prefilteredMap;
 
-layout (binding = 23) uniform sampler2DArray shadowMap;
 layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 layout (location = 0) out vec4 outColor;
@@ -87,33 +70,30 @@ const vec3 Fdielectric = vec3(0.04);
 const float PI = 3.141592;
 const float Epsilon = 0.00001;
 
-#define ambient 0.3
-
 vec3 GetAlbedro()
 {
 	vec3 alb = inUseAlbedroMap == 1 ? texture(texturesMap[inAlbedroMapIndex], inUV).rgb: inColor.rgb;
 	return pow(alb, vec3(2.2));
 }
 
-float textureProj(vec4 shadowCoord, vec2 offset, uint cascadeIndex)
+float textureProj(vec4 shadowCoord, vec2 off)
 {
 	float shadow = 1.0;
-	float bias = 0.005;
-
-	if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) {
-		float dist = texture(shadowMap, vec3(shadowCoord.st + offset, cascadeIndex)).r;
-		if (shadowCoord.w > 0 && dist < shadowCoord.z - bias) {
+	if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) 
+	{
+		float dist = texture( shadowMap, shadowCoord.st + off ).r;
+		if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
+		{
 			shadow = ambient;
 		}
 	}
 	return shadow;
-
 }
 
-float filterPCF(vec4 sc, uint cascadeIndex)
+float filterPCF(vec4 sc)
 {
-	ivec2 texDim = textureSize(shadowMap, 0).xy;
-	float scale = 0.75;
+	ivec2 texDim = textureSize(shadowMap, 0);
+	float scale = 1.5;
 	float dx = scale * 1.0 / float(texDim.x);
 	float dy = scale * 1.0 / float(texDim.y);
 
@@ -121,11 +101,14 @@ float filterPCF(vec4 sc, uint cascadeIndex)
 	int count = 0;
 	int range = 1;
 	
-	for (int x = -range; x <= range; x++) {
-		for (int y = -range; y <= range; y++) {
-			shadowFactor += textureProj(sc, vec2(dx*x, dy*y), cascadeIndex);
+	for (int x = -range; x <= range; x++)
+	{
+		for (int y = -range; y <= range; y++)
+		{
+			shadowFactor += textureProj(sc, vec2(dx*x, dy*y));
 			count++;
 		}
+	
 	}
 	return shadowFactor / count;
 }
@@ -208,7 +191,7 @@ void main()
     // Ambient lighting (IBL).
 	vec3 ambientLighting;
 	{
-		// Sample diffuse irradiance at normal direction.
+        // Sample diffuse irradiance at normal direction.
 		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
 		vec3 modifier = vec3(10, 10, 10);
 
@@ -226,7 +209,7 @@ void main()
 
 		// Sample pre-filtered specular reflection environment at correct mipmap level.
 		int specularTextureLevels = textureQueryLevels(prefilteredMap);
-		vec3 specularIrradiance = textureLod(prefilteredMap, Lr, roughness * specularTextureLevels).rgb;
+		vec3 specularIrradiance = textureLod(prefilteredMap, -Lr, roughness * specularTextureLevels).rgb;
 
 		// Split-sum approximation factors for Cook-Torrance specular BRDF.
 		vec2 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, roughness)).rg;
@@ -242,14 +225,14 @@ void main()
 	vec3 directLighting = vec3(0);
 	for(int i=0; i< inDirectionalLightCount; ++i)
 	{
-		vec3 Li = normalize(directionalLights[i].position.xyz);
+		vec3 L = normalize(directionalLights[0].position.xyz - inRawPos.xyz);
 		vec3 Lradiance = directionalLights[i].color.rgb;
 
 		// Half-vector between Li and Lo.
-		vec3 Lh = normalize(Li + Lo);
+		vec3 Lh = normalize(Lo + L);
 
 		// Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0, dot(N, Li));
+		float cosLi = max(0.0, dot(N, L));
 		float cosLh = max(0.0, dot(N, Lh));
 
 		// Calculate Fresnel term for direct lighting. 
@@ -271,24 +254,13 @@ void main()
 
 		// Cook-Torrance specular microfacet BRDF.
 		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * 0.8);
-
-		uint cascadeIndex = 0;
-	    for(uint b = 0; b < SHADOW_MAP_CASCADE_COUNT - 1; ++b) 
-	    {
-	       if(inViewPos.z < inCascadeSplits[b]) 
-	       {	
-			cascadeIndex = b + 1;
-	       }
-	    }
-
-	    // Depth compare for shadowing
-	    vec4 shadowCoord = (biasMat * cascadeViewProjMat.viewProj[cascadeIndex]) * vec4(inWorldPos, 1.0);
-	    float shadow =  filterPCF(shadowCoord / shadowCoord.w, cascadeIndex);
-
+		vec3 result = (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
 		// Total contribution for this light.
-		directLighting += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
-		directLighting *= shadow;
+		directLighting += result;
 	}
+
+	float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
+	directLighting *= shadow;
 
 	// Point lighting calculation
 	vec3 pointLighting = vec3(0);
@@ -306,8 +278,7 @@ void main()
 		float attTotal = constantAtt + linearAtt * dist + expAtt * dist * dist;
 		pointLighting += pointLights[i].color.rgb * (ambientLighting + diffuse) / attTotal;
 	}
-
-	vec3 color = pointLighting + directLighting + ambientLighting;
+	vec3 color = ambientLighting + directLighting + pointLighting;
 
 	// Tone mapping
 	color = Uncharted2Tonemap(color * inExposure);

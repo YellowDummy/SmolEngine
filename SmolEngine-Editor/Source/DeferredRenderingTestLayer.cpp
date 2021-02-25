@@ -66,7 +66,7 @@ namespace SmolEngine
 			framebufferEditor.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
 
 			auto frameBuffer = Framebuffer::Create(framebufferEditor);
-			m_EditorCamera->SetFramebuffers({ frameBuffer });
+			//m_EditorCamera->SetFramebuffers({ frameBuffer });
 		}
 
 		// MRT Framebufefr
@@ -190,7 +190,7 @@ namespace SmolEngine
 
 				DynamicPipelineCI.PipelineName = "PBR_Rendering";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-				DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
+				//DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
 			}
 
 			auto result = m_PBRPipeline->Create(&DynamicPipelineCI);
@@ -415,7 +415,7 @@ namespace SmolEngine
 				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(FullSreenData), FullSreenlayout) };
 				DynamicPipelineCI.PipelineName = "Deferred_Rendering_Combination";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-				DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
+				//DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
 			}
 
 			auto result = m_CombinationPipeline->Create(&DynamicPipelineCI);

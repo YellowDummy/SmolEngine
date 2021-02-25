@@ -3,6 +3,7 @@
 
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
+#include "Renderer/Framebuffer.h"
 
 namespace SmolEngine
 {
@@ -21,12 +22,30 @@ namespace SmolEngine
 		s_Instance = nullptr;
 	}
 
-	void GraphicsContext::Init()
+	bool GraphicsContext::Init(GraphicsContextInitInfo& info)
 	{
+		if (GraphicsContext::GetSingleton()->m_Initialized)
+			return false;
+
+		FramebufferSpecification framebufferCI = {};
+		{
+			framebufferCI.Width = Application::GetApplication().GetWindowWidth();
+			framebufferCI.Height = Application::GetApplication().GetWindowHeight();
+			framebufferCI.bUseMSAA = info.bMSAA;
+			framebufferCI.bTargetsSwapchain = info.bTargetsSwapchain;
+			framebufferCI.bUsedByImGui = true;
+			framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color) };
+
+			GraphicsContext::GetSingleton()->m_Framebuffer = Framebuffer::Create(framebufferCI);
+			GraphicsContext::GetSingleton()->m_Initialized = true;
+		}
+
+		Renderer::Init();
 		Renderer2D::Init();
 #ifdef  SMOLENGINE_OPENGL_IMPL
 		GraphicsContext::GetSingleton()->GetOpenglRendererAPI()->Init();
 #endif
+		return true;
 	}
 
 	void GraphicsContext::OnResize(uint32_t height, uint32_t width)
@@ -36,6 +55,7 @@ namespace SmolEngine
 #else
 		m_VulkanContext.OnResize(height, width);
 #endif
+		m_Framebuffer->OnResize(width, height);
 	}
 
 	void GraphicsContext::SwapBuffers()

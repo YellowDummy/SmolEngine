@@ -47,8 +47,6 @@ namespace SmolEngine
 
 		void SetCameraType(CameraType type);
 
-		void SetFramebuffers(std::vector<Ref<Framebuffer>> framebuffers);
-
 		// Getters
 
 		const glm::mat4 GetViewProjection() const { return m_Projection * m_ViewMatrix; }
@@ -78,8 +76,6 @@ namespace SmolEngine
 		glm::vec3 GetUpDirection() const;
 
 		glm::quat GetOrientation() const;
-
-		Ref<Framebuffer> GetFramebuffer(uint32_t index = 0);
 
 		const CameraType GetType() const ;
 
@@ -137,7 +133,6 @@ namespace SmolEngine
 		float                           m_MaxZoomSpeed = 100.0f;
 		float                           m_Speed = 2.0f;
 
-		std::vector<Ref<Framebuffer>>   m_FrameBuffers;
 		CameraType                      m_Type = CameraType::Perspective;
 
 	private:

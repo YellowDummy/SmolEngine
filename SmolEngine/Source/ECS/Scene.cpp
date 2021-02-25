@@ -159,7 +159,7 @@ namespace SmolEngine
 
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Body2DComponent>(output);
+				CanvasComponent, Body2DComponent, MeshComponent>(output);
 		}
 
 		// Serializing scene data
@@ -250,7 +250,7 @@ namespace SmolEngine
 
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Body2DComponent>(regisrtyInput);
+				CanvasComponent, Body2DComponent, MeshComponent>(regisrtyInput);
 		}
 
 		// Loading Singletons-Components

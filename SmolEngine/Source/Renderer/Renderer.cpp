@@ -91,12 +91,14 @@ namespace SmolEngine
 		// Pipelines
 		Scope<GraphicsPipeline>          m_MainPipeline = nullptr;
 		Scope<GraphicsPipeline>          m_SkyboxPipeline = nullptr;
+		Scope<GraphicsPipeline>          m_OmniPipeline = nullptr;
 		Scope<GraphicsPipeline>          m_DepthPassPipeline = nullptr;
 		Scope<GraphicsPipeline>          m_DebugViewPipeline = nullptr;
 
 		// Framebuffers
 		Ref<Framebuffer>                 m_Framebuffer = nullptr;
-		Ref<Framebuffer>                 m_CascadeFramebuffer = nullptr;
+		Ref<Framebuffer>                 m_DepthFramebuffer = nullptr;
+		Ref<Framebuffer>                 m_OmniFramebuffer = nullptr;
 
 		// Buffers
 		Mesh*                            m_UsedMeshes[s_MaxPackages];
@@ -117,14 +119,15 @@ namespace SmolEngine
 			glm::vec4                    CamPos = glm::vec4(1.0f);
 
 			glm::vec4                    Params = glm::vec4(2.5f, 4.0f, 1.0f, 1.0f);
-			glm::vec4                    CascadeSplits = glm::vec4(0, 0, 0, 0);
 		};
 
-		float                            m_NearClip;
-		float                            m_FarClip;
+		float                            m_NearClip = 1.0f;
+		float                            m_FarClip = 1.0f;
 
 		struct PushConstant
 		{
+			glm::mat4                    m_DepthMVP = glm::mat4(1.0f);
+
 			uint32_t                     DataOffset = 0;
 			uint32_t                     DirectionalLights = 0;
 			uint32_t                     PointLights = 0;
@@ -132,28 +135,24 @@ namespace SmolEngine
 
 		struct DebugView
 		{
-			uint32_t                     ShowCascades = 0;
+			uint32_t                     ShowOmniCube = 0;
 			uint32_t                     ShowMRT = 0;		                 
 			uint32_t                     MRTattachmentIndex = 0;
-			uint32_t                     CascadeIndex = 0;
+		};
+
+		struct ShadowMatrix
+		{
+			glm::mat4 shadowTransforms[6];
 		};
 
 		DebugView                        m_DebugView = {};
 		SceneData                        m_SceneData = {};
 		PushConstant                     m_MainPushConstant = {};
+		ShadowMatrix                     m_ShadowMatrix = {};
 
 		const size_t                     m_DebugViewSize = sizeof(DebugView);
 		const size_t                     m_SceneDataSize = sizeof(SceneData);
 		const size_t                     m_PushConstantSize = sizeof(PushConstant);
-
-		// Shadowmap Cascade 
-
-		struct CacadeViewProj
-		{
-			glm::mat4                    ViewProjMatrix[SHADOW_MAP_CASCADE_COUNT];
-		};
-
-		CacadeViewProj                   m_Cascades;
 	};
 
 	static RendererData* s_Data = nullptr;
@@ -233,10 +232,6 @@ namespace SmolEngine
 		// Updates UBOs and SSBOs 
 		s_Data->m_MainPipeline->BeginBufferSubmit();
 		{
-			// Updates Cascade ViewProj data
-			UpdateCascades();
-			s_Data->m_DepthPassPipeline->SubmitBuffer(1, sizeof(glm::mat4) * SHADOW_MAP_CASCADE_COUNT, &s_Data->m_Cascades);
-
 			// Updates scene data
 			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
 
@@ -256,36 +251,42 @@ namespace SmolEngine
 			MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
 			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_MaterialsBinding, size, data);
 #endif
+			// Depth
+			s_Data->m_MainPushConstant.m_DepthMVP = CalculateDepthMVP(s_Data->m_DirectionalLights[0].Position); // temp
 		}
 
-#ifndef SMOLENGINE_OPENGL_IMPL
-		// Test Depth Pass
+		// Depth Pass
 		s_Data->m_DepthPassPipeline->BeginCommandBuffer(true);
+#ifndef SMOLENGINE_OPENGL_IMPL
+		VkCommandBuffer cmdBuffer = s_Data->m_DepthPassPipeline->GetVkCommandBuffer();
+#endif
+		s_Data->m_DepthPassPipeline->BeginRenderPass();
 		{
-			for (uint32_t index = 0; index < SHADOW_MAP_CASCADE_COUNT; ++index)
+			// Set depth bias (aka "Polygon offset")
+			// Required to avoid shadow mapping artifacts
+			vkCmdSetDepthBias(cmdBuffer, 1.25f, 0.0f, 1.75f);
+
+			struct PushConstant
 			{
-				s_Data->m_DepthPassPipeline->BeginRenderPass(index);
-				{
-					for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
-					{
-						auto& cmd = s_Data->m_DrawList[i];
+				glm::mat4 depthMVP;
+				uint32_t offset;
 
-						struct PushConstant
-						{
-							uint32_t offset;
-							uint32_t cascadeIndex;
-						} pc;
+			} pc;
 
-						pc.offset = cmd.Offset;
-						pc.cascadeIndex = index;
-						s_Data->m_DepthPassPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
-						s_Data->m_DepthPassPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount, index);
-					}
-				}
-				s_Data->m_DepthPassPipeline->EndRenderPass();
+			pc.depthMVP = s_Data->m_MainPushConstant.m_DepthMVP;
+
+			for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
+			{
+				auto& cmd = s_Data->m_DrawList[i];
+				pc.offset = cmd.Offset;
+
+				s_Data->m_DepthPassPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
+				s_Data->m_DepthPassPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount);
 			}
 		}
-#endif
+		s_Data->m_DepthPassPipeline->EndRenderPass();
+
+		// Debug Pass
 		if (s_Data->m_ShowDebugView)
 		{
 			s_Data->m_DebugViewPipeline->BeginCommandBuffer(true);
@@ -377,8 +378,9 @@ namespace SmolEngine
 		if (index >= s_MaxDirectionalLights)
 			return; // temp;
 
+
 		s_Data->m_DirectionalLights[index].Color = color;
-		s_Data->m_DirectionalLights[index].Position = normalize(glm::vec4(pos, 1));
+		s_Data->m_DirectionalLights[index].Position = glm::vec4(pos, 1.0);
 		s_Data->m_DirectionalLightIndex++;
 	}
 
@@ -388,8 +390,11 @@ namespace SmolEngine
 		if (index >= s_MaxPointLights)
 			return; // temp;
 
+		glm::mat4 view = glm::lookAt(pos, glm::vec3(0.0f), glm::vec3(0, 1, 0));
+		glm::vec4 lightDir = glm::vec4(1.0f) * glm::inverse(view);
+
 		s_Data->m_PointLights[index].Color = color;
-		s_Data->m_PointLights[index].Position = normalize(glm::vec4(pos, 1));
+		s_Data->m_PointLights[index].Position = lightDir;
 		s_Data->m_PointLights[index].Params.x = constant;
 		s_Data->m_PointLights[index].Params.y = linear;
 		s_Data->m_PointLights[index].Params.z = exp;
@@ -398,9 +403,8 @@ namespace SmolEngine
 
 	void Renderer::SetDebugViewParams(DebugViewInfo& info)
 	{
-		s_Data->m_DebugView.ShowCascades = info.bShowCascades;
+		s_Data->m_DebugView.ShowOmniCube = info.bShowOmniCube;
 		s_Data->m_DebugView.ShowMRT = info.bShowMRT;
-		s_Data->m_DebugView.CascadeIndex = info.cascadeIndex;
 		s_Data->m_DebugView.MRTattachmentIndex = info.mrtAttachmentIndex;
 	}
 
@@ -434,6 +438,17 @@ namespace SmolEngine
 
 	void Renderer::InitPipelines()
 	{
+		BufferLayout mainLayout =
+		{
+			{ DataTypes::Float3, "aPos" },
+			{ DataTypes::Float3, "aNormal" },
+			{ DataTypes::Float4, "aTangent" },
+			{ DataTypes::Float2, "aUV" },
+			{ DataTypes::Float4, "aColor" }
+		};
+
+		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
+
 		// Main
 		{
 			s_Data->m_MainPipeline = std::make_unique<GraphicsPipeline>();
@@ -448,34 +463,21 @@ namespace SmolEngine
 				shaderCI.StorageBuffersSizes[29] = { sizeof(PointLightBuffer) * s_MaxPointLights };
 			};
 
-			BufferLayout mainLayout =
-			{
-				{ DataTypes::Float3, "aPos" },
-				{ DataTypes::Float3, "aNormal" },
-				{ DataTypes::Float4, "aTangent" },
-				{ DataTypes::Float2, "aUV" },
-				{ DataTypes::Float4, "aColor" }
-			};
-
-			VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
-
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
 				DynamicPipelineCI.VertexInputInfos = { vertexMain };
 				DynamicPipelineCI.PipelineName = "PBR_Pipeline";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.TargetFramebuffer = s_Data->m_Framebuffer;
-				DynamicPipelineCI.PipelineCullMode = CullMode::None;
 			}
 
 			auto result = s_Data->m_MainPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
 #ifndef SMOLENGINE_OPENGL_IMPL
+			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(1, s_Data->m_DepthFramebuffer->GetVulkanFramebuffer().GetDethAttachment()->ImageInfo);
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
-
-			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(23, s_Data->m_CascadeFramebuffer->GetVulkanFramebuffer().GetDethAttachment()->ImageInfo);
 #endif
 		}
 
@@ -560,39 +562,6 @@ namespace SmolEngine
 			s_Data->m_SkyboxPipeline->SetVertexBuffers({ skyBoxFB });
 		}
 
-		// Depth Pass
-		{
-			s_Data->m_DepthPassPipeline = std::make_unique<GraphicsPipeline>();
-			GraphicsPipelineShaderCreateInfo shaderCI = {};
-			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/DepthPass_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/DepthPass_Vulkan_Fragment.glsl";
-			};
-
-			BufferLayout layout =
-			{
-				{ DataTypes::Float3, "aPos" },
-				{ DataTypes::Float3, "aNormal" },
-				{ DataTypes::Float4, "aTangent" },
-				{ DataTypes::Float2, "aUV" },
-				{ DataTypes::Float4, "aColor" }
-			};
-
-			VertexInputInfo vertexMain(sizeof(PBRVertex), layout);
-			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
-			{
-				DynamicPipelineCI.VertexInputInfos = { vertexMain };
-				DynamicPipelineCI.PipelineName = "DepthPass_Pipeline";
-				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-				DynamicPipelineCI.TargetFramebuffer = s_Data->m_CascadeFramebuffer;
-				DynamicPipelineCI.DescriptorSets = SHADOW_MAP_CASCADE_COUNT;
-				DynamicPipelineCI.PipelineCullMode = CullMode::None;
-
-				auto result = s_Data->m_DepthPassPipeline->Create(&DynamicPipelineCI);
-				assert(result == PipelineCreateResult::SUCCESS);
-			}
-		}
-
 		// Debug View
 		{
 			s_Data->m_DebugViewPipeline = std::make_unique<GraphicsPipeline>();
@@ -632,46 +601,115 @@ namespace SmolEngine
 				DynamicPipelineCI.PipelineName = "DebugView_Pipeline";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
 				DynamicPipelineCI.TargetFramebuffer = s_Data->m_Framebuffer;
+				DynamicPipelineCI.PipelineCullMode = CullMode::None;
 
 				auto result = s_Data->m_DebugViewPipeline->Create(&DynamicPipelineCI);
 				assert(result == PipelineCreateResult::SUCCESS);
+#ifndef SMOLENGINE_OPENGL_IMPL
+				s_Data->m_DebugViewPipeline->UpdateVulkanImageDescriptor(1, s_Data->m_DepthFramebuffer->GetVulkanFramebuffer().GetDethAttachment()->ImageInfo);
+#endif
 
 				s_Data->m_DebugViewPipeline->SetVertexBuffers({ FullScreenVB });
 				s_Data->m_DebugViewPipeline->SetIndexBuffers({ FullScreenID });
+			}
+		}
 
-#ifndef SMOLENGINE_OPENGL_IMPL
-				s_Data->m_DebugViewPipeline->UpdateVulkanImageDescriptor(0,
-					s_Data->m_CascadeFramebuffer->GetVulkanFramebuffer().GetDethAttachment()->ImageInfo);
-#endif
+		// Depth Pass
+		{
+			s_Data->m_DepthPassPipeline = std::make_unique<GraphicsPipeline>();
+			GraphicsPipelineShaderCreateInfo shaderCI = {};
+			{
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/DepthPass_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/DepthPass_Vulkan_Fragment.glsl";
+			};
+
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			{
+				DynamicPipelineCI.VertexInputInfos = { vertexMain };
+				DynamicPipelineCI.PipelineName = "DepthPass_Pipeline";
+				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+				DynamicPipelineCI.TargetFramebuffer = s_Data->m_DepthFramebuffer;
+				DynamicPipelineCI.bDepthBiasEnabled = true;
+				DynamicPipelineCI.StageCount = 1;
+
+				auto result = s_Data->m_DepthPassPipeline->Create(&DynamicPipelineCI);
+				assert(result == PipelineCreateResult::SUCCESS);
+			}
+		}
+
+		return;
+
+		// Omni Pass
+		{
+			s_Data->m_OmniPipeline = std::make_unique<GraphicsPipeline>();
+			GraphicsPipelineShaderCreateInfo shaderCI = {};
+			{
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/OmniShadow_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/OmniShadow_Vulkan_Fragment.glsl";
+			};
+
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			{
+				DynamicPipelineCI.VertexInputInfos = { vertexMain };
+				DynamicPipelineCI.PipelineName = "OmniPass_Pipeline";
+				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+				DynamicPipelineCI.TargetFramebuffer = s_Data->m_OmniFramebuffer;
+
+				auto result = s_Data->m_OmniPipeline->Create(&DynamicPipelineCI);
+				assert(result == PipelineCreateResult::SUCCESS);
 			}
 		}
 	}
 
 	void Renderer::InitFramebuffers()
 	{
+		// Main
+		{
+			s_Data->m_Framebuffer = GraphicsContext::GetSingleton()->GetFramebuffer();
+		}
+
+		// Depth
 		{
 			FramebufferSpecification framebufferCI = {};
 			{
-				framebufferCI.Width = Application::GetApplication().GetWindowWidth();
-				framebufferCI.Height = Application::GetApplication().GetWindowHeight();
-				framebufferCI.bUseMSAA = true;
-				framebufferCI.bTargetsSwapchain = true;
-				framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color) };
+				framebufferCI.Width = 2048;
+				framebufferCI.Height = 2048;
+				framebufferCI.Specialisation = FramebufferSpecialisation::ShadowMap;
 
-				s_Data->m_Framebuffer = Framebuffer::Create(framebufferCI);
+				s_Data->m_DepthFramebuffer = Framebuffer::Create(framebufferCI);
 			}
 		}
 
+		return;
+
+		// Omni
 		{
 			FramebufferSpecification framebufferCI = {};
 			{
-				framebufferCI.Width = 4096;
-				framebufferCI.Height = 4096;
-				framebufferCI.bUsingCascadeObject = true;
-				framebufferCI.NumArrayLayers = SHADOW_MAP_CASCADE_COUNT;
-				s_Data->m_CascadeFramebuffer = Framebuffer::Create(framebufferCI);
+				framebufferCI.Width = 1024;
+				framebufferCI.Height = 1024;
+				framebufferCI.Specialisation = FramebufferSpecialisation::OmniShadow;
+				framebufferCI.NumSubpassDependencies = 0;
+
+				s_Data->m_OmniFramebuffer = Framebuffer::Create(framebufferCI);
 			}
 		}
+	}
+
+	glm::mat4 Renderer::CalculateDepthMVP(const glm::vec4& lightPos)
+	{
+		// Keep depth range as small as possible
+		// for better shadow map precision
+		float zNear = 1.0f;
+		float zFar = 1000.0f;
+		float lightFOV = 45.0f;
+
+		// Matrix from light's point of view
+		glm::mat4 depthProjectionMatrix = glm::perspective(lightFOV, 1.0f, zNear, zFar);
+		glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(lightPos), glm::vec3(0.0f), glm::vec3(0, 1, 0));
+		glm::mat4 depthModelMatrix = glm::mat4(1.0f);
+
+		return depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 	}
 
 	bool Renderer::OnNewLevelLoaded()
@@ -685,7 +723,6 @@ namespace SmolEngine
 			return false;
 
 		s_Data->m_MainPipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), s_Data->m_TexturesBinding);
-		s_Data->m_DepthPassPipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), s_Data->m_TexturesBinding);
 
 		void* data = nullptr;
 		uint32_t size = 0;
@@ -693,111 +730,6 @@ namespace SmolEngine
 		s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_MaterialsBinding, size, data);
 
 		return true;
-	}
-
-	void Renderer::UpdateCascades()
-	{
-		float cascadeSplits[SHADOW_MAP_CASCADE_COUNT];
-
-		float nearClip = s_Data->m_NearClip;
-		float farClip = s_Data->m_FarClip;
-		float clipRange = farClip - nearClip;
-
-		float minZ = nearClip;
-		float maxZ = nearClip + clipRange;
-
-		float range = maxZ - minZ;
-		float ratio = maxZ / minZ;
-		float cascadeSplitLambda = 1.0f;
-
-		// Calculate split depths based on view camera frustum
-		// Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
-		for (uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++) 
-		{
-			float p = (i + 1) / static_cast<float>(SHADOW_MAP_CASCADE_COUNT);
-			float log = minZ * std::pow(ratio, p);
-			float uniform = minZ + range * p;
-			float d = cascadeSplitLambda * (log - uniform) + uniform;
-			cascadeSplits[i] = (d - nearClip) / clipRange;
-		}
-
-		// Project frustum corners into world space
-		glm::mat4 invCam = glm::inverse(s_Data->m_SceneData.Projection * s_Data->m_SceneData.View);
-
-		// Calculate orthographic projection matrix for each cascade
-		float lastSplitDist = 0.0;
-		for (uint32_t i = 0; i < SHADOW_MAP_CASCADE_COUNT; i++) {
-			float splitDist = cascadeSplits[i];
-
-			glm::vec3 frustumCorners[8] = {
-				glm::vec3(-1.0f,  1.0f, -1.0f),
-				glm::vec3(1.0f,  1.0f, -1.0f),
-				glm::vec3(1.0f, -1.0f, -1.0f),
-				glm::vec3(-1.0f, -1.0f, -1.0f),
-				glm::vec3(-1.0f,  1.0f, 1.0f),
-				glm::vec3(1.0f,  1.0f, 1.0f),
-				glm::vec3(1.0f, -1.0f, 1.0f),
-				glm::vec3(-1.0f, -1.0f, 1.0f)
-			};
-
-			for (uint32_t i = 0; i < 8; i++) {
-				glm::vec4 invCorner = invCam * glm::vec4(frustumCorners[i], 1.0f);
-				frustumCorners[i] = invCorner / invCorner.w;
-			}
-
-			for (uint32_t i = 0; i < 4; i++)
-			{
-				glm::vec3 dist = frustumCorners[i + 4] - frustumCorners[i];
-				frustumCorners[i + 4] = frustumCorners[i] + (dist * splitDist);
-				frustumCorners[i] = frustumCorners[i] + (dist * lastSplitDist);
-			}
-
-			// Get frustum center
-			glm::vec3 frustumCenter = glm::vec3(0.0f);
-			for (uint32_t i = 0; i < 8; i++) 
-			{
-				frustumCenter += frustumCorners[i];
-			}
-			frustumCenter /= 8.0f;
-
-			float radius = 0.0f;
-			for (uint32_t i = 0; i < 8; i++) 
-			{
-				float distance = glm::length(frustumCorners[i] - frustumCenter);
-				radius = glm::max(radius, distance);
-			}
-			radius = std::ceil(radius * 16.0f) / 16.0f;
-
-			glm::vec3 maxExtents = glm::vec3(radius);
-			glm::vec3 minExtents = -maxExtents;
-
-			glm::vec3 lightDir = glm::vec3(s_Data->m_DirectionalLights[0].Position);
-			glm::vec3 shadow_camera_pos = frustumCenter + lightDir * -minExtents.z;
-
-			glm::mat4 lightViewMatrix = glm::lookAt(shadow_camera_pos, frustumCenter, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f, maxExtents.z);
-			glm::mat4 shadow_matrix = lightOrthoMatrix * lightViewMatrix;
-
-			// Create the rounding matrix, by projecting the world-space origin and determining
-			// the fractional offset in texel space
-			glm::vec4 shadow_origin = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-			shadow_origin = shadow_matrix * shadow_origin;
-			shadow_origin = shadow_origin * (4000 / 2.0f);
-
-			glm::vec4 rounded_origin = glm::round(shadow_origin);
-			glm::vec4 round_offset = rounded_origin - shadow_origin;
-			round_offset = round_offset * (2.0f / 4000);
-			round_offset.z = 0.0f;
-			round_offset.w = 0.0f;
-
-			lightOrthoMatrix[3] = lightOrthoMatrix[3] + round_offset;
-
-			// Store split distance and matrix in cascade
-			s_Data->m_SceneData.CascadeSplits[i] = (s_Data->m_NearClip + splitDist * clipRange) * -1.0f;
-			s_Data->m_Cascades.ViewProjMatrix[i] = (lightOrthoMatrix * lightViewMatrix);
-
-			lastSplitDist = cascadeSplits[i];
-		}
 	}
 
 	void Renderer::Reset()

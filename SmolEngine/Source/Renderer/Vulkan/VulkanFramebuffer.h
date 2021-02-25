@@ -41,7 +41,9 @@ namespace SmolEngine
 
 		bool Create(uint32_t width, uint32_t height);
 
-		bool CreateCascade(uint32_t width, uint32_t height);
+		bool CreateOmni(uint32_t width, uint32_t height);
+
+		bool CreateShadow(uint32_t width, uint32_t height);
 
 		void CreateSampler(VkFilter filer = VK_FILTER_NEAREST);
 
@@ -52,6 +54,8 @@ namespace SmolEngine
 			VkFormat format, VkImage& image, VkImageView& imageView, VkDeviceMemory& mem, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 
 		void FreeAttachment(Attachment& framebuffer);
+
+		VkBool32 IsFormatIsFilterable(VkPhysicalDevice physicalDevice, VkFormat format, VkImageTiling tiling);
 
 	public:
 

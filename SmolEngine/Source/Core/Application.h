@@ -36,6 +36,8 @@ namespace SmolEngine
 
 		void RunApp();
 
+		void InitGraphicsContext();
+
 		/// Layers
 
 		void PushOverlay(Layer* layer);

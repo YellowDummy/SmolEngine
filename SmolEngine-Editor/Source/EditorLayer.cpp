@@ -44,7 +44,7 @@
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Scene.h"
 
-
+#include "Renderer/GraphicsContext.h"
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
@@ -56,6 +56,11 @@ namespace SmolEngine
 {
 	void EditorLayer::OnAttach()
 	{
+		GraphicsContextInitInfo GCInfo = {};
+		GCInfo.bMSAA = true;
+		GCInfo.bTargetsSwapchain = false;
+		assert(GraphicsContext::Init(GCInfo) == true);
+
 		EditorCameraCreateInfo editorCamCI{};
 		{
 			editorCamCI.Type = CameraType::Ortho;
@@ -107,7 +112,7 @@ namespace SmolEngine
 		}
 
 		if (isSceneViewFocused)
-			m_Camera->OnEvent(event);
+			//m_Camera->OnEvent(event);
 
 		m_Scene->OnEvent(event);
 	}
@@ -893,7 +898,7 @@ namespace SmolEngine
 
 				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
 
-				auto& frameBuffer = m_Camera->GetFramebuffer();
+				auto& frameBuffer = GraphicsContext::GetSingleton()->GetFramebuffer();
 				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
@@ -965,6 +970,7 @@ namespace SmolEngine
 
 	void EditorLayer::DrawGameView(bool enabled)
 	{
+		return;
 		if (enabled)
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });

@@ -48,6 +48,13 @@ namespace SmolEngine
 		Depth
 	};
 
+	enum class FramebufferSpecialisation : uint16_t
+	{
+		None,
+		ShadowMap,
+		OmniShadow
+	};
+
 	struct FramebufferAttachment
 	{
 		FramebufferAttachment() = default;
@@ -64,17 +71,16 @@ namespace SmolEngine
 
 	struct FramebufferSpecification
 	{
-		int32_t                                    Width = 0;
-		int32_t                                    Height = 0;
-		int32_t                                    NumDependencies = 1;
-		int32_t                                    NumArrayLayers = 1;
-				                                   
+		FramebufferSpecialisation                  Specialisation = FramebufferSpecialisation::None;
+
 		bool                                       bTargetsSwapchain = false;
 		bool                                       bUsedByImGui = false;
 		bool                                       bUseMSAA = false;
 		bool                                       bResizable = true;
 
-		bool                                       bUsingCascadeObject = false;
+		int32_t                                    Width = 0;
+		int32_t                                    Height = 0;
+		int32_t                                    NumSubpassDependencies = 1;
 
 		FramebufferAttachment                      ResolveAttachment;
 		std::vector<FramebufferAttachment>         Attachments;

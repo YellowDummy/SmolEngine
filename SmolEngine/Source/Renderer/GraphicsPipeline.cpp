@@ -94,7 +94,7 @@ namespace SmolEngine
 			m_VextexArray = nullptr;
 	}
 
-	void GraphicsPipeline::BeginRenderPass(uint32_t framebufferIndex)
+	void GraphicsPipeline::BeginRenderPass(uint32_t framebufferIndex, bool flip)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 		m_Shader->Bind();
@@ -121,12 +121,23 @@ namespace SmolEngine
 
 		// Update dynamic viewport state
 		VkViewport viewport = {};
-		viewport.x = 0;
-		viewport.y = (float)height;
-		viewport.height = -(float)height;
-		viewport.width = (float)width;
-		viewport.minDepth = (float)0.0f;
-		viewport.maxDepth = (float)1.0f;
+		if (flip)
+		{
+			viewport.height = (float)height;
+			viewport.width = (float)width;
+			viewport.minDepth = (float)0.0f;
+			viewport.maxDepth = (float)1.0f;
+		}
+		else
+		{
+			viewport.x = 0;
+			viewport.y = (float)height;
+			viewport.height = -(float)height;
+			viewport.width = (float)width;
+			viewport.minDepth = (float)0.0f;
+			viewport.maxDepth = (float)1.0f;
+		}
+
 		vkCmdSetViewport(m_CommandBuffer, 0, 1, &viewport);
 
 		// Update dynamic scissor state
@@ -158,7 +169,6 @@ namespace SmolEngine
 		instance->SetClearColor(clearColors);
 		instance->Clear();
 #else
-
 		VkClearRect clearRect = {};
 		clearRect.layerCount = 1;
 		clearRect.baseArrayLayer = 0;

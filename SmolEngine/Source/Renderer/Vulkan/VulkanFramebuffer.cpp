@@ -65,11 +65,11 @@ namespace SmolEngine
 				vkInfo.ImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 				vkInfo.ImageInfo.imageView = vkInfo.AttachmentVkInfo.view;
 				vkInfo.ImageInfo.sampler = m_Sampler;
-			}
 
-			if (m_Specification.bUsedByImGui)
-			{
-				vkInfo.ImGuiID = ImGui_ImplVulkan_AddTexture(vkInfo.ImageInfo);
+				if (m_Specification.bUsedByImGui)
+				{
+					vkInfo.ImGuiID = ImGui_ImplVulkan_AddTexture(vkInfo.ImageInfo);
+				}
 			}
 
 			attachments[lastImageViewIndex] = vkInfo.AttachmentVkInfo.view;
@@ -96,13 +96,22 @@ namespace SmolEngine
 			m_ResolveAttachment.ImageInfo.imageView = m_ResolveAttachment.AttachmentVkInfo.view;
 			m_ResolveAttachment.ImageInfo.sampler = m_Sampler;
 
+			auto cmd = VulkanCommandBuffer::CreateSingleCommandBuffer();
+			VulkanTexture::SetImageLayout(cmd, m_ResolveAttachment.AttachmentVkInfo.image,
+				VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+			VulkanCommandBuffer::EndSingleCommandBuffer(cmd);
+
 			if (m_Specification.bUsedByImGui)
-			{
 				m_ResolveAttachment.ImGuiID = ImGui_ImplVulkan_AddTexture(m_ResolveAttachment.ImageInfo);
-			}
 
 			attachments[lastImageViewIndex] = m_ResolveAttachment.AttachmentVkInfo.view;
 			m_AttachmentsMap["Resolve"] = lastImageViewIndex;
+
+			m_ClearValues[lastImageViewIndex].color = { { 0.0f, 0.0f, 0.0f, 1.0f} };
+			m_ClearAttachments[lastImageViewIndex].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			m_ClearAttachments[lastImageViewIndex].clearValue.color = { { 0.1f, 0.1f, 0.1f, 1.0f} };
+			lastImageViewIndex++;
+
 		}
 
 		if (m_Specification.bTargetsSwapchain)
@@ -178,34 +187,296 @@ namespace SmolEngine
 	}
 
 	// Temp Implmetation
-	bool VulkanFramebuffer::CreateCascade(uint32_t width, uint32_t height)
+	bool VulkanFramebuffer::CreateOmni(uint32_t width, uint32_t height)
 	{
-		// 	Depth map renderpass
+		m_Attachments.resize(2);
+		m_Specification.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+
+		VkFormat colorFormat = VK_FORMAT_R32_SFLOAT;
+		auto& fb = m_Attachments[0].AttachmentVkInfo;
+		auto& cube = m_Attachments[1].AttachmentVkInfo;
+
+		// Framebuffer - Attachment 1
+		{
+			VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+			fb.image = VulkanTexture::CreateVkImage(m_Specification.Width, m_Specification.Height,
+				1,
+				VK_SAMPLE_COUNT_1_BIT,
+				colorFormat,
+				VK_IMAGE_TILING_OPTIMAL,
+				usage, fb.mem);
+
+			VkImageViewCreateInfo imageCI = {};
+			imageCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			imageCI.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			imageCI.format = colorFormat;
+			imageCI.flags = 0;
+			imageCI.subresourceRange = {};
+			imageCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageCI.subresourceRange.baseMipLevel = 0;
+			imageCI.subresourceRange.levelCount = 1;
+			imageCI.subresourceRange.baseArrayLayer = 0;
+			imageCI.subresourceRange.layerCount = 1;
+
+			VkCommandBuffer cmdBuffer = VulkanCommandBuffer::CreateSingleCommandBuffer();
+			VulkanTexture::SetImageLayout(cmdBuffer, fb.image,
+				VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+				VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+
+			imageCI.image = fb.image;
+			VK_CHECK_RESULT(vkCreateImageView(m_Device, &imageCI, nullptr, &fb.view));
+
+			// Depth
+			usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			m_DepthAttachment.AttachmentVkInfo.image = VulkanTexture::CreateVkImage(m_Specification.Width, m_Specification.Height,
+				1,
+				VK_SAMPLE_COUNT_1_BIT,
+				m_DepthFormat,
+				VK_IMAGE_TILING_OPTIMAL,
+				usage, m_DepthAttachment.AttachmentVkInfo.mem, imageAspect);
+
+			VulkanTexture::SetImageLayout(cmdBuffer, m_DepthAttachment.AttachmentVkInfo.image,
+				VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, VK_IMAGE_LAYOUT_UNDEFINED,
+				VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+			VulkanCommandBuffer::EndSingleCommandBuffer(cmdBuffer);
+
+			imageCI.format = m_DepthFormat;
+			imageCI.subresourceRange = {};
+			imageCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			imageCI.subresourceRange.baseMipLevel = 0;
+			imageCI.subresourceRange.levelCount = 1;
+			imageCI.subresourceRange.baseArrayLayer = 0;
+			imageCI.subresourceRange.layerCount = 1;
+			imageCI.image = m_DepthAttachment.AttachmentVkInfo.image;
+			VK_CHECK_RESULT(vkCreateImageView(m_Device, &imageCI, nullptr, &m_DepthAttachment.AttachmentVkInfo.view));
+
+
+			// Render pass
+			if (m_RenderPass == VK_NULL_HANDLE)
+			{
+				VkAttachmentDescription osAttachments[2] = {};
+
+				osAttachments[0].format = colorFormat;
+				osAttachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+				osAttachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+				osAttachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+				osAttachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+				osAttachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+				osAttachments[0].initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+				osAttachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+				// Depth attachment
+				osAttachments[1].format = m_DepthFormat;
+				osAttachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+				osAttachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+				osAttachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+				osAttachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+				osAttachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+				osAttachments[1].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+				osAttachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+				VkAttachmentReference colorReference = {};
+				colorReference.attachment = 0;
+				colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+				VkAttachmentReference depthReference = {};
+				depthReference.attachment = 1;
+				depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+				VkSubpassDescription subpass = {};
+				subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+				subpass.colorAttachmentCount = 1;
+				subpass.pColorAttachments = &colorReference;
+				subpass.pDepthStencilAttachment = &depthReference;
+
+				VkRenderPassCreateInfo renderPassCreateInfo = {};
+				renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+				renderPassCreateInfo.attachmentCount = 2;
+				renderPassCreateInfo.pAttachments = osAttachments;
+				renderPassCreateInfo.subpassCount = 1;
+				renderPassCreateInfo.pSubpasses = &subpass;
+
+				VK_CHECK_RESULT(vkCreateRenderPass(m_Device, &renderPassCreateInfo, nullptr, &m_RenderPass));
+			}
+
+			// Framebuffer
+			{
+				VkImageView attachments[2];
+				attachments[0] = fb.view;
+				attachments[1] = m_DepthAttachment.AttachmentVkInfo.view;
+
+				VkFramebufferCreateInfo fbufCreateInfo = {};
+				{
+					fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+					fbufCreateInfo.pNext = NULL;
+					fbufCreateInfo.renderPass = m_RenderPass;
+					fbufCreateInfo.attachmentCount = 2;
+					fbufCreateInfo.pAttachments = attachments;
+					fbufCreateInfo.width = m_Specification.Width;
+					fbufCreateInfo.height = m_Specification.Height;
+					fbufCreateInfo.layers = 1;
+				}
+
+				m_VkFrameBuffers.resize(1);
+				VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[0]));
+			}
+		}
+
+		// Omni Cube - Attachment 2
+		{
+			// 32 bit float format for higher precision
+			VkFormat format = VK_FORMAT_R32_SFLOAT;
+			VkCommandBuffer cmdBuffer = VulkanCommandBuffer::CreateSingleCommandBuffer();
+			{
+				VkImageCreateInfo imageCI = {};
+				{
+					imageCI.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+					imageCI.imageType = VK_IMAGE_TYPE_2D;
+					imageCI.format = format;
+					imageCI.mipLevels = 1;
+					imageCI.extent.depth = 1;
+					imageCI.arrayLayers = 6;
+					imageCI.samples = VK_SAMPLE_COUNT_1_BIT;
+					imageCI.tiling = VK_IMAGE_TILING_OPTIMAL;
+					imageCI.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+					imageCI.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+					imageCI.extent = { (uint32_t)width, (uint32_t)height, 1 };
+					imageCI.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+					imageCI.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+
+					VK_CHECK_RESULT(vkCreateImage(m_Device, &imageCI, nullptr, &cube.image));
+				}
+
+				VkMemoryRequirements memReqs;
+				vkGetImageMemoryRequirements(m_Device, cube.image, &memReqs);
+				uint32_t typeIndex = VulkanContext::GetDevice().GetMemoryTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+				VulkanMemoryAllocator::Allocate(m_Device, memReqs, &cube.mem, typeIndex);
+				VK_CHECK_RESULT(vkBindImageMemory(m_Device, cube.image, cube.mem, 0));
+			}
+
+			// Image barrier for optimal image (target)
+			VkImageSubresourceRange subresourceRange = {};
+			subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			subresourceRange.baseMipLevel = 0;
+			subresourceRange.levelCount = 1;
+			subresourceRange.layerCount = 6;
+			VulkanTexture::SetImageLayout(cmdBuffer, cube.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+			VulkanCommandBuffer::EndSingleCommandBuffer(cmdBuffer);
+
+			// Sampler
+			{
+				VkSamplerCreateInfo samplerCI = {};
+				{
+					samplerCI.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+					samplerCI.magFilter = VK_FILTER_LINEAR;
+					samplerCI.minFilter = VK_FILTER_LINEAR;
+					samplerCI.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+					samplerCI.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+					samplerCI.addressModeV = samplerCI.addressModeU;
+					samplerCI.addressModeW = samplerCI.addressModeU;
+					samplerCI.mipLodBias = 0.0f;
+					samplerCI.maxAnisotropy = 1.0f;
+					samplerCI.compareOp = VK_COMPARE_OP_NEVER;
+					samplerCI.minLod = 0.0f;
+					samplerCI.maxLod = 1.0f;
+					samplerCI.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+
+					VK_CHECK_RESULT(vkCreateSampler(m_Device, &samplerCI, nullptr, &m_Sampler));
+				}
+			}
+
+			// Image View
+			{
+				VkImageViewCreateInfo view = {};
+				{
+					view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+					view.image = VK_NULL_HANDLE;
+					view.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
+					view.format = format;
+					view.components = { VK_COMPONENT_SWIZZLE_R };
+					view.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+					view.subresourceRange.layerCount = 6;
+					view.image = cube.image;
+
+					VK_CHECK_RESULT(vkCreateImageView(m_Device, &view, nullptr, &cube.view));
+				}
+			}
+
+			m_Attachments[1].ImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			m_Attachments[1].ImageInfo.imageView = cube.view;
+			m_Attachments[1].ImageInfo.sampler = m_Sampler;
+		}
+		
+		m_ClearValues.resize(2);
+		m_ClearAttachments.resize(2);
+
+		m_ClearValues[0].color = { { 0.0f, 0.0f, 0.0f, 1.0f} };
+		m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		m_ClearAttachments[0].clearValue.color = { { 0.0f, 0.0f, 0.0f, 1.0f} };
+		m_ClearAttachments[0].colorAttachment = 0;
+
+		m_ClearValues[1].depthStencil = { 1.0f, 0 };
+		m_ClearAttachments[1].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+		m_ClearAttachments[1].clearValue.depthStencil = { 1.0f, 0 };
+
+		return true;
+	}
+
+	bool VulkanFramebuffer::CreateShadow(uint32_t width, uint32_t height)
+	{
+		// Depth 
+		{
+			VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT;
+
+			AddAttachment(width, height, VK_SAMPLE_COUNT_1_BIT, usage, m_DepthFormat,
+				m_DepthAttachment.AttachmentVkInfo.image, m_DepthAttachment.AttachmentVkInfo.view, m_DepthAttachment.AttachmentVkInfo.mem, imageAspect);
+		}
+
+		// Sampler
+		{
+			VkFilter shadowmap_filter = IsFormatIsFilterable(VulkanContext::GetDevice().GetPhysicalDevice(), m_DepthFormat, VK_IMAGE_TILING_OPTIMAL) ?
+				VK_FILTER_LINEAR : VK_FILTER_NEAREST;
+
+			VkSamplerCreateInfo sampler = {};
+			sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			sampler.maxAnisotropy = 1.0f;
+			sampler.magFilter = shadowmap_filter;
+			sampler.minFilter = shadowmap_filter;
+			sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+			sampler.addressModeV = sampler.addressModeU;
+			sampler.addressModeW = sampler.addressModeU;
+			sampler.mipLodBias = 0.0f;
+			sampler.maxAnisotropy = 1.0f;
+			sampler.minLod = 0.0f;
+			sampler.maxLod = 1.0f;
+			sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+			VK_CHECK_RESULT(vkCreateSampler(m_Device, &sampler, nullptr, &m_Sampler));
+		}
+
+		// Render Pass
 		{
 			VkAttachmentDescription attachmentDescription{};
 			attachmentDescription.format = m_DepthFormat;
 			attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-			attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;							// Clear depth at beginning of the render pass
+			attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;						// We will read from depth, so it's important to store the depth attachment results
 			attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 			attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-			attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-
-			m_ClearAttachments.resize(1);
-			m_ClearValues.resize(1);
-			m_ClearValues[0].depthStencil = { 1.0f, 0 };
-			m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-			m_ClearAttachments[0].clearValue.depthStencil = { 1.0f, 0 };
+			attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;					// We don't care about initial layout of the attachment
+			attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;// Attachment will be transitioned to shader read at render pass end
 
 			VkAttachmentReference depthReference = {};
 			depthReference.attachment = 0;
-			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+			depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;			// Attachment will be used as depth/stencil during render pass
 
 			VkSubpassDescription subpass = {};
 			subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-			subpass.colorAttachmentCount = 0;
-			subpass.pDepthStencilAttachment = &depthReference;
+			subpass.colorAttachmentCount = 0;													// No color attachments
+			subpass.pDepthStencilAttachment = &depthReference;									// Reference to our depth attachment
 
 			// Use subpass dependencies for layout transitions
 			std::array<VkSubpassDependency, 2> dependencies;
@@ -238,82 +509,32 @@ namespace SmolEngine
 			VK_CHECK_RESULT(vkCreateRenderPass(m_Device, &renderPassCreateInfo, nullptr, &m_RenderPass));
 		}
 
-		//Create Sampler
-		CreateSampler(VK_FILTER_LINEAR);
-
-		VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-		VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_DEPTH_BIT;
-		//Layered depth image and views
+		// Framebuffer
 		{
-			m_DepthAttachment.AttachmentVkInfo.image = VulkanTexture::CreateVkImage(width, height,
-				1,
-				VK_SAMPLE_COUNT_1_BIT,
-				m_DepthFormat,
-				VK_IMAGE_TILING_OPTIMAL,
-				usage, m_DepthAttachment.AttachmentVkInfo.mem, m_Specification.NumArrayLayers);
+			VkFramebufferCreateInfo fbufCreateInfo = {};
+			fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+			fbufCreateInfo.renderPass = m_RenderPass;
+			fbufCreateInfo.attachmentCount = 1;
+			fbufCreateInfo.pAttachments = &m_DepthAttachment.AttachmentVkInfo.view;
+			fbufCreateInfo.width = width;
+			fbufCreateInfo.height = height;
+			fbufCreateInfo.layers = 1;
 
-			VkImageViewCreateInfo imageViewCI = {};
-			{
-				imageViewCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-				imageViewCI.viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-				imageViewCI.format = m_DepthFormat;
-				imageViewCI.subresourceRange = {};
-				imageViewCI.subresourceRange.aspectMask = imageAspect;
-				imageViewCI.subresourceRange.baseMipLevel = 0;
-				imageViewCI.subresourceRange.baseArrayLayer = 0;
-				imageViewCI.subresourceRange.levelCount = 1;
-				imageViewCI.subresourceRange.layerCount = m_Specification.NumArrayLayers;
-				imageViewCI.image = m_DepthAttachment.AttachmentVkInfo.image;
-
-				VK_CHECK_RESULT(vkCreateImageView(m_Device, &imageViewCI, nullptr, &m_DepthAttachment.AttachmentVkInfo.view));
-			}
-
-			m_DepthAttachment.ImageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-			m_DepthAttachment.ImageInfo.sampler = m_Sampler;
-			m_DepthAttachment.ImageInfo.imageView = m_DepthAttachment.AttachmentVkInfo.view;
+			m_VkFrameBuffers.resize(1);
+			VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[0]));
 		}
 
-		// One image and framebuffer per cascade
-		{
-			m_Attachments.resize(m_Specification.NumArrayLayers);
-			m_VkFrameBuffers.resize(m_Specification.NumArrayLayers);
-			for (uint32_t i = 0; i < m_Specification.NumArrayLayers; ++i)
-			{
-				VkImageViewCreateInfo imageViewCI = {};
-				{
-					imageViewCI.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-					imageViewCI.viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-					imageViewCI.format = m_DepthFormat;
-					imageViewCI.subresourceRange = {};
-					imageViewCI.subresourceRange.aspectMask = imageAspect;
-					imageViewCI.subresourceRange.baseMipLevel = 0;
-					imageViewCI.subresourceRange.baseArrayLayer = i;
-					imageViewCI.subresourceRange.levelCount = 1;
-					imageViewCI.subresourceRange.layerCount = 1;
-					imageViewCI.image = m_DepthAttachment.AttachmentVkInfo.image;
 
-					VK_CHECK_RESULT(vkCreateImageView(m_Device, &imageViewCI, nullptr, &m_Attachments[i].AttachmentVkInfo.view));
-				}
+		m_DepthAttachment.ImageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+		m_DepthAttachment.ImageInfo.sampler = m_Sampler;
+		m_DepthAttachment.ImageInfo.imageView = m_DepthAttachment.AttachmentVkInfo.view;
 
-				m_Attachments[i].ImageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-				m_Attachments[i].ImageInfo.imageView = m_Attachments[i].AttachmentVkInfo.view;
-				m_Attachments[i].ImageInfo.sampler = m_Sampler;
+		m_ClearValues.resize(1);
+		m_ClearAttachments.resize(1);
 
-				VkFramebufferCreateInfo fbufCreateInfo = {};
-				{
-					fbufCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-					fbufCreateInfo.pNext = NULL;
-					fbufCreateInfo.renderPass = m_RenderPass;
-					fbufCreateInfo.attachmentCount = 1;
-					fbufCreateInfo.pAttachments = &m_Attachments[i].AttachmentVkInfo.view;
-					fbufCreateInfo.width = m_Specification.Width;
-					fbufCreateInfo.height = m_Specification.Height;
-					fbufCreateInfo.layers = 1;
-				}
-
-				VK_CHECK_RESULT(vkCreateFramebuffer(m_Device, &fbufCreateInfo, nullptr, &m_VkFrameBuffers[i]));
-			}
-		}
+		m_ClearValues[0].depthStencil = { 1.0f, 0 };
+		m_ClearAttachments[0].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+		m_ClearAttachments[0].clearValue.depthStencil = { 1.0f, 0 };
 
 		return true;
 	}
@@ -352,7 +573,23 @@ namespace SmolEngine
 		m_Specification = data;
 		m_MSAASamples = data.bUseMSAA ? VulkanContext::GetDevice().GetMSAASamplesCount(): VK_SAMPLE_COUNT_1_BIT;
 
-		return m_Specification.bUsingCascadeObject ? CreateCascade(data.Width, data.Height): Create(data.Width, data.Height);
+		switch (m_Specification.Specialisation)
+		{
+		case FramebufferSpecialisation::None:
+		{
+			return Create(data.Width, data.Height);
+		}
+		case FramebufferSpecialisation::ShadowMap:
+		{
+			return CreateShadow(data.Width, data.Height);
+		}
+		case FramebufferSpecialisation::OmniShadow:
+		{
+			return CreateOmni(data.Width, data.Height);
+		}
+		default:
+			return false;
+		}
 	}
 
 	void VulkanFramebuffer::OnResize(uint32_t width, uint32_t height)
@@ -430,6 +667,20 @@ namespace SmolEngine
 
 		if (framebuffer.AttachmentVkInfo.mem != VK_NULL_HANDLE)
 			vkFreeMemory(m_Device, framebuffer.AttachmentVkInfo.mem, nullptr);
+	}
+
+	VkBool32 VulkanFramebuffer::IsFormatIsFilterable(VkPhysicalDevice physicalDevice, VkFormat format, VkImageTiling tiling)
+	{
+		VkFormatProperties formatProps;
+		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &formatProps);
+
+		if (tiling == VK_IMAGE_TILING_OPTIMAL)
+			return formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+		if (tiling == VK_IMAGE_TILING_LINEAR)
+			return formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+		return false;
 	}
 
 	VkFormat VulkanFramebuffer::GetAttachmentFormat(AttachmentFormat format)

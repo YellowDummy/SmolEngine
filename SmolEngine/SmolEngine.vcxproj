@@ -583,7 +583,6 @@
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Actor.h" />
-    <ClInclude Include="Source\ECS\Components\MaterialComponent.h" />
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h" />
@@ -648,6 +647,7 @@
     <ClInclude Include="Source\Renderer\Material.h" />
     <ClInclude Include="Source\Renderer\MaterialLibrary.h" />
     <ClInclude Include="Source\Renderer\Mesh.h" />
+    <ClInclude Include="Source\Renderer\MeshPool.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglContext.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglFramebuffer.h" />
@@ -721,7 +721,6 @@
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\ECS\Actor.cpp" />
-    <ClCompile Include="Source\ECS\Components\MaterialComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
     <ClCompile Include="Source\ECS\ComponentTuples\CameraBaseTuple.cpp" />
@@ -775,6 +774,7 @@
     <ClCompile Include="Source\Renderer\Material.cpp" />
     <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
     <ClCompile Include="Source\Renderer\Mesh.cpp" />
+    <ClCompile Include="Source\Renderer\MeshPool.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglContext.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglFramebuffer.cpp" />

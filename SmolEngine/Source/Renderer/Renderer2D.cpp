@@ -95,6 +95,8 @@ namespace SmolEngine
 
 	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer)
 	{
+		return; //
+
 #ifdef SMOLENGINE_OPENGL_IMPL
 		s_Data->MainPipeline->SumbitUniform<glm::mat4>("u_ViewProjection", &viewProjectionMatrix);
 		s_Data->MainPipeline->SumbitUniform<float>("u_AmbientValue", &ambientValue);
@@ -118,6 +120,8 @@ namespace SmolEngine
 
 	void Renderer2D::EndScene()
 	{
+		return; //
+
 		FlushAllLayers();
 #ifndef SMOLENGINE_OPENGL_IMPL
 		s_Data->MainPipeline->EndBufferSubmit();
@@ -406,6 +410,8 @@ namespace SmolEngine
 
 	void Renderer2D::BeginDebug()
 	{
+		return; //
+
 		s_Data->DebugPipeline->BeginCommandBuffer();
 		s_Data->DebugPipeline->BeginBufferSubmit();
 		s_Data->DebugPipeline->BeginRenderPass();
@@ -413,6 +419,8 @@ namespace SmolEngine
 
 	void Renderer2D::EndDebug()
 	{
+		return; //
+
 		s_Data->DebugPipeline->EndRenderPass();
 		s_Data->DebugPipeline->EndBufferSubmit();
 		s_Data->DebugPipeline->EndCommandBuffer();

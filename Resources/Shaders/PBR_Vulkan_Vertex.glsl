@@ -30,7 +30,6 @@ struct SceneData
 	mat4 skyBoxMatrix;
 	vec4 camPos;
 	vec4 params;
-	vec4 cascadeSplits;
 };
 
 layout(std140, binding = 25) readonly buffer ShaderDataBuffer
@@ -50,12 +49,21 @@ layout (std140, binding = 27) uniform SceneDataBuffer
     SceneData data;
 } sceneData;
 
-layout(push_constant) uniform CameraData
+layout(push_constant) uniform ConstantData
 {
+	mat4 lightSpace;
+
 	uint dataOffset;
 	uint directionalLights;
 	uint pointLights;
 };
+
+const mat4 biasMat = mat4( 
+	0.5, 0.0, 0.0, 0.0,
+	0.0, -0.5, 0.0, 0.0,
+	0.0, 0.0, 1.0, 0.0,
+	0.5, 0.5, 0.0, 1.0 
+);
 
 layout (location = 0)  out vec3 outWorldPos;
 layout (location = 1)  out vec3 outNormal;
@@ -85,9 +93,8 @@ layout (location = 20) out uint outDirectionalLightCount;
 layout (location = 21) out uint outPointLightCount;
 
 layout (location = 22) out vec4 outColor;
-layout (location = 23) out vec4 outCascadeSplits;
-layout (location = 24) out vec3 outViewPos;
-
+layout (location = 23) out vec4 outShadowCoord;
+layout (location = 24) out vec4 outRawPos;
 layout (location = 25) out mat3 outTBN;
 
 void main()
@@ -105,8 +112,8 @@ void main()
 	outAmbient = sceneData.data.params.z;
 	outDirectionalLightCount = directionalLights;
 	outPointLightCount = pointLights;
-	outCascadeSplits = sceneData.data.cascadeSplits;
-	outViewPos = vec4( sceneData.data.view * vec4(outWorldPos, 1.0)).xyz;
+	outShadowCoord = ( biasMat * lightSpace * model ) * vec4(a_Position, 1.0);	
+	outRawPos = vec4(a_Position, 1.0);
 
 	// TBN matrix
 	vec3 N = normalize(outNormal);

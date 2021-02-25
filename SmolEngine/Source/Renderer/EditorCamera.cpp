@@ -157,11 +157,6 @@ namespace SmolEngine
 		}
 	}
 
-	void EditorCamera::SetFramebuffers(std::vector<Ref<Framebuffer>> framebuffers)
-	{
-		m_FrameBuffers = framebuffers;
-	}
-
 	glm::vec3 EditorCamera::GetForwardDirection() const
 	{
 		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
@@ -180,14 +175,6 @@ namespace SmolEngine
 	glm::quat EditorCamera::GetOrientation() const
 	{
 		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
-	}
-
-	Ref<Framebuffer> EditorCamera::GetFramebuffer(uint32_t index)
-	{
-		if (index > m_FrameBuffers.size() - 1)
-			return nullptr;
-
-		return m_FrameBuffers[index];
 	}
 
 	const CameraType EditorCamera::GetType() const
@@ -274,9 +261,6 @@ namespace SmolEngine
 		m_ViewportHeight = static_cast<float>(res_e.GetHeight());
 		m_AspectRatio = m_ViewportHeight / m_ViewportWidth;
 
-		for (auto& framebuffer : m_FrameBuffers)
-			framebuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());
-
 		SetCameraType(m_Type);
 		return false;
 	}
@@ -301,9 +285,6 @@ namespace SmolEngine
 			break;
 		}
 		}
-
-		for (auto& framebuffer : m_FrameBuffers)
-			framebuffer->OnResize(width, height);
 
 		SetCameraType(m_Type);
 		return false;

@@ -6,6 +6,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/EditorCamera.h"
 #include "Renderer/Text.h"
+#include "Renderer/GraphicsContext.h"
 
 #include "Core/AssetManager.h"
 #include "ImGui/EditorConsole.h"
@@ -266,7 +267,7 @@ namespace SmolEngine
 	void WorldAdmin::UpdateEditorCamera(Ref<EditorCamera>& cam)
 	{
 		// Rendering scene to the target framebuffer
-		RenderScene(cam->GetViewProjection(), cam->GetFramebuffer(), true);
+		RenderScene(cam->GetViewProjection(), GraphicsContext::GetSingleton()->GetFramebuffer(), true);
 	}
 
 	void WorldAdmin::OnGameViewResize(float width, float height)

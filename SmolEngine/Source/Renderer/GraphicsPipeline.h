@@ -5,14 +5,13 @@
 #endif
 
 #include "Renderer/GraphicsPipelineShaderCreateInfo.h"
+#include "Renderer/GraphicsContext.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/Texture.h"
 #include "Renderer/Shared.h"
 #include "Renderer/Shader.h"
-#include "Renderer/GraphicsContext.h"
-
 namespace SmolEngine
 {
 	class Framebuffer;
@@ -49,10 +48,13 @@ namespace SmolEngine
 		CullMode                             PipelineCullMode = CullMode::Back;
 
 		bool                                 bDepthTestEnabled = true;
+		bool                                 bDepthBiasEnabled = false;
 
 		float                                MinDepth = 0.0f;
 		float                                MaxDepth = 1.0f;
-		uint32_t                             DescriptorSets = 1;
+
+		int32_t                              DescriptorSets = 1;
+		int32_t                              StageCount = -1;
 
 		Ref<Framebuffer>                     TargetFramebuffer = nullptr;
 		GraphicsPipelineShaderCreateInfo*    ShaderCreateInfo = nullptr;
@@ -80,7 +82,7 @@ namespace SmolEngine
 
 		// Render Pass
 
-		void BeginRenderPass(uint32_t framebufferIndex = 0);
+		void BeginRenderPass(uint32_t framebufferIndex = 0, bool flip = false);
 
 		void EndRenderPass();
 

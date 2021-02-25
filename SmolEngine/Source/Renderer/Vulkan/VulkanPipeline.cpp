@@ -90,7 +90,7 @@ namespace SmolEngine
 			rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 			rasterizationState.depthClampEnable = VulkanContext::GetDevice().GetDeviceFeatures()->depthClamp;
 			rasterizationState.rasterizerDiscardEnable = VK_FALSE;
-			rasterizationState.depthBiasEnable = VK_FALSE;
+			rasterizationState.depthBiasEnable = m_PipelineSpecification->bDepthBiasEnabled ? VK_TRUE: VK_FALSE;
 			rasterizationState.lineWidth = 1.0f;
 		}
 
@@ -146,6 +146,9 @@ namespace SmolEngine
 		{
 			dynamicStateEnables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
 			dynamicStateEnables.push_back(VK_DYNAMIC_STATE_SCISSOR);
+			if(m_PipelineSpecification->bDepthBiasEnabled)
+				dynamicStateEnables.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
+
 
 			dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 			dynamicState.pDynamicStates = dynamicStateEnables.data();
@@ -260,7 +263,7 @@ namespace SmolEngine
 		}
 
 		// Set pipeline shader stage info
-		pipelineCreateInfo.stageCount = static_cast<uint32_t>(m_Shader->GetVkPipelineShaderStages().size());
+		pipelineCreateInfo.stageCount = m_PipelineSpecification->StageCount == -1? static_cast<uint32_t>(m_Shader->GetVkPipelineShaderStages().size()): m_PipelineSpecification->StageCount;
 		pipelineCreateInfo.pStages = m_Shader->GetVkPipelineShaderStages().data();
 
 		// Assign the pipeline states to the pipeline creation info structure

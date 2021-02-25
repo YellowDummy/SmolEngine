@@ -77,8 +77,6 @@ namespace SmolEngine
 		// Pushing Dear ImGui Layer
 		PushLayer(m_ImGuiLayer);
 #endif
-		// Init 2D/3D Renderer
-		m_Window->GetContext()->Init();
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
 		ClientInit();

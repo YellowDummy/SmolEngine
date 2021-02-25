@@ -3,40 +3,11 @@
 #include "ECS/Components/BaseComponent.h"
 #include "Renderer/Mesh.h"
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+
 namespace SmolEngine
 {
-	struct PBRTexture
-	{
-		Ref<Texture> Texture = nullptr;
-		std::string FilePath = "";
-
-		template<typename Archive>
-		void serialize(Archive& archive)
-		{
-			archive(filePath);
-		}
-	};
-
-	struct PBRMaterial
-	{
-		PBRTexture          AlbedoTexture;
-		PBRTexture          MetallicTetxure;
-		PBRTexture          RoughnessTetxure;
-		PBRTexture          NormalTexture;
-
-		float               Albedo = 0.1f;
-		float               Metallic = 0.1f;
-		float               Roughness = 0.1f;
-
-	public:
-
-		template<typename Archive>
-		void serialize(Archive& archive)
-		{
-			archive(filePath);
-		}
-	};
-
 	struct MeshComponent: public BaseComponent
 	{
 		MeshComponent() = default;
@@ -46,8 +17,12 @@ namespace SmolEngine
 
 		// Data
 
-		PBRMaterial Material = {};
-		Ref<Mesh> Mesh = nullptr;
+		bool                   bCastShadows = true;
+		bool                   bIsStatic = false;
+		int                    ShadowType = 2;
+
+		Ref<Mesh>              Mesh = nullptr;
+		std::vector<int32_t>   MaterialIDs;
 
 	private:
 
@@ -56,7 +31,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Material, ComponentID);
+			archive(bCastShadows, bIsStatic, ShadowType, MaterialIDs, ComponentID);
 		}
 	};
 }

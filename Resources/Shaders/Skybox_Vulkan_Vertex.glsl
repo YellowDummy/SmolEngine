@@ -9,7 +9,6 @@ struct SceneData
 	mat4 skyBoxMatrix;
 	vec4 camPos;
 	vec4 params;
-	vec4 cascadeSplits;
 };
 
 layout (std140, binding = 27) uniform SceneDataBuffer
