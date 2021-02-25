@@ -1,14 +1,14 @@
 ## SmolEngine
 
-![SmolEngine](https://i.imgur.com/U4A5J7V.png)
-![SmolEngine](https://i.imgur.com/iHBPll5.png)
+![SmolEngine](https://i.imgur.com/848tYFm.png)
+![SmolEngine](https://i.imgur.com/AfcMRkh.png)
 
 ## Core Features
 
 ### Implemented in first iteration
 
 - Rendering: Native rendering API support (Vulkan/OpenGL), Physically Based Rendering (PBR), 
-  Multi Sampled Deferred Shading, Multisample Anti-Aliasing (MSAA),
+  Deferred Rendering, Shadow Mapping, Multisample Anti-Aliasing (MSAA),
   Screen Space Ambient Occlusion (SSAO), 2D/3D Renderer, 2D Animations
   
 - Integrations: 3rd party 2D physics engine (Box2D), 3rd party audio engine (FMOD)
@@ -23,8 +23,8 @@
 
 ### Features to come
 
-- Rendering: Cascaded Shadow Mapping, Real-Time Ray Tracing (Vulkan), Post-processing,
-    3D Animations, Multithreading, Materials (user's shaders), Sprite Atlases
+- Rendering: Skeletal Animations, FXAA, Forward Rendering, Real-Time Ray Tracing (Vulkan),
+  Post-Processing, User's Shaders, Sprite Atlases
 
 - Systems: Build System, Jobs System, Particles System (2D and 3D), Network Solution, Asset Manager
     
