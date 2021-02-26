@@ -31,23 +31,21 @@ namespace SmolEngine
 
 	private:
 
-		static void BeginDraw(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer>& targetFramebuffer);
+		static void BeginDraw(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar);
 
 		static void EndDraw();
 
-		// Textures
+		// 3D
+
+		static void RenderMeshes(entt::registry& registry);
+
+		// 2D
 
 		static void Render2DTextures(entt::registry& registry);
 
-		// Light 2D
-
 		static void Render2DLight(entt::registry& registry);
 
-		// Animation
-
 		static void Render2DAnimations(entt::registry& registry);
-
-		// UI
 
 		static void RenderCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform);
 

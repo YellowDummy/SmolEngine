@@ -246,10 +246,7 @@ namespace SmolEngine
 
 #ifdef SMOLENGINE_EDITOR
 			// Update materials
-			void* data = nullptr;
-			uint32_t size = 0;
-			MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
-			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_MaterialsBinding, size, data);
+			UpdateMaterials();
 #endif
 			// Depth
 			s_Data->m_MainPushConstant.m_DepthMVP = CalculateDepthMVP(s_Data->m_DirectionalLights[0].Position); // temp

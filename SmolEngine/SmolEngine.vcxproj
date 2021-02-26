@@ -573,6 +573,7 @@
     <ClInclude Include="Source\Core\EngineCommand.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
     <ClInclude Include="Source\Core\EventHandler.h" />
+    <ClInclude Include="Source\Core\FileDialog.h" />
     <ClInclude Include="Source\Core\FilePaths.h" />
     <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\Core\InputCodes.h" />
@@ -627,6 +628,7 @@
     <ClInclude Include="Source\ImGui\ImGuiExtension.h" />
     <ClInclude Include="Source\ImGui\ImGuiLayer.h" />
     <ClInclude Include="Source\ImGui\ImGuiVulkanImpl.h" />
+    <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
     <ClInclude Include="Source\ImGui\NodeEditor\imnodes.h" />
     <ClInclude Include="Source\Networking\NetworkManager.h" />
     <ClInclude Include="Source\Physics2D\Box2D\Body2D.h" />
@@ -716,6 +718,7 @@
     <ClCompile Include="Source\Core\EngineCommand.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
+    <ClCompile Include="Source\Core\FileDialog.cpp" />
     <ClCompile Include="Source\Core\Layer.cpp" />
     <ClCompile Include="Source\Core\LayerManager.cpp" />
     <ClCompile Include="Source\Core\SLog.cpp" />
@@ -760,6 +763,7 @@
     <ClCompile Include="Source\ImGui\ImGuiExtension.cpp" />
     <ClCompile Include="Source\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="Source\ImGui\ImGuiVulkanImpl.cpp" />
+    <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
     <ClCompile Include="Source\ImGui\NodeEditor\imnodes.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\Body2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\CollisionFilter2D.cpp" />

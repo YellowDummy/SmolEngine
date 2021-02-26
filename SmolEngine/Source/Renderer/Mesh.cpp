@@ -46,6 +46,11 @@ namespace SmolEngine
         return nullptr;
     }
 
+    const std::string& Mesh::GetName() const
+    {
+        return m_Name;
+    }
+
     void Mesh::SetMaterialID(int32_t ID, bool submeshes)
     {
         m_MaterialID = ID;

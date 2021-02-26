@@ -45,7 +45,8 @@ namespace SmolEngine
 
 		// Rendering
 
-		void RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, bool debugDrawEnabled, 
+		void RenderScene(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos,
+			float zNear, float zFar, bool debugDrawEnabled,
 			CameraComponent* target = nullptr, TransformComponent* tranform = nullptr);
 
 		// Assets

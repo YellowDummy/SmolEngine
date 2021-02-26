@@ -8,6 +8,16 @@
 
 namespace SmolEngine
 {
+	struct BeginSceneInfo
+	{
+		float          nearClip;
+		float          farClip;
+
+		glm::vec3      pos;
+		glm::mat4      proj;
+		glm::mat4      view;
+	};
+
 	enum class DebugPrimitives : uint16_t
 	{
 		None = 0,

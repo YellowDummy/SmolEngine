@@ -93,7 +93,7 @@ namespace SmolEngine
 		CreateDebugData();
 	}
 
-	void Renderer2D::BeginScene(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer> targetFramebuffer)
+	void Renderer2D::BeginScene(const BeginSceneInfo& info)
 	{
 		return; //
 
@@ -110,9 +110,8 @@ namespace SmolEngine
 		s_Data->MainPipeline->EndRenderPass();
 		s_Data->MainPipeline->BeginBufferSubmit();
 
-		s_Data->SceneData.viewProjectionMatrix = viewProjectionMatrix;
-		s_Data->SceneData.ambientValue = ambientValue;
-		s_Data->SceneData.targetFramebuffer = targetFramebuffer;
+		s_Data->SceneData.viewProjectionMatrix = info.view * info.proj;
+		s_Data->SceneData.ambientValue = 1.0f;
 
 		StartNewBatch();
 		Stats->Reset();

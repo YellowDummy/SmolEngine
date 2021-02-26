@@ -43,6 +43,8 @@ namespace SmolEngine
 
 		std::vector<Ref<Mesh>>& GetSubMeshes() { return m_SubMeshes; }
 
+		const std::string& GetName() const;
+
 		// Setters
 
 		void SetMaterialID(int32_t ID, bool submeshes = false);

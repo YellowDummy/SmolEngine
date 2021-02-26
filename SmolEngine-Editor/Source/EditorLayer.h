@@ -5,8 +5,10 @@
 #include "ImGui/EditorConsole.h"
 #include "ImGui/EditorPanels.h"
 #include "ImGui/BuildPanel.h"
-
+#include "ImGui/FileBrowser/imfilebrowser.h"
 #include "ImGui/AnimationPanel.h"
+#include "ImGui/MaterialLibraryInterface.h"
+
 #include "Animation/AnimationClip.h"
 #include "ECS/Components/BaseComponent.h"
 #include "Scripting/OutValues.h"
@@ -14,8 +16,6 @@
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <ImGuizmo.h>
-
-#include "ImGui/FileBrowser/imfilebrowser.h"
 
 
 namespace SmolEngine
@@ -30,8 +30,10 @@ namespace SmolEngine
 	struct CanvasComponent;
 	struct BehaviourComponent;
 	struct Light2DSourceComponent;
+	struct MeshComponent;
 
 	class Actor;
+	class Mesh;
 	class Framebuffer;
 	class EditorCamera;
 
@@ -127,6 +129,10 @@ namespace SmolEngine
 
 		void DrawHierarchy();
 
+		void DrawMeshComponent(MeshComponent* meshComponent);
+
+		void DrawMeshInspector(bool& show);
+
 		// Helpers
 
 		void UpdateFileBrowser(bool& showAnimPanel);
@@ -173,6 +179,7 @@ namespace SmolEngine
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
 		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
+		MaterialLibraryInterface m_MaterialLibraryInterface = {};
 		std::unique_ptr<BuildPanel> m_BuildPanel = nullptr;
 		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;
@@ -184,6 +191,8 @@ namespace SmolEngine
 		inline static ImGuizmo::OPERATION m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 		//TEMP 
+
+		Mesh* m_SelectedMesh = nullptr;
 
 		Ref<Actor> m_Actor = nullptr;
 		Ref<Actor> m_CameraActor = nullptr;

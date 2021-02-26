@@ -62,18 +62,18 @@ namespace SmolEngine
 		// Chair
 		MaterialCI = {};
 		MaterialCI.Name = "Chair";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
-		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "WoodenChair_01_16-bit_Metallic.png");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "WoodenChair_01_16-bit_Roughness.png");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "WoodenChair_01_16-bit_Diffuse.png";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "WoodenChair_01_16-bit_Normal.png";
+		MaterialCI.Textures[MaterialTexture::Metallic] = Resources + "WoodenChair_01_16-bit_Metallic.png";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "WoodenChair_01_16-bit_Roughness.png";
 		chairID = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaBase
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaBase";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Albedo.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Bricks_a_Roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_Bricks_a_Albedo.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_Bricks_a_Normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_Bricks_a_Roughness.PNG";
 		MaterialCI.Metallic = 0.2f;
 
 		sponzaBase = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -81,9 +81,9 @@ namespace SmolEngine
 		// SponzaRoof
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaRoof";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Roof_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Roof_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Roof_roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_Roof_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_Roof_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_Roof_roughness.PNG";
 		MaterialCI.Metallic = 0.0;
 
 		sponzaRoof = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -91,9 +91,9 @@ namespace SmolEngine
 		// SponzaLion
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaLion";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Lion_Albedo.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Lion_Normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Lion_Roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Lion_Albedo.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Lion_Normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Lion_Roughness.PNG";
 		MaterialCI.Metallic = 1.0;
 
 		sponzaLion = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -101,9 +101,9 @@ namespace SmolEngine
 		// SponzaFlowers
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaFlowers";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/VasePlant_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/VasePlant_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/VasePlant_roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/VasePlant_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/VasePlant_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/VasePlant_roughness.PNG";
 		MaterialCI.Metallic = 0.0;
 
 		sponzaFlowers = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -111,9 +111,9 @@ namespace SmolEngine
 		// SponzaVase
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaVase";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Vase_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Vase_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Vase_roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Vase_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Vase_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Vase_roughness.PNG";
 		MaterialCI.Metallic = 1.0;
 
 		sponzaVase = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -121,39 +121,39 @@ namespace SmolEngine
 		// SponzaCurtainRed
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaCurtainRed";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Curtain_Red_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Curtain_Red_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Curtain_roughness.PNG");
-		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "/Test/Sponza_Curtain_metallic.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_Curtain_Red_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_Curtain_Red_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_Curtain_roughness.PNG";
+		MaterialCI.Textures[MaterialTexture::Metallic] = Resources + "/Test/Sponza_Curtain_metallic.PNG";
 
 		sponzaCurtainRed = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaCurtainGreen
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaCurtainGreen";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Curtain_Green_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Curtain_Green_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Curtain_roughness.PNG");
-		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "/Test/Sponza_Curtain_metallic.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_Curtain_Green_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_Curtain_Green_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_Curtain_roughness.PNG";
+		MaterialCI.Textures[MaterialTexture::Metallic] = Resources + "/Test/Sponza_Curtain_metallic.PNG";
 
 		sponzaCurtainGreen = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaCurtainBlue
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaCurtainBlue";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Curtain_Blue_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Curtain_Blue_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Curtain_roughness.PNG");
-		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "/Test/Sponza_Curtain_metallic.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_Curtain_Blue_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_Curtain_Blue_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_Curtain_roughness.PNG";
+		MaterialCI.Textures[MaterialTexture::Metallic] = Resources + "/Test/Sponza_Curtain_metallic.PNG";
 
 		sponzaCurtainBlue = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// SponzaThorn
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaThorn";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_Thorn_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_Thorn_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_Thorn_roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_Thorn_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_Thorn_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_Thorn_roughness.PNG";
 		MaterialCI.Metallic = 0.0;
 
 		sponzaThorn =  MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -161,9 +161,9 @@ namespace SmolEngine
 		//SponzaBrazier
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaBrazier";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/VaseHanging_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/VaseHanging_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/VaseHanging_roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/VaseHanging_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/VaseHanging_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/VaseHanging_roughness.PNG";
 		MaterialCI.Metallic = 0.0;
 
 		sponzaBrazier = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
@@ -171,22 +171,23 @@ namespace SmolEngine
 		// SponzaChain
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaChain";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/ChainTexture_Albedo.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/ChainTexture_Normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/ChainTexture_Roughness.PNG");
-		MaterialCI.Textures[MaterialTexture::Metallic] = Texture::Create(Resources + "/Test/ChainTexture_Metallic.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/ChainTexture_Albedo.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/ChainTexture_Normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/ChainTexture_Roughness.PNG";
+		MaterialCI.Textures[MaterialTexture::Metallic] = Resources + "/Test/ChainTexture_Metallic.PNG";
 
 		sponzaChain = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
 
 		// FlagPole
 		MaterialCI = {};
 		MaterialCI.Name = "SponzaFlagPole";
-		MaterialCI.Textures[MaterialTexture::Albedro] = Texture::Create(Resources + "/Test/Sponza_FlagPole_diffuse.PNG");
-		MaterialCI.Textures[MaterialTexture::Normal] = Texture::Create(Resources + "/Test/Sponza_FlagPole_normal.PNG");
-		MaterialCI.Textures[MaterialTexture::Roughness] = Texture::Create(Resources + "/Test/Sponza_FlagPole_roughness.PNG");
+		MaterialCI.Textures[MaterialTexture::Albedro] = Resources + "/Test/Sponza_FlagPole_diffuse.PNG";
+		MaterialCI.Textures[MaterialTexture::Normal] = Resources + "/Test/Sponza_FlagPole_normal.PNG";
+		MaterialCI.Textures[MaterialTexture::Roughness] = Resources + "/Test/Sponza_FlagPole_roughness.PNG";
 		MaterialCI.Metallic = 0.5f;
 
 		sponzaFlagPole = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
+		MaterialLibrary::GetSinglenton()->Save();
 
 		Renderer::UpdateMaterials();
 

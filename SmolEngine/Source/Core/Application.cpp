@@ -10,8 +10,7 @@
 #include "Events/ApplicationEvent.h"
 
 #include "Renderer/GraphicsContext.h"
-
-#include "../../../GameX/CppScriptingExamples.h"
+#include "Renderer/MaterialLibrary.h"
 
 namespace SmolEngine 
 {
@@ -77,6 +76,9 @@ namespace SmolEngine
 		// Pushing Dear ImGui Layer
 		PushLayer(m_ImGuiLayer);
 #endif
+		// Initializing Material Library
+		MaterialLibrary::GetSinglenton()->Init();
+
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
 		ClientInit();

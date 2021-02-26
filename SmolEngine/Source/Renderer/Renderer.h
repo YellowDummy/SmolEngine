@@ -1,22 +1,11 @@
 #pragma once
 #include "Core/Core.h"
-
-#include <glm/glm.hpp>
+#include "Renderer/RendererShared.h"
 
 namespace SmolEngine
 {
 	class Mesh;
 	class Framebuffer;
-
-	struct BeginSceneInfo
-	{
-		float          nearClip;
-		float          farClip;
-
-		glm::vec3      pos;
-		glm::mat4      proj;
-		glm::mat4      view;
-	};
 
 	struct DebugViewInfo
 	{

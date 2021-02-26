@@ -20,6 +20,7 @@
 #include "UI/UITextLabel.h"
 #include "Renderer/Text.h"
 #include "Core/Input.h"
+#include "Core/FileDialog.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -45,6 +46,7 @@
 #include "ECS/Scene.h"
 
 #include "Renderer/GraphicsContext.h"
+#include "Renderer/MaterialLibrary.h"
 #ifndef SMOLENGINE_OPENGL_IMPL
 #include "Renderer/Vulkan/Vulkan.h"
 #include "Renderer/Vulkan/VulkanContext.h"
@@ -54,6 +56,7 @@
 
 namespace SmolEngine
 {
+
 	void EditorLayer::OnAttach()
 	{
 		GraphicsContextInitInfo GCInfo = {};
@@ -63,15 +66,11 @@ namespace SmolEngine
 
 		EditorCameraCreateInfo editorCamCI{};
 		{
-			editorCamCI.Type = CameraType::Ortho;
-			editorCamCI.NearClip = -1.0f;
-			editorCamCI.FarClip = 1.0f;
+			editorCamCI.Type = CameraType::Perspective;
+			m_Camera = std::make_shared<EditorCamera>(&editorCamCI);
 		}
 
-		m_Camera = std::make_shared<EditorCamera>(&editorCamCI);
-
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
-
 		m_BuildPanel = std::make_unique<BuildPanel>();
 		m_AnimationPanel = std::make_unique<AnimationPanel>();
 		m_SettingsWindow = std::make_unique<SettingsWindow>();
@@ -112,7 +111,7 @@ namespace SmolEngine
 		}
 
 		if (isSceneViewFocused)
-			//m_Camera->OnEvent(event);
+			m_Camera->OnEvent(event);
 
 		m_Scene->OnEvent(event);
 	}
@@ -128,6 +127,7 @@ namespace SmolEngine
 		static bool showSettingsWindow = false;
 		static bool showBuildPanel = false;
 		static bool showAnimationPanel = false;
+		static bool showMaterialLibrary = false;
 
 		//TEMP
 
@@ -314,6 +314,11 @@ namespace SmolEngine
 					showSettingsWindow = true;
 				}
 
+				if (ImGui::MenuItem("Material Library"))
+				{
+					showMaterialLibrary = true;
+				}
+
 				if (ImGui::MenuItem("Renderer2D Stats"))
 				{
 					showRenderer2Dstats = true;
@@ -368,6 +373,7 @@ namespace SmolEngine
 
 		DrawSceneView(true);
 		DrawGameView(showGameView);
+		m_MaterialLibraryInterface.Draw(showMaterialLibrary);
 
 		// TEMP
 
@@ -1162,6 +1168,18 @@ namespace SmolEngine
 						ImGui::NewLine();
 					}
 
+					if (IsCurrentComponent<MeshComponent>(i))
+					{
+						ImGui::NewLine();
+						if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							ImGui::NewLine();
+							auto component = m_Scene->GetActiveScene().GetComponent<MeshComponent>(*m_SelectedActor.get());
+							DrawMeshComponent(component);
+						}
+						ImGui::NewLine();
+					}
+
 					DrawScriptComponent(i);
 				}
 
@@ -1372,7 +1390,7 @@ namespace SmolEngine
 						ImGui::EndMenu();
 					}
 
-					if (ImGui::BeginMenu("Common"))
+					if (ImGui::BeginMenu("2D"))
 					{
 						std::stringstream ss;
 						if (ImGui::MenuItem("Sprite"))
@@ -1400,6 +1418,25 @@ namespace SmolEngine
 							m_Scene->GetActiveScene().AddComponent<Animation2DComponent>
 								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
 						}
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("3D"))
+					{
+						std::stringstream ss;
+						if (ImGui::MenuItem("Mesh"))
+						{
+							ss << "New_Mesh_" << data.m_ActorPool.size();
+							m_Scene->GetActiveScene().AddComponent<MeshComponent>
+								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Common"))
+					{
+						std::stringstream ss;
 						if (ImGui::MenuItem("Audio Source"))
 						{
 							ss << "New_AudioSource_" << data.m_ActorPool.size();
@@ -1417,8 +1454,10 @@ namespace SmolEngine
 							ss << "New_Camera_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().CreateActor(ActorBaseType::CameraBase, ss.str());
 						}
+
 						ImGui::EndMenu();
 					}
+
 
 					ImGui::EndPopup();
 				}
@@ -1503,6 +1542,93 @@ namespace SmolEngine
 			ImGui::EndChild();
 		}
 		ImGui::End();
+	}
+
+	void EditorLayer::DrawMeshComponent(MeshComponent* meshComponent)
+	{
+		static bool showMeshInspector = false;
+		if (meshComponent->Mesh)
+		{
+			ImGui::Extensions::Text("Material ID", std::to_string(meshComponent->Mesh->GetMaterialID()));
+			ImGui::NewLine();
+
+			ImGui::Extensions::CheckBox("Show", meshComponent->bShow);
+			ImGui::Extensions::CheckBox("Static", meshComponent->bIsStatic);
+			ImGui::Extensions::CheckBox("Cast Shadows", meshComponent->bIsStatic);
+
+			ImGui::NewLine();
+			if (!showMeshInspector)
+			{
+				if (ImGui::Button("Mesh Inspector", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+				{
+					showMeshInspector = true;
+				}
+			}
+
+			DrawMeshInspector(showMeshInspector);
+		}
+		else
+		{
+			if (ImGui::Button("Load", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+			{
+				auto& result = FileDialog::OpenFile("fbx, obj, glb");
+				if (result.has_value())
+					meshComponent->Mesh = Mesh::Create(result.value());
+			}
+		}
+	}
+
+	void EditorLayer::DrawMeshInspector(bool& show)
+	{
+		auto* meshComponent = m_Scene->GetActiveScene().GetComponent<MeshComponent>(*m_SelectedActor.get());
+		if (!meshComponent)
+			return;
+
+		std::vector<Mesh*> meshes(meshComponent->Mesh->GetSubMeshes().size() + 1);
+		uint32_t index = 0;
+		meshes[index] = meshComponent->Mesh.get();
+		index++;
+
+		for (auto& sub : meshComponent->Mesh->GetSubMeshes())
+		{
+			meshes[index] = sub.get();
+			index++;
+		}
+
+		if (show)
+		{
+			ImGui::Begin("Mesh Inspector", &show);
+			{
+				static int32_t interface_id = 0;
+				std::vector<const char*> charitems;
+				for (auto& [name, id] : MaterialLibrary::GetSinglenton()->GetMaterialTable())
+					charitems.push_back(name.c_str());
+
+				uint32_t itemCount = static_cast<uint32_t>(charitems.size());
+
+				ImGui::Extensions::Text("Meshe & SubMeshes", "");
+				for (auto& mesh : meshes)
+				{
+					std::string name = "Mesh #" + mesh->GetName();
+					if (ImGui::CollapsingHeader(name.c_str()))
+					{
+						std::string id = name + "IDMat";
+						ImGui::PushID(id.c_str());
+						{
+							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
+							ImGui::Combo("Material", &interface_id, &charitems[0], itemCount, itemCount);
+							if (ImGui::Button("Update", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+							{
+								int32_t id = MaterialLibrary::GetSinglenton()->GetMaterialID(std::string(charitems[interface_id]));
+								mesh->SetMaterialID(id);
+							}
+						}
+						ImGui::PopID();
+					}
+				}
+			}
+			ImGui::End();
+		}
 	}
 
 	void EditorLayer::UpdateFileBrowser(bool& showAnimPanel)

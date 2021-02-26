@@ -6,6 +6,7 @@
 #include "ECS/Systems/UISystem.h"
 
 #include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer.h"
 #include "Core/Application.h"
 
 namespace SmolEngine
@@ -25,14 +26,35 @@ namespace SmolEngine
 		Renderer2D::DebugDrawLine(startPos, endPos, color);
 	}
 
-	void RendererSystem::BeginDraw(const glm::mat4& viewProjectionMatrix, const float ambientValue, Ref<Framebuffer>& targetFramebuffer)
+	void RendererSystem::BeginDraw(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar)
 	{
-		Renderer2D::BeginScene(viewProjectionMatrix, ambientValue, targetFramebuffer);
+		static BeginSceneInfo info;
+		info.farClip = zFar;
+		info.nearClip = zNear;
+		info.view = view;
+		info.proj = proj;
+		info.pos = camPos;
+
+		Renderer::BeginScene(info);
+		Renderer2D::BeginScene(info);
 	}
 
 	void RendererSystem::EndDraw()
 	{
+		Renderer::EndScene();
 		Renderer2D::EndScene();
+	}
+
+
+	void RendererSystem::RenderMeshes(entt::registry& registry)
+	{
+		const auto& group = registry.view<TransformComponent, MeshComponent>();
+		for (const auto& entity : group)
+		{
+			auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
+			if (mesh.bShow && mesh.Mesh)
+				Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh);
+		}
 	}
 
 	void RendererSystem::Render2DTextures(entt::registry& registry)

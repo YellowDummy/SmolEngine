@@ -120,6 +120,9 @@ namespace SmolEngine
 
 	Ref<Texture> Texture::Create(const std::string& filePath, TextureFormat format)
 	{
+		if (filePath == "")
+			return nullptr;
+
 		Ref<Texture> texture = TexturesPool::AddTexture(filePath);
 
 		if (!texture->m_Initialized)

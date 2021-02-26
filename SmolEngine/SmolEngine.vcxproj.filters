@@ -1592,6 +1592,8 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\MeshPool.h" />
+    <ClInclude Include="Source\Core\FileDialog.h" />
+    <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1932,5 +1934,7 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\MeshPool.cpp" />
+    <ClCompile Include="Source\Core\FileDialog.cpp" />
+    <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
   </ItemGroup>
 </Project>

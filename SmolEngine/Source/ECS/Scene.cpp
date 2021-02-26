@@ -150,7 +150,7 @@ namespace SmolEngine
 		std::stringstream storageRegistry;
 		std::stringstream storageSceneData;
 
-		// Serializing all Tuples
+		// Serializing all Components
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<

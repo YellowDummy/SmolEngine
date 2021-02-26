@@ -146,7 +146,7 @@ namespace SmolEngine
 			CameraSystem::CalculateView(&tuple.Camera, &transform);
 
 			// Rendering scene to target framebuffer
-			RenderScene(tuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0], false, &tuple.Camera, &transform);
+			//RenderScene(tuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0], false, &tuple.Camera, &transform);
 
 			// At the moment we support only one viewport
 			break;
@@ -187,7 +187,7 @@ namespace SmolEngine
 		UISystem::OnEvent(GetActiveScene().m_SceneData.m_Registry, e);
 	}
 
-	void WorldAdmin::RenderScene(const glm::mat4& viewProjectionMatrix, Ref<Framebuffer> framebuffer, bool debugDrawEnabled,
+	void WorldAdmin::RenderScene(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar, bool debugDrawEnabled,
 		CameraComponent* targetCamera, TransformComponent* cameraTranform)
 	{
 		entt::registry& registry = GetActiveScene().m_SceneData.m_Registry;
@@ -198,15 +198,14 @@ namespace SmolEngine
 		Box2DPhysicsSystem::UpdateTransfroms(registry);
 
 #endif
-		RendererSystem::BeginDraw(viewProjectionMatrix, GetActiveScene().m_SceneData.m_AmbientStrength, framebuffer);
+		RendererSystem::BeginDraw(view, proj, camPos, zNear, zFar);
 		{
-			// 2D Textures 
+			// 3D
+			RendererSystem::RenderMeshes(registry);
+
+			// 2D
 			RendererSystem::Render2DTextures(registry);
-
-			// 2D Light
 			RendererSystem::Render2DLight(registry);
-
-			// 2D Animations
 			Animation2DSystem::Update(registry);
 			RendererSystem::Render2DAnimations(registry);
 
@@ -267,7 +266,8 @@ namespace SmolEngine
 	void WorldAdmin::UpdateEditorCamera(Ref<EditorCamera>& cam)
 	{
 		// Rendering scene to the target framebuffer
-		RenderScene(cam->GetViewProjection(), GraphicsContext::GetSingleton()->GetFramebuffer(), true);
+		RenderScene(cam->GetViewMatrix(),
+			cam->GetProjection(), cam->GetPosition(), cam->GetNearClip(), cam->GetFarClip(), true);
 	}
 
 	void WorldAdmin::OnGameViewResize(float width, float height)

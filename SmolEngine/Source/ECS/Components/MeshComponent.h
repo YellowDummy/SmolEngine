@@ -17,12 +17,14 @@ namespace SmolEngine
 
 		// Data
 
-		bool                   bCastShadows = true;
-		bool                   bIsStatic = false;
-		int                    ShadowType = 2;
+		bool                       bCastShadows = true;
+		bool                       bIsStatic = false;
+		bool                       bShow = true;
 
-		Ref<Mesh>              Mesh = nullptr;
-		std::vector<int32_t>   MaterialIDs;
+		int                        ShadowType = 2;
+							       
+		Ref<Mesh>                  Mesh = nullptr;
+		std::vector<std::string>   MaterialNames;
 
 	private:
 
@@ -31,7 +33,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(bCastShadows, bIsStatic, ShadowType, MaterialIDs, ComponentID);
+			archive(bCastShadows, bIsStatic, ShadowType, MaterialNames, ComponentID);
 		}
 	};
 }

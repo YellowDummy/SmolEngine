@@ -22,8 +22,7 @@ namespace SmolEngine
 
 		static void Shutdown();
 
-		static void BeginScene(const glm::mat4& viewProjectionMatrix, 
-			const float ambientValue, Ref<Framebuffer> targetFramebuffer);
+		static void BeginScene(const BeginSceneInfo& info);
 
 		static void EndScene();
 

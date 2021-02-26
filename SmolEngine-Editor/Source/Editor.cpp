@@ -26,10 +26,10 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENGL_IMPL
 		app.PushLayer(new EditorLayer);
 #else
-		app.PushLayer(new Renderer3DTestLayer);
+		//app.PushLayer(new Renderer3DTestLayer);
 		//app.PushLayer(new DeferredRenderingTest);
 #endif
-		//app.PushLayer(new EditorLayer);
+		app.PushLayer(new EditorLayer);
 		EDITOR_INFO("Initialized successfully");
 	}
 
