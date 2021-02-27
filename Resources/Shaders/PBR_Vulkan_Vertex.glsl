@@ -5,7 +5,6 @@ layout(location = 1) in vec3 a_Normal;
 layout(location = 2) in vec4 a_Tangent;
 layout(location = 3) in vec2 a_UV;
 layout(location = 4) in vec4 a_Color;
-
 struct MaterialData
 {
    ivec4 TextureStates;
@@ -65,27 +64,36 @@ const mat4 biasMat = mat4(
 	0.5, 0.5, 0.0, 1.0 
 );
 
-layout (binding = 24) uniform sampler2D texturesMap[4096];
-
 layout (location = 0)  out vec3 outWorldPos;
 layout (location = 1)  out vec3 outNormal;
 layout (location = 2)  out vec3 outCameraPos;
 layout (location = 3)  out vec2 outUV;
-layout (location = 4)  out vec4 outTangent;
 
-layout (location = 5) out float outMetallic;
-layout (location = 6) out float outRoughness;
-layout (location = 7) out float outExposure;
-layout (location = 8) out float outGamma;
-layout (location = 9) out float outAmbient;
+layout (location = 4)  out int outUseAlbedroMap;
+layout (location = 5)  out int outUseNormalMap;
+layout (location = 6)  out int outUseMetallicMap;
+layout (location = 7)  out int outUseRoughnessMap;
+layout (location = 8)  out int outUseAOMap;
 
-layout (location = 10) out uint outDirectionalLightCount;
-layout (location = 11) out uint outPointLightCount;
+layout (location = 9)  out int outAlbedroMapIndex;
+layout (location = 10) out int outNormalMapIndex;
+layout (location = 11) out int outMetallicMapIndex;
+layout (location = 12) out int outRoughnessMapIndex;
+layout (location = 13) out int outAOMapIndex;
 
-layout (location = 12) out vec3 outAO;
-layout (location = 13) out vec3 outAlbedro;
-layout (location = 14) out vec4 outShadowCoord;
-layout (location = 15) out vec4 outRawPos;
+layout (location = 14) out float outMetallic;
+layout (location = 15) out float outRoughness;
+layout (location = 16) out float outExposure;
+layout (location = 17) out float outGamma;
+layout (location = 18) out float outAmbient;
+
+layout (location = 19) out uint outDirectionalLightCount;
+layout (location = 20) out uint outPointLightCount;
+
+layout (location = 21) out vec4 outColor;
+layout (location = 22) out vec4 outShadowCoord;
+layout (location = 23) out vec4 outRawPos;
+layout (location = 24) out mat3 outTBN;
 
 void main()
 {
@@ -93,51 +101,43 @@ void main()
 	int materialIndex = int(shaderDataBuffer.data[dataOffset + gl_InstanceIndex].data.x);
 
 	outWorldPos = vec3(model * vec4(a_Position, 1.0));
-	outTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
+	outNormal =  mat3(model) * a_Normal;
 	outCameraPos = sceneData.data.camPos.rgb;
 	outUV = a_UV;
-	outRawPos = vec4(a_Position, 1.0);
-
-	//
 	outExposure = sceneData.data.params.x;
 	outGamma = sceneData.data.params.y;
 	outAmbient = sceneData.data.params.z;
-
-	//
 	outDirectionalLightCount = directionalLights;
 	outPointLightCount = pointLights;
 	outShadowCoord = ( biasMat * lightSpace * model ) * vec4(a_Position, 1.0);	
-
-	// states
-	int useAlbedroMap = materialBuffer.materials[materialIndex].TextureStates.x;
-	int useNormalMap = materialBuffer.materials[materialIndex].TextureStates.y;
-	int useMetallicMap = materialBuffer.materials[materialIndex].TextureStates.z;
-	int useRoughnessMap = materialBuffer.materials[materialIndex].TextureStates.w;
-	int useAOMap = materialBuffer.materials[materialIndex].TextureStates_2.x;
-
-	// index
-	int albedroMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.x;
-	int normalMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.y;
-	int metallicMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.z;
-	int roughnessMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.w;
-	int AOMapIndex = materialBuffer.materials[materialIndex].TextureIndexes_2.x;
+	outRawPos = vec4(a_Position, 1.0);
 
 	// TBN matrix
-	vec3 modelNormal =  mat3(model) * a_Normal;
-	vec3 N = normalize(modelNormal);
-	vec3 T = normalize(outTangent.xyz);
+	vec4 modelTangent = vec4(mat3(model) * a_Tangent.xyz, a_Tangent.w);
+	vec3 N = normalize(outNormal);
+	vec3 T = normalize(modelTangent.xyz);
 	vec3 B = normalize(cross(N, T));
-	mat3 TBN = mat3(T, B, N);
-
-	outNormal = useNormalMap == 1? normalize(texture(texturesMap[normalMapIndex], a_UV).xyz * 2.0 - vec3(1.0)): TBN[2];
+	outTBN = mat3(T, B, N);
 
 	// PBR Params
-	float tempColor = materialBuffer.materials[materialIndex].PBRValues.z;
-	outMetallic = useMetallicMap == 1 ? texture(texturesMap[metallicMapIndex], a_UV).r : materialBuffer.materials[materialIndex].PBRValues.x;
-	outRoughness = useRoughnessMap == 1 ? texture(texturesMap[roughnessMapIndex], a_UV).r : materialBuffer.materials[materialIndex].PBRValues.y;
-	outAlbedro = useAlbedroMap == 1 ? texture(texturesMap[albedroMapIndex], a_UV).rgb : vec3(tempColor, tempColor, tempColor);
-	outAlbedro = pow(outAlbedro, vec3(2.2));
-	outAO = useAOMap == 1 ? texture(texturesMap[AOMapIndex], a_UV).rrr : vec3(1.0, 1.0, 1.0);
+	outMetallic = materialBuffer.materials[materialIndex].PBRValues.x;
+	outRoughness = materialBuffer.materials[materialIndex].PBRValues.y;
+	float c =  materialBuffer.materials[materialIndex].PBRValues.z;
+	outColor = vec4(c, c, c, 1);
+
+	// states
+	outUseAlbedroMap = materialBuffer.materials[materialIndex].TextureStates.x;
+	outUseNormalMap = materialBuffer.materials[materialIndex].TextureStates.y;
+	outUseMetallicMap = materialBuffer.materials[materialIndex].TextureStates.z;
+	outUseRoughnessMap = materialBuffer.materials[materialIndex].TextureStates.w;
+	outUseAOMap = materialBuffer.materials[materialIndex].TextureStates_2.x;
+
+	// index
+	outAlbedroMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.x;
+	outNormalMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.y;
+	outMetallicMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.z;
+	outRoughnessMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.w;
+	outAOMapIndex = materialBuffer.materials[materialIndex].TextureIndexes_2.x;
 
 	gl_Position =  sceneData.data.projection * sceneData.data.view * vec4(outWorldPos, 1.0);
 }

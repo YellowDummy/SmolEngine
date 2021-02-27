@@ -138,6 +138,7 @@ namespace SmolEngine
 		m_SceneData.m_Registry.remove_if_exists<CanvasComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<AudioSourceComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
 
 		m_IDSet.erase(actor->GetName());
 		m_SceneData.m_ActorPool.erase(actor->GetID());

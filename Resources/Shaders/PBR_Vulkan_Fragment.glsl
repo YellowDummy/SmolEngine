@@ -6,21 +6,32 @@ layout (location = 0)  in vec3 inWorldPos;
 layout (location = 1)  in vec3 inNormal;
 layout (location = 2)  in vec3 inCameraPos;
 layout (location = 3)  in vec2 inUV;
-layout (location = 4)  in vec4 inTangent;
 
-layout (location = 5)  in float inMetallic;
-layout (location = 6)  in float inRoughness;
-layout (location = 7)  in float inExposure;
-layout (location = 8)  in float inGamma;
-layout (location = 9)  in float inAmbient;
+layout (location = 4)  flat in int inUseAlbedroMap;
+layout (location = 5)  flat in int inUseNormalMap;
+layout (location = 6)  flat in int inUseMetallicMap;
+layout (location = 7)  flat in int inUseRoughnessMap;
+layout (location = 8)  flat in int inUseAOMap;
 
-layout (location = 10) flat in uint inDirectionalLightCount;
-layout (location = 11) flat in uint inPointLightCount;
+layout (location = 9) flat in int inAlbedroMapIndex;
+layout (location = 10) flat in int inNormalMapIndex;
+layout (location = 11) flat in int inMetallicMapIndex;
+layout (location = 12) flat in int inRoughnessMapIndex;
+layout (location = 13) flat in int inAOMapIndex;
 
-layout (location = 12) in vec3 inAO;
-layout (location = 13) in vec3 inAlbedro;
-layout (location = 14) in vec4 inShadowCoord;
-layout (location = 15) in vec4 inRawPos;
+layout (location = 14) in float inMetallic;
+layout (location = 15) in float inRoughness;
+layout (location = 16) in float inExposure;
+layout (location = 17) in float inGamma;
+layout (location = 18) in float inAmbient;
+
+layout (location = 19) flat in uint inDirectionalLightCount;
+layout (location = 20) flat in uint inPointLightCount;
+
+layout (location = 21) in vec4 inColor;
+layout (location = 22) in vec4 inShadowCoord;
+layout (location = 23) in vec4 inRawPos;
+layout (location = 24) in mat3 inTBN;
 
 // Out
 layout (location = 0) out vec4 outColor;
@@ -30,6 +41,7 @@ layout (binding = 1) uniform sampler2D shadowMap;
 layout (binding = 2) uniform samplerCube samplerIrradiance;
 layout (binding = 3) uniform sampler2D samplerBRDFLUT;
 layout (binding = 4) uniform samplerCube prefilteredMap;
+layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 // Buffers
 struct DirectionalLightBuffer
@@ -140,12 +152,26 @@ vec3 fresnelSchlick(vec3 F0, float cosTheta)
 	return F0 + (vec3(1.0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+vec3 getNormal()
+{
+    if(inUseNormalMap == 1)
+	{
+		return inTBN * normalize(texture(texturesMap[inNormalMapIndex], inUV).xyz * 2.0 - vec3(1.0));
+	}
+
+	return inTBN[2];
+}
+
 void main()
 {	
-	vec3 N = inNormal;
-	float metallic = inMetallic;
-	float roughness = inRoughness;
-	vec3 ao = inAO;
+	// Getting Values 
+	vec3 N = getNormal();
+	vec3 ao = inUseAOMap == 1 ? texture(texturesMap[inAOMapIndex], inUV).rrr : vec3(1, 1, 1);
+	vec3 albedro = inUseAlbedroMap == 1 ? texture(texturesMap[inAlbedroMapIndex], inUV).rgb : inColor.rgb;
+	albedro = pow(albedro, vec3(2.2));
+
+	float metallic = inUseMetallicMap == 1 ? texture(texturesMap[inMetallicMapIndex], inUV).r : inMetallic;
+	float roughness = inUseRoughnessMap == 1 ? texture(texturesMap[inRoughnessMapIndex], inUV).r: inRoughness;
 	
 	// Outgoing light direction (vector from world-space fragment position to the "eye").
 	vec3 Lo = normalize(inCameraPos - inWorldPos);
@@ -156,7 +182,7 @@ void main()
 	// Specular reflection vector.
 	vec3 Lr = 2.0 * cosLo * N - Lo;
 	vec3 F0 = vec3(0.04); 
-	F0 = mix(F0, inAlbedro, metallic);
+	F0 = mix(F0, albedro, metallic);
 
     // Ambient lighting (IBL).
 	vec3 ambientLighting;
@@ -175,7 +201,7 @@ void main()
 		vec3 kd = mix(vec3(1.0), F, metallic);
 
 		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
-		vec3 diffuseIBL = kd * inAlbedro * irradiance;
+		vec3 diffuseIBL = kd * albedro * irradiance;
 
 		// Sample pre-filtered specular reflection environment at correct mipmap level.
 		int specularTextureLevels = textureQueryLevels(prefilteredMap);
@@ -220,7 +246,7 @@ void main()
 		// Lambert diffuse BRDF.
 		// We don't scale by 1/PI for lighting & material units to be more convenient.
 		// See: https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
-		vec3 diffuseBRDF = kd * inAlbedro;
+		vec3 diffuseBRDF = kd * albedro;
 
 		// Cook-Torrance specular microfacet BRDF.
 		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * 0.8);

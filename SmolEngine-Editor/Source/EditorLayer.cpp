@@ -1153,7 +1153,6 @@ namespace SmolEngine
 						ImGui::NewLine();
 						DrawInfo(&ref->Info);
 					}
-					ImGui::NewLine();
 					break;
 				}
 				case ActorBaseType::CameraBase:
@@ -1169,7 +1168,6 @@ namespace SmolEngine
 						DrawInfo(&ref->Info);
 					}
 
-					ImGui::NewLine();
 
 					// Camera
 					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1177,8 +1175,6 @@ namespace SmolEngine
 						ImGui::NewLine();
 						DrawCamera(&ref->Camera);
 					}
-
-					ImGui::NewLine();
 
 					break;
 				}
@@ -1537,6 +1533,8 @@ namespace SmolEngine
 				{
 					showMeshInspector = true;
 				}
+
+				ImGui::NewLine();
 			}
 
 			DrawMeshInspector(showMeshInspector);
@@ -1549,6 +1547,8 @@ namespace SmolEngine
 				if (result.has_value())
 					meshComponent->Mesh = Mesh::Create(result.value());
 			}
+
+			ImGui::NewLine();
 		}
 	}
 
