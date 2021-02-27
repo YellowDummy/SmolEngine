@@ -201,17 +201,18 @@ namespace SmolEngine
 		RendererSystem::BeginDraw(view, proj, camPos, zNear, zFar);
 		{
 			// 3D
-			RendererSystem::RenderMeshes(registry);
-
+			RendererSystem::SubmitMeshes(registry);
 			// 2D
-			RendererSystem::Render2DTextures(registry);
-			RendererSystem::Render2DLight(registry);
+			RendererSystem::Submit2DTextures(registry);
+			// Animations
 			Animation2DSystem::Update(registry);
-			RendererSystem::Render2DAnimations(registry);
-
+			RendererSystem::Submit2DAnimations(registry);
+			// Lights
+			RendererSystem::SubmitDirectionalLights(registry);
+			RendererSystem::Submit2DLight(registry);
 			//UI
 			if (targetCamera != nullptr && cameraTranform != nullptr)
-				RendererSystem::RenderCanvases(registry, targetCamera, cameraTranform);
+				RendererSystem::SubmitCanvases(registry, targetCamera, cameraTranform);
 		}
 		RendererSystem::EndDraw();
 

@@ -45,8 +45,27 @@ namespace SmolEngine
 		Renderer2D::EndScene();
 	}
 
+	void RendererSystem::SubmitDirectionalLights(entt::registry& registry)
+	{
+		bool shadows_casted = false;
+		const auto& view = registry.view<DirectionalLightComponent>();
+		for (const auto& entity : view)
+		{
+			auto& light = view.get<DirectionalLightComponent>(entity);
+			if (light.bEnabled)
+			{
+				if (light.bCastShadows && !shadows_casted)
+				{
+					Renderer::SetShadowLightDirection(light.Direction);
+					shadows_casted = true;
+				}
 
-	void RendererSystem::RenderMeshes(entt::registry& registry)
+				Renderer::SubmitDirectionalLight(light.Direction, light.Color);
+			}
+		}
+	}
+
+	void RendererSystem::SubmitMeshes(entt::registry& registry)
 	{
 		const auto& group = registry.view<TransformComponent, MeshComponent>();
 		for (const auto& entity : group)
@@ -57,7 +76,7 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::Render2DTextures(entt::registry& registry)
+	void RendererSystem::Submit2DTextures(entt::registry& registry)
 	{
 		const auto& group = registry.view<TransformComponent, Texture2DComponent>();
 		for (const auto& entity : group)
@@ -73,7 +92,7 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::Render2DLight(entt::registry& registry)
+	void RendererSystem::Submit2DLight(entt::registry& registry)
 	{
 		const auto& group = registry.view<TransformComponent, Light2DSourceComponent>();
 		for (const auto& entity : group)
@@ -86,7 +105,7 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::Render2DAnimations(entt::registry& registry)
+	void RendererSystem::Submit2DAnimations(entt::registry& registry)
 	{
 		const auto& group = registry.view<TransformComponent, Animation2DComponent>();
 		for (const auto& entity : group)
@@ -106,7 +125,7 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::RenderCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform)
+	void RendererSystem::SubmitCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform)
 	{
 		const auto& group = registry.view<CanvasComponent>();
 		for (const auto& entity : group)

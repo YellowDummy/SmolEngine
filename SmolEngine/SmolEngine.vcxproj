@@ -584,6 +584,7 @@
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Actor.h" />
+    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h" />
@@ -724,6 +725,7 @@
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\ECS\Actor.cpp" />
+    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
     <ClCompile Include="Source\ECS\ComponentTuples\CameraBaseTuple.cpp" />

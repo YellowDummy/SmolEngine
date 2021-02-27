@@ -36,13 +36,15 @@ namespace SmolEngine
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation,
 			const glm::vec3& scale, const Ref<Mesh>& mesh, int32_t materialID = -1);
 
-		static void SubmitDirectionalLight(const glm::vec3& pos, const glm::vec4& color);
+		static void SubmitDirectionalLight(const glm::vec3& dir, const glm::vec4& color);
 
 		static void SubmitPointLight(const glm::vec3& pos, const glm::vec4& color, float constant, float linear, float exp);
 
 		// Setters
 
 		static void SetDebugViewParams(DebugViewInfo& info);
+
+		static void SetShadowLightDirection(const glm::vec3& dir);
 
 		static void SetActiveDebugView(bool value);
 
@@ -80,7 +82,7 @@ namespace SmolEngine
 
 		static void InitFramebuffers();
 
-		static glm::mat4 CalculateDepthMVP(const glm::vec4& lightPos);
+		static glm::mat4 CalculateDepthMVP(const glm::vec3& lightPos);
 
 	private:
 

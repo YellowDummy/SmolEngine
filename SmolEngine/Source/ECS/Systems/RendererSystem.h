@@ -37,17 +37,19 @@ namespace SmolEngine
 
 		// 3D
 
-		static void RenderMeshes(entt::registry& registry);
+		static void SubmitMeshes(entt::registry& registry);
+
+		static void SubmitDirectionalLights(entt::registry& registry);
 
 		// 2D
 
-		static void Render2DTextures(entt::registry& registry);
+		static void Submit2DTextures(entt::registry& registry);
 
-		static void Render2DLight(entt::registry& registry);
+		static void Submit2DLight(entt::registry& registry);
 
-		static void Render2DAnimations(entt::registry& registry);
+		static void Submit2DAnimations(entt::registry& registry);
 
-		static void RenderCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform);
+		static void SubmitCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform);
 
 		// Debug
 

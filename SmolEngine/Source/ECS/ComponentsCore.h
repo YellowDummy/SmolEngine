@@ -11,3 +11,4 @@
 #include "ECS/Components/Texture2DComponent.h"
 #include "ECS/Components/TransformComponent.h"
 #include "ECS/Components/MeshComponent.h"
+#include "ECS/Components/DirectionalLightComponent.h"

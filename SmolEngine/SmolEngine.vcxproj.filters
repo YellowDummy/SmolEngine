@@ -1594,6 +1594,7 @@
     <ClInclude Include="Source\Renderer\MeshPool.h" />
     <ClInclude Include="Source\Core\FileDialog.h" />
     <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
+    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1936,5 +1937,6 @@
     <ClCompile Include="Source\Renderer\MeshPool.cpp" />
     <ClCompile Include="Source\Core\FileDialog.cpp" />
     <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
+    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
   </ItemGroup>
 </Project>

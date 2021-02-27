@@ -31,6 +31,7 @@ namespace SmolEngine
 	struct BehaviourComponent;
 	struct Light2DSourceComponent;
 	struct MeshComponent;
+	struct DirectionalLightComponent;
 
 	class Actor;
 	class Mesh;
@@ -131,6 +132,8 @@ namespace SmolEngine
 
 		void DrawMeshComponent(MeshComponent* meshComponent);
 
+		void DrawDirectionalLightComponent(DirectionalLightComponent* light);
+
 		void DrawMeshInspector(bool& show);
 
 		// Helpers
@@ -175,6 +178,7 @@ namespace SmolEngine
 
 		bool isSceneViewFocused = false;
 		bool isGameViewFocused = false;
+		bool m_GizmoEnabled = true;
 
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
 		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;

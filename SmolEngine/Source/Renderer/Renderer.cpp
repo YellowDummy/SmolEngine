@@ -123,6 +123,7 @@ namespace SmolEngine
 
 		float                            m_NearClip = 1.0f;
 		float                            m_FarClip = 1.0f;
+		glm::vec3                        m_ShadowLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		struct PushConstant
 		{
@@ -235,11 +236,19 @@ namespace SmolEngine
 			// Updates scene data
 			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_SceneDataBinding, s_Data->m_SceneDataSize, &s_Data->m_SceneData);
 
-			// Updates Directional Lights
-			s_Data->m_MainPipeline->SubmitBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
+			if (s_Data->m_DirectionalLightIndex > 0)
+			{
+				// Updates Directional Lights
+				s_Data->m_MainPipeline->SubmitBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
+				// Calculate Depth
+				s_Data->m_MainPushConstant.m_DepthMVP = CalculateDepthMVP(s_Data->m_ShadowLightDirection);
+			}
 
-			// Updates Point Lights
-			s_Data->m_MainPipeline->SubmitBuffer(29, sizeof(PointLightBuffer) * s_Data->m_PointLightIndex, &s_Data->m_PointLights);
+			if (s_Data->m_PointLightIndex > 0)
+			{
+				// Updates Point Lights
+				s_Data->m_MainPipeline->SubmitBuffer(29, sizeof(PointLightBuffer) * s_Data->m_PointLightIndex, &s_Data->m_PointLights);
+			}
 
 			// Updates model views and material indexes
 			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_ShaderDataBinding, sizeof(InstanceData) * s_Data->m_InstanceDataIndex, &s_Data->m_InstancesData);
@@ -248,40 +257,42 @@ namespace SmolEngine
 			// Update materials
 			UpdateMaterials();
 #endif
-			// Depth
-			s_Data->m_MainPushConstant.m_DepthMVP = CalculateDepthMVP(s_Data->m_DirectionalLights[0].Position); // temp
 		}
 
 		// Depth Pass
-		s_Data->m_DepthPassPipeline->BeginCommandBuffer(true);
-#ifndef SMOLENGINE_OPENGL_IMPL
-		VkCommandBuffer cmdBuffer = s_Data->m_DepthPassPipeline->GetVkCommandBuffer();
-#endif
-		s_Data->m_DepthPassPipeline->BeginRenderPass();
+		if (s_Data->m_DirectionalLightIndex > 0)
 		{
-			// Set depth bias (aka "Polygon offset")
-			// Required to avoid shadow mapping artifacts
-			vkCmdSetDepthBias(cmdBuffer, 1.25f, 0.0f, 1.75f);
-
-			struct PushConstant
+			s_Data->m_DepthPassPipeline->BeginCommandBuffer(true);
+#ifndef SMOLENGINE_OPENGL_IMPL
+			VkCommandBuffer cmdBuffer = s_Data->m_DepthPassPipeline->GetVkCommandBuffer();
+#endif
+			s_Data->m_DepthPassPipeline->BeginRenderPass();
 			{
-				glm::mat4 depthMVP;
-				uint32_t offset;
+				// Set depth bias (aka "Polygon offset")
+				// Required to avoid shadow mapping artifacts
+				vkCmdSetDepthBias(cmdBuffer, 1.25f, 0.0f, 1.75f);
 
-			} pc;
+				struct PushConstant
+				{
+					glm::mat4 depthMVP;
+					uint32_t offset;
 
-			pc.depthMVP = s_Data->m_MainPushConstant.m_DepthMVP;
+				} pc;
 
-			for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
-			{
-				auto& cmd = s_Data->m_DrawList[i];
-				pc.offset = cmd.Offset;
+				pc.depthMVP = s_Data->m_MainPushConstant.m_DepthMVP;
 
-				s_Data->m_DepthPassPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
-				s_Data->m_DepthPassPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount);
+				for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
+				{
+					auto& cmd = s_Data->m_DrawList[i];
+					pc.offset = cmd.Offset;
+
+					s_Data->m_DepthPassPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConstant), &pc);
+					s_Data->m_DepthPassPipeline->DrawMesh(cmd.Mesh, DrawMode::Triangle, cmd.InstancesCount);
+				}
 			}
+			s_Data->m_DepthPassPipeline->EndRenderPass();
+
 		}
-		s_Data->m_DepthPassPipeline->EndRenderPass();
 
 		// Debug Pass
 		if (s_Data->m_ShowDebugView)
@@ -369,15 +380,14 @@ namespace SmolEngine
 			SubmitMesh(pos, rotation, scale, sub);
 	}
 
-	void Renderer::SubmitDirectionalLight(const glm::vec3& pos, const glm::vec4& color)
+	void Renderer::SubmitDirectionalLight(const glm::vec3& dir, const glm::vec4& color)
 	{
 		uint32_t index = s_Data->m_DirectionalLightIndex;
 		if (index >= s_MaxDirectionalLights)
 			return; // temp;
 
-
 		s_Data->m_DirectionalLights[index].Color = color;
-		s_Data->m_DirectionalLights[index].Position = glm::vec4(pos, 1.0);
+		s_Data->m_DirectionalLights[index].Position = glm::vec4(dir, 1.0f);
 		s_Data->m_DirectionalLightIndex++;
 	}
 
@@ -387,11 +397,8 @@ namespace SmolEngine
 		if (index >= s_MaxPointLights)
 			return; // temp;
 
-		glm::mat4 view = glm::lookAt(pos, glm::vec3(0.0f), glm::vec3(0, 1, 0));
-		glm::vec4 lightDir = glm::vec4(1.0f) * glm::inverse(view);
-
 		s_Data->m_PointLights[index].Color = color;
-		s_Data->m_PointLights[index].Position = lightDir;
+		s_Data->m_PointLights[index].Position = glm::vec4(pos, 1.0f);
 		s_Data->m_PointLights[index].Params.x = constant;
 		s_Data->m_PointLights[index].Params.y = linear;
 		s_Data->m_PointLights[index].Params.z = exp;
@@ -403,6 +410,11 @@ namespace SmolEngine
 		s_Data->m_DebugView.ShowOmniCube = info.bShowOmniCube;
 		s_Data->m_DebugView.ShowMRT = info.bShowMRT;
 		s_Data->m_DebugView.MRTattachmentIndex = info.mrtAttachmentIndex;
+	}
+
+	void Renderer::SetShadowLightDirection(const glm::vec3& dir)
+	{
+		s_Data->m_ShadowLightDirection = dir;
 	}
 
 	void Renderer::SetAmbientMixer(float value)
@@ -693,7 +705,7 @@ namespace SmolEngine
 		}
 	}
 
-	glm::mat4 Renderer::CalculateDepthMVP(const glm::vec4& lightPos)
+	glm::mat4 Renderer::CalculateDepthMVP(const glm::vec3& lightPos)
 	{
 		// Keep depth range as small as possible
 		// for better shadow map precision
@@ -703,7 +715,7 @@ namespace SmolEngine
 
 		// Matrix from light's point of view
 		glm::mat4 depthProjectionMatrix = glm::perspective(lightFOV, 1.0f, zNear, zFar);
-		glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(lightPos), glm::vec3(0.0f), glm::vec3(0, 1, 0));
+		glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0, 1, 0));
 		glm::mat4 depthModelMatrix = glm::mat4(1.0f);
 
 		return depthProjectionMatrix * depthViewMatrix * depthModelMatrix;

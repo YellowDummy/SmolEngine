@@ -435,6 +435,11 @@ namespace SmolEngine
 				m_DepthAttachment.AttachmentVkInfo.image, m_DepthAttachment.AttachmentVkInfo.view, m_DepthAttachment.AttachmentVkInfo.mem, imageAspect);
 		}
 
+		auto cmd = VulkanCommandBuffer::CreateSingleCommandBuffer();
+		VulkanTexture::SetImageLayout(cmd, m_DepthAttachment.AttachmentVkInfo.image,
+			VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
+		VulkanCommandBuffer::EndSingleCommandBuffer(cmd);
+
 		// Sampler
 		{
 			VkFilter shadowmap_filter = IsFormatIsFilterable(VulkanContext::GetDevice().GetPhysicalDevice(), m_DepthFormat, VK_IMAGE_TILING_OPTIMAL) ?
