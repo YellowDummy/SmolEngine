@@ -44,6 +44,9 @@ namespace SmolEngine
 
 		static void SetDebugViewParams(DebugViewInfo& info);
 
+		static void SetAmbientLighting(const glm::vec3& diffuseColor, glm::vec3& specularColor,
+			float IBLscale, bool enableIBL, glm::vec3& ambient);
+
 		static void SetShadowLightDirection(const glm::vec3& dir);
 
 		static void SetActiveDebugView(bool value);

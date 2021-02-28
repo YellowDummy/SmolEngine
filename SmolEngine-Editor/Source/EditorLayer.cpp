@@ -21,6 +21,7 @@
 #include "Renderer/Text.h"
 #include "Core/Input.h"
 #include "Core/FileDialog.h"
+#include "Core/FilePaths.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -69,6 +70,7 @@ namespace SmolEngine
 			editorCamCI.Type = CameraType::Perspective;
 			m_Camera = std::make_shared<EditorCamera>(&editorCamCI);
 		}
+
 
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
 		m_BuildPanel = std::make_unique<BuildPanel>();
@@ -334,6 +336,27 @@ namespace SmolEngine
 		}
 		ImGui::EndMainMenuBar();
 		ImGui::PopStyleVar();
+
+#if  0
+
+		ImGui::Begin("TemPw");
+		static glm::vec3 dColor = glm::vec3(1.0f);
+		static glm::vec3 sColor = glm::vec3(1.0f);
+		static glm::vec3 aColor = glm::vec3(1.0f);
+		static float mode = 1.0f;
+		static bool enableIBL = true;
+
+		ImGui::ColorPicker3("diffuseColor", glm::value_ptr(dColor));
+		ImGui::ColorPicker3("specularColor", glm::value_ptr(sColor));
+		ImGui::ColorPicker3("ambientColor", glm::value_ptr(aColor));
+
+		ImGui::InputFloat("Mod", &mode);
+		ImGui::Checkbox("Enable IBL", &enableIBL);
+
+		Renderer::SetAmbientLighting(dColor, sColor, mode, enableIBL, aColor);
+
+		ImGui::End();
+#endif //  0
 
 		m_BuildPanel->Update(showBuildPanel);
 
@@ -1606,6 +1629,10 @@ namespace SmolEngine
 
 				uint32_t itemCount = static_cast<uint32_t>(charitems.size());
 
+				ImGui::Extensions::Text("Material Picker", "");
+				ImGui::Combo("Material", &interface_id, &charitems[0], itemCount, itemCount);
+				ImGui::NewLine();
+
 				ImGui::Extensions::Text("Mesh & SubMeshes", "");
 				for (auto& mesh : meshes)
 				{
@@ -1615,9 +1642,11 @@ namespace SmolEngine
 						std::string id = name + "IDMat";
 						ImGui::PushID(id.c_str());
 						{
+
+							ImGui::Extensions::Text("Material Name", MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID()));
 							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
-							ImGui::Combo("Material", &interface_id, &charitems[0], itemCount, itemCount);
-							if (ImGui::Button("Update", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+
+							if (ImGui::Button("Set"))
 							{
 								int32_t id = MaterialLibrary::GetSinglenton()->GetMaterialID(std::string(charitems[interface_id]));
 								mesh->SetMaterialID(id);

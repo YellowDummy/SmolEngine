@@ -146,6 +146,11 @@ namespace SmolEngine
 		return &m_Materials[it->second];
 	}
 
+	std::string MaterialLibrary::GetMaterialName(int32_t id)
+	{
+		return m_SaveData[id].Name;
+	}
+
 	int32_t MaterialLibrary::GetMaterialID(std::string& name)
 	{
 		auto& it = m_MaterialTable.find(name);

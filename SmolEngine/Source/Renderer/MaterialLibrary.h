@@ -62,6 +62,8 @@ namespace SmolEngine
 
 		Material* GetMaterial(std::string& name);
 
+		std::string GetMaterialName(int32_t id);
+
 		int32_t GetMaterialID(std::string& name);
 
 		std::vector<Material>& GetMaterials();
@@ -100,7 +102,7 @@ namespace SmolEngine
 	private:
 
 		friend class cereal::access;
-		friend 	class Application;
+		friend class Application;
 		friend class MaterialLibraryInterface;
 
 		template<typename Archive>

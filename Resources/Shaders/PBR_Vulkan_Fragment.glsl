@@ -50,6 +50,14 @@ struct DirectionalLightBuffer
 	vec4 color;
 };
 
+struct AmbientLightingBuffer
+{
+	vec4 diffuseColor;
+	vec4 specularColor;
+	vec4 ambientColor;
+	vec4 params; // x = IBL scale, y = enable IBL;
+};
+
 struct PointLightBuffer
 {
     vec4 position;
@@ -65,6 +73,11 @@ layout(std140, binding = 28) readonly buffer DirectionalLightStorage
 layout(std140, binding = 29) readonly buffer PointLightStorage
 {   
 	PointLightBuffer pointLights[];
+};
+
+layout(std140, binding = 30) uniform AmbientLightingStorage
+{   
+	AmbientLightingBuffer ambientLightingData;
 };
 
 // Constant normal incidence Fresnel factor for all dielectrics.
@@ -121,6 +134,13 @@ vec3 Uncharted2Tonemap(vec3 x)
 	return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 }
 
+vec4 tonemap(vec4 color)
+{
+	vec3 outcol = Uncharted2Tonemap(color.rgb * inExposure);
+	outcol = outcol * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
+	return vec4(pow(outcol, vec3(1.0f / inGamma)), color.a);
+}
+
 // GGX/Towbridge-Reitz normal distribution function.
 // Uses Disney's reparametrization of alpha = roughness^2.
 float ndfGGX(float cosLh, float roughness)
@@ -150,6 +170,21 @@ float gaSchlickGGX(float cosLi, float cosLo, float roughness)
 vec3 fresnelSchlick(vec3 F0, float cosTheta)
 {
 	return F0 + (vec3(1.0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+vec4 SRGBtoLINEAR(vec4 srgbIn)
+{
+	#ifdef MANUAL_SRGB
+	#ifdef SRGB_FAST_APPROXIMATION
+	vec3 linOut = pow(srgbIn.xyz,vec3(2.2));
+	#else //SRGB_FAST_APPROXIMATION
+	vec3 bLess = step(vec3(0.04045),srgbIn.xyz);
+	vec3 linOut = mix( srgbIn.xyz/vec3(12.92), pow((srgbIn.xyz+vec3(0.055))/vec3(1.055),vec3(2.4)), bLess );
+	#endif //SRGB_FAST_APPROXIMATION
+	return vec4(linOut,srgbIn.w);;
+	#else //MANUAL_SRGB
+	return srgbIn;
+	#endif //MANUAL_SRGB
 }
 
 vec3 getNormal()
@@ -185,36 +220,32 @@ void main()
 	F0 = mix(F0, albedro, metallic);
 
     // Ambient lighting (IBL).
-	vec3 ambientLighting;
+	vec3 ambientLighting = ambientLightingData.ambientColor.rgb;
+	if(ambientLightingData.params.y == 1.0)
 	{
-        // Sample diffuse irradiance at normal direction.
-		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
-		vec3 modifier = vec3(10, 10, 10);
-
-		// Calculate Fresnel term for ambient lighting.
-		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
-		// use cosLo instead of angle with light's half-vector (cosLh above).
-		// See: https://seblagarde.wordpress.com/2011/08/17/hello-world/
 		vec3 F = fresnelSchlick(F0, cosLo);
-
 		// Get diffuse contribution factor (as with direct lighting).
 		vec3 kd = mix(vec3(1.0), F, metallic);
 
-		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
-		vec3 diffuseIBL = kd * albedro * irradiance;
-
+		// Sample diffuse irradiance at normal direction.
+		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
+		// Split-sum approximation factors for Cook-Torrance specular BRDF.
+		vec3 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, 1.0 - roughness)).rgb;
 		// Sample pre-filtered specular reflection environment at correct mipmap level.
 		int specularTextureLevels = textureQueryLevels(prefilteredMap);
-		vec3 specularIrradiance = textureLod(prefilteredMap, -Lr, roughness * specularTextureLevels).rgb;
-
-		// Split-sum approximation factors for Cook-Torrance specular BRDF.
-		vec2 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, roughness)).rg;
+		vec3 specularIrradiance =  textureLod(prefilteredMap, -Lr, roughness * specularTextureLevels).rgb;
+		
+		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
+		vec3 diffuseIBL = irradiance * ( kd * albedro * ambientLightingData.diffuseColor.rgb);
 
 		// Total specular IBL contribution.
-		vec3 specularIBL = (F0 * modifier * specularBRDF.x + specularBRDF.y) * specularIrradiance;
+		vec3 specularIBL = specularIrradiance * (F0 * ambientLightingData.specularColor.rgb * specularBRDF.x + specularBRDF.y);
+
+		diffuseIBL *= ambientLightingData.params.x; // x = IBL scale
+		specularIBL *= ambientLightingData.params.x;
 
 		// Total ambient lighting contribution.
-		ambientLighting = mix(diffuseIBL, specularIBL, 0.04);
+		ambientLighting = diffuseIBL + specularIBL;
 	}
 	
 	// Direct lighting calculation for analytical lights.
@@ -274,7 +305,8 @@ void main()
 		float attTotal = constantAtt + linearAtt * dist + expAtt * dist * dist;
 		pointLighting += pointLights[i].color.rgb * (ambientLighting + diffuse) / attTotal;
 	}
-	vec3 color = ambientLighting + directLighting + pointLighting;
+	vec3 color = directLighting + pointLighting;
+	color += ambientLighting;
 
 	// Tone mapping
 	color = Uncharted2Tonemap(color * inExposure);

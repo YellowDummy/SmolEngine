@@ -125,9 +125,17 @@ namespace SmolEngine
 		float                            m_FarClip = 1.0f;
 		glm::vec3                        m_ShadowLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 
+		struct AmbientLighting
+		{
+			glm::vec4                    DiffuseColor = glm::vec4(1.0f);
+			glm::vec4                    SpecularColor = glm::vec4(1.0f);
+			glm::vec4                    Ambient = glm::vec4(1.0f);
+			glm::vec4                    Params = glm::vec4(1.0f, 1.0f, 0.0f, 0.0f); // x = IBL scale, y = enable IBL;
+		};
+
 		struct PushConstant
 		{
-			glm::mat4                    m_DepthMVP = glm::mat4(1.0f);
+			glm::mat4                    DepthMVP = glm::mat4(1.0f);
 
 			uint32_t                     DataOffset = 0;
 			uint32_t                     DirectionalLights = 0;
@@ -150,10 +158,13 @@ namespace SmolEngine
 		SceneData                        m_SceneData = {};
 		PushConstant                     m_MainPushConstant = {};
 		ShadowMatrix                     m_ShadowMatrix = {};
+		AmbientLighting                  m_AmbientLighting = {};
 
+		// Sizes
 		const size_t                     m_DebugViewSize = sizeof(DebugView);
 		const size_t                     m_SceneDataSize = sizeof(SceneData);
 		const size_t                     m_PushConstantSize = sizeof(PushConstant);
+		const size_t                     m_AmbientLightingSize = sizeof(AmbientLighting);
 	};
 
 	static RendererData* s_Data = nullptr;
@@ -241,7 +252,7 @@ namespace SmolEngine
 				// Updates Directional Lights
 				s_Data->m_MainPipeline->SubmitBuffer(28, sizeof(DirectionalLightBuffer) * s_Data->m_DirectionalLightIndex, &s_Data->m_DirectionalLights);
 				// Calculate Depth
-				s_Data->m_MainPushConstant.m_DepthMVP = CalculateDepthMVP(s_Data->m_ShadowLightDirection);
+				s_Data->m_MainPushConstant.DepthMVP = CalculateDepthMVP(s_Data->m_ShadowLightDirection);
 			}
 
 			if (s_Data->m_PointLightIndex > 0)
@@ -249,6 +260,9 @@ namespace SmolEngine
 				// Updates Point Lights
 				s_Data->m_MainPipeline->SubmitBuffer(29, sizeof(PointLightBuffer) * s_Data->m_PointLightIndex, &s_Data->m_PointLights);
 			}
+
+			// Updates Ambient Lighting
+			s_Data->m_MainPipeline->SubmitBuffer(30, s_Data->m_AmbientLightingSize, &s_Data->m_AmbientLighting);
 
 			// Updates model views and material indexes
 			s_Data->m_MainPipeline->SubmitBuffer(s_Data->m_ShaderDataBinding, sizeof(InstanceData) * s_Data->m_InstanceDataIndex, &s_Data->m_InstancesData);
@@ -279,7 +293,7 @@ namespace SmolEngine
 
 				} pc;
 
-				pc.depthMVP = s_Data->m_MainPushConstant.m_DepthMVP;
+				pc.depthMVP = s_Data->m_MainPushConstant.DepthMVP;
 
 				for (uint32_t i = 0; i < s_Data->m_DrawListIndex; ++i)
 				{
@@ -412,6 +426,15 @@ namespace SmolEngine
 		s_Data->m_DebugView.MRTattachmentIndex = info.mrtAttachmentIndex;
 	}
 
+	void Renderer::SetAmbientLighting(const glm::vec3& diffuseColor, glm::vec3& specularColor, float IBLscale, bool enableIBL, glm::vec3& ambient)
+	{
+		s_Data->m_AmbientLighting.DiffuseColor = glm::vec4(diffuseColor, 0.0f);
+		s_Data->m_AmbientLighting.SpecularColor = glm::vec4(specularColor, 0.0f);
+		s_Data->m_AmbientLighting.Ambient = glm::vec4(ambient, 0.0f);
+		s_Data->m_AmbientLighting.Params.x = IBLscale;
+		s_Data->m_AmbientLighting.Params.y = enableIBL ? 1.0f : 0.0f;
+	}
+
 	void Renderer::SetShadowLightDirection(const glm::vec3& dir)
 	{
 		s_Data->m_ShadowLightDirection = dir;
@@ -482,6 +505,8 @@ namespace SmolEngine
 
 			auto result = s_Data->m_MainPipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
+
+			s_Data->m_MainPipeline->SubmitBuffer(30, s_Data->m_AmbientLightingSize, &s_Data->m_AmbientLighting);
 #ifndef SMOLENGINE_OPENGL_IMPL
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(1, s_Data->m_DepthFramebuffer->GetVulkanFramebuffer().GetDethAttachment()->ImageInfo);
 			s_Data->m_MainPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
