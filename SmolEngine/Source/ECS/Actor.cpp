@@ -23,7 +23,6 @@ namespace SmolEngine
 
 	}
 
-
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{
 		if (m_Childs.empty()) { return nullptr; }

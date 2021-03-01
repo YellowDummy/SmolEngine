@@ -186,7 +186,7 @@ namespace SmolEngine
 		std::shared_ptr<EditorConsole> m_EditorConsole = nullptr;
 		std::shared_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
-		MaterialLibraryInterface m_MaterialLibraryInterface = {};
+		std::unique_ptr<MaterialLibraryInterface> m_MaterialLibraryInterface = nullptr;
 		std::unique_ptr<BuildPanel> m_BuildPanel = nullptr;
 		std::unique_ptr<AnimationPanel> m_AnimationPanel = nullptr;
 		std::unique_ptr<SettingsWindow> m_SettingsWindow = nullptr;

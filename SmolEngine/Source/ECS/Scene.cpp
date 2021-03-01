@@ -20,18 +20,13 @@ namespace SmolEngine
 
 	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
-		if (m_SceneData.m_ID == 0)
-		{
-			NATIVE_ERROR("The scene is not initialized! Use CreateScene() to initialize the scene");
-			abort();
-		}
-
+		Ref<Actor> new_actor = nullptr;
 		// Checking if actor already exists
 		const auto searchNameResult = m_IDSet.find(name);
 		if (searchNameResult != m_IDSet.end())
 		{
 			NATIVE_ERROR("Actor {} already exist!", name);
-			return 0;
+			return new_actor;
 		}
 
 		// Getting ID
@@ -39,21 +34,21 @@ namespace SmolEngine
 		uint32_t id = (uint32_t)actorEntity;
 
 		// Creating Actor
-		auto& actorRef = std::make_shared<Actor>(actorEntity, m_SceneData.m_ActorPool.size());
+		new_actor = std::make_shared<Actor>(actorEntity, m_SceneData.m_ActorPool.size());
 
 		// Add Head
-		auto head = AddComponent<HeadComponent>(*actorRef.get());
+		auto head = AddComponent<HeadComponent>(*new_actor.get());
 		head->ID = id;
 		head->Name = name;
 		head->Tag = tag;
 
 		// Add Transform
-		AddComponent<TransformComponent>(*actorRef.get());
+		AddComponent<TransformComponent>(*new_actor.get());
 		m_IDSet[name] = id;
-		m_SceneData.m_ActorPool[id] = actorRef;
-		m_SceneData.m_ActorList.push_back(actorRef);
+		m_SceneData.m_ActorPool[id] = new_actor;
+		m_SceneData.m_ActorList.push_back(new_actor);
 
-		return actorRef;
+		return new_actor;
 	}
 
 	Ref<Actor> Scene::FindActorByName(const std::string& name)
@@ -108,10 +103,10 @@ namespace SmolEngine
 	void Scene::DeleteActor(Ref<Actor>& actor)
 	{
 		m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<Body2DComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<Texture2DComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<BehaviourComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<Animation2DComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<Light2DSourceComponent>(*actor);
@@ -207,8 +202,8 @@ namespace SmolEngine
 		{
 			cereal::JSONInputArchive sceneDataInput{ sceneDataStorage };
 
-			sceneDataInput(m_SceneData.m_ActorPool,
-				m_SceneData.m_AssetMap,
+			sceneDataInput(m_SceneData.m_MaterialInfos,
+				m_SceneData.m_ActorPool, m_SceneData.m_AssetMap,
 				m_SceneData.m_Entity, m_SceneData.m_Gravity.x,
 				m_SceneData.m_Gravity.y, m_SceneData.m_ID,
 				m_SceneData.m_filePath, m_SceneData.m_fileName,

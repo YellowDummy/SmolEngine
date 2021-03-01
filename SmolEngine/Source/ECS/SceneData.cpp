@@ -19,7 +19,6 @@ static const size_t reserveSize = 259;
 	void SceneData::operator=(const SceneData& other)
 	{
 		m_ActorPool = other.m_ActorPool;
-		m_AssetMap = other.m_AssetMap;
 		m_Entity = other.m_Entity;
 		m_Gravity.x = other.m_Gravity.x;
 		m_Gravity.y = other.m_Gravity.y;
@@ -28,6 +27,9 @@ static const size_t reserveSize = 259;
 		m_fileName = other.m_fileName;
 		m_Name = other.m_Name;
 		m_AmbientStrength = other.m_AmbientStrength;
+
+		m_AssetMap = std::move(other.m_AssetMap);
+		m_MaterialInfos = std::move(other.m_MaterialInfos);
 	}
 
 	void SceneData::Prepare()

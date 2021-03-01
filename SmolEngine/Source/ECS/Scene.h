@@ -7,7 +7,6 @@
 
 namespace SmolEngine
 {
-	enum class ActorBaseType : uint16_t;
 	class Actor;
 	struct BehaviourComponent;
 
@@ -116,7 +115,6 @@ namespace SmolEngine
 		void GetSortedActorList(std::vector<Ref<Actor>>& outList);
 
 		void GetActorListByTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
-
 
 		SceneData& GetSceneData();
 

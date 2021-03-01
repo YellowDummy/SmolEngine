@@ -187,7 +187,6 @@ namespace SmolEngine
 		MaterialCI.Metallic = 0.5f;
 
 		sponzaFlagPole = MaterialLibrary::GetSinglenton()->Add(&MaterialCI);
-		MaterialLibrary::GetSinglenton()->Save();
 
 		Renderer::UpdateMaterials();
 

@@ -22,14 +22,10 @@ namespace SmolEngine
 	void Editor::ClientInit()
 	{
 		auto& app = Application::GetApplication();
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-		app.PushLayer(new EditorLayer);
-#else
 		//app.PushLayer(new Renderer3DTestLayer);
 		//app.PushLayer(new DeferredRenderingTest);
-#endif
 		app.PushLayer(new EditorLayer);
+
 		EDITOR_INFO("Initialized successfully");
 	}
 

@@ -4,6 +4,7 @@
 #include "Renderer/Texture.h"
 
 #include <string>
+#include <optional>
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/vector.hpp>
@@ -31,6 +32,7 @@ namespace SmolEngine
 
 	private:
 
+		friend class MaterialLibrary;
 		friend class cereal::access;
 
 		template<typename Archive>
@@ -44,25 +46,31 @@ namespace SmolEngine
 	{
 	public:
 
+		MaterialLibrary();
+
+		~MaterialLibrary();
+
 		// Add / Delete
 
 		int32_t Add(MaterialCreateInfo* infoCI);
 
 		bool Delete(const std::string& name);
 
-		// Save / Load
+		void Reset();
 
-		bool Load();
+		// Save / Load MaterialCreateInfo
 
-		bool Save();
+		bool Load(std::string& filePath, MaterialCreateInfo& out_info);
+
+		bool Save(std::string& filePath, MaterialCreateInfo& info);
 
 		// Getters
+
+		std::optional<std::string> GetMaterialName(int32_t id);
 
 		Material* GetMaterial(uint32_t ID);
 
 		Material* GetMaterial(std::string& name);
-
-		std::string GetMaterialName(int32_t id);
 
 		int32_t GetMaterialID(std::string& name);
 
@@ -80,35 +88,18 @@ namespace SmolEngine
 
 		// Helpers
 
-		void Init();
-
 		int32_t AddTexture(const Ref<Texture>& texture);
 
 	private:
 
 		static MaterialLibrary*                     s_Instance;
-		bool                                        m_Initialized = false;
 		uint32_t                                    m_MaterialIndex = 0;
 		uint32_t                                    m_TextureIndex = 0;
 
-		std::string                                 m_SavePath = "../Resources/Saves/MaterialLibrary.data";
 		std::vector<Material>                       m_Materials;
 		std::vector<Ref<Texture>>                   m_Textures;
-		std::vector<MaterialCreateInfo>             m_SaveData;
 
 		std::unordered_map<std::string, uint32_t>   m_MaterialTable;
 		std::unordered_map<size_t, std::string>     m_Hasher;
-
-	private:
-
-		friend class cereal::access;
-		friend class Application;
-		friend class MaterialLibraryInterface;
-
-		template<typename Archive>
-		void serialize(Archive& archive)
-		{
-			archive(m_SaveData);
-		}
 	};
 }

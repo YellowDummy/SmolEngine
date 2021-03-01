@@ -76,6 +76,7 @@ namespace SmolEngine
 		m_BuildPanel = std::make_unique<BuildPanel>();
 		m_AnimationPanel = std::make_unique<AnimationPanel>();
 		m_SettingsWindow = std::make_unique<SettingsWindow>();
+		m_MaterialLibraryInterface = std::make_unique<MaterialLibraryInterface>();
 
 		m_EditorConsole = EditorConsole::GetConsole();
 		m_Scene = WorldAdmin::GetSingleton();
@@ -387,7 +388,7 @@ namespace SmolEngine
 
 		DrawSceneView(true);
 		DrawGameView(showGameView);
-		m_MaterialLibraryInterface.Draw(showMaterialLibrary);
+		m_MaterialLibraryInterface->Draw(showMaterialLibrary);
 
 		// TEMP
 
@@ -1614,7 +1615,10 @@ namespace SmolEngine
 						ImGui::PushID(id.c_str());
 						{
 
-							ImGui::Extensions::Text("Material Name", MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID()));
+							auto& matName = MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID());
+							if (matName.has_value())
+								ImGui::Extensions::Text("Material Name", matName.value());
+
 							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
 
 							if (ImGui::Button("Set"))

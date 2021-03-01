@@ -5,6 +5,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/OpenGL/OpenglTexture.h"
 #include "Renderer/TexturesPool.h"
+#include "Core/AssetManager.h"
 
 #include <memory>
 
@@ -118,12 +119,12 @@ namespace SmolEngine
 		return texture;
 	}
 
-	Ref<Texture> Texture::Create(const std::string& filePath, TextureFormat format)
+	Ref<Texture> Texture::Create(const std::string& filePath, TextureFormat format, bool pooling)
 	{
-		if (filePath == "")
+		if (!AssetManager::IsPathValid(filePath))
 			return nullptr;
 
-		Ref<Texture> texture = TexturesPool::AddTexture(filePath);
+		Ref<Texture> texture = pooling ? TexturesPool::AddTexture(filePath) : std::make_shared<Texture>();
 
 		if (!texture->m_Initialized)
 		{

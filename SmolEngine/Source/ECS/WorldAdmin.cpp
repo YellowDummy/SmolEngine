@@ -89,7 +89,7 @@ namespace SmolEngine
 		AudioSystem::OnAwake(sceneData.m_Registry, AudioEngineSComponent::Get()->Engine);
 		Animation2DSystem::OnAwake(sceneData.m_Registry);
 
-		// Sending start callback to all systems-scripts
+		// Sending start callback to all enabled scripts
 		ScriptingSystem::OnSceneBegin(sceneData.m_Registry);
 		m_InPlayMode = true;
 	}
@@ -256,6 +256,9 @@ namespace SmolEngine
 		// Reloading Canvas
 		AssetManager::ReloadCanvases(registry);
 
+		// Reloading Materials
+		AssetManager::ReloadMaterials(&activeScene.m_SceneData);
+
 		// Reloading Scripts
 		ScriptingSystem::ReloadScripts(registry, activeScene.m_SceneData.m_ActorPool);
 	}
@@ -293,7 +296,7 @@ namespace SmolEngine
 			return false;
 		}
 
-		m_SceneMap.clear();
+		m_SceneMap.clear(); // temp
 		m_ActiveSceneID = 0;
 		CreateScene(path);
 
@@ -324,6 +327,7 @@ namespace SmolEngine
 	{
 		m_ActiveSceneID++;
 		m_SceneMap[m_ActiveSceneID].Init(filePath);
+		ReloadAssets();
 	}
 
 	bool WorldAdmin::LoadSceneRuntime(uint32_t index)

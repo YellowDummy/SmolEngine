@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Renderer/MaterialLibrary.h"
 
 #include <unordered_map>
 #include <glm/glm.hpp>
@@ -22,7 +23,7 @@ namespace SmolEngine
 
 		void Prepare();
 
-	public:
+	public: 
 
 		glm::vec2                                          m_Gravity = glm::vec2(0.0f, -9.81f);
 		entt::registry                                     m_Registry;
@@ -32,6 +33,7 @@ namespace SmolEngine
 		std::unordered_map<uint32_t, Ref<Actor>>           m_ActorPool;
 		std::unordered_map<std::string, std::string>       m_AssetMap;
 		std::vector<Ref<Actor>>                            m_ActorList;
+		std::vector<MaterialCreateInfo>                    m_MaterialInfos;
 
 	private:
 
@@ -51,7 +53,8 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_ActorPool, m_AssetMap, m_Entity, m_Gravity.x, m_Gravity.y, m_ID, m_filePath, m_fileName, m_Name, m_AmbientStrength);
+			archive(m_MaterialInfos, m_ActorPool, m_AssetMap, m_Entity, m_Gravity.x, m_Gravity.y,
+				m_ID, m_filePath, m_fileName, m_Name, m_AmbientStrength);
 		}
 	};
 }

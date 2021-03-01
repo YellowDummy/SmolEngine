@@ -45,7 +45,7 @@ namespace SmolEngine
 
 		static Ref<Texture> Create(const uint32_t width, const uint32_t height, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
 
-		static Ref<Texture> Create(const std::string& filePath, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
+		static Ref<Texture> Create(const std::string& filePath, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool pooling = true);
 
 		static Ref<Texture> Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height,
 			TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
@@ -63,11 +63,9 @@ namespace SmolEngine
 	private:
 
 #ifdef  SMOLENGINE_OPENGL_IMPL
-
 		OpenglTexture2D m_OpenglTexture2D = {};
 #else
 		VulkanTexture m_VulkanTexture = {};
-
 #endif
 		bool m_Initialized = false;
 	};

@@ -4,6 +4,9 @@
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/AudioSystem.h"
 #include "ECS/Systems/UISystem.h"
+#include "ECS/SceneData.h"
+
+#include "Renderer/MaterialLibrary.h"
 
 #include "Animation/AnimationClip.h"
 #include "Audio/AudioEngine.h"
@@ -74,6 +77,20 @@ namespace SmolEngine
 		{
 			UISystem::ReloadElements(canvas);
 		});
+	}
+
+	void AssetManager::ReloadMaterials(SceneData* data)
+	{
+		MaterialLibrary* instance = MaterialLibrary::GetSinglenton();
+		instance->Reset();
+
+		// Default Material = ID 0
+		MaterialCreateInfo defaultMaterial = {};
+		defaultMaterial.Name = "Default Material";
+		instance->Add(&defaultMaterial);
+
+		// Scene materials
+
 	}
 
 	bool AssetManager::PathCheck(std::string& path, const std::string& fileName)

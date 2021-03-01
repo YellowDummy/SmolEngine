@@ -7,6 +7,21 @@ namespace SmolEngine
 {
 	MaterialLibrary* MaterialLibrary::s_Instance = new MaterialLibrary();
 
+	MaterialLibrary::MaterialLibrary()
+	{
+		const uint32_t maxTextures = 4096;
+		const uint32_t materials = 259;
+
+		m_Textures.resize(maxTextures);
+		m_Materials.reserve(materials);
+		m_MaterialTable.reserve(materials);
+	}
+
+	MaterialLibrary::~MaterialLibrary()
+	{
+
+	}
+
 	int32_t MaterialLibrary::Add(MaterialCreateInfo* infoCI)
 	{
 		int32_t materialID = -1;
@@ -42,9 +57,6 @@ namespace SmolEngine
 
 		materialID = m_MaterialIndex;
 		m_Materials.emplace_back(newMaterial);
-		if(m_Initialized)
-			m_SaveData.emplace_back(*infoCI);
-
 		m_MaterialTable[infoCI->Name] = materialID;
 		m_MaterialIndex++;
 		return materialID;
@@ -55,63 +67,60 @@ namespace SmolEngine
 		return false;
 	}
 
-	MaterialLibrary* MaterialLibrary::GetSinglenton()
+	void MaterialLibrary::Reset()
 	{
-		return s_Instance;
+		m_MaterialIndex = 0;
+		m_TextureIndex = 0;
+
+		m_Materials.clear();
+		m_Textures.clear();
+		m_MaterialTable.clear();
+		m_Hasher.clear();
 	}
 
-	bool MaterialLibrary::Load()
+	bool MaterialLibrary::Load(std::string& filePath, MaterialCreateInfo& out_info)
 	{
 		std::stringstream storage;
-		std::ifstream file(m_SavePath);
+		std::ifstream file(filePath);
 		if (!file)
 		{
-			NATIVE_ERROR("Could not open the file: {}", m_SavePath);
+			NATIVE_ERROR("Could not open the file: {}", filePath);
 			return false;
 		}
 
 		storage << file.rdbuf();
 		{
 			cereal::JSONInputArchive input{ storage };
-			input(m_SaveData);
+			input(out_info.Metallic, out_info.Albedro,
+				out_info.Roughness, out_info.Specular, out_info.Name,
+				out_info.Textures);
 		}
 
 		return true;
 	}
 
-	bool MaterialLibrary::Save()
+	bool MaterialLibrary::Save(std::string& filePath, MaterialCreateInfo& info)
 	{
 		std::stringstream storage;
 		{
 			cereal::JSONOutputArchive output{ storage };
-			serialize(output);
+			info.serialize(output);
 		}
 
-		m_SaveData;
-		std::ofstream myfile(m_SavePath);
+		std::ofstream myfile(filePath);
 		if (myfile.is_open())
 		{
 			myfile << storage.str();
 			myfile.close();
-			NATIVE_INFO("MaterialLibrary: saved successfully");
 			return true;
 		}
 
 		return false;
 	}
 
-	void MaterialLibrary::Init()
+	MaterialLibrary* MaterialLibrary::GetSinglenton()
 	{
-		const uint32_t maxTextures = 4096;
-		m_Textures.resize(maxTextures);
-		if (AssetManager::IsPathValid(m_SavePath))
-		{
-			Load();
-			for (auto& data : m_SaveData)
-				Add(&data);
-		}
-
-		m_Initialized = true;
+		return s_Instance;
 	}
 
 	int32_t MaterialLibrary::AddTexture(const Ref<Texture>& texture)
@@ -146,9 +155,15 @@ namespace SmolEngine
 		return &m_Materials[it->second];
 	}
 
-	std::string MaterialLibrary::GetMaterialName(int32_t id)
+	std::optional<std::string> MaterialLibrary::GetMaterialName(int32_t id)
 	{
-		return m_SaveData[id].Name;
+		for (auto& [name, id] : m_MaterialTable)
+		{
+			if (id == id)
+				return name;
+		}
+
+		return std::nullopt;
 	}
 
 	int32_t MaterialLibrary::GetMaterialID(std::string& name)

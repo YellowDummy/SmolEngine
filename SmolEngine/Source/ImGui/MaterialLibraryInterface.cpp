@@ -1,99 +1,239 @@
 #include "stdafx.h"
 #include "MaterialLibraryInterface.h"
 #include "Core/FileDialog.h"
+#include "Core/FilePaths.h"
 
+#include "Renderer/Mesh.h"
+#include "Renderer/GraphicsPipeline.h"
+#include "Renderer/Framebuffer.h"
+#ifndef SMOLENGINE_OPENGL_IMPL
+#include "Renderer/Vulkan/VulkanPBR.h"
+#endif
+#include "Renderer/EditorCamera.h"
+
+#include <thread>
 #include <imgui.h>
 #include "ImGui/ImGuiExtension.h"
 #include "ImGui/EditorConsole.h"
 
 namespace SmolEngine
 {
+	MaterialLibraryInterface::MaterialLibraryInterface()
+	{
+		InitPreviewRenderer();
+	}
+
 	void MaterialLibraryInterface::Draw(bool& show)
 	{
 		if (show)
 		{
-			ImGui::Begin("Material Library", &show);
+			ImGui::Begin("Material Library", &show, ImGuiWindowFlags_MenuBar);
 			{
-				if (ImGui::CollapsingHeader("Create New"))
+				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 10.0f, 10.0f });
+				if (ImGui::BeginMenuBar())
 				{
-					if (ImGui::Extensions::InputRawString("Name", m_Buffer.name, "Material Name", 130.0f, false))
+					if (ImGui::MenuItem("Save as"))
 					{
-						m_MaterialCI.Name = m_Buffer.name;
+						auto& result = FileDialog::SaveFile("");
+						if (result.has_value())
+						{
+							if(MaterialLibrary::GetSinglenton()->Save(result.value(), m_MaterialCI))
+								Reset();
+						}
 					}
-					ImGui::NewLine();
 
-					ImGui::Extensions::Text("Textures", "");
-
-					DrawTextureInfo("Albedro", m_MaterialCI.Textures[MaterialTexture::Albedro], m_Buffer.albedro);
-					DrawTextureInfo("Normal", m_MaterialCI.Textures[MaterialTexture::Normal], m_Buffer.normal);
-					DrawTextureInfo("Metallic", m_MaterialCI.Textures[MaterialTexture::Metallic], m_Buffer.metallic);
-					DrawTextureInfo("Roughness", m_MaterialCI.Textures[MaterialTexture::Roughness], m_Buffer.roughness);
-					DrawTextureInfo("AO", m_MaterialCI.Textures[MaterialTexture::AO], m_Buffer.ao);
-					ImGui::NewLine();
-
-					ImGui::Extensions::Text("Parameters", "");
-					ImGui::Extensions::InputFloat("Albedro", m_MaterialCI.Albedro);
-					ImGui::Extensions::InputFloat("Metallic", m_MaterialCI.Metallic);
-					ImGui::Extensions::InputFloat("Roughness", m_MaterialCI.Roughness);
-					ImGui::Extensions::InputFloat("Specular", m_MaterialCI.Specular);
-
-					ImGui::NewLine();
-					if (ImGui::Button("Add", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+					if (ImGui::MenuItem("Load"))
 					{
-						int32_t id = MaterialLibrary::GetSinglenton()->Add(&m_MaterialCI);
-						if (id == -1)
+						Reset();
+						auto& result = FileDialog::OpenFile("");
+						if (result.has_value())
 						{
-							std::string info = "Material " + m_MaterialCI.Name + " already exists!";
-							CONSOLE_WARN(info);
+							MaterialLibrary::GetSinglenton()->Load(result.value(), m_MaterialCI);
+							m_Buffer.albedro = m_MaterialCI.Textures[MaterialTexture::Albedro];
+							m_Buffer.normal = m_MaterialCI.Textures[MaterialTexture::Normal];
+							m_Buffer.metallic = m_MaterialCI.Textures[MaterialTexture::Metallic];
+							m_Buffer.roughness = m_MaterialCI.Textures[MaterialTexture::Roughness];
+							m_Buffer.ao = m_MaterialCI.Textures[MaterialTexture::AO];
+							m_Buffer.name = m_MaterialCI.Name;
 						}
-						else
-						{
-							std::string info = "Material " + m_MaterialCI.Name + " added successfully!";
-							CONSOLE_INFO(info);
-							MaterialLibrary::GetSinglenton()->Save();
-						}
-
-						m_Buffer = {};
-						m_MaterialCI = {};
 					}
+
+					if (ImGui::MenuItem("Show Preview"))
+						m_bShowPreview = true;
 				}
-
-				ImGui::Separator();
-				ImGui::Extensions::Text("Materials List", "");
+				ImGui::EndMenuBar();
+				ImGui::PopStyleVar();
 				ImGui::NewLine();
-				ImGui::BeginChild("Materials List");
+
+				if (ImGui::Extensions::InputRawString("Name", m_Buffer.name, "Material Name", 130.0f, false))
 				{
-					for (uint32_t i = 0; i < static_cast<uint32_t>(MaterialLibrary::GetSinglenton()->m_SaveData.size()); i++)
-					{
-						auto& data = MaterialLibrary::GetSinglenton()->m_SaveData[i];
-						auto& material = MaterialLibrary::GetSinglenton()->GetMaterials()[i];
-						std::string name = "Material #" + data.Name;
-
-						if (ImGui::CollapsingHeader(name.c_str()))
-						{
-							ImGui::Extensions::Text("Textures", "");
-							ImGui::NewLine();
-
-							ImGui::Extensions::Text("Albedro", data.Textures[MaterialTexture::Albedro]);
-							ImGui::Extensions::Text("Normal", data.Textures[MaterialTexture::Normal]);
-							ImGui::Extensions::Text("Metallic", data.Textures[MaterialTexture::Metallic]);
-							ImGui::Extensions::Text("Roughness", data.Textures[MaterialTexture::Roughness]);
-							ImGui::Extensions::Text("AO", data.Textures[MaterialTexture::AO]);
-							ImGui::NewLine();
-
-							ImGui::Extensions::Text("Parameters", "");
-							ImGui::NewLine();
-							ImGui::Extensions::InputFloat("Metallic", material.m_MaterialProperties.PBRValues.x);
-							ImGui::Extensions::InputFloat("Roughness", material.m_MaterialProperties.PBRValues.y);
-							ImGui::Extensions::InputFloat("Albedro", material.m_MaterialProperties.PBRValues.z);
-							ImGui::Extensions::InputFloat("Specular", material.m_MaterialProperties.PBRValues.w);
-						}
-					}
+					m_MaterialCI.Name = m_Buffer.name;
 				}
-				ImGui::EndChild();
+				ImGui::NewLine();
+
+				ImGui::Extensions::Text("Textures", "");
+
+				DrawTextureInfo("Albedro", m_MaterialCI.Textures[MaterialTexture::Albedro], m_Buffer.albedro);
+				DrawTextureInfo("Normal", m_MaterialCI.Textures[MaterialTexture::Normal], m_Buffer.normal);
+				DrawTextureInfo("Metallic", m_MaterialCI.Textures[MaterialTexture::Metallic], m_Buffer.metallic);
+				DrawTextureInfo("Roughness", m_MaterialCI.Textures[MaterialTexture::Roughness], m_Buffer.roughness);
+				DrawTextureInfo("AO", m_MaterialCI.Textures[MaterialTexture::AO], m_Buffer.ao);
+				ImGui::NewLine();
+
+				ImGui::Extensions::Text("Parameters", "");
+				ImGui::Extensions::InputFloat("Albedro", m_MaterialCI.Albedro);
+				ImGui::Extensions::InputFloat("Metallic", m_MaterialCI.Metallic);
+				ImGui::Extensions::InputFloat("Roughness", m_MaterialCI.Roughness);
+				ImGui::Extensions::InputFloat("Specular", m_MaterialCI.Specular);
+
+				ImGui::NewLine();
+				if (ImGui::Button("Generate Preview", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+				{
+					auto f = [&]() {
+
+						struct RenderState
+						{
+							glm::ivec4 states = glm::ivec4(0); // x = albedro, y = normal, z = metallic, w = roughness
+							glm::ivec4 states2 = glm::ivec4(0); // x = ao
+							glm::vec4 pbrValues = glm::vec4(0); // x = metallic, y = metallic
+							glm::vec4 camPos = glm::vec4(0);
+						} info;
+
+						Ref<Texture> albedro = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Albedro], TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> normal = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Normal], TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> metallic = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Metallic], TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> roughness = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Roughness], TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> ao = Texture::Create(m_MaterialCI.Textures[MaterialTexture::AO], TextureFormat::R8G8B8A8_UNORM, false);
+
+#ifndef SMOLENGINE_OPENGL_IMPL
+						Ref<Texture> dummy = Texture::CreateWhiteTexture();
+						m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(5, dummy->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(6, dummy->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(7, dummy->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(8, dummy->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(9, dummy->GetVulkanTexture()->GetVkDescriptorImageInfo());
+
+						if (albedro)
+						{
+							info.states.x = 1;
+							m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(5, albedro->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						}
+						if (normal)
+						{
+							info.states.y = 1;
+							m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(6, normal->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						}
+						if (metallic)
+						{
+							info.states.z = 1;
+							m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(7, metallic->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						}
+						if (roughness)
+						{
+							info.states.w = 1;
+							m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(8, roughness->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						}
+						if (ao)
+						{
+							info.states.x = 1;
+							m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(9, ao->GetVulkanTexture()->GetVkDescriptorImageInfo());
+						}
+#endif
+
+						info.pbrValues.x = m_MaterialCI.Metallic;
+						info.pbrValues.y = m_MaterialCI.Roughness;
+						info.camPos = glm::vec4(m_PreviewRenderingData.CameraPos, 1.0f);
+						m_PreviewRenderingData.Pipeline->SubmitBuffer(100, sizeof(RenderState), &info);
+
+						// Render
+						m_PreviewRenderingData.Pipeline->BeginCommandBuffer();
+						m_PreviewRenderingData.Pipeline->BeginRenderPass();
+						{
+
+							m_PreviewRenderingData.Pipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(glm::mat4), &m_PreviewRenderingData.ViewProj);
+							m_PreviewRenderingData.Pipeline->DrawMesh(m_PreviewRenderingData.Mesh.get());
+						}
+						m_PreviewRenderingData.Pipeline->EndRenderPass();
+						m_PreviewRenderingData.Pipeline->EndCommandBuffer();
+
+						m_bShowPreview = true;
+					};
+
+					std::thread worker(f);
+					worker.join(); // temp
+				}
+
+				if (m_bShowPreview)
+				{
+					ImGui::Begin("Material Preview", &m_bShowPreview);
+					ImGui::SetWindowSize({ 720, 540 });
+					ImGui::Image(m_PreviewRenderingData.Framebuffer->GetImGuiTextureID(), ImVec2{ 720, 480 });
+					ImGui::End();
+				}
 			}
 			ImGui::End();
 		}
+	}
+
+	void MaterialLibraryInterface::Reset()
+	{
+		m_Buffer = {};
+		m_MaterialCI = {};
+	}
+
+	void MaterialLibraryInterface::InitPreviewRenderer()
+	{
+		FramebufferSpecification spec = {};
+		spec.Height = 480;
+		spec.Width = 720;
+		spec.bResizable = false;
+		spec.bTargetsSwapchain = false;
+		spec.bUsedByImGui = true;
+		spec.bUseMSAA = true;
+		spec.NumSubpassDependencies = 0;
+		spec.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+
+		m_PreviewRenderingData.Framebuffer = Framebuffer::Create(spec);
+		m_PreviewRenderingData.Pipeline = std::make_shared<GraphicsPipeline>();
+		m_PreviewRenderingData.Mesh = Mesh::Create(Resources + "Models/monkey.glb");
+
+		BufferLayout mainLayout =
+		{
+			{ DataTypes::Float3, "aPos" },
+			{ DataTypes::Float3, "aNormal" },
+			{ DataTypes::Float4, "aTangent" },
+			{ DataTypes::Float2, "aUV" },
+			{ DataTypes::Float4, "aColor" }
+		};
+		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
+
+		GraphicsPipelineShaderCreateInfo shaderCI = {};
+		{
+			shaderCI.FilePaths[ShaderType::Vertex] = Resources + "Shaders/Vulkan/PBR_Preview.vert";
+			shaderCI.FilePaths[ShaderType::Fragment] = Resources + "Shaders/Vulkan/PBR_Preview.frag";
+		};
+
+		GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+		{
+			DynamicPipelineCI.VertexInputInfos = { vertexMain };
+			DynamicPipelineCI.PipelineName = "PBR_PreviewPipeline";
+			DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
+			DynamicPipelineCI.TargetFramebuffer = m_PreviewRenderingData.Framebuffer;
+		}
+
+		assert(m_PreviewRenderingData.Pipeline->Create(&DynamicPipelineCI) == PipelineCreateResult::SUCCESS);
+#ifndef SMOLENGINE_OPENGL_IMPL
+		m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
+		m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
+		m_PreviewRenderingData.Pipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
+#endif
+
+		EditorCameraCreateInfo info;
+		info.FOV = 45.0f;
+		m_PreviewRenderingData.Camera = std::make_shared<EditorCamera>(&info);
+		m_PreviewRenderingData.ViewProj = m_PreviewRenderingData.Camera->GetViewProjection();
+		m_PreviewRenderingData.CameraPos = m_PreviewRenderingData.Camera->GetPosition();
+
 	}
 
 	void MaterialLibraryInterface::DrawTextureInfo(const char* header, std::string& outString, std::string& dummy)

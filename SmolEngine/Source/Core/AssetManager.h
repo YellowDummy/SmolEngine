@@ -9,6 +9,7 @@
 namespace SmolEngine
 {
 	class AudioEngine;
+	struct SceneData;
 
 	enum class CachedPathType
 	{
@@ -34,6 +35,8 @@ namespace SmolEngine
 		static void ReloadAudioClips(entt::registry& registry, AudioEngine* engine);
 
 		static void ReloadCanvases(entt::registry& registry);
+
+		static void ReloadMaterials(SceneData* data);
 
 		//Helpers
 
