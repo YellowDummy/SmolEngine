@@ -2,9 +2,7 @@
 #include "Actor.h"
 
 #include "ECS/WorldAdmin.h"
-#include "ECS/ComponentTuples/DefaultBaseTuple.h"
-#include "ECS/ComponentTuples/CameraBaseTuple.h"
-
+#include "ECS/ComponentsCore.h"
 
 namespace SmolEngine
 {
@@ -15,11 +13,10 @@ namespace SmolEngine
 
 	}
 
-	Actor::Actor(const ActorBaseType baseType, entt::entity entity, size_t index)
+	Actor::Actor(entt::entity entity, size_t index)
 		:
 
 		m_Parent(nullptr),
-		m_ActorType(baseType),
 		m_Entity(entity),
 		m_Index(index)
 	{
@@ -63,18 +60,7 @@ namespace SmolEngine
 
 	const HeadComponent* Actor::GetInfo() const
 	{
-		switch (m_ActorType)
-		{
-		case ActorBaseType::DefaultBase:
-		{
-			return &WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<DefaultBaseTuple>(m_Entity)->GetInfo();
-		}
-		case ActorBaseType::CameraBase:
-		{
-			return &WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<CameraBaseTuple>(m_Entity)->GetInfo();
-		}
-		default:
-			return nullptr;
-		}
+
+		return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<HeadComponent>(m_Entity);
 	}
 }

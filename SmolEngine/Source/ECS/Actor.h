@@ -3,7 +3,6 @@
 #include <../Libraries/entt/entt.hpp>
 #include "Core/Time.h"
 #include "Core/SLog.h"
-#include "ECS/ComponentTuples/BaseTuple.h"
 
 #include <functional>
 #include <vector>
@@ -22,19 +21,13 @@ namespace SmolEngine
 	struct ResourceTuple;
 	struct HeadComponent;
 
-	enum class ActorBaseType : uint16_t
-	{
-		DefaultBase,
-		CameraBase
-	};
-
 	class Actor
 	{
 	public:
 
 		Actor();
 
-		Actor(const ActorBaseType baseType, entt::entity entity, size_t index);
+		Actor(entt::entity entity, size_t index);
 
 		/// Operators
 
@@ -68,7 +61,6 @@ namespace SmolEngine
 
 		Ref<Actor>                       m_Parent = nullptr;
 		entt::entity                     m_Entity;
-		ActorBaseType                    m_ActorType = ActorBaseType::DefaultBase;
 
 		size_t                           m_Index = 0;
 		size_t                           m_ComponentsCount = 0;
@@ -86,7 +78,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_Entity, m_ActorType, m_Parent, m_Childs, m_Index, m_ComponentsCount);
+			archive(m_Entity, m_Parent, m_Childs, m_Index, m_ComponentsCount);
 		}
 
 	};

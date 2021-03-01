@@ -19,8 +19,6 @@
 #include "ImGui/ImGuiLayer.h"
 #include "ImGui/EditorConsole.h"
 
-#include "ECS/ComponentTuples/DefaultBaseTuple.h"
-#include "ECS/ComponentTuples/CameraBaseTuple.h"
 #include "ECS/ComponentTuples/SingletonTuple.h"
 #include "ECS/ComponentsCore.h"
 

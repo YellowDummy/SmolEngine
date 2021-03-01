@@ -45,22 +45,51 @@ namespace SmolEngine
 		Renderer2D::EndScene();
 	}
 
-	void RendererSystem::SubmitDirectionalLights(entt::registry& registry)
+	void RendererSystem::SubmitLights(entt::registry& registry)
 	{
-		bool shadows_casted = false;
-		const auto& view = registry.view<DirectionalLightComponent>();
-		for (const auto& entity : view)
+		// Point Lights
 		{
-			auto& light = view.get<DirectionalLightComponent>(entity);
-			if (light.bEnabled)
+			const auto& pGroup = registry.view<TransformComponent, PointLightComponent>();
+			for (const auto& entity : pGroup)
 			{
-				if (light.bCastShadows && !shadows_casted)
+				auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
+				if (light.bEnabled)
 				{
-					Renderer::SetShadowLightDirection(light.Direction);
-					shadows_casted = true;
+					Renderer::SubmitPointLight({ transform.WorldPos + light.Offset }, light.Color, light.Constant, light.Linear, light.Exposure);
 				}
+			}
+		}
 
-				Renderer::SubmitDirectionalLight(light.Direction, light.Color);
+		// Directional Lights
+		{
+			bool shadows_casted = false;
+			const auto& dView = registry.view<DirectionalLightComponent>();
+			for (const auto& entity : dView)
+			{
+				auto& light = dView.get<DirectionalLightComponent>(entity);
+				if (light.bEnabled)
+				{
+					if (light.bCastShadows && !shadows_casted)
+					{
+						Renderer::SetShadowLightDirection(light.Direction);
+						shadows_casted = true;
+					}
+
+					Renderer::SubmitDirectionalLight(light.Direction, light.Color);
+				}
+			}
+		}
+
+		// 2D Point Light
+		{
+			const auto& group = registry.view<TransformComponent, Light2DSourceComponent>();
+			for (const auto& entity : group)
+			{
+				auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
+				if (light2D.IsEnabled)
+				{
+					Renderer2D::SubmitLight2D(transform.WorldPos + glm::vec3(light2D.Offset, 0), light2D.Radius, light2D.Color, light2D.Intensity);
+				}
 			}
 		}
 	}
@@ -88,19 +117,6 @@ namespace SmolEngine
 			{
 				Renderer2D::SubmitSprite(transform.WorldPos, texture2D.LayerIndex,
 					transform.Scale, transform.Rotation.x, texture2D.Texture, 1.0f, texture2D.Color);
-			}
-		}
-	}
-
-	void RendererSystem::Submit2DLight(entt::registry& registry)
-	{
-		const auto& group = registry.view<TransformComponent, Light2DSourceComponent>();
-		for (const auto& entity : group)
-		{
-			auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
-			if (light2D.isEnabled)
-			{
-				Renderer2D::SubmitLight2D(transform.WorldPos + glm::vec3(light2D.Position, 0), light2D.Radius, light2D.Color, light2D.Intensity);
 			}
 		}
 	}

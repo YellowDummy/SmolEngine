@@ -16,26 +16,23 @@ namespace SmolEngine
 		Light2DSourceComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		/// Data
+		// Data
 
-		glm::vec4 Color = glm::vec4(1.0f);
-		glm::vec2 Position = glm::vec2(0.0f);
+		bool         IsEnabled = false;
+		float        Intensity = 1.0f;
+		float        Radius = 1.0f;
 
-		float Intensity = 1.0f;
-		float Radius = 1.0f;
-
-		bool isEnabled = false;
+		glm::vec2    Offset = glm::vec2(0.0f);
+		glm::vec4    Color = glm::vec4(1.0f);
 
 	private:
 
 		friend class cereal::access;
-		friend class EditorLayer;
-		friend class Scene;
 
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Position.x, Position.y, Color.r, Color.g, Color.b, Color.a, Radius, Intensity, isEnabled, ComponentID);
+			archive(Offset.x, Offset.y, Color.r, Color.g, Color.b, Color.a, Radius, Intensity, IsEnabled, ComponentID);
 		}
 	};
 }

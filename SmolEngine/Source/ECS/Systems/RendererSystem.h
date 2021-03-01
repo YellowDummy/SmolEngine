@@ -39,13 +39,13 @@ namespace SmolEngine
 
 		static void SubmitMeshes(entt::registry& registry);
 
-		static void SubmitDirectionalLights(entt::registry& registry);
+		// Lights
+
+		static void SubmitLights(entt::registry& registry);
 
 		// 2D
 
 		static void Submit2DTextures(entt::registry& registry);
-
-		static void Submit2DLight(entt::registry& registry);
 
 		static void Submit2DAnimations(entt::registry& registry);
 

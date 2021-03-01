@@ -32,6 +32,7 @@ namespace SmolEngine
 	struct Light2DSourceComponent;
 	struct MeshComponent;
 	struct DirectionalLightComponent;
+	struct PointLightComponent;
 
 	class Actor;
 	class Mesh;
@@ -135,6 +136,8 @@ namespace SmolEngine
 		void DrawDirectionalLightComponent(DirectionalLightComponent* light);
 
 		void DrawMeshInspector(bool& show);
+
+		void DrawPointLightComponent(PointLightComponent* light);
 
 		// Helpers
 

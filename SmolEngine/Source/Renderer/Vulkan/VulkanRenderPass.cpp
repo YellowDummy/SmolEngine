@@ -102,8 +102,8 @@ namespace SmolEngine
 
 		std::vector<VkSubpassDependency> dependencies(framebufferSpec->NumSubpassDependencies * 2);
 		{
-			uint32_t subPassIndex = 0;
-			for (uint32_t i = 0; i < framebufferSpec->NumSubpassDependencies * 2; ++i)
+			int32_t subPassIndex = 0;
+			for (int32_t i = 0; i < framebufferSpec->NumSubpassDependencies * 2; ++i)
 			{
 				dependencies[i].srcSubpass = VK_SUBPASS_EXTERNAL;
 				dependencies[i].dstSubpass = subPassIndex;

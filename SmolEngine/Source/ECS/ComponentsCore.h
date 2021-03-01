@@ -12,3 +12,4 @@
 #include "ECS/Components/TransformComponent.h"
 #include "ECS/Components/MeshComponent.h"
 #include "ECS/Components/DirectionalLightComponent.h"
+#include "ECS/Components/PointLightComponent.h"

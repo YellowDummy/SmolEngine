@@ -586,10 +586,9 @@
     <ClInclude Include="Source\ECS\Actor.h" />
     <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
+    <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h" />
-    <ClInclude Include="Source\ECS\ComponentTuples\CameraBaseTuple.h" />
-    <ClInclude Include="Source\ECS\ComponentTuples\DefaultBaseTuple.h" />
     <ClInclude Include="Source\ECS\ComponentTuples\SingletonTuple.h" />
     <ClInclude Include="Source\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\AudioSourceComponent.h" />
@@ -727,9 +726,8 @@
     <ClCompile Include="Source\ECS\Actor.cpp" />
     <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
-    <ClCompile Include="Source\ECS\ComponentTuples\CameraBaseTuple.cpp" />
-    <ClCompile Include="Source\ECS\ComponentTuples\DefaultBaseTuple.cpp" />
     <ClCompile Include="Source\ECS\ComponentTuples\SingletonTuple.cpp" />
     <ClCompile Include="Source\ECS\Components\Animation2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\AudioSourceComponent.cpp" />

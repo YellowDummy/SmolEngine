@@ -1263,12 +1263,6 @@
     <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h">
       <Filter>Source\ECS\ComponentTuples</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ECS\ComponentTuples\CameraBaseTuple.h">
-      <Filter>Source\ECS\ComponentTuples</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\ComponentTuples\DefaultBaseTuple.h">
-      <Filter>Source\ECS\ComponentTuples</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ECS\ComponentTuples\SingletonTuple.h">
       <Filter>Source\ECS\ComponentTuples</Filter>
     </ClInclude>
@@ -1595,6 +1589,7 @@
     <ClInclude Include="Source\Core\FileDialog.h" />
     <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
     <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
+    <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1653,12 +1648,6 @@
     </ClCompile>
     <ClCompile Include="Source\ECS\Actor.cpp">
       <Filter>Source\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\ComponentTuples\CameraBaseTuple.cpp">
-      <Filter>Source\ECS\ComponentTuples</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\ComponentTuples\DefaultBaseTuple.cpp">
-      <Filter>Source\ECS\ComponentTuples</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\ComponentTuples\SingletonTuple.cpp">
       <Filter>Source\ECS\ComponentTuples</Filter>
@@ -1938,5 +1927,6 @@
     <ClCompile Include="Source\Core\FileDialog.cpp" />
     <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
     <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
   </ItemGroup>
 </Project>

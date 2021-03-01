@@ -283,11 +283,8 @@ void main()
 		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * 0.8);
 		vec3 result = (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
 		// Total contribution for this light.
-		directLighting += result;
+		directLighting += result * 2.0; // temp
 	}
-
-	float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
-	directLighting *= shadow;
 
 	// Point lighting calculation
 	vec3 pointLighting = vec3(0);
@@ -305,8 +302,13 @@ void main()
 		float attTotal = constantAtt + linearAtt * dist + expAtt * dist * dist;
 		pointLighting += pointLights[i].color.rgb * (ambientLighting + diffuse) / attTotal;
 	}
-	vec3 color = directLighting + pointLighting;
-	color += ambientLighting;
+
+	vec3 color =  ambientLighting + directLighting + pointLighting;
+	if(inDirectionalLightCount > 0)
+	{
+		float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
+		color*= shadow;
+	}
 
 	// Tone mapping
 	color = Uncharted2Tonemap(color * inExposure);

@@ -64,8 +64,6 @@ const mat4 biasMat = mat4(
 	0.5, 0.5, 0.0, 1.0 
 );
 
-struct 
-
 layout (location = 0)  out vec3 outWorldPos;
 layout (location = 1)  out vec3 outNormal;
 layout (location = 2)  out vec3 outCameraPos;

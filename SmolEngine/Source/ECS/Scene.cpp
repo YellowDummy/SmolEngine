@@ -6,8 +6,6 @@
 #include "Scripting/SystemRegistry.h"
 
 #include "ECS/ComponentTuples/SingletonTuple.h"
-#include "ECS/ComponentTuples/CameraBaseTuple.h"
-#include "ECS/ComponentTuples/DefaultBaseTuple.h"
 #include "ImGui/EditorConsole.h"
 
 namespace SmolEngine
@@ -20,7 +18,7 @@ namespace SmolEngine
 		LoadSingletons();
 	}
 
-	Ref<Actor> Scene::CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag)
+	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
 		if (m_SceneData.m_ID == 0)
 		{
@@ -36,37 +34,20 @@ namespace SmolEngine
 			return 0;
 		}
 
-		// Generating ID
+		// Getting ID
 		auto actorEntity = m_SceneData.m_Registry.create();
 		uint32_t id = (uint32_t)actorEntity;
 
 		// Creating Actor
-		auto& actorRef = std::make_shared<Actor>(baseType, actorEntity, m_SceneData.m_ActorPool.size());
+		auto& actorRef = std::make_shared<Actor>(actorEntity, m_SceneData.m_ActorPool.size());
 
-		switch (baseType)
-		{
-		case ActorBaseType::DefaultBase:
-		{
-			auto ref = AddTuple<DefaultBaseTuple>(*actorRef.get());
-			ref->Info.ID = id;
-			ref->Info.Name = name;
-			ref->Info.Tag = tag;
+		// Add Head
+		auto head = AddComponent<HeadComponent>(*actorRef.get());
+		head->ID = id;
+		head->Name = name;
+		head->Tag = tag;
 
-			break;
-		}
-		case ActorBaseType::CameraBase:
-		{
-			auto ref = AddTuple<CameraBaseTuple>(*actorRef.get());
-			ref->Info.ID = id;
-			ref->Info.Name = name;
-			ref->Info.Tag = tag;
-
-			break;
-		}
-		default:
-			break;
-		}
-
+		// Add Transform
 		AddComponent<TransformComponent>(*actorRef.get());
 		m_IDSet[name] = id;
 		m_SceneData.m_ActorPool[id] = actorRef;
@@ -126,9 +107,8 @@ namespace SmolEngine
 
 	void Scene::DeleteActor(Ref<Actor>& actor)
 	{
-		m_SceneData.m_Registry.remove_if_exists<DefaultBaseTuple>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<CameraBaseTuple>(*actor);
-
+		m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<Body2DComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<Texture2DComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
@@ -139,6 +119,7 @@ namespace SmolEngine
 		m_SceneData.m_Registry.remove_if_exists<AudioSourceComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
 
 		m_IDSet.erase(actor->GetName());
 		m_SceneData.m_ActorPool.erase(actor->GetID());
@@ -155,12 +136,11 @@ namespace SmolEngine
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<
-
-				DefaultBaseTuple, CameraBaseTuple,
-
+				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent>(output);
+				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
+				PointLightComponent>(output);
 		}
 
 		// Serializing scene data
@@ -246,12 +226,11 @@ namespace SmolEngine
 			cereal::JSONInputArchive regisrtyInput{ regisrtyStorage };
 
 			entt::snapshot_loader{ m_SceneData.m_Registry }.entities(regisrtyInput).component<
-
-				DefaultBaseTuple, CameraBaseTuple,
-
+				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent>(regisrtyInput);
+				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
+				PointLightComponent>(regisrtyInput);
 		}
 
 		// Loading Singletons-Components
@@ -387,17 +366,10 @@ namespace SmolEngine
 	{
 		m_IDSet.clear();
 		{
-			const auto& view = m_SceneData.m_Registry.view<DefaultBaseTuple>();
-			view.each([&](DefaultBaseTuple& tuple)
+			const auto& view = m_SceneData.m_Registry.view<HeadComponent>();
+			view.each([&](HeadComponent& head)
 				{
-					m_IDSet[tuple.Info.Name] = tuple.Info.ID;
-				});
-		}
-		{
-			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
-			view.each([&](CameraBaseTuple& tuple)
-				{
-					m_IDSet[tuple.Info.Name] = tuple.Info.ID;
+					m_IDSet[head.Name] = head.ID;
 				});
 		}
 	}

@@ -21,7 +21,7 @@ namespace SmolEngine
 
 		/// Actors
 
-		Ref<Actor> CreateActor(const ActorBaseType baseType, const std::string& name, const std::string& tag = std::string("Default"));
+		Ref<Actor> CreateActor(const std::string& name, const std::string& tag = std::string("Default"));
 
 		// Search
 
@@ -63,19 +63,6 @@ namespace SmolEngine
 			auto& component = m_SceneData.m_Registry.emplace<T>(actor, std::forward<Args>(args)...);
 			component.ComponentID = static_cast<uint32_t>(actor.m_ComponentsCount);
 			actor.m_ComponentsCount++;
-			return &component;
-		}
-
-		template<typename T>
-		T* AddTuple(Actor& actor)
-		{
-			if (HasComponent<T>(actor))
-			{
-				NATIVE_ERROR("Actor already have tuple!");
-				return nullptr;
-			}
-
-			auto& component = m_SceneData.m_Registry.emplace<T>(actor);
 			return &component;
 		}
 

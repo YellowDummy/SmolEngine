@@ -359,11 +359,8 @@ namespace SmolEngine
 #endif //  0
 
 		m_BuildPanel->Update(showBuildPanel);
-
 		m_SettingsWindow->Update(showSettingsWindow, m_Scene);
-
 		m_AnimationPanel->Update(showAnimationPanel);
-
 		m_EditorConsole->Update(showConsole);
 
 		if (showRenderer2Dstats)
@@ -528,16 +525,16 @@ namespace SmolEngine
 			ImGui::Extensions::InputFloat("Restitution", rb->Body.m_Restitution);
 			ImGui::Extensions::InputFloat("Friction", rb->Body.m_Friction);
 			ImGui::Extensions::InputFloat("Density", rb->Body.m_Density);
-			ImGui::Extensions::CheckBox("Is Bullet?", rb->Body.m_IsBullet);
+			ImGui::Extensions::CheckBox("Bullet", rb->Body.m_IsBullet);
 
 			ImGui::NewLine();
 
 		}
 
-		ImGui::Extensions::CheckBox("Is Trigger?", rb->Body.m_IsTrigger);
-		ImGui::Extensions::CheckBox("Is Awake?", rb->Body.m_IsAwake);
-		ImGui::Extensions::CheckBox("Allow Sleep?", rb->Body.m_canSleep);
-		ImGui::Extensions::CheckBox("Draw Shape?", rb->ShowShape);
+		ImGui::Extensions::CheckBox("Trigger", rb->Body.m_IsTrigger);
+		ImGui::Extensions::CheckBox("Awake", rb->Body.m_IsAwake);
+		ImGui::Extensions::CheckBox("Allow Sleep", rb->Body.m_canSleep);
+		ImGui::Extensions::CheckBox("Draw Shape", rb->ShowShape);
 
 	}
 
@@ -549,19 +546,17 @@ namespace SmolEngine
 
 		ImGui::NewLine();
 
-		if(ImGui::Extensions::CheckBox("Is Primary?", camera->isPrimaryCamera))
+		if(ImGui::Extensions::CheckBox("Primary", camera->isPrimaryCamera))
 		{
 			if (camera->isPrimaryCamera)
 			{
 				const size_t id = m_SelectedActor->GetID();
 
 				SceneData& data = m_Scene->GetActiveScene().GetSceneData();
-				data.m_Registry.view<CameraBaseTuple>().each([&](CameraBaseTuple& tuple)
+				data.m_Registry.view<HeadComponent, CameraComponent>().each([&](HeadComponent& head, CameraComponent& camera)
 				{
-					if (tuple.Info.ID != id)
-					{
-						tuple.Camera.isPrimaryCamera = false;
-					}
+					if (head.ID != id)
+						camera.isPrimaryCamera = false;
 				});
 			}
 		}
@@ -875,14 +870,14 @@ namespace SmolEngine
 
 	void EditorLayer::DrawLight2D(Light2DSourceComponent* light)
 	{
-		ImGui::Extensions::InputFloat2Base("Offset", light->Position, 130.0f, "2DLightPanel");
+		ImGui::Extensions::InputFloat2Base("Offset", light->Offset, 130.0f, "2DLightPanel");
 		ImGui::Extensions::InputFloat("Intensity", light->Intensity, 130.0f, "2DLightPanel");
 		ImGui::Extensions::InputFloat("Radius", light->Radius, 130.0f, "2DLightPanel");
 		ImGui::Extensions::ColorInput3("Color", light->Color, 130.0f, "2DLightPanel");
 
 		ImGui::NewLine();
 
-		ImGui::Extensions::CheckBox("Is Enabled?", light->isEnabled, 130.0f, "2DLightPanel");
+		ImGui::Extensions::CheckBox("Enabled", light->IsEnabled, 130.0f, "2DLightPanel");
 	}
 
 	void EditorLayer::DrawSceneView(bool enabled)
@@ -1111,7 +1106,8 @@ namespace SmolEngine
 
 						if (ImGui::MenuItem("Point Light"))
 						{
-
+							m_Scene->GetActiveScene().AddComponent<PointLightComponent>(*m_SelectedActor.get());
+							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Directional Light"))
@@ -1147,6 +1143,11 @@ namespace SmolEngine
 							ImGui::CloseCurrentPopup();
 						}
 
+						if (ImGui::MenuItem("Camera"))
+						{
+							m_Scene->GetActiveScene().AddComponent<CameraComponent>(*m_SelectedActor.get());
+							ImGui::CloseCurrentPopup();
+						}
 
 						if (ImGui::MenuItem("Canvas"))
 						{
@@ -1160,49 +1161,12 @@ namespace SmolEngine
 					ImGui::EndPopup();
 				}
 
-
-				switch (m_SelectedActor->m_ActorType)
+				// Head
+				if (ImGui::CollapsingHeader("Head"))
 				{
-				case ActorBaseType::DefaultBase:
-				{
-					auto ref = m_Scene->GetActiveScene().GetComponent<DefaultBaseTuple>(*m_SelectedActor.get());
-
-					ImGui::Separator();
 					ImGui::NewLine();
-
-					// Head
-					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-						DrawInfo(&ref->Info);
-					}
-					break;
-				}
-				case ActorBaseType::CameraBase:
-				{
-					auto ref = m_Scene->GetActiveScene().GetComponent<CameraBaseTuple>(*m_SelectedActor.get());
-
-					ImGui::NewLine();
-
-					// Head
-					if (ImGui::CollapsingHeader("Head", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-						DrawInfo(&ref->Info);
-					}
-
-
-					// Camera
-					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::NewLine();
-						DrawCamera(&ref->Camera);
-					}
-
-					break;
-				}
-				default:
-					break;
+					auto info = m_Scene->GetActiveScene().GetComponent<HeadComponent>(*m_SelectedActor.get());
+					DrawInfo(info);
 				}
 
 				// Transform 
@@ -1285,6 +1249,26 @@ namespace SmolEngine
 						}
 					}
 
+					if (IsCurrentComponent<PointLightComponent>(i))
+					{
+						if (ImGui::CollapsingHeader("Point Light"))
+						{
+							ImGui::NewLine();
+							auto component = m_Scene->GetActiveScene().GetComponent<PointLightComponent>(*m_SelectedActor.get());
+							DrawPointLightComponent(component);
+						}
+					}
+
+					if (IsCurrentComponent<CameraComponent>(i))
+					{
+						if (ImGui::CollapsingHeader("Camera"))
+						{
+							ImGui::NewLine();
+							auto component = m_Scene->GetActiveScene().GetComponent<CameraComponent>(*m_SelectedActor.get());
+							DrawCamera(component);
+						}
+					}
+
 					DrawScriptComponent(i);
 				}
 
@@ -1333,45 +1317,35 @@ namespace SmolEngine
 				{
 					ImGui::MenuItem("New Actor", NULL, false, false);
 					ImGui::Separator();
+					std::stringstream ss;
 
-					if (ImGui::BeginMenu("Base"))
+					if (ImGui::MenuItem("Empty Actor"))
 					{
-						std::stringstream ss;
-						if (ImGui::MenuItem("Default"))
-						{
-							ss << "New_DefaultActor_" << data.m_ActorPool.size();
-							m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str());
-						}
-						if (ImGui::MenuItem("Camera"))
-						{
-							ss << "New_CameraActor_" << data.m_ActorPool.size();
-							m_Scene->GetActiveScene().CreateActor(ActorBaseType::CameraBase, ss.str());
-						}
-
-						ImGui::EndMenu();
+						ss << "New_EmptyActor_" << data.m_ActorPool.size();
+						m_Scene->GetActiveScene().CreateActor(ss.str());
 					}
 
 					if (ImGui::BeginMenu("Lights"))
 					{
-						std::stringstream ss;
-
 						if (ImGui::MenuItem("Point Light 2D"))
 						{
 							ss << "New_Light2D_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<Light2DSourceComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						if (ImGui::MenuItem("Point Light"))
 						{
-
+							ss << "New_PointLight_" << data.m_ActorPool.size();
+							m_Scene->GetActiveScene().AddComponent<PointLightComponent>
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						if (ImGui::MenuItem("Directional Light"))
 						{
 							ss << "New_DirectionalLight_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<DirectionalLightComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						ImGui::EndMenu();
@@ -1379,11 +1353,10 @@ namespace SmolEngine
 
 					if (ImGui::BeginMenu("Physics"))
 					{
-						std::stringstream ss;
 						if (ImGui::MenuItem("Rigidbody 2D"))
 						{
 							ss << "New_Rigidbody2D_" << data.m_ActorPool.size();
-							Ref<Actor> actor = m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str());
+							Ref<Actor> actor = m_Scene->GetActiveScene().CreateActor(ss.str());
 							m_Scene->GetActiveScene().AddComponent<Body2DComponent>(*actor,
 								actor, 0);
 						}
@@ -1393,12 +1366,11 @@ namespace SmolEngine
 
 					if (ImGui::BeginMenu("2D"))
 					{
-						std::stringstream ss;
 						if (ImGui::MenuItem("Sprite"))
 						{
 							ss << "New_Sprite_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<Texture2DComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						ImGui::EndMenu();
@@ -1406,12 +1378,11 @@ namespace SmolEngine
 
 					if (ImGui::BeginMenu("3D"))
 					{
-						std::stringstream ss;
 						if (ImGui::MenuItem("Mesh"))
 						{
 							ss << "New_Mesh_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<MeshComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 
@@ -1420,32 +1391,32 @@ namespace SmolEngine
 
 					if (ImGui::BeginMenu("Common"))
 					{
-						std::stringstream ss;
 						if (ImGui::MenuItem("Audio Source"))
 						{
 							ss << "New_AudioSource_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<AudioSourceComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						if (ImGui::MenuItem("Animation 2D"))
 						{
 							ss << "New_Animation2D_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<Animation2DComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						if (ImGui::MenuItem("Canvas"))
 						{
 							ss << "New_Canvas_" << data.m_ActorPool.size();
 							m_Scene->GetActiveScene().AddComponent<CanvasComponent>
-								(*m_Scene->GetActiveScene().CreateActor(ActorBaseType::DefaultBase, ss.str()).get());
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						if (ImGui::MenuItem("Camera"))
 						{
 							ss << "New_Camera_" << data.m_ActorPool.size();
-							m_Scene->GetActiveScene().CreateActor(ActorBaseType::CameraBase, ss.str());
+							m_Scene->GetActiveScene().AddComponent<CameraComponent>
+								(*m_Scene->GetActiveScene().CreateActor(ss.str()).get());
 						}
 
 						ImGui::EndMenu();
@@ -1658,6 +1629,16 @@ namespace SmolEngine
 			}
 			ImGui::End();
 		}
+	}
+
+	void EditorLayer::DrawPointLightComponent(PointLightComponent* light)
+	{
+		ImGui::Extensions::CheckBox("Enabled", light->bEnabled);
+		ImGui::Extensions::InputFloat("Constant", light->Constant);
+		ImGui::Extensions::InputFloat("Linear", light->Linear);
+		ImGui::Extensions::InputFloat("Exposure", light->Exposure);
+		ImGui::Extensions::InputFloat3Base("Offset", light->Offset);
+		ImGui::Extensions::ColorInput3("Color", light->Color);
 	}
 
 	void EditorLayer::UpdateFileBrowser(bool& showAnimPanel)

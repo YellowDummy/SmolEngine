@@ -28,10 +28,7 @@
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
-#include "ECS/ComponentTuples/BaseTuple.h"
 #include "ECS/ComponentTuples/SingletonTuple.h"
-#include "ECS/ComponentTuples/CameraBaseTuple.h"
-#include "ECS/ComponentTuples/DefaultBaseTuple.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
@@ -133,17 +130,17 @@ namespace SmolEngine
 		ScriptingSystem::OnSceneTick(registry, deltaTime);
 #endif
 
-		// Extracting Camera Tuples
-		const auto& cameraGroup = registry.view<CameraBaseTuple, TransformComponent>();
+		// Extracting Camera
+		const auto& cameraGroup = registry.view<CameraComponent, TransformComponent>();
 		for (const auto& entity : cameraGroup)
 		{
-			auto& [tuple, transform] = cameraGroup.get<CameraBaseTuple, TransformComponent>(entity);
+			auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
 
 			// There is no need to render the scene if the camera is not our target or is disabled
-			if (!tuple.Camera.isPrimaryCamera || !tuple.Camera.isEnabled) { continue; }
+			if (!camera.isPrimaryCamera || !camera.isEnabled) { continue; }
 
 			// Calculating MVP
-			CameraSystem::CalculateView(&tuple.Camera, &transform);
+			CameraSystem::CalculateView(&camera, &transform);
 
 			// Rendering scene to target framebuffer
 			//RenderScene(tuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0], false, &tuple.Camera, &transform);
@@ -166,11 +163,11 @@ namespace SmolEngine
 		if (e.m_EventType == (int)EventType::S_WINDOW_RESIZE)
 		{
 
-			const auto& view = m_SceneData.m_Registry.view<CameraBaseTuple>();
+			const auto& view = m_SceneData.m_Registry.view<CameraComponent>();
 
-			view.each([&](CameraBaseTuple& tuple)
+			view.each([&](CameraComponent& camera)
 				{
-					CameraSystem::OnEvent(tuple, e);
+					CameraSystem::OnEvent(camera, e);
 				});
 
 			auto& winResize = static_cast<WindowResizeEvent&>(e);
@@ -208,8 +205,7 @@ namespace SmolEngine
 			Animation2DSystem::Update(registry);
 			RendererSystem::Submit2DAnimations(registry);
 			// Lights
-			RendererSystem::SubmitDirectionalLights(registry);
-			RendererSystem::Submit2DLight(registry);
+			RendererSystem::SubmitLights(registry);
 			//UI
 			if (targetCamera != nullptr && cameraTranform != nullptr)
 				RendererSystem::SubmitCanvases(registry, targetCamera, cameraTranform);
