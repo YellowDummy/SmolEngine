@@ -34,7 +34,7 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("Save as"))
 					{
-						auto& result = FileDialog::SaveFile("");
+						auto& result = FileDialog::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
 						if (result.has_value())
 						{
 							if(MaterialLibrary::GetSinglenton()->Save(result.value(), m_MaterialCI))
@@ -45,7 +45,7 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Load"))
 					{
 						Reset();
-						auto& result = FileDialog::OpenFile("");
+						auto& result = FileDialog::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
 						if (result.has_value())
 						{
 							MaterialLibrary::GetSinglenton()->Load(result.value(), m_MaterialCI);

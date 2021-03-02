@@ -36,7 +36,7 @@ namespace SmolEngine
 
 		static void ReloadCanvases(entt::registry& registry);
 
-		static void ReloadMaterials(SceneData* data);
+		static void ReloadMeshMaterials(entt::registry& registry, SceneData* data);
 
 		//Helpers
 

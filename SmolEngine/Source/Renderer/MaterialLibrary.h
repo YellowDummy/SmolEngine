@@ -52,7 +52,7 @@ namespace SmolEngine
 
 		// Add / Delete
 
-		int32_t Add(MaterialCreateInfo* infoCI);
+		int32_t Add(MaterialCreateInfo* infoCI, const std::string& path = "");
 
 		bool Delete(const std::string& name);
 
@@ -80,7 +80,7 @@ namespace SmolEngine
 
 		const std::vector<Ref<Texture>>& GetTextures() const;
 
-		const std::unordered_map<std::string, uint32_t>& GetMaterialTable() const;
+		const std::unordered_map<std::string, int32_t>& GetMaterialTable() const;
 
 		static MaterialLibrary* GetSinglenton();
 
@@ -93,13 +93,13 @@ namespace SmolEngine
 	private:
 
 		static MaterialLibrary*                     s_Instance;
-		uint32_t                                    m_MaterialIndex = 0;
+		int32_t                                     m_MaterialIndex = 0;
 		uint32_t                                    m_TextureIndex = 0;
 
 		std::vector<Material>                       m_Materials;
 		std::vector<Ref<Texture>>                   m_Textures;
 
-		std::unordered_map<std::string, uint32_t>   m_MaterialTable;
-		std::unordered_map<size_t, std::string>     m_Hasher;
+		std::unordered_map<std::string, int32_t>   m_MaterialNames;
+		std::unordered_map<std::string, int32_t>   m_MaterialPaths;
 	};
 }

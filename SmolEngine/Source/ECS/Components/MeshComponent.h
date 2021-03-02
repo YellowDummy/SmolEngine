@@ -4,7 +4,7 @@
 #include "Renderer/Mesh.h"
 
 #include <cereal/cereal.hpp>
-#include <cereal/types/vector.hpp>
+#include <cereal/types/unordered_map.hpp>
 
 namespace SmolEngine
 {
@@ -17,14 +17,15 @@ namespace SmolEngine
 
 		// Data
 
-		bool                       bCastShadows = true;
-		bool                       bIsStatic = false;
-		bool                       bShow = true;
-
-		int                        ShadowType = 2;
-							       
-		Ref<Mesh>                  Mesh = nullptr;
-		std::vector<std::string>   MaterialNames;
+		bool                                        bCastShadows = true;
+		bool                                        bIsStatic = false;
+		bool                                        bShow = true;
+								                    
+		int                                         ShadowType = 2;
+							                        
+		Ref<Mesh>                                   Mesh = nullptr;
+		std::string                                 FilePath = "";
+		std::unordered_map<uint32_t, std::string>   MaterialNames;
 
 	private:
 
@@ -33,7 +34,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(bCastShadows, bIsStatic, ShadowType, MaterialNames, ComponentID);
+			archive(bCastShadows, bIsStatic, bShow,  ShadowType, MaterialNames, FilePath, ComponentID);
 		}
 	};
 }

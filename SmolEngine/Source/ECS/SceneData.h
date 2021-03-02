@@ -33,12 +33,11 @@ namespace SmolEngine
 		std::unordered_map<uint32_t, Ref<Actor>>           m_ActorPool;
 		std::unordered_map<std::string, std::string>       m_AssetMap;
 		std::vector<Ref<Actor>>                            m_ActorList;
-		std::vector<MaterialCreateInfo>                    m_MaterialInfos;
+		std::vector<std::string>                           m_MaterialPaths;
 
 	private:
 
 		std::string                                        m_filePath = "";
-		std::string                                        m_fileName = "";
 		std::string                                        m_Name = std::string("");
 		size_t                                             m_ID = 0;
 
@@ -53,8 +52,8 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_MaterialInfos, m_ActorPool, m_AssetMap, m_Entity, m_Gravity.x, m_Gravity.y,
-				m_ID, m_filePath, m_fileName, m_Name, m_AmbientStrength);
+			archive(m_MaterialPaths, m_ActorPool, m_AssetMap, m_Entity, m_Gravity.x, m_Gravity.y,
+				m_ID, m_filePath, m_Name, m_AmbientStrength);
 		}
 	};
 }

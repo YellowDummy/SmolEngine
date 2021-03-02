@@ -34,10 +34,18 @@ namespace SmolEngine
 		return std::nullopt;
 	}
 
-	std::optional<std::string> FileDialog::SaveFile(const char* filter)
+	std::optional<std::string> FileDialog::SaveFile(const char* filter, const std::string& initialName)
 	{
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
+		if (!initialName.empty())
+		{
+			for (uint32_t i = 0; i < static_cast<uint32_t>(initialName.size()); ++i)
+			{
+				szFile[i] = initialName[i];
+			}
+		}
+
 		CHAR currentDir[256] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);

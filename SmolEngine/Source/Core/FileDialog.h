@@ -11,6 +11,6 @@ namespace SmolEngine
 
 		static std::optional<std::string> OpenFile(const char* filter);
 
-		static std::optional<std::string> SaveFile(const char* filter);
+		static std::optional<std::string> SaveFile(const char* filter, const std::string& initialName = "");
 	};
 }

@@ -202,11 +202,11 @@ namespace SmolEngine
 		{
 			cereal::JSONInputArchive sceneDataInput{ sceneDataStorage };
 
-			sceneDataInput(m_SceneData.m_MaterialInfos,
+			sceneDataInput(m_SceneData.m_MaterialPaths,
 				m_SceneData.m_ActorPool, m_SceneData.m_AssetMap,
 				m_SceneData.m_Entity, m_SceneData.m_Gravity.x,
 				m_SceneData.m_Gravity.y, m_SceneData.m_ID,
-				m_SceneData.m_filePath, m_SceneData.m_fileName,
+				m_SceneData.m_filePath,
 				m_SceneData.m_Name, m_SceneData.m_AmbientStrength);
 		}
 

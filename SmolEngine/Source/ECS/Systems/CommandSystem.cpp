@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "CommandSystem.h"
 
+#include "ECS/ComponentsCore.h"
+#include "ECS/WorldAdmin.h"
+
+#include "Renderer/Mesh.h"
+#include "Renderer/MaterialLibrary.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -99,4 +105,41 @@ namespace SmolEngine
 
         return true;
     }
+
+	bool CommandSystem::SetMeshMaterial(MeshComponent* component, Mesh* target_mesh, MaterialCreateInfo* info, const std::string& material_path)
+	{
+		auto& material_paths = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_MaterialPaths;
+		bool path_exist = false;
+		for (auto& path : material_paths)
+		{
+			if (path == material_path)
+			{
+				path_exist = true;
+				break;
+			}
+		}
+
+		int32_t id = MaterialLibrary::GetSinglenton()->Add(info, material_path);
+		if (id == -1)
+			return false;
+
+		uint32_t index = 0;
+		if (component->Mesh.get() != target_mesh)
+		{
+			index++;
+			for (auto& sub : component->Mesh->GetSubMeshes())
+			{
+				if (sub.get() == target_mesh)
+					break;
+				index++;
+			}
+		}
+
+		if(!path_exist)
+			material_paths.push_back(material_path);
+
+		component->MaterialNames[index] = info->Name;
+		target_mesh->SetMaterialID(id);
+		return true;
+	}
 }

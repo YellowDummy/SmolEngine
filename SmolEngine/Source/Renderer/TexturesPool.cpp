@@ -3,6 +3,15 @@
 
 namespace SmolEngine
 {
+	Ref<Texture> TexturesPool::AddDummyTexture()
+	{
+		if (m_DummyTexture != nullptr)
+			return m_DummyTexture;
+
+		m_DummyTexture = std::make_shared<Texture>();
+		return m_DummyTexture;
+	}
+
 	Ref<Texture> TexturesPool::GetTexture(size_t id)
 	{
 		return m_Textures[id];
@@ -36,10 +45,20 @@ namespace SmolEngine
 		return m_Textures[id];
 	}
 
+	void TexturesPool::Reset()
+	{
+		m_Textures.clear();
+	}
+
 	bool TexturesPool::IsTexture2DLoaded(const std::string& filePath)
 	{
 		std::hash<std::string> hasher;
 		size_t id = hasher(filePath);
 		return m_Textures.find(id) != m_Textures.end();
+	}
+
+	std::unordered_map<size_t, Ref<Texture>>& TexturesPool::GetTextures()
+	{
+		return m_Textures;
 	}
 }

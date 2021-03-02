@@ -8,7 +8,6 @@ static const size_t reserveSize = 259;
 	SceneData::SceneData(const std::string& filePath, const std::string& fileName)
 	{
 		m_filePath = filePath;
-		m_fileName = fileName;
 		m_Name = fileName;
 		m_ID = std::hash<std::string>{}(filePath);
 
@@ -24,12 +23,11 @@ static const size_t reserveSize = 259;
 		m_Gravity.y = other.m_Gravity.y;
 		m_ID = other.m_ID;
 		m_filePath = other.m_filePath;
-		m_fileName = other.m_fileName;
 		m_Name = other.m_Name;
 		m_AmbientStrength = other.m_AmbientStrength;
 
 		m_AssetMap = std::move(other.m_AssetMap);
-		m_MaterialInfos = std::move(other.m_MaterialInfos);
+		m_MaterialPaths = std::move(other.m_MaterialPaths);
 	}
 
 	void SceneData::Prepare()

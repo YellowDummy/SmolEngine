@@ -79,18 +79,56 @@ namespace SmolEngine
 		});
 	}
 
-	void AssetManager::ReloadMaterials(SceneData* data)
+	void AssetManager::ReloadMeshMaterials(entt::registry& registry, SceneData* data)
 	{
 		MaterialLibrary* instance = MaterialLibrary::GetSinglenton();
 		instance->Reset();
 
 		// Default Material = ID 0
-		MaterialCreateInfo defaultMaterial = {};
-		defaultMaterial.Name = "Default Material";
-		instance->Add(&defaultMaterial);
+		MaterialCreateInfo materialCI = {};
+		materialCI.Name = "Default Material";
+		instance->Add(&materialCI);
 
 		// Scene materials
+		for (auto& path : data->m_MaterialPaths)
+		{
+			materialCI = {};
+			bool load = instance->Load(path, materialCI);
+			if (load)
+			{
+				instance->Add(&materialCI, path);
+				continue;
+			}
 
+			NATIVE_ERROR("Material {] not found!", path);
+		}
+
+		// Load Meshes and updates components
+		const auto& view = registry.view<MeshComponent>();
+		view.each([&](MeshComponent& component)
+		{
+			if (!component.FilePath.empty())
+			{
+				component.Mesh = Mesh::Create(component.FilePath);
+
+				if ((component.MaterialNames.size() > 0))
+				{
+					uint32_t index = 0;
+					int32_t id = instance->GetMaterialID(component.MaterialNames[index]);
+					component.Mesh->SetMaterialID(id);
+					index++;
+
+					for (auto& sub : component.Mesh->GetSubMeshes())
+					{
+						int32_t id = instance->GetMaterialID(component.MaterialNames[index]);
+						sub->SetMaterialID(id);
+
+						index++;
+					}
+				}
+			}
+
+		});
 	}
 
 	bool AssetManager::PathCheck(std::string& path, const std::string& fileName)
@@ -117,29 +155,11 @@ namespace SmolEngine
 	{
 		using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
-#ifdef SMOLENGINE_EDITOR // Dodgy implementation
+#ifdef SMOLENGINE_EDITOR
 
 		for (const auto& dirEntry : recursive_directory_iterator(std::string("../GameX/")))
 		{
-			if (dirEntry.path().filename() == fileName)
-			{
-				pathToChange = dirEntry.path().u8string();
-				return true;
-			}
-		}
-
-		for (const auto& dirEntry : recursive_directory_iterator(std::string("../SmolEngine/Assets/")))
-		{
-			if (dirEntry.path().filename() == fileName)
-			{
-				pathToChange = dirEntry.path().u8string();
-				return true;
-			}
-		}
-
-		for (const auto& dirEntry : recursive_directory_iterator(std::string("../SmolEngine-Editor/")))
-		{
-			if (dirEntry.path().filename() == fileName)
+			if (dirEntry.path().filename().stem() == fileName)
 			{
 				pathToChange = dirEntry.path().u8string();
 				return true;

@@ -81,7 +81,7 @@ namespace SmolEngine
 		m_EditorConsole = EditorConsole::GetConsole();
 		m_Scene = WorldAdmin::GetSingleton();
 
-		m_Scene->CreateScene(std::string("TestScene2.smolscene"));
+		m_Scene->CreateScene(std::string("TestScene.s_scene"));
 	}
 
 	void EditorLayer::OnDetach()
@@ -188,37 +188,43 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("New"))
 					{
-						m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
-
-						m_FileBrowser->SetTypeFilters({ ".smolscene" });
-						m_FileBrowser->SetTitle("New Scene");
-						m_FileBrowserState = FileBrowserFlags::Scene_Create;
-						m_FileBrowser->Open();
+						auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						if (result.has_value())
+						{
+							m_SelectedActor = nullptr;
+							m_Scene->CreateScene(result.value());
+						}
 					}
 
 					if (ImGui::MenuItem("Save"))
 					{
-						m_Scene->SaveCurrentScene();
+						if (!m_Scene->SaveCurrentScene())
+						{
+							CONSOLE_ERROR("Couldn't save current scene!");
+						}
 					}
 
 					if (ImGui::MenuItem("Save as"))
 					{
-						m_FileBrowser = std::make_unique<ImGui::FileBrowser>(ImGuiFileBrowserFlags_EnterNewFilename);
-
-						m_FileBrowser->SetTypeFilters({ ".smolscene" });
-						m_FileBrowser->SetTitle("Save as");
-						m_FileBrowserState = FileBrowserFlags::Scene_Save;
-						m_FileBrowser->Open();
+						auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						if (result.has_value())
+						{
+							m_SelectedActor = nullptr;
+							m_Scene->GetActiveScene().GetSceneData().m_filePath = result.value();
+							std::filesystem::path path = result.value();
+							m_Scene->GetActiveScene().GetSceneData().m_Name = path.filename().stem().string();
+							m_Scene->Save(result.value());
+						}
 					}
 
 					if (ImGui::MenuItem("Load"))
 					{
-						m_SelectedActor = nullptr;
-
-						m_FileBrowser->SetTypeFilters({ ".smolscene" });
-						m_FileBrowser->SetTitle("Load Scene");
-						m_FileBrowserState = FileBrowserFlags::Scene_Load;
-						m_FileBrowser->Open();
+						auto& result = FileDialog::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
+						if (result.has_value())
+						{
+							m_SelectedActor = nullptr;
+							m_Scene->Load(result.value());
+						}
 					}
 				}
 
@@ -229,17 +235,12 @@ namespace SmolEngine
 			{
 				if (ImGui::MenuItem("New Clip"))
 				{
-					showAnimationPanel = true;
-					m_AnimationPanel->m_AnimationClip = std::make_unique<AnimationClip>();
+
 				}
 
 				if (ImGui::MenuItem("Load Clip"))
 				{
-					m_FileBrowserState = FileBrowserFlags::Load_Animation_Clip;
 
-					m_FileBrowser->SetTitle("Load Clip");
-					m_FileBrowser->SetTypeFilters({ ".smolanim" });
-					m_FileBrowser->Open();
 				}
 
 				ImGui::EndMenu();
@@ -289,11 +290,6 @@ namespace SmolEngine
 				{
 					m_BuildPanel->Load("../Config/ProjectConfig.smolconfig");
 					showBuildPanel = true;
-				}
-
-				if (ImGui::MenuItem("Linux"))
-				{
-
 				}
 
 				if (ImGui::MenuItem("Android"))
@@ -924,20 +920,12 @@ namespace SmolEngine
 				}
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-
 				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
 #else
 				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
-#endif // SMOLENGINE_OPENGL_IMPL
-
-				if (Input::IsKeyPressed(KeyCode::P))
-					m_GizmoEnabled = false;
-
-				if (Input::IsKeyPressed(KeyCode::O))
-					m_GizmoEnabled = true;
-
+#endif
 				// Gizmos
-				if (m_SelectedActor != nullptr && !m_Scene->m_InPlayMode && m_GizmoEnabled)
+				if (m_SelectedActor != nullptr && !m_Scene->m_InPlayMode && isSceneViewFocused)
 				{
 					auto transformComponent = m_Scene->GetActiveScene().GetComponent<TransformComponent>(*m_SelectedActor.get());
 					if (transformComponent)
@@ -959,7 +947,6 @@ namespace SmolEngine
 						}
 
 						ImGuizmo::SetDrawlist();
-
 						float width = (float)ImGui::GetWindowSize().x;
 						float height = (float)ImGui::GetWindowSize().y;
 
@@ -970,7 +957,7 @@ namespace SmolEngine
 						float snapValues[3] = { snapValue, snapValue, snapValue };
 
 						ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
-							m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues: nullptr);
+							m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
 
 						if (ImGuizmo::IsUsing())
 						{
@@ -1291,17 +1278,12 @@ namespace SmolEngine
 			static char name[128];
 			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
 			ImGui::Separator();
-
-			std::string sceneStr;
+			std::string sceneStr = "Scene";
 			SceneData& data = m_Scene->GetActiveScene().GetSceneData();
 
-			if (data.m_Name == std::string(""))
+			if (!data.m_Name.empty())
 			{
-				sceneStr = "Scene (" + std::to_string(data.m_ID) + ")";
-			}
-			else
-			{
-				sceneStr = "Scene (" + data.m_Name + ")";
+				sceneStr = "Scene: " + data.m_Name;
 			}
 
 			ImGui::BeginChild("Scene");
@@ -1522,29 +1504,31 @@ namespace SmolEngine
 			ImGui::Extensions::CheckBox("Cast Shadows", meshComponent->bIsStatic);
 
 			ImGui::NewLine();
+
 			if (!showMeshInspector)
 			{
 				if (ImGui::Button("Mesh Inspector", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 				{
 					showMeshInspector = true;
 				}
-
-				ImGui::NewLine();
 			}
 
 			DrawMeshInspector(showMeshInspector);
 		}
-		else
-		{
-			if (ImGui::Button("Load", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
-			{
-				auto& result = FileDialog::OpenFile("glb");
-				if (result.has_value())
-					meshComponent->Mesh = Mesh::Create(result.value());
-			}
 
-			ImGui::NewLine();
+		if (ImGui::Button("Load Mesh", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+		{
+			auto& result = FileDialog::OpenFile("glTF (*.glb)\0*.glb\0FBX (*.fbx)\0*.fbx\0OBJ (*.obj)\0*.obj\0");
+			if (result.has_value())
+			{
+				meshComponent->MaterialNames.clear();
+				meshComponent->Mesh = nullptr;
+
+				meshComponent->Mesh = Mesh::Create(result.value());
+				meshComponent->FilePath = result.value();
+			}
 		}
+		ImGui::NewLine();
 	}
 
 	void EditorLayer::DrawDirectionalLightComponent(DirectionalLightComponent* light)
@@ -1594,17 +1578,6 @@ namespace SmolEngine
 		{
 			ImGui::Begin("Mesh Inspector", &show);
 			{
-				static int32_t interface_id = 0;
-				std::vector<const char*> charitems;
-				for (auto& [name, id] : MaterialLibrary::GetSinglenton()->GetMaterialTable())
-					charitems.push_back(name.c_str());
-
-				uint32_t itemCount = static_cast<uint32_t>(charitems.size());
-
-				ImGui::Extensions::Text("Material Picker", "");
-				ImGui::Combo("Material", &interface_id, &charitems[0], itemCount, itemCount);
-				ImGui::NewLine();
-
 				ImGui::Extensions::Text("Mesh & SubMeshes", "");
 				for (auto& mesh : meshes)
 				{
@@ -1614,17 +1587,24 @@ namespace SmolEngine
 						std::string id = name + "IDMat";
 						ImGui::PushID(id.c_str());
 						{
-
 							auto& matName = MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID());
 							if (matName.has_value())
 								ImGui::Extensions::Text("Material Name", matName.value());
 
 							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
 
-							if (ImGui::Button("Set"))
+							if (ImGui::Button("Select Material"))
 							{
-								int32_t id = MaterialLibrary::GetSinglenton()->GetMaterialID(std::string(charitems[interface_id]));
-								mesh->SetMaterialID(id);
+								MaterialCreateInfo materialCI = {};
+								auto& result = FileDialog::OpenFile("");
+								if (result.has_value())
+								{
+									MaterialLibrary::GetSinglenton()->Load(result.value(), materialCI);
+									if (!CommandSystem::SetMeshMaterial(meshComponent, mesh, &materialCI, result.value()))
+									{
+										CONSOLE_ERROR("Could not set material!");
+									}
+								}
 							}
 						}
 						ImGui::PopID();
@@ -1668,36 +1648,6 @@ namespace SmolEngine
 				texture2D->Texture = Texture::Create(m_FilePath);
 
 				m_Scene->GetActiveScene().AddAsset(m_FileName, m_FilePath);
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Scene_Create:
-			{
-				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
-
-				m_SelectedActor = nullptr;
-				m_Scene->CreateScene(m_FilePath);
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Scene_Save:
-			{
-				m_FileBrowser = std::make_unique<ImGui::FileBrowser>();
-
-				m_Scene->GetActiveScene().GetSceneData().m_filePath = m_FilePath;
-				m_Scene->GetActiveScene().GetSceneData().m_fileName = m_FileName;
-				m_Scene->Save(m_FilePath);
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Scene_Load:
-			{
-				m_SelectedActor = nullptr;
-
-				m_Scene->Load(m_FilePath);
-
 				ResetFileBrowser();
 				break;
 			}

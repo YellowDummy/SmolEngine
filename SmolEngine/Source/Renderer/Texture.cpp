@@ -101,9 +101,7 @@ namespace SmolEngine
 
 	Ref<Texture> Texture::CreateWhiteTexture()
 	{
-		const uint32_t w = 1, h = 1;
-		Ref<Texture> texture = TexturesPool::AddTexture(w, h);
-
+		Ref<Texture> texture = TexturesPool::AddDummyTexture();
 		if (!texture->m_Initialized)
 		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
@@ -112,10 +110,11 @@ namespace SmolEngine
 			texture->m_OpenglTexture2D.Init(w, h);
 			texture->m_OpenglTexture2D.SetData(&whiteTextureData, sizeof(uint32_t));
 #else
-			texture->m_VulkanTexture.GenWhiteTetxure(w, h);
+			texture->m_VulkanTexture.GenWhiteTetxure(1, 1);
 #endif
 			texture->m_Initialized = true;
 		}
+
 		return texture;
 	}
 

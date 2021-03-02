@@ -7,6 +7,7 @@
 #include "Renderer/EditorCamera.h"
 #include "Renderer/Text.h"
 #include "Renderer/GraphicsContext.h"
+#include "Renderer/TexturesPool.h"
 
 #include "Core/AssetManager.h"
 #include "ImGui/EditorConsole.h"
@@ -63,7 +64,7 @@ namespace SmolEngine
 	{
 		SceneData& sceneData = GetActiveScene().GetSceneData();
 #ifdef SMOLENGINE_EDITOR
-		if (!AssetManager::PathCheck(sceneData.m_filePath, sceneData.m_fileName))
+		if (!AssetManager::PathCheck(sceneData.m_filePath, sceneData.m_Name))
 		{
 			NATIVE_ERROR("Failed to start the game!");
 			return;
@@ -139,7 +140,7 @@ namespace SmolEngine
 			// There is no need to render the scene if the camera is not our target or is disabled
 			if (!camera.isPrimaryCamera || !camera.isEnabled) { continue; }
 
-			// Calculating MVP
+			// Calculating ViewProj
 			CameraSystem::CalculateView(&camera, &transform);
 
 			// Rendering scene to target framebuffer
@@ -257,7 +258,7 @@ namespace SmolEngine
 		AssetManager::ReloadCanvases(registry);
 
 		// Reloading Materials
-		AssetManager::ReloadMaterials(&activeScene.m_SceneData);
+		AssetManager::ReloadMeshMaterials(registry, &activeScene.m_SceneData);
 
 		// Reloading Scripts
 		ScriptingSystem::ReloadScripts(registry, activeScene.m_SceneData.m_ActorPool);
@@ -302,6 +303,8 @@ namespace SmolEngine
 
 		if (GetActiveScene().Load(path))
 		{
+			// Reset Pools
+			TexturesPool::Reset();
 			// Reloading Assets
 			ReloadAssets();
 			CONSOLE_WARN(std::string("Scene loaded successfully"));
@@ -313,9 +316,12 @@ namespace SmolEngine
 
 	bool WorldAdmin::SaveCurrentScene()
 	{
+		if (m_SceneMap.size() == 0)
+			return false;
+
 		SceneData& data = GetActiveScene().GetSceneData();
 		// Searching for a file in assets folders if absolute path is not valid and replace old path if file found
-		if (AssetManager::PathCheck(data.m_filePath, data.m_fileName))
+		if (AssetManager::PathCheck(data.m_filePath, data.m_Name))
 		{
 			return Save(data.m_filePath);
 		}

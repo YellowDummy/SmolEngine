@@ -1,0 +1,80 @@
+{
+    "value0": 2,
+    "value1": 0,
+    "value2": 1,
+    "value3": 1,
+    "value4": 1,
+    "value5": {
+        "value0": 1,
+        "value1": "Floor",
+        "value2": "Default",
+        "value3": true,
+        "value4": 0
+    },
+    "value6": 0,
+    "value7": 0,
+    "value8": 0,
+    "value9": 0,
+    "value10": 0,
+    "value11": 0,
+    "value12": 1,
+    "value13": 1,
+    "value14": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 6.538412094116211,
+        "value4": 0.15641820430755616,
+        "value5": 4.8641357421875,
+        "value6": 0.0,
+        "value7": 0.0,
+        "value8": 0.0,
+        "value9": 1
+    },
+    "value15": 0,
+    "value16": 0,
+    "value17": 1,
+    "value18": 1,
+    "value19": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
+        "value6": 2
+    },
+    "value20": 0,
+    "value21": 0
+}|{
+    "value0": [],
+    "value1": [
+        {
+            "key": 1,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483649,
+                    "data": {
+                        "value0": 1,
+                        "value1": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value2": [],
+                        "value3": 0,
+                        "value4": 3
+                    }
+                }
+            }
+        }
+    ],
+    "value2": [],
+    "value3": 0,
+    "value4": 0.0,
+    "value5": -9.8100004196167,
+    "value6": 8531768292242376039,
+    "value7": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\TestScene.s_scene",
+    "value8": "TestScene",
+    "value9": 1.0
+}

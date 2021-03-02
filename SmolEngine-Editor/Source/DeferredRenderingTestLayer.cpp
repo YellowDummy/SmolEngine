@@ -23,18 +23,7 @@ namespace SmolEngine
 #ifdef SMOLENGINE_OPENL_IMPL // Vulkan support only
 		return;
 #endif
-		// Create materials
-
-		MaterialCreateInfo materialCI = {};
-		materialCI.Name = "Brick";
-		assert(MaterialLibrary::GetSinglenton()->Add(&materialCI) > -1);
-		auto material_ = MaterialLibrary::GetSinglenton()->GetMaterial(0);
-
-
-		MaterialCreateInfo chairMaterialCI = {};
-		materialCI.Name = "Wooden Chair";
-		int32_t id = MaterialLibrary::GetSinglenton()->Add(&materialCI);
-		auto material = MaterialLibrary::GetSinglenton()->GetMaterial(id);
+	
 		// Models buffer
 		m_ModelViews.resize(1);
 		CommandSystem::ComposeTransform(m_Pos, m_Rot, m_Scale, true, m_ModelViews[0]);
