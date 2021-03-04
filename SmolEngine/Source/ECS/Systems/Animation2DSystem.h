@@ -8,7 +8,7 @@ namespace SmolEngine
 {
 	struct Animation2DComponent;
 
-	struct AnimationClip;
+	struct AnimationClip2D;
 
 	///
 
@@ -30,7 +30,7 @@ namespace SmolEngine
 
 		static void Update(entt::registry& registry);
 
-		static void Reset(Ref<AnimationClip> anim);
+		static void Reset(Ref<AnimationClip2D> anim);
 
 		static void ResetAllFrames(const Animation2DComponent& anim);
 
@@ -42,15 +42,15 @@ namespace SmolEngine
 		static bool RenameClip(Animation2DComponent& anim, const std::string& keyName, const std::string& newName);
 
 
-		static void DebugPlay(AnimationClip* anim);
+		static void DebugPlay(AnimationClip2D* anim);
 
-		static void DebugUpdate(AnimationClip* anim);
+		static void DebugUpdate(AnimationClip2D* anim);
 
-		static void DebugStop(AnimationClip* anim);
+		static void DebugStop(AnimationClip2D* anim);
 
-		static void DebugReset(AnimationClip* anim);
+		static void DebugReset(AnimationClip2D* anim);
 
-		static void DebugResetAllFrames(AnimationClip* anim);
+		static void DebugResetAllFrames(AnimationClip2D* anim);
 
 	private:
 

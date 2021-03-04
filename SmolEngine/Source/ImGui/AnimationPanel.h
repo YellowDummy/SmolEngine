@@ -6,7 +6,7 @@
 
 namespace SmolEngine
 {
-	struct AnimationClip;
+	struct AnimationClip2D;
 	struct Animation2DFrameKey;
 
 	enum class AnimationPanelSelectionState : uint16_t
@@ -37,7 +37,7 @@ namespace SmolEngine
 
 		friend class EditorLayer;
 
-		std::unique_ptr<AnimationClip> m_AnimationClip = nullptr;
+		std::unique_ptr<AnimationClip2D> m_AnimationClip = nullptr;
 		std::unique_ptr<ImGui::FileBrowser> m_FileBrowser = nullptr;
 
 		std::shared_ptr<Animation2DFrameKey> m_SelectedFrame = nullptr;

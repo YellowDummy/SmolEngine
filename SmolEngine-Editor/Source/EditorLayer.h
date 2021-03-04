@@ -9,7 +9,6 @@
 #include "ImGui/AnimationPanel.h"
 #include "ImGui/MaterialLibraryInterface.h"
 
-#include "Animation/AnimationClip.h"
 #include "ECS/Components/BaseComponent.h"
 #include "Scripting/OutValues.h"
 

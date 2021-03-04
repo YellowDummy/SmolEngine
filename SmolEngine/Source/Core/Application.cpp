@@ -10,6 +10,7 @@
 #include "Events/ApplicationEvent.h"
 
 #include "Renderer/GraphicsContext.h"
+#include "Multithreading/ThreadPool.h"
 
 namespace SmolEngine 
 {
@@ -34,6 +35,17 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
+	static bool kek1 = false;
+	static bool kek2 = false;
+
+	void SomeWork(int id)
+	{
+		auto time = std::chrono::system_clock::now();
+		auto result = std::chrono::system_clock::to_time_t(time);
+		NATIVE_INFO("ZZZZZ, id: {}, time: {}", id, result);
+		kek1 = true;
+	}
+
 	void Application::InitApp()
 	{
 		NATIVE_INFO("State = Startup");
@@ -42,6 +54,10 @@ namespace SmolEngine
 		// Creating Startup Timer
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
+
+		ThreadPool pool;
+		pool.SubmitWork(WorkerSpecialization::None, SomeWork, 1);
+		pool.SubmitWork(WorkerSpecialization::Rendering, SomeWork, 3);
 
 		// Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();

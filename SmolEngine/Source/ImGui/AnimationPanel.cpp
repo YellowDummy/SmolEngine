@@ -9,7 +9,7 @@
 #include "Core/SLog.h"
 #include "Core/Application.h"
 
-#include "Animation/AnimationClip.h"
+#include "Animation/AnimationClip2D.h"
 
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer.h"
@@ -67,9 +67,9 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Preview"))
 					{
 						showPreview = true;
-						if (m_AnimationClip->m_IsActive)
+						if (m_AnimationClip->m_bIsActive)
 						{
-							m_AnimationClip->m_IsActive = false;
+							m_AnimationClip->m_bIsActive = false;
 						}
 
 						Animation2DSystem::DebugPlay(m_AnimationClip.get());
@@ -188,7 +188,7 @@ namespace SmolEngine
 
 						ImGui::BeginChild("Anim");
 						{
-							if (m_AnimationClip->m_IsActive)
+							if (m_AnimationClip->m_bIsActive)
 							{
 								Animation2DSystem::DebugUpdate(m_AnimationClip.get());
 							}
@@ -344,7 +344,7 @@ namespace SmolEngine
 			return;
 		}
 
-		m_AnimationClip = std::make_unique<AnimationClip>();
+		m_AnimationClip = std::make_unique<AnimationClip2D>();
 
 		{
 			cereal::JSONInputArchive sceneDataInput{ storage };

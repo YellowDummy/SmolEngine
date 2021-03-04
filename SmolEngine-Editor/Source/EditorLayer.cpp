@@ -1,27 +1,46 @@
 #include "stdafx.h"
-#include "../../GameX/CppScriptingExamples.h"
 
 #include "EditorLayer.h"
-#include "ImGui/ImGuiExtension.h"
-#include "icon_font_cpp_headers/IconsFontAwesome5.h"
-#include "imgui/misc/cpp/imgui_stdlib.h"
-#include "ImGui/NodeEditor/imnodes.h"
 
 #include "Renderer/Renderer2D.h"
 #include "Renderer/EditorCamera.h"
-#include "Animation/AnimationClip.h"
+#include "Renderer/Text.h"
+#include "Renderer/GraphicsContext.h"
+#include "Renderer/MaterialLibrary.h"
+#ifndef SMOLENGINE_OPENGL_IMPL
+#include "Renderer/Vulkan/Vulkan.h"
+#include "Renderer/Vulkan/VulkanContext.h"
+#endif
+#include "Renderer/Mesh.h"
+
+#include "Animation/AnimationClip2D.h"
+
 #include "ECS/WorldAdmin.h"
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
+#include "ECS/Systems/RendererSystem.h"
+#include "ECS/Systems/Physics2DSystem.h"
+#include "ECS/Systems/AudioSystem.h"
+#include "ECS/Systems/Animation2DSystem.h"
+#include "ECS/Systems/CameraSystem.h"
+#include "ECS/Systems/CommandSystem.h"
+#include "ECS/Systems/UISystem.h"
+#include "ECS/Systems/ScriptingSystem.h"
+#include "ECS/Systems/CommandSystem.h"
+#include "ECS/Scene.h"
 
 #include "Audio/AudioClip.h"
 
 #include "UI/UIButton.h"
 #include "UI/UITextLabel.h"
-#include "Renderer/Text.h"
 #include "Core/Input.h"
 #include "Core/FileDialog.h"
 #include "Core/FilePaths.h"
+
+#include "ImGui/ImGuiExtension.h"
+#include "icon_font_cpp_headers/IconsFontAwesome5.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
+#include "ImGui/NodeEditor/imnodes.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -34,26 +53,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
-
-#include "ECS/Systems/RendererSystem.h"
-#include "ECS/Systems/Physics2DSystem.h"
-#include "ECS/Systems/AudioSystem.h"
-#include "ECS/Systems/Animation2DSystem.h"
-#include "ECS/Systems/CameraSystem.h"
-#include "ECS/Systems/CommandSystem.h"
-#include "ECS/Systems/UISystem.h"
-#include "ECS/Systems/ScriptingSystem.h"
-#include "ECS/Systems/CommandSystem.h"
-#include "ECS/Scene.h"
-
-#include "Renderer/GraphicsContext.h"
-#include "Renderer/MaterialLibrary.h"
-#ifndef SMOLENGINE_OPENGL_IMPL
-#include "Renderer/Vulkan/Vulkan.h"
-#include "Renderer/Vulkan/VulkanContext.h"
-#endif
-
-#include "Renderer/Mesh.h"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace SmolEngine
 {
@@ -67,6 +67,8 @@ namespace SmolEngine
 
 		EditorCameraCreateInfo editorCamCI{};
 		{
+			editorCamCI.FOV = 65.5f;
+			editorCamCI.WorldPos = glm::vec3(0, 0, -6);
 			editorCamCI.Type = CameraType::Perspective;
 			m_Camera = std::make_shared<EditorCamera>(&editorCamCI);
 		}
@@ -667,7 +669,7 @@ namespace SmolEngine
 					break;
 				}
 
-				ImGui::Extensions::CheckBox("Default Clip?", clip->m_IsDefaultClip);
+				ImGui::Extensions::CheckBox("Default Clip", clip->m_bIsDefaultClip);
 
 				ImGui::NewLine();
 				
@@ -925,7 +927,7 @@ namespace SmolEngine
 				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
 #endif
 				// Gizmos
-				if (m_SelectedActor != nullptr && !m_Scene->m_InPlayMode && isSceneViewFocused)
+				if (m_SelectedActor != nullptr && !m_Scene->m_InPlayMode)
 				{
 					auto transformComponent = m_Scene->GetActiveScene().GetComponent<TransformComponent>(*m_SelectedActor.get());
 					if (transformComponent)
@@ -947,6 +949,7 @@ namespace SmolEngine
 						}
 
 						ImGuizmo::SetDrawlist();
+
 						float width = (float)ImGui::GetWindowSize().x;
 						float height = (float)ImGui::GetWindowSize().y;
 
@@ -1294,6 +1297,9 @@ namespace SmolEngine
 					{
 						ImGui::OpenPopup("CreateActorPopUp");
 					}
+
+					if (Input::IsMouseButtonPressed(MouseCode::Button0))
+						m_SelectedActor = nullptr;
 				}
 
 				if (ImGui::BeginPopup("CreateActorPopUp"))
@@ -1452,7 +1458,6 @@ namespace SmolEngine
 
 							m_SelectedActor = actor;
 						}
-
 					}
 
 					ImGui::TreePop();

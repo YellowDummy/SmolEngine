@@ -15,6 +15,7 @@
 #include "Renderer/Vulkan/VulkanPBR.h"
 
 #include "ECS/Systems/CommandSystem.h"
+#include <glm/glm/ext/matrix_transform.hpp>
 
 namespace SmolEngine
 {

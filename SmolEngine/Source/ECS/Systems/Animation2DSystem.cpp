@@ -2,7 +2,7 @@
 #include "Animation2DSystem.h"
 
 #include "ECS/Components/Animation2DComponent.h"
-#include "Animation/AnimationClip.h"
+#include "Animation/AnimationClip2D.h"
 #include "Core/AssetManager.h"
 
 #include "Core/SLog.h"
@@ -35,7 +35,7 @@ namespace SmolEngine
 		clip->m_CurrentFrameKey = clip->m_Frames[clip->m_CurrentIndex];
 		clip->m_CurrentTexture = clip->m_CurrentFrameKey->Texture;
 
-		clip->m_IsActive = true;
+		clip->m_bIsActive = true;
 		clip->m_Timer.StartTimer();
 
 	}
@@ -63,7 +63,7 @@ namespace SmolEngine
 			{
 				auto& [key, clip] = pair;
 
-				if (clip->m_IsDefaultClip)
+				if (clip->m_bIsDefaultClip)
 				{
 					Play(clip->m_ClipName, anim);
 					continue;
@@ -102,7 +102,7 @@ namespace SmolEngine
 				auto animation = anim.CurrentClip;
 
 				auto currentTexture = animation->m_Frames[animation->m_CurrentIndex];
-				if (animation->m_IsActive && currentTexture)
+				if (animation->m_bIsActive && currentTexture)
 				{
 					if (animation->m_Timer.GetTimeInMiliseconds() > currentTexture->Speed)
 					{
@@ -124,9 +124,9 @@ namespace SmolEngine
 		}
 	}
 
-	void Animation2DSystem::Reset(Ref<AnimationClip> anim)
+	void Animation2DSystem::Reset(Ref<AnimationClip2D> anim)
 	{
-		anim->m_IsActive = false;
+		anim->m_bIsActive = false;
 		anim->m_CurrentIndex = 0;
 		anim->m_CurrentFrameKey = nullptr;
 		anim->m_CurrentTexture = nullptr;
@@ -159,10 +159,10 @@ namespace SmolEngine
 		file.close();
 
 		// Creating new clip
-		auto& Clip = std::make_shared<AnimationClip>();
+		auto& Clip = std::make_shared<AnimationClip2D>();
 		if (anim.m_Clips.size() == 0)
 		{
-			Clip->m_IsDefaultClip = true;
+			Clip->m_bIsDefaultClip = true;
 		}
 
 		// Loading Clip Data
@@ -220,7 +220,7 @@ namespace SmolEngine
 		auto& search = anim.m_Clips.find(keyName);
 		if (search != anim.m_Clips.end())
 		{
-			Ref<AnimationClip> clipRef = search->second;
+			Ref<AnimationClip2D> clipRef = search->second;
 
 			if (anim.CurrentClip)
 			{
@@ -238,7 +238,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	void Animation2DSystem::DebugPlay(AnimationClip* clip)
+	void Animation2DSystem::DebugPlay(AnimationClip2D* clip)
 	{
 		clip->m_CurrentIndex = 0;
 
@@ -248,14 +248,14 @@ namespace SmolEngine
 		clip->m_CurrentFrameKey = clip->m_Frames[clip->m_CurrentIndex];
 		clip->m_CurrentTexture = clip->m_CurrentFrameKey->Texture;
 
-		clip->m_IsActive = true;
+		clip->m_bIsActive = true;
 		clip->m_Timer.StartTimer();
 	}
 
-	void Animation2DSystem::DebugUpdate(AnimationClip* animation)
+	void Animation2DSystem::DebugUpdate(AnimationClip2D* animation)
 	{
 		auto currentTexture = animation->m_Frames[animation->m_CurrentIndex];
-		if (animation->m_IsActive && currentTexture)
+		if (animation->m_bIsActive && currentTexture)
 		{
 			if (animation->m_Timer.GetTimeInMiliseconds() > currentTexture->Speed)
 			{
@@ -275,21 +275,21 @@ namespace SmolEngine
 		}
 	}
 
-	void Animation2DSystem::DebugStop(AnimationClip* anim)
+	void Animation2DSystem::DebugStop(AnimationClip2D* anim)
 	{
 		DebugReset(anim);
 	}
 
-	void Animation2DSystem::DebugReset(AnimationClip* anim)
+	void Animation2DSystem::DebugReset(AnimationClip2D* anim)
 	{
-		anim->m_IsActive = false;
+		anim->m_bIsActive = false;
 		anim->m_CurrentIndex = 0;
 		anim->m_CurrentFrameKey = nullptr;
 		anim->m_CurrentTexture = nullptr;
 		anim->m_Timer.StopTimer();
 	}
 
-	void Animation2DSystem::DebugResetAllFrames(AnimationClip* anim)
+	void Animation2DSystem::DebugResetAllFrames(AnimationClip2D* anim)
 	{
 		DebugReset(anim);
 		anim->m_Frames.clear();

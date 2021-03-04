@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
-#include "Animation/AnimationClip.h"
+#include "Animation/AnimationClip2D.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
@@ -17,8 +17,8 @@ namespace SmolEngine
 
 		/// Data
 		
-		std::unordered_map<std::string, Ref<AnimationClip>> m_Clips;
-		Ref<AnimationClip> CurrentClip = nullptr;
+		std::unordered_map<std::string, Ref<AnimationClip2D>> m_Clips;
+		Ref<AnimationClip2D> CurrentClip = nullptr;
 		int IndexLayer = 0;
 
 	private:

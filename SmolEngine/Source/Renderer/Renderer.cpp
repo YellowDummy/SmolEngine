@@ -291,7 +291,7 @@ namespace SmolEngine
 					glm::mat4 depthMVP;
 					uint32_t offset;
 
-				} pc;
+				} static pc;
 
 				pc.depthMVP = s_Data->m_MainPushConstant.DepthMVP;
 
@@ -735,7 +735,7 @@ namespace SmolEngine
 		// Keep depth range as small as possible
 		// for better shadow map precision
 		float zNear = 1.0f;
-		float zFar = 1000.0f;
+		float zFar = 200.0f;
 		float lightFOV = 45.0f;
 
 		// Matrix from light's point of view

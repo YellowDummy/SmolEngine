@@ -18,7 +18,7 @@
 #include "Scripting/BehaviourPrimitive.h"
 
 #include "Audio/AudioEngine.h"
-#include "Animation/AnimationClip.h"
+#include "Animation/AnimationClip2D.h"
 
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/RendererSystem.h"

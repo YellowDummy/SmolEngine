@@ -8,7 +8,7 @@
 
 #include "Renderer/MaterialLibrary.h"
 
-#include "Animation/AnimationClip.h"
+#include "Animation/AnimationClip2D.h"
 #include "Audio/AudioEngine.h"
 #include "ImGui/EditorConsole.h"
 

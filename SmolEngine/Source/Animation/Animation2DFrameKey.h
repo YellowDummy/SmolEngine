@@ -12,16 +12,15 @@ namespace SmolEngine
 	{
 		Animation2DFrameKey() = default;
 
-	public:
+		// Data
 
-		glm::vec4 TextureColor = glm::vec4(1.0f);
-		glm::vec2 TextureScale = glm::vec2(1.0f);
+		float             Speed = 100.0f;
+		Ref<Texture>      Texture = nullptr;
 
-		std::string TexturePath = "";
-		std::string FileName = "";
-
-		float Speed = 100.0f;
-		Ref<Texture> Texture = nullptr;
+		glm::vec2         TextureScale = glm::vec2(1.0f);
+		glm::vec4         TextureColor = glm::vec4(1.0f);
+		std::string       TexturePath = "";
+		std::string       FileName = "";
 
 	private:
 

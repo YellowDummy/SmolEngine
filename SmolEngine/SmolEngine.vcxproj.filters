@@ -1206,9 +1206,6 @@
     <ClInclude Include="Source\Animation\Animation2DFrameKey.h">
       <Filter>Source\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Animation\AnimationClip.h">
-      <Filter>Source\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Audio\AudioClip.h">
       <Filter>Source\Audio</Filter>
     </ClInclude>
@@ -1590,6 +1587,12 @@
     <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
     <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
+    <ClInclude Include="Source\Animation\AnimationClip2D.h">
+      <Filter>Source\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Multithreading\Worker.h" />
+    <ClInclude Include="Source\Multithreading\ThreadPool.h" />
+    <ClInclude Include="Source\ECS\Systems\JobsSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1608,9 +1611,6 @@
       <Filter>Libraries\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="Source\Animation\Animation2DFrameKey.cpp">
-      <Filter>Source\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Animation\AnimationClip.cpp">
       <Filter>Source\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\AudioClip.cpp">
@@ -1928,5 +1928,11 @@
     <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
     <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
+    <ClCompile Include="Source\Animation\AnimationClip2D.cpp">
+      <Filter>Source\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Multithreading\Worker.cpp" />
+    <ClCompile Include="Source\Multithreading\ThreadPool.cpp" />
+    <ClCompile Include="Source\ECS\Systems\JobsSystem.cpp" />
   </ItemGroup>
 </Project>

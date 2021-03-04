@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "RendererSystem.h"
+#include "Core/Application.h"
 
 #include "ECS/ComponentsCore.h"
-#include "Animation/AnimationClip.h"
 #include "ECS/Systems/UISystem.h"
+#include "Animation/AnimationClip2D.h"
 
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer.h"
-#include "Core/Application.h"
 
 namespace SmolEngine
 {

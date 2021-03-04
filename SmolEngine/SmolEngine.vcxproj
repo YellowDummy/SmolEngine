@@ -564,7 +564,7 @@
     <ClInclude Include="Libraries\stb_image\stb_image.h" />
     <ClInclude Include="Libraries\stb_image\stb_image_write.h" />
     <ClInclude Include="Source\Animation\Animation2DFrameKey.h" />
-    <ClInclude Include="Source\Animation\AnimationClip.h" />
+    <ClInclude Include="Source\Animation\AnimationClip2D.h" />
     <ClInclude Include="Source\Audio\AudioClip.h" />
     <ClInclude Include="Source\Audio\AudioEngine.h" />
     <ClInclude Include="Source\Core\Application.h" />
@@ -612,6 +612,7 @@
     <ClInclude Include="Source\ECS\Systems\AudioSystem.h" />
     <ClInclude Include="Source\ECS\Systems\CameraSystem.h" />
     <ClInclude Include="Source\ECS\Systems\CommandSystem.h" />
+    <ClInclude Include="Source\ECS\Systems\JobsSystem.h" />
     <ClInclude Include="Source\ECS\Systems\Physics2DSystem.h" />
     <ClInclude Include="Source\ECS\Systems\RendererSystem.h" />
     <ClInclude Include="Source\ECS\Systems\ScriptingSystem.h" />
@@ -630,6 +631,8 @@
     <ClInclude Include="Source\ImGui\ImGuiVulkanImpl.h" />
     <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
     <ClInclude Include="Source\ImGui\NodeEditor\imnodes.h" />
+    <ClInclude Include="Source\Multithreading\ThreadPool.h" />
+    <ClInclude Include="Source\Multithreading\Worker.h" />
     <ClInclude Include="Source\Networking\NetworkManager.h" />
     <ClInclude Include="Source\Physics2D\Box2D\Body2D.h" />
     <ClInclude Include="Source\Physics2D\Box2D\Body2DDefs.h" />
@@ -710,7 +713,7 @@
     <ClCompile Include="Libraries\imgizmo\src\ImSequencer.cpp" />
     <ClCompile Include="Libraries\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Animation\Animation2DFrameKey.cpp" />
-    <ClCompile Include="Source\Animation\AnimationClip.cpp" />
+    <ClCompile Include="Source\Animation\AnimationClip2D.cpp" />
     <ClCompile Include="Source\Audio\AudioClip.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
@@ -750,6 +753,7 @@
     <ClCompile Include="Source\ECS\Systems\AudioSystem.cpp" />
     <ClCompile Include="Source\ECS\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\ECS\Systems\CommandSystem.cpp" />
+    <ClCompile Include="Source\ECS\Systems\JobsSystem.cpp" />
     <ClCompile Include="Source\ECS\Systems\Physics2DSystem.cpp" />
     <ClCompile Include="Source\ECS\Systems\RendererSystem.cpp" />
     <ClCompile Include="Source\ECS\Systems\ScriptingSystem.cpp" />
@@ -765,6 +769,8 @@
     <ClCompile Include="Source\ImGui\ImGuiVulkanImpl.cpp" />
     <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
     <ClCompile Include="Source\ImGui\NodeEditor\imnodes.cpp" />
+    <ClCompile Include="Source\Multithreading\ThreadPool.cpp" />
+    <ClCompile Include="Source\Multithreading\Worker.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\Body2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\CollisionFilter2D.cpp" />
     <ClCompile Include="Source\Physics2D\Box2D\CollisionListener2D.cpp" />

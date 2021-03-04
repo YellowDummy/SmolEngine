@@ -9,7 +9,7 @@
 #include "ImGui/FileBrowser/imfilebrowser.h"
 #include "ImGui/ImGuiExtension.h"
 
-#include "Animation/AnimationClip.h"
+#include "Animation/AnimationClip2D.h"
 #include "Renderer/Renderer2D.h"
 
 #include <glm/glm.hpp>
