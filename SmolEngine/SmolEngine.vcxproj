@@ -587,9 +587,7 @@
     <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
     <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
-    <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
-    <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h" />
-    <ClInclude Include="Source\ECS\ComponentTuples\SingletonTuple.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="Source\ECS\Components\BaseComponent.h" />
@@ -601,7 +599,6 @@
     <ClInclude Include="Source\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\AudioEngineSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.h" />
-    <ClInclude Include="Source\ECS\Components\Singletons\FramebufferSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\TransformComponent.h" />
@@ -662,7 +659,6 @@
     <ClInclude Include="Source\Renderer\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="Source\Renderer\Renderer.h" />
     <ClInclude Include="Source\Renderer\Renderer2D.h" />
-    <ClInclude Include="Source\Renderer\RendererDeferred.h" />
     <ClInclude Include="Source\Renderer\RendererShared.h" />
     <ClInclude Include="Source\Renderer\Shader.h" />
     <ClInclude Include="Source\Renderer\Shared.h" />
@@ -730,8 +726,7 @@
     <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
-    <ClCompile Include="Source\ECS\ComponentTuples\SingletonTuple.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Animation2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\BaseComponent.cpp" />
@@ -743,7 +738,6 @@
     <ClCompile Include="Source\ECS\Components\Light2DSourceComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\Singletons\FramebufferSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Texture2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\TransformComponent.cpp" />
@@ -794,7 +788,6 @@
     <ClCompile Include="Source\Renderer\OpenGL\OpenglVertexArray.cpp" />
     <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="Source\Renderer\RendererDeferred.cpp" />
     <ClCompile Include="Source\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
     <ClCompile Include="Source\Renderer\SubTexture.cpp" />

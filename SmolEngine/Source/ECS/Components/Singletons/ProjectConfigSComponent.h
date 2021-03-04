@@ -32,9 +32,8 @@ namespace SmolEngine
 
 		/// Data
 
-		std::unordered_map<uint32_t, SceneConfigData> m_Scenes;
-
-		std::string m_AssetFolder = "";
+		std::unordered_map<uint32_t, SceneConfigData>    m_Scenes;
+		std::string                                      m_AssetFolder = "";
 
 		/// Getters
 
@@ -42,7 +41,7 @@ namespace SmolEngine
 
 	private:
 
-		static ProjectConfigSComponent* Instance;
+		static ProjectConfigSComponent*                  Instance;
 
 	private:
 

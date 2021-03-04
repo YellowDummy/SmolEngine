@@ -27,6 +27,10 @@
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Systems/CommandSystem.h"
+#include "ECS/Components/Singletons/AudioEngineSComponent.h"
+#include "ECS/Components/Singletons/Box2DWorldSComponent.h"
+#include "ECS/Components/Singletons/ProjectConfigSComponent.h"
+#include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Scene.h"
 
 #include "Audio/AudioClip.h"
@@ -606,14 +610,14 @@ namespace SmolEngine
 
 				if (ImGui::Extensions::SmallButton("Debug", "Play"))
 				{
-					AudioSystem::DebugPlay(clip, AudioEngineSComponent::Get()->Engine);
+					AudioSystem::DebugPlay(clip, &AudioEngineSComponent::Get()->Engine);
 				}
 
 				ImGui::SameLine();
 
 				if (ImGui::SmallButton("Stop"))
 				{
-					AudioSystem::DebugStop(clip, AudioEngineSComponent::Get()->Engine);
+					AudioSystem::DebugStop(clip, &AudioEngineSComponent::Get()->Engine);
 				}
 
 				ImGui::TreePop();
@@ -1001,19 +1005,6 @@ namespace SmolEngine
 				{
 					m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
 					m_Scene->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
-				}
-
-				auto framebuffer = FramebufferSComponent::Get()[0];
-				if (framebuffer)
-				{
-
-#ifdef SMOLENGINE_OPENGL_IMPL
-					ImGui::Image(framebuffer->GetImGuiTextureID(),
-						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-#else
-					ImGui::Image(framebuffer->GetImGuiTextureID(),
-						ImVec2{ m_GameViewPortSize.x, m_GameViewPortSize.y });
-#endif
 				}
 			}
 

@@ -8,20 +8,13 @@ namespace SmolEngine
 {
 	Actor::Actor()
 		: 
-		m_Parent(nullptr)
-	{
-
-	}
+		m_Parent(nullptr) {}
 
 	Actor::Actor(entt::entity entity, size_t index)
 		:
-
 		m_Parent(nullptr),
 		m_Entity(entity),
-		m_Index(index)
-	{
-
-	}
+		m_Index(index) {}
 
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{

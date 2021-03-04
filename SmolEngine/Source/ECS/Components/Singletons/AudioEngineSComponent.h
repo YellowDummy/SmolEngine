@@ -1,10 +1,10 @@
 #pragma once
 #include "Core/Core.h"
 
+#include "Audio/AudioEngine.h"
+
 namespace SmolEngine
 {
-	class AudioEngine;
-
 	// Note:
 	// S - Singleton Component
 	// Contains Audio Engine (FMOD) instance
@@ -17,7 +17,7 @@ namespace SmolEngine
 
 		/// Data
 
-		AudioEngine* Engine = nullptr;
+		AudioEngine Engine = {};
 
 		/// Getters
 

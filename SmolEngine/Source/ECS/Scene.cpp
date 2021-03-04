@@ -4,8 +4,6 @@
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
 #include "Scripting/SystemRegistry.h"
-
-#include "ECS/ComponentTuples/SingletonTuple.h"
 #include "ImGui/EditorConsole.h"
 
 namespace SmolEngine
@@ -15,7 +13,6 @@ namespace SmolEngine
 		std::filesystem::path p(filePath);
 		m_SceneData = SceneData(filePath, p.filename().string());
 		m_SceneData.Prepare();
-		LoadSingletons();
 	}
 
 	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
@@ -210,9 +207,6 @@ namespace SmolEngine
 				m_SceneData.m_Name, m_SceneData.m_AmbientStrength);
 		}
 
-		// Deleting Singletons-Components
-		DeleteSingletons();
-
 		// The registry must be cleared before writing new data
 		CleanRegistry();
 
@@ -228,9 +222,6 @@ namespace SmolEngine
 				PointLightComponent>(regisrtyInput);
 		}
 
-		// Loading Singletons-Components
-		LoadSingletons();
-
 		// Updating ActorList
 		m_SceneData.m_ActorList.clear();
 		m_SceneData.m_ActorList.reserve(m_SceneData.m_ActorPool.size());
@@ -238,8 +229,6 @@ namespace SmolEngine
 		{
 			m_SceneData.m_ActorList.push_back(actor);
 		}
-
-		// Reloading Assets
 
 		CONSOLE_WARN(std::string("Scene loaded successfully"));
 		return true;
@@ -331,30 +320,6 @@ namespace SmolEngine
 			return true;
 		}
 		return false;
-	}
-
-	void Scene::DeleteSingletons()
-	{
-		if (m_SceneData.m_Registry.valid(m_SceneData.m_Entity))
-		{
-			m_SceneData.m_Registry.remove_if_exists<SingletonTuple>(m_SceneData.m_Entity);
-			return;
-		}
-
-		m_SceneData.m_Entity = m_SceneData.m_Registry.create();
-		m_SceneData.m_Registry.remove_if_exists<SingletonTuple>(m_SceneData.m_Entity);
-	}
-
-	void Scene::LoadSingletons()
-	{
-		if (m_SceneData.m_Registry.valid(m_SceneData.m_Entity))
-		{
-			m_SceneData.m_Registry.emplace_or_replace<SingletonTuple>(m_SceneData.m_Entity);
-			return;
-		}
-
-		m_SceneData.m_Entity = m_SceneData.m_Registry.create();
-		m_SceneData.m_Registry.emplace_or_replace<SingletonTuple>(m_SceneData.m_Entity);
 	}
 
 	void Scene::UpdateIDSet()

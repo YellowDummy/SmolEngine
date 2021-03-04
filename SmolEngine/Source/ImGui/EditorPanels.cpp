@@ -19,7 +19,7 @@
 
 namespace SmolEngine
 {
-	void SettingsWindow::Update(bool& isOpened, Ref<WorldAdmin> scene)
+	void SettingsWindow::Update(bool& isOpened, WorldAdmin* scene)
 	{
 		if (isOpened)
 		{

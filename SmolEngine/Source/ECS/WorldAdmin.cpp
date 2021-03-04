@@ -29,7 +29,10 @@
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
-#include "ECS/ComponentTuples/SingletonTuple.h"
+#include "ECS/Components/Singletons/AudioEngineSComponent.h"
+#include "ECS/Components/Singletons/Box2DWorldSComponent.h"
+#include "ECS/Components/Singletons/ProjectConfigSComponent.h"
+#include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
@@ -38,8 +41,14 @@
 
 namespace SmolEngine
 {
+	WorldAdmin::WorldAdmin()
+	{
+		s_World = this;
+	}
+
 	void WorldAdmin::Init()
 	{
+		LoadStaticComponents();
 		m_InPlayMode = false;
 	}
 
@@ -82,12 +91,12 @@ namespace SmolEngine
 			const auto& view = sceneData.m_Registry.view<TransformComponent, Body2DComponent>();
 			view.each([&](TransformComponent& tranform, Body2DComponent& body)
 			{
-					Physics2DSystem::CreateBody(&body, &tranform, world->World, GetActiveScene().FindActorByID(body.ActorID));
+					Physics2DSystem::CreateBody(&body, &tranform, &world->World, GetActiveScene().FindActorByID(body.ActorID));
 			});
 		}
 
 		// Finding which animation / audio clip should play on awake
-		AudioSystem::OnAwake(sceneData.m_Registry, AudioEngineSComponent::Get()->Engine);
+		AudioSystem::OnAwake(sceneData.m_Registry, &AudioEngineSComponent::Get()->Engine);
 		Animation2DSystem::OnAwake(sceneData.m_Registry);
 
 		// Sending start callback to all enabled scripts
@@ -102,12 +111,12 @@ namespace SmolEngine
 		ScriptingSystem::OnSceneEnd(registry);
 
 		// Deleting all Rigidbodies
-		Physics2DSystem::DeleteBodies(registry, Box2DWorldSComponent::Get()->World);
+		Physics2DSystem::DeleteBodies(registry, &Box2DWorldSComponent::Get()->World);
 
 		// Resetting Animation / Audio clips
-		AudioSystem::OnReset(registry, AudioEngineSComponent::Get()->Engine);
+		AudioSystem::OnReset(registry, &AudioEngineSComponent::Get()->Engine);
 		Animation2DSystem::OnReset(registry);
-		AudioEngineSComponent::Get()->Engine->Reset();
+		AudioEngineSComponent::Get()->Engine.Reset();
 
 #ifdef SMOLENGINE_EDITOR
 		Load(GetActiveScene().m_SceneData.m_filePath);
@@ -249,7 +258,7 @@ namespace SmolEngine
 		AssetManager::Reload2DTextures(registry, assetMap);
 
 		//  Reloading Audio
-		AssetManager::ReloadAudioClips(registry, AudioEngineSComponent::Get()->Engine);
+		AssetManager::ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
 
 		// Reloading 2D Animations
 		AssetManager::Reload2DAnimations(registry);
@@ -273,12 +282,6 @@ namespace SmolEngine
 
 	void WorldAdmin::OnGameViewResize(float width, float height)
 	{
-		for (const auto pair : FramebufferSComponent::Get())
-		{
-			const auto& [key, framebuffer] = pair;
-			framebuffer->OnResize(static_cast<uint32_t>(width), static_cast<uint32_t>(height));
-		}
-
 		CameraSystem::OnResize(GetActiveScene().m_SceneData.m_Registry, width, height);
 	}
 
@@ -400,6 +403,20 @@ namespace SmolEngine
 			cereal::JSONInputArchive dataInput{ storage };
 			dataInput(ref->m_Scenes, ref->m_AssetFolder);
 		}
+		return true;
+	}
+
+	bool WorldAdmin::LoadStaticComponents()
+	{
+		auto id = m_GlobalRegistry.create();
+
+		// Engines
+		m_GlobalRegistry.emplace<AudioEngineSComponent>(id);
+		m_GlobalRegistry.emplace<Box2DWorldSComponent>(id);
+		// System States
+		m_GlobalRegistry.emplace<ProjectConfigSComponent>(id);
+		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(id);
+
 		return true;
 	}
 }

@@ -22,6 +22,8 @@ namespace SmolEngine
 
 		// Getters
 
+		bool IsAnyWorkerBusy() const;
+
 		uint32_t GetNumWorkers() const;
 
 		uint32_t GetNumActiveWorkers() const;
@@ -31,7 +33,7 @@ namespace SmolEngine
 		// Submit
 
 		template<typename F, typename...Args>
-		auto SubmitWork(WorkerSpecialization workType, F&& f,  Args&&... args) -> std::future<decltype(f(args...))>
+		auto SubmitWork(WorkerSpecialization workSpec, F&& f,  Args&&... args) -> std::future<decltype(f(args...))>
 		{
 			// Create a function with bounded parameters ready to execute
 			std::function<decltype(f(args...))()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
@@ -44,11 +46,13 @@ namespace SmolEngine
 				(*task_ptr)();
 			};
 
-			m_Pools[(uint32_t)workType].Tasks.emplace(wrapper_func);
-			m_Pools[(uint32_t)workType].Condition->notify_one();
+			m_Pools[(uint32_t)workSpec].Tasks.emplace(wrapper_func);
+			m_Pools[(uint32_t)workSpec].Condition->notify_one();
 
 			return task_ptr->get_future();
 		}
+
+		void SubmitWork(WorkerSpecialization workSpec, std::function<void()>& func);
 
 	private:
 
@@ -85,7 +89,7 @@ namespace SmolEngine
 
 		bool                                            m_bStop = false;
 		std::vector<PoolData>                           m_Pools;
-		std::vector<WorkerUnit>                         m_Workers;
+		std::vector<WorkerUnit*>                        m_Workers;
 
 	private:
 

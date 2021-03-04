@@ -15,6 +15,7 @@ namespace SmolEngine
 	class ImGuiLayer;
 	class Window;
 	class UIText;
+	class WorldAdmin;
 
 	class Application
 	{
@@ -70,6 +71,7 @@ namespace SmolEngine
 
 		ImGuiLayer*            m_ImGuiLayer = nullptr;
 		UIText*                m_UIText = nullptr;
+		WorldAdmin*            m_World = nullptr;
 		Ref<LayerManager>      m_LayerHandler = nullptr;
 		Ref<EventHandler>      m_EventHandler = nullptr;
 		Ref<Window>            m_Window = nullptr;

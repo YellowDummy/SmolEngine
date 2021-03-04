@@ -20,5 +20,5 @@ public:
 
 private:
 
-	SmolEngine::Ref<SmolEngine::WorldAdmin> m_Scene = nullptr;
+	SmolEngine::WorldAdmin* m_Scene = nullptr;
 };

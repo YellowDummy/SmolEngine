@@ -16,15 +16,15 @@ namespace SmolEngine
 	void Physics2DSystem::OnBegin(Box2DWorldSComponent* data)
 	{
 		//Setting Box2D Filtering
-		data->World->SetContactFilter(data->m_CollisionFilter2D);
+		data->World.SetContactFilter(&data->m_CollisionFilter2D);
 
 		//Setting Box2D Collision Callbacks
-		data->World->SetContactListener(data->m_CollisionListener2D);
+		data->World.SetContactListener(&data->m_CollisionListener2D);
 	}
 
 	void Physics2DSystem::OnUpdate(DeltaTime delta, uint32_t velocityIterations, uint32_t positionIterations, Box2DWorldSComponent* data)
 	{
-		data->World->Step(delta, velocityIterations, positionIterations);
+		data->World.Step(delta, velocityIterations, positionIterations);
 	}
 
 	void Physics2DSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Ref<Actor> actor)
@@ -425,7 +425,7 @@ namespace SmolEngine
 	const RayCast2DHitInfo Physics2DSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)
 	{
 		RayCast2D ray2D;
-		Box2DWorldSComponent::Get()->World->RayCast(&ray2D, { startPoisition.x, startPoisition.y }, { targerPosition.x, targerPosition.y });
+		Box2DWorldSComponent::Get()->World.RayCast(&ray2D, { startPoisition.x, startPoisition.y }, { targerPosition.x, targerPosition.y });
 		
 		return ray2D.GetHitInfo();
 	}
@@ -435,7 +435,7 @@ namespace SmolEngine
 		std::vector<RayCast2DHitInfo> infoList;
 		std::vector<size_t> idList;
 
-		b2World* world = Box2DWorldSComponent::Get()->World;
+		b2World* world = &Box2DWorldSComponent::Get()->World;
 
 		for (float r = 0; r < 360; ++r)
 		{

@@ -23,6 +23,8 @@ namespace SmolEngine
 	{
 	public:
 
+		WorldAdmin();
+
 		// Initialization
 
 		void Init();
@@ -75,23 +77,28 @@ namespace SmolEngine
 
 		// Getters
 
-		inline static Ref<WorldAdmin>& GetSingleton() { return s_World; }
+		inline static WorldAdmin* GetSingleton() { return s_World; }
 
 		Scene& GetActiveScene();
+
+	private:
 
 		// Internal needs
 
 		bool LoadProjectConfig();
 
+		bool LoadStaticComponents();
+
 	private:
 
 		bool                                 m_InPlayMode = false;
 
-		inline static Ref<WorldAdmin>        s_World = std::make_shared<WorldAdmin>();
+		inline static WorldAdmin*            s_World = nullptr;
 		Ref<EditorCameraController>          m_EditorCamera = nullptr;
 		Ref<SubTexture2D>                    m_TestSub = nullptr;
 
 		size_t                               m_ActiveSceneID = 0;
+		entt::registry                       m_GlobalRegistry;
 		std::unordered_map<size_t, Scene>    m_SceneMap;
 
 	private:

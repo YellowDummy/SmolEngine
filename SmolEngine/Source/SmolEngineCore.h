@@ -19,7 +19,6 @@
 #include "ImGui/ImGuiLayer.h"
 #include "ImGui/EditorConsole.h"
 
-#include "ECS/ComponentTuples/SingletonTuple.h"
 #include "ECS/ComponentsCore.h"
 
 #include "ECS/Systems/Physics2DSystem.h"

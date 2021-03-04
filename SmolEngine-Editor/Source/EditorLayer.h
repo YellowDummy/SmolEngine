@@ -173,7 +173,7 @@ namespace SmolEngine
 
 		size_t m_IDBuffer = 0;
 
-		Ref<WorldAdmin> m_Scene = nullptr;
+		WorldAdmin*       m_Scene = nullptr;
 		Ref<EditorCamera> m_Camera = nullptr;
 		FileBrowserFlags m_FileBrowserState = FileBrowserFlags::None;
 		SelectionFlags m_SelectionFlags = SelectionFlags::None;

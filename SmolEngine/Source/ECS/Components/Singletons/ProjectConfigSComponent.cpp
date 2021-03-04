@@ -12,10 +12,7 @@ namespace SmolEngine
 
 	ProjectConfigSComponent::~ProjectConfigSComponent()
 	{
-		if (Instance != nullptr)
-		{
-			Instance =  nullptr;
-		}
+		Instance = nullptr;
 	}
 
 	ProjectConfigSComponent* ProjectConfigSComponent::Get()

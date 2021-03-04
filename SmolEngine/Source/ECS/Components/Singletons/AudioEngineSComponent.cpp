@@ -9,21 +9,13 @@ namespace SmolEngine
 
 	AudioEngineSComponent::AudioEngineSComponent()
 	{
-		Engine = new AudioEngine();
-		Engine->Init();
-
+		Engine.Init();
 		Instance = this;
 	}
 
 	AudioEngineSComponent::~AudioEngineSComponent()
 	{
 		if (!Instance) { return; }
-
-		if (Engine != nullptr)
-		{
-			delete Engine;
-		}
-
 		Instance = nullptr;
 	}
 }

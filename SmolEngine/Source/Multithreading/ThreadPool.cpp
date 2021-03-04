@@ -15,15 +15,16 @@ namespace SmolEngine
         WorkerCreateInfo workerCI = {};
         for (uint32_t i = 0; i < numThreads; ++i)
         {
-            m_Workers[i].State.bWorking = false;
-            m_Workers[i].State.ID = i;
-            m_Workers[i].State.Specialization = i == 0 ?
+            m_Workers[i] = new WorkerUnit();
+            m_Workers[i]->State.bWorking = false;
+            m_Workers[i]->State.ID = i;
+            m_Workers[i]->State.Specialization = i == 0 ?
                 WorkerSpecialization::Rendering : WorkerSpecialization::None;
 
             workerCI.Pool = this;
-            workerCI.State = &m_Workers[i].State;
+            workerCI.State = &m_Workers[i]->State;
 
-            m_Workers[i].Unit.Init(&workerCI);
+            m_Workers[i]->Unit.Init(&workerCI);
         }
 
         NATIVE_INFO("ThreadPool -> avalable thareads: {}", numThreads);
@@ -40,7 +41,21 @@ namespace SmolEngine
         }
 
         for (auto& worker : m_Workers)
-            worker.Unit.Join();
+        {
+            worker->Unit.Join();
+            delete worker;
+        }
+    }
+
+    bool ThreadPool::IsAnyWorkerBusy() const
+    {
+        for (auto& worker : m_Workers)
+        {
+            if (worker->State.bWorking)
+                return true;
+        }
+
+        return false;
     }
 
     uint32_t ThreadPool::GetNumWorkers() const
@@ -53,7 +68,7 @@ namespace SmolEngine
         uint32_t num = 0;
         for (auto& worker : m_Workers)
         {
-            if (worker.State.bWorking)
+            if (worker->State.bWorking)
                 num++;
         }
 
@@ -65,10 +80,16 @@ namespace SmolEngine
         uint32_t num = 0;
         for (auto& worker : m_Workers)
         {
-            if (!worker.State.bWorking)
+            if (!worker->State.bWorking)
                 num++;
         }
 
         return num;
+    }
+
+    void ThreadPool::SubmitWork(WorkerSpecialization workSpec, std::function<void()>& func)
+    {
+        m_Pools[(uint32_t)workSpec].Tasks.emplace(func);
+        m_Pools[(uint32_t)workSpec].Condition->notify_one();
     }
 }

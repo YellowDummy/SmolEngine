@@ -1257,12 +1257,6 @@
     <ClInclude Include="Source\ECS\Actor.h">
       <Filter>Source\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ECS\ComponentTuples\BaseTuple.h">
-      <Filter>Source\ECS\ComponentTuples</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\ComponentTuples\SingletonTuple.h">
-      <Filter>Source\ECS\ComponentTuples</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ECS\Components\Animation2DComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
@@ -1294,9 +1288,6 @@
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\FramebufferSComponent.h">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h">
@@ -1567,7 +1558,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
-    <ClInclude Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
     <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h" />
@@ -1578,7 +1568,6 @@
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\FilePaths.h" />
-    <ClInclude Include="Source\Renderer\RendererDeferred.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
@@ -1593,6 +1582,7 @@
     <ClInclude Include="Source\Multithreading\Worker.h" />
     <ClInclude Include="Source\Multithreading\ThreadPool.h" />
     <ClInclude Include="Source\ECS\Systems\JobsSystem.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1649,9 +1639,6 @@
     <ClCompile Include="Source\ECS\Actor.cpp">
       <Filter>Source\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\ComponentTuples\SingletonTuple.cpp">
-      <Filter>Source\ECS\ComponentTuples</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ECS\Components\Animation2DComponent.cpp">
       <Filter>Source\ECS\Components</Filter>
     </ClCompile>
@@ -1683,9 +1670,6 @@
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\FramebufferSComponent.cpp">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
@@ -1914,12 +1898,10 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\Singletons\EnvironmentMapSComponent.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp" />
     <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
     <ClCompile Include="Source\Renderer\Material.cpp" />
     <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
-    <ClCompile Include="Source\Renderer\RendererDeferred.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
@@ -1934,5 +1916,6 @@
     <ClCompile Include="Source\Multithreading\Worker.cpp" />
     <ClCompile Include="Source\Multithreading\ThreadPool.cpp" />
     <ClCompile Include="Source\ECS\Systems\JobsSystem.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
   </ItemGroup>
 </Project>

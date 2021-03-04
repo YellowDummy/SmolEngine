@@ -4,7 +4,6 @@
 #include "Events/ApplicationEvent.h"
 
 #include "ECS/ComponentsCore.h"
-#include "ECS/Components/Singletons/FramebufferSComponent.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

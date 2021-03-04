@@ -140,7 +140,7 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		auto& admin = WorldAdmin::GetSingleton();
+		auto admin = WorldAdmin::GetSingleton();
 		if (admin->GetActiveScene().HasComponent<BehaviourComponent>(*actorB))
 		{
 			BehaviourComponent* behaviour = admin->GetActiveScene().GetComponent<BehaviourComponent>(*actorB);
@@ -155,7 +155,7 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		auto& admin = WorldAdmin::GetSingleton();
+		auto admin = WorldAdmin::GetSingleton();
 		if (admin->GetActiveScene().HasComponent<BehaviourComponent>(*actorB))
 		{
 			BehaviourComponent* behaviour = admin->GetActiveScene().GetComponent<BehaviourComponent>(*actorB);

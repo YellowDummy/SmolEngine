@@ -11,7 +11,7 @@ namespace SmolEngine
 
 	struct Box2DWorldSComponent
 	{
-		Box2DWorldSComponent(); // Uses Earth's gravity (0, -9.81)
+		Box2DWorldSComponent();
 
 		Box2DWorldSComponent(const float gravityX, const float gravityY);
 
@@ -19,9 +19,9 @@ namespace SmolEngine
 
 		/// Data
 
-		b2World* World = nullptr;
-		CollisionListener2D* m_CollisionListener2D = nullptr;
-		CollisionFilter2D* m_CollisionFilter2D = nullptr;
+		b2World World = b2World({ 0.0f, -9.81f });
+		CollisionListener2D m_CollisionListener2D = {};
+		CollisionFilter2D m_CollisionFilter2D = {};
 
 		/// Getters
 

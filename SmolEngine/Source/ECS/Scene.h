@@ -88,10 +88,6 @@ namespace SmolEngine
 
 		bool OnActorNameChanged(const std::string& lastName, const std::string& newName);
 
-		void DeleteSingletons();
-
-		void LoadSingletons();
-
 		void UpdateIDSet();
 
 		void CleanRegistry();

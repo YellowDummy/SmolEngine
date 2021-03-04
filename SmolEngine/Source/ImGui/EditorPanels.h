@@ -5,9 +5,7 @@
 namespace SmolEngine
 {
 	class WorldAdmin;
-
 	class Animation2D;
-
 	class CameraController;
 
 	class SettingsWindow
@@ -16,7 +14,7 @@ namespace SmolEngine
 
 		SettingsWindow() = default;
 
-		void Update(bool& isOpened, Ref<WorldAdmin> scene);
+		void Update(bool& isOpened, WorldAdmin* scene);
 	};
 
 }

@@ -10,7 +10,7 @@
 #include "Events/ApplicationEvent.h"
 
 #include "Renderer/GraphicsContext.h"
-#include "Multithreading/ThreadPool.h"
+#include "ECS/Systems/JobsSystem.h"
 
 namespace SmolEngine 
 {
@@ -35,15 +35,19 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
-	static bool kek1 = false;
-	static bool kek2 = false;
-
 	void SomeWork(int id)
 	{
 		auto time = std::chrono::system_clock::now();
 		auto result = std::chrono::system_clock::to_time_t(time);
 		NATIVE_INFO("ZZZZZ, id: {}, time: {}", id, result);
-		kek1 = true;
+	}
+
+	uint32_t SomeLol()
+	{
+		auto time = std::chrono::system_clock::now();
+		auto result = std::chrono::system_clock::to_time_t(time);
+		NATIVE_INFO("SomeLol, id: {}, time: {}", 1, result);
+		return result;
 	}
 
 	void Application::InitApp()
@@ -55,12 +59,17 @@ namespace SmolEngine
 		ToolTimer timer("<Startup Timer>");
 		timer.StartTimer();
 
-		ThreadPool pool;
-		pool.SubmitWork(WorkerSpecialization::None, SomeWork, 1);
-		pool.SubmitWork(WorkerSpecialization::Rendering, SomeWork, 3);
+		// Initializing World Admin
+		m_World = new WorldAdmin();
+		m_World->Init();
+
+		JobsSystem::Schedule(JobPriority::General, 3, SomeLol);
+		JobsSystem::Schedule(JobPriority::General, 2, SomeWork, 2);
 
 		// Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();
+
+		JobsSystem::Complete(true);
 
 		// Binding Callbacks
 		m_EventHandler->OnEventFn = std::bind(&Application::OnEvent, this, std::placeholders::_1);
@@ -97,9 +106,6 @@ namespace SmolEngine
 		ClientInit();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
-
-		// Initializing WorldAdmin
-		WorldAdmin::GetSingleton()->Init();
 
 #ifndef SMOLENGINE_EDITOR
 		// Loading a scene with index 0 and starting the game
