@@ -1,5 +1,5 @@
 ## Level-Editor
-![SmolEngine](https://i.imgur.com/6lgD4Ff.png)
+![SmolEngine](https://i.imgur.com/vS3DiqW.png)
 ## Physically Based Rendering
 ![SmolEngine](https://i.imgur.com/848tYFm.png)
 
@@ -13,7 +13,7 @@
   
 - Integrations: 3rd party 2D physics engine (Box2D), 3rd party audio engine (FMOD)
 
-- Systems: Data-Oriented Entity Component System (ECS)
+- Systems: Data-Oriented Entity Component System (ECS), Jobs System (Multithreading)
 
 - Scripting: C++
 
@@ -26,7 +26,7 @@
 - Rendering: Skeletal Animations, FXAA, Forward Rendering, Real-Time Ray Tracing (Vulkan),
   Post-Processing, User's Shaders, Sprite Atlases
 
-- Systems: Build System, Jobs System, Particles System (2D and 3D), Network Solution, Asset Manager
+- Systems: Build System, Particles System (2D and 3D), Network Solution, Asset Manager
     
 - Integrations: 3rd party 3D physics engine (PhysX)
   
@@ -38,7 +38,7 @@
 
 ## Limitations
 
-- Developed primarily by one person for learning purposes
+- Developed by one person for learning purposes
 
 - At a very early stage
 
