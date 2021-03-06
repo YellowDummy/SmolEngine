@@ -32,4 +32,9 @@ namespace SmolEngine
 		instance->JobGroupIDs.clear();
 		instance->SheduleTasks.clear();
 	}
+
+	ThreadPool* JobsSystem::GetThreadPool()
+	{
+		return &JobsSystemStateSComponent::GetSingleton()->ThreadPool;
+	}
 }

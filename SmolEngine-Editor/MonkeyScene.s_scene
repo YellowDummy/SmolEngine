@@ -1,43 +1,52 @@
 {
-    "value0": 4,
+    "value0": 5,
     "value1": 0,
     "value2": 1,
     "value3": 2,
     "value4": 3,
-    "value5": 3,
-    "value6": 1,
-    "value7": {
+    "value5": 4,
+    "value6": 4,
+    "value7": 1,
+    "value8": {
         "value0": 1,
         "value1": "Floor",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value8": 2,
-    "value9": {
+    "value9": 2,
+    "value10": {
         "value0": 2,
         "value1": "Monkey",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value10": 3,
-    "value11": {
+    "value11": 3,
+    "value12": {
         "value0": 3,
         "value1": "DirectionalLight",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value12": 0,
-    "value13": 0,
-    "value14": 0,
+    "value13": 4,
+    "value14": {
+        "value0": 4,
+        "value1": "New_EmptyActor_3",
+        "value2": "Default",
+        "value3": true,
+        "value4": 0
+    },
     "value15": 0,
     "value16": 0,
     "value17": 0,
-    "value18": 3,
-    "value19": 1,
-    "value20": {
+    "value18": 0,
+    "value19": 0,
+    "value20": 0,
+    "value21": 4,
+    "value22": 1,
+    "value23": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -49,8 +58,8 @@
         "value8": 0.0,
         "value9": 1
     },
-    "value21": 2,
-    "value22": {
+    "value24": 2,
+    "value25": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -62,8 +71,8 @@
         "value8": 0.13524746894836427,
         "value9": 1
     },
-    "value23": 3,
-    "value24": {
+    "value26": 3,
+    "value27": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -75,11 +84,24 @@
         "value8": 0.0,
         "value9": 1
     },
-    "value25": 0,
-    "value26": 0,
-    "value27": 2,
-    "value28": 1,
+    "value28": 4,
     "value29": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 0.10000000149011612,
+        "value4": 0.10000000149011612,
+        "value5": 0.10000000149011612,
+        "value6": 0.6446337699890137,
+        "value7": 0.0,
+        "value8": 6.426957130432129,
+        "value9": 1
+    },
+    "value30": 0,
+    "value31": 0,
+    "value32": 3,
+    "value33": 1,
+    "value34": {
         "value0": true,
         "value1": false,
         "value2": true,
@@ -88,8 +110,8 @@
         "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
         "value6": 2
     },
-    "value30": 2,
-    "value31": {
+    "value35": 2,
+    "value36": {
         "value0": true,
         "value1": false,
         "value2": true,
@@ -103,25 +125,50 @@
         "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\monkey.glb",
         "value6": 2
     },
-    "value32": 1,
-    "value33": 3,
-    "value34": {
+    "value37": 4,
+    "value38": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "WoodenChair"
+            },
+            {
+                "key": 1,
+                "value": "WoodenChair"
+            },
+            {
+                "key": 2,
+                "value": "WoodenChair"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\WoodenChair_01.FBX",
+        "value6": 2
+    },
+    "value39": 1,
+    "value40": 3,
+    "value41": {
         "value0": true,
         "value1": true,
         "value2": 1.0,
-        "value3": -4.0,
-        "value4": 55.0,
-        "value5": 65.0,
+        "value3": -1.0,
+        "value4": 57.0,
+        "value5": 39.0,
         "value6": 1.0,
         "value7": 1.0,
         "value8": 1.0,
         "value9": 1.0,
         "value10": 2
     },
-    "value35": 0
+    "value42": 0
 }|{
     "value0": [
-        "C:\\Dev\\SmolEngine\\Resources\\Materials\\bronze_metal.s_material"
+        "C:\\Dev\\SmolEngine\\Resources\\Materials\\bronze_metal.s_material",
+        "C:\\Dev\\SmolEngine\\Resources\\Materials\\ChainTexture.s_material",
+        "C:\\Dev\\SmolEngine\\Resources\\Materials\\WoodenChair.s_material"
     ],
     "value1": [
         {
@@ -176,6 +223,25 @@
                         },
                         "value2": [],
                         "value3": 2,
+                        "value4": 3
+                    }
+                }
+            }
+        },
+        {
+            "key": 4,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483652,
+                    "data": {
+                        "value0": 4,
+                        "value1": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value2": [],
+                        "value3": 3,
                         "value4": 3
                     }
                 }

@@ -8,6 +8,7 @@ namespace SmolEngine
 	class Framebuffer;
 	class Mesh;
 	class EditorCamera;
+	class Texture;
 
 	struct PreviewRenderingData
 	{
@@ -18,6 +19,8 @@ namespace SmolEngine
 
 		glm::mat4               ViewProj = glm::mat4(1.0f);
 		glm::vec3               CameraPos = glm::vec3(0, 0, 6);
+
+		Ref<GraphicsPipeline>   TestPipeline = nullptr;
 	};
 
 	struct MaterialLibraryBuffer
@@ -51,6 +54,7 @@ namespace SmolEngine
 		
 		bool                  m_bShowPreview = false;
 
+		Ref<Texture>          m_Texture = nullptr;
 		MaterialCreateInfo    m_MaterialCI = {};
 		PreviewRenderingData  m_PreviewRenderingData = {};
 		MaterialLibraryBuffer m_Buffer = {};

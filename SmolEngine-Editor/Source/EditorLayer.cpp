@@ -69,6 +69,8 @@ namespace SmolEngine
 		GCInfo.bTargetsSwapchain = false;
 		assert(GraphicsContext::Init(GCInfo) == true);
 
+		auto mesh = Mesh::Create(Resources + "Models/anim.glb");
+
 		EditorCameraCreateInfo editorCamCI{};
 		{
 			editorCamCI.FOV = 65.5f;
@@ -76,7 +78,6 @@ namespace SmolEngine
 			editorCamCI.Type = CameraType::Perspective;
 			m_Camera = std::make_shared<EditorCamera>(&editorCamCI);
 		}
-
 
 		m_FileBrowser = std::make_shared<ImGui::FileBrowser>();
 		m_BuildPanel = std::make_unique<BuildPanel>();

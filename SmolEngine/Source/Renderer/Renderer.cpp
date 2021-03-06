@@ -181,6 +181,7 @@ namespace SmolEngine
 
 	void Renderer::Shutdown()
 	{
+		s_Data->m_IsInitialized = false;
 		delete s_Data;
 	}
 
@@ -476,7 +477,8 @@ namespace SmolEngine
 			{ DataTypes::Float3, "aNormal" },
 			{ DataTypes::Float4, "aTangent" },
 			{ DataTypes::Float2, "aUV" },
-			{ DataTypes::Float4, "aColor" }
+			{ DataTypes::Int4,   "aBoneIDs"},
+			{ DataTypes::Float4, "aWeight"}
 		};
 
 		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
@@ -706,8 +708,8 @@ namespace SmolEngine
 		{
 			FramebufferSpecification framebufferCI = {};
 			{
-				framebufferCI.Width = 2048;
-				framebufferCI.Height = 2048;
+				framebufferCI.Width = 4096;
+				framebufferCI.Height = 4096;
 				framebufferCI.Specialisation = FramebufferSpecialisation::ShadowMap;
 
 				s_Data->m_DepthFramebuffer = Framebuffer::Create(framebufferCI);

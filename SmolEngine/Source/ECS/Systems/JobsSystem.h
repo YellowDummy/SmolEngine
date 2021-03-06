@@ -29,6 +29,10 @@ namespace SmolEngine
 
 		static void Complete(bool wait);
 
+		// Getters
+
+		static ThreadPool* GetThreadPool();
+
 	private:
 
 		template<typename F, typename...Args>

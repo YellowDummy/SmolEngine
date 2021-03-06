@@ -35,21 +35,6 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
-	void SomeWork(int id)
-	{
-		auto time = std::chrono::system_clock::now();
-		auto result = std::chrono::system_clock::to_time_t(time);
-		NATIVE_INFO("ZZZZZ, id: {}, time: {}", id, result);
-	}
-
-	uint32_t SomeLol()
-	{
-		auto time = std::chrono::system_clock::now();
-		auto result = std::chrono::system_clock::to_time_t(time);
-		NATIVE_INFO("SomeLol, id: {}, time: {}", 1, result);
-		return result;
-	}
-
 	void Application::InitApp()
 	{
 		NATIVE_INFO("State = Startup");
@@ -63,13 +48,8 @@ namespace SmolEngine
 		m_World = new WorldAdmin();
 		m_World->Init();
 
-		JobsSystem::Schedule(JobPriority::General, 3, SomeLol);
-		JobsSystem::Schedule(JobPriority::General, 2, SomeWork, 2);
-
 		// Initializing Event Dispatcher
 		m_EventHandler = std::make_shared<EventHandler>();
-
-		JobsSystem::Complete(true);
 
 		// Binding Callbacks
 		m_EventHandler->OnEventFn = std::bind(&Application::OnEvent, this, std::placeholders::_1);

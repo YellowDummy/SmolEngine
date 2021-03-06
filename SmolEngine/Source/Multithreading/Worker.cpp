@@ -51,7 +51,7 @@ namespace SmolEngine
                 }
 
                 state->bWorking = true;
-                NATIVE_INFO("Worker with ID {} starts execution", state->ID);
+                //NATIVE_INFO("Worker with ID {} starts execution", state->ID);
                 task();
                 state->bWorking = false;
             }

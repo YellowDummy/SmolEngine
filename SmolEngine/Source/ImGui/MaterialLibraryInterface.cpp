@@ -3,6 +3,8 @@
 #include "Core/FileDialog.h"
 #include "Core/FilePaths.h"
 
+#include "ECS/Systems/JobsSystem.h"
+
 #include "Renderer/Mesh.h"
 #include "Renderer/GraphicsPipeline.h"
 #include "Renderer/Framebuffer.h"
@@ -203,7 +205,8 @@ namespace SmolEngine
 			{ DataTypes::Float3, "aNormal" },
 			{ DataTypes::Float4, "aTangent" },
 			{ DataTypes::Float2, "aUV" },
-			{ DataTypes::Float4, "aColor" }
+			{ DataTypes::Int4,   "aBoneIDs"},
+			{ DataTypes::Float4, "aWeight"}
 		};
 		VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
 

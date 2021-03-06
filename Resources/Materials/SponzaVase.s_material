@@ -1,0 +1,29 @@
+{
+    "value0": 0.10000000149011612,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": 9.0,
+    "value4": "SponzaVase",
+    "value5": [
+        {
+            "key": 0,
+            "value": "C:\\Dev\\Test\\Vase_diffuse.PNG"
+        },
+        {
+            "key": 1,
+            "value": "C:\\Dev\\Test\\Vase_normal.PNG"
+        },
+        {
+            "key": 2,
+            "value": ""
+        },
+        {
+            "key": 3,
+            "value": "C:\\Dev\\Test\\Vase_roughness.PNG"
+        },
+        {
+            "key": 4,
+            "value": ""
+        }
+    ]
+}
