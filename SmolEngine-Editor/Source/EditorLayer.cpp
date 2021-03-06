@@ -45,6 +45,7 @@
 #include "icon_font_cpp_headers/IconsFontAwesome5.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
 #include "ImGui/NodeEditor/imnodes.h"
+#include "ImGui/ImPlot/implot.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -148,8 +149,8 @@ namespace SmolEngine
 		if (opt_fullscreen)
 		{
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->GetWorkPos());
-			ImGui::SetNextWindowSize(viewport->GetWorkSize());
+			ImGui::SetNextWindowPos(viewport->WorkPos);
+			ImGui::SetNextWindowSize(viewport->WorkSize);
 			ImGui::SetNextWindowViewport(viewport->ID);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -342,23 +343,80 @@ namespace SmolEngine
 		ImGui::PopStyleVar();
 
 #if  0
+		ImGui::Begin("My Window");
+		{
+			struct ScrollingBuffer {
+				int MaxSize;
+				int Offset;
+				ImVector<ImVec2> Data;
+				ScrollingBuffer(int max_size = 2000) {
+					MaxSize = max_size;
+					Offset = 0;
+					Data.reserve(MaxSize);
+				}
+				void AddPoint(float x, float y) {
+					if (Data.size() < MaxSize)
+						Data.push_back(ImVec2(x, y));
+					else {
+						Data[Offset] = ImVec2(x, y);
+						Offset = (Offset + 1) % MaxSize;
+					}
+				}
+				void Erase() {
+					if (Data.size() > 0) {
+						Data.shrink(0);
+						Offset = 0;
+					}
+				}
+			};
 
-		ImGui::Begin("TemPw");
-		static glm::vec3 dColor = glm::vec3(1.0f);
-		static glm::vec3 sColor = glm::vec3(1.0f);
-		static glm::vec3 aColor = glm::vec3(1.0f);
-		static float mode = 1.0f;
-		static bool enableIBL = true;
+			// utility structure for realtime plot
+			struct RollingBuffer {
+				float Span;
+				ImVector<ImVec2> Data;
+				RollingBuffer() {
+					Span = 10.0f;
+					Data.reserve(2000);
+				}
+				void AddPoint(float x, float y) {
+					float xmod = fmodf(x, Span);
+					if (!Data.empty() && xmod < Data.back().x)
+						Data.shrink(0);
+					Data.push_back(ImVec2(xmod, y));
+				}
+			};
 
-		ImGui::ColorPicker3("diffuseColor", glm::value_ptr(dColor));
-		ImGui::ColorPicker3("specularColor", glm::value_ptr(sColor));
-		ImGui::ColorPicker3("ambientColor", glm::value_ptr(aColor));
+			ImGui::BulletText("Move your mouse to change the data!");
+			ImGui::BulletText("This example assumes 60 FPS. Higher FPS requires larger buffer size.");
+			static ScrollingBuffer sdata1, sdata2;
+			static RollingBuffer   rdata1, rdata2;
+			ImVec2 mouse = ImGui::GetMousePos();
+			static float t = 0;
+			t += ImGui::GetIO().DeltaTime;
+			sdata1.AddPoint(t, mouse.x * 0.0005f);
+			rdata1.AddPoint(t, mouse.x * 0.0005f);
+			sdata2.AddPoint(t, mouse.y * 0.0005f);
+			rdata2.AddPoint(t, mouse.y * 0.0005f);
 
-		ImGui::InputFloat("Mod", &mode);
-		ImGui::Checkbox("Enable IBL", &enableIBL);
+			static float history = 10.0f;
+			ImGui::SliderFloat("History", &history, 1, 30, "%.1f s");
+			rdata1.Span = history;
+			rdata2.Span = history;
 
-		Renderer::SetAmbientLighting(dColor, sColor, mode, enableIBL, aColor);
-
+			static ImPlotAxisFlags rt_axis = ImPlotAxisFlags_NoTickLabels;
+			ImPlot::SetNextPlotLimitsX(t - history, t, ImGuiCond_Always);
+			if (ImPlot::BeginPlot("##Scrolling", NULL, NULL, ImVec2(-1, 150), 0, rt_axis, rt_axis | ImPlotAxisFlags_LockMin)) {
+				ImPlot::PlotShaded("Data 1", &sdata1.Data[0].x, &sdata1.Data[0].y, sdata1.Data.size(), 0, sdata1.Offset, 2 * sizeof(float));
+				ImPlot::PlotLine("Data 2", &sdata2.Data[0].x, &sdata2.Data[0].y, sdata2.Data.size(), sdata2.Offset, 2 * sizeof(float));
+				ImPlot::EndPlot();
+			}
+			ImPlot::SetNextPlotLimitsX(0, history, ImGuiCond_Always);
+			if (ImPlot::BeginPlot("##Rolling", NULL, NULL, ImVec2(-1, 150), 0, rt_axis, rt_axis)) {
+				ImPlot::PlotLine("Data 1", &rdata1.Data[0].x, &rdata1.Data[0].y, rdata1.Data.size(), 0, 2 * sizeof(float));
+				ImPlot::PlotLine("Data 2", &rdata2.Data[0].x, &rdata2.Data[0].y, rdata2.Data.size(), 0, 2 * sizeof(float));
+				ImPlot::EndPlot();
+			}
+		}
 		ImGui::End();
 #endif //  0
 
@@ -372,19 +430,12 @@ namespace SmolEngine
 			if (ImGui::Begin("Renderer2D: Stats", &showRenderer2Dstats))
 			{
 				ImGui::Extensions::Text("Squares", std::to_string(Renderer2D::Stats->QuadCount));
-
 				ImGui::Extensions::Text("Vertices", std::to_string(Renderer2D::Stats->GetTotalVertexCount()));
-
 				ImGui::Extensions::Text("Indices", std::to_string(Renderer2D::Stats->GetTotalIndexCount()));
-
 				ImGui::Extensions::Text("Textures", std::to_string(Renderer2D::Stats->TexturesInUse));
-
 				ImGui::Extensions::Text("Layers", std::to_string(Renderer2D::Stats->LayersInUse) + " / 10");
-
 				ImGui::NewLine();
-
 				ImGui::Extensions::Text("Draw Calls", std::to_string(Renderer2D::Stats->DrawCalls));
-
 				ImGui::End();
 			}
 		}

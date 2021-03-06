@@ -584,10 +584,6 @@
     <ClInclude Include="Source\Core\Tools.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\ECS\Actor.h" />
-    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
-    <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
-    <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
-    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="Source\ECS\Components\BaseComponent.h" />
@@ -595,10 +591,14 @@
     <ClInclude Include="Source\ECS\Components\Body2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\CameraComponent.h" />
     <ClInclude Include="Source\ECS\Components\CanvasComponent.h" />
+    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\HeadComponent.h" />
     <ClInclude Include="Source\ECS\Components\Light2DSourceComponent.h" />
+    <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
+    <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\AudioEngineSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\TransformComponent.h" />
@@ -626,6 +626,8 @@
     <ClInclude Include="Source\ImGui\ImGuiExtension.h" />
     <ClInclude Include="Source\ImGui\ImGuiLayer.h" />
     <ClInclude Include="Source\ImGui\ImGuiVulkanImpl.h" />
+    <ClInclude Include="Source\ImGui\ImPlot\implot.h" />
+    <ClInclude Include="Source\ImGui\ImPlot\implot_internal.h" />
     <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
     <ClInclude Include="Source\ImGui\NodeEditor\imnodes.h" />
     <ClInclude Include="Source\Multithreading\ThreadPool.h" />
@@ -660,9 +662,9 @@
     <ClInclude Include="Source\Renderer\Renderer.h" />
     <ClInclude Include="Source\Renderer\Renderer2D.h" />
     <ClInclude Include="Source\Renderer\RendererShared.h" />
+    <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\Shader.h" />
     <ClInclude Include="Source\Renderer\Shared.h" />
-    <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
     <ClInclude Include="Source\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Renderer\Text.h" />
     <ClInclude Include="Source\Renderer\Texture.h" />
@@ -671,6 +673,7 @@
     <ClInclude Include="Source\Renderer\VertexBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\Vulkan.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanBuffer.h" />
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandPool.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanContext.h" />
@@ -689,7 +692,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanStagingBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSwapchain.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanTexture.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanUtils.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Scripting\BehaviourPrimitive.h" />
@@ -723,10 +725,6 @@
     <ClCompile Include="Source\Core\SLog.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\ECS\Actor.cpp" />
-    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Animation2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\BaseComponent.cpp" />
@@ -734,10 +732,14 @@
     <ClCompile Include="Source\ECS\Components\Body2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\CanvasComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\HeadComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Light2DSourceComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Texture2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\TransformComponent.cpp" />
@@ -761,6 +763,9 @@
     <ClCompile Include="Source\ImGui\ImGuiExtension.cpp" />
     <ClCompile Include="Source\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="Source\ImGui\ImGuiVulkanImpl.cpp" />
+    <ClCompile Include="Source\ImGui\ImPlot\implot.cpp" />
+    <ClCompile Include="Source\ImGui\ImPlot\implot_demo.cpp" />
+    <ClCompile Include="Source\ImGui\ImPlot\implot_items.cpp" />
     <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
     <ClCompile Include="Source\ImGui\NodeEditor\imnodes.cpp" />
     <ClCompile Include="Source\Multithreading\ThreadPool.cpp" />
@@ -788,8 +793,8 @@
     <ClCompile Include="Source\Renderer\OpenGL\OpenglVertexArray.cpp" />
     <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="Source\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
+    <ClCompile Include="Source\Renderer\Shader.cpp" />
     <ClCompile Include="Source\Renderer\SubTexture.cpp" />
     <ClCompile Include="Source\Renderer\Text.cpp" />
     <ClCompile Include="Source\Renderer\Texture.cpp" />
@@ -797,6 +802,7 @@
     <ClCompile Include="Source\Renderer\VertexArray.cpp" />
     <ClCompile Include="Source\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanBuffer.cpp" />
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandPool.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanContext.cpp" />
@@ -814,7 +820,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanStagingBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSwapchain.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanTexture.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanUtils.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Scripting\BehaviourPrimitive.cpp" />

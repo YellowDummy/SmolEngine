@@ -46,9 +46,6 @@
     <Filter Include="Source\ECS">
       <UniqueIdentifier>{A09AC236-8C52-0484-F559-DDDFE1309F74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ECS\ComponentTuples">
-      <UniqueIdentifier>{9FBF18EC-8BCF-C4BC-F488-29DBE0B7B355}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\ECS\Components">
       <UniqueIdentifier>{B59BF594-2108-B18F-EAFB-48ED5627D3F7}</UniqueIdentifier>
     </Filter>
@@ -67,8 +64,14 @@
     <Filter Include="Source\ImGui\FileBrowser">
       <UniqueIdentifier>{73066A8F-5F2B-B90F-8876-9E9F74FAB72D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ImGui\ImPlot">
+      <UniqueIdentifier>{C4CD6A3F-302F-484D-B99C-8EFF25FD7E0C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\ImGui\NodeEditor">
       <UniqueIdentifier>{3C1D8064-A854-C8FB-B15E-2C1F1D15EFF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Multithreading">
+      <UniqueIdentifier>{A6D6B36D-1243-6F68-DB36-07C6476291D0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Networking">
       <UniqueIdentifier>{AD32A3F0-1949-A186-62C0-2CA8CE15720E}</UniqueIdentifier>
@@ -1206,6 +1209,9 @@
     <ClInclude Include="Source\Animation\Animation2DFrameKey.h">
       <Filter>Source\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Animation\AnimationClip2D.h">
+      <Filter>Source\Animation</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Audio\AudioClip.h">
       <Filter>Source\Audio</Filter>
     </ClInclude>
@@ -1228,6 +1234,12 @@
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\EventHandler.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\FileDialog.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\FilePaths.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Input.h">
@@ -1278,16 +1290,28 @@
     <ClInclude Include="Source\ECS\Components\CanvasComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h">
+      <Filter>Source\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ECS\Components\HeadComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\Light2DSourceComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\Components\MeshComponent.h">
+      <Filter>Source\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\Components\PointLightComponent.h">
+      <Filter>Source\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ECS\Components\Singletons\AudioEngineSComponent.h">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.h">
+      <Filter>Source\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h">
@@ -1318,6 +1342,9 @@
       <Filter>Source\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Systems\CommandSystem.h">
+      <Filter>Source\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\Systems\JobsSystem.h">
       <Filter>Source\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Systems\Physics2DSystem.h">
@@ -1368,8 +1395,23 @@
     <ClInclude Include="Source\ImGui\ImGuiVulkanImpl.h">
       <Filter>Source\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ImGui\ImPlot\implot.h">
+      <Filter>Source\ImGui\ImPlot</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGui\ImPlot\implot_internal.h">
+      <Filter>Source\ImGui\ImPlot</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h">
+      <Filter>Source\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ImGui\NodeEditor\imnodes.h">
       <Filter>Source\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Multithreading\ThreadPool.h">
+      <Filter>Source\Multithreading</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Multithreading\Worker.h">
+      <Filter>Source\Multithreading</Filter>
     </ClInclude>
     <ClInclude Include="Source\Networking\NetworkManager.h">
       <Filter>Source\Networking</Filter>
@@ -1413,10 +1455,22 @@
     <ClInclude Include="Source\Renderer\GraphicsPipeline.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Renderer\IndexBuffer.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Renderer\Material.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\MaterialLibrary.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Renderer\Mesh.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\MeshPool.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h">
@@ -1446,7 +1500,16 @@
     <ClInclude Include="Source\Renderer\Renderer2D.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Renderer\RendererShared.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\SSAOGenerator.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Renderer\Shader.h">
+      <Filter>Source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\Shared.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\SubTexture.h">
@@ -1471,6 +1534,9 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanBuffer.h">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandBuffer.h">
@@ -1504,6 +1570,9 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanPipeline.h">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Vulkan\VulkanSemaphore.h">
@@ -1557,32 +1626,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ECS\Components\MeshComponent.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h" />
-    <ClInclude Include="Source\Renderer\SSAOGenerator.h" />
-    <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h" />
-    <ClInclude Include="Source\Renderer\Material.h" />
-    <ClInclude Include="Source\Renderer\Shared.h" />
-    <ClInclude Include="Source\Renderer\MaterialLibrary.h" />
-    <ClInclude Include="Source\Renderer\RendererShared.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\FilePaths.h" />
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\MeshPool.h" />
-    <ClInclude Include="Source\Core\FileDialog.h" />
-    <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h" />
-    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h" />
-    <ClInclude Include="Source\ECS\Components\PointLightComponent.h" />
-    <ClInclude Include="Source\Animation\AnimationClip2D.h">
-      <Filter>Source\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Multithreading\Worker.h" />
-    <ClInclude Include="Source\Multithreading\ThreadPool.h" />
-    <ClInclude Include="Source\ECS\Systems\JobsSystem.h" />
-    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1601,6 +1644,9 @@
       <Filter>Libraries\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="Source\Animation\Animation2DFrameKey.cpp">
+      <Filter>Source\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Animation\AnimationClip2D.cpp">
       <Filter>Source\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\AudioClip.cpp">
@@ -1622,6 +1668,9 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EventHandler.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\FileDialog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Layer.cpp">
@@ -1660,16 +1709,28 @@
     <ClCompile Include="Source\ECS\Components\CanvasComponent.cpp">
       <Filter>Source\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp">
+      <Filter>Source\ECS\Components</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ECS\Components\HeadComponent.cpp">
       <Filter>Source\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Light2DSourceComponent.cpp">
       <Filter>Source\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp">
+      <Filter>Source\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp">
+      <Filter>Source\ECS\Components</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\AudioEngineSComponent.cpp">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
+      <Filter>Source\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
@@ -1697,6 +1758,9 @@
       <Filter>Source\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Systems\CommandSystem.cpp">
+      <Filter>Source\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Systems\JobsSystem.cpp">
       <Filter>Source\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Systems\Physics2DSystem.cpp">
@@ -1738,8 +1802,26 @@
     <ClCompile Include="Source\ImGui\ImGuiVulkanImpl.cpp">
       <Filter>Source\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ImGui\ImPlot\implot.cpp">
+      <Filter>Source\ImGui\ImPlot</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGui\ImPlot\implot_demo.cpp">
+      <Filter>Source\ImGui\ImPlot</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGui\ImPlot\implot_items.cpp">
+      <Filter>Source\ImGui\ImPlot</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp">
+      <Filter>Source\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ImGui\NodeEditor\imnodes.cpp">
       <Filter>Source\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Multithreading\ThreadPool.cpp">
+      <Filter>Source\Multithreading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Multithreading\Worker.cpp">
+      <Filter>Source\Multithreading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Physics2D\Box2D\Body2D.cpp">
       <Filter>Source\Physics2D\Box2D</Filter>
@@ -1771,7 +1853,16 @@
     <ClCompile Include="Source\Renderer\IndexBuffer.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Renderer\Material.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer\MaterialLibrary.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Renderer\Mesh.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer\MeshPool.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp">
@@ -1801,6 +1892,9 @@
     <ClCompile Include="Source\Renderer\Renderer2D.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Renderer\SSAOGenerator.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Renderer\Shader.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
@@ -1823,6 +1917,9 @@
       <Filter>Source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanBuffer.cpp">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandBuffer.cpp">
@@ -1856,6 +1953,9 @@
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanPipeline.cpp">
+      <Filter>Source\Renderer\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp">
       <Filter>Source\Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\Vulkan\VulkanSemaphore.cpp">
@@ -1897,25 +1997,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp" />
-    <ClCompile Include="Source\Renderer\SSAOGenerator.cpp" />
-    <ClCompile Include="Source\Renderer\Material.cpp" />
-    <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\MeshPool.cpp" />
-    <ClCompile Include="Source\Core\FileDialog.cpp" />
-    <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp" />
-    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp" />
-    <ClCompile Include="Source\Animation\AnimationClip2D.cpp">
-      <Filter>Source\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Multithreading\Worker.cpp" />
-    <ClCompile Include="Source\Multithreading\ThreadPool.cpp" />
-    <ClCompile Include="Source\ECS\Systems\JobsSystem.cpp" />
-    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
   </ItemGroup>
 </Project>

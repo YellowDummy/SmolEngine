@@ -16,6 +16,7 @@
 #include "Core/Window.h"
 #include "Core/EventHandler.h"
 #include "Core/Application.h"
+#include "ImGui/ImPlot/implot.h"
 #include "IconsFontAwesome5.h"
 #include "ImGuizmo.h"
 #include "Core/Window.h"
@@ -51,6 +52,7 @@ namespace SmolEngine
 		IMGUI_CHECKVERSION();
 
 		ImGui::CreateContext();
+		ImPlot::CreateContext();
 		imnodes::Initialize();
 
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -115,7 +117,6 @@ namespace SmolEngine
 			style.Colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
 			style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
 			style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.32f, 0.52f, 0.65f, 1.00f);
-			style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.20f, 0.20f, 0.20f, 0.50f);
 
 			style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
 		}
@@ -177,6 +178,7 @@ namespace SmolEngine
 
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+		ImPlot::DestroyContext();
 		imnodes::Shutdown();
 	}
 
