@@ -113,14 +113,14 @@ namespace SmolEngine
 
 	bool AudioSystem::RenameClip(AudioSourceComponent& audioSource, const std::string& keyName, const std::string& newName)
 	{
-		auto& searchNewName = audioSource.AudioClips.find(newName);
+		const auto& searchNewName = audioSource.AudioClips.find(newName);
 		if (searchNewName != audioSource.AudioClips.end())
 		{
 			NATIVE_WARN("Audio clip <{}> already exist!", newName);
 			return false;
 		}
 
-		auto& search = audioSource.AudioClips.find(keyName);
+		const auto& search = audioSource.AudioClips.find(keyName);
 		if (search != audioSource.AudioClips.end())
 		{
 			Ref<AudioClip> clipRef = search->second;

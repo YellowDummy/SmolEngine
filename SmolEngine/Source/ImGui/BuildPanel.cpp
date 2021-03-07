@@ -116,47 +116,7 @@ namespace SmolEngine
 				
 			}
 			ImGui::End();
-
-			m_FileBrowser->Display();
-
-			if (m_FileBrowser->HasSelected())
-			{
-				const auto filePath = m_FileBrowser->GetSelected().u8string();
-				const auto fileName = m_FileBrowser->GetSelected().filename().u8string();
-
-				switch (m_FileBrowserState)
-				{
-				case BuildPanelFileBrowserState::Add_Scene:
-				{
-					ProjectConfigSComponent* ref = ProjectConfigSComponent::Get();
-					if (ref != nullptr)
-					{
-						SceneConfigData temp;
-						temp.FileName = fileName;
-						temp.FilePath = filePath;
-
-						ref->m_Scenes[static_cast<uint32_t>(ref->m_Scenes.size())] = temp;
-						ResetFileBrowser();
-					}
-
-					break;
-				}
-				case BuildPanelFileBrowserState::Save_Config:
-				{
-					Save(filePath);
-					ResetFileBrowser();
-					break;
-				}
-				case BuildPanelFileBrowserState::Load_Config:
-				{
-					Load(filePath);
-					ResetFileBrowser();
-					break;
-				}
-				default:
-					break;
-				}
-			}
+	
 		}
 	}
 

@@ -59,7 +59,7 @@ namespace SmolEngine
 
         auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_AssetMap;
 
-        auto& result = assetMap.find(m_FontName);
+        const auto& result = assetMap.find(m_FontName);
         if (result != assetMap.end())
         {
             m_TextLabel = Text::Create(result->second);

@@ -21,7 +21,7 @@ namespace SmolEngine
 	{
 		std::hash<std::string> hasher;
 		size_t id = hasher(filePath);
-		auto& result = m_Textures.find(id);
+		const auto& result = m_Textures.find(id);
 		if (result == m_Textures.end())
 		{
 			Ref<Texture> texture = std::make_shared<Texture>();

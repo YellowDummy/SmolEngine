@@ -19,6 +19,11 @@
 
 namespace SmolEngine
 {
+	auto pos = std::string("Position");
+	auto normal = std::string("Normals");
+	auto albedro = std::string("Albedro");
+	auto pbr = std::string("Pbr");
+
 	void DeferredRenderingTest::OnAttach()
 	{
 #ifdef SMOLENGINE_OPENL_IMPL // Vulkan support only
@@ -272,8 +277,8 @@ namespace SmolEngine
 #ifndef SMOLENGINE_OPENGL_IMPL
 				auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer();
 
-				m_SSAOPipeline->UpdateVulkanImageDescriptor(0, pass.GetAttachment(std::string("Position"))->ImageInfo);
-				m_SSAOPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Normals"))->ImageInfo);
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(0, pass.GetAttachment(pos)->ImageInfo);
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(normal)->ImageInfo);
 #endif
 
 				m_SSAOPipeline->SetVertexBuffers({ FullScreenVB });
@@ -422,10 +427,10 @@ namespace SmolEngine
 			auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer();
 
 			m_CombinationPipeline->UpdateVulkanImageDescriptor(0, m_SkyboxFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Position"))->ImageInfo);
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(std::string("Normals"))->ImageInfo); 
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(std::string("Pbr"))->ImageInfo);
-			m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(std::string("Albedro"))->ImageInfo); 
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(pos)->ImageInfo);
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(normal)->ImageInfo); 
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(pbr)->ImageInfo);
+			m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(albedro)->ImageInfo); 
 			m_CombinationPipeline->UpdateVulkanImageDescriptor(5, m_SSAOFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
 			m_CombinationPipeline->UpdateVulkanImageDescriptor(6, m_SSAOBlurFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
 
@@ -467,12 +472,12 @@ namespace SmolEngine
 				m_Pipeline->UpdateSamplers({ m_Tetxure4, m_BrickRoughness }, 9); //roughness
 
 				auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer();
-				m_SSAOPipeline->UpdateVulkanImageDescriptor(0, pass.GetAttachment(std::string("Position"))->ImageInfo);
-				m_SSAOPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Normals"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Position"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(std::string("Normals"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(std::string("Pbr"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(std::string("Albedro"))->ImageInfo);
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(0, pass.GetAttachment(pos)->ImageInfo);
+				m_SSAOPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(normal)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(pos)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(normal)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(pbr)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(albedro)->ImageInfo);
 			}
 		}
 
@@ -483,10 +488,10 @@ namespace SmolEngine
 				auto& pass = m_DeferredFrameBuffer->GetVulkanFramebuffer();
 
 				m_CombinationPipeline->UpdateVulkanImageDescriptor(0, m_SkyboxFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(std::string("Position"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(std::string("Normals"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(std::string("Pbr"))->ImageInfo);
-				m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(std::string("Albedro"))->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(1, pass.GetAttachment(pos)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(2, pass.GetAttachment(normal)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(4, pass.GetAttachment(pbr)->ImageInfo);
+				m_CombinationPipeline->UpdateVulkanImageDescriptor(3, pass.GetAttachment(albedro)->ImageInfo);
 				m_CombinationPipeline->UpdateVulkanImageDescriptor(5, m_SSAOFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
 				m_CombinationPipeline->UpdateVulkanImageDescriptor(6, m_SSAOBlurFrameBuffer->GetVulkanFramebuffer().GetAttachment()->ImageInfo);
 

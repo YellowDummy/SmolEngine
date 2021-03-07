@@ -59,7 +59,7 @@ namespace SmolEngine
 		const auto& view = registry.view<BehaviourComponent>();
 		view.each([&](BehaviourComponent& behaviour)
 		{
-			auto& result = actorPool.find(behaviour.ID);
+			const auto& result = actorPool.find(behaviour.ID);
 			if (result != actorPool.end())
 			{
 				behaviour.Actor = result->second;

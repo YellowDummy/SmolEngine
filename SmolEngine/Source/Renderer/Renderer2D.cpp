@@ -510,7 +510,7 @@ namespace SmolEngine
 		{
 			if (dirEntry.path().filename() == shaderName)
 			{
-				filePath = dirEntry.path().u8string();
+				filePath = dirEntry.path().string();
 				return true;
 			}
 		}

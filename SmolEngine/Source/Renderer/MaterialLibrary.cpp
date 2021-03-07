@@ -27,13 +27,13 @@ namespace SmolEngine
 			return materialID;
 		}
 
-		auto& name_it = m_MaterialNames.find(infoCI->Name);
+		const auto& name_it = m_MaterialNames.find(infoCI->Name);
 		if (name_it != m_MaterialNames.end())
 			return name_it->second;
 
 		if (!path.empty())
 		{
-			auto& path_it = m_MaterialPaths.find(path);
+			const auto& path_it = m_MaterialPaths.find(path);
 			if (path_it != m_MaterialPaths.end())
 				return path_it->second;
 		}
@@ -146,7 +146,7 @@ namespace SmolEngine
 		return index;
 	}
 
-	Material* MaterialLibrary::GetMaterial(uint32_t ID)
+	Material* MaterialLibrary::GetMaterial(int32_t ID)
 	{
 		if (ID > m_MaterialIndex)
 			return nullptr;
@@ -156,7 +156,7 @@ namespace SmolEngine
 
 	Material* MaterialLibrary::GetMaterial(std::string& name)
 	{
-		auto& it = m_MaterialNames.find(name);
+		const auto& it = m_MaterialNames.find(name);
 		if (it == m_MaterialNames.end())
 			return nullptr;
 
@@ -176,7 +176,7 @@ namespace SmolEngine
 
 	int32_t MaterialLibrary::GetMaterialID(std::string& name)
 	{
-		auto& it = m_MaterialNames.find(name);
+		const auto& it = m_MaterialNames.find(name);
 		if (it == m_MaterialNames.end())
 			return 0;
 

@@ -239,61 +239,6 @@ namespace SmolEngine
 
 			if (m_FileBrowser->HasSelected())
 			{
-
-				auto FilePath = m_FileBrowser->GetSelected().u8string();
-				auto FileName = m_FileBrowser->GetSelected().filename().u8string();
-
-				switch (m_SelectionState)
-				{
-				case AnimationPanelSelectionState::NewFrame:
-				{
-					for (auto item : m_FileBrowser->GetMultiSelected())
-					{
-						FilePath = item.u8string();
-						FileName = item.filename().u8string();
-
-						m_SelectedFrame = std::make_shared<Animation2DFrameKey>();
-						m_AnimationClip->m_Frames[static_cast<int>(m_AnimationClip->m_Frames.size())] = m_SelectedFrame;
-
-						m_SelectedFrame->Texture = Texture::Create(FilePath);
-						m_SelectedFrame->TexturePath = FilePath;
-						m_SelectedFrame->FileName = FileName;
-
-						m_SelectedFrame = nullptr;
-						m_FileBrowser->ClearSelected();
-					}
-
-					m_SelectionState = AnimationPanelSelectionState::None;
-					break;
-				}
-				case AnimationPanelSelectionState::NewSprite:
-				{
-					m_SelectedFrame->Texture = Texture::Create(FilePath);
-					m_SelectedFrame->TexturePath = FilePath;
-					m_SelectedFrame->FileName = FileName;
-
-					m_SelectedFrame = nullptr;
-					m_FileBrowser->ClearSelected();
-
-					m_SelectionState = AnimationPanelSelectionState::None;
-					break;
-				}
-
-				case AnimationPanelSelectionState::Save:
-				{
-					Save(FilePath);
-					m_SelectionState = AnimationPanelSelectionState::None;
-					break;
-				}
-				case AnimationPanelSelectionState::Load:
-				{
-					Load(FilePath);
-					m_SelectionState = AnimationPanelSelectionState::None;
-					break;
-				}
-				default:
-					break;
-				}
 			}
 		}
 		else

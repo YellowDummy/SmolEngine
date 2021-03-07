@@ -404,7 +404,7 @@ namespace SmolEngine
 		const auto& group = registry.view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
-			auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
+			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
 			auto& b2Pos = body2D.Body.m_Body->GetTransform();
 
 			transform.WorldPos = { b2Pos.p.x, b2Pos.p.y, transform.WorldPos.z };

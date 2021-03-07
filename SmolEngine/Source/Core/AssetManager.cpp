@@ -161,7 +161,7 @@ namespace SmolEngine
 		{
 			if (dirEntry.path().filename().stem() == fileName)
 			{
-				pathToChange = dirEntry.path().u8string();
+				pathToChange = dirEntry.path().string();
 				return true;
 			}
 		}
@@ -170,7 +170,7 @@ namespace SmolEngine
 		{
 			if (dirEntry.path().filename() == fileName)
 			{
-				pathToChange = dirEntry.path().u8string();
+				pathToChange = dirEntry.path().string();
 				return true;
 			}
 		}

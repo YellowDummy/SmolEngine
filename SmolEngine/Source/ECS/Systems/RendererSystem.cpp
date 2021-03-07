@@ -52,7 +52,7 @@ namespace SmolEngine
 			const auto& pGroup = registry.view<TransformComponent, PointLightComponent>();
 			for (const auto& entity : pGroup)
 			{
-				auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
+				const auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
 				if (light.bEnabled)
 				{
 					Renderer::SubmitPointLight({ transform.WorldPos + light.Offset }, light.Color, light.Constant, light.Linear, light.Exposure);
@@ -85,7 +85,7 @@ namespace SmolEngine
 			const auto& group = registry.view<TransformComponent, Light2DSourceComponent>();
 			for (const auto& entity : group)
 			{
-				auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
+				const auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
 				if (light2D.IsEnabled)
 				{
 					Renderer2D::SubmitLight2D(transform.WorldPos + glm::vec3(light2D.Offset, 0), light2D.Radius, light2D.Color, light2D.Intensity);
@@ -99,7 +99,7 @@ namespace SmolEngine
 		const auto& group = registry.view<TransformComponent, MeshComponent>();
 		for (const auto& entity : group)
 		{
-			auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
+			const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
 			if (mesh.bShow && mesh.Mesh)
 				Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh);
 		}
@@ -110,7 +110,7 @@ namespace SmolEngine
 		const auto& group = registry.view<TransformComponent, Texture2DComponent>();
 		for (const auto& entity : group)
 		{
-			auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
+			const auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
 
 			CheckLayerIndex(texture2D.LayerIndex);
 			if (texture2D.Enabled && texture2D.Texture != nullptr)
@@ -126,7 +126,7 @@ namespace SmolEngine
 		const auto& group = registry.view<TransformComponent, Animation2DComponent>();
 		for (const auto& entity : group)
 		{
-			auto& [transform, anim] = group.get<TransformComponent, Animation2DComponent>(entity);
+			const auto& [transform, anim] = group.get<TransformComponent, Animation2DComponent>(entity);
 
 			if (anim.CurrentClip)
 			{
@@ -146,7 +146,7 @@ namespace SmolEngine
 		const auto& group = registry.view<CanvasComponent>();
 		for (const auto& entity : group)
 		{
-			auto& canvas = group.get<CanvasComponent>(entity);
+			const auto& canvas = group.get<CanvasComponent>(entity);
 			UISystem::DrawAllElements(canvas, cameraTransform->WorldPos, camera->ZoomLevel);
 		}
 	}
@@ -169,7 +169,7 @@ namespace SmolEngine
 		const auto& group = registry.view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
-			auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
+			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
 			const auto& body = body2D.Body;
 
 			if (!body2D.ShowShape)

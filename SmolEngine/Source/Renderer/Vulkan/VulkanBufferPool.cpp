@@ -10,7 +10,7 @@ namespace SmolEngine
 	void VulkanBufferPool::Add(size_t size, uint32_t binding, VkMemoryPropertyFlags mem, VkBufferUsageFlags usage, 
 		VkDescriptorBufferInfo& outDescriptorBufferInfo)
 	{
-		auto& it = m_Buffers.find(binding);
+		const auto& it = m_Buffers.find(binding);
 		if (it == m_Buffers.end())
 		{
 			Ref<BufferObject> object = std::make_shared<BufferObject>();
@@ -35,7 +35,7 @@ namespace SmolEngine
 
 	VulkanBuffer* VulkanBufferPool::GetBuffer(uint32_t binding)
 	{
-		auto& it = m_Buffers.find(binding);
+		const auto& it = m_Buffers.find(binding);
 		if (it == m_Buffers.end())
 			return nullptr;
 

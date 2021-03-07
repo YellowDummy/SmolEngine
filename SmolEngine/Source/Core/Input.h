@@ -31,13 +31,13 @@ namespace SmolEngine
 			return state == GLFW_PRESS;
 		}
 
-		inline static float Input::GetMouseX()
+		inline static float GetMouseX()
 		{
 			auto [x, y] = GetMousePosition();
 			return x;
 		}
 
-		inline static float Input::GetMouseY()
+		inline static float GetMouseY()
 		{
 			auto [x, y] = GetMousePosition();
 			return y;
@@ -64,7 +64,7 @@ namespace SmolEngine
 
 	private:
 
-		inline static std::pair<float, float> Input::GetMousePosition()
+		inline static std::pair<float, float> GetMousePosition()
 		{
 			auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
 			double xpos, ypos;

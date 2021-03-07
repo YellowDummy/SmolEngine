@@ -134,7 +134,7 @@ namespace SmolEngine
 	{
 		auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_AssetMap;
 
-		auto& result = assetMap.find(m_TetxureName);
+		const auto& result = assetMap.find(m_TetxureName);
 		if (result != assetMap.end())
 		{
 			m_Texture = Texture::Create(result->second);

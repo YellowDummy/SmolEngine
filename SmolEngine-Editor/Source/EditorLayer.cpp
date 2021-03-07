@@ -196,7 +196,7 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("New"))
 					{
-						auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						const auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -214,7 +214,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Save as"))
 					{
-						auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						const auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -227,7 +227,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Load"))
 					{
-						auto& result = FileDialog::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
+						const auto& result = FileDialog::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -296,7 +296,8 @@ namespace SmolEngine
 
 				if (ImGui::MenuItem("Windows"))
 				{
-					m_BuildPanel->Load("../Config/ProjectConfig.smolconfig");
+					const std::string path = "../Config/ProjectConfig.smolconfig";
+					m_BuildPanel->Load(path);
 					showBuildPanel = true;
 				}
 
@@ -968,7 +969,7 @@ namespace SmolEngine
 
 				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
 
-				auto& frameBuffer = GraphicsContext::GetSingleton()->GetFramebuffer();
+				const auto& frameBuffer = GraphicsContext::GetSingleton()->GetFramebuffer();
 				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
@@ -1566,7 +1567,7 @@ namespace SmolEngine
 
 		if (ImGui::Button("Load Mesh", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 		{
-			auto& result = FileDialog::OpenFile("glTF (*.glb)\0*.glb\0FBX (*.fbx)\0*.fbx\0OBJ (*.obj)\0*.obj\0");
+			const auto& result = FileDialog::OpenFile("glTF (*.glb)\0*.glb\0FBX (*.fbx)\0*.fbx\0OBJ (*.obj)\0*.obj\0");
 			if (result.has_value())
 			{
 				meshComponent->MaterialNames.clear();
@@ -1635,7 +1636,7 @@ namespace SmolEngine
 						std::string id = name + "IDMat";
 						ImGui::PushID(id.c_str());
 						{
-							auto& matName = MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID());
+							const auto& matName = MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID());
 							if (matName.has_value())
 								ImGui::Extensions::Text("Material Name", matName.value());
 
@@ -1644,11 +1645,12 @@ namespace SmolEngine
 							if (ImGui::Button("Select Material"))
 							{
 								MaterialCreateInfo materialCI = {};
-								auto& result = FileDialog::OpenFile("");
+								const auto& result = FileDialog::OpenFile("");
 								if (result.has_value())
 								{
-									MaterialLibrary::GetSinglenton()->Load(result.value(), materialCI);
-									if (!CommandSystem::SetMeshMaterial(meshComponent, mesh, &materialCI, result.value()))
+									std::string value = result.value();
+									MaterialLibrary::GetSinglenton()->Load(value, materialCI);
+									if (!CommandSystem::SetMeshMaterial(meshComponent, mesh, &materialCI, value))
 									{
 										CONSOLE_ERROR("Could not set material!");
 									}
@@ -1677,8 +1679,6 @@ namespace SmolEngine
 	{
 		if (m_FileBrowser->HasSelected())
 		{
-			m_FilePath = m_FileBrowser->GetSelected().u8string();
-			m_FileName = m_FileBrowser->GetSelected().filename().u8string();
 
 			switch (m_FileBrowserState)
 			{

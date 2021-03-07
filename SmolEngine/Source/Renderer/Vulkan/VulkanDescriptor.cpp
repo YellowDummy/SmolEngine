@@ -96,7 +96,7 @@ namespace SmolEngine
 				type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 				usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 
-				auto& it = shader->m_Info.StorageBuffersSizes.find(buffer.BindingPoint);
+				const auto& it = shader->m_Info.StorageBuffersSizes.find(buffer.BindingPoint);
 				if (it != shader->m_Info.StorageBuffersSizes.end())
 					dataSize = it->second;
 				else

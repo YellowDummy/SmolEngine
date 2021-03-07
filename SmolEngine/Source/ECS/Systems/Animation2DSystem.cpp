@@ -159,7 +159,7 @@ namespace SmolEngine
 		file.close();
 
 		// Creating new clip
-		auto& Clip = std::make_shared<AnimationClip2D>();
+		const auto& Clip = std::make_shared<AnimationClip2D>();
 		if (anim.m_Clips.size() == 0)
 		{
 			Clip->m_bIsDefaultClip = true;
@@ -176,7 +176,7 @@ namespace SmolEngine
 		// Loading Textures
 		for (auto& [value, frame] : Clip->m_Frames)
 		{
-			auto& result = assetMap.find(frame->FileName);
+			const auto& result = assetMap.find(frame->FileName);
 			if (result != assetMap.end())
 			{
 				frame->Texture = Texture::Create(result->second);
@@ -210,14 +210,14 @@ namespace SmolEngine
 
 	bool Animation2DSystem::RenameClip(Animation2DComponent& anim, const std::string& keyName, const std::string& newName)
 	{
-		auto& searchNewName = anim.m_Clips.find(newName);
+		const auto& searchNewName = anim.m_Clips.find(newName);
 		if (searchNewName != anim.m_Clips.end())
 		{
 			NATIVE_WARN("Animation2D: clip <{}> already exist!", newName);
 			return false;
 		}
 
-		auto& search = anim.m_Clips.find(keyName);
+		const auto& search = anim.m_Clips.find(keyName);
 		if (search != anim.m_Clips.end())
 		{
 			Ref<AnimationClip2D> clipRef = search->second;

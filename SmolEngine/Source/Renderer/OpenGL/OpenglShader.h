@@ -62,7 +62,7 @@ namespace SmolEngine
 
 		void CompileShader(const std::unordered_map<GLenum, std::string>& shaderSources);
 
-		std::unordered_map<GLenum, std::string> OpenglShader::PreProcess(const std::string& source);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
 
 	private:
 

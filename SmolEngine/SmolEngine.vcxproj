@@ -96,12 +96,12 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MDd /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,7 +120,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/MD /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,12 +148,12 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_OPENGL_IMPL;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MDd /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,7 +172,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -180,7 +180,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/MD /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

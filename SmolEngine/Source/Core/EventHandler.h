@@ -32,7 +32,7 @@ namespace SmolEngine
 	public:
 
 		bool m_Handled = false;
-		int m_EventType = -1, m_EventCategory = -1, m_Action = -1, m_Key = -1;
+		uint32_t m_EventType = -1, m_EventCategory = -1, m_Action = -1, m_Key = -1;
 	};
 
 	class EventHandler

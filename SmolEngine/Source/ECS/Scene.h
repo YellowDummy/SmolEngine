@@ -4,6 +4,7 @@
 #include "Core/SLog.h"
 
 #include "ECS/SceneData.h"
+#include "ECS/Actor.h"
 
 namespace SmolEngine
 {

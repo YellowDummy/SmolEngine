@@ -1,3 +1,4 @@
+
 workspace "SmolEngine"
 	architecture "x64"
 	startproject "SmolEngine-Editor"
@@ -25,6 +26,7 @@ IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src"
 IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
 IncludeDir["imgizmo"] = "SmolEngine/Libraries/imgizmo/src"
 IncludeDir["ktx"] = "SmolEngine/Libraries/ktx/include"
+IncludeDir["meta"] = "SmolEngine/Libraries/meta"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -42,7 +44,7 @@ project "SmolEngine"
 	location "SmolEngine"
 	kind "StaticLib"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++20"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -94,7 +96,8 @@ project "SmolEngine"
 		"%{IncludeDir.rttr}",
 		"%{IncludeDir.vulkan}",
 		"%{IncludeDir.imgizmo}",
-		"%{IncludeDir.ktx}"
+		"%{IncludeDir.ktx}",
+		"%{IncludeDir.meta}"
 	}
 
 	links 
@@ -252,7 +255,7 @@ project "GameX"
 	location "GameX"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++20"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -342,7 +345,7 @@ project "GameX"
 	location "SmolEngine-Editor"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++20"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")

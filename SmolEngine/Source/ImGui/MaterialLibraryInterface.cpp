@@ -36,10 +36,11 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("Save as"))
 					{
-						auto& result = FileDialog::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
+						const auto& result = FileDialog::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
 						if (result.has_value())
 						{
-							if(MaterialLibrary::GetSinglenton()->Save(result.value(), m_MaterialCI))
+							std::string value = result.value();
+							if(MaterialLibrary::GetSinglenton()->Save(value, m_MaterialCI))
 								Reset();
 						}
 					}
@@ -47,10 +48,11 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Load"))
 					{
 						Reset();
-						auto& result = FileDialog::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
+						const auto& result = FileDialog::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
 						if (result.has_value())
 						{
-							MaterialLibrary::GetSinglenton()->Load(result.value(), m_MaterialCI);
+							std::string value = result.value();
+							MaterialLibrary::GetSinglenton()->Load(value, m_MaterialCI);
 							m_Buffer.albedro = m_MaterialCI.Textures[MaterialTexture::Albedro];
 							m_Buffer.normal = m_MaterialCI.Textures[MaterialTexture::Normal];
 							m_Buffer.metallic = m_MaterialCI.Textures[MaterialTexture::Metallic];
@@ -249,7 +251,7 @@ namespace SmolEngine
 		ImGui::SameLine();
 		if(ImGui::SmallButton("Add"))
 		{
-			auto& result = FileDialog::OpenFile("");
+			const auto& result = FileDialog::OpenFile("");
 			if (result.has_value())
 				dummy = result.value();
 		}

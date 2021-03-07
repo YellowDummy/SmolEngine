@@ -144,7 +144,7 @@ namespace SmolEngine
 		const auto& cameraGroup = registry.view<CameraComponent, TransformComponent>();
 		for (const auto& entity : cameraGroup)
 		{
-			auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
+			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
 
 			// There is no need to render the scene if the camera is not our target or is disabled
 			if (!camera.isPrimaryCamera || !camera.isEnabled) { continue; }

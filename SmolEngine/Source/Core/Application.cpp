@@ -153,10 +153,13 @@ namespace SmolEngine
 		}
 	}
 
-	void Application::OnEvent(SmolEngine::Event& event)
+	void Application::OnEvent(Event& event)
 	{
-		S_BIND_EVENT_TYPE(Application, OnWindowClose, EventType::S_WINDOW_CLOSE, event);
-		S_BIND_EVENT_TYPE(Application, OnWindowResize, EventType::S_WINDOW_RESIZE, event);
+		if (event.m_EventType == (uint32_t)EventType::S_WINDOW_CLOSE)
+			OnWindowClose(event);
+
+		if (event.m_EventType == (uint32_t)EventType::S_WINDOW_RESIZE)
+			OnWindowResize(event);
 
 		// Sending Events To The Layer Stack
 		for (auto result = m_LayerHandler->end(); result != m_LayerHandler->begin();)
@@ -184,26 +187,22 @@ namespace SmolEngine
 
 	}
 
-	bool Application::OnWindowClose(Event& e)
+	void Application::OnWindowClose(Event& e)
 	{
 		CloseApp();
-
-		return true;
 	}
 
-	bool Application::OnWindowResize(Event& event)
+	void Application::OnWindowResize(Event& event)
 	{
 		auto& e = static_cast<WindowResizeEvent&>(event);
 		if (e.GetHeight() == 0 || e.GetWidth() == 0)
 		{
-			m_WindowMinimized = true; return false;
+			m_WindowMinimized = true; 
+			return;
 		}
 
 		m_WindowMinimized = false; 
 		m_Window->ResizeContext(e.GetHeight(), e.GetWidth());
-
-		// No need to block this event
-		return false;
 	}
 
 	void Application::GetAppName(std::string& outName)

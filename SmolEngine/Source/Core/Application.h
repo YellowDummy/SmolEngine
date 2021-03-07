@@ -47,9 +47,9 @@ namespace SmolEngine
 
 		/// Callbacks
 
-		bool OnWindowResize(Event& e);
+		void OnWindowResize(Event& e);
 
-		bool OnWindowClose(Event& e);
+		void OnWindowClose(Event& e);
 
 		/// Overrides
 

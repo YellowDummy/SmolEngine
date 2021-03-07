@@ -762,7 +762,7 @@ namespace SmolEngine
 
 	Attachment* VulkanFramebuffer::GetAttachment(std::string& name)
 	{
-		auto& it = m_AttachmentsMap.find(name);
+		const auto& it = m_AttachmentsMap.find(name);
 		if (it != m_AttachmentsMap.end())
 			return &m_Attachments[it->second];
 

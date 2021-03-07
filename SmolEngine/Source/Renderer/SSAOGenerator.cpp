@@ -31,7 +31,7 @@ namespace SmolEngine
 		}
 
 		// Create Noice Texture
-		out_NoiseTexture = Texture::Create(noise.data(), noise.size() * sizeof(glm::vec4), 4, 4, TextureFormat::R32G32B32A32_SFLOAT);
+		out_NoiseTexture = Texture::Create(noise.data(), static_cast<uint32_t>(noise.size() * sizeof(glm::vec4)), 4, 4, TextureFormat::R32G32B32A32_SFLOAT);
 	}
 
 	float SSAOGenerator::Lerp(float a, float b, float f)

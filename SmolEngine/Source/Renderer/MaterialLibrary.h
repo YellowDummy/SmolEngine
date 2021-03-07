@@ -68,7 +68,7 @@ namespace SmolEngine
 
 		std::optional<std::string> GetMaterialName(int32_t id);
 
-		Material* GetMaterial(uint32_t ID);
+		Material* GetMaterial(int32_t ID);
 
 		Material* GetMaterial(std::string& name);
 

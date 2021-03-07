@@ -50,7 +50,7 @@ namespace SmolEngine
 
 	Ref<Actor> Scene::FindActorByName(const std::string& name)
 	{
-		auto& result = m_IDSet.find(name);
+		const auto& result = m_IDSet.find(name);
 		if (result == m_IDSet.end())
 			return nullptr;
 
@@ -74,7 +74,7 @@ namespace SmolEngine
 
 	Ref<Actor> Scene::FindActorByID(const uint32_t id)
 	{
-		auto& result = m_SceneData.m_ActorPool.find(id);
+		const auto& result = m_SceneData.m_ActorPool.find(id);
 		if (result != m_SceneData.m_ActorPool.end())
 			return result->second;
 
