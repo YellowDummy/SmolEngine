@@ -7,17 +7,11 @@
 namespace SmolEngine
 {
 	struct Animation2DComponent;
-
 	struct AnimationClip2D;
-
-	///
 
 	class Animation2DSystem
 	{
 	public:
-
-		Animation2DSystem() = default;
-
 
 		static void Play(const std::string& clipName, Animation2DComponent& anim);
 

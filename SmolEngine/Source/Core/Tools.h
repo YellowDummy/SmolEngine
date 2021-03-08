@@ -64,6 +64,16 @@ public:
 		m_StartTime = std::chrono::high_resolution_clock::now();
 	}
 
+	float GetTimeInSeconds()
+	{
+		auto recordEndTime = std::chrono::high_resolution_clock::now();
+
+		auto startTime = std::chrono::time_point_cast<std::chrono::seconds>(m_StartTime).time_since_epoch().count();
+		auto endTime = std::chrono::time_point_cast<std::chrono::seconds>(recordEndTime).time_since_epoch().count();
+
+		return static_cast<float>(endTime - startTime);
+	}
+
 	size_t GetTimeInMiliseconds()
 	{
 		auto recordEndTime = std::chrono::high_resolution_clock::now();

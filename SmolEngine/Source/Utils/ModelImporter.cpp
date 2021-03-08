@@ -6,6 +6,8 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace SmolEngine
 {
     // TODO: Add materials
@@ -43,7 +45,14 @@ namespace SmolEngine
         return tmp;
     }
 
-    void LoadBones( std::map<std::string, uint32_t>& BoneMapping, const aiMesh* pMesh, ImportedComponent& comp)
+    glm::vec3 vec3_cast(const aiVector3D& v) { return glm::vec3(v.x, v.y, v.z); }
+    glm::vec2 vec2_cast(const aiVector3D& v) { return glm::vec2(v.x, v.y); } // it's aiVector3D because assimp's texture coordinates use that
+    glm::quat quat_cast(const aiQuaternion& q) { return glm::quat(q.w, q.x, q.y, q.z); }
+    glm::mat4 mat4_cast(const aiMatrix4x4& m) { return glm::transpose(glm::make_mat4(&m.a1)); }
+    glm::mat4 mat4_cast(const aiMatrix3x3& m) { return glm::transpose(glm::make_mat3(&m.a1)); }
+
+    void LoadBones( std::map<std::string, uint32_t>& BoneMapping, const aiMesh* pMesh, uint32_t& numBones, 
+        std::vector<SkeletalAnimationClip::BoneInfo>& boneIbfo, ImportedComponent& comp)
     {
         for (uint32_t i = 0; i < pMesh->mNumBones; i++) {
 
@@ -52,13 +61,10 @@ namespace SmolEngine
 
             if (BoneMapping.find(BoneName) == BoneMapping.end())
             {
-                boneIndex = comp.NumBones;
-                comp.NumBones++;
-
-                BoneInfo bi;
-                bi.BoneOffset = AiToGLMMat4(pMesh->mBones[i]->mOffsetMatrix);
-                comp.BoneInfo.push_back(bi);
-                BoneMapping[BoneName] = boneIndex;
+                boneIndex = numBones;
+                numBones++;
+                SkeletalAnimationClip::BoneInfo bi;
+                boneIbfo.push_back(bi);
             }
             else
             {
@@ -66,6 +72,7 @@ namespace SmolEngine
             }
 
             BoneMapping[BoneName] = boneIndex;
+            boneIbfo[boneIndex].BoneOffset = AiToGLMMat4(pMesh->mBones[i]->mOffsetMatrix);
 
             for (uint32_t j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
 
@@ -131,8 +138,7 @@ namespace SmolEngine
             //Bones
             if (mesh->HasBones())
             {
-                out_data->BoneMapping.clear();
-                LoadBones(out_data->BoneMapping, mesh, component);
+                LoadBones(out_data->BoneMapping, mesh, out_data->NumBones, out_data->BoneInfo, component);
             }
 
             for (uint32_t x = 0; x < mesh->mNumFaces; ++x)
@@ -147,17 +153,11 @@ namespace SmolEngine
         out_data->Components.emplace_back(component);
     }
 
-    bool ModelImporter::Load(const std::string& filePath, ImportedData* out_data)
+    bool ModelImporter::Load(const std::string& filePath, ImportedData* out_data, ModelImporterFlags flags)
     {
         Assimp::Importer importer;
         const aiScene* g_scene = importer.ReadFile(filePath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
         auto meshes = g_scene->mMeshes;
-
-        out_data->Animations.resize(g_scene->mNumAnimations);
-        for (uint32_t i = 0; i < g_scene->mNumAnimations; ++i)
-        {
-            auto animation = g_scene->mAnimations[i];
-        }
 
         uint32_t childsCount = 0;
         for (uint32_t i = 0; i < g_scene->mRootNode->mNumChildren; ++i)
@@ -190,6 +190,53 @@ namespace SmolEngine
                 if (child->mNumMeshes > 0)
                     ProcessMesh(meshes, child, out_data);
             }
+        }
+
+        if (g_scene->mNumAnimations > 0)
+        {
+            auto animationRef = g_scene->mAnimations[0];
+            auto& animClip = out_data->AnimationClip;
+
+            animClip.Duration = animationRef->mDuration;
+            animClip.Name = animationRef->mName.C_Str();
+            animClip.TicksPerSecond = animationRef->mTicksPerSecond;
+
+            for (uint32_t i = 0; i < animationRef->mNumChannels; ++i)
+            {
+                auto channel = animationRef->mChannels[0]; // temp
+                {
+                    uint32_t scaleCount = channel->mNumScalingKeys;
+                    uint32_t posCount = channel->mNumPositionKeys;
+                    uint32_t rotationCount = channel->mNumRotationKeys;
+
+                    animClip.TransformKeys.resize(posCount);
+                    for (uint32_t p = 0; p < posCount; ++p)
+                    {
+                        animClip.TransformKeys[p].Time = channel->mPositionKeys[p].mTime;
+                        animClip.TransformKeys[p].Value = vec3_cast(channel->mPositionKeys[p].mValue);
+                    }
+
+                    animClip.ScaleKeys.resize(scaleCount);
+                    for (uint32_t s = 0; s < scaleCount; ++s)
+                    {
+                        animClip.ScaleKeys[s].Time = channel->mScalingKeys[s].mTime;
+                        animClip.ScaleKeys[s].Value = vec3_cast(channel->mScalingKeys[s].mValue);
+                    }
+
+                    animClip.RotationKeys.resize(rotationCount);
+                    for (uint32_t r = 0; r < rotationCount; ++r)
+                    {
+                        animClip.RotationKeys[r].Time = channel->mRotationKeys[r].mTime;
+                        animClip.RotationKeys[r].Value = quat_cast(channel->mRotationKeys[r].mValue);
+                    }
+
+                }
+
+                break; // temp
+            }
+
+            out_data->AnimationClip.BoneInfos = std::move(out_data->BoneInfo);
+            out_data->AnimationClip.BoneMapping = std::move(out_data->BoneMapping);
         }
 
         return true;

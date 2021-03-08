@@ -1272,6 +1272,9 @@
     <ClInclude Include="Source\ECS\Components\Animation2DComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\Components\AnimatorComponent.h">
+      <Filter>Source\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ECS\Components\AudioSourceComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
@@ -1626,6 +1629,8 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\Systems\AnimationSystem.h" />
+    <ClInclude Include="Source\Animation\SkeletalAnimationClip.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1642,12 +1647,6 @@
     </ClCompile>
     <ClCompile Include="Libraries\stb_image\stb_image.cpp">
       <Filter>Libraries\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Animation\Animation2DFrameKey.cpp">
-      <Filter>Source\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Animation\AnimationClip2D.cpp">
-      <Filter>Source\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\AudioClip.cpp">
       <Filter>Source\Audio</Filter>
@@ -1689,6 +1688,9 @@
       <Filter>Source\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Animation2DComponent.cpp">
+      <Filter>Source\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Components\AnimatorComponent.cpp">
       <Filter>Source\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\AudioSourceComponent.cpp">
@@ -1997,5 +1999,6 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ECS\Systems\AnimationSystem.cpp" />
   </ItemGroup>
 </Project>

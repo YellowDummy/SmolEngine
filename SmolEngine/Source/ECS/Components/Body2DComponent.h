@@ -19,11 +19,11 @@ namespace SmolEngine
 		
 		Body2DComponent(Ref<Actor> actor, int type);
 
-		/// Data
+		// Data
 
-		Body2D Body;
-		uint32_t ActorID = 0;
-		bool ShowShape = true;
+		Body2D           Body;
+		uint32_t         ActorID = 0;
+		bool             ShowShape = true;
 
 	private:
 
