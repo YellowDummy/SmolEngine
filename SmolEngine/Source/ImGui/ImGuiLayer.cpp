@@ -15,7 +15,7 @@
 
 #include "Core/Window.h"
 #include "Core/EventHandler.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "ImGui/ImPlot/implot.h"
 #include "IconsFontAwesome5.h"
 #include "ImGuizmo.h"
@@ -133,7 +133,7 @@ namespace SmolEngine
 		io.Fonts->AddFontFromFileTTF("../../Resources/Fonts/Font1.ttf", 17.0f, &config);
 #endif
 
-		Application& app = Application::GetApplication();
+		Engine& app = Engine::GetEngine();
 		GLFWwindow* EditorWindow = app.GetWindow().GetNativeWindow();
 
 #ifdef  SMOLENGINE_OPENGL_IMPL

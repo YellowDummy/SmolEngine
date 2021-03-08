@@ -143,13 +143,13 @@ namespace SmolEngine
 				Data.Width = width;
 
 				WindowResizeEvent resizeEvent(Data);
-				Data.m_EventHandler->SendEvent(resizeEvent, EventType::S_WINDOW_RESIZE, EventCategory::S_EVENT_APPLICATION);
+				Data.m_EventHandler->SendEvent(resizeEvent, EventType::S_WINDOW_RESIZE, EventCategory::S_EVENT_Engine);
 		});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) 
 		{
 				WindowCloseEvent closeEvent;
-				Data.m_EventHandler->SendEvent(closeEvent, EventType::S_WINDOW_CLOSE, EventCategory::S_EVENT_APPLICATION);
+				Data.m_EventHandler->SendEvent(closeEvent, EventType::S_WINDOW_CLOSE, EventCategory::S_EVENT_Engine);
 		});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow * window, int key, int scancode, int action, int mods)

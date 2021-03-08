@@ -5,7 +5,7 @@
 #include "glad/glad.h"
 #include "Core/SLog.h"
 
-#include "Core/Application.h"
+#include "Core/Engine.h"
 
 namespace SmolEngine 
 {

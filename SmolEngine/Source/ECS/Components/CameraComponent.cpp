@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "CameraComponent.h"
 
-#include "Core/Application.h"
+#include "Core/Engine.h"
 
 namespace SmolEngine
 {
 	CameraComponent::CameraComponent()
 	{
-		AspectRatio = (float)Application::GetApplication().GetWindowWidth() / (float)Application::GetApplication().GetWindowHeight();
+		AspectRatio = (float)Engine::GetEngine().GetWindowWidth() / (float)Engine::GetEngine().GetWindowHeight();
 	}
 }

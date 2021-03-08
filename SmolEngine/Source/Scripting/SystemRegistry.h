@@ -70,7 +70,7 @@ namespace SmolEngine
 		static SystemRegistry* Instance;
 		std::unordered_map<std::string, std::string> m_SystemMap;
 
-		friend class Application;
+		friend class Engine;
 		friend class WorldAdmin;
 		friend class Scene;
 		friend class EditorLayer;

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "Core/SLog.h"
 #include "Core/Tools.h"
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "Core/Layer.h"
 #include "Core/InputCodes.h"
-#include "Core/EngineCommand.h"
+#include "Core/EntryPoint.h"
 
 #include "Events/ApplicationEvent.h"
 #include "Events/InputEvent.h"

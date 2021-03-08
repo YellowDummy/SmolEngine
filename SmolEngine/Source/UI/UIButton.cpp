@@ -3,7 +3,7 @@
 
 #include "Renderer/Renderer2D.h"
 #include "ECS/WorldAdmin.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "Core/Window.h"
 
 namespace SmolEngine
@@ -74,7 +74,7 @@ namespace SmolEngine
 		minY = static_cast<uint32_t>((y - (m_Size.y * 50.0f)));
 
 #else
-		auto& app = Application::GetApplication();
+		auto& app = Engine::GetEngine();
 
 		const float width = app.GetWindow().GetHeight();
 		const float height = app.GetWindow().GetWidth();

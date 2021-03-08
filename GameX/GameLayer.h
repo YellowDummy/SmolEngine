@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Core/Layer.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "ECS/WorldAdmin.h"
 
 class GameLayer : public SmolEngine::Layer

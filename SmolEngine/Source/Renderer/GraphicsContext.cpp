@@ -29,8 +29,8 @@ namespace SmolEngine
 
 		FramebufferSpecification framebufferCI = {};
 		{
-			framebufferCI.Width = Application::GetApplication().GetWindowWidth();
-			framebufferCI.Height = Application::GetApplication().GetWindowHeight();
+			framebufferCI.Width = Engine::GetEngine().GetWindowWidth();
+			framebufferCI.Height = Engine::GetEngine().GetWindowHeight();
 			framebufferCI.bUseMSAA = info.bMSAA;
 			framebufferCI.bTargetsSwapchain = info.bTargetsSwapchain;
 			framebufferCI.bUsedByImGui = true;

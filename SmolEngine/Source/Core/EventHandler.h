@@ -5,7 +5,7 @@
 
 namespace SmolEngine 
 {
-	class Application;
+	class Engine;
 
 	enum class EventType: uint32_t
 	{
@@ -18,7 +18,7 @@ namespace SmolEngine
 	enum class EventCategory: uint32_t
 	{
 		S_EVENT_NONE = 0,
-		S_EVENT_KEYBOARD, S_EVENT_MOUSE, S_EVENT_APPLICATION,
+		S_EVENT_KEYBOARD, S_EVENT_MOUSE, S_EVENT_Engine,
 	};
 
 	class Event

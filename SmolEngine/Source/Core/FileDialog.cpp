@@ -20,7 +20,7 @@ namespace SmolEngine
 		CHAR currentDir[256] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::GetApplication().GetWindow().GetNativeWindow());
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Engine::GetEngine().GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		if (GetCurrentDirectoryA(256, currentDir))
@@ -49,7 +49,7 @@ namespace SmolEngine
 		CHAR currentDir[256] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::GetApplication().GetWindow().GetNativeWindow());
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Engine::GetEngine().GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		if (GetCurrentDirectoryA(256, currentDir))

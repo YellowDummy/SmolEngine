@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Application.h"
+#include "Engine.h"
 #include "GLFW/glfw3.h"
 
 #include "Core/Tools.h"
@@ -14,20 +14,20 @@
 
 namespace SmolEngine 
 {
-	Application* Application::s_Instance = nullptr;
+	Engine* Engine::s_Instance = nullptr;
 
-	Application::Application()
+	Engine::Engine()
 	{
 		if (s_Instance != nullptr) 
 		{
-			NATIVE_ERROR("Application already instantiated");
+			NATIVE_ERROR("Engine already instantiated");
 			abort();
 		}
 
 		s_Instance = this;
 	}
 
-	Application::~Application()
+	Engine::~Engine()
 	{
 		NATIVE_INFO("State : Shutdown");
 
@@ -35,7 +35,7 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
-	void Application::InitApp()
+	void Engine::Init()
 	{
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
@@ -52,7 +52,7 @@ namespace SmolEngine
 		m_EventHandler = std::make_shared<EventHandler>();
 
 		// Binding Callbacks
-		m_EventHandler->OnEventFn = std::bind(&Application::OnEvent, this, std::placeholders::_1);
+		m_EventHandler->OnEventFn = std::bind(&Engine::OnEvent, this, std::placeholders::_1);
 
 		// Initializing LayerManager and Related Classes
 		m_LayerHandler = std::make_shared<LayerManager>();
@@ -83,7 +83,7 @@ namespace SmolEngine
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
-		ClientInit();
+		OnEngineInitialized();
 
 		//----------------------CLIENT-SIDE-INITIALIZATION----------------------//
 
@@ -93,13 +93,12 @@ namespace SmolEngine
 #endif
 		timer.StopTimer();
 		NATIVE_INFO("Initialized successfully");
-
 		m_Running = true;
 		// Starting Main Loop
-		RunApp();
+		Run();
 	}
 
-	void Application::CloseApp()
+	void Engine::Shutdown()
 	{
 		NATIVE_INFO("State : Shutdown");
 
@@ -110,7 +109,7 @@ namespace SmolEngine
 		exit(0);
 	}
 
-	void Application::RunApp()
+	void Engine::Run()
 	{
 		NATIVE_INFO("State = Runtime");
 		while (m_Running)
@@ -153,7 +152,7 @@ namespace SmolEngine
 		}
 	}
 
-	void Application::OnEvent(Event& event)
+	void Engine::OnEvent(Event& event)
 	{
 		if (event.m_EventType == (uint32_t)EventType::S_WINDOW_CLOSE)
 			OnWindowClose(event);
@@ -172,27 +171,27 @@ namespace SmolEngine
 		}
 	}
 
-	void Application::PushLayer(Layer* layer)
+	void Engine::PushLayer(Layer* layer)
 	{
 		m_LayerHandler->AddLayer(layer);
 	}
 
-	void Application::PushOverlay(Layer* layer)
+	void Engine::PushOverlay(Layer* layer)
 	{
 		m_LayerHandler->AddOverlay(layer);
 	}
 
-	void Application::PopLayer()
+	void Engine::PopLayer()
 	{
 
 	}
 
-	void Application::OnWindowClose(Event& e)
+	void Engine::OnWindowClose(Event& e)
 	{
-		CloseApp();
+		Shutdown();
 	}
 
-	void Application::OnWindowResize(Event& event)
+	void Engine::OnWindowResize(Event& event)
 	{
 		auto& e = static_cast<WindowResizeEvent&>(event);
 		if (e.GetHeight() == 0 || e.GetWidth() == 0)
@@ -205,7 +204,7 @@ namespace SmolEngine
 		m_Window->ResizeContext(e.GetHeight(), e.GetWidth());
 	}
 
-	void Application::GetAppName(std::string& outName)
+	void Engine::GetAppName(std::string& outName)
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 #ifdef SMOLENGINE_DEBUG
@@ -222,12 +221,12 @@ namespace SmolEngine
 #endif 
 	}
 
-	const uint32_t Application::GetWindowHeight()
+	const uint32_t Engine::GetWindowHeight()
 	{
 		return m_Window->GetHeight();
 	}
 
-	const uint32_t Application::GetWindowWidth()
+	const uint32_t Engine::GetWindowWidth()
 	{
 		return m_Window->GetWidth();
 	}

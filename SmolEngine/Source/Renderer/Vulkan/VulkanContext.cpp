@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "VulkanContext.h"
 #include "Renderer/Vulkan/VulkanRenderPass.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 
 #include <GLFW/glfw3.h>
 #include <../Libraries/imgui/examples/imgui_impl_vulkan.h>

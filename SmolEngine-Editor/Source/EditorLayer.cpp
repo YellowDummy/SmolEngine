@@ -184,7 +184,7 @@ namespace SmolEngine
 			{
 				if (ImGui::MenuItem("Close"))
 				{
-					Application::GetApplication().CloseApp();
+					Engine::GetEngine().Shutdown();
 				}
 
 				ImGui::EndMenu();

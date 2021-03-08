@@ -2,7 +2,7 @@
 #include "EditorPanels.h"
 
 #include "ECS/WorldAdmin.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "Core/SLog.h"
 
 #include "ImGui/EditorConsole.h"
@@ -24,8 +24,8 @@ namespace SmolEngine
 		if (isOpened)
 		{
 			ImGui::Begin("Settings", &isOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
-			//ImGui::SetWindowPos(ImVec2{ (float)Application::GetApplication().GetWindowWidth() / 2 - 350, 
-//(float)Application::GetApplication().GetWindowHeight() / 2 - 180 });
+			//ImGui::SetWindowPos(ImVec2{ (float)Engine::GetEngine().GetWindowWidth() / 2 - 350, 
+//(float)Engine::GetEngine().GetWindowHeight() / 2 - 180 });
 			ImGui::SetWindowSize("Settings", { 480, 380 });
 
 			static char name[128] = "Default Name";

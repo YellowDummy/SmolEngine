@@ -4,7 +4,7 @@
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"
 #include "Renderer/Framebuffer.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>

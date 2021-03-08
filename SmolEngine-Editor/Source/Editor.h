@@ -4,15 +4,11 @@
 
 namespace SmolEngine
 {
-	class Editor : public Application 
+	class Editor : public Engine
 	{
 	public:
 
-		Editor();
-
-		~Editor();
-
-		void ClientInit() override;
+		void OnEngineInitialized() override;
 	};
 
 }

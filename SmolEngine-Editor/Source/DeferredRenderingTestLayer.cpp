@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "DeferredRenderingTestLayer.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "Core/Window.h"
 #include "Core/FilePaths.h"
 
@@ -54,8 +54,8 @@ namespace SmolEngine
 		// Framebuffer Editor
 		FramebufferSpecification framebufferEditor;
 		{
-			framebufferEditor.Width = Application::GetApplication().GetWindowWidth();
-			framebufferEditor.Height = Application::GetApplication().GetWindowHeight();
+			framebufferEditor.Width = Engine::GetEngine().GetWindowWidth();
+			framebufferEditor.Height = Engine::GetEngine().GetWindowHeight();
 			framebufferEditor.bUseMSAA = true;
 			framebufferEditor.bTargetsSwapchain = true;
 			framebufferEditor.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
@@ -84,8 +84,8 @@ namespace SmolEngine
 		// SSAO Framebuffer
 		FramebufferSpecification SSAOFramebuffer = {};
 		{
-			SSAOFramebuffer.Width = Application::GetApplication().GetWindowWidth();
-			SSAOFramebuffer.Height = Application::GetApplication().GetWindowHeight();
+			SSAOFramebuffer.Width = Engine::GetEngine().GetWindowWidth();
+			SSAOFramebuffer.Height = Engine::GetEngine().GetWindowHeight();
 			SSAOFramebuffer.bUseMSAA = false;
 			SSAOFramebuffer.bTargetsSwapchain = false;
 			SSAOFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::UNORM_8, true) };
@@ -96,8 +96,8 @@ namespace SmolEngine
 		// SSAO Blur Framebuffer
 		FramebufferSpecification SSAOBlurFramebuffer = {};
 		{
-			SSAOBlurFramebuffer.Width = Application::GetApplication().GetWindowWidth();
-			SSAOBlurFramebuffer.Height = Application::GetApplication().GetWindowHeight();
+			SSAOBlurFramebuffer.Width = Engine::GetEngine().GetWindowWidth();
+			SSAOBlurFramebuffer.Height = Engine::GetEngine().GetWindowHeight();
 			SSAOBlurFramebuffer.bUseMSAA = false;
 			SSAOBlurFramebuffer.bTargetsSwapchain = false;
 			SSAOBlurFramebuffer.Attachments = { FramebufferAttachment(AttachmentFormat::UNORM_8, true) };

@@ -568,10 +568,9 @@
     <ClInclude Include="Source\Animation\SkeletalAnimationClip.h" />
     <ClInclude Include="Source\Audio\AudioClip.h" />
     <ClInclude Include="Source\Audio\AudioEngine.h" />
-    <ClInclude Include="Source\Core\Application.h" />
+    <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\AssetManager.h" />
     <ClInclude Include="Source\Core\Core.h" />
-    <ClInclude Include="Source\Core\EngineCommand.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
     <ClInclude Include="Source\Core\EventHandler.h" />
     <ClInclude Include="Source\Core\FileDialog.h" />
@@ -715,9 +714,8 @@
     <ClCompile Include="Libraries\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Audio\AudioClip.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
-    <ClCompile Include="Source\Core\Application.cpp" />
+    <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\AssetManager.cpp" />
-    <ClCompile Include="Source\Core\EngineCommand.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
     <ClCompile Include="Source\Core\FileDialog.cpp" />

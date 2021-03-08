@@ -1218,16 +1218,13 @@
     <ClInclude Include="Source\Audio\AudioEngine.h">
       <Filter>Source\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Application.h">
+    <ClInclude Include="Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\AssetManager.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\EngineCommand.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\EntryPoint.h">
@@ -1654,13 +1651,10 @@
     <ClCompile Include="Source\Audio\AudioEngine.cpp">
       <Filter>Source\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Application.cpp">
+    <ClCompile Include="Source\Core\Engine.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\AssetManager.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\EngineCommand.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EntryPoint.cpp">

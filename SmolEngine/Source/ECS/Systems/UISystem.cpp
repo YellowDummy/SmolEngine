@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UISystem.h"
 #include "Core/Window.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "Events/MouseEvent.h"
 
 #include "ECS/Components/CanvasComponent.h"
@@ -76,8 +76,8 @@ namespace SmolEngine
 
 	void UISystem::DrawAllElements(const CanvasComponent& canvas, const glm::vec3& cameraPos, const float zoomLevel)
 	{
-		float w = static_cast<float>(Application::GetApplication().GetWindowWidth());
-		float h = static_cast<float>(Application::GetApplication().GetWindowHeight());
+		float w = static_cast<float>(Engine::GetEngine().GetWindowWidth());
+		float h = static_cast<float>(Engine::GetEngine().GetWindowHeight());
 
 		glm::vec2 screenCenter = { w / 2.0f, h / 2.5f };
 
@@ -172,7 +172,7 @@ namespace SmolEngine
 
 	bool UISystem::OnMouseClick(CanvasComponent& canvas, Event& e)
 	{
-		const auto win = Application::GetApplication().GetWindow().GetNativeWindow();
+		const auto win = Engine::GetEngine().GetWindow().GetNativeWindow();
 
 		double xpos, ypos;
 		glfwGetCursorPos(win, &xpos, &ypos);

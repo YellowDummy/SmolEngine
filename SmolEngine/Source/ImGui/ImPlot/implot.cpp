@@ -3873,7 +3873,7 @@ void ShowMetricsWindow(bool* p_popen) {
     ImGuiIO& io = ImGui::GetIO();
     ImGui::Begin("ImPlot Metrics", p_popen);
     ImGui::Text("ImPlot " IMPLOT_VERSION);
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    ImGui::Text("Engine average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::Separator();
     int n_plots = gp.Plots.GetSize();
     if (ImGui::TreeNode("Tools")) {

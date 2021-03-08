@@ -17,25 +17,21 @@ namespace SmolEngine
 	class UIText;
 	class WorldAdmin;
 
-	class Application
+	class Engine
 	{
 	public:
 
-		Application(const Application&) = delete;
+		virtual ~Engine();
 
-		virtual ~Application();
-
-		Application();
+		Engine();
 
 		/// Main
 
-		void OnEvent(Event& event);
+		void Init();
 
-		void CloseApp();
+		void Shutdown();
 
-		void InitApp();
-
-		void RunApp();
+		void Run();
 
 		/// Layers
 
@@ -51,13 +47,15 @@ namespace SmolEngine
 
 		void OnWindowClose(Event& e);
 
+		void OnEvent(Event& event);
+
 		/// Overrides
 
-		virtual void ClientInit() = 0;
+		virtual void OnEngineInitialized() {};
 
 		/// Getters
 
-		static Application& GetApplication() { return *s_Instance; }
+		static Engine& GetEngine() { return *s_Instance; }
 
 		void GetAppName(std::string& outName);
 
@@ -80,10 +78,10 @@ namespace SmolEngine
 		bool                   m_WindowMinimized = false;
 		float                  m_LastFrameTime = 0.0f;
 
-		static Application*    s_Instance;
+		static Engine*    s_Instance;
 	};
 
-	Application* CreateApp(); 	// Client side 
+	Engine* CreateEngineContext();
 
 }
 

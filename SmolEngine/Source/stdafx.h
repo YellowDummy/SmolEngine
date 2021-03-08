@@ -23,7 +23,7 @@
 #include "ECS/WorldAdmin.h"
 #include "ECS/Actor.h"
 
-#include "Core/Application.h"
+#include "Core/Engine.h"
 
 #include <../../SmolEngine/Libraries/cereal/include/cereal/cereal.hpp>
 #include <../../SmolEngine/Libraries/cereal/include/cereal/types/polymorphic.hpp>

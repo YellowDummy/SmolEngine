@@ -9,11 +9,12 @@
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/TexturesPool.h"
 
+#include "Events/MouseEvent.h"
+#include "Events/ApplicationEvent.h"
+
 #include "Core/AssetManager.h"
 #include "ImGui/EditorConsole.h"
-#include "Events/MouseEvent.h"
 #include "UI/UIButton.h"
-#include "Events/ApplicationEvent.h"
 #include "Physics2D/Box2D/CollisionListener2D.h"
 #include "Scripting/BehaviourPrimitive.h"
 

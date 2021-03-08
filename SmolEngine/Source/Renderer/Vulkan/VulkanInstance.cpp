@@ -37,12 +37,10 @@ namespace SmolEngine
 #else
 			appInfo.pApplicationName = "SmolEngine Game";
 #endif
-
+			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 			appInfo.pEngineName = "SmolEngine";
 			appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 			appInfo.apiVersion = VK_API_VERSION_1_2;
-
 		}
 
 		return CreateInstance(appInfo);
@@ -63,7 +61,7 @@ namespace SmolEngine
 		VkInstanceCreateInfo instanceInfo = {};
 		{
 			instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-			instanceInfo.pApplicationInfo = &appInfo;
+			instanceInfo.pApplicationInfo= &appInfo;
 			instanceInfo.enabledExtensionCount = static_cast<uint32_t>(instanceExt.size());
 			instanceInfo.ppEnabledExtensionNames = instanceExt.data();
 			instanceInfo.enabledLayerCount = static_cast<uint32_t>(instanceLayers.size());

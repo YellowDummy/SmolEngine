@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "RendererSystem.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/UISystem.h"

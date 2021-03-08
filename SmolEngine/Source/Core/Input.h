@@ -4,7 +4,7 @@
 #include "Core/EventHandler.h"
 #include "InputCodes.h"
 #include "Core/SLog.h"
-#include "Core/Application.h"
+#include "Core/Engine.h"
 #include "Core/Window.h"
 
 #include <memory>
@@ -19,14 +19,14 @@ namespace SmolEngine
 
 		inline static bool IsKeyPressed(KeyCode key)
 		{
-			auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
+			auto window = static_cast<GLFWwindow*>(Engine::GetEngine().GetWindow().GetNativeWindow());
 			auto state = glfwGetKey(window, static_cast<int32_t>(key));
 			return state == GLFW_PRESS || state == GLFW_REPEAT;
 		}
 
 		inline static bool IsMouseButtonPressed(MouseCode button)
 		{
-			auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
+			auto window = static_cast<GLFWwindow*>(Engine::GetEngine().GetWindow().GetNativeWindow());
 			auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
 			return state == GLFW_PRESS;
 		}
@@ -66,7 +66,7 @@ namespace SmolEngine
 
 		inline static std::pair<float, float> GetMousePosition()
 		{
-			auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
+			auto window = static_cast<GLFWwindow*>(Engine::GetEngine().GetWindow().GetNativeWindow());
 			double xpos, ypos;
 			glfwGetCursorPos(window, &xpos, &ypos);
 

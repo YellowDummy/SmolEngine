@@ -67,7 +67,7 @@ namespace SmolEngine
 #else
 		VulkanContext                        m_VulkanContext = {};
 #endif
-		friend class Application;
+		friend class Engine;
 		friend class GraphicsPipeline;
 		friend class WorldAdmin;
 		friend class EditorLayer;
