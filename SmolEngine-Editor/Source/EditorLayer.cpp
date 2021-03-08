@@ -70,7 +70,7 @@ namespace SmolEngine
 		GCInfo.bTargetsSwapchain = false;
 		assert(GraphicsContext::Init(GCInfo) == true);
 
-		auto mesh = Mesh::Create(Resources + "Models/anim.glb");
+		//auto mesh = Mesh::Create(Resources + "Models/anim.glb");
 
 		EditorCameraCreateInfo editorCamCI{};
 		{

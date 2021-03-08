@@ -488,8 +488,8 @@ namespace SmolEngine
 			s_Data->m_MainPipeline = std::make_unique<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/PBR_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/PBR_Vulkan_Fragment.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/PBR.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/PBR.frag";
 
 				shaderCI.StorageBuffersSizes[25] = { sizeof(InstanceData) * s_InstanceDataMaxCount };
 				shaderCI.StorageBuffersSizes[26] = { sizeof(Material) * 1000 };
@@ -522,8 +522,8 @@ namespace SmolEngine
 			s_Data->m_SkyboxPipeline = std::make_unique<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Skybox_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Skybox_Vulkan_Frag.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/Skybox.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/Skybox.frag";
 			};
 
 			struct SkyBoxData
@@ -603,8 +603,8 @@ namespace SmolEngine
 			s_Data->m_DebugViewPipeline = std::make_unique<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/DebugView_Vulkan_Fragment.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/GenVertex.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/DebugView.frag";
 			};
 
 			float quadVertices[] = {
@@ -655,8 +655,8 @@ namespace SmolEngine
 			s_Data->m_DepthPassPipeline = std::make_unique<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/DepthPass_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/DepthPass_Vulkan_Fragment.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/DepthPass.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/DepthPass.frag";
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
@@ -680,8 +680,8 @@ namespace SmolEngine
 			s_Data->m_OmniPipeline = std::make_unique<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/OmniShadow_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/OmniShadow_Vulkan_Fragment.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/OmniShadow.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/OmniShadow.frag";
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};

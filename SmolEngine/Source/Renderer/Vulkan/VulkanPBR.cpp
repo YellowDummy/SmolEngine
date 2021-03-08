@@ -163,8 +163,8 @@ namespace SmolEngine
 			VulkanShader shader = {};
 			{
 				GraphicsPipelineShaderCreateInfo shaderCI;
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Gen_BRD_flut_Frag.glsl";
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Gen_BRD_flut_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/GenBRDflut.frag";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/GenBRDflut.vert";
 
 				assert(shader.Init(&shaderCI) == true);
 			}
@@ -640,8 +640,8 @@ namespace SmolEngine
 			VulkanShader shader = {};
 			{
 				GraphicsPipelineShaderCreateInfo shaderCI;
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/IrradianceCube_Vulkan_Frag.glsl";
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/FilterCube_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/IrradianceCube.frag";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/FilterCube.vert";
 
 				assert(shader.Init(&shaderCI) == true);
 			}
@@ -1265,8 +1265,8 @@ namespace SmolEngine
 			VulkanShader shader = {};
 			{
 				GraphicsPipelineShaderCreateInfo shaderCI;
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/PreFilterenvMap_Vulkan_Frag.glsl";
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/FilterCube_Vulkan_Vertex.glsl";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/PreFilterenvMap.frag";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/FilterCube.vert";
 
 				assert(shader.Init(&shaderCI) == true);
 			}
