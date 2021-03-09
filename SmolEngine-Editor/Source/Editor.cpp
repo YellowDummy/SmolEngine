@@ -5,10 +5,17 @@
 #include "DeferredRenderingTestLayer.h"
 #include "Renderer3DTestLayer.h"
 
+#include "ECS/Systems/ScriptingSystem.h"
+#include "../../GameX/CppScriptingExamples.h"
+
 namespace SmolEngine
 {
 	void Editor::OnEngineInitialized()
 	{
+		// Adds Scripts
+		ScriptingSystem::AddNativeClass<CharMoveScript>("CharMoveScript");
+
+		// Push Layers
 		auto& engine = Engine::GetEngine();
 		//engine.PushLayer(new Renderer3DTestLayer);
 		//engine.PushLayer(new DeferredRenderingTest);

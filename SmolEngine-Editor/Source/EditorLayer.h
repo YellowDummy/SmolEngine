@@ -10,7 +10,6 @@
 #include "ImGui/MaterialLibraryInterface.h"
 
 #include "ECS/Components/BaseComponent.h"
-#include "Scripting/OutValues.h"
 
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>

@@ -3,7 +3,6 @@
 
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
-#include "Scripting/SystemRegistry.h"
 #include "ImGui/EditorConsole.h"
 
 namespace SmolEngine
@@ -232,76 +231,6 @@ namespace SmolEngine
 
 		CONSOLE_WARN(std::string("Scene loaded successfully"));
 		return true;
-	}
-
-	BehaviourComponent* Scene::AddBehaviour(const std::string& systemName, const Ref<Actor>& actor)
-	{
-		auto& systemMap = SystemRegistry::Get()->m_SystemMap;
-		const auto& result = systemMap.find(systemName);
-		if (result == systemMap.end())
-		{
-			NATIVE_ERROR("System <{}> not found!", systemName);
-			return nullptr;
-		}
-
-		BehaviourComponent* behaviour = nullptr;
-		{
-			if (!HasComponent<BehaviourComponent>(*actor))
-			{
-				behaviour = AddComponent<BehaviourComponent>(*actor);
-				behaviour->Actor = actor;
-				behaviour->ID = actor->GetID();
-			}
-			else
-			{
-				behaviour = GetComponent<BehaviourComponent>(*actor);
-			}
-		}
-
-		int32_t index = static_cast<int32_t>(actor->m_ComponentsCount);
-		actor->m_ComponentsCount++;
-		ScriptInstance instance = {};
-		{
-			instance.type = rttr::type::get_by_name(systemName);
-			instance.variant = instance.type.create();
-		}
-
-		std::vector< OutValue> tempValues;
-		// Creating out-variables 
-		{
-			auto& primitive = instance.variant.get_wrapped_value_non_const<BehaviourPrimitive>();
-			primitive.m_Actor = actor;
-
-			for (const auto& pair : primitive.m_OutFloatVariables)
-			{
-				const auto [varName, varValue] = pair;
-
-				OutValue value = OutValue(varName, *varValue, OutValueType::Float);
-				tempValues.push_back(value);
-			}
-
-			for (const auto& pair : primitive.m_OutIntVariables)
-			{
-				const auto [varName, varValue] = pair;
-
-				OutValue value = OutValue(varName, *varValue, OutValueType::Int);
-				tempValues.push_back(value);
-			}
-
-			for (const auto& pair : primitive.m_OutStringVariables)
-			{
-				const auto& [varName, varValue] = pair;
-
-				OutValue value = OutValue(varName, *varValue, OutValueType::String);
-				strcpy(value.stringBuffer, varValue->data());
-				tempValues.push_back(value);
-			}
-		}
-
-		behaviour->OutValues[systemName].ScriptID = index;
-		behaviour->OutValues[systemName].OutValues = std::move(tempValues);
-		behaviour->Scripts.push_back(std::move(instance));
-		return behaviour;
 	}
 
 	bool Scene::OnActorNameChanged(const std::string& lastName, const std::string& newName)

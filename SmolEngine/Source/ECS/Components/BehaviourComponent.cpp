@@ -3,8 +3,5 @@
 
 namespace SmolEngine
 {
-	BehaviourComponent::BehaviourComponent()
-	{
 
-	}
 }

@@ -2,11 +2,10 @@
 
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
-#include "Scripting/SystemRegistry.h"
-#include "Scripting/OutValues.h"
 
 #include <string>
 #include <vector>
+#include <../Libraries/meta/meta.hpp>
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
@@ -15,10 +14,9 @@
 namespace SmolEngine
 {
 	class Actor;
-
 	struct BehaviourComponent: public BaseComponent
 	{
-		BehaviourComponent();
+		BehaviourComponent() = default;
 
 		BehaviourComponent(uint32_t id) 
 			:BaseComponent(id) {}
@@ -27,21 +25,70 @@ namespace SmolEngine
 
 		struct OutData
 		{
-			std::vector<OutValue> OutValues;
-			int32_t ScriptID = 0;
+			struct IntBuffer
+			{
+				int32_t Value;
+				std::string Name;
+
+				template<typename Archive>
+				void serialize(Archive& archive)
+				{
+					archive(Value, Name);
+				}
+			};
+
+			struct FloatBuffer
+			{
+				float Value;
+				std::string Name;
+
+				template<typename Archive>
+				void serialize(Archive& archive)
+				{
+					archive(Value, Name);
+				}
+			};
+
+			struct StringBuffer
+			{
+				std::string Value;
+				std::string Name;
+
+				template<typename Archive>
+				void serialize(Archive& archive)
+				{
+					archive(Value, Name);
+				}
+			};
+
+			int32_t                   ScriptID = 0;
+			std::vector<IntBuffer>    Ints;
+			std::vector<FloatBuffer>  Floats;
+			std::vector<StringBuffer> Strings;
 
 			template<typename Archive>
 			void serialize(Archive& archive)
 			{
-				archive(ScriptID, OutValues);
+				archive(ScriptID, Ints, Floats, Strings);
 			}
 		};
 
-		std::vector<ScriptInstance> Scripts;
-		std::unordered_map<std::string, OutData> OutValues;
+		struct ScriptInstance
+		{										   
+			std::string                            KeyName = "";
+			meta::any                              Script;
 
-		size_t ID = 0;
-		Ref<Actor> Actor = nullptr;
+			template<typename Archive>
+			void serialize(Archive& archive)
+			{
+				archive(KeyName);
+			}
+		};		
+
+		uint32_t                                   ActorID = 0;
+		Ref<Actor>                                 Actor = nullptr;
+		std::vector<ScriptInstance>                Scripts;
+		std::unordered_map<std::string, OutData>   OutValues;			   
 
 	private:
 
@@ -52,7 +99,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ID, OutValues, ComponentID, Actor);
+			archive(ActorID, Scripts, OutValues, ComponentID, Actor);
 		}
 	};
 }

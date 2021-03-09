@@ -34,10 +34,10 @@
 #include "ECS/Components/Singletons/Box2DWorldSComponent.h"
 #include "ECS/Components/Singletons/ProjectConfigSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
+#include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
-#include <rttr/registration.h>
 #include <box2d/b2_world.h>
 
 namespace SmolEngine
@@ -101,7 +101,7 @@ namespace SmolEngine
 		Animation2DSystem::OnAwake(sceneData.m_Registry);
 
 		// Sending start callback to all enabled scripts
-		ScriptingSystem::OnSceneBegin(sceneData.m_Registry);
+		ScriptingSystem::OnBegin(sceneData.m_Registry);
 		m_InPlayMode = true;
 	}
 
@@ -109,7 +109,7 @@ namespace SmolEngine
 	{
 		m_InPlayMode = false;
 		entt::registry& registry = GetActiveScene().m_SceneData.m_Registry;
-		ScriptingSystem::OnSceneEnd(registry);
+		ScriptingSystem::OnEnd(registry);
 
 		// Deleting all Rigidbodies
 		Physics2DSystem::DeleteBodies(registry, &Box2DWorldSComponent::Get()->World);
@@ -133,7 +133,7 @@ namespace SmolEngine
 			// Updating Phycics
 			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 			// Sending OnProcess callback
-			ScriptingSystem::OnSceneTick(registry, deltaTime);
+			ScriptingSystem::OnTick(registry, deltaTime);
 		}
 #else
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
@@ -271,7 +271,7 @@ namespace SmolEngine
 		AssetManager::ReloadMeshMaterials(registry, &activeScene.m_SceneData);
 
 		// Reloading Scripts
-		ScriptingSystem::ReloadScripts(registry, activeScene.m_SceneData.m_ActorPool);
+		ScriptingSystem::ReloadScripts(registry);
 	}
 
 	void WorldAdmin::UpdateEditorCamera(Ref<EditorCamera>& cam)
@@ -416,6 +416,7 @@ namespace SmolEngine
 		m_GlobalRegistry.emplace<Box2DWorldSComponent>(id);
 		// System States
 		m_GlobalRegistry.emplace<ProjectConfigSComponent>(id);
+		m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(id);
 		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(id);
 
 		return true;

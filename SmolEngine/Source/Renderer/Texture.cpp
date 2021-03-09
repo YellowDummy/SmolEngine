@@ -151,15 +151,4 @@ namespace SmolEngine
 #endif
 		return texture;
 	}
-
-	Ref<Texture> Texture::Create(FT_Bitmap* bitmap)
-	{
-		Ref<Texture> texture = std::make_shared<Texture>();
-
-#ifdef  SMOLENGINE_OPENGL_IMPL
-		texture->m_OpenglTexture2D.Init(bitmap);
-#else
-#endif
-		return texture;
-	}
 }

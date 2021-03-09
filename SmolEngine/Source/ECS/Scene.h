@@ -49,8 +49,6 @@ namespace SmolEngine
 
 		// Components
 
-		BehaviourComponent* AddBehaviour(const std::string& systemName, const Ref<Actor>& actor);
-
 		template<typename T, typename... Args>
 		T* AddComponent(Actor& actor, Args&&... args)
 		{

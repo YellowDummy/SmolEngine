@@ -32,6 +32,7 @@ namespace SmolEngine
 
 		/// Data
 
+		inline static ProjectConfigSComponent*           Instance = nullptr;
 		std::unordered_map<uint32_t, SceneConfigData>    m_Scenes;
 		std::string                                      m_AssetFolder = "";
 
@@ -41,12 +42,7 @@ namespace SmolEngine
 
 	private:
 
-		static ProjectConfigSComponent*                  Instance;
-
-	private:
-
 		friend class cereal::access;
-
 		friend class BuildPanel;
 
 		template<typename Archive>

@@ -96,7 +96,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -108,11 +108,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Debug (Vulkan)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug (Vulkan)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug (Vulkan)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug (Vulkan)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Debug (Vulkan)-windows-x86_64\RTTR\RTTR.lib;Libraries\spir_v_cross\bin\Debug (Vulkan)-windows-x86_64\SPIRV-Cross\SPIRV-Cross.lib;Libraries\ktx\bin\Debug (Vulkan)-windows-x86_64\KTX-Tools\KTX-Tools.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype_d.lib;Libraries\vulkan\libs\shaderc_d.lib;Libraries\vulkan\libs\shaderc_util_d.lib;Libraries\vulkan\libs\glslang_d.lib;Libraries\vulkan\libs\SPIRV_d.lib;Libraries\vulkan\libs\SPIRV-Tools_d.lib;Libraries\vulkan\libs\SPIRV-Tools-opt_d.lib;Libraries\vulkan\libs\machineIndependent_d.lib;Libraries\vulkan\libs\genericCodeGen_d.lib;Libraries\vulkan\libs\OGLCompiler_d.lib;Libraries\vulkan\libs\OSDependent_d.lib;Libraries\assimp\libs\assimp-vc142-mtd.lib;Libraries\assimp\libs\zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\vulkan\libs\shaderc_d.lib;Libraries\vulkan\libs\shaderc_util_d.lib;Libraries\vulkan\libs\glslang_d.lib;Libraries\vulkan\libs\SPIRV_d.lib;Libraries\vulkan\libs\SPIRV-Tools_d.lib;Libraries\vulkan\libs\SPIRV-Tools-opt_d.lib;Libraries\vulkan\libs\machineIndependent_d.lib;Libraries\vulkan\libs\genericCodeGen_d.lib;Libraries\vulkan\libs\OGLCompiler_d.lib;Libraries\vulkan\libs\OSDependent_d.lib;Libraries\assimp\libs\assimp-vc142-mtd.lib;Libraries\assimp\libs\zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
     <ClCompile>
@@ -120,7 +117,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -136,11 +133,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Release (Vulkan)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release (Vulkan)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release (Vulkan)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release (Vulkan)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Release (Vulkan)-windows-x86_64\RTTR\RTTR.lib;Libraries\spir_v_cross\bin\Release (Vulkan)-windows-x86_64\SPIRV-Cross\SPIRV-Cross.lib;Libraries\ktx\bin\Release (Vulkan)-windows-x86_64\KTX-Tools\KTX-Tools.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\freetype\libs\freetype.lib;Libraries\vulkan\libs\shaderc.lib;Libraries\vulkan\libs\shaderc_util.lib;Libraries\vulkan\libs\glslang.lib;Libraries\vulkan\libs\SPIRV.lib;Libraries\vulkan\libs\SPIRV-Tools.lib;Libraries\vulkan\libs\SPIRV-Tools-opt.lib;Libraries\vulkan\libs\machineIndependent.lib;Libraries\vulkan\libs\genericCodeGen.lib;Libraries\vulkan\libs\OGLCompiler.lib;Libraries\vulkan\libs\OSDependent.lib;Libraries\assimp\libs\assimp-vc142-mt.lib;Libraries\assimp\libs\zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;Libraries\vulkan\libs\shaderc.lib;Libraries\vulkan\libs\shaderc_util.lib;Libraries\vulkan\libs\glslang.lib;Libraries\vulkan\libs\SPIRV.lib;Libraries\vulkan\libs\SPIRV-Tools.lib;Libraries\vulkan\libs\SPIRV-Tools-opt.lib;Libraries\vulkan\libs\machineIndependent.lib;Libraries\vulkan\libs\genericCodeGen.lib;Libraries\vulkan\libs\OGLCompiler.lib;Libraries\vulkan\libs\OSDependent.lib;Libraries\assimp\libs\assimp-vc142-mt.lib;Libraries\assimp\libs\zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
     <ClCompile>
@@ -148,7 +142,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_OPENGL_IMPL;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -160,11 +154,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Debug (OpenGL)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Debug (OpenGL)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Debug (OpenGL)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Debug (OpenGL)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Debug (OpenGL)-windows-x86_64\RTTR\RTTR.lib;Libraries\spir_v_cross\bin\Debug (OpenGL)-windows-x86_64\SPIRV-Cross\SPIRV-Cross.lib;Libraries\ktx\bin\Debug (OpenGL)-windows-x86_64\KTX-Tools\KTX-Tools.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;opengl32.lib;Libraries\freetype\libs\freetype_d.lib;Libraries\vulkan\libs\shaderc_d.lib;Libraries\vulkan\libs\shaderc_util_d.lib;Libraries\vulkan\libs\glslang_d.lib;Libraries\vulkan\libs\SPIRV_d.lib;Libraries\vulkan\libs\SPIRV-Tools_d.lib;Libraries\vulkan\libs\SPIRV-Tools-opt_d.lib;Libraries\vulkan\libs\machineIndependent_d.lib;Libraries\vulkan\libs\genericCodeGen_d.lib;Libraries\vulkan\libs\OGLCompiler_d.lib;Libraries\vulkan\libs\OSDependent_d.lib;Libraries\assimp\libs\assimp-vc142-mtd.lib;Libraries\assimp\libs\zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;opengl32.lib;Libraries\vulkan\libs\shaderc_d.lib;Libraries\vulkan\libs\shaderc_util_d.lib;Libraries\vulkan\libs\glslang_d.lib;Libraries\vulkan\libs\SPIRV_d.lib;Libraries\vulkan\libs\SPIRV-Tools_d.lib;Libraries\vulkan\libs\SPIRV-Tools-opt_d.lib;Libraries\vulkan\libs\machineIndependent_d.lib;Libraries\vulkan\libs\genericCodeGen_d.lib;Libraries\vulkan\libs\OGLCompiler_d.lib;Libraries\vulkan\libs\OSDependent_d.lib;Libraries\assimp\libs\assimp-vc142-mtd.lib;Libraries\assimp\libs\zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
     <ClCompile>
@@ -172,7 +163,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\freetype\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\yojimbo;Libraries\rttr\src;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -188,11 +179,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Libraries\glfw\bin\Release (OpenGL)-windows-x86_64\GLFW\GLFW.lib;Libraries\glad\bin\Release (OpenGL)-windows-x86_64\Glad\Glad.lib;Libraries\imgui\bin\Release (OpenGL)-windows-x86_64\ImGui\ImGui.lib;Libraries\box2d\bin\Release (OpenGL)-windows-x86_64\Box2D\Box2D.lib;Libraries\rttr\bin\Release (OpenGL)-windows-x86_64\RTTR\RTTR.lib;Libraries\spir_v_cross\bin\Release (OpenGL)-windows-x86_64\SPIRV-Cross\SPIRV-Cross.lib;Libraries\ktx\bin\Release (OpenGL)-windows-x86_64\KTX-Tools\KTX-Tools.lib;Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;opengl32.lib;Libraries\freetype\libs\freetype.lib;Libraries\vulkan\libs\shaderc.lib;Libraries\vulkan\libs\shaderc_util.lib;Libraries\vulkan\libs\glslang.lib;Libraries\vulkan\libs\SPIRV.lib;Libraries\vulkan\libs\SPIRV-Tools.lib;Libraries\vulkan\libs\SPIRV-Tools-opt.lib;Libraries\vulkan\libs\machineIndependent.lib;Libraries\vulkan\libs\genericCodeGen.lib;Libraries\vulkan\libs\OGLCompiler.lib;Libraries\vulkan\libs\OSDependent.lib;Libraries\assimp\libs\assimp-vc142-mt.lib;Libraries\assimp\libs\zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Libraries\vulkan\libs\vulkan-1.lib;Libraries\vulkan\libs\VkLayer_utils.lib;Libraries\fmod\libs\fmodL_vc.lib;Libraries\fmod\libs\fmodstudioL_vc.lib;opengl32.lib;Libraries\vulkan\libs\shaderc.lib;Libraries\vulkan\libs\shaderc_util.lib;Libraries\vulkan\libs\glslang.lib;Libraries\vulkan\libs\SPIRV.lib;Libraries\vulkan\libs\SPIRV-Tools.lib;Libraries\vulkan\libs\SPIRV-Tools-opt.lib;Libraries\vulkan\libs\machineIndependent.lib;Libraries\vulkan\libs\genericCodeGen.lib;Libraries\vulkan\libs\OGLCompiler.lib;Libraries\vulkan\libs\OSDependent.lib;Libraries\assimp\libs\assimp-vc142-mt.lib;Libraries\assimp\libs\zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\glm\glm\common.hpp" />
@@ -568,9 +556,9 @@
     <ClInclude Include="Source\Animation\SkeletalAnimationClip.h" />
     <ClInclude Include="Source\Audio\AudioClip.h" />
     <ClInclude Include="Source\Audio\AudioEngine.h" />
-    <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\AssetManager.h" />
     <ClInclude Include="Source\Core\Core.h" />
+    <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
     <ClInclude Include="Source\Core\EventHandler.h" />
     <ClInclude Include="Source\Core\FileDialog.h" />
@@ -601,6 +589,7 @@
     <ClInclude Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\TransformComponent.h" />
     <ClInclude Include="Source\ECS\ComponentsCore.h" />
@@ -697,8 +686,6 @@
     <ClInclude Include="Source\Renderer\Vulkan\VulkanUtils.h" />
     <ClInclude Include="Source\Renderer\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Scripting\BehaviourPrimitive.h" />
-    <ClInclude Include="Source\Scripting\OutValues.h" />
-    <ClInclude Include="Source\Scripting\SystemRegistry.h" />
     <ClInclude Include="Source\SmolEngineCore.h" />
     <ClInclude Include="Source\UI\UIButton.h" />
     <ClInclude Include="Source\UI\UIElement.h" />
@@ -714,8 +701,8 @@
     <ClCompile Include="Libraries\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Audio\AudioClip.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
-    <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\AssetManager.cpp" />
+    <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\EntryPoint.cpp" />
     <ClCompile Include="Source\Core\EventHandler.cpp" />
     <ClCompile Include="Source\Core\FileDialog.cpp" />
@@ -741,6 +728,7 @@
     <ClCompile Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Texture2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\ECS\Scene.cpp" />
@@ -824,7 +812,6 @@
     <ClCompile Include="Source\Renderer\Vulkan\VulkanUtils.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Scripting\BehaviourPrimitive.cpp" />
-    <ClCompile Include="Source\Scripting\SystemRegistry.cpp" />
     <ClCompile Include="Source\UI\UIButton.cpp" />
     <ClCompile Include="Source\UI\UITextLabel.cpp" />
     <ClCompile Include="Source\Utils\ModelImporter.cpp" />
@@ -842,14 +829,8 @@
     <ProjectReference Include="Libraries\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
-    <ProjectReference Include="Libraries\yojimbo\Yojimbo.vcxproj">
-      <Project>{3EF064D1-AACF-E36C-B3E7-6E431F464ACE}</Project>
-    </ProjectReference>
     <ProjectReference Include="Libraries\box2d\Box2D.vcxproj">
       <Project>{A434E80C-1049-10BE-D9CA-B31D459E0CEF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Libraries\rttr\RTTR.vcxproj">
-      <Project>{11778B7C-FDAD-8C0D-A69A-721092B0080F}</Project>
     </ProjectReference>
     <ProjectReference Include="Libraries\spir_v_cross\SPIRV-Cross.vcxproj">
       <Project>{30B15D9A-9C66-D68F-255B-D066910FCD93}</Project>

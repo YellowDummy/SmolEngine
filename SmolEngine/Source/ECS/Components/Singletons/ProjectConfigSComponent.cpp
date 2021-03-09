@@ -3,8 +3,6 @@
 
 namespace SmolEngine
 {
-	ProjectConfigSComponent* ProjectConfigSComponent::Instance = new ProjectConfigSComponent();
-
 	ProjectConfigSComponent::ProjectConfigSComponent()
 	{
 		Instance = this;

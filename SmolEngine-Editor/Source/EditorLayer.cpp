@@ -90,6 +90,10 @@ namespace SmolEngine
 		m_Scene = WorldAdmin::GetSingleton();
 
 		m_Scene->CreateScene(std::string("TestScene.s_scene"));
+
+		Ref<Actor> actorA = m_Scene->GetActiveScene().CreateActor("ShitActor");
+		bool result = ScriptingSystem::AttachNativeScript(actorA, std::string("CharMoveScript"));
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -895,33 +899,7 @@ namespace SmolEngine
 
 	void EditorLayer::DrawBehaviorComponent(std::vector<OutValue>& outValues)
 	{
-		for (auto& val : outValues)
-		{
-			switch (val.Value.index())
-			{
 
-			case (uint32_t)OutValueType::Float:
-			{
-				ImGui::Extensions::InputFloat(val.Key.c_str(), std::get<float>(val.Value));
-
-				break;
-			}
-			case (uint32_t)OutValueType::Int:
-			{
-				ImGui::Extensions::InputInt(val.Key.c_str(), std::get<int>(val.Value));
-
-				break;
-			}
-			case (uint32_t)OutValueType::String:
-			{
-				ImGui::Extensions::InputRawString(val.Key.c_str(), std::get<std::string>(val.Value), val.Key.c_str());
-
-				break;
-			}
-			default:
-				break;
-			}
-		}
 	}
 
 	void EditorLayer::DrawLight2D(Light2DSourceComponent* light)
@@ -1098,6 +1076,7 @@ namespace SmolEngine
 					ImGui::MenuItem("New Script", NULL, false, false);
 					ImGui::Separator();
 
+#if 0
 					for (const auto& [key, name] : SystemRegistry::Get()->m_SystemMap)
 					{
 						if (ImGui::MenuItem(name.c_str()))
@@ -1106,6 +1085,7 @@ namespace SmolEngine
 							ImGui::CloseCurrentPopup();
 						}
 					}
+#endif // 0
 
 					ImGui::EndPopup();
 				}
@@ -1818,56 +1798,36 @@ namespace SmolEngine
 		if (m_Scene->GetActiveScene().HasComponent<BehaviourComponent>(*m_SelectedActor.get()))
 		{
 			BehaviourComponent* comp = m_Scene->GetActiveScene().GetComponent<BehaviourComponent>(*m_SelectedActor.get());
-			bool is_active = false;
-			uint32_t scriptID = 0;
 			std::string scriptName = "";
-			for (auto& [name, data] : comp->OutValues)
+			BehaviourComponent::OutData* data = nullptr;
+			for (auto& [name, container] : comp->OutValues)
 			{
-				if (data.ScriptID == index)
+				if (container.ScriptID == index)
 				{
-					is_active = true;
-					scriptID = data.ScriptID;
+					data = &container;
 					scriptName = name;
 					break;
 				}
 			}
 
-			if (!is_active)
+			if (!data)
 				return;
 
-			if (ImGui::CollapsingHeader(scriptName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			if (ImGui::CollapsingHeader(scriptName.c_str()))
 			{
 				ImGui::NewLine();
 				ImGui::Extensions::Text("Script Type", "C++ Script");
 				ImGui::NewLine();
 
-				for (auto& val : comp->OutValues[scriptName].OutValues)
-				{
-					switch (val.Value.index())
-					{
+				for (auto& f : data->Floats)
+					ImGui::Extensions::InputFloat(f.Name, f.Value);
 
-					case (uint32_t)OutValueType::Float:
-					{
-						ImGui::Extensions::InputFloat(val.Key.c_str(), std::get<float>(val.Value));
+				for (auto& i : data->Ints)
+					ImGui::Extensions::InputInt(i.Name, i.Value);
 
-						break;
-					}
-					case (uint32_t)OutValueType::Int:
-					{
-						ImGui::Extensions::InputInt(val.Key.c_str(), std::get<int>(val.Value));
+				for (auto& str : data->Strings)
+					ImGui::Extensions::InputRawString(str.Name, str.Value, "Value");
 
-						break;
-					}
-					case (uint32_t)OutValueType::String:
-					{
-						ImGui::Extensions::InputRawString(val.Key.c_str(), std::get<std::string>(val.Value), val.Key.c_str());
-
-						break;
-					}
-					default:
-						break;
-					}
-				}
 				ImGui::NewLine();
 			}
 		}

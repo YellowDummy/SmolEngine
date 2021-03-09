@@ -1212,19 +1212,22 @@
     <ClInclude Include="Source\Animation\AnimationClip2D.h">
       <Filter>Source\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Animation\SkeletalAnimationClip.h">
+      <Filter>Source\Animation</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Audio\AudioClip.h">
       <Filter>Source\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\AudioEngine.h">
       <Filter>Source\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Engine.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\AssetManager.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\EntryPoint.h">
@@ -1333,6 +1336,9 @@
       <Filter>Source\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Systems\Animation2DSystem.h">
+      <Filter>Source\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\Systems\AnimationSystem.h">
       <Filter>Source\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Systems\AudioSystem.h">
@@ -1602,12 +1608,6 @@
     <ClInclude Include="Source\Scripting\BehaviourPrimitive.h">
       <Filter>Source\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scripting\OutValues.h">
-      <Filter>Source\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scripting\SystemRegistry.h">
-      <Filter>Source\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SmolEngineCore.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -1626,8 +1626,7 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\AnimationSystem.h" />
-    <ClInclude Include="Source\Animation\SkeletalAnimationClip.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1651,10 +1650,10 @@
     <ClCompile Include="Source\Audio\AudioEngine.cpp">
       <Filter>Source\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Engine.cpp">
+    <ClCompile Include="Source\Core\AssetManager.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\AssetManager.cpp">
+    <ClCompile Include="Source\Core\Engine.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\EntryPoint.cpp">
@@ -1745,6 +1744,9 @@
       <Filter>Source\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Systems\Animation2DSystem.cpp">
+      <Filter>Source\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Systems\AnimationSystem.cpp">
       <Filter>Source\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Systems\AudioSystem.cpp">
@@ -1978,9 +1980,6 @@
     <ClCompile Include="Source\Scripting\BehaviourPrimitive.cpp">
       <Filter>Source\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scripting\SystemRegistry.cpp">
-      <Filter>Source\Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="Source\UI\UIButton.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
@@ -1993,6 +1992,6 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\AnimationSystem.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
   </ItemGroup>
 </Project>

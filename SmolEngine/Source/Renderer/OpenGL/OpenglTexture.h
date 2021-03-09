@@ -1,11 +1,6 @@
 #pragma once
 #include "Core/Core.h"
 
-extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-}
-
 namespace SmolEngine
 {
 	class OpenglTexture2D
@@ -21,8 +16,6 @@ namespace SmolEngine
 		void Init(const std::string& filePath);
 
 		void Init(const uint32_t width, const uint32_t height);
-
-		void Init(FT_Bitmap* bitmap);
 
 		/// Binding
 

@@ -21,8 +21,6 @@ IncludeDir["ImGui"] = "SmolEngine/Libraries/imgui"
 IncludeDir["glm"] = "SmolEngine/Libraries/glm"
 IncludeDir["stb"] = "SmolEngine/Libraries/stb_image"
 IncludeDir["entt"] = "SmolEngine/Libraries/entt"
-IncludeDir["yojimbo"] = "SmolEngine/Libraries/yojimbo"
-IncludeDir["rttr"] = "SmolEngine/Libraries/rttr/src"
 IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
 IncludeDir["imgizmo"] = "SmolEngine/Libraries/imgizmo/src"
 IncludeDir["ktx"] = "SmolEngine/Libraries/ktx/include"
@@ -32,9 +30,7 @@ group "Dependencies"
 include "SmolEngine/Libraries/glfw"
 include "SmolEngine/Libraries/glad"
 include "SmolEngine/Libraries/imgui"
-include "SmolEngine/Libraries/yojimbo"
 include "SmolEngine/Libraries/box2d"
-include "SmolEngine/Libraries/rttr"
 include "SmolEngine/Libraries/spir_v_cross"
 include "SmolEngine/Libraries/ktx"
 group ""
@@ -80,7 +76,6 @@ project "SmolEngine"
 		"SmolEngine/Libraries/icon_font_cpp_headers",
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/cereal/include",
-		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/box2d/include",
 		"SmolEngine/Libraries/assimp/include",
@@ -92,8 +87,6 @@ project "SmolEngine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
         "%{IncludeDir.entt}",
-		"%{IncludeDir.yojimbo}",
-		"%{IncludeDir.rttr}",
 		"%{IncludeDir.vulkan}",
 		"%{IncludeDir.imgizmo}",
 		"%{IncludeDir.ktx}",
@@ -105,9 +98,7 @@ project "SmolEngine"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"Yojimbo",
 		"Box2D",
-		"RTTR",
 		"SPIRV-Cross",
 		"KTX-Tools",
 		
@@ -143,7 +134,6 @@ project "SmolEngine"
 
 		links 
 		{ 
-			"SmolEngine/Libraries/freetype/libs/freetype_d.lib",
 			"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
 			"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
 			"SmolEngine/Libraries/vulkan/libs/glslang_d.lib",
@@ -173,7 +163,6 @@ project "SmolEngine"
 	links 
 	{ 
 		"opengl32.lib",
-		"SmolEngine/Libraries/freetype/libs/freetype_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
 		"SmolEngine/Libraries/vulkan/libs/glslang_d.lib",
@@ -203,7 +192,6 @@ project "SmolEngine"
 
 		links 
 		{ 
-			"SmolEngine/Libraries/freetype/libs/freetype.lib",
 			"SmolEngine/Libraries/vulkan/libs/shaderc.lib",
 			"SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
 			"SmolEngine/Libraries/vulkan/libs/glslang.lib",
@@ -228,7 +216,6 @@ project "SmolEngine"
 	   links 
 	   { 
 		"opengl32.lib",
-		 "SmolEngine/Libraries/freetype/libs/freetype.lib",
 		 "SmolEngine/Libraries/vulkan/libs/shaderc.lib",
 		 "SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
 		 "SmolEngine/Libraries/vulkan/libs/glslang.lib",
@@ -276,15 +263,12 @@ project "GameX"
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
-		"SmolEngine/Libraries/freetype/include/",
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
 
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.yojimbo}",
-		"%{IncludeDir.rttr}",
 		"%{IncludeDir.vulkan}"
 	}
 
@@ -366,15 +350,12 @@ project "GameX"
 		"SmolEngine/Libraries/spdlog/include",
 		"SmolEngine/Libraries/fmod/include",
 		"SmolEngine/Libraries/cereal/include",
-		"SmolEngine/Libraries/freetype/include/",
 		
 		"SmolEngine/Source",
 		"SmolEngine/Libraries",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.yojimbo}",
-		"%{IncludeDir.rttr}",
 		"%{IncludeDir.vulkan}",
 		"%{IncludeDir.imgizmo}"
 	}

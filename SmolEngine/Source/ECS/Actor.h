@@ -74,6 +74,7 @@ namespace SmolEngine
 		friend class WorldAdmin;
 		friend class Scene;
 		friend class EditorLayer;
+		friend class ScriptingSystem;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

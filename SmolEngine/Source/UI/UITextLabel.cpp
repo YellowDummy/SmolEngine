@@ -14,7 +14,7 @@ namespace SmolEngine
 
     void UITextLabel::Init(const std::string& fontFilePath, const std::string& fontName)
     {
-        m_TextLabel = Text::Create(fontFilePath);
+        //m_TextLabel = Text::Create(fontFilePath);
 
         m_FontFilePath = fontFilePath;
         m_FontName = fontName;
@@ -23,10 +23,9 @@ namespace SmolEngine
     void UITextLabel::SetText(const std::string& text)
     {
         m_Text = text;
-
         if (m_TextLabel) 
         {
-            m_TextLabel->SetText(text);
+            //m_TextLabel->SetText(text);
         }
     }
 
@@ -34,7 +33,7 @@ namespace SmolEngine
     {
         if (m_TextLabel)
         {
-            m_TextLabel->SetFont(fontFilePath);
+           // m_TextLabel->SetFont(fontFilePath);
         }
     }
 
@@ -62,8 +61,8 @@ namespace SmolEngine
         const auto& result = assetMap.find(m_FontName);
         if (result != assetMap.end())
         {
-            m_TextLabel = Text::Create(result->second);
-            m_TextLabel->SetText(m_Text);
+           // m_TextLabel = Text::Create(result->second);
+           //m_TextLabel->SetText(m_Text);
             return;
         }
 
@@ -74,7 +73,7 @@ namespace SmolEngine
     {
         if (m_TextLabel)
         {
-            m_TextLabel->Render(glm::vec3(cameraPos.x + m_Position.x, cameraPos.y + m_Position.y, 1.0f ), m_Size, m_Color, m_Padding);
+            //m_TextLabel->Render(glm::vec3(cameraPos.x + m_Position.x, cameraPos.y + m_Position.y, 1.0f ), m_Size, m_Color, m_Padding);
         }
     }
 }

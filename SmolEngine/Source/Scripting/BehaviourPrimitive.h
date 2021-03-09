@@ -1,20 +1,8 @@
 #pragma once
 
-#include "Scripting/OutValues.h"
-
-#include <string>
-#include <any>
-#include <rttr/registration.h>
-#include <rttr/type.h>
-#include <rttr/registration_friend>
-
 namespace SmolEngine
 {
 	class Actor;
-
-	//Note:
-	//Base class for all script-systems
-
 	class BehaviourPrimitive
 	{
 	public:
@@ -23,15 +11,7 @@ namespace SmolEngine
 
 		virtual ~BehaviourPrimitive() = default;
 
-		/// Methods to implement
-
-		virtual void OnCollisionContact(Actor* another, bool isTrigger) {}
-
-		virtual void OnCollisionExit(Actor* another, bool isTrigger) {}
-
-		virtual void OnDebugDraw() {}
-
-		/// Getters
+		// Getters
 
 		const std::string& GetName();
 
@@ -39,42 +19,79 @@ namespace SmolEngine
 
 		const size_t GetID();
 
+		void GetActors(std::vector<Ref<Actor>>& outList);
+
+		void GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
+
 		template<typename T>
 		T* GetComponent()
 		{
 			return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(*m_Actor);
 		}
 
-		/// Search
-
+		// Search
 		Ref<Actor> FindActorByName(const std::string& name);
 
 		Ref<Actor> FindActorByTag(const std::string& tag);
 
 		Ref<Actor> FindActorByID(uint32_t id);
 
+		template<typename T>
+		bool CreateValue(const std::string& name)
+		{
+			OutValue info = {};
+			info.Ptr = nullptr;
+			info.ValueName = name;
 
-		void GetActors(std::vector<Ref<Actor>>& outList);
+			if (std::is_same<int32_t, T>::value)
+				info.Type = OutValueType::Int;
 
-		void GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
+			if (std::is_same<float, T>::value)
+				info.Type = OutValueType::Float;
 
-		/// Out-Properties
+			if (std::is_same<std::string, T>::value)
+				info.Type = OutValueType::String;
 
-		void PushOutProperty(const char* keyName, std::any val, OutValueType type);
+			if (info.Type != OutValueType::None)
+			{
+				m_OutValues.emplace_back(info);
+				return true;
+			}
 
-		/// Defines
+			return false;
+		}
 
-#define OUT_FLOAT(name, value) PushOutProperty(name, value, OutValueType::Float)
-#define OUT_INT(name, value) PushOutProperty(name, value, OutValueType::Int)
-#define OUT_STRING(name, value) PushOutProperty(name, value, OutValueType::String)
+		template<typename T>
+		T* GetValue(const std::string& name)
+		{
+			for (const auto& value : m_OutValues)
+			{
+				if (value.ValueName == name)
+					return static_cast<T*>(value.Ptr);
+			}
+
+			return nullptr;
+		}
 
 	private:
 
-		Ref<Actor>                                        m_Actor = nullptr;
+		enum class OutValueType : uint16_t
+		{
+			None,
+			Int,
+			Float,
+			String
+		};
 
-		std::unordered_map<const char*, float*>           m_OutFloatVariables;
-		std::unordered_map<const char*, int*>             m_OutIntVariables;
-		std::unordered_map<const char*, std::string*>     m_OutStringVariables;
+		struct OutValue
+		{
+			void*        Ptr = nullptr;
+			std::string  ValueName = "";
+			OutValueType Type = OutValueType::None;
+		};
+
+		Ref<Actor>               m_Actor = nullptr;
+		std::vector<OutValue>    m_OutValues;
 
 	private:
 
@@ -83,11 +100,5 @@ namespace SmolEngine
 		friend class ScriptingSystem;
 		friend class WorldAdmin;
 		friend class Scene;
-
-		/// RTTR
-
-		RTTR_ENABLE()
-
-		RTTR_REGISTRATION_FRIEND
 	};
 }

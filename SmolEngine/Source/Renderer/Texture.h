@@ -54,8 +54,6 @@ namespace SmolEngine
 
 		static Ref<Texture> CreateWhiteTexture();
 
-		static Ref<Texture> Create(FT_Bitmap* bitmap);
-
 		/// Operators
 
 		bool operator==(const Texture& other) const;
