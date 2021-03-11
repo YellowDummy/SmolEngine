@@ -1,4 +1,5 @@
 ## Level-Editor
+![SmolEngine](https://i.imgur.com/Is4pzSb.png)
 ![SmolEngine](https://i.imgur.com/vS3DiqW.png)
 ## Physically Based Rendering
 ![SmolEngine](https://i.imgur.com/848tYFm.png)
@@ -8,7 +9,7 @@
 ### Implemented in first iteration
 
 - Rendering: Native rendering API support (Vulkan/OpenGL), Physically Based Rendering (PBR), 
-  Deferred Rendering, Shadow Mapping, Multisample Anti-Aliasing (MSAA),
+  Deferred Rendering, Shadow Mapping, MSAA / FXAA,
   Screen Space Ambient Occlusion (SSAO), 2D/3D Renderer, 2D Animations
   
 - Integrations: 3rd party 2D physics engine (Box2D), 3rd party audio engine (FMOD)
@@ -23,7 +24,7 @@
 
 ### Features to come
 
-- Rendering: Skeletal Animations, FXAA, Forward Rendering, Real-Time Ray Tracing (Vulkan),
+- Rendering: Skeletal Animations, Forward Rendering, Real-Time Ray Tracing (Vulkan),
   Post-Processing, User's Shaders, Sprite Atlases
 
 - Systems: Build System, Particles System (2D and 3D), Network Solution, Asset Manager
@@ -51,4 +52,3 @@
 3. Extract libs.7z in Libraries\vulkan
 4. Extract libs.7z in Libraries\assimp
 5. Copy all dll's from Libraries\fmod\libs to output (bin\) folder
-6. Under configuration properties makes sure that Yojimbo project is set to "build"
