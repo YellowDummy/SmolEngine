@@ -94,10 +94,43 @@ namespace SmolEngine
 
 	void Scene::DuplicateActor(Ref<Actor>& actor)
 	{
+		auto newObj = CreateActor(actor->GetName() + "_D", actor->GetTag());
+		auto newT = newObj->GetComponent<TransformComponent>();
+		auto oldT = actor->GetComponent<TransformComponent>();
+
+		newT->Rotation = oldT->Rotation;
+		newT->Scale = oldT->Scale;
+		newT->WorldPos = oldT->WorldPos;
+
+		auto meshOld = actor->GetComponent<MeshComponent>();
+		if (meshOld)
+		{
+			auto meshNew = newObj->AddComponent<MeshComponent>();
+			meshNew->bCastShadows = meshOld->bCastShadows;
+			meshNew->bIsStatic = meshOld->bIsStatic;
+			meshNew->bShow = meshOld->bShow;
+			meshNew->FilePath = meshOld->FilePath;
+			meshNew->MaterialNames = meshOld->MaterialNames;
+			meshNew->ShadowType = meshOld->ShadowType;
+			meshNew->Mesh = meshOld->Mesh;
+		}
 	}
 
 	void Scene::DeleteActor(Ref<Actor>& actor)
 	{
+		m_IDSet.erase(actor->GetName());
+		m_SceneData.m_ActorPool.erase(actor->GetID());
+
+		std::vector<Ref<Actor>> tempList;
+		tempList.reserve(m_SceneData.m_ActorList.size() - 1);
+		for (auto& actorRef : m_SceneData.m_ActorList)
+		{
+			if (actorRef != actor)
+				tempList.push_back(actorRef);
+		}
+
+		m_SceneData.m_ActorList = std::move(tempList);
+
 		m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
@@ -111,10 +144,8 @@ namespace SmolEngine
 		m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
+		m_SceneData.m_Registry.remove_if_exists<AnimatorComponent>(*actor);
 
-		m_IDSet.erase(actor->GetName());
-		m_SceneData.m_ActorPool.erase(actor->GetID());
-		std::remove(m_SceneData.m_ActorList.begin(), m_SceneData.m_ActorList.end(), actor);
 		actor = nullptr;
 	}
 

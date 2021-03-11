@@ -88,69 +88,80 @@ namespace SmolEngine
         }
     }
 
-    void ProcessMesh(aiMesh** meshes, const aiNode* node, ImportedData* out_data)
+    void ProcessMesh(aiMesh** meshes, const aiNode* node, const aiNode* parent, ImportedData* out_data)
     {
-        ImportedComponent component = {};
-        uint32_t vertexCount = 0;
-        uint32_t indexCount = 0;
-
-        for (uint32_t y = 0; y < node->mNumMeshes; ++y)
+        if (node->mNumMeshes > 0)
         {
-            uint32_t id = node->mMeshes[y];
-            const aiMesh* mesh = meshes[id];
+            ImportedComponent component = {};
+            uint32_t vertexCount = 0;
+            uint32_t indexCount = 0;
 
-            vertexCount += mesh->mNumVertices;
-            indexCount += mesh->mNumFaces;
+            for (uint32_t y = 0; y < node->mNumMeshes; ++y)
+            {
+                uint32_t id = node->mMeshes[y];
+                const aiMesh* mesh = meshes[id];
+
+                vertexCount += mesh->mNumVertices;
+                indexCount += mesh->mNumFaces;
+            }
+
+            glm::mat4 Transformation = AiToGLMMat4(node->mTransformation);
+            if (parent)
+            {
+                Transformation *= AiToGLMMat4(parent->mTransformation);
+            }
+
+            component.VertexData.reserve(vertexCount);
+            component.Indices.reserve(indexCount * 3);
+
+            for (uint32_t y = 0; y < node->mNumMeshes; ++y)
+            {
+                uint32_t id = node->mMeshes[y];
+                const aiMesh* mesh = meshes[id];
+
+                for (uint32_t x = 0; x < mesh->mNumVertices; ++x)
+                {
+                    PBRVertex data = {};
+
+                    // Position
+                    data.Pos = glm::vec4(mesh->mVertices[x].x, mesh->mVertices[x].y, mesh->mVertices[x].z, 1) * Transformation;
+
+                    // Normals
+                    if (mesh->HasNormals())
+                        data.Normals = { mesh->mNormals[x].x, mesh->mNormals[x].y, mesh->mNormals[x].z };
+
+                    // UVs
+                    if (mesh->HasTextureCoords(0))
+                        data.UVs = { mesh->mTextureCoords[0][x].x, mesh->mTextureCoords[0][x].y };
+
+                    //Tangents
+                    if (mesh->HasTangentsAndBitangents())
+                        data.Tangent = { mesh->mTangents[x].x, mesh->mTangents[x].y, mesh->mTangents[x].z, 1.0f };
+
+                    component.VertexData.emplace_back(data);
+                }
+
+                //Bones
+                if (mesh->HasBones())
+                {
+                    LoadBones(out_data->BoneMapping, mesh, out_data->NumBones, out_data->BoneInfo, component);
+                }
+
+                for (uint32_t x = 0; x < mesh->mNumFaces; ++x)
+                {
+                    component.Indices.emplace_back(mesh->mFaces[x].mIndices[0]);
+                    component.Indices.emplace_back(mesh->mFaces[x].mIndices[1]);
+                    component.Indices.emplace_back(mesh->mFaces[x].mIndices[2]);
+                }
+            }
+
+            component.Name = node->mName.C_Str();
+            out_data->Components.emplace_back(component);
         }
 
-        glm::mat4 Transformation = AiToGLMMat4(node->mTransformation);
-
-        component.VertexData.reserve(vertexCount);
-        component.Indices.reserve(indexCount * 3);
-
-        for (uint32_t y = 0; y < node->mNumMeshes; ++y)
-        {
-            uint32_t id = node->mMeshes[y];
-            const aiMesh* mesh = meshes[id];
-
-            for (uint32_t x = 0; x < mesh->mNumVertices; ++x)
-            {
-                PBRVertex data = {};
-
-                // Position
-                data.Pos = glm::vec4(mesh->mVertices[x].x, mesh->mVertices[x].y, mesh->mVertices[x].z, 1) * Transformation;
-
-                // Normals
-                if (mesh->HasNormals())
-                    data.Normals = { mesh->mNormals[x].x, mesh->mNormals[x].y, mesh->mNormals[x].z };
-
-                // UVs
-                if (mesh->HasTextureCoords(0))
-                    data.UVs = { mesh->mTextureCoords[0][x].x, mesh->mTextureCoords[0][x].y };
-
-                //Tangents
-                if (mesh->HasTangentsAndBitangents())
-                    data.Tangent = { mesh->mTangents[x].x, mesh->mTangents[x].y, mesh->mTangents[x].z, 1.0f};
-
-                component.VertexData.emplace_back(data);
-            }
-
-            //Bones
-            if (mesh->HasBones())
-            {
-                LoadBones(out_data->BoneMapping, mesh, out_data->NumBones, out_data->BoneInfo, component);
-            }
-
-            for (uint32_t x = 0; x < mesh->mNumFaces; ++x)
-            {
-                component.Indices.emplace_back(mesh->mFaces[x].mIndices[0]);
-                component.Indices.emplace_back(mesh->mFaces[x].mIndices[1]);
-                component.Indices.emplace_back(mesh->mFaces[x].mIndices[2]);
-            }
-        }
-
-        component.Name = node->mName.C_Str();
-        out_data->Components.emplace_back(component);
+       
+        for (uint32_t i = 0; i < node->mNumChildren; ++i)
+            ProcessMesh(meshes, node->mChildren[i], node, out_data);
     }
 
     bool ModelImporter::Load(const std::string& filePath, ImportedData* out_data, ModelImporterFlags flags)
@@ -178,18 +189,7 @@ namespace SmolEngine
         for (uint32_t i = 0; i < g_scene->mRootNode->mNumChildren; ++i)
         {
             const aiNode* node = g_scene->mRootNode->mChildren[i];
-
-            // Main Node
-            if (node->mNumMeshes > 0)
-                ProcessMesh(meshes, node, out_data);
-
-            // Child Nodes
-            for (uint32_t i = 0; i < node->mNumChildren; i++)
-            {
-                auto child = node->mChildren[i];
-                if (child->mNumMeshes > 0)
-                    ProcessMesh(meshes, child, out_data);
-            }
+            ProcessMesh(meshes, node, nullptr, out_data);
         }
 
         if (g_scene->mNumAnimations > 0)

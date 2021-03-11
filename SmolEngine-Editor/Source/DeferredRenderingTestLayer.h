@@ -69,6 +69,7 @@ namespace SmolEngine
 		Ref<Mesh>                        m_TestMesh = nullptr;
 		Ref<Mesh>                        m_SponzaMesh = nullptr;
 		Ref<Mesh>                        m_PlaneMesh = nullptr;
+		Ref<Framebuffer>                 m_Framebuffer = nullptr;
 
 		Ref<GraphicsPipeline>            m_Pipeline = nullptr;
 		Ref<GraphicsPipeline>            m_SSAOPipeline = nullptr;

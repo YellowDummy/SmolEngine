@@ -30,12 +30,7 @@ layout (location = 19) in float inPDepth;
 layout (location = 20) in mat3 inTBN;
 
 // uniforms
-
-layout (binding = 5) uniform sampler2D albedoMap[256];
-layout (binding = 6) uniform sampler2D normalMap[256];
-layout (binding = 7) uniform sampler2D aoMap[256];
-layout (binding = 8) uniform sampler2D metallicMap[256];
-layout (binding = 9) uniform sampler2D roughnessMap[256];
+layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 // out
 
@@ -48,7 +43,7 @@ vec3 calculateNormal()
 {
     if(inUseNormalMap == 1)
 	{
-		vec3 tangentNormal = texture(normalMap[inNormalMapIndex], inUV).xyz * 2.0 - vec3(1.0);
+		vec3 tangentNormal = texture(texturesMap[inNormalMapIndex], inUV).xyz * 2.0 - vec3(1.0);
 		return inTBN * normalize(tangentNormal);
 	}
 	else
@@ -60,11 +55,11 @@ vec3 calculateNormal()
 void main()
 {		
 	vec3 N = calculateNormal();
-	float metallic = inUseMetallicMap == 1? texture(metallicMap[inMetallicMapIndex], inUV).r : inMetallic;
-	float roughness = inUseRoughnessMap == 1 ? texture(roughnessMap[inRoughnessMapIndex], inUV).r : inRoughness;
-    float ao = inUseAOMap == 1? texture(aoMap[inAOMapIndex], inUV).r : 1.0;
+	float metallic = inUseMetallicMap == 1? texture(texturesMap[inMetallicMapIndex], inUV).r : inMetallic;
+	float roughness = inUseRoughnessMap == 1 ? texture(texturesMap[inRoughnessMapIndex], inUV).r : inRoughness;
+    float ao = inUseAOMap == 1? texture(texturesMap[inAOMapIndex], inUV).r : 1.0;
 
-	outAlbedo = inUseAlbedroMap == 1? texture(albedoMap[inAlbedroMapIndex], inUV) : inColor;
+	outAlbedo = inUseAlbedroMap == 1? texture(texturesMap[inAlbedroMapIndex], inUV) : inColor;
     outNormal = vec4(N, 1);
     outPosition = vec4(inWorldPos, inPDepth);
 

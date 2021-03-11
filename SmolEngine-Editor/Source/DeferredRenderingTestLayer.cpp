@@ -30,6 +30,7 @@ namespace SmolEngine
 		return;
 #endif
 	
+		VulkanPBR::Init("../Resources/Textures/gcanyon_cube.ktx", TextureFormat::R16G16B16A16_SFLOAT);
 		// Models buffer
 		m_ModelViews.resize(1);
 		CommandSystem::ComposeTransform(m_Pos, m_Rot, m_Scale, true, m_ModelViews[0]);
@@ -42,8 +43,6 @@ namespace SmolEngine
 		} ssaoTempData;
 
 		SSAOGenerator::Generate(m_SSAONoise, ssaoTempData.kernel);
-
-		VulkanPBR::Init("../Resources/Textures/gcanyon_cube.ktx", TextureFormat::R16G16B16A16_SFLOAT);
 
 		// Editor Camera
 		EditorCameraCreateInfo cameraCI = {};
@@ -60,8 +59,7 @@ namespace SmolEngine
 			framebufferEditor.bTargetsSwapchain = true;
 			framebufferEditor.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
 
-			auto frameBuffer = Framebuffer::Create(framebufferEditor);
-			//m_EditorCamera->SetFramebuffers({ frameBuffer });
+			m_Framebuffer = Framebuffer::Create(framebufferEditor);
 		}
 
 		// MRT Framebufefr
@@ -156,63 +154,16 @@ namespace SmolEngine
 		auto FullScreenID = IndexBuffer::Create(squareIndices, 6);
 
 		// Model
-		m_TestMesh = Mesh::Create(Resources + "WoodenChair_01.FBX");
-		m_SponzaMesh = Mesh::Create(Resources + "sponza.glb");
-		m_PlaneMesh = Mesh::Create(Resources + "plane.glb");
-
-		// Default PBR
-		{
-			m_PBRPipeline = std::make_shared<GraphicsPipeline>();
-			GraphicsPipelineShaderCreateInfo shaderCI = {};
-			{
-				shaderCI.FilePaths[ShaderType::Vertex] = Resources + "Shaders/PBR_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = Resources + "Shaders/PBR_Vulkan_Fragment.glsl";
-			};
-
-			BufferLayout mainLayout =
-			{
-				{ DataTypes::Float3, "aPos" },
-				{ DataTypes::Float3, "aNormal" },
-				{ DataTypes::Float4, "aTangent" },
-				{ DataTypes::Float2, "aUV" },
-				{ DataTypes::Float4, "aColor" }
-			};
-
-
-			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
-			{
-				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(PBRVertex), mainLayout) };
-
-				DynamicPipelineCI.PipelineName = "PBR_Rendering";
-				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-				//DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
-			}
-
-			auto result = m_PBRPipeline->Create(&DynamicPipelineCI);
-			assert(result == PipelineCreateResult::SUCCESS);
-
-			m_PBRPipeline->UpdateSampler(m_Tetxure1, 5); //albedo
-			m_PBRPipeline->UpdateSampler(m_Tetxure3, 6); //normal
-			m_PBRPipeline->UpdateSampler(m_Tetxure5, 7); //ao
-			m_PBRPipeline->UpdateSampler( m_Tetxure2, 8); //metallic
-			m_PBRPipeline->UpdateSampler(m_Tetxure4, 9); //roughness
-
-			m_PBRPipeline->SubmitBuffer(12, sizeof(PBRParams), &m_PBRParams);
-
-#ifndef SMOLENGINE_OPENGL_IMPL
-			m_PBRPipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
-			m_PBRPipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
-			m_PBRPipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
-#endif
-		}
+		m_TestMesh = Mesh::Create(Resources + "Models/WoodenChair_01.FBX");
+		m_SponzaMesh = Mesh::Create(Resources + "Models/sponza.glb");
 
 		// MRT
 		{
 			m_Pipeline = std::make_shared<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/MRT_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/MRT_Vulkan_Fragment.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/MRT.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/MRT.frag";
 
 				shaderCI.StorageBuffersSizes[25] = { sizeof(glm::mat4) * m_ModelViews.size() };
 				shaderCI.StorageBuffersSizes[26] = { sizeof(Material) * 1000 };
@@ -224,7 +175,8 @@ namespace SmolEngine
 				{ DataTypes::Float3, "aNormal" },
 				{ DataTypes::Float4, "aTangent" },
 				{ DataTypes::Float2, "aUV" },
-				{ DataTypes::Float4, "aColor" }
+				{ DataTypes::Int4,   "aBoneIDs"},
+				{ DataTypes::Float4, "aWeight"}
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
@@ -239,13 +191,20 @@ namespace SmolEngine
 			auto result = m_Pipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
 
-			m_Pipeline->SubmitBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
+			MaterialCreateInfo info = {};
+			std::string path = Resources + "Materials/SponzaBricks.s_material";
+			MaterialLibrary::GetSinglenton()->Load(path, info);
+			info.Metallic = 0.2f;
+			MaterialLibrary::GetSinglenton()->Add(&info, path);
 
-			m_Pipeline->UpdateSamplers({ m_Tetxure1, m_BrickAlbedro }, 5); //albedo
-			m_Pipeline->UpdateSamplers({ m_Tetxure3, m_BrickNormal }, 6); //normal
-			m_Pipeline->UpdateSamplers({ m_Tetxure5 }, 7); //ao
-			m_Pipeline->UpdateSamplers({ m_Tetxure2 }, 8); //metallic
-			m_Pipeline->UpdateSamplers({ m_Tetxure4, m_BrickRoughness }, 9); //roughness
+			m_Pipeline->UpdateSamplers(MaterialLibrary::GetSinglenton()->GetTextures(), 24);
+
+			void* data = nullptr;
+			uint32_t size = 0;
+			MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
+			m_Pipeline->SubmitBuffer(26, size, data);
+
+			m_Pipeline->SubmitBuffer(25, sizeof(glm::mat4) * m_ModelViews.size(), m_ModelViews.data());
 		}
 
 		// SSAO + SSAO Blur
@@ -256,8 +215,8 @@ namespace SmolEngine
 
 				GraphicsPipelineShaderCreateInfo shaderCI = {};
 				{
-					shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
-					shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/SSAO_Vulkan_Fragment.glsl";
+					shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/GenVertex.vert";
+					shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/SSAO.frag";
 				};
 
 				GraphicsPipelineCreateInfo DynamicPipelineCI = {};
@@ -271,7 +230,7 @@ namespace SmolEngine
 				auto result = m_SSAOPipeline->Create(&DynamicPipelineCI);
 				assert(result == PipelineCreateResult::SUCCESS);
 
-				m_SSAOPipeline->SubmitBuffer(25, sizeof(SSAOTempUbo), &ssaoTempData);
+				m_SSAOPipeline->SubmitBuffer(66, sizeof(SSAOTempUbo), &ssaoTempData);
 				m_SSAOPipeline->UpdateSampler(m_SSAONoise, 2);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
@@ -291,8 +250,8 @@ namespace SmolEngine
 
 				GraphicsPipelineShaderCreateInfo shaderCI = {};
 				{
-					shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
-					shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/SSAO_Blur_Vulkan_Fragment.glsl";
+					shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/GenVertex.vert";
+					shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/SSAOBlur.frag";
 				};
 
 				GraphicsPipelineCreateInfo DynamicPipelineCI = {};
@@ -321,8 +280,8 @@ namespace SmolEngine
 			m_SkyboxPipeline = std::make_shared<GraphicsPipeline>();
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Skybox_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Skybox_Vulkan_Frag.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/Skybox.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/Skybox.frag";
 			};
 
 			struct SkyBoxData
@@ -401,8 +360,8 @@ namespace SmolEngine
 
 			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/GenVertex_Vulkan_Vertex.glsl";
-				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/PBR_MRT_Vulkan_Fragment.glsl";
+				shaderCI.FilePaths[ShaderType::Vertex] = "../Resources/Shaders/Vulkan/GenVertex.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "../Resources/Shaders/Vulkan/PBRMRT.frag";
 			};
 
 			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
@@ -410,7 +369,7 @@ namespace SmolEngine
 				DynamicPipelineCI.VertexInputInfos = { VertexInputInfo(sizeof(FullSreenData), FullSreenlayout) };
 				DynamicPipelineCI.PipelineName = "Deferred_Rendering_Combination";
 				DynamicPipelineCI.ShaderCreateInfo = &shaderCI;
-				//DynamicPipelineCI.TargetFramebuffer = m_EditorCamera->GetFramebuffer();
+				DynamicPipelineCI.TargetFramebuffer = m_Framebuffer;
 			}
 
 			auto result = m_CombinationPipeline->Create(&DynamicPipelineCI);
@@ -450,6 +409,11 @@ namespace SmolEngine
 	void DeferredRenderingTest::OnEvent(Event& event)
 	{
 		m_EditorCamera->OnEvent(event);
+		if (event.m_EventType == (int)EventType::S_WINDOW_RESIZE)
+		{
+			auto& res_e = static_cast<WindowResizeEvent&>(event);
+			m_Framebuffer->OnResize(res_e.GetWidth(), res_e.GetHeight());
+		}
 	}
 
 	void DeferredRenderingTest::OnImGuiRender()
@@ -530,48 +494,12 @@ namespace SmolEngine
 
 	void DeferredRenderingTest::BuildTestCommandBuffer()
 	{
-		static bool defPBR = false;
-		if (defPBR)
-		{
-			// Default PBR Test
-			{
-				m_PBRPipeline->BeginCommandBuffer(true);
-				m_PBRPipeline->BeginRenderPass();
-				{
-					struct PushConsant
-					{
-						glm::mat4 proj;
-						glm::mat4 model;
-						glm::mat4 view;
-
-						glm::vec3 camPos;
-					} pc;
-
-					pc.proj = m_EditorCamera->GetProjection();
-					pc.model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-					pc.view = m_EditorCamera->GetViewMatrix();
-					pc.camPos = m_EditorCamera->GetPosition();
-
-					m_PBRPipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_PBRPipeline->DrawMesh(m_SponzaMesh.get());
-				}
-				m_PBRPipeline->EndRenderPass();
-			}
-			return;
-		}
-
 		bool useMainCmdBuffer = true;
 		VkCommandBuffer cmdBuffer;
 		// Offscreen MRT + SkyBox
 		{
-
 			// MRT
 			{
-				// Update materials
-				void* data = nullptr;
-				uint32_t size = 0;
-				MaterialLibrary::GetSinglenton()->GetMaterialsPtr(data, size);
-				m_Pipeline->SubmitBuffer(26, size, data);
 
 				m_Pipeline->BeginCommandBuffer(useMainCmdBuffer);
 				m_Pipeline->BeginRenderPass();
@@ -604,7 +532,7 @@ namespace SmolEngine
 					pc.materialIndex = m_MaterialIndex;
 
 					m_Pipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(PushConsant), &pc);
-					m_Pipeline->DrawMesh(m_PlaneMesh.get());
+					m_Pipeline->DrawMesh(m_SponzaMesh.get());
 				}
 				m_Pipeline->EndRenderPass();
 			}

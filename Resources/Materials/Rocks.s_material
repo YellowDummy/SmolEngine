@@ -1,0 +1,29 @@
+{
+    "value0": 1.0,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": 9.0,
+    "value4": "Rocks",
+    "value5": [
+        {
+            "key": 0,
+            "value": "C:\\Users\\fleur\\Downloads\\uploads_files_2735883_Mountain(2)\\Model\\Textures\\aerial_rocks_02_8k_png\\aerial_rocks_02_diff_8k.png"
+        },
+        {
+            "key": 1,
+            "value": "C:\\Users\\fleur\\Downloads\\uploads_files_2735883_Mountain(2)\\Model\\Textures\\aerial_rocks_02_8k_png\\aerial_rocks_02_nor_8k.png"
+        },
+        {
+            "key": 2,
+            "value": ""
+        },
+        {
+            "key": 3,
+            "value": "C:\\Users\\fleur\\Downloads\\uploads_files_2735883_Mountain(2)\\Model\\Textures\\aerial_rocks_02_8k_png\\aerial_rocks_02_rough_8k.png"
+        },
+        {
+            "key": 4,
+            "value": "C:\\Users\\fleur\\Downloads\\uploads_files_2735883_Mountain(2)\\Model\\Textures\\aerial_rocks_02_8k_png\\aerial_rocks_02_ao_8k.png"
+        }
+    ]
+}

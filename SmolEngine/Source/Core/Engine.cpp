@@ -35,6 +35,13 @@ namespace SmolEngine
 		delete m_ImGuiLayer;
 	}
 
+	struct SomeData
+	{
+		float x = 0.0f;
+		int b = 100;
+		std::string name = "NoName";
+	};
+
 	void Engine::Init()
 	{
 		NATIVE_INFO("State = Startup");
@@ -123,15 +130,12 @@ namespace SmolEngine
 			m_LastFrameTime = time;
 
 			if (m_WindowMinimized)
-			{
 				continue;
-			}
 
 			// Begin New Frame
 			m_Window->BeginFrame();
 
 #ifdef SMOLENGINE_EDITOR
-
 			// Updating ImGui
 			m_ImGuiLayer->OnBegin();
 			for (Layer* layer : *m_LayerHandler)
@@ -140,9 +144,7 @@ namespace SmolEngine
 			}
 			m_ImGuiLayer->OnEnd();
 #endif
-
 			// Updating Layers
-
 			for (Layer* layer : *m_LayerHandler)
 			{
 				layer->OnUpdate(deltaTime);

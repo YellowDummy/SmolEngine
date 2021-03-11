@@ -12,7 +12,7 @@ struct Kernel
     vec4 samples[SSAO_KERNEL_SIZE];
 };
 
-layout (binding = 25) uniform UBOSSAOKernel
+layout (binding = 66) uniform UBOSSAOKernel
 {
     Kernel uboSSAOKernel;
 };

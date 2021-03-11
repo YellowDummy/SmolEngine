@@ -29,6 +29,12 @@ namespace SmolEngine
 			return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(*m_Actor);
 		}
 
+		template<typename T>
+		T* HasComponent()
+		{
+			return WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<T>(*m_Actor);
+		}
+
 		// Search
 		Ref<Actor> FindActorByName(const std::string& name);
 

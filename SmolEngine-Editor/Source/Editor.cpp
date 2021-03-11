@@ -24,6 +24,7 @@ namespace SmolEngine
 		EDITOR_INFO("Initialized successfully");
 	}
 
+
 	Engine* CreateEngineContext()
 	{
 		return new Editor;

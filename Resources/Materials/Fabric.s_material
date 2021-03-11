@@ -1,0 +1,29 @@
+{
+    "value0": 1.0,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": 9.0,
+    "value4": "FabricMaterial",
+    "value5": [
+        {
+            "key": 0,
+            "value": "C:\\Users\\fleur\\Downloads\\Fabric048_4K-PNG\\Fabric048_4K_Color.png"
+        },
+        {
+            "key": 1,
+            "value": "C:\\Users\\fleur\\Downloads\\Fabric048_4K-PNG\\Fabric048_4K_Normal.png"
+        },
+        {
+            "key": 2,
+            "value": "C:\\Users\\fleur\\Downloads\\Fabric048_4K-PNG\\Fabric048_4K_Displacement.png"
+        },
+        {
+            "key": 3,
+            "value": "C:\\Users\\fleur\\Downloads\\Fabric048_4K-PNG\\Fabric048_4K_Roughness.png"
+        },
+        {
+            "key": 4,
+            "value": "C:\\Users\\fleur\\Downloads\\Fabric048_4K-PNG\\Fabric048_4K_AmbientOcclusion.png"
+        }
+    ]
+}

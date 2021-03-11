@@ -64,6 +64,21 @@ namespace SmolEngine
 			return &component;
 		}
 
+		template<typename T, typename... Args>
+		T* AddComponent(Actor* actor, Args&&... args)
+		{
+			if (HasComponent<T>(*actor))
+			{
+				NATIVE_ERROR("Actor already have component!");
+				return nullptr;
+			}
+
+			auto& component = m_SceneData.m_Registry.emplace<T>(*actor, std::forward<Args>(args)...);
+			component.ComponentID = static_cast<uint32_t>(actor->m_ComponentsCount);
+			actor->m_ComponentsCount++;
+			return &component;
+		}
+
 		template<typename T>
 		bool HasComponent(entt::entity entity)
 		{

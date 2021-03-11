@@ -30,25 +30,15 @@ namespace SmolEngine
 	enum class JointType : uint16_t
 	{
 		Distance,
-
 		Revolute,
-
 		Prismatic, 
-
 		Pulley,
-
 		Gear,
-
 		Mouse, 
-
 		Wheel,
-
 		Weld,
-
 		Rope,
-
 		Friction,
-
 		Motor
 	};
 

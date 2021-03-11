@@ -45,6 +45,8 @@ public:
 
 private:
 
+	float forceX = 0.0;
+	float forceY = 20.0f;
 	float* speed = nullptr;
 	std::string* name = nullptr;
 };

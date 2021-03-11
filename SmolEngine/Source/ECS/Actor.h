@@ -33,6 +33,18 @@ namespace SmolEngine
 
 		operator entt::entity() const { return m_Entity; }
 
+		template<typename T>
+		bool HasComponent()
+		{
+			return WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<T>(m_Entity);
+		}
+
+		template<typename T, typename... Args>
+		T* AddComponent(Args&&... args)
+		{
+			return WorldAdmin::GetSingleton()->GetActiveScene().AddComponent<T>(this, args...);
+		}
+
 		/// Getters
 
 		std::vector<Ref<Actor>>& GetChilds() { return m_Childs; }
@@ -50,6 +62,13 @@ namespace SmolEngine
 		const uint32_t GetID() const;
 
 		const size_t GetComponentsCount() const;
+
+		template<typename T>
+		T* GetComponent()
+		{
+			return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(m_Entity);
+		}
+
 
 		/// Setters
 

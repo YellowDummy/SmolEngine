@@ -91,7 +91,7 @@ namespace SmolEngine
 
 		m_Scene->CreateScene(std::string("TestScene.s_scene"));
 
-		Ref<Actor> actorA = m_Scene->GetActiveScene().CreateActor("ShitActor");
+		Ref<Actor> actorA = WorldAdmin::GetSingleton()->GetActiveScene().CreateActor("NewActor");
 		bool result = ScriptingSystem::AttachNativeScript(actorA, std::string("CharMoveScript"));
 
 	}
@@ -1504,7 +1504,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Dublicate", "Ctrl+C"))
 					{
-
+						m_Scene->GetActiveScene().DuplicateActor(m_SelectedActor);
 					}
 
 					if (ImGui::MenuItem("Delete"))

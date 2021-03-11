@@ -1,5 +1,5 @@
 {
-    "value0": 8,
+    "value0": 10,
     "value1": 0,
     "value2": 1,
     "value3": 2,
@@ -9,74 +9,92 @@
     "value7": 6,
     "value8": 7,
     "value9": 8,
-    "value10": 0,
-    "value11": {
+    "value10": 9,
+    "value11": 10,
+    "value12": 0,
+    "value13": {
         "value0": 0,
         "value1": "Floor_1",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value12": 1,
-    "value13": {
+    "value14": 1,
+    "value15": {
         "value0": 1,
         "value1": "Floor_2",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value14": 2,
-    "value15": {
+    "value16": 2,
+    "value17": {
         "value0": 2,
         "value1": "Floor_3",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value16": 3,
-    "value17": {
+    "value18": 3,
+    "value19": {
         "value0": 3,
         "value1": "Floor_4",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value18": 4,
-    "value19": {
+    "value20": 4,
+    "value21": {
         "value0": 4,
         "value1": "Wall_1",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value20": 5,
-    "value21": {
+    "value22": 5,
+    "value23": {
         "value0": 5,
         "value1": "Wall_2",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value22": 6,
-    "value23": {
+    "value24": 6,
+    "value25": {
         "value0": 6,
         "value1": "Wall_3",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value24": 7,
-    "value25": {
+    "value26": 7,
+    "value27": {
         "value0": 7,
-        "value1": "New_Mesh_7",
+        "value1": "Wall_4",
         "value2": "Default",
         "value3": true,
         "value4": 0
     },
-    "value26": 0,
-    "value27": 1,
-    "value28": 0,
+    "value28": 8,
     "value29": {
+        "value0": 8,
+        "value1": "Cannon",
+        "value2": "Default",
+        "value3": true,
+        "value4": 0
+    },
+    "value30": 9,
+    "value31": {
+        "value0": 9,
+        "value1": "DirectionalLight",
+        "value2": "Default",
+        "value3": true,
+        "value4": 0
+    },
+    "value32": 0,
+    "value33": 1,
+    "value34": 0,
+    "value35": {
         "value0": 0,
         "value1": [
             {
@@ -122,13 +140,13 @@
             }
         }
     },
-    "value30": 0,
-    "value31": 0,
-    "value32": 0,
-    "value33": 0,
-    "value34": 8,
-    "value35": 0,
-    "value36": {
+    "value36": 0,
+    "value37": 0,
+    "value38": 0,
+    "value39": 0,
+    "value40": 10,
+    "value41": 0,
+    "value42": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -140,8 +158,8 @@
         "value8": 0.0,
         "value9": 1
     },
-    "value37": 1,
-    "value38": {
+    "value43": 1,
+    "value44": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -153,8 +171,8 @@
         "value8": 1.994664192199707,
         "value9": 1
     },
-    "value39": 2,
-    "value40": {
+    "value45": 2,
+    "value46": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -166,8 +184,8 @@
         "value8": 0.0,
         "value9": 1
     },
-    "value41": 3,
-    "value42": {
+    "value47": 3,
+    "value48": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -179,8 +197,8 @@
         "value8": 1.9907442331314088,
         "value9": 1
     },
-    "value43": 4,
-    "value44": {
+    "value49": 4,
+    "value50": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -192,8 +210,8 @@
         "value8": 0.0,
         "value9": 1
     },
-    "value45": 5,
-    "value46": {
+    "value51": 5,
+    "value52": {
         "value0": 0.0,
         "value1": 0.0,
         "value2": 0.0,
@@ -205,8 +223,8 @@
         "value8": 2.0022945404052736,
         "value9": 1
     },
-    "value47": 6,
-    "value48": {
+    "value53": 6,
+    "value54": {
         "value0": 0.0,
         "value1": -1.600000023841858,
         "value2": 0.0,
@@ -218,8 +236,8 @@
         "value8": 3.0953662395477297,
         "value9": 1
     },
-    "value49": 7,
-    "value50": {
+    "value55": 7,
+    "value56": {
         "value0": 0.0,
         "value1": -1.600000023841858,
         "value2": 0.0,
@@ -231,11 +249,37 @@
         "value8": 3.032761812210083,
         "value9": 1
     },
-    "value51": 0,
-    "value52": 0,
-    "value53": 8,
-    "value54": 0,
-    "value55": {
+    "value57": 8,
+    "value58": {
+        "value0": 0.0,
+        "value1": 3.0,
+        "value2": 0.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": -1.034277081489563,
+        "value7": 0.12154918909072876,
+        "value8": 0.7993820905685425,
+        "value9": 1
+    },
+    "value59": 9,
+    "value60": {
+        "value0": 0.0,
+        "value1": 0.0,
+        "value2": 0.0,
+        "value3": 1.0,
+        "value4": 1.0,
+        "value5": 1.0,
+        "value6": 0.0,
+        "value7": 0.0,
+        "value8": 0.0,
+        "value9": 1
+    },
+    "value61": 0,
+    "value62": 0,
+    "value63": 9,
+    "value64": 0,
+    "value65": {
         "value0": true,
         "value1": false,
         "value2": true,
@@ -249,82 +293,7 @@
         "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
         "value6": 4
     },
-    "value56": 1,
-    "value57": {
-        "value0": true,
-        "value1": false,
-        "value2": true,
-        "value3": 2,
-        "value4": [
-            {
-                "key": 0,
-                "value": "Concrete2"
-            }
-        ],
-        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
-        "value6": 2
-    },
-    "value58": 2,
-    "value59": {
-        "value0": true,
-        "value1": false,
-        "value2": true,
-        "value3": 2,
-        "value4": [
-            {
-                "key": 0,
-                "value": "Concrete2"
-            }
-        ],
-        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
-        "value6": 2
-    },
-    "value60": 3,
-    "value61": {
-        "value0": true,
-        "value1": false,
-        "value2": true,
-        "value3": 2,
-        "value4": [
-            {
-                "key": 0,
-                "value": "Concrete2"
-            }
-        ],
-        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
-        "value6": 2
-    },
-    "value62": 4,
-    "value63": {
-        "value0": true,
-        "value1": false,
-        "value2": true,
-        "value3": 2,
-        "value4": [
-            {
-                "key": 0,
-                "value": "FabricMaterial"
-            }
-        ],
-        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
-        "value6": 2
-    },
-    "value64": 5,
-    "value65": {
-        "value0": true,
-        "value1": false,
-        "value2": true,
-        "value3": 2,
-        "value4": [
-            {
-                "key": 0,
-                "value": "FabricMaterial"
-            }
-        ],
-        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
-        "value6": 2
-    },
-    "value66": 6,
+    "value66": 1,
     "value67": {
         "value0": true,
         "value1": false,
@@ -333,14 +302,44 @@
         "value4": [
             {
                 "key": 0,
-                "value": "FabricMaterial"
+                "value": "Concrete2"
             }
         ],
         "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
         "value6": 2
     },
-    "value68": 7,
+    "value68": 2,
     "value69": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "Concrete2"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
+        "value6": 2
+    },
+    "value70": 3,
+    "value71": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "Concrete2"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
+        "value6": 2
+    },
+    "value72": 4,
+    "value73": {
         "value0": true,
         "value1": false,
         "value2": true,
@@ -354,12 +353,107 @@
         "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
         "value6": 2
     },
-    "value70": 0,
-    "value71": 0
+    "value74": 5,
+    "value75": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "FabricMaterial"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
+        "value6": 2
+    },
+    "value76": 6,
+    "value77": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "FabricMaterial"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
+        "value6": 2
+    },
+    "value78": 7,
+    "value79": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "FabricMaterial"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cube.glb",
+        "value6": 2
+    },
+    "value80": 8,
+    "value81": {
+        "value0": true,
+        "value1": false,
+        "value2": true,
+        "value3": 2,
+        "value4": [
+            {
+                "key": 0,
+                "value": "CannonMaterial"
+            },
+            {
+                "key": 1,
+                "value": "CannonMaterial"
+            },
+            {
+                "key": 2,
+                "value": "CannonMaterial"
+            },
+            {
+                "key": 3,
+                "value": "CannonMaterial"
+            },
+            {
+                "key": 4,
+                "value": "CannonMaterial"
+            },
+            {
+                "key": 5,
+                "value": "CannonMaterial"
+            }
+        ],
+        "value5": "C:\\Dev\\SmolEngine\\Resources\\Models\\cannon.glb",
+        "value6": 2
+    },
+    "value82": 1,
+    "value83": 9,
+    "value84": {
+        "value0": true,
+        "value1": true,
+        "value2": 1.0,
+        "value3": 8.0,
+        "value4": 12.0,
+        "value5": -3.0,
+        "value6": 1.0,
+        "value7": 1.0,
+        "value8": 1.0,
+        "value9": 1.0,
+        "value10": 2
+    },
+    "value85": 0
 }|{
     "value0": [
         "C:\\Dev\\SmolEngine\\Resources\\Materials\\Concrete2.s_material",
-        "C:\\Dev\\SmolEngine\\Resources\\Materials\\Fabric.s_material"
+        "C:\\Dev\\SmolEngine\\Resources\\Materials\\Fabric.s_material",
+        "C:\\Dev\\SmolEngine\\Resources\\Materials\\Cannon.s_material"
     ],
     "value1": [
         {
@@ -513,6 +607,44 @@
                     }
                 }
             }
+        },
+        {
+            "key": 8,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483657,
+                    "data": {
+                        "value0": 8,
+                        "value1": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value2": [],
+                        "value3": 8,
+                        "value4": 3
+                    }
+                }
+            }
+        },
+        {
+            "key": 9,
+            "value": {
+                "ptr_wrapper": {
+                    "id": 2147483658,
+                    "data": {
+                        "value0": 9,
+                        "value1": {
+                            "ptr_wrapper": {
+                                "id": 0
+                            }
+                        },
+                        "value2": [],
+                        "value3": 9,
+                        "value4": 3
+                    }
+                }
+            }
         }
     ],
     "value2": [],
@@ -520,7 +652,7 @@
     "value4": 0.0,
     "value5": -9.8100004196167,
     "value6": 8531768292242376039,
-    "value7": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\TestScene.s_scene",
-    "value8": "TestScene",
+    "value7": "C:\\Dev\\SmolEngine\\SmolEngine-Editor\\Cannon.s_scene",
+    "value8": "Cannon",
     "value9": 1.0
 }

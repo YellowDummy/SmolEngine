@@ -3,6 +3,7 @@
 #include "Core/AssetManager.h"
 #include "ImGui/EditorConsole.h"
 
+
 namespace SmolEngine
 {
 	const uint32_t maxTextures = 4096;
@@ -44,6 +45,7 @@ namespace SmolEngine
 			newMaterial.m_MaterialProperties.PBRValues.y = infoCI->Roughness;
 			newMaterial.m_MaterialProperties.PBRValues.z = infoCI->Albedro;
 			newMaterial.m_MaterialProperties.PBRValues.w = infoCI->Specular;
+
 
 			newMaterial.m_MaterialProperties.Indexes_1.x = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::Albedro], TextureFormat::R8G8B8A8_UNORM, false));
 			newMaterial.m_MaterialProperties.Indexes_1.y = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::Normal], TextureFormat::R8G8B8A8_UNORM, false));

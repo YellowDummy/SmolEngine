@@ -173,18 +173,6 @@ namespace SmolEngine
 					}
 				}
 
-				for (auto& valueInt : s_it->second.Ints)
-				{
-					for (auto& primitiveValue : primitive.m_OutValues)
-					{
-						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Int)
-						{
-							if (valueInt.Name == primitiveValue.ValueName)
-								primitiveValue.Ptr = &valueInt.Value;
-						}
-					}
-				}
-
 				for (auto& valueFloat : s_it->second.Floats)
 				{
 					for (auto& primitiveValue : primitive.m_OutValues)
