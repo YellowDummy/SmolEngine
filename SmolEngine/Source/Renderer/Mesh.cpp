@@ -15,13 +15,13 @@ namespace SmolEngine
     //TODO: add staging buffer
     Ref<Mesh> Mesh::Create(const std::string& filePath)
     {
-        Ref<Mesh> mesh = nullptr;
+        Ref<Mesh> mesh = WorldAdmin::GetSingleton()->AddOrGetMeshFromPool(filePath);
+        if (mesh->m_Initialized)
+            return mesh;
+
         ImportedData* data = new ImportedData();
         if (ModelImporter::Load(filePath, data))
-        {
-            mesh = std::make_shared<Mesh>();
-            mesh->Init(data);
-        }
+            mesh->m_Initialized = mesh->Init(data);
 
         delete data;
         return mesh;

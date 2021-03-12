@@ -18,14 +18,14 @@ namespace SmolEngine
 			return false;
 
 		BehaviourComponent* component = nullptr;
-		if (!WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<BehaviourComponent>(*actor))
+		if (!WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<BehaviourComponent>(*actor))
 		{
-			component = WorldAdmin::GetSingleton()->GetActiveScene().AddComponent<BehaviourComponent>(*actor);
+			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<BehaviourComponent>(*actor);
 			component->Actor = actor;
 			component->ActorID = actor->GetID();
 		}
 		else
-			component = WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<BehaviourComponent>(*actor);
+			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(*actor);
 
 		int32_t index = static_cast<int32_t>(actor->m_ComponentsCount);
 		actor->m_ComponentsCount++;
@@ -121,7 +121,7 @@ namespace SmolEngine
 	void ScriptingSystem::OnDestroy(Ref<Actor>& actor)
 	{
 		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<BehaviourComponent>(*actor.get());
+		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(*actor.get());
 		if (behaviour && instance)
 		{
 			for (auto& script : behaviour->Scripts)
@@ -136,7 +136,7 @@ namespace SmolEngine
 		for (const auto& entity : view)
 		{
 			auto& behaviour = view.get<BehaviourComponent>(entity);
-			Ref<Actor> actor = WorldAdmin::GetSingleton()->GetActiveScene().FindActorByID(behaviour.ActorID);
+			Ref<Actor> actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(behaviour.ActorID);
 			if (!actor)
 			{
 				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
@@ -203,10 +203,10 @@ namespace SmolEngine
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		auto admin = WorldAdmin::GetSingleton();
-		if (admin->GetActiveScene().HasComponent<BehaviourComponent>(*actorB))
+		if (admin->GetActiveScene()->HasComponent<BehaviourComponent>(*actorB))
 		{
 			ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-			BehaviourComponent* behaviour = admin->GetActiveScene().GetComponent<BehaviourComponent>(*actorB);
+			BehaviourComponent* behaviour = admin->GetActiveScene()->GetComponent<BehaviourComponent>(*actorB);
 
 			for (auto& script : behaviour->Scripts)
 				instance->MetaMap[script.KeyName].OnCollBeginFunc.invoke(script.Script, actorA, isTrigger);
@@ -216,10 +216,10 @@ namespace SmolEngine
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		auto admin = WorldAdmin::GetSingleton();
-		if (admin->GetActiveScene().HasComponent<BehaviourComponent>(*actorB))
+		if (admin->GetActiveScene()->HasComponent<BehaviourComponent>(*actorB))
 		{
 			ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-			BehaviourComponent* behaviour = admin->GetActiveScene().GetComponent<BehaviourComponent>(*actorB);
+			BehaviourComponent* behaviour = admin->GetActiveScene()->GetComponent<BehaviourComponent>(*actorB);
 
 			for (auto& script : behaviour->Scripts)
 				instance->MetaMap[script.KeyName].OnCollEndFunc.invoke(script.Script, actorA, isTrigger);

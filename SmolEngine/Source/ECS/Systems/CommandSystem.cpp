@@ -108,7 +108,7 @@ namespace SmolEngine
 
 	bool CommandSystem::SetMeshMaterial(MeshComponent* component, Mesh* target_mesh, MaterialCreateInfo* info, const std::string& material_path)
 	{
-		auto& material_paths = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_MaterialPaths;
+		auto& material_paths = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneData().m_MaterialPaths;
 		bool path_exist = false;
 		for (auto& path : material_paths)
 		{

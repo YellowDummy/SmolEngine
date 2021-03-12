@@ -20,6 +20,7 @@
 #include <unordered_set>
 #include <string>
 
+#include "ECS/Scene.h"
 #include "ECS/WorldAdmin.h"
 #include "ECS/Actor.h"
 

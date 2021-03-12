@@ -132,7 +132,7 @@ namespace SmolEngine
 
 	void UIButton::Reload()
 	{
-		auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_AssetMap;
+		auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneData().m_AssetMap;
 
 		const auto& result = assetMap.find(m_TetxureName);
 		if (result != assetMap.end())

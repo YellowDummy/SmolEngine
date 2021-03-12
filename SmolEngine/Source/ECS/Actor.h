@@ -36,13 +36,13 @@ namespace SmolEngine
 		template<typename T>
 		bool HasComponent()
 		{
-			return WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<T>(m_Entity);
+			return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Entity);
 		}
 
 		template<typename T, typename... Args>
 		T* AddComponent(Args&&... args)
 		{
-			return WorldAdmin::GetSingleton()->GetActiveScene().AddComponent<T>(this, args...);
+			return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<T>(this, args...);
 		}
 
 		/// Getters
@@ -66,7 +66,7 @@ namespace SmolEngine
 		template<typename T>
 		T* GetComponent()
 		{
-			return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(m_Entity);
+			return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<T>(m_Entity);
 		}
 
 

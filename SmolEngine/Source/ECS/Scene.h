@@ -15,9 +15,15 @@ namespace SmolEngine
 	{
 	public:
 
-		Scene() = default;
+		Scene();
+
+		~Scene();
+
+		Scene(const Scene& another);
 
 		void Init(const std::string& filePath);
+
+		void Free();
 
 		/// Actors
 

@@ -590,6 +590,7 @@
     <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.h" />
     <ClInclude Include="Source\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="Source\ECS\Components\TransformComponent.h" />
     <ClInclude Include="Source\ECS\ComponentsCore.h" />
@@ -642,7 +643,6 @@
     <ClInclude Include="Source\Renderer\Material.h" />
     <ClInclude Include="Source\Renderer\MaterialLibrary.h" />
     <ClInclude Include="Source\Renderer\Mesh.h" />
-    <ClInclude Include="Source\Renderer\MeshPool.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglContext.h" />
     <ClInclude Include="Source\Renderer\OpenGL\OpenglFramebuffer.h" />
@@ -659,7 +659,6 @@
     <ClInclude Include="Source\Renderer\SubTexture.h" />
     <ClInclude Include="Source\Renderer\Text.h" />
     <ClInclude Include="Source\Renderer\Texture.h" />
-    <ClInclude Include="Source\Renderer\TexturesPool.h" />
     <ClInclude Include="Source\Renderer\VertexArray.h" />
     <ClInclude Include="Source\Renderer\VertexBuffer.h" />
     <ClInclude Include="Source\Renderer\Vulkan\Vulkan.h" />
@@ -729,6 +728,7 @@
     <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\Texture2DComponent.cpp" />
     <ClCompile Include="Source\ECS\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\ECS\Scene.cpp" />
@@ -772,7 +772,6 @@
     <ClCompile Include="Source\Renderer\Material.cpp" />
     <ClCompile Include="Source\Renderer\MaterialLibrary.cpp" />
     <ClCompile Include="Source\Renderer\Mesh.cpp" />
-    <ClCompile Include="Source\Renderer\MeshPool.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglContext.cpp" />
     <ClCompile Include="Source\Renderer\OpenGL\OpenglFramebuffer.cpp" />
@@ -787,7 +786,6 @@
     <ClCompile Include="Source\Renderer\SubTexture.cpp" />
     <ClCompile Include="Source\Renderer\Text.cpp" />
     <ClCompile Include="Source\Renderer\Texture.cpp" />
-    <ClCompile Include="Source\Renderer\TexturesPool.cpp" />
     <ClCompile Include="Source\Renderer\VertexArray.cpp" />
     <ClCompile Include="Source\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Vulkan\VulkanBuffer.cpp" />

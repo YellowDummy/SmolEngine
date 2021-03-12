@@ -2,13 +2,14 @@
 #include "Core/Core.h"
 #include "Core/Time.h"
 #include "Core/EventHandler.h"
-#include "ECS/Scene.h"
 
 #include <glm/glm.hpp>
 #include <unordered_map>
+#include <entt.hpp>
 
 namespace SmolEngine
 { 
+	struct WorldAdminStateSComponent;
 	struct CameraComponent;
 	struct TransformComponent;
 	struct BehaviourComponent;
@@ -18,6 +19,9 @@ namespace SmolEngine
 	class EditorCameraController;
 	class Framebuffer;
 	class EditorCamera;
+	class Mesh;
+	class Texture;
+	class Scene;
 
 	class WorldAdmin
 	{
@@ -69,6 +73,14 @@ namespace SmolEngine
 
 		bool SaveCurrentScene();
 
+		bool IsInPlayMode();
+
+		// Helpers
+
+		Ref<Mesh> AddOrGetMeshFromPool(const std::string& path);
+
+		Ref<Texture> AddOrGetTextureFromPool(const std::string& path);
+
 		// Camera handling
 		
 		void UpdateEditorCamera(Ref<EditorCamera>& cam);
@@ -79,7 +91,7 @@ namespace SmolEngine
 
 		inline static WorldAdmin* GetSingleton() { return s_World; }
 
-		Scene& GetActiveScene();
+		Scene* GetActiveScene();
 
 	private:
 
@@ -91,15 +103,10 @@ namespace SmolEngine
 
 	private:
 
-		bool                                 m_InPlayMode = false;
-
 		inline static WorldAdmin*            s_World = nullptr;
-		Ref<EditorCameraController>          m_EditorCamera = nullptr;
-		Ref<SubTexture2D>                    m_TestSub = nullptr;
+		WorldAdminStateSComponent*           m_State = nullptr;
 
-		size_t                               m_ActiveSceneID = 0;
 		entt::registry                       m_GlobalRegistry;
-		std::unordered_map<size_t, Scene>    m_SceneMap;
 
 	private:
 

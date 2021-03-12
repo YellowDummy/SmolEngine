@@ -4,7 +4,6 @@
 #include "Core/SLog.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/OpenGL/OpenglTexture.h"
-#include "Renderer/TexturesPool.h"
 #include "Core/AssetManager.h"
 
 #include <memory>
@@ -83,7 +82,7 @@ namespace SmolEngine
 
 	Ref<Texture> Texture::Create(const uint32_t width, const uint32_t height, TextureFormat format)
 	{
-		Ref<Texture> texture = TexturesPool::AddTexture(width, height);
+		Ref<Texture> texture = std::make_shared<Texture>();
 
 		if (!texture->m_Initialized)
 		{
@@ -101,7 +100,7 @@ namespace SmolEngine
 
 	Ref<Texture> Texture::CreateWhiteTexture()
 	{
-		Ref<Texture> texture = TexturesPool::AddDummyTexture();
+		Ref<Texture> texture = WorldAdmin::GetSingleton()->AddOrGetTextureFromPool("DummuTexture");
 		if (!texture->m_Initialized)
 		{
 #ifdef  SMOLENGINE_OPENGL_IMPL
@@ -123,7 +122,7 @@ namespace SmolEngine
 		if (!AssetManager::IsPathValid(filePath))
 			return nullptr;
 
-		Ref<Texture> texture = pooling ? TexturesPool::AddTexture(filePath) : std::make_shared<Texture>();
+		Ref<Texture> texture = pooling ? WorldAdmin::GetSingleton()->AddOrGetTextureFromPool(filePath) : std::make_shared<Texture>();
 
 		if (!texture->m_Initialized)
 		{

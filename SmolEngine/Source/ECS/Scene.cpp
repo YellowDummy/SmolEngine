@@ -7,11 +7,33 @@
 
 namespace SmolEngine
 {
+	Scene::Scene()
+	{
+
+	}
+
+	Scene::~Scene()
+	{
+
+	}
+
+	Scene::Scene(const Scene& another)
+	{
+		assert(false);
+	}
+
 	void Scene::Init(const std::string& filePath)
 	{
 		std::filesystem::path p(filePath);
 		m_SceneData = SceneData(filePath, p.filename().string());
 		m_SceneData.Prepare();
+	}
+
+	void Scene::Free()
+	{
+		m_IDSet.clear();
+		m_SceneData.m_Registry.clear();
+		m_SceneData = {};
 	}
 
 	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
@@ -92,28 +114,30 @@ namespace SmolEngine
 		child->SetParent(parent);
 	}
 
+	// TODO: add more components
 	void Scene::DuplicateActor(Ref<Actor>& actor)
 	{
 		auto newObj = CreateActor(actor->GetName() + "_D", actor->GetTag());
 		auto newT = newObj->GetComponent<TransformComponent>();
 		auto oldT = actor->GetComponent<TransformComponent>();
 
-		newT->Rotation = oldT->Rotation;
-		newT->Scale = oldT->Scale;
-		newT->WorldPos = oldT->WorldPos;
+		// Transform
+		*newT = *oldT;
 
 		auto meshOld = actor->GetComponent<MeshComponent>();
 		if (meshOld)
 		{
 			auto meshNew = newObj->AddComponent<MeshComponent>();
-			meshNew->bCastShadows = meshOld->bCastShadows;
-			meshNew->bIsStatic = meshOld->bIsStatic;
-			meshNew->bShow = meshOld->bShow;
-			meshNew->FilePath = meshOld->FilePath;
-			meshNew->MaterialNames = meshOld->MaterialNames;
-			meshNew->ShadowType = meshOld->ShadowType;
-			meshNew->Mesh = meshOld->Mesh;
+			*meshNew = *meshOld;
 		}
+
+		auto scriptOld = actor->GetComponent<BehaviourComponent>();
+		if (scriptOld)
+		{
+			auto scriptNew = newObj->AddComponent<BehaviourComponent>();
+			*scriptNew = *scriptOld;
+		}
+
 	}
 
 	void Scene::DeleteActor(Ref<Actor>& actor)

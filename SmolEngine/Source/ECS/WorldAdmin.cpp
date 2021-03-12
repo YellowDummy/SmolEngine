@@ -1,25 +1,14 @@
 #include "stdafx.h"
 #include "WorldAdmin.h"
 
-#include "Renderer/Framebuffer.h"
 #include "Renderer/Renderer2D.h"
-#include "Renderer/Renderer.h"
 #include "Renderer/EditorCamera.h"
-#include "Renderer/Text.h"
-#include "Renderer/GraphicsContext.h"
-#include "Renderer/TexturesPool.h"
 
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"
 
 #include "Core/AssetManager.h"
 #include "ImGui/EditorConsole.h"
-#include "UI/UIButton.h"
-#include "Physics2D/Box2D/CollisionListener2D.h"
-#include "Scripting/BehaviourPrimitive.h"
-
-#include "Audio/AudioEngine.h"
-#include "Animation/AnimationClip2D.h"
 
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/RendererSystem.h"
@@ -35,6 +24,7 @@
 #include "ECS/Components/Singletons/ProjectConfigSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
@@ -50,7 +40,7 @@ namespace SmolEngine
 	void WorldAdmin::Init()
 	{
 		LoadStaticComponents();
-		m_InPlayMode = false;
+		m_State->m_InPlayMode = false;
 	}
 
 	void WorldAdmin::StartGame()
@@ -72,7 +62,7 @@ namespace SmolEngine
 
 	void WorldAdmin::OnPlay()
 	{
-		SceneData& sceneData = GetActiveScene().GetSceneData();
+		SceneData& sceneData = GetActiveScene()->GetSceneData();
 #ifdef SMOLENGINE_EDITOR
 		if (!AssetManager::PathCheck(sceneData.m_filePath, sceneData.m_Name))
 		{
@@ -92,7 +82,7 @@ namespace SmolEngine
 			const auto& view = sceneData.m_Registry.view<TransformComponent, Body2DComponent>();
 			view.each([&](TransformComponent& tranform, Body2DComponent& body)
 			{
-					Physics2DSystem::CreateBody(&body, &tranform, &world->World, GetActiveScene().FindActorByID(body.ActorID));
+					Physics2DSystem::CreateBody(&body, &tranform, &world->World, GetActiveScene()->FindActorByID(body.ActorID));
 			});
 		}
 
@@ -102,13 +92,13 @@ namespace SmolEngine
 
 		// Sending start callback to all enabled scripts
 		ScriptingSystem::OnBegin(sceneData.m_Registry);
-		m_InPlayMode = true;
+		m_State->m_InPlayMode = true;
 	}
 
 	void WorldAdmin::OnEndPlay()
 	{
-		m_InPlayMode = false;
-		entt::registry& registry = GetActiveScene().m_SceneData.m_Registry;
+		m_State->m_InPlayMode = false;
+		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 		ScriptingSystem::OnEnd(registry);
 
 		// Deleting all Rigidbodies
@@ -120,15 +110,15 @@ namespace SmolEngine
 		AudioEngineSComponent::Get()->Engine.Reset();
 
 #ifdef SMOLENGINE_EDITOR
-		Load(GetActiveScene().m_SceneData.m_filePath);
+		Load(GetActiveScene()->m_SceneData.m_filePath);
 #endif
 	}
 
 	void WorldAdmin::OnUpdate(DeltaTime deltaTime)
 	{
-		entt::registry& registry = GetActiveScene().m_SceneData.m_Registry;
+		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 #ifdef SMOLENGINE_EDITOR
-		if (m_InPlayMode)
+		if (m_State->m_InPlayMode)
 		{
 			// Updating Phycics
 			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
@@ -191,16 +181,16 @@ namespace SmolEngine
 			}
 	     }
 #endif 
-		if (!m_InPlayMode) { return; }
-		UISystem::OnEvent(GetActiveScene().m_SceneData.m_Registry, e);
+		if (!m_State->m_InPlayMode) { return; }
+		UISystem::OnEvent(GetActiveScene()->m_SceneData.m_Registry, e);
 	}
 
 	void WorldAdmin::RenderScene(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar, bool debugDrawEnabled,
 		CameraComponent* targetCamera, TransformComponent* cameraTranform)
 	{
-		entt::registry& registry = GetActiveScene().m_SceneData.m_Registry;
+		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 #ifdef SMOLENGINE_EDITOR
-		if (m_InPlayMode)
+		if (m_State->m_InPlayMode)
 			Physics2DSystem::UpdateTransforms(registry);
 #else
 		Box2DPhysicsSystem::UpdateTransfroms(registry);
@@ -230,7 +220,7 @@ namespace SmolEngine
 				RendererSystem::DebugDraw(registry);
 
 #ifdef SMOLENGINE_EDITOR
-				if (m_InPlayMode)
+				if (m_State->m_InPlayMode)
 					ScriptingSystem::OnDebugDraw(registry);
 #else
 				ScriptingSystem::OnDebugDraw(registry);
@@ -242,13 +232,13 @@ namespace SmolEngine
 
 	void WorldAdmin::ReloadAssets()
 	{
-		Scene& activeScene = GetActiveScene();
-		entt::registry& registry = GetActiveScene().m_SceneData.m_Registry;
+		Scene* activeScene = GetActiveScene();
+		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 
-		activeScene.UpdateIDSet();
+		activeScene->UpdateIDSet();
 
 		// Updating AssetMap
-		auto& assetMap = activeScene.m_SceneData.m_AssetMap;
+		auto& assetMap = activeScene->m_SceneData.m_AssetMap;
 		for (auto& pair : assetMap)
 		{
 			auto& [name, path] = pair;
@@ -268,7 +258,7 @@ namespace SmolEngine
 		AssetManager::ReloadCanvases(registry);
 
 		// Reloading Materials
-		AssetManager::ReloadMeshMaterials(registry, &activeScene.m_SceneData);
+		AssetManager::ReloadMeshMaterials(registry, &activeScene->m_SceneData);
 
 		// Reloading Scripts
 		ScriptingSystem::ReloadScripts(registry);
@@ -283,12 +273,12 @@ namespace SmolEngine
 
 	void WorldAdmin::OnGameViewResize(float width, float height)
 	{
-		CameraSystem::OnResize(GetActiveScene().m_SceneData.m_Registry, width, height);
+		CameraSystem::OnResize(GetActiveScene()->m_SceneData.m_Registry, width, height);
 	}
 
 	bool WorldAdmin::Save(const std::string& filePath)
 	{
-		return GetActiveScene().Save(filePath);
+		return GetActiveScene()->Save(filePath);
 	}
 
 	bool WorldAdmin::Load(const std::string& filePath)
@@ -301,14 +291,23 @@ namespace SmolEngine
 			return false;
 		}
 
-		m_SceneMap.clear(); // temp
-		m_ActiveSceneID = 0;
+		if (m_State->m_NumLoadedScene > m_State->m_MaxAssetPoolLiftime)
+		{
+			m_State->m_MeshMap.clear();
+			m_State->m_TexturesMap.clear();
+		}
+		m_State->m_NumLoadedScene++;
+
+		// temp
+		{
+			m_State->m_SceneMap.clear();
+			m_State->m_ActiveSceneID = 0;
+		}
+
 		CreateScene(path);
 
-		if (GetActiveScene().Load(path))
+		if (GetActiveScene()->Load(path))
 		{
-			// Reset Pools
-			TexturesPool::Reset();
 			// Reloading Assets
 			ReloadAssets();
 			CONSOLE_WARN(std::string("Scene loaded successfully"));
@@ -320,10 +319,10 @@ namespace SmolEngine
 
 	bool WorldAdmin::SaveCurrentScene()
 	{
-		if (m_SceneMap.size() == 0)
+		if (m_State->m_SceneMap.size() == 0)
 			return false;
 
-		SceneData& data = GetActiveScene().GetSceneData();
+		SceneData& data = GetActiveScene()->GetSceneData();
 		// Searching for a file in assets folders if absolute path is not valid and replace old path if file found
 		if (AssetManager::PathCheck(data.m_filePath, data.m_Name))
 		{
@@ -333,10 +332,40 @@ namespace SmolEngine
 		return false;
 	}
 
+	bool WorldAdmin::IsInPlayMode()
+	{
+		return m_State->m_InPlayMode == true;
+	}
+
+	Ref<Mesh> WorldAdmin::AddOrGetMeshFromPool(const std::string& path)
+	{
+		size_t hash = m_State->m_Hash(path);
+		auto& it = m_State->m_MeshMap.find(hash);
+		if (it != m_State->m_MeshMap.end())
+			return it->second;
+
+		Ref<Mesh> mesh = std::make_shared<Mesh>();
+		m_State->m_MeshMap[hash] = mesh;
+		return mesh;
+	}
+
+	Ref<Texture> WorldAdmin::AddOrGetTextureFromPool(const std::string& path)
+	{
+		size_t hash = m_State->m_Hash(path);
+		auto& it = m_State->m_TexturesMap.find(hash);
+		if (it != m_State->m_TexturesMap.end())
+			return it->second;
+
+		Ref<Texture> texture = std::make_shared<Texture>();
+		m_State->m_TexturesMap[hash] = texture;
+		return texture;
+	}
+
+
 	void WorldAdmin::CreateScene(const std::string& filePath)
 	{
-		m_ActiveSceneID++;
-		m_SceneMap[m_ActiveSceneID].Init(filePath);
+		m_State->m_ActiveSceneID++;
+		m_State->m_SceneMap[m_State->m_ActiveSceneID].Init(filePath);
 		ReloadAssets();
 	}
 
@@ -368,12 +397,12 @@ namespace SmolEngine
 		return false;
 	}
 
-	Scene& WorldAdmin::GetActiveScene()
+	Scene* WorldAdmin::GetActiveScene()
 	{
-		assert(m_SceneMap.size() > 0);
-		assert(m_ActiveSceneID > 0);
+		assert(m_State->m_SceneMap.size() > 0);
+		assert(m_State->m_ActiveSceneID > 0);
 
-		return m_SceneMap[m_ActiveSceneID];
+		return &m_State->m_SceneMap[m_State->m_ActiveSceneID];
 	}
 
 	bool WorldAdmin::LoadProjectConfig()
@@ -415,6 +444,7 @@ namespace SmolEngine
 		m_GlobalRegistry.emplace<AudioEngineSComponent>(id);
 		m_GlobalRegistry.emplace<Box2DWorldSComponent>(id);
 		// System States
+		m_State = &m_GlobalRegistry.emplace<WorldAdminStateSComponent>(id);
 		m_GlobalRegistry.emplace<ProjectConfigSComponent>(id);
 		m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(id);
 		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(id);

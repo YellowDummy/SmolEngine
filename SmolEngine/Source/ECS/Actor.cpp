@@ -19,7 +19,7 @@ namespace SmolEngine
 	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{
 		if (m_Childs.empty()) { return nullptr; }
-		auto& set = WorldAdmin::GetSingleton()->GetActiveScene().GetIDSet();
+		auto& set = WorldAdmin::GetSingleton()->GetActiveScene()->GetIDSet();
 		size_t id = set[name];
 
 		return nullptr;
@@ -53,6 +53,6 @@ namespace SmolEngine
 	const HeadComponent* Actor::GetInfo() const
 	{
 
-		return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<HeadComponent>(m_Entity);
+		return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<HeadComponent>(m_Entity);
 	}
 }

@@ -56,7 +56,7 @@ namespace SmolEngine
     {
         m_TextLabel = nullptr;
 
-        auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_AssetMap;
+        auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneData().m_AssetMap;
 
         const auto& result = assetMap.find(m_FontName);
         if (result != assetMap.end())

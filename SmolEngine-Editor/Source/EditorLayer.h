@@ -148,9 +148,9 @@ namespace SmolEngine
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
 		{
-			if (m_Scene->GetActiveScene().HasComponent<T>(*m_SelectedActor.get()))
+			if (m_Scene->GetActiveScene()->HasComponent<T>(*m_SelectedActor.get()))
 			{
-				auto comp = m_Scene->GetActiveScene().GetComponent<T>(*m_SelectedActor.get());
+				auto comp = m_Scene->GetActiveScene()->GetComponent<T>(*m_SelectedActor.get());
 				BaseComponent* baseComp = static_cast<BaseComponent*>(comp);
 				return baseComp->ComponentID == index;
 			}

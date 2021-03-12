@@ -59,6 +59,7 @@ namespace SmolEngine
 
 	private:
 
+		bool                               m_Initialized = false;
 		uint32_t                           m_VertexCount = 0;
 		int32_t                            m_MaterialID = 0; // default material
 

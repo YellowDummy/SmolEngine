@@ -171,7 +171,7 @@ namespace SmolEngine
 			dataInput(Clip->m_Frames, Clip->m_ClipName);
 		}
 
-		const auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene().GetSceneData().m_AssetMap;
+		const auto& assetMap = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneData().m_AssetMap;
 
 		// Loading Textures
 		for (auto& [value, frame] : Clip->m_Frames)

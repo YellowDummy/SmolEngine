@@ -1476,9 +1476,6 @@
     <ClInclude Include="Source\Renderer\Mesh.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer\MeshPool.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h">
       <Filter>Source\Renderer\OpenGL</Filter>
     </ClInclude>
@@ -1525,9 +1522,6 @@
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\Texture.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\TexturesPool.h">
       <Filter>Source\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\VertexArray.h">
@@ -1627,6 +1621,7 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
+    <ClInclude Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1860,9 +1855,6 @@
     <ClCompile Include="Source\Renderer\Mesh.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer\MeshPool.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp">
       <Filter>Source\Renderer\OpenGL</Filter>
     </ClCompile>
@@ -1903,9 +1895,6 @@
       <Filter>Source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\Texture.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\TexturesPool.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Renderer\VertexArray.cpp">
@@ -1993,5 +1982,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
+    <ClCompile Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
   </ItemGroup>
 </Project>

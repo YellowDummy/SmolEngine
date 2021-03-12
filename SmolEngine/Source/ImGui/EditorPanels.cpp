@@ -35,19 +35,19 @@ namespace SmolEngine
 			ImGui::Separator();
 			ImGui::NewLine();
 
-			ImGui::InputFloat2("Gravity", glm::value_ptr(scene->GetActiveScene().GetSceneData().m_Gravity));
+			ImGui::InputFloat2("Gravity", glm::value_ptr(scene->GetActiveScene()->GetSceneData().m_Gravity));
 			ImGui::PushItemWidth(200);
 			ImGui::Separator();
 			ImGui::NewLine();
 
-			ImGui::InputFloat("Ambient Light Strength", &scene->GetActiveScene().GetSceneData().m_AmbientStrength);
+			ImGui::InputFloat("Ambient Light Strength", &scene->GetActiveScene()->GetSceneData().m_AmbientStrength);
 			ImGui::PushItemWidth(200);
 			ImGui::Separator();
 			ImGui::NewLine();
 
 			if (ImGui::Button("Update"))
 			{
-				scene->GetActiveScene().GetSceneData().m_Name = name;
+				scene->GetActiveScene()->GetSceneData().m_Name = name;
 				isOpened = false;
 			}
 
