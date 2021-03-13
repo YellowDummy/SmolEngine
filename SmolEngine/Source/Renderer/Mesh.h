@@ -37,17 +37,11 @@ namespace SmolEngine
 
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 
-		const int32_t GetMaterialID() const { return m_MaterialID; }
-
 		const uint32_t GetVertexCount() const { return m_VertexCount; }
 
 		std::vector<Ref<Mesh>>& GetSubMeshes() { return m_SubMeshes; }
 
 		const std::string& GetName() const;
-
-		// Setters
-
-		void SetMaterialID(int32_t ID, bool submeshes = false);
 
 	private:
 
@@ -61,7 +55,6 @@ namespace SmolEngine
 
 		bool                               m_Initialized = false;
 		uint32_t                           m_VertexCount = 0;
-		int32_t                            m_MaterialID = 0; // default material
 
 		Ref<VertexBuffer>                  m_VertexBuffer = nullptr;
 		Ref<IndexBuffer>                   m_IndexBuffer = nullptr;

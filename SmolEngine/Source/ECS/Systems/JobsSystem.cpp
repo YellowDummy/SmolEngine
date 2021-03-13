@@ -16,25 +16,46 @@ namespace SmolEngine
 			uint32_t id = instance->JobGroupIDs[i];
 			for (auto& job : instance->SheduleTasks[id])
 			{
-				instance->ThreadPool.SubmitWork((WorkerSpecialization)job->State, job->Func);
+				instance->ThreadPoolInstance->SubmitWork((WorkerSpecialization)job->State, job->Func);
 			}
 
 			if (wait)
 			{
-				auto last = instance->SheduleTasks[id].size() - 1;
-				instance->SheduleTasks[id][last]->Ptr.wait();
+				for (auto& job : instance->SheduleTasks[id])
+					job->Ptr.wait();
 			}
+		}
+	}
 
-			for (auto& job : instance->SheduleTasks[id])
-				delete job;
+	void JobsSystem::Clear()
+	{
+		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
+		for (auto& [key, dsc] : instance->SheduleTasks)
+		{
+			for (auto& job : dsc)
+				delete job; 
 		}
 
 		instance->JobGroupIDs.clear();
 		instance->SheduleTasks.clear();
 	}
 
+	void JobsSystem::BeginSubmition()
+	{
+		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
+		instance->bBeginSubmition = true;
+		Clear();
+	}
+
+	void JobsSystem::EndSubmition(bool wait)
+	{
+		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
+		instance->bBeginSubmition = false;
+		Complete(wait);
+	}
+
 	ThreadPool* JobsSystem::GetThreadPool()
 	{
-		return &JobsSystemStateSComponent::GetSingleton()->ThreadPool;
+		return JobsSystemStateSComponent::GetSingleton()->ThreadPoolInstance;
 	}
 }

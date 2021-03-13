@@ -106,6 +106,29 @@ namespace SmolEngine
         return true;
     }
 
+	bool CommandSystem::LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset)
+	{
+		if (reset)
+		{
+			component->MeshData.clear();
+			component->Mesh = nullptr;
+
+			component->Mesh = Mesh::Create(filePath);
+			component->MeshData.resize(component->Mesh->GetSubMeshes().size() + 1);
+			for (auto& data : component->MeshData)
+				data.MaterialID = 0;
+
+			component->FilePath = filePath;
+			return true;
+		}
+
+		component->Mesh = Mesh::Create(filePath);
+		for (auto& data : component->MeshData)
+			data.MaterialID = 0;
+
+		return true;
+	}
+
 	bool CommandSystem::SetMeshMaterial(MeshComponent* component, Mesh* target_mesh, MaterialCreateInfo* info, const std::string& material_path)
 	{
 		auto& material_paths = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneData().m_MaterialPaths;
@@ -138,8 +161,8 @@ namespace SmolEngine
 		if(!path_exist)
 			material_paths.push_back(material_path);
 
-		component->MaterialNames[index] = info->Name;
-		target_mesh->SetMaterialID(id);
+		component->MeshData[index].MaterialName = info->Name;
+		component->MeshData[index].MaterialID = id;
 		return true;
 	}
 }

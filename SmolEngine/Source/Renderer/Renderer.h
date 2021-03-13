@@ -6,6 +6,7 @@ namespace SmolEngine
 {
 	class Mesh;
 	class Framebuffer;
+	struct MeshComponent;
 
 	struct DebugViewInfo
 	{
@@ -33,8 +34,11 @@ namespace SmolEngine
 
 		// Submit
 
+		static void SubmitMeshComponent(const glm::vec3& pos, const glm::vec3& rotation,
+			const glm::vec3& scale, MeshComponent* mesh);
+
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation,
-			const glm::vec3& scale, const Ref<Mesh>& mesh, int32_t materialID = -1);
+			const glm::vec3& scale, const Ref<Mesh>& mesh, int32_t materialID = 0);
 
 		static void SubmitDirectionalLight(const glm::vec3& dir, const glm::vec4& color);
 

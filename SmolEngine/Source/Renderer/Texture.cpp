@@ -2,8 +2,7 @@
 #include "Texture.h"
 #include "Core/Core.h"
 #include "Core/SLog.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/OpenGL/OpenglTexture.h"
+#include "Renderer/Shader.h"
 #include "Core/AssetManager.h"
 
 #include <memory>
@@ -75,27 +74,31 @@ namespace SmolEngine
 #endif
 	}
 
+	void Texture::LoadTexture(const std::string& path, TextureLoadedData* outData)
+	{
+		outData->Data = nullptr;
+		if (!AssetManager::IsPathValid(path))
+			return;
+
+		outData->FilePath = path;
+		int height, width, channels;
+		stbi_set_flip_vertically_on_load(1);
+		stbi_uc* data = nullptr;
+		{
+			data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+			if (!data)
+				NATIVE_ERROR("Texture not found! file: {}, line: {}", __FILE__, __LINE__);
+		}
+
+		outData->Data = data;
+		outData->Height = height;
+		outData->Width = width;
+		outData->Channels = channels;
+	}
+
 	bool Texture::operator==(const Texture& other) const
 	{
 		return GetID() == other.GetID();
-	}
-
-	Ref<Texture> Texture::Create(const uint32_t width, const uint32_t height, TextureFormat format)
-	{
-		Ref<Texture> texture = std::make_shared<Texture>();
-
-		if (!texture->m_Initialized)
-		{
-#ifdef  SMOLENGINE_OPENGL_IMPL
-
-			texture->m_OpenglTexture2D.Init(width, height);
-#else
-			texture->Create(width, height);
-#endif
-			texture->m_Initialized = true;
-		}
-
-		return texture;
 	}
 
 	Ref<Texture> Texture::CreateWhiteTexture()
@@ -132,6 +135,30 @@ namespace SmolEngine
 #else
 			texture->m_VulkanTexture.LoadTexture(filePath, format);
 #endif
+			texture->m_Initialized = true;
+		}
+		return texture;
+	}
+
+	Ref<Texture> Texture::Create(const TextureLoadedData* data, TextureFormat format, bool pooling)
+	{
+		if (!data)
+			return nullptr;
+
+		if (data->Data == nullptr)
+			return nullptr;
+
+		Ref<Texture> texture = pooling ? WorldAdmin::GetSingleton()->AddOrGetTextureFromPool(data->FilePath) : std::make_shared<Texture>();
+
+		if (!texture->m_Initialized)
+		{
+#ifdef  SMOLENGINE_OPENGL_IMPL
+
+			texture->m_OpenglTexture2D.Init(filePath);
+#else
+			texture->m_VulkanTexture.LoadTexture(data, format);
+#endif
+			stbi_image_free(data->Data);
 			texture->m_Initialized = true;
 		}
 		return texture;

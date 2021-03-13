@@ -166,8 +166,8 @@ namespace SmolEngine
 
     bool ModelImporter::Load(const std::string& filePath, ImportedData* out_data, ModelImporterFlags flags)
     {
-        Assimp::Importer importer;
-        const aiScene* g_scene = importer.ReadFile(filePath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+        Assimp::Importer* importer = new Assimp::Importer();
+        const aiScene* g_scene = importer->ReadFile(filePath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
         auto meshes = g_scene->mMeshes;
 
         uint32_t childsCount = 0;
@@ -239,6 +239,7 @@ namespace SmolEngine
             out_data->AnimationClip.BoneMapping = std::move(out_data->BoneMapping);
         }
 
+        delete importer;
         return true;
 	}
 }

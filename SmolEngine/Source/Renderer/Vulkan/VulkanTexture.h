@@ -17,6 +17,8 @@ namespace SmolEngine
 
 		void LoadTexture(const std::string& filePath, TextureFormat format);
 
+		void LoadTexture(const TextureLoadedData* data, TextureFormat format);
+
 		void LoadCubeMap(const std::string& filePath, TextureFormat format);
 
 		/// Gen

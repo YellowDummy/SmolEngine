@@ -186,7 +186,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent>(output);
+				PointLightComponent, AnimatorComponent>(output);
 		}
 
 		// Serializing scene data
@@ -273,7 +273,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent>(regisrtyInput);
+				PointLightComponent, AnimatorComponent>(regisrtyInput);
 		}
 
 		// Updating ActorList

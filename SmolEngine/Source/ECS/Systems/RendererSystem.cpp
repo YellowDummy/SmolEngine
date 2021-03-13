@@ -101,7 +101,7 @@ namespace SmolEngine
 		{
 			const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
 			if (mesh.bShow && mesh.Mesh)
-				Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh);
+				Renderer::SubmitMeshComponent(transform.WorldPos, transform.Rotation, transform.Scale, &mesh);
 		}
 	}
 

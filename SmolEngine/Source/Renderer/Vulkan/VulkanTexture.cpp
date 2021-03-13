@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "VulkanTexture.h"
 #include "stb_image.h"
-#include "stb_image_write.h"
 
 #include "Renderer/Vulkan/VulkanContext.h"
 #include "Renderer/Vulkan/VulkanStagingBuffer.h"
@@ -81,6 +80,23 @@ namespace SmolEngine
 		stbi_image_free(data);
 		std::hash<std::string> hasher;
 		m_ID = hasher(filePath);
+	}
+
+	void VulkanTexture::LoadTexture(const TextureLoadedData* data, TextureFormat format)
+	{
+		int width = data->Width;
+		int height = data->Height;
+
+		const uint32_t mipLevels = static_cast<uint32_t>(floor(log2(std::max(width, height)))) + 1;
+		m_Format = GetImageFormat(format);
+
+		CreateTexture(width, height, mipLevels, data->Data);
+		m_Width = width;
+		m_Height = height;
+		m_IsCreated = true;
+
+		std::hash<std::string> hasher;
+		m_ID = hasher(data->FilePath);
 	}
 
 	void VulkanTexture::LoadCubeMap(const std::string& filePath, TextureFormat format)

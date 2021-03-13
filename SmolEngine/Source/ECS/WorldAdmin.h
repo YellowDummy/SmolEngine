@@ -75,6 +75,10 @@ namespace SmolEngine
 
 		bool IsInPlayMode();
 
+		bool IsTetxureInPool(const std::string& filePath);
+
+		bool IsMeshInPool(const std::string& filePath);
+
 		// Helpers
 
 		Ref<Mesh> AddOrGetMeshFromPool(const std::string& path);

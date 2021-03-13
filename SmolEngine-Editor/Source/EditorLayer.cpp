@@ -1522,7 +1522,6 @@ namespace SmolEngine
 		static bool showMeshInspector = false;
 		if (meshComponent->Mesh)
 		{
-			ImGui::Extensions::Text("Material ID", std::to_string(meshComponent->Mesh->GetMaterialID()));
 			ImGui::NewLine();
 
 			ImGui::Extensions::CheckBox("Show", meshComponent->bShow);
@@ -1547,11 +1546,7 @@ namespace SmolEngine
 			const auto& result = FileDialog::OpenFile("glTF (*.glb)\0*.glb\0FBX (*.fbx)\0*.fbx\0OBJ (*.obj)\0*.obj\0");
 			if (result.has_value())
 			{
-				meshComponent->MaterialNames.clear();
-				meshComponent->Mesh = nullptr;
-
-				meshComponent->Mesh = Mesh::Create(result.value());
-				meshComponent->FilePath = result.value();
+				CommandSystem::LoadMeshComponent(meshComponent, result.value());
 			}
 		}
 		ImGui::NewLine();
@@ -1613,12 +1608,6 @@ namespace SmolEngine
 						std::string id = name + "IDMat";
 						ImGui::PushID(id.c_str());
 						{
-							const auto& matName = MaterialLibrary::GetSinglenton()->GetMaterialName(mesh->GetMaterialID());
-							if (matName.has_value())
-								ImGui::Extensions::Text("Material Name", matName.value());
-
-							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
-
 							if (ImGui::Button("Select Material"))
 							{
 								MaterialCreateInfo materialCI = {};
@@ -1654,131 +1643,7 @@ namespace SmolEngine
 
 	void EditorLayer::UpdateFileBrowser(bool& showAnimPanel)
 	{
-		if (m_FileBrowser->HasSelected())
-		{
 
-			switch (m_FileBrowserState)
-			{
-			case FileBrowserFlags::Load_Jinx_Script:
-
-				ResetFileBrowser();
-				break;
-
-			case FileBrowserFlags::Load_Texture2D:
-			{
-				auto texture2D = m_Scene->GetActiveScene()->GetComponent<Texture2DComponent>(*m_SelectedActor.get());
-				m_Scene->GetActiveScene()->DeleteAsset(texture2D->FileName);
-
-				texture2D->FileName = m_FileName;
-				texture2D->Texture = Texture::Create(m_FilePath);
-
-				m_Scene->GetActiveScene()->AddAsset(m_FileName, m_FilePath);
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Load_Animation_Clip:
-			{
-				m_AnimationPanel->Load(m_FilePath);
-				ResetFileBrowser();
-				showAnimPanel = true;
-
-				break;
-			}
-			case FileBrowserFlags::Load_Audio_Clip:
-			{
-				auto clip = std::make_shared<AudioClip>();
-				auto audio = m_Scene->GetActiveScene()->GetComponent<AudioSourceComponent>(*m_SelectedActor.get());
-
-				if (audio != nullptr)
-				{
-					std::stringstream ss;
-					ss << "New Audio Clip #" << audio->AudioClips.size();
-
-					clip->FileName = m_FileName;
-					clip->FilePath = m_FilePath;
-					clip->ClipName = ss.str();
-
-					if (AudioSystem::AddClip(*audio, clip))
-					{
-						m_Scene->GetActiveScene()->AddAsset(m_FileName, m_FilePath);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Canvas_Chanage_Button_Texture:
-			{
-				auto canvas = m_Scene->GetActiveScene()->GetComponent<CanvasComponent>(*m_SelectedActor.get());
-				if (canvas != nullptr)
-				{
-					auto button = UISystem::GetButton(*canvas, m_IDBuffer);
-					if (button != nullptr)
-					{
-						m_Scene->GetActiveScene()->DeleteAsset(button->m_TetxureName);
-
-						m_Scene->GetActiveScene()->AddAsset(m_FileName, m_FilePath);
-						button->Init(m_FilePath, m_FileName);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Canavas_Create_TextLabel:
-			{
-				auto canvas = m_Scene->GetActiveScene()->GetComponent<CanvasComponent>(*m_SelectedActor.get());
-				if (canvas != nullptr)
-				{
-					auto element = UISystem::AddElement(*canvas, UIElementType::TextLabel);
-					auto textLabel = std::static_pointer_cast<UITextLabel>(element);
-
-					m_Scene->GetActiveScene()->AddAsset(m_FileName, m_FilePath);
-					textLabel->Init(m_FilePath, m_FileName);
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Canavas_TextLabel_Load_Font:
-			{
-				auto canvas = m_Scene->GetActiveScene()->GetComponent<CanvasComponent>(*m_SelectedActor.get());
-				if (canvas != nullptr)
-				{
-					auto text = UISystem::GetTextLabel(*canvas, m_IDBuffer);
-					if (text != nullptr)
-					{
-						m_Scene->GetActiveScene()->DeleteAsset(text->m_FontName);
-
-						text->m_FontFilePath = m_FilePath;
-						text->m_FontName = m_FileName;
-						text->SetFont(m_FilePath);
-
-						m_Scene->GetActiveScene()->AddAsset(m_FileName, m_FilePath);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			case FileBrowserFlags::Load_Animation_Clip_Inspector:
-			{
-				auto animation2d = m_Scene->GetActiveScene()->GetComponent<Animation2DComponent>(*m_SelectedActor.get());
-				if (animation2d)
-				{
-					if (Animation2DSystem::LoadClip(*animation2d, m_FilePath))
-					{
-						m_Scene->GetActiveScene()->AddAsset(m_FileName, m_FilePath);
-					}
-				}
-
-				ResetFileBrowser();
-				break;
-			}
-			default:
-				break;
-			}
-		}
 	}
 
 	void EditorLayer::ResetFileBrowser()

@@ -21,7 +21,10 @@ namespace SmolEngine
 
         ImportedData* data = new ImportedData();
         if (ModelImporter::Load(filePath, data))
-            mesh->m_Initialized = mesh->Init(data);
+        {
+            mesh->Init(data);
+            mesh->m_Initialized = true;
+        }
 
         delete data;
         return mesh;
@@ -49,18 +52,6 @@ namespace SmolEngine
     const std::string& Mesh::GetName() const
     {
         return m_Name;
-    }
-
-    void Mesh::SetMaterialID(int32_t ID, bool submeshes)
-    {
-        m_MaterialID = ID;
-        if (submeshes)
-        {
-            for (auto& mesh : m_SubMeshes)
-            {
-                mesh->SetMaterialID(ID);
-            }
-        }
     }
 
     void Mesh::Free()

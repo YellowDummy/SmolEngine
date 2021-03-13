@@ -4,6 +4,8 @@
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/AudioSystem.h"
 #include "ECS/Systems/UISystem.h"
+#include "ECS/Systems/JobsSystem.h"
+#include "ECS/Systems/CommandSystem.h"
 #include "ECS/SceneData.h"
 
 #include "Renderer/MaterialLibrary.h"
@@ -29,7 +31,7 @@ namespace SmolEngine
 			auto search = assetMap.find(texture.FileName);
 			if (search != assetMap.end())
 			{
-				texture.Texture = Texture::Create(search->second);
+				//texture.Texture = Texture::Create(search->second);
 			}
 		});
 	}
@@ -53,7 +55,7 @@ namespace SmolEngine
 							continue;
 						}
 
-						frame->Texture = Texture::Create(frame->TexturePath);
+						//frame->Texture = Texture::Create(frame->TexturePath);
 					}
 				}
 
@@ -109,20 +111,19 @@ namespace SmolEngine
 		{
 			if (!component.FilePath.empty())
 			{
-				component.Mesh = Mesh::Create(component.FilePath);
+				CommandSystem::LoadMeshComponent(&component, component.FilePath, false);
 
-				if ((component.MaterialNames.size() > 0))
+				if ((component.MeshData.size() > 0))
 				{
 					uint32_t index = 0;
-					int32_t id = instance->GetMaterialID(component.MaterialNames[index]);
-					component.Mesh->SetMaterialID(id);
+					int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialName);
+					component.MeshData[index].MaterialID = id;
 					index++;
 
 					for (auto& sub : component.Mesh->GetSubMeshes())
 					{
-						int32_t id = instance->GetMaterialID(component.MaterialNames[index]);
-						sub->SetMaterialID(id);
-
+						int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialName);
+						component.MeshData[index].MaterialID = id;
 						index++;
 					}
 				}

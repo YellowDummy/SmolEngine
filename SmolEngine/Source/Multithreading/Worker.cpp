@@ -13,11 +13,8 @@ namespace SmolEngine
             for (;;)
             {
                 std::function<void()> task;
-                {
-                    auto& targetPool = pool->m_Pools[(uint32_t)state->Specialization];
-                    std::unique_lock<std::mutex> lock(*targetPool.Mutex);
-                    auto& queue = targetPool.Tasks;
-
+                {;
+                    std::unique_lock<std::mutex> lock(pool->m_Mutex);
                     auto predicate = [&]
                     {
 #if  0
@@ -36,23 +33,26 @@ namespace SmolEngine
                         }
                         NATIVE_ERROR("Waiting!");
 #endif 
-                        return pool->m_bStop || !queue.empty();
+                        return pool->m_bStop || !pool->m_Tasks.empty();
                     };
 
-                    targetPool.Condition->wait(lock, predicate);
-                    if (pool->m_bStop || queue.empty())
+                    pool->m_Condition.wait(lock, predicate);
+                    if (pool->m_bStop || pool->m_Tasks.empty())
                     {
                         NATIVE_ERROR("Exit!");
                         return;
                     }
 
-                    task = std::move(queue.front());
-                    queue.pop();
+                    task = std::move(pool->m_Tasks.front());
+                    pool->m_Tasks.pop();
                 }
 
                 state->bWorking = true;
                 //NATIVE_INFO("Worker with ID {} starts execution", state->ID);
-                task();
+                if (task)
+                {
+                    task();
+                }
                 state->bWorking = false;
             }
         };

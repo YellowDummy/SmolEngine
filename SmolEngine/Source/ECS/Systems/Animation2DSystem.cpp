@@ -177,16 +177,16 @@ namespace SmolEngine
 		for (auto& [value, frame] : Clip->m_Frames)
 		{
 			const auto& result = assetMap.find(frame->FileName);
-			if (result != assetMap.end())
-			{
-				frame->Texture = Texture::Create(result->second);
-				continue;
-			}
+			//if (result != assetMap.end())
+			//{
+			//	frame->Texture = Texture::Create(result->second);
+			//	continue;
+			//}
 
-			if (AssetManager::PathCheck(frame->TexturePath, frame->FileName))
-			{
-				frame->Texture = Texture::Create(frame->TexturePath);
-			}
+			//if (AssetManager::PathCheck(frame->TexturePath, frame->FileName))
+			//{
+			//	frame->Texture = Texture::Create(frame->TexturePath);
+			//}
 		}
 
 		// Checking if clip already exists

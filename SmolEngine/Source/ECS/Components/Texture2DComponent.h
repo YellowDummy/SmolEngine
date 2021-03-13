@@ -15,8 +15,6 @@ namespace SmolEngine
 
 		Texture2DComponent(uint32_t id);
 
-		Texture2DComponent(const std::string& filePath, const glm::vec4& color = glm::vec4(1.0f));
-
 	public:
 
 		glm::vec4 Color = glm::vec4(1.0f);

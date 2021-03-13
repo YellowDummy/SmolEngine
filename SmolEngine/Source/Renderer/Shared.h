@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Renderer/BufferLayout.h"
+#include "../Libraries/stb_image/stb_image.h"
 
 #include <glm/glm.hpp>
 
@@ -17,6 +18,15 @@ namespace SmolEngine
 		uint32_t          Stride;
 		BufferLayout      Layout;
 		bool              IsInputRateInstance;
+	};
+
+	struct TextureLoadedData
+	{
+		int          Height = 0;
+		int          Width = 0;
+		int          Channels = 0;
+		std::string  FilePath = "";
+		stbi_uc* Data = nullptr;
 	};
 
 	struct PBRVertex

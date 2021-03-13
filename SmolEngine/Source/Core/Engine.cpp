@@ -47,10 +47,6 @@ namespace SmolEngine
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
 
-		// Creating Startup Timer
-		ToolTimer timer("<Startup Timer>");
-		timer.StartTimer();
-
 		// Initializing World Admin
 		m_World = new WorldAdmin();
 		m_World->Init();
@@ -98,7 +94,6 @@ namespace SmolEngine
 		// Loading a scene with index 0 and starting the game
 		WorldAdmin::GetScene()->StartGame();
 #endif
-		timer.StopTimer();
 		NATIVE_INFO("Initialized successfully");
 		m_Running = true;
 		// Starting Main Loop

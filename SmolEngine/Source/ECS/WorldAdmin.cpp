@@ -337,6 +337,26 @@ namespace SmolEngine
 		return m_State->m_InPlayMode == true;
 	}
 
+	bool WorldAdmin::IsTetxureInPool(const std::string& filePath)
+	{
+		size_t hash = m_State->m_Hash(filePath);
+		auto& it = m_State->m_TexturesMap.find(hash);
+		if (it != m_State->m_TexturesMap.end())
+			return true;
+
+		return false;
+	}
+
+	bool WorldAdmin::IsMeshInPool(const std::string& filePath)
+	{
+		size_t hash = m_State->m_Hash(filePath);
+		auto& it = m_State->m_MeshMap.find(hash);
+		if (it != m_State->m_MeshMap.end())
+			return true;
+
+		return false;
+	}
+
 	Ref<Mesh> WorldAdmin::AddOrGetMeshFromPool(const std::string& path)
 	{
 		size_t hash = m_State->m_Hash(path);

@@ -11,7 +11,7 @@
 
 namespace SmolEngine
 {
-	enum class MaterialTexture : uint16_t
+	enum class MaterialTexture : uint32_t
 	{
 		Albedro,
 		Normal,

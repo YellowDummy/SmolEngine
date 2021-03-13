@@ -17,15 +17,28 @@ namespace SmolEngine
 
 		// Data
 
-		bool                                        bCastShadows = true;
-		bool                                        bIsStatic = false;
-		bool                                        bShow = true;
-								                    
-		int                                         ShadowType = 2;
-							                        
-		Ref<Mesh>                                   Mesh = nullptr;
-		std::string                                 FilePath = "";
-		std::unordered_map<uint32_t, std::string>   MaterialNames;
+		bool                                 bCastShadows = true;
+		bool                                 bIsStatic = false;
+		bool                                 bShow = true;
+								             
+		int                                  ShadowType = 2;
+							                 
+		Ref<Mesh>                            Mesh = nullptr;
+		std::string                          FilePath = "";
+
+		struct MeshData
+		{
+			std::string  MaterialName;
+			int32_t      MaterialID; // runtime value, no need to serialize
+
+			template<typename Archive>
+			void serialize(Archive& archive)
+			{
+				archive(MaterialName);
+			}
+		};
+
+		std::vector<MeshData>                MeshData;
 
 	private:
 
@@ -34,7 +47,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(bCastShadows, bIsStatic, bShow,  ShadowType, MaterialNames, FilePath, ComponentID);
+			archive(MeshData, bCastShadows, bIsStatic, bShow,  ShadowType, FilePath, ComponentID);
 		}
 	};
 }

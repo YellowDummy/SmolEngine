@@ -26,9 +26,9 @@ namespace SmolEngine
 		static JobsSystemStateSComponent* GetSingleton();
 
 		// Data
-		inline static JobsSystemStateSComponent*                  Instance = nullptr;
-															      
-		ThreadPool                                                 ThreadPool = {};
+		inline static JobsSystemStateSComponent*                   Instance = nullptr;			      
+		ThreadPool*                                                ThreadPoolInstance = nullptr;
+		bool                                                       bBeginSubmition = false;
 		std::vector<uint32_t>                                      JobGroupIDs;
 		std::unordered_map<uint32_t,std::vector<JobDescription*>>  SheduleTasks;
 	};

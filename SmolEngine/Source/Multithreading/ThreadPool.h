@@ -46,40 +46,14 @@ namespace SmolEngine
 				(*task_ptr)();
 			};
 
-			m_Pools[(uint32_t)workSpec].Tasks.emplace(wrapper_func);
-			m_Pools[(uint32_t)workSpec].Condition->notify_one();
-
+			m_Tasks.emplace(wrapper_func);
+			m_Condition.notify_one();
 			return task_ptr->get_future();
 		}
 
 		void SubmitWork(WorkerSpecialization workSpec, std::function<void()>& func);
 
 	private:
-
-		struct PoolData
-		{
-			PoolData()
-				: Mutex(new std::mutex()), Condition(new std::condition_variable()) {}
-
-			~PoolData()
-			{
-				delete Mutex;
-				delete Condition;
-			}
-
-			PoolData(const PoolData& data)
-			{
-				Mutex = Mutex;
-				Condition = Condition;
-				Tasks = Tasks;
-			}
-
-			// Data
-
-			std::mutex*                                 Mutex = nullptr;
-			std::condition_variable*                    Condition = nullptr;
-			std::queue<std::function<void()>>           Tasks;
-		};
 
 		struct WorkerUnit
 		{
@@ -88,7 +62,9 @@ namespace SmolEngine
 		};
 
 		bool                                            m_bStop = false;
-		std::vector<PoolData>                           m_Pools;
+		std::mutex                                      m_Mutex;
+		std::condition_variable                         m_Condition;
+		std::queue<std::function<void()>>               m_Tasks;
 		std::vector<WorkerUnit*>                        m_Workers;
 
 	private:

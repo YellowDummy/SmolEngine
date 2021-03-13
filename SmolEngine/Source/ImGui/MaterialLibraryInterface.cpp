@@ -103,11 +103,51 @@ namespace SmolEngine
 							glm::vec4 camPos = glm::vec4(0);
 						} info;
 
-						Ref<Texture> albedro = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Albedro], TextureFormat::R8G8B8A8_UNORM, false);
-						Ref<Texture> normal = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Normal], TextureFormat::R8G8B8A8_UNORM, false);
-						Ref<Texture> metallic = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Metallic], TextureFormat::R8G8B8A8_UNORM, false);
-						Ref<Texture> roughness = Texture::Create(m_MaterialCI.Textures[MaterialTexture::Roughness], TextureFormat::R8G8B8A8_UNORM, false);
-						Ref<Texture> ao = Texture::Create(m_MaterialCI.Textures[MaterialTexture::AO], TextureFormat::R8G8B8A8_UNORM, false);
+						TextureLoadedData albedroData = {};
+						TextureLoadedData normalData = {};
+						TextureLoadedData metallicData = {};
+						TextureLoadedData roughnessData = {};
+						TextureLoadedData aoData = {};
+
+						JobsSystem::BeginSubmition();
+						{
+							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
+								{
+									Texture::LoadTexture(path, data);
+
+								}, m_MaterialCI.Textures[MaterialTexture::Albedro], & albedroData);
+
+							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
+								{
+									Texture::LoadTexture(path, data);
+
+								}, m_MaterialCI.Textures[MaterialTexture::Normal], & normalData);
+
+							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
+								{
+									Texture::LoadTexture(path, data);
+
+								}, m_MaterialCI.Textures[MaterialTexture::Metallic], & metallicData);
+
+							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
+								{
+									Texture::LoadTexture(path, data);
+
+								}, m_MaterialCI.Textures[MaterialTexture::Roughness], & roughnessData);
+
+							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
+								{
+									Texture::LoadTexture(path, data);
+
+								}, m_MaterialCI.Textures[MaterialTexture::AO], & aoData);
+						}
+						JobsSystem::EndSubmition();
+
+						Ref<Texture> albedro = Texture::Create(&albedroData, TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> normal = Texture::Create(&normalData, TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> metallic = Texture::Create(&metallicData, TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> roughness = Texture::Create(&roughnessData, TextureFormat::R8G8B8A8_UNORM, false);
+						Ref<Texture> ao = Texture::Create(&aoData, TextureFormat::R8G8B8A8_UNORM, false);
 
 #ifndef SMOLENGINE_OPENGL_IMPL
 						Ref<Texture> dummy = Texture::CreateWhiteTexture();

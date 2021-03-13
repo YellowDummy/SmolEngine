@@ -9,6 +9,8 @@
 
 namespace SmolEngine
 {
+	struct TextureLoadedData;
+
 	class Texture
 	{
 	public:
@@ -41,11 +43,15 @@ namespace SmolEngine
 
 		void SetData(void* data, uint32_t size);
 
+		///
+
+		static void LoadTexture(const std::string& path, TextureLoadedData* outData);
+
 		/// Factory
 
-		static Ref<Texture> Create(const uint32_t width, const uint32_t height, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
-
 		static Ref<Texture> Create(const std::string& filePath, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool pooling = true);
+
+		static Ref<Texture> Create(const TextureLoadedData* data, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool pooling = true);
 
 		static Ref<Texture> Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height,
 			TextureFormat format = TextureFormat::R8G8B8A8_UNORM);

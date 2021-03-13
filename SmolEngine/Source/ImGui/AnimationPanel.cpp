@@ -302,7 +302,7 @@ namespace SmolEngine
 
 			if (AssetManager::PathCheck(frame->TexturePath, frame->FileName))
 			{
-				frame->Texture = Texture::Create(frame->TexturePath);
+				//frame->Texture = Texture::Create(frame->TexturePath);
 			}
 		}
 	}

@@ -11,9 +11,13 @@ namespace SmolEngine
 		Rendering
 	};
 
-	class JobsSystem
+	class JobsSystem // TODO: remove dynamic memory allocations
 	{
 	public:
+
+		static void BeginSubmition();
+
+		static void EndSubmition(bool wait = true);
 
 		template<typename F, typename...Args>
 		static void Schedule(JobPriority priority, uint32_t job_group_id, F&& f, Args&&... args)
@@ -27,19 +31,26 @@ namespace SmolEngine
 			SubmitJob(priority, false, 0, f, args...);
 		}
 
-		static void Complete(bool wait);
-
 		// Getters
 
 		static ThreadPool* GetThreadPool();
 
 	private:
 
+		static void Complete(bool wait);
+
+		static void Clear();
+
+	private:
+
 		template<typename F, typename...Args>
 		static void SubmitJob(JobPriority priority, bool schedule, uint32_t job_group_id, F&& f, Args&&... args)
 		{
-			WorkerSpecialization spec = priority == JobPriority::General ? WorkerSpecialization::None : WorkerSpecialization::Rendering;
 			JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
+			if (!instance->bBeginSubmition)
+				return;
+
+			WorkerSpecialization spec = priority == JobPriority::General ? WorkerSpecialization::None : WorkerSpecialization::Rendering;
 			std::function<decltype(f(args...))()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
 			auto task_ptr = std::make_shared<std::packaged_task<decltype(f(args...))()>>(func);
 			std::function<void()> wrapper_func = [task_ptr]() {
@@ -69,7 +80,7 @@ namespace SmolEngine
 				return;
 			}
 
-			instance->ThreadPool.SubmitWork(spec, wrapper_func);
+			instance->ThreadPoolInstance->SubmitWork(spec, wrapper_func);
 		}
 	};
 }

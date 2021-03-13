@@ -17,7 +17,7 @@ namespace SmolEngine
 
 		static bool ComposeTransform(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale, bool is3D, glm::mat4& out_transform);
 
-		// Setters
+		static bool LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset = true);
 
 		static bool SetMeshMaterial(MeshComponent* component, Mesh* target_mesh, MaterialCreateInfo* info, const std::string& material_path);
 	};

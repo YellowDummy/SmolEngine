@@ -117,15 +117,7 @@ namespace SmolEngine
 
 		// Load Textures
 		{
-			m_Tetxure1 = Texture::Create(Resources + "WoodenChair_01_16-bit_Diffuse.png");
-			m_Tetxure3 = Texture::Create(Resources + "WoodenChair_01_16-bit_Normal.png");
-			m_Tetxure2 = Texture::Create(Resources + "WoodenChair_01_16-bit_Metallic.png");
-			m_Tetxure4 = Texture::Create(Resources + "WoodenChair_01_16-bit_Roughness.png");
-			m_Tetxure5 = Texture::Create(Resources + "WoodenChair_01_16-bit_Height.png");
-
-			m_BrickAlbedro = Texture::Create(Resources + "bricks_diffuse.png");
-			m_BrickNormal = Texture::Create(Resources + "bricks_normal.png");
-			m_BrickRoughness = Texture::Create(Resources + "bricks_roughness.png");
+			
 		}
 
 		float quadVertices[] = {

@@ -9,7 +9,6 @@ namespace SmolEngine
     {
         uint32_t numThreads = std::thread::hardware_concurrency();
 
-        m_Pools.resize(2);
         m_Workers.resize(numThreads);
 
         WorkerCreateInfo workerCI = {};
@@ -34,12 +33,8 @@ namespace SmolEngine
     {
         m_bStop = true;
 
-        for (auto& pool : m_Pools)
-        {
-            std::unique_lock<std::mutex> lock(*pool.Mutex);
-            pool.Condition->notify_all();
-        }
-
+        std::unique_lock<std::mutex> lock(m_Mutex);
+        m_Condition.notify_all();
         for (auto& worker : m_Workers)
         {
             worker->Unit.Join();
@@ -89,7 +84,7 @@ namespace SmolEngine
 
     void ThreadPool::SubmitWork(WorkerSpecialization workSpec, std::function<void()>& func)
     {
-        m_Pools[(uint32_t)workSpec].Tasks.emplace(func);
-        m_Pools[(uint32_t)workSpec].Condition->notify_one();
+        m_Tasks.emplace(func);
+        m_Condition.notify_one();
     }
 }
