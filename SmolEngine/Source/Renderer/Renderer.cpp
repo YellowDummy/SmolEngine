@@ -362,17 +362,7 @@ namespace SmolEngine
 		if (s_Data->m_Objects >= s_Data->m_MaxObjects)
 			StartNewBacth();
 		
-		std::vector<Mesh*> meshes(component->Mesh->GetSubMeshes().size() + 1);
-		uint32_t index = 0;
-		meshes[index] = component->Mesh.get();
-		index++;
-
-		for (auto& sub : component->Mesh->GetSubMeshes())
-		{
-			meshes[index] = sub.get();
-			index++;
-		}
-
+		const auto& meshes = component->Mesh->GetAllMeshes();
 		for (uint32_t i = 0; i < static_cast<uint32_t>(meshes.size()); ++i)
 		{
 			Mesh* mesh = meshes[i];
@@ -454,7 +444,7 @@ namespace SmolEngine
 			return; // temp;
 
 		s_Data->m_DirectionalLights[index].Color = color;
-		s_Data->m_DirectionalLights[index].Position = glm::vec4(dir, 1.0f);
+		s_Data->m_DirectionalLights[index].Position = glm::normalize(glm::vec4(dir, 1.0f));
 		s_Data->m_DirectionalLightIndex++;
 	}
 
@@ -465,7 +455,7 @@ namespace SmolEngine
 			return; // temp;
 
 		s_Data->m_PointLights[index].Color = color;
-		s_Data->m_PointLights[index].Position = glm::vec4(pos, 1.0f);
+		s_Data->m_PointLights[index].Position = glm::normalize(glm::vec4(pos, 1.0f));
 		s_Data->m_PointLights[index].Params.x = constant;
 		s_Data->m_PointLights[index].Params.y = linear;
 		s_Data->m_PointLights[index].Params.z = exp;

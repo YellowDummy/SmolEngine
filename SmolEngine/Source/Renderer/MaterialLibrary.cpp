@@ -24,22 +24,16 @@ namespace SmolEngine
 	int32_t MaterialLibrary::Add(MaterialCreateInfo* infoCI, const std::string& path)
 	{
 		int32_t materialID = -1;
-		if (infoCI->Name.empty())
+		if (path.empty())
 		{
-			NATIVE_ERROR("Material {} name is empty", path);
+			NATIVE_ERROR("Material path is empty");
 			return materialID;
 		}
 
-		const auto& name_it = m_MaterialNames.find(infoCI->Name);
-		if (name_it != m_MaterialNames.end())
+		size_t hashID = m_Hash(path);
+		const auto& name_it = m_MaterialMap.find(hashID);
+		if (name_it != m_MaterialMap.end())
 			return name_it->second;
-
-		if (!path.empty())
-		{
-			const auto& path_it = m_MaterialPaths.find(path);
-			if (path_it != m_MaterialPaths.end())
-				return path_it->second;
-		}
 
 		Material newMaterial = {};
 		{
@@ -103,10 +97,7 @@ namespace SmolEngine
 
 		materialID = m_MaterialIndex;
 		m_Materials.emplace_back(newMaterial);
-		if (!path.empty())
-			m_MaterialPaths[path] = materialID;
-
-		m_MaterialNames[infoCI->Name] = materialID;
+		m_MaterialMap[hashID] = materialID;
 		m_MaterialIndex++;
 		return materialID;
 	}
@@ -125,8 +116,7 @@ namespace SmolEngine
 		m_Textures.resize(maxTextures);
 
 		m_Materials.clear();
-		m_MaterialPaths.clear();
-		m_MaterialNames.clear();
+		m_MaterialMap.clear();
 	}
 
 	bool MaterialLibrary::Load(std::string& filePath, MaterialCreateInfo& out_info)
@@ -197,30 +187,30 @@ namespace SmolEngine
 		return &m_Materials[ID];
 	}
 
-	Material* MaterialLibrary::GetMaterial(std::string& name)
+	Material* MaterialLibrary::GetMaterial(std::string& path)
 	{
-		const auto& it = m_MaterialNames.find(name);
-		if (it == m_MaterialNames.end())
+		size_t hashID = m_Hash(path);
+		const auto& it = m_MaterialMap.find(hashID);
+		if (it == m_MaterialMap.end())
 			return nullptr;
 
 		return &m_Materials[it->second];
 	}
 
-	std::optional<std::string> MaterialLibrary::GetMaterialName(int32_t id)
+	int32_t MaterialLibrary::GetMaterialID(std::string& path)
 	{
-		for (auto& [name, id] : m_MaterialNames)
-		{
-			if (id == id)
-				return name;
-		}
+		size_t hashID = m_Hash(path);
+		const auto& it = m_MaterialMap.find(hashID);
+		if (it == m_MaterialMap.end())
+			return 0;
 
-		return std::nullopt;
+		return it->second;
 	}
 
-	int32_t MaterialLibrary::GetMaterialID(std::string& name)
+	int32_t MaterialLibrary::GetMaterialID(size_t& hashed_path)
 	{
-		const auto& it = m_MaterialNames.find(name);
-		if (it == m_MaterialNames.end())
+		const auto& it = m_MaterialMap.find(hashed_path);
+		if (it == m_MaterialMap.end())
 			return 0;
 
 		return it->second;
@@ -234,11 +224,6 @@ namespace SmolEngine
 	const std::vector<Ref<Texture>>& MaterialLibrary::GetTextures() const
 	{
 		return m_Textures;
-	}
-
-	const std::unordered_map<std::string, int32_t>& MaterialLibrary::GetMaterialTable() const
-	{
-		return m_MaterialNames;
 	}
 
 	void MaterialLibrary::GetMaterialsPtr(void*& data, uint32_t& size)

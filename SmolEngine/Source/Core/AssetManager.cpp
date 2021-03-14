@@ -88,8 +88,42 @@ namespace SmolEngine
 
 		// Default Material = ID 0
 		MaterialCreateInfo materialCI = {};
-		materialCI.Name = "Default Material";
-		instance->Add(&materialCI);
+		instance->Add(&materialCI, "Default Material");
+
+		std::vector<std::string> usedMaterials;
+		{
+			const auto& view = registry.view<MeshComponent>();
+			view.each([&](MeshComponent& component)
+				{
+					bool found = false;
+					for (auto& meshData : component.MeshData)
+					{
+						if (usedMaterials.size() > 1)
+						{
+							bool found = false;
+							for (auto& usedMaterials : usedMaterials)
+							{
+								if (meshData.MaterialPath == usedMaterials)
+								{
+									found = true;
+									break;
+								}
+							}
+
+							if (!found)
+								usedMaterials.push_back(meshData.MaterialPath);
+
+							continue;
+						}
+
+						usedMaterials.push_back(meshData.MaterialPath);
+					}
+
+				});
+
+		}
+
+		data->m_MaterialPaths = std::move(usedMaterials);
 
 		// Scene materials
 		for (auto& path : data->m_MaterialPaths)
@@ -116,13 +150,13 @@ namespace SmolEngine
 				if ((component.MeshData.size() > 0))
 				{
 					uint32_t index = 0;
-					int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialName);
+					int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialHash);
 					component.MeshData[index].MaterialID = id;
 					index++;
 
 					for (auto& sub : component.Mesh->GetSubMeshes())
 					{
-						int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialName);
+						int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialHash);
 						component.MeshData[index].MaterialID = id;
 						index++;
 					}

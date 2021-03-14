@@ -39,13 +39,17 @@ namespace SmolEngine
 
 		const uint32_t GetVertexCount() const { return m_VertexCount; }
 
-		std::vector<Ref<Mesh>>& GetSubMeshes() { return m_SubMeshes; }
+		const std::vector<Ref<Mesh>>& GetSubMeshes() { return m_SubMeshes; }
+
+		const std::vector<Mesh*>& GetAllMeshes() { return m_Meshes; }
 
 		const std::string& GetName() const;
 
 	private:
 
 		void Free();
+
+		void FindAllMeshes();
 
 		bool Init(ImportedData* data);
 
@@ -61,6 +65,7 @@ namespace SmolEngine
 
 		std::string                        m_Name = "";
 		std::vector<Ref<Mesh>>             m_SubMeshes;
+		std::vector<Mesh*>                 m_Meshes;
 
 	private:
 

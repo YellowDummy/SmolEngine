@@ -131,17 +131,6 @@ namespace SmolEngine
 
 	bool CommandSystem::SetMeshMaterial(MeshComponent* component, Mesh* target_mesh, MaterialCreateInfo* info, const std::string& material_path)
 	{
-		auto& material_paths = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneData().m_MaterialPaths;
-		bool path_exist = false;
-		for (auto& path : material_paths)
-		{
-			if (path == material_path)
-			{
-				path_exist = true;
-				break;
-			}
-		}
-
 		int32_t id = MaterialLibrary::GetSinglenton()->Add(info, material_path);
 		if (id == -1)
 			return false;
@@ -158,11 +147,10 @@ namespace SmolEngine
 			}
 		}
 
-		if(!path_exist)
-			material_paths.push_back(material_path);
-
-		component->MeshData[index].MaterialName = info->Name;
+		std::hash<std::string_view> hash{};
+		component->MeshData[index].MaterialPath = material_path;
 		component->MeshData[index].MaterialID = id;
+		component->MeshData[index].MaterialHash = hash(material_path);
 		return true;
 	}
 }

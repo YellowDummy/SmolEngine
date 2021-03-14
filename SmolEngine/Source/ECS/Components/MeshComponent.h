@@ -28,13 +28,14 @@ namespace SmolEngine
 
 		struct MeshData
 		{
-			std::string  MaterialName;
+			std::string  MaterialPath;
+			size_t       MaterialHash;
 			int32_t      MaterialID; // runtime value, no need to serialize
 
 			template<typename Archive>
 			void serialize(Archive& archive)
 			{
-				archive(MaterialName);
+				archive(MaterialPath, MaterialHash);
 			}
 		};
 

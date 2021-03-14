@@ -66,6 +66,22 @@ namespace SmolEngine
 
         if (m_SubMeshes.size() != 0)
             m_SubMeshes.clear();
+
+        m_Meshes.clear();
+    }
+
+    void Mesh::FindAllMeshes()
+    {
+        m_Meshes.resize(m_SubMeshes.size() + 1);
+        uint32_t index = 0;
+        m_Meshes[index] = this;
+        index++;
+
+        for (auto& sub : m_SubMeshes)
+        {
+            m_Meshes[index] = sub.get();
+            index++;
+        }
     }
 
     bool Mesh::Init(ImportedData* data)
@@ -91,6 +107,7 @@ namespace SmolEngine
             m_SubMeshes.emplace_back(mesh);
         }
 
+        FindAllMeshes();
         return true;
     }
 

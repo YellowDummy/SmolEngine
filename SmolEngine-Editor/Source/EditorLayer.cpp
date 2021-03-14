@@ -1584,30 +1584,27 @@ namespace SmolEngine
 		if (!meshComponent)
 			return;
 
-		std::vector<Mesh*> meshes(meshComponent->Mesh->GetSubMeshes().size() + 1);
-		uint32_t index = 0;
-		meshes[index] = meshComponent->Mesh.get();
-		index++;
-
-		for (auto& sub : meshComponent->Mesh->GetSubMeshes())
-		{
-			meshes[index] = sub.get();
-			index++;
-		}
-
 		if (show)
 		{
 			ImGui::Begin("Mesh Inspector", &show);
 			{
 				ImGui::Extensions::Text("Mesh & SubMeshes", "");
-				for (auto& mesh : meshes)
+				for (uint32_t i = 0; i < static_cast<uint32_t>(meshComponent->Mesh->GetAllMeshes().size()); ++i)
 				{
+					Mesh* mesh = meshComponent->Mesh->GetAllMeshes()[i];
+					auto& meshData = meshComponent->MeshData[i];
+
 					std::string name = "Mesh #" + mesh->GetName();
 					if (ImGui::CollapsingHeader(name.c_str()))
 					{
 						std::string id = name + "IDMat";
 						ImGui::PushID(id.c_str());
 						{
+							std::filesystem::path p(meshData.MaterialPath);
+
+							ImGui::Extensions::Text("Material Name", p.filename().stem().string());
+							ImGui::Extensions::Text("Material ID", std::to_string(meshData.MaterialID));
+
 							if (ImGui::Button("Select Material"))
 							{
 								MaterialCreateInfo materialCI = {};

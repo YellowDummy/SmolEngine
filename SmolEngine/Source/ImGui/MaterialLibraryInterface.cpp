@@ -67,16 +67,8 @@ namespace SmolEngine
 				}
 				ImGui::EndMenuBar();
 				ImGui::PopStyleVar();
-				ImGui::NewLine();
-
-				if (ImGui::Extensions::InputRawString("Name", m_Buffer.name, "Material Name", 130.0f, false))
-				{
-					m_MaterialCI.Name = m_Buffer.name;
-				}
-				ImGui::NewLine();
 
 				ImGui::Extensions::Text("Textures", "");
-
 				DrawTextureInfo("Albedro", m_MaterialCI.Textures[MaterialTexture::Albedro], m_Buffer.albedro);
 				DrawTextureInfo("Normal", m_MaterialCI.Textures[MaterialTexture::Normal], m_Buffer.normal);
 				DrawTextureInfo("Metallic", m_MaterialCI.Textures[MaterialTexture::Metallic], m_Buffer.metallic);
@@ -88,7 +80,6 @@ namespace SmolEngine
 				ImGui::Extensions::InputFloat("Albedro", m_MaterialCI.Albedro);
 				ImGui::Extensions::InputFloat("Metallic", m_MaterialCI.Metallic);
 				ImGui::Extensions::InputFloat("Roughness", m_MaterialCI.Roughness);
-				ImGui::Extensions::InputFloat("Specular", m_MaterialCI.Specular);
 
 				ImGui::NewLine();
 				if (ImGui::Button("Generate Preview", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))

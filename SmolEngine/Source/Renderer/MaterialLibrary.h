@@ -66,21 +66,19 @@ namespace SmolEngine
 
 		// Getters
 
-		std::optional<std::string> GetMaterialName(int32_t id);
-
 		Material* GetMaterial(int32_t ID);
 
-		Material* GetMaterial(std::string& name);
+		Material* GetMaterial(std::string& path);
 
-		int32_t GetMaterialID(std::string& name);
+		int32_t GetMaterialID(std::string& path);
+
+		int32_t GetMaterialID(size_t& hashed_path);
 
 		std::vector<Material>& GetMaterials();
 
 		void GetMaterialsPtr(void*& data, uint32_t& size);
 
 		const std::vector<Ref<Texture>>& GetTextures() const;
-
-		const std::unordered_map<std::string, int32_t>& GetMaterialTable() const;
 
 		static MaterialLibrary* GetSinglenton();
 
@@ -98,8 +96,8 @@ namespace SmolEngine
 
 		std::vector<Material>                       m_Materials;
 		std::vector<Ref<Texture>>                   m_Textures;
+		std::hash<std::string_view>                 m_Hash{};
 
-		std::unordered_map<std::string, int32_t>   m_MaterialNames;
-		std::unordered_map<std::string, int32_t>   m_MaterialPaths;
+		std::unordered_map<size_t, int32_t>         m_MaterialMap;
 	};
 }
