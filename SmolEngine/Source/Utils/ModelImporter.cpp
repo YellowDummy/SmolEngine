@@ -7,6 +7,8 @@
 #include <assimp/scene.h>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <gli.hpp>
+#include <tiny_gltf.h>
 
 namespace SmolEngine
 {

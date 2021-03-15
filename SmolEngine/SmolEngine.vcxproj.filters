@@ -297,6 +297,12 @@
     <ClInclude Include="Libraries\glm\glm\ext\matrix_clip_space.inl">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_common.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_common.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x2.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
@@ -405,6 +411,66 @@
     <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x4_precision.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x2.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x2_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x3.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x4.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x4_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x2.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x2_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x3.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x4.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x4_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x2.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x2_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x3.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x4.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x4_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_integer.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_integer.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\matrix_projection.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
@@ -421,6 +487,60 @@
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\matrix_transform.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x2.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x2_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x3.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x4.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x4_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x2.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x2_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x3.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x4.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x4_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x2.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x2_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x3.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x4.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x4_sized.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\quaternion_common.hpp">
@@ -487,6 +607,24 @@
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\scalar_int_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_integer.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_integer.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_packing.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_packing.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_reciprocal.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_reciprocal.inl">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\scalar_relational.hpp">
@@ -588,10 +726,16 @@
     <ClInclude Include="Libraries\glm\glm\ext\vector_int1_precision.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int1_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_int2.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_int2_precision.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int2_sized.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_int3.hpp">
@@ -600,10 +744,34 @@
     <ClInclude Include="Libraries\glm\glm\ext\vector_int3_precision.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_int4.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_int4_precision.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int4_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_integer.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_integer.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_packing.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_packing.inl">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_reciprocal.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_reciprocal.inl">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_relational.hpp">
@@ -618,10 +786,16 @@
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint1_precision.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint1_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint2.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint2_precision.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint2_sized.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint3.hpp">
@@ -630,10 +804,16 @@
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint3_precision.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint3_sized.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint4.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint4_precision.hpp">
+      <Filter>Libraries\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint4_sized.hpp">
       <Filter>Libraries\glm\glm\ext</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\glm\glm\ext\vector_ulp.hpp">
@@ -1320,6 +1500,12 @@
     <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h">
+      <Filter>Source\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.h">
+      <Filter>Source\ECS\Components\Singletons</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ECS\Components\Texture2DComponent.h">
       <Filter>Source\ECS\Components</Filter>
     </ClInclude>
@@ -1620,8 +1806,6 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
-    <ClInclude Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
@@ -1724,6 +1908,12 @@
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
+      <Filter>Source\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp">
+      <Filter>Source\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.cpp">
       <Filter>Source\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Source\ECS\Components\Texture2DComponent.cpp">
@@ -1981,7 +2171,5 @@
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
-    <ClCompile Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
   </ItemGroup>
 </Project>

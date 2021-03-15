@@ -19,8 +19,9 @@ namespace SmolEngine
 	{
 		SkeletalAnimationClip                            AnimationClip = {};
 
-		std::map<std::string, uint32_t>                  BoneMapping;
 		uint32_t                                         NumBones = 0;
+
+		std::map<std::string, uint32_t>                  BoneMapping;
 		std::vector<SkeletalAnimationClip::BoneInfo>     BoneInfo;
 		std::vector<ImportedComponent>                   Components;
 	};

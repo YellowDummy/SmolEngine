@@ -124,16 +124,23 @@ namespace SmolEngine
 		// Transform
 		*newT = *oldT;
 
-		auto meshOld = actor->GetComponent<MeshComponent>();
-		if (meshOld)
+		if (actor->HasComponent<MeshComponent>())
 		{
+			auto meshOld = actor->GetComponent<MeshComponent>();
 			auto meshNew = newObj->AddComponent<MeshComponent>();
-			*meshNew = *meshOld;
+
+			meshNew->bCastShadows = meshOld->bCastShadows;
+			meshNew->bIsStatic = meshOld->bIsStatic;
+			meshNew->bShow = meshOld->bShow;
+			meshNew->FilePath = meshOld->FilePath;
+			meshNew->MeshData = meshOld->MeshData;
+			meshNew->ShadowType = meshOld->ShadowType;
+			meshNew->Mesh = meshOld->Mesh;
 		}
 
-		auto scriptOld = actor->GetComponent<BehaviourComponent>();
-		if (scriptOld)
+		if (actor->HasComponent<BehaviourComponent>())
 		{
+			auto scriptOld = actor->GetComponent<BehaviourComponent>();
 			auto scriptNew = newObj->AddComponent<BehaviourComponent>();
 			*scriptNew = *scriptOld;
 		}

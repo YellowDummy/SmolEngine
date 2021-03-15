@@ -96,7 +96,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;Libraries\gli;Libraries\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -117,7 +117,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;Libraries\gli;Libraries\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -142,7 +142,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_OPENGL_IMPL;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;Libraries\gli;Libraries\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -163,7 +163,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Libraries\icon_font_cpp_headers;Libraries\spdlog\include;Libraries\cereal\include;Libraries\fmod\include;Libraries\box2d\include;Libraries\assimp\include;Source;Libraries\glfw\include;Libraries\glad\include;Libraries\imgui;Libraries\glm;Libraries\stb_image;Libraries\entt;Libraries\vulkan\include;Libraries\imgizmo\src;Libraries\ktx\include;Libraries\meta;Libraries\gli;Libraries\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -248,6 +248,8 @@
     <ClInclude Include="Libraries\glm\glm\ext.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_clip_space.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_clip_space.inl" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_common.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_common.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x2.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x2_precision.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x3.hpp" />
@@ -284,12 +286,50 @@
     <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x3_precision.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x4.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x4_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x2.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x2_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x3.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x3_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x4.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x4_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x2.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x2_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x3.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x3_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x4.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x4_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x2.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x2_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x3.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x3_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x4.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x4_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_integer.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_integer.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_projection.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_projection.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_relational.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_relational.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_transform.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\matrix_transform.inl" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x2.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x2_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x3.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x3_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x4.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x4_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x2.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x2_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x3.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x3_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x4.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x4_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x2.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x2_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x3.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x3_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x4.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x4_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\quaternion_common.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\quaternion_common.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\quaternion_common_simd.inl" />
@@ -312,6 +352,12 @@
     <ClInclude Include="Libraries\glm\glm\ext\scalar_constants.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\scalar_constants.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\scalar_int_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_integer.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_integer.inl" />
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_packing.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_packing.inl" />
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_reciprocal.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\scalar_reciprocal.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\scalar_relational.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\scalar_relational.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\scalar_uint_sized.hpp" />
@@ -345,22 +391,36 @@
     <ClInclude Include="Libraries\glm\glm\ext\vector_float4_precision.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int1.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int1_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int1_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int2.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int2_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int2_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int3.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int3_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int3_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int4.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_int4_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_int4_sized.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_integer.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_integer.inl" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_packing.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_packing.inl" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_reciprocal.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_reciprocal.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_relational.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_relational.inl" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint1.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint1_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint1_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint2.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint2_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint2_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint3.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint3_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint3_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint4.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_uint4_precision.hpp" />
+    <ClInclude Include="Libraries\glm\glm\ext\vector_uint4_sized.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_ulp.hpp" />
     <ClInclude Include="Libraries\glm\glm\ext\vector_ulp.inl" />
     <ClInclude Include="Libraries\glm\glm\fwd.hpp" />

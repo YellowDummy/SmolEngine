@@ -25,6 +25,8 @@ IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
 IncludeDir["imgizmo"] = "SmolEngine/Libraries/imgizmo/src"
 IncludeDir["ktx"] = "SmolEngine/Libraries/ktx/include"
 IncludeDir["meta"] = "SmolEngine/Libraries/meta"
+IncludeDir["gli"] = "SmolEngine/Libraries/gli"
+IncludeDir["tinygltf"] = "SmolEngine/Libraries/tinygltf"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -90,7 +92,9 @@ project "SmolEngine"
 		"%{IncludeDir.vulkan}",
 		"%{IncludeDir.imgizmo}",
 		"%{IncludeDir.ktx}",
-		"%{IncludeDir.meta}"
+		"%{IncludeDir.meta}",
+		"%{IncludeDir.gli}",
+		"%{IncludeDir.tinygltf}"
 	}
 
 	links 
