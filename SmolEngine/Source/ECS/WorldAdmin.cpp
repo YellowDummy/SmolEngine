@@ -291,15 +291,17 @@ namespace SmolEngine
 			return false;
 		}
 
-		if (m_State->m_NumLoadedScene > m_State->m_MaxAssetPoolLiftime)
-		{
-			m_State->m_MeshMap.clear();
-			m_State->m_TexturesMap.clear();
-		}
-		m_State->m_NumLoadedScene++;
-
 		// temp
 		{
+			size_t hash = m_State->m_Hash("DummuTexture");
+			auto& it = m_State->m_TexturesMap.find(hash);
+			auto dummy = it->second;
+
+			m_State->m_MeshMap.clear();
+			m_State->m_TexturesMap.clear();
+
+			m_State->m_TexturesMap[hash] = dummy;
+
 			m_State->m_SceneMap.clear();
 			m_State->m_ActiveSceneID = 0;
 		}

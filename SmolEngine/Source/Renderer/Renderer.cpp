@@ -507,7 +507,7 @@ namespace SmolEngine
 	{
 #ifdef SMOLENGINE_OPENGL_IMPL
 #else
-		VulkanPBR::Init("../Resources/Textures/gcanyon_cube.ktx", TextureFormat::R16G16B16A16_SFLOAT);
+		VulkanPBR::Init("../Resources/Textures/uffizi_cube.ktx", TextureFormat::R16G16B16A16_SFLOAT);
 #endif
 	}
 

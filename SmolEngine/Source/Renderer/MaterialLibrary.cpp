@@ -42,51 +42,11 @@ namespace SmolEngine
 			newMaterial.m_MaterialProperties.PBRValues.z = infoCI->Albedro;
 			newMaterial.m_MaterialProperties.PBRValues.w = infoCI->Specular;
 
-			TextureLoadedData albedroData = {};
-			TextureLoadedData normalData = {};
-			TextureLoadedData metallicData = {};
-			TextureLoadedData roughnessData = {};
-			TextureLoadedData aoData = {};
-
-			JobsSystem::BeginSubmition();
-			{
-				JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-					{
-						Texture::LoadTexture(path, data);
-
-					}, infoCI->Textures[MaterialTexture::Albedro], &albedroData);
-
-				JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-					{
-						Texture::LoadTexture(path, data);
-
-					}, infoCI->Textures[MaterialTexture::Normal], &normalData);
-
-				JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-					{
-						Texture::LoadTexture(path, data);
-
-					}, infoCI->Textures[MaterialTexture::Metallic], &metallicData);
-
-				JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-					{
-						Texture::LoadTexture(path, data);
-
-					}, infoCI->Textures[MaterialTexture::Roughness], &roughnessData);
-
-				JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-					{
-						Texture::LoadTexture(path, data);
-
-					}, infoCI->Textures[MaterialTexture::AO], &aoData);
-			}
-			JobsSystem::EndSubmition();
-
-			newMaterial.m_MaterialProperties.Indexes_1.x = AddTexture(Texture::Create(&albedroData, TextureFormat::R8G8B8A8_UNORM, false));
-			newMaterial.m_MaterialProperties.Indexes_1.y = AddTexture(Texture::Create(&normalData, TextureFormat::R8G8B8A8_UNORM, false));
-			newMaterial.m_MaterialProperties.Indexes_1.z = AddTexture(Texture::Create(&metallicData,TextureFormat::R8G8B8A8_UNORM, false));
-			newMaterial.m_MaterialProperties.Indexes_1.w = AddTexture(Texture::Create(&roughnessData, TextureFormat::R8G8B8A8_UNORM, false));
-			newMaterial.m_MaterialProperties.Indexes_2.x = AddTexture(Texture::Create(&aoData, TextureFormat::R8G8B8A8_UNORM, false));
+			newMaterial.m_MaterialProperties.Indexes_1.x = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::Albedro], TextureFormat::R8G8B8A8_UNORM, false));
+			newMaterial.m_MaterialProperties.Indexes_1.y = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::Normal], TextureFormat::R8G8B8A8_UNORM, false));
+			newMaterial.m_MaterialProperties.Indexes_1.z = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::Metallic],TextureFormat::R8G8B8A8_UNORM, false));
+			newMaterial.m_MaterialProperties.Indexes_1.w = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::Roughness], TextureFormat::R8G8B8A8_UNORM, false));
+			newMaterial.m_MaterialProperties.Indexes_2.x = AddTexture(Texture::Create(infoCI->Textures[MaterialTexture::AO], TextureFormat::R8G8B8A8_UNORM, false));
 
 			newMaterial.m_MaterialProperties.States_1.x = newMaterial.m_MaterialProperties.Indexes_1.x > -1 ? true : false;
 			newMaterial.m_MaterialProperties.States_1.y = newMaterial.m_MaterialProperties.Indexes_1.y > -1 ? true : false;

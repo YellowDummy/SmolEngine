@@ -256,7 +256,7 @@ void main()
 		vec3 Lradiance = directionalLights[i].color.rgb;
 
 		// Half-vector between Li and Lo.
-		vec3 Lh = normalize(Lo + L);
+		vec3 Lh = normalize(L + Lo);
 
 		// Calculate angles between surface normal and various light vectors.
 		float cosLi = max(0.0, dot(N, L));
@@ -303,7 +303,8 @@ void main()
 		pointLighting += pointLights[i].color.rgb * (ambientLighting + diffuse) / attTotal;
 	}
 
-	vec3 color =  ambientLighting + directLighting + pointLighting;
+	vec3 color = directLighting + pointLighting;
+	color += ambientLighting;
 	if(inDirectionalLightCount > 0)
 	{
 		float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
