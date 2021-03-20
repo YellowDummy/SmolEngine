@@ -3,6 +3,7 @@
 
 #include "Multithreading/ThreadPool.h"
 
+#include <taskflow/include/taskflow.hpp>
 #include <unordered_map>
 #include <future>
 #include <any>
@@ -27,9 +28,9 @@ namespace SmolEngine
 
 		// Data
 		inline static JobsSystemStateSComponent*                   Instance = nullptr;			      
-		ThreadPool*                                                ThreadPoolInstance = nullptr;
 		bool                                                       bBeginSubmition = false;
-		std::vector<uint32_t>                                      JobGroupIDs;
-		std::unordered_map<uint32_t,std::vector<JobDescription*>>  SheduleTasks;
+
+		tf::Taskflow* Taskflow = nullptr;
+		tf::Executor* Executor = nullptr;
 	};
 }

@@ -27,6 +27,7 @@ IncludeDir["ktx"] = "SmolEngine/Libraries/ktx/include"
 IncludeDir["meta"] = "SmolEngine/Libraries/meta"
 IncludeDir["gli"] = "SmolEngine/Libraries/gli"
 IncludeDir["tinygltf"] = "SmolEngine/Libraries/tinygltf"
+IncludeDir["taskflow"] = "SmolEngine/Libraries/taskflow"
 
 group "Dependencies"
 include "SmolEngine/Libraries/glfw"
@@ -94,7 +95,8 @@ project "SmolEngine"
 		"%{IncludeDir.ktx}",
 		"%{IncludeDir.meta}",
 		"%{IncludeDir.gli}",
-		"%{IncludeDir.tinygltf}"
+		"%{IncludeDir.tinygltf}",
+		"%{IncludeDir.taskflow}",
 	}
 
 	links 
@@ -361,7 +363,8 @@ project "GameX"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.imgizmo}"
+		"%{IncludeDir.imgizmo}",
+		"%{IncludeDir.taskflow}",
 	}
 
 	links

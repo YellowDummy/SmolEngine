@@ -5,13 +5,17 @@ namespace SmolEngine
 {
 	JobsSystemStateSComponent::JobsSystemStateSComponent()
 	{
-		ThreadPoolInstance = new ThreadPool();
+		Taskflow = new tf::Taskflow();
+		Executor = new tf::Executor();
+
+		
+		NATIVE_INFO("ThreadPool -> avalable thareads: {}", Executor->num_workers());
 		Instance = this;
 	}
 
 	JobsSystemStateSComponent::~JobsSystemStateSComponent()
 	{
-		delete ThreadPoolInstance;
+		delete Taskflow, Executor;
 		Instance = nullptr;
 	}
 

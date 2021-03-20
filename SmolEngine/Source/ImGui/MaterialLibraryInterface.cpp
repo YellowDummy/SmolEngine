@@ -102,35 +102,11 @@ namespace SmolEngine
 
 						JobsSystem::BeginSubmition();
 						{
-							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-								{
-									Texture::LoadTexture(path, data);
-
-								}, m_MaterialCI.Textures[MaterialTexture::Albedro], & albedroData);
-
-							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-								{
-									Texture::LoadTexture(path, data);
-
-								}, m_MaterialCI.Textures[MaterialTexture::Normal], & normalData);
-
-							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-								{
-									Texture::LoadTexture(path, data);
-
-								}, m_MaterialCI.Textures[MaterialTexture::Metallic], & metallicData);
-
-							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-								{
-									Texture::LoadTexture(path, data);
-
-								}, m_MaterialCI.Textures[MaterialTexture::Roughness], & roughnessData);
-
-							JobsSystem::Schedule(JobPriority::General, 0, [](const std::string& path, TextureLoadedData* data)
-								{
-									Texture::LoadTexture(path, data);
-
-								}, m_MaterialCI.Textures[MaterialTexture::AO], & aoData);
+							JobsSystem::Schedule([&]() {Texture::LoadTexture(m_MaterialCI.Textures[MaterialTexture::Albedro], &albedroData); });
+							JobsSystem::Schedule([&]() {Texture::LoadTexture(m_MaterialCI.Textures[MaterialTexture::Normal], &normalData); });
+							JobsSystem::Schedule([&]() {Texture::LoadTexture(m_MaterialCI.Textures[MaterialTexture::Metallic], &metallicData); });
+							JobsSystem::Schedule([&]() {Texture::LoadTexture(m_MaterialCI.Textures[MaterialTexture::Roughness], &roughnessData); });
+							JobsSystem::Schedule([&]() {Texture::LoadTexture(m_MaterialCI.Textures[MaterialTexture::AO], &aoData); });
 						}
 						JobsSystem::EndSubmition();
 
