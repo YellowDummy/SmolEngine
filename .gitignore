@@ -34,13 +34,10 @@ bld/
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 
-Config/
-SmolEngine/Libraries/vulkan/libs/
-SmolEngine/Libraries/assimp/libs/
-bin-int/Debug (OpenGL)-windows-x86_64/
-bin-int/Debug (Vulkan)-windows-x86_64/
-bin-int/Release (OpenGL)-windows-x86_64/
-bin-int/Release (Vulkan)-windows-x86_64/
+bin/
+vendor/bin-int/
+vendor/fmod/libs/
+vendor/frostium/libs/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/

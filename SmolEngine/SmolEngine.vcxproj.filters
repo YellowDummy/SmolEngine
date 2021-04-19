@@ -1,2177 +1,1548 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Libraries">
-      <UniqueIdentifier>{0259E1F6-6EC3-956D-B701-471323AB73C2}</UniqueIdentifier>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\glm">
-      <UniqueIdentifier>{519425CA-BD54-A100-868F-EA7DF20EE6DC}</UniqueIdentifier>
+    <Filter Include="include\Animation">
+      <UniqueIdentifier>{B8270F86-243E-0D1C-6DB5-983DD90ADEA3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\glm\glm">
-      <UniqueIdentifier>{20DFA4D0-8CF5-A266-D56C-2E8841C273EE}</UniqueIdentifier>
+    <Filter Include="include\Audio">
+      <UniqueIdentifier>{4A00A5A2-B6C0-20D9-7FFB-6956EB7A65B5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\glm\glm\detail">
-      <UniqueIdentifier>{E2926823-CEB7-B7A3-F702-9D33E386B6C1}</UniqueIdentifier>
+    <Filter Include="include\Core">
+      <UniqueIdentifier>{81F1C769-6D54-570E-16DA-8FC4021C2391}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\glm\glm\ext">
-      <UniqueIdentifier>{80F25A48-EC5E-1643-B552-AEA0217E38AB}</UniqueIdentifier>
+    <Filter Include="include\ECS">
+      <UniqueIdentifier>{5340C031-BFF5-3827-48EA-32FEB49E2F2B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\glm\glm\gtc">
-      <UniqueIdentifier>{6DFA5A48-D966-1643-A25A-AEA00E8638AB}</UniqueIdentifier>
+    <Filter Include="include\ECS\Components">
+      <UniqueIdentifier>{886B2CAD-7465-55FF-5DD2-EB0F496BBB6B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\glm\glm\gtx">
-      <UniqueIdentifier>{82FA5A48-EE66-1643-B75A-AEA0238638AB}</UniqueIdentifier>
+    <Filter Include="include\ECS\Components\Singletons">
+      <UniqueIdentifier>{7D10C465-E97E-19E5-3268-D4E49E150F81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\imgizmo">
-      <UniqueIdentifier>{2D0DA26C-9923-A002-E29A-2B244EF0708A}</UniqueIdentifier>
+    <Filter Include="include\ECS\Systems">
+      <UniqueIdentifier>{5A39334A-C69A-1058-4F08-570ABB684717}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\imgizmo\src">
-      <UniqueIdentifier>{C4992ADC-3006-E6D6-F9F9-7D346525083F}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D">
+      <UniqueIdentifier>{489D14B1-3481-D506-9DE1-CF5989E4BF88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\stb_image">
-      <UniqueIdentifier>{1CB49886-8815-7694-1183-BC467DE3AC53}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Common">
+      <UniqueIdentifier>{80E9F6CA-ECAB-2A55-355C-B9E1A15D0333}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\ImGUI">
+      <UniqueIdentifier>{32E4BFC0-1E09-0F41-4754-F4D033D80D5F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Animation">
-      <UniqueIdentifier>{C54731E5-B140-5037-DA72-35BCC6CA2F43}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries">
+      <UniqueIdentifier>{B44A053A-A005-F5E5-49BD-6D3035573F76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Audio">
-      <UniqueIdentifier>{D721A7F1-C384-3696-6C0A-6F4C584C0219}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal">
+      <UniqueIdentifier>{8F7E7B58-FB37-E602-8497-00DDF04F9C72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core">
-      <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include">
+      <UniqueIdentifier>{02C529EF-6E2A-BD75-F702-5F4E6367B2E4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ECS">
-      <UniqueIdentifier>{A09AC236-8C52-0484-F559-DDDFE1309F74}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal">
+      <UniqueIdentifier>{1D95A1B8-0929-9760-72ED-F0145EA0D152}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ECS\Components">
-      <UniqueIdentifier>{B59BF594-2108-B18F-EAFB-48ED5627D3F7}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external">
+      <UniqueIdentifier>{0F54845D-7B11-2D94-04DC-18FC70989FE8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ECS\Components\Singletons">
-      <UniqueIdentifier>{8AAA367A-76FB-21BC-9F5F-107E8B0FB525}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson">
+      <UniqueIdentifier>{887C6E1A-F4F0-0378-BD3A-5187296E8FAB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ECS\Systems">
-      <UniqueIdentifier>{A7905DFA-9374-1E50-FCD4-18A3E8D708D2}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error">
+      <UniqueIdentifier>{E1595244-4D6F-C09A-D62B-9AFB4240042A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Events">
-      <UniqueIdentifier>{7ABAF22F-E67A-6E66-AFB5-B7E31B35B342}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal">
+      <UniqueIdentifier>{D4B7706D-C0E5-DD60-A941-7926950ED6BF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ImGui">
-      <UniqueIdentifier>{000933F2-EC6B-C296-95F1-FA4C81338E19}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes">
+      <UniqueIdentifier>{579F3276-43F8-A2F9-6CF2-849358AA48F7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ImGui\FileBrowser">
-      <UniqueIdentifier>{73066A8F-5F2B-B90F-8876-9E9F74FAB72D}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\glm">
+      <UniqueIdentifier>{030F6FFC-EF5F-5A3E-18C4-48000474EDA7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ImGui\ImPlot">
-      <UniqueIdentifier>{C4CD6A3F-302F-484D-B99C-8EFF25FD7E0C}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\glm\glm">
+      <UniqueIdentifier>{D262B0AB-BE49-72A3-679A-D8C05360EB09}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ImGui\NodeEditor">
-      <UniqueIdentifier>{3C1D8064-A854-C8FB-B15E-2C1F1D15EFF4}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\glm\glm\simd">
+      <UniqueIdentifier>{6E52AC00-DA6C-0FA2-238F-1F368FE836A9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Multithreading">
-      <UniqueIdentifier>{A6D6B36D-1243-6F68-DB36-07C6476291D0}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgizmo">
+      <UniqueIdentifier>{DF90AD47-CB77-6F3F-74C8-D55C608EE8A5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Networking">
-      <UniqueIdentifier>{AD32A3F0-1949-A186-62C0-2CA8CE15720E}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgizmo\src">
+      <UniqueIdentifier>{76A6D493-6223-C8D6-8BA0-C8EA777C646A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Physics2D">
-      <UniqueIdentifier>{7E3D1B0D-6A36-3A5F-9368-1FE47FC0196B}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui">
+      <UniqueIdentifier>{1E8F93D4-0ACB-963E-73DD-AE355F383F59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Physics2D\Box2D">
-      <UniqueIdentifier>{0C8E8A2B-F887-B37D-E1F4-498ECD8D19EA}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples">
+      <UniqueIdentifier>{8CBE97A2-F823-2B29-81FC-CC01ED602098}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Renderer">
-      <UniqueIdentifier>{BC4F86EE-28DB-F3B2-31EC-76A79DF64FB3}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs">
+      <UniqueIdentifier>{653A4057-51E3-A786-7A79-C3056681C2C7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Renderer\OpenGL">
-      <UniqueIdentifier>{706D2C4F-5C67-55A1-45D4-EBB1316DBB0D}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w">
+      <UniqueIdentifier>{B14E9A19-1D6B-8C0A-E642-F977521EF6CB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Renderer\Vulkan">
-      <UniqueIdentifier>{BCD1DE5F-A8CB-07B2-9138-9EC27DD16D1E}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL">
+      <UniqueIdentifier>{736E8116-5F43-C9C9-88F2-08C67426D7E0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scripting">
-      <UniqueIdentifier>{D803A49B-C4FC-C2ED-ED2E-A872D986A2F9}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw">
+      <UniqueIdentifier>{44559A19-B071-8C0A-7949-F977E524F6CB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\UI">
-      <UniqueIdentifier>{C3068266-2F71-36DD-78AF-E782E4581432}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include">
+      <UniqueIdentifier>{B780BA50-2349-88D4-ECD9-90E65861B80F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Utils">
-      <UniqueIdentifier>{369510F3-22F8-9F97-CB7D-D84DB7BF6B1A}</UniqueIdentifier>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW">
+      <UniqueIdentifier>{5646A517-4232-3D87-ABA8-FCD997B3DDB7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\usynergy">
+      <UniqueIdentifier>{3A21E58F-A693-27AC-EF27-5D305BD9F1A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\imgui\misc">
+      <UniqueIdentifier>{B9C4AF83-2554-716E-2E50-52869A5EAC7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\imgui\misc\cpp">
+      <UniqueIdentifier>{0BF320AB-7758-B431-0031-560A6C95A9A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\imgui\misc\freetype">
+      <UniqueIdentifier>{8C23D0DA-78CC-370A-A162-53898D6A524B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\imgui\misc\single_file">
+      <UniqueIdentifier>{296BDDB6-957C-855D-1ECE-179D8ADE0E97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\implot">
+      <UniqueIdentifier>{383D0A67-A4F6-7411-2D56-8FEB990E2B81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog">
+      <UniqueIdentifier>{6C888D7E-D841-F828-61A1-1203CD59AE98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\bench">
+      <UniqueIdentifier>{BB43EE52-275E-51F4-7080-6188DCD978FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include">
+      <UniqueIdentifier>{DF5BA2F6-4BC1-357D-D499-D75540FE2AEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog">
+      <UniqueIdentifier>{373BBC56-23CF-B1FE-8C93-0BB37846ECF0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg">
+      <UniqueIdentifier>{36776084-2221-9693-0BF2-9DAEF73A3682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details">
+      <UniqueIdentifier>{AC725C6D-9832-ED11-0150-D51CED2E0024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt">
+      <UniqueIdentifier>{ED846084-D92E-9693-C2FF-9DAEAE483682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled">
+      <UniqueIdentifier>{DA40A5D6-C616-2CD4-AFC0-46279B355F75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks">
+      <UniqueIdentifier>{EE757E1F-DA4A-C6D2-03FA-05CFEF2DD4E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan">
+      <UniqueIdentifier>{D4D9EB85-4093-5630-C9F2-700A35AB0CA0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include">
+      <UniqueIdentifier>{47954F2E-B3FA-E2B4-3CD3-848DA837D823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang">
+      <UniqueIdentifier>{3E7DA726-AA8E-4FCD-33E0-E10C9FF0D806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include">
+      <UniqueIdentifier>{916A3D32-FD27-E668-86F2-D1D0F2AE58BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent">
+      <UniqueIdentifier>{50F31ED5-3CF5-62E5-2578-59DE11195E8A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\Public">
+      <UniqueIdentifier>{AC0EB586-98CE-452B-01EC-2D36EDCA583D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV">
+      <UniqueIdentifier>{E17AD98F-4DED-1BAC-9681-51300233E6A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\shaderc">
+      <UniqueIdentifier>{30A9C3B7-9CBA-6B5E-250C-FE9D911CF597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers">
+      <UniqueIdentifier>{5385334C-BFF7-7568-088C-ABEC743D4061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\spirv-tools">
+      <UniqueIdentifier>{28F1C203-94D8-ADF9-9DC6-AF75092D51BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross">
+      <UniqueIdentifier>{13E63277-7FCD-1D6D-88BB-1FE9F421C12F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Libraries\vulkan\include\vulkan">
+      <UniqueIdentifier>{07214C34-F3B4-41DC-5C79-9B90482C7CCE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\OpenGL">
+      <UniqueIdentifier>{7C8502E7-E847-3671-31F8-C4FD9DF90E4F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Utils">
+      <UniqueIdentifier>{A8749DC1-9499-EC41-BDE4-D1D1A968EB5F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Frostium3D\Vulkan">
+      <UniqueIdentifier>{C8E9B4F7-34AC-E881-7D5C-770EE95DC15F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries">
+      <UniqueIdentifier>{35E2EFDA-A1F8-ED70-EA6F-799256C5BEF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\box_2D">
+      <UniqueIdentifier>{E271456E-CE96-94EE-F7E1-797EE365930C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\box_2D\include">
+      <UniqueIdentifier>{555B8FA1-41AC-7AE3-6A10-69A556C00D4D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\box_2D\include\box2d">
+      <UniqueIdentifier>{63814C48-4FD3-2338-38F2-604824E33C21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\fmod">
+      <UniqueIdentifier>{0AD85AB5-F6D1-8307-DF3E-1A18CBD7E973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\fmod\include">
+      <UniqueIdentifier>{7D691CF6-698F-E65C-52D5-6B283E9A0B29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Networking">
+      <UniqueIdentifier>{00113DAD-ECF4-FD02-5555-F8554158E884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Physics2D">
+      <UniqueIdentifier>{711DF9AD-DD33-F743-26AB-82659200C8CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Physics2D\Box2D">
+      <UniqueIdentifier>{3F589B4A-AB8F-E3E1-B499-470520500ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Scripting">
+      <UniqueIdentifier>{CBE3813C-37FA-7FD2-8071-0BF4ECC6505A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Audio">
+      <UniqueIdentifier>{EE2696B2-5A91-4A29-A3CF-FBCE0F79287E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core">
+      <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ECS">
+      <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ECS\Components">
+      <UniqueIdentifier>{AC4A8D64-982E-4EBA-018F-480DED91383C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ECS\Components\Singletons">
+      <UniqueIdentifier>{21B1B4A1-8DC9-9BCB-5676-2B65C24D3065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ECS\Systems">
+      <UniqueIdentifier>{FECA3740-6A56-A504-7367-28F9DF710105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics2D">
+      <UniqueIdentifier>{15F6A409-81B6-2040-4AF1-69BDB670651C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics2D\Box2D">
+      <UniqueIdentifier>{E31B18EE-4F7D-F5FB-D8EA-3BAE444B2CBB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting">
+      <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Libraries\glm\glm\common.hpp">
-      <Filter>Libraries\glm\glm</Filter>
+    <ClInclude Include="include\Animation\Animation2DFrameKey.h">
+      <Filter>include\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\_features.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Animation\AnimationClip2D.h">
+      <Filter>include\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\_fixes.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Animation\SkeletalAnimationClip.h">
+      <Filter>include\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\_noise.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Audio\AudioClip.h">
+      <Filter>include\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\_swizzle.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Audio\AudioEngine.h">
+      <Filter>include\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\_swizzle_func.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\Core.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\_vectorize.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\EditorConsole.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\compute_common.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\Engine.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\compute_vector_relational.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\EntryPoint.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_common.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\FileDialog.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_common_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\Layer.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_exponential.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\LayerManager.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_exponential_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\MaterialLibraryInterface.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_geometric.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Core\Timer.h">
+      <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_geometric_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Actor.h">
+      <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_integer.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Animation2DComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_integer_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\AnimatorComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_matrix.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\AudioSourceComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_matrix_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\BaseComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_packing.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\BehaviourComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_packing_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Body2DComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_trigonometric.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\CameraComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_trigonometric_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\CanvasComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_vector_relational.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\DirectionalLightComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\func_vector_relational_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\HeadComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\qualifier.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Light2DSourceComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\setup.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\MeshComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_float.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\PointLightComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_half.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Singletons\AudioEngineSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_half.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Singletons\Box2DWorldSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat2x2.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat2x2.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat2x3.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Singletons\ScriptingSystemStateSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat2x3.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat2x4.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\Texture2DComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat2x4.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Components\TransformComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat3x2.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\ComponentsCore.h">
+      <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat3x2.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Scene.h">
+      <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat3x3.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\SceneData.h">
+      <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat3x3.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\Animation2DSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat3x4.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\AnimationSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat3x4.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\AudioSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x2.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\CameraSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x2.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\CommandSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x3.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\JobsSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x3.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\Physics2DSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x4.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\RendererSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x4.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\ScriptingSystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_mat4x4_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\Systems\UISystem.h">
+      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_quat.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\ECS\WorldAdmin.h">
+      <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_quat.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\BufferElement.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_quat_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\BufferLayout.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec1.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Common.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec1.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Core.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec2.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\CubeTexture.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec2.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Events.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec3.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Flags.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec3.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Framebuffer.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec4.hpp">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\FramebufferSpecification.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec4.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\GraphicsPipelineInfos.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\detail\type_vec4_simd.inl">
-      <Filter>Libraries\glm\glm\detail</Filter>
+    <ClInclude Include="include\Frostium3D\Common\IndexBuffer.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\exponential.hpp">
-      <Filter>Libraries\glm\glm</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Input.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext.hpp">
-      <Filter>Libraries\glm\glm</Filter>
+    <ClInclude Include="include\Frostium3D\Common\InputCodes.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_clip_space.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Material.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_clip_space.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Mesh.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_common.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\RendererShared.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_common.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\SLog.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Shader.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\SubTexture.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Text.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Texture.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Time.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double2x4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\VertexArray.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double3x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\VertexBuffer.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double3x2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Common\Window.h">
+      <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double3x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\EditorCamera.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double3x3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\GraphicsContext.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double3x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\GraphicsPipeline.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double3x4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiContext.h">
+      <Filter>include\Frostium3D\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double4x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiExtension.h">
+      <Filter>include\Frostium3D\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double4x2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiVulkanImpl.h">
+      <Filter>include\Frostium3D\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double4x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\allocators.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double4x3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\cursorstreamwrapper.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double4x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\document.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_double4x4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodedstream.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float2x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodings.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float2x2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\en.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float2x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\error.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float2x3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filereadstream.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float2x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filewritestream.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float2x4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\fwd.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float3x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\biginteger.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float3x2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\diyfp.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float3x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\dtoa.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float3x3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\ieee754.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float3x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\itoa.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float3x4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\meta.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\pow10.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\regex.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\stack.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strfunc.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strtod.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_float4x4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\swap.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\istreamwrapper.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorybuffer.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorystream.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\inttypes.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\stdint.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int2x4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\ostreamwrapper.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\pointer.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\prettywriter.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\rapidjson.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\reader.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\schema.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int3x4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stream.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stringbuffer.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\writer.h">
+      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\common.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\exponential.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\geometric.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_int4x4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\integer.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_integer.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\matrix.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_integer.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\neon.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_projection.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\packing.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_projection.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\platform.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_relational.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\trigonometric.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_relational.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\vector_relational.h">
+      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_transform.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImCurveEdit.h">
+      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_transform.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImGradient.h">
+      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImGuizmo.h">
+      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImSequencer.h">
+      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_allegro5.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx10.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx11.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint2x4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx12.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx9.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_glfw.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_glut.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_marmalade.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_metal.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint3x4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl2.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl3.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_osx.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_sdl.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_vulkan.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_win32.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\matrix_uint4x4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\gl3w.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_common.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\glcorearb.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_common.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_common_simd.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3native.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_double.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\usynergy\uSynergy.h">
+      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\usynergy</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_double_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imconfig.h">
+      <Filter>include\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_exponential.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imgui.h">
+      <Filter>include\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_exponential.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imgui_internal.h">
+      <Filter>include\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_float.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_rectpack.h">
+      <Filter>include\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_float_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_textedit.h">
+      <Filter>include\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_geometric.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_truetype.h">
+      <Filter>include\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_geometric.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>include\Frostium3D\Libraries\imgui\misc\cpp</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_relational.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\freetype\imgui_freetype.h">
+      <Filter>include\Frostium3D\Libraries\imgui\misc\freetype</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_relational.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\single_file\imgui_single_file.h">
+      <Filter>include\Frostium3D\Libraries\imgui\misc\single_file</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_transform.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\implot\implot.h">
+      <Filter>include\Frostium3D\Libraries\implot</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_transform.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\implot\implot_internal.h">
+      <Filter>include\Frostium3D\Libraries\implot</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_trigonometric.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\bench\utils.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\bench</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\quaternion_trigonometric.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_common.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async_logger-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_common.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async_logger.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_constants.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\argv.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_constants.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\env.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_int_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_integer.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_integer.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\log_levels.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_packing.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\common-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_packing.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\common.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_reciprocal.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_reciprocal.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_relational.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\circular_q.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_relational.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\console_globals.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_uint_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_ulp.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\scalar_ulp.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\fmt_helper.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool1.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool1_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\mpmc_blocking_q.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\null_mutex.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\os-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_bool4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\os.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_common.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_common.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double1.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\registry-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double1_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\registry.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\synchronous_factory.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client-windows.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_double4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\windows_include.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float1.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bin_to_hex.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float1_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\chrono.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\color.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\compile.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\core.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_float4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\locale.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int1.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ostream.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int1_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\posix.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int1_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\printf.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ranges.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\fmt.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\ostr.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\formatter.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fwd.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\logger-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\logger.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_int4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_integer.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\android_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_integer.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_packing.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_packing.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_reciprocal.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_reciprocal.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_relational.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_relational.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\daily_file_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint1.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dist_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint1_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dup_filter_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint1_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\msvc_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint2.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\null_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint2_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ostream_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint2_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ringbuffer_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint3.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint3_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint3_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint4.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint4_precision.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_uint4_sized.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_ulp.hpp">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\ext\vector_ulp.inl">
-      <Filter>Libraries\glm\glm\ext</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\fwd.hpp">
-      <Filter>Libraries\glm\glm</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\syslog_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\geometric.hpp">
-      <Filter>Libraries\glm\glm</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\systemd_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\glm.hpp">
-      <Filter>Libraries\glm\glm</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\tcp_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\bitfield.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\win_eventlog_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\bitfield.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\color_space.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\color_space.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\spdlog-inl.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\constants.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\spdlog.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\constants.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\tweakme.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\epsilon.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\version.h">
+      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\epsilon.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\integer.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\Common.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\integer.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\ConstantUnion.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_access.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\PoolAlloc.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_access.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\ResourceLimits.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_integer.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\Types.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_inverse.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\arrays.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_inverse.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\intermediate.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_transform.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\Versions.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\matrix_transform.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\localintermediate.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\noise.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Public\ShaderLang.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Public</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\noise.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\GlslangToSpv.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\packing.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\Logger.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\packing.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SPVRemapper.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\quaternion.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SpvTools.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\quaternion.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\spvIR.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\quaternion_simd.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\env.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\random.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\shaderc.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\random.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\status.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\reciprocal.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\visibility.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\reciprocal.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers\GLSL.std.450.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv-headers</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\round.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers\spirv.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv-headers</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\round.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-tools\libspirv.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv-tools</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\type_aligned.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\GLSL.std.450.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\type_precision.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\type_precision.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv_cross_c.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\type_ptr.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_icd.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\type_ptr.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_layer.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\ulp.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_platform.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\ulp.inl">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_sdk_platform.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtc\vec1.hpp">
-      <Filter>Libraries\glm\glm\gtc</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\associated_min_max.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_android.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\associated_min_max.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_beta.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\bit.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_core.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\bit.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_directfb.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\closest_point.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_fuchsia.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\closest_point.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ggp.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\color_encoding.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ios.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\color_encoding.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_macos.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\color_space.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_metal.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\color_space.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_vi.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\color_space_YCoCg.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_wayland.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\color_space_YCoCg.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_win32.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\common.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xcb.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\common.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\compatibility.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib_xrandr.h">
+      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\compatibility.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\MaterialLibrary.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\component_wise.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglBuffer.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\component_wise.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglContext.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\dual_quaternion.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglFramebuffer.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\dual_quaternion.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglRendererAPI.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\easing.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglShader.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\easing.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglTexture.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\euler_angles.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglVertexArray.h">
+      <Filter>include\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\euler_angles.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\RayTracer.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\extend.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\RaytracingPipeline.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\extend.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Renderer.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\extended_min_max.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Renderer2D.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\extended_min_max.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\RendererDebug.h">
+      <Filter>include\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\exterior_product.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Utils\Frustum.h">
+      <Filter>include\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\exterior_product.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Utils\GLM.h">
+      <Filter>include\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\fast_exponential.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Utils\SSAOGenerator.h">
+      <Filter>include\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\fast_exponential.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Utils\Utils.h">
+      <Filter>include\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\fast_square_root.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Utils\glTFImporter.h">
+      <Filter>include\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\fast_square_root.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\Vulkan.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\fast_trigonometry.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanAccelerationStructure.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\fast_trigonometry.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanBuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\float_notmalize.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanBufferPool.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\functions.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanCommandBuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\functions.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanCommandPool.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\gradient_paint.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanContext.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\gradient_paint.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanDescriptor.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\handed_coordinate_space.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanDevice.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\handed_coordinate_space.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanFramebuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\hash.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanIndexBuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\hash.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanInstance.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\integer.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanMemoryAllocator.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\integer.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanPBR.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\intersect.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanPipeline.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\intersect.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanRaytracingPipeline.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\io.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanRenderPass.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\io.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanScratchBuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\log_base.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanSemaphore.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\log_base.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanShader.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_cross_product.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanShaderResources.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_cross_product.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanStagingBuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_decompose.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanSwapchain.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_decompose.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanTexture.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_factorisation.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanUtils.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_factorisation.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanVertexBuffer.h">
+      <Filter>include\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_interpolation.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_block_allocator.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_interpolation.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_body.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_major_storage.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_broad_phase.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_major_storage.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_chain_shape.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_operation.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_circle_shape.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_operation.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_collision.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_query.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_contact.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_query.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_contact_manager.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_transform_2d.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_distance.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\matrix_transform_2d.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_distance_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\mixed_product.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_draw.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\mixed_product.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_dynamic_tree.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\norm.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_edge_shape.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\norm.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_fixture.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\normal.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_friction_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\normal.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_gear_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\normalize_dot.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_growable_stack.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\normalize_dot.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\number_precision.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_math.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\number_precision.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_motor_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\optimum_pow.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_mouse_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\optimum_pow.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_polygon_shape.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\orthonormalize.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_prismatic_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\orthonormalize.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_pulley_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\perpendicular.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_revolute_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\perpendicular.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_rope.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\polar_coordinates.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_rope_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\polar_coordinates.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_settings.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\projection.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_shape.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\projection.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_stack_allocator.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\quaternion.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_time_of_impact.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\quaternion.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_time_step.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\range.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_timer.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\raw_data.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_weld_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\raw_data.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_wheel_joint.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\rotate_normalized_axis.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_world.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\rotate_normalized_axis.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_world_callbacks.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\rotate_vector.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\box2d.h">
+      <Filter>include\Libraries\box_2D\include\box2d</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\rotate_vector.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\scalar_multiplication.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_codec.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\scalar_relational.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_common.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\scalar_relational.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_dsp.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\spline.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_dsp_effects.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\spline.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_errors.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\std_based_type.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_output.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\std_based_type.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_studio.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\string_cast.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Libraries\fmod\include\fmod_studio_common.h">
+      <Filter>include\Libraries\fmod\include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\string_cast.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Networking\NetworkManager.h">
+      <Filter>include\Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\texture.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Physics2D\Box2D\Body2D.h">
+      <Filter>include\Physics2D\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\texture.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Physics2D\Box2D\Body2DDefs.h">
+      <Filter>include\Physics2D\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\transform.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Physics2D\Box2D\CollisionFilter2D.h">
+      <Filter>include\Physics2D\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\transform.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Physics2D\Box2D\CollisionListener2D.h">
+      <Filter>include\Physics2D\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\transform2.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Physics2D\Box2D\RayCast2D.h">
+      <Filter>include\Physics2D\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\transform2.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\Scripting\BehaviourPrimitive.h">
+      <Filter>include\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\type_aligned.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\SmolEngineCore.h">
+      <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\type_aligned.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
+    <ClInclude Include="include\stdafx.h">
+      <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\type_trait.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\type_trait.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\vec_swizzle.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\vector_angle.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\vector_angle.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\vector_query.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\vector_query.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\wrap.hpp">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\gtx\wrap.inl">
-      <Filter>Libraries\glm\glm\gtx</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\integer.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat2x2.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat2x3.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat2x4.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat3x2.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat3x3.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat3x4.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat4x2.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat4x3.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\mat4x4.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\matrix.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\packing.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\trigonometric.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\vec2.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\vec3.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\vec4.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\glm\glm\vector_relational.hpp">
-      <Filter>Libraries\glm\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\imgizmo\src\ImCurveEdit.h">
-      <Filter>Libraries\imgizmo\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\imgizmo\src\ImGradient.h">
-      <Filter>Libraries\imgizmo\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\imgizmo\src\ImGuizmo.h">
-      <Filter>Libraries\imgizmo\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\imgizmo\src\ImSequencer.h">
-      <Filter>Libraries\imgizmo\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\stb_image\stb_image.h">
-      <Filter>Libraries\stb_image</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\stb_image\stb_image_write.h">
-      <Filter>Libraries\stb_image</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Animation\Animation2DFrameKey.h">
-      <Filter>Source\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Animation\AnimationClip2D.h">
-      <Filter>Source\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Animation\SkeletalAnimationClip.h">
-      <Filter>Source\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Audio\AudioClip.h">
-      <Filter>Source\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Audio\AudioEngine.h">
-      <Filter>Source\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\AssetManager.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Core.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Engine.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\EntryPoint.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\EventHandler.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\FileDialog.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\FilePaths.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Input.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\InputCodes.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Layer.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\LayerManager.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\SLog.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Time.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Tools.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Window.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Actor.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Animation2DComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\AnimatorComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\AudioSourceComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\BaseComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\BehaviourComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Body2DComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\CameraComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\CanvasComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\DirectionalLightComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\HeadComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Light2DSourceComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\MeshComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\PointLightComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\AudioEngineSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.h">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\Texture2DComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Components\TransformComponent.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\ComponentsCore.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Scene.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\SceneData.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\Animation2DSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\AnimationSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\AudioSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\CameraSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\CommandSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\JobsSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\Physics2DSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\RendererSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\ScriptingSystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\Systems\UISystem.h">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ECS\WorldAdmin.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Events\ApplicationEvent.h">
-      <Filter>Source\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Events\InputEvent.h">
-      <Filter>Source\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Events\MouseEvent.h">
-      <Filter>Source\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\AnimationPanel.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\BuildPanel.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\EditorConsole.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\EditorPanels.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\FileBrowser\imfilebrowser.h">
-      <Filter>Source\ImGui\FileBrowser</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\ImGuiExtension.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\ImGuiLayer.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\ImGuiVulkanImpl.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\ImPlot\implot.h">
-      <Filter>Source\ImGui\ImPlot</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\ImPlot\implot_internal.h">
-      <Filter>Source\ImGui\ImPlot</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\MaterialLibraryInterface.h">
-      <Filter>Source\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui\NodeEditor\imnodes.h">
-      <Filter>Source\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Multithreading\ThreadPool.h">
-      <Filter>Source\Multithreading</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Multithreading\Worker.h">
-      <Filter>Source\Multithreading</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Networking\NetworkManager.h">
-      <Filter>Source\Networking</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics2D\Box2D\Body2D.h">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics2D\Box2D\Body2DDefs.h">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics2D\Box2D\CollisionFilter2D.h">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics2D\Box2D\CollisionListener2D.h">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics2D\Box2D\RayCast2D.h">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\BufferElement.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\BufferLayout.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\CubeTexture.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\EditorCamera.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Framebuffer.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\FramebufferSpecification.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\GraphicsContext.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\GraphicsPipeline.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\GraphicsPipelineShaderCreateInfo.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\IndexBuffer.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Material.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\MaterialLibrary.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Mesh.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglBuffer.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglContext.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglFramebuffer.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglRendererAPI.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglShader.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglTexture.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\OpenGL\OpenglVertexArray.h">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Renderer.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Renderer2D.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\RendererShared.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\SSAOGenerator.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Shader.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Shared.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\SubTexture.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Text.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Texture.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\VertexArray.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\VertexBuffer.h">
-      <Filter>Source\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\Vulkan.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanBuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanBufferPool.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandBuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanCommandPool.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanContext.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanDescriptor.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanDevice.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanFramebuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanIndexBuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanInstance.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanMemoryAllocator.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanPBR.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanPipeline.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanRenderPass.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanSemaphore.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanShader.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanShaderResources.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanStagingBuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanSwapchain.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanTexture.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanUtils.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer\Vulkan\VulkanVertexBuffer.h">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scripting\BehaviourPrimitive.h">
-      <Filter>Source\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SmolEngineCore.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UIButton.h">
-      <Filter>Source\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UIElement.h">
-      <Filter>Source\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UITextLabel.h">
-      <Filter>Source\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utils\ModelImporter.h">
-      <Filter>Source\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\stdafx.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utils\glTFImporter.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Libraries\imgizmo\src\ImCurveEdit.cpp">
-      <Filter>Libraries\imgizmo\src</Filter>
+    <ClCompile Include="src\Audio\AudioClip.cpp">
+      <Filter>src\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\imgizmo\src\ImGradient.cpp">
-      <Filter>Libraries\imgizmo\src</Filter>
+    <ClCompile Include="src\Audio\AudioEngine.cpp">
+      <Filter>src\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\imgizmo\src\ImGuizmo.cpp">
-      <Filter>Libraries\imgizmo\src</Filter>
+    <ClCompile Include="src\Core\Engine.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\imgizmo\src\ImSequencer.cpp">
-      <Filter>Libraries\imgizmo\src</Filter>
+    <ClCompile Include="src\Core\EntryPoint.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\stb_image\stb_image.cpp">
-      <Filter>Libraries\stb_image</Filter>
+    <ClCompile Include="src\Core\FileDialog.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Audio\AudioClip.cpp">
-      <Filter>Source\Audio</Filter>
+    <ClCompile Include="src\Core\Layer.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Audio\AudioEngine.cpp">
-      <Filter>Source\Audio</Filter>
+    <ClCompile Include="src\Core\LayerManager.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\AssetManager.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\Core\MaterialLibraryInterface.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Engine.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Actor.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\EntryPoint.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Components\Singletons\AudioEngineSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\EventHandler.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\FileDialog.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Layer.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\LayerManager.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\SLog.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Components\Singletons\WorldAdminStateSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Window.cpp">
-      <Filter>Source\Core</Filter>
+    <ClCompile Include="src\ECS\Scene.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Actor.cpp">
-      <Filter>Source\ECS</Filter>
+    <ClCompile Include="src\ECS\SceneData.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Animation2DComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\Animation2DSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\AnimatorComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\AnimationSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\AudioSourceComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\AudioSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\BaseComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\CameraSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\BehaviourComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\CommandSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Body2DComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\JobsSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\CameraComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\Physics2DSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\CanvasComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\RendererSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\DirectionalLightComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\ScriptingSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\HeadComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\Systems\UISystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Light2DSourceComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\ECS\WorldAdmin.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\MeshComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\Physics2D\Box2D\Body2D.cpp">
+      <Filter>src\Physics2D\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\PointLightComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
+    <ClCompile Include="src\Physics2D\Box2D\CollisionFilter2D.cpp">
+      <Filter>src\Physics2D\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\AudioEngineSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
+    <ClCompile Include="src\Physics2D\Box2D\CollisionListener2D.cpp">
+      <Filter>src\Physics2D\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
+    <ClCompile Include="src\Physics2D\Box2D\RayCast2D.cpp">
+      <Filter>src\Physics2D\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\JobsSystemStateSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
+    <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp">
+      <Filter>src\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Singletons\WorldAdminStateSComponent.cpp">
-      <Filter>Source\ECS\Components\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Components\Texture2DComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Components\TransformComponent.cpp">
-      <Filter>Source\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Scene.cpp">
-      <Filter>Source\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\SceneData.cpp">
-      <Filter>Source\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\Animation2DSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\AnimationSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\AudioSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\CameraSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\CommandSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\JobsSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\Physics2DSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\RendererSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\ScriptingSystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\Systems\UISystem.cpp">
-      <Filter>Source\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ECS\WorldAdmin.cpp">
-      <Filter>Source\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\AnimationPanel.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\BuildPanel.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\EditorConsole.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\EditorPanels.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImGuiBuid.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImGuiExtension.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImGuiLayer.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImGuiVulkanImpl.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImPlot\implot.cpp">
-      <Filter>Source\ImGui\ImPlot</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImPlot\implot_demo.cpp">
-      <Filter>Source\ImGui\ImPlot</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\ImPlot\implot_items.cpp">
-      <Filter>Source\ImGui\ImPlot</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\MaterialLibraryInterface.cpp">
-      <Filter>Source\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGui\NodeEditor\imnodes.cpp">
-      <Filter>Source\ImGui\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Multithreading\ThreadPool.cpp">
-      <Filter>Source\Multithreading</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Multithreading\Worker.cpp">
-      <Filter>Source\Multithreading</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics2D\Box2D\Body2D.cpp">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics2D\Box2D\CollisionFilter2D.cpp">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics2D\Box2D\CollisionListener2D.cpp">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics2D\Box2D\RayCast2D.cpp">
-      <Filter>Source\Physics2D\Box2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\CubeTexture.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\EditorCamera.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Framebuffer.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\GraphicsContext.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\GraphicsPipeline.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\IndexBuffer.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Material.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\MaterialLibrary.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Mesh.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglBuffer.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglContext.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglFramebuffer.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglRendererAPI.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglShader.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglTexture.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\OpenGL\OpenglVertexArray.cpp">
-      <Filter>Source\Renderer\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Renderer.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Renderer2D.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\SSAOGenerator.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Shader.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\SubTexture.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Text.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Texture.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\VertexArray.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\VertexBuffer.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanBuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanBufferPool.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandBuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanCommandPool.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanContext.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanDescriptor.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanDevice.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanFramebuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanIndexBuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanInstance.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanMemoryAllocator.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanPBR.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanPipeline.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanRenderPass.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanSemaphore.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanShader.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanStagingBuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanSwapchain.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanTexture.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanUtils.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer\Vulkan\VulkanVertexBuffer.cpp">
-      <Filter>Source\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scripting\BehaviourPrimitive.cpp">
-      <Filter>Source\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\UIButton.cpp">
-      <Filter>Source\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\UITextLabel.cpp">
-      <Filter>Source\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utils\ModelImporter.cpp">
-      <Filter>Source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\stdafx.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utils\glTFImporter.cpp" />
   </ItemGroup>
 </Project>

@@ -1,1 +1,0 @@
-#include "CppScriptingExamples.h"

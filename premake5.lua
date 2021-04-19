@@ -5,113 +5,54 @@ workspace "SmolEngine"
 
 	configurations
 	{
-		"Debug (Vulkan)",
-		"Release (Vulkan)",
-		"Debug (OpenGL)",
-		"Release (OpenGL)",
+		"Debug",
+		"Release",
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
--- Include directories relative to root folder (solution directory)
-IncludeDir = {}
-IncludeDir["GLFW"] = "SmolEngine/Libraries/glfw/include"
-IncludeDir["Glad"] = "SmolEngine/Libraries/glad/include"
-IncludeDir["ImGui"] = "SmolEngine/Libraries/imgui"
-IncludeDir["glm"] = "SmolEngine/Libraries/glm"
-IncludeDir["stb"] = "SmolEngine/Libraries/stb_image"
-IncludeDir["entt"] = "SmolEngine/Libraries/entt"
-IncludeDir["vulkan"] = "SmolEngine/Libraries/vulkan/include"
-IncludeDir["imgizmo"] = "SmolEngine/Libraries/imgizmo/src"
-IncludeDir["ktx"] = "SmolEngine/Libraries/ktx/include"
-IncludeDir["meta"] = "SmolEngine/Libraries/meta"
-IncludeDir["gli"] = "SmolEngine/Libraries/gli"
-IncludeDir["tinygltf"] = "SmolEngine/Libraries/tinygltf"
-IncludeDir["taskflow"] = "SmolEngine/Libraries/taskflow"
-
 group "Dependencies"
-include "SmolEngine/Libraries/glfw"
-include "SmolEngine/Libraries/glad"
-include "SmolEngine/Libraries/imgui"
-include "SmolEngine/Libraries/box2d"
-include "SmolEngine/Libraries/spir_v_cross"
-include "SmolEngine/Libraries/ktx"
+include "vendor/box2d"
 group ""
 
 
 project "SmolEngine"
-	location "SmolEngine"
+	location "smolengine"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	objdir ("vendor/bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "stdafx.h"
-	pchsource "SmolEngine/Source/stdafx.cpp"
+	pchsource "smolengine/src/stdafx.cpp"
 
 	files
 	{
-		"%{prj.name}/Source/**.h",
-		"%{prj.name}/Source/**.cpp",
-
-		"%{prj.name}/Libraries/glm/glm/**.hpp",
-		"%{prj.name}/Libraries/glm/glm/**.inl",
-
-		"%{prj.name}/Libraries/stb_image/**.h",
-		"%{prj.name}/Libraries/stb_image/**.cpp",
-
-		"%{prj.name}/Libraries/imgizmo/src/ImGuizmo.h",
-		"%{prj.name}/Libraries/imgizmo/src/ImGuizmo.cpp",
-		"%{prj.name}/Libraries/imgizmo/src/ImCurveEdit.h",
-		"%{prj.name}/Libraries/imgizmo/src/ImGradient.h",
-		"%{prj.name}/Libraries/imgizmo/src/ImGradient.cpp",
-		"%{prj.name}/Libraries/imgizmo/src/ImCurveEdit.cpp",
-		"%{prj.name}/Libraries/imgizmo/src/ImSequencer.h",
-		"%{prj.name}/Libraries/imgizmo/src/ImSequencer.cpp",
-
+		"smolengine/include/**.h",
+		"smolengine/src/**.cpp"
 	}
 
 	includedirs
 	{
-		"SmolEngine/Libraries/icon_font_cpp_headers",
-		"SmolEngine/Libraries/spdlog/include",
-		"SmolEngine/Libraries/cereal/include",
-		"SmolEngine/Libraries/fmod/include",
-		"SmolEngine/Libraries/box2d/include",
-		"SmolEngine/Libraries/assimp/include",
-		
-		"%{prj.name}/Source",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb}",
-        "%{IncludeDir.entt}",
-		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.imgizmo}",
-		"%{IncludeDir.ktx}",
-		"%{IncludeDir.meta}",
-		"%{IncludeDir.gli}",
-		"%{IncludeDir.tinygltf}",
-		"%{IncludeDir.taskflow}",
+		"smolengine/include/",
+		"smolengine/include/Libraries/",
+		"smolengine/include/Libraries/box_2D/include/",
+		"smolengine/include/Libraries/fmod/include/",
+		"smolengine/include/Frostium3D/",
+		"smolengine/include/Frostium3D/Libraries/",
+		"smolengine/include/Frostium3D/Libraries/spdlog/include/",
+		"smolengine/include/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Frostium3D/Libraries/glm/",
 	}
 
 	links 
 	{ 
-		"GLFW",
-		"Glad",
-		"ImGui",
 		"Box2D",
-		"SPIRV-Cross",
-		"KTX-Tools",
-		
-		"SmolEngine/Libraries/vulkan/libs/vulkan-1.lib",
-		"SmolEngine/Libraries/vulkan/libs/VkLayer_utils.lib",
-		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
-		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
+		"vendor/fmod/libs/fmodL_vc.lib",
+		"vendor/fmod/libs/fmodstudioL_vc.lib"
 	}
 
 	defines
@@ -132,7 +73,7 @@ project "SmolEngine"
 			"GLFW_INCLUDE_NONE"
 		}
 
-	filter "configurations:Debug (Vulkan)"
+	filter "configurations:Debug"
 		buildoptions "/MDd"
 		buildoptions "/bigobj"
 		buildoptions "/Zm500"
@@ -140,57 +81,16 @@ project "SmolEngine"
 
 		links 
 		{ 
-			"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/glslang_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/SPIRV_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/machineIndependent_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/genericCodeGen_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/OGLCompiler_d.lib",
-			"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib",
-
-			"SmolEngine/Libraries/assimp/libs/assimp-vc142-mtd.lib",
-			"SmolEngine/Libraries/assimp/libs/zlibstaticd.lib"
+		   "vendor/frostium/libs/Frostium_d.lib"
 		}
 
 		defines
 		{
 			"SMOLENGINE_DEBUG"
 		}
+		
 
-	filter "configurations:Debug (OpenGL)"
-	buildoptions "/MDd"
-	buildoptions "/bigobj"
-	buildoptions "/Zm500"
-	symbols "on"
-
-	links 
-	{ 
-		"opengl32.lib",
-		"SmolEngine/Libraries/vulkan/libs/shaderc_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/shaderc_util_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/glslang_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/SPIRV_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/machineIndependent_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/genericCodeGen_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/OGLCompiler_d.lib",
-		"SmolEngine/Libraries/vulkan/libs/OSDependent_d.lib",
-
-		"SmolEngine/Libraries/assimp/libs/assimp-vc142-mtd.lib",
-		"SmolEngine/Libraries/assimp/libs/zlibstaticd.lib"
-	}
-
-	defines
-	{
-		"SMOLENGINE_OPENGL_IMPL",
-		"SMOLENGINE_DEBUG"
-	}
-
-	filter "configurations:Release (Vulkan)"
+	filter "configurations:Release"
 		buildoptions "/MD"
 		buildoptions "/bigobj"
 		buildoptions "/Zm500"
@@ -198,91 +98,45 @@ project "SmolEngine"
 
 		links 
 		{ 
-			"SmolEngine/Libraries/vulkan/libs/shaderc.lib",
-			"SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
-			"SmolEngine/Libraries/vulkan/libs/glslang.lib",
-			"SmolEngine/Libraries/vulkan/libs/SPIRV.lib",
-			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools.lib",
-			"SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt.lib",
-			"SmolEngine/Libraries/vulkan/libs/machineIndependent.lib",
-			"SmolEngine/Libraries/vulkan/libs/genericCodeGen.lib",
-			"SmolEngine/Libraries/vulkan/libs/OGLCompiler.lib",
-			"SmolEngine/Libraries/vulkan/libs/OSDependent.lib",
-
-			"SmolEngine/Libraries/assimp/libs/assimp-vc142-mt.lib",
-			"SmolEngine/Libraries/assimp/libs/zlibstatic.lib"
+		   "vendor/frostium/libs/Frostium.lib"
 		}
 
-	filter "configurations:Release (OpenGL)"
-	buildoptions "/MD"
-	buildoptions "/bigobj"
-	buildoptions "/Zm500"
-	optimize "on"
 
-	   links 
-	   { 
-		"opengl32.lib",
-		 "SmolEngine/Libraries/vulkan/libs/shaderc.lib",
-		 "SmolEngine/Libraries/vulkan/libs/shaderc_util.lib",
-		 "SmolEngine/Libraries/vulkan/libs/glslang.lib",
-		 "SmolEngine/Libraries/vulkan/libs/SPIRV.lib",
-		 "SmolEngine/Libraries/vulkan/libs/SPIRV-Tools.lib",
-		 "SmolEngine/Libraries/vulkan/libs/SPIRV-Tools-opt.lib",
-		 "SmolEngine/Libraries/vulkan/libs/machineIndependent.lib",
-		 "SmolEngine/Libraries/vulkan/libs/genericCodeGen.lib",
-		 "SmolEngine/Libraries/vulkan/libs/OGLCompiler.lib",
-		 "SmolEngine/Libraries/vulkan/libs/OSDependent.lib",
-
-		 "SmolEngine/Libraries/assimp/libs/assimp-vc142-mt.lib",
-		 "SmolEngine/Libraries/assimp/libs/zlibstatic.lib"
-	   }
-
-	    defines
-	   {
-		 "SMOLENGINE_OPENGL_IMPL"
-	   }
-
-
-
+group "Samples"
 project "GameX"
-	location "GameX"
+	location "samples"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	objdir ("vendor/bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
 		"%{prj.name}/**.h",
 		"%{prj.name}/**.cpp",
-		"%{prj.name}/Libraries/glm/glm/**.hpp",
-		"%{prj.name}/Libraries/glm/glm/**.inl",
 	}
 
 	includedirs
 	{
-		"SmolEngine/Libraries/icon_font_cpp_headers",
-		"SmolEngine/Libraries/box2d/include",
-		"SmolEngine/Libraries/spdlog/include",
-		"SmolEngine/Libraries/fmod/include",
-		"SmolEngine/Libraries/cereal/include",
-		"SmolEngine/Source",
-		"SmolEngine/Libraries",
-
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.vulkan}"
+		"smolengine/include/",
+		"smolengine/include/Libraries/",
+		"smolengine/include/Libraries/box_2D/include/",
+		"smolengine/include/Libraries/fmod/include/",
+		"smolengine/include/Frostium3D/",
+		"smolengine/include/Frostium3D/Libraries/",
+		"smolengine/include/Frostium3D/Libraries/spdlog/include/",
+		"smolengine/include/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Frostium3D/Libraries/glm/",
 	}
 
 	links
 	{
 		"SmolEngine",
-		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
-		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
+		"vendor/fmod/libs/fmodL_vc.lib",
+		"vendor/fmod/libs/fmodstudioL_vc.lib"
 	}
 
 	filter "system:windows"
@@ -294,84 +148,54 @@ project "GameX"
 			"PLATFORM_WIN"
 		}
 
-
-	--------------------------------------- Debug
-
-	filter "configurations:Debug (Vulkan)"
+	filter "configurations:Debug"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	symbols "on"
 
-	filter "configurations:Debug (OpenGL)"
-	buildoptions "/MDd"
-	buildoptions "/bigobj"
-	symbols "on"
-
-	defines
-	{
-		"SMOLENGINE_OPENGL_IMPL"
-	}
-
-	--------------------------------------- Release
-
-	filter "configurations:Release (Vulkan)"
+	filter "configurations:Release"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
-
-	filter "configurations:Release (OpenGL)"
-	buildoptions "/MD"
-	buildoptions "/bigobj"
-	optimize "on"
-
-	defines
-	{
-		"SMOLENGINE_OPENGL_IMPL"
-	}
-
+	group ""
 	
 	project "SmolEngine-Editor"
 
-	location "SmolEngine-Editor"
+	location "smolengine-editor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	objdir ("vendor/bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
-		"%{prj.name}/**.h",
-		"%{prj.name}/**.cpp",
-		"%{prj.name}/Libraries/glm/glm/**.hpp",
-		"%{prj.name}/Libraries/glm/glm/**.inl",
+		"smolengine-editor/include/**.h",
+		"smolengine-editor/src/**.cpp",
 	}
 
 	includedirs
 	{
-		"SmolEngine/Libraries/icon_font_cpp_headers",
-		"SmolEngine/Libraries/box2d/include",
-		"SmolEngine/Libraries/spdlog/include",
-		"SmolEngine/Libraries/fmod/include",
-		"SmolEngine/Libraries/cereal/include",
-		
-		"SmolEngine/Source",
-		"SmolEngine/Libraries",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.vulkan}",
-		"%{IncludeDir.imgizmo}",
-		"%{IncludeDir.taskflow}",
+		"smolengine-editor/include/",
+		"smolengine-editor/src/",
+		"smolengine/include/",
+		"smolengine/include/Libraries/",
+		"smolengine/include/Libraries/box_2D/include/",
+		"smolengine/include/Libraries/fmod/include/",
+		"smolengine/include/Frostium3D/",
+		"smolengine/include/Frostium3D/Libraries/",
+		"smolengine/include/Frostium3D/Libraries/spdlog/include/",
+		"smolengine/include/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Frostium3D/Libraries/glm/",
 	}
 
 	links
 	{
 		"SmolEngine",
-		"SmolEngine/Libraries/fmod/libs/fmodL_vc.lib",
-		"SmolEngine/Libraries/fmod/libs/fmodstudioL_vc.lib"
+		"vendor/fmod/libs/fmodL_vc.lib",
+		"vendor/fmod/libs/fmodstudioL_vc.lib"
 	}
 
 	filter "system:windows"
@@ -383,36 +207,12 @@ project "GameX"
 			"PLATFORM_WIN"
 		}
 
-	--------------------------------------- Debug
-
-	filter "configurations:Debug (Vulkan)"
+	filter "configurations:Debug"
 	buildoptions "/MDd"
 	buildoptions "/bigobj"
 	symbols "on"
 
-	filter "configurations:Debug (OpenGL)"
-	buildoptions "/MDd"
-	buildoptions "/bigobj"
-	symbols "on"
-
-	defines
-	{
-		"SMOLENGINE_OPENGL_IMPL"
-	}
-
-	--------------------------------------- Release
-
-	filter "configurations:Release (Vulkan)"
+	filter "configurations:Release"
 	buildoptions "/MD"
 	buildoptions "/bigobj"
 	optimize "on"
-
-	filter "configurations:Release (OpenGL)"
-	buildoptions "/MD"
-	buildoptions "/bigobj"
-	optimize "on"
-
-	defines
-	{
-		"SMOLENGINE_OPENGL_IMPL"
-	}

@@ -1,20 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug (Vulkan)|x64">
-      <Configuration>Debug (Vulkan)</Configuration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release (Vulkan)|x64">
-      <Configuration>Release (Vulkan)</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug (OpenGL)|x64">
-      <Configuration>Debug (OpenGL)</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release (OpenGL)|x64">
-      <Configuration>Release (OpenGL)</Configuration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -26,25 +18,13 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
@@ -53,53 +33,33 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug (Vulkan)-windows-x86_64\SmolEngine-Editor\</OutDir>
-    <IntDir>..\bin-int\Debug (Vulkan)-windows-x86_64\SmolEngine-Editor\</IntDir>
+    <OutDir>..\bin\Debug-windows-x86_64\SmolEngine-Editor\</OutDir>
+    <IntDir>..\vendor\bin-int\Debug-windows-x86_64\SmolEngine-Editor\</IntDir>
     <TargetName>SmolEngine-Editor</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release (Vulkan)-windows-x86_64\SmolEngine-Editor\</OutDir>
-    <IntDir>..\bin-int\Release (Vulkan)-windows-x86_64\SmolEngine-Editor\</IntDir>
+    <OutDir>..\bin\Release-windows-x86_64\SmolEngine-Editor\</OutDir>
+    <IntDir>..\vendor\bin-int\Release-windows-x86_64\SmolEngine-Editor\</IntDir>
     <TargetName>SmolEngine-Editor</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug (OpenGL)-windows-x86_64\SmolEngine-Editor\</OutDir>
-    <IntDir>..\bin-int\Debug (OpenGL)-windows-x86_64\SmolEngine-Editor\</IntDir>
-    <TargetName>SmolEngine-Editor</TargetName>
-    <TargetExt>.exe</TargetExt>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release (OpenGL)-windows-x86_64\SmolEngine-Editor\</OutDir>
-    <IntDir>..\bin-int\Release (OpenGL)-windows-x86_64\SmolEngine-Editor\</IntDir>
-    <TargetName>SmolEngine-Editor</TargetName>
-    <TargetExt>.exe</TargetExt>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Vulkan)|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;src;..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Frostium3D;..\smolengine\include\Frostium3D\Libraries;..\smolengine\include\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Frostium3D\Libraries\cereal\include;..\smolengine\include\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -109,15 +69,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Vulkan)|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;src;..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Frostium3D;..\smolengine\include\Frostium3D\Libraries;..\smolengine\include\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Frostium3D\Libraries\cereal\include;..\smolengine\include\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -131,65 +91,19 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|x64'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/MDd /bigobj %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|x64'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;SMOLENGINE_OPENGL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SmolEngine\Libraries\icon_font_cpp_headers;..\SmolEngine\Libraries\box2d\include;..\SmolEngine\Libraries\spdlog\include;..\SmolEngine\Libraries\fmod\include;..\SmolEngine\Libraries\cereal\include;..\SmolEngine\Source;..\SmolEngine\Libraries;..\SmolEngine\Libraries\glm;..\SmolEngine\Libraries\entt;..\SmolEngine\Libraries\glad\include;..\SmolEngine\Libraries\vulkan\include;..\SmolEngine\Libraries\imgizmo\src;..\SmolEngine\Libraries\taskflow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Full</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <MinimalRebuild>false</MinimalRebuild>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/MD /bigobj %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\SmolEngine\Libraries\fmod\libs\fmodL_vc.lib;..\SmolEngine\Libraries\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\DeferredRenderingTestLayer.h" />
-    <ClInclude Include="Source\Editor.h" />
-    <ClInclude Include="Source\EditorLayer.h" />
-    <ClInclude Include="Source\RaytracingTestLayer.h" />
-    <ClInclude Include="Source\Renderer3DTestLayer.h" />
+    <ClInclude Include="include\Editor.h" />
+    <ClInclude Include="include\EditorLayer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\DeferredRenderingTestLayer.cpp" />
-    <ClCompile Include="Source\Editor.cpp" />
-    <ClCompile Include="Source\EditorLayer.cpp" />
-    <ClCompile Include="Source\RaytracingTestLayer.cpp" />
-    <ClCompile Include="Source\Renderer3DTestLayer.cpp" />
+    <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\EditorLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmolEngine\SmolEngine.vcxproj">
+    <ProjectReference Include="..\smolengine\SmolEngine.vcxproj">
       <Project>{76BC28B1-6274-6AFE-CB7B-435AB75205EF}</Project>
     </ProjectReference>
   </ItemGroup>

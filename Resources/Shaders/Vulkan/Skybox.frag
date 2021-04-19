@@ -1,6 +1,7 @@
 #version 450 core
 
-layout(location = 0) out vec4 o_color;
+layout (location = 0) out vec4 outColor;
+
 
 layout(location = 0) in vec3 v_WorldPos;
 layout(location = 1) in float v_Gamma;
@@ -30,6 +31,6 @@ void main()
 	color = color * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
 	// Gamma correction
 	color = pow(color, vec3(1.0f / v_Gamma));
-	
-	o_color = vec4(color, 1.0);
+
+	outColor = vec4(color, 1);
 }

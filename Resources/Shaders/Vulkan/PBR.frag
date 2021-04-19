@@ -2,36 +2,36 @@
 #define ambient 0.1
 
 // In
-layout (location = 0)  in vec3 inWorldPos;
-layout (location = 1)  in vec3 inNormal;
-layout (location = 2)  in vec3 inCameraPos;
-layout (location = 3)  in vec2 inUV;
+layout (location = 0)  in vec3 v_ModelPos;
+layout (location = 1)  in vec3 v_Normal;
+layout (location = 2)  in vec3 v_CameraPos;
+layout (location = 3)  in vec2 v_UV;
 
-layout (location = 4)  flat in int inUseAlbedroMap;
-layout (location = 5)  flat in int inUseNormalMap;
-layout (location = 6)  flat in int inUseMetallicMap;
-layout (location = 7)  flat in int inUseRoughnessMap;
-layout (location = 8)  flat in int inUseAOMap;
+layout (location = 4)  flat in uint v_UseAlbedroMap;
+layout (location = 5)  flat in uint v_UseNormalMap;
+layout (location = 6)  flat in uint v_UseMetallicMap;
+layout (location = 7)  flat in uint v_UseRoughnessMap;
+layout (location = 8)  flat in uint v_UseAOMap;
 
-layout (location = 9) flat in int inAlbedroMapIndex;
-layout (location = 10) flat in int inNormalMapIndex;
-layout (location = 11) flat in int inMetallicMapIndex;
-layout (location = 12) flat in int inRoughnessMapIndex;
-layout (location = 13) flat in int inAOMapIndex;
+layout (location = 9)  flat in uint v_AlbedroMapIndex;
+layout (location = 10) flat in uint v_NormalMapIndex;
+layout (location = 11) flat in uint v_MetallicMapIndex;
+layout (location = 12) flat in uint v_RoughnessMapIndex;
+layout (location = 13) flat in uint v_AOMapIndex;
 
-layout (location = 14) in float inMetallic;
-layout (location = 15) in float inRoughness;
-layout (location = 16) in float inExposure;
-layout (location = 17) in float inGamma;
-layout (location = 18) in float inAmbient;
+layout (location = 14) in float v_Metallic;
+layout (location = 15) in float v_Roughness;
+layout (location = 16) in float v_Exposure;
+layout (location = 17) in float v_Gamma;
+layout (location = 18) in float v_Ambient;
 
-layout (location = 19) flat in uint inDirectionalLightCount;
-layout (location = 20) flat in uint inPointLightCount;
+layout (location = 19) flat in uint v_DirectionalLightCount;
+layout (location = 20) flat in uint v_PointLightCount;
 
-layout (location = 21) in vec4 inColor;
-layout (location = 22) in vec4 inShadowCoord;
-layout (location = 23) in vec4 inRawPos;
-layout (location = 24) in mat3 inTBN;
+layout (location = 21) in vec4 v_Color;
+layout (location = 22) in vec4 v_ShadowCoord;
+layout (location = 23) in vec4 v_WorldPos;
+layout (location = 24) in mat3 v_TBN;
 
 // Out
 layout (location = 0) out vec4 outColor;
@@ -136,9 +136,9 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 vec4 tonemap(vec4 color)
 {
-	vec3 outcol = Uncharted2Tonemap(color.rgb * inExposure);
+	vec3 outcol = Uncharted2Tonemap(color.rgb * v_Exposure);
 	outcol = outcol * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
-	return vec4(pow(outcol, vec3(1.0f / inGamma)), color.a);
+	return vec4(pow(outcol, vec3(1.0f / v_Gamma)), color.a);
 }
 
 // GGX/Towbridge-Reitz normal distribution function.
@@ -172,44 +172,29 @@ vec3 fresnelSchlick(vec3 F0, float cosTheta)
 	return F0 + (vec3(1.0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
-vec4 SRGBtoLINEAR(vec4 srgbIn)
-{
-	#ifdef MANUAL_SRGB
-	#ifdef SRGB_FAST_APPROXIMATION
-	vec3 linOut = pow(srgbIn.xyz,vec3(2.2));
-	#else //SRGB_FAST_APPROXIMATION
-	vec3 bLess = step(vec3(0.04045),srgbIn.xyz);
-	vec3 linOut = mix( srgbIn.xyz/vec3(12.92), pow((srgbIn.xyz+vec3(0.055))/vec3(1.055),vec3(2.4)), bLess );
-	#endif //SRGB_FAST_APPROXIMATION
-	return vec4(linOut,srgbIn.w);;
-	#else //MANUAL_SRGB
-	return srgbIn;
-	#endif //MANUAL_SRGB
-}
-
 vec3 getNormal()
 {
-    if(inUseNormalMap == 1)
+    if(v_UseNormalMap == 1)
 	{
-		return inTBN * normalize(texture(texturesMap[inNormalMapIndex], inUV).xyz * 2.0 - vec3(1.0));
+		return v_TBN * normalize(texture(texturesMap[v_NormalMapIndex], v_UV).xyz * 2.0 - vec3(1.0));
 	}
 
-	return inTBN[2];
+	return v_TBN[2];
 }
 
 void main()
 {	
 	// Getting Values 
 	vec3 N = getNormal();
-	vec3 ao = inUseAOMap == 1 ? texture(texturesMap[inAOMapIndex], inUV).rrr : vec3(1, 1, 1);
-	vec3 albedro = inUseAlbedroMap == 1 ? texture(texturesMap[inAlbedroMapIndex], inUV).rgb : inColor.rgb;
+	vec3 ao = v_UseAOMap == 1 ? texture(texturesMap[v_AOMapIndex], v_UV).rrr : vec3(1, 1, 1);
+	vec3 albedro = v_UseAlbedroMap == 1 ? texture(texturesMap[v_AlbedroMapIndex], v_UV).rgb : v_Color.rgb;
 	albedro = pow(albedro, vec3(2.2));
 
-	float metallic = inUseMetallicMap == 1 ? texture(texturesMap[inMetallicMapIndex], inUV).r : inMetallic;
-	float roughness = inUseRoughnessMap == 1 ? texture(texturesMap[inRoughnessMapIndex], inUV).r: inRoughness;
+	float metallic = v_UseMetallicMap == 1 ? texture(texturesMap[v_MetallicMapIndex], v_UV).r : v_Metallic;
+	float roughness = v_UseRoughnessMap == 1 ? texture(texturesMap[v_RoughnessMapIndex], v_UV).r: v_Roughness;
 	
 	// Outgoing light direction (vector from world-space fragment position to the "eye").
-	vec3 Lo = normalize(inCameraPos - inWorldPos);
+	vec3 Lo = normalize(v_CameraPos - v_ModelPos);
 
 	// Angle between surface normal and outgoing light direction.
 	float cosLo = max(0.0, dot(N, Lo));
@@ -250,9 +235,9 @@ void main()
 	
 	// Direct lighting calculation for analytical lights.
 	vec3 directLighting = vec3(0);
-	for(int i=0; i< inDirectionalLightCount; ++i)
+	for(int i=0; i< v_DirectionalLightCount; ++i)
 	{
-		vec3 L = normalize(directionalLights[0].position.xyz - inRawPos.xyz);
+		vec3 L = normalize(directionalLights[0].position.xyz - v_WorldPos.xyz);
 		vec3 Lradiance = directionalLights[i].color.rgb;
 
 		// Half-vector between Li and Lo.
@@ -288,13 +273,13 @@ void main()
 
 	// Point lighting calculation
 	vec3 pointLighting = vec3(0);
-	for(int i=0; i< inPointLightCount; ++i)
+	for(int i=0; i< v_PointLightCount; ++i)
 	{
 		float constantAtt = pointLights[i].params.x;
 		float linearAtt = pointLights[i].params.y;
 		float expAtt = pointLights[i].params.z;
 
-	    vec3 posToLight = inWorldPos - pointLights[i].position.xyz;
+	    vec3 posToLight = v_ModelPos - pointLights[i].position.xyz;
 	    float dist = length(posToLight);
 	    posToLight = normalize(posToLight);
 		float diffuse = max(0.0, dot(N, -posToLight));
@@ -305,17 +290,16 @@ void main()
 
 	vec3 color = directLighting + pointLighting;
 	color += ambientLighting;
-	if(inDirectionalLightCount > 0)
+	if(v_DirectionalLightCount > 0)
 	{
-		float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
+		float shadow = filterPCF(v_ShadowCoord / v_ShadowCoord.w);
 		color*= shadow;
 	}
-
 	// Tone mapping
-	color = Uncharted2Tonemap(color * inExposure);
+	color = Uncharted2Tonemap(color * v_Exposure);
 	color = color * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
 	// Gamma correction
-	color = pow(color, vec3(1.0f / inGamma));
+	color = pow(color, vec3(1.0f / v_Gamma));
 
 	outColor = vec4(color, 1.0);
 }
