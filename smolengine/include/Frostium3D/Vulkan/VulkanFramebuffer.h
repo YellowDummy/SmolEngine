@@ -39,7 +39,6 @@ namespace Frostium
 	private:
 
 		bool Create(uint32_t width, uint32_t height);
-		bool CreateOmni(uint32_t width, uint32_t height);
 		bool CreateShadow(uint32_t width, uint32_t height);
 		void CreateSampler(VkFilter filer = VK_FILTER_NEAREST);
 		void FreeResources();

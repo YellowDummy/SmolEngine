@@ -1,0 +1,545 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{76BC28B1-6274-6AFE-CB7B-435AB75205EF}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SmolEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\bin\Debug-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\vendor\bin-int\Debug-windows-x86_64\SmolEngine\</IntDir>
+    <TargetName>SmolEngine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\bin\Release-windows-x86_64\SmolEngine\</OutDir>
+    <IntDir>..\vendor\bin-int\Release-windows-x86_64\SmolEngine\</IntDir>
+    <TargetName>SmolEngine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Frostium3D;include\Frostium3D\Libraries;include\Frostium3D\Libraries\spdlog\include;include\Frostium3D\Libraries\cereal\include;include\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Frostium3D;include\Frostium3D\Libraries;include\Frostium3D\Libraries\spdlog\include;include\Frostium3D\Libraries\cereal\include;include\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD /bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Animation\Animation2DFrameKey.h" />
+    <ClInclude Include="include\Animation\AnimationClip2D.h" />
+    <ClInclude Include="include\Animation\SkeletalAnimationClip.h" />
+    <ClInclude Include="include\Audio\AudioClip.h" />
+    <ClInclude Include="include\Audio\AudioEngine.h" />
+    <ClInclude Include="include\Core\Core.h" />
+    <ClInclude Include="include\Core\EditorConsole.h" />
+    <ClInclude Include="include\Core\Engine.h" />
+    <ClInclude Include="include\Core\EntryPoint.h" />
+    <ClInclude Include="include\Core\FileDialog.h" />
+    <ClInclude Include="include\Core\Layer.h" />
+    <ClInclude Include="include\Core\LayerManager.h" />
+    <ClInclude Include="include\Core\MaterialLibraryInterface.h" />
+    <ClInclude Include="include\Core\Timer.h" />
+    <ClInclude Include="include\ECS\Actor.h" />
+    <ClInclude Include="include\ECS\Components\Animation2DComponent.h" />
+    <ClInclude Include="include\ECS\Components\AnimatorComponent.h" />
+    <ClInclude Include="include\ECS\Components\AudioSourceComponent.h" />
+    <ClInclude Include="include\ECS\Components\BaseComponent.h" />
+    <ClInclude Include="include\ECS\Components\BehaviourComponent.h" />
+    <ClInclude Include="include\ECS\Components\Body2DComponent.h" />
+    <ClInclude Include="include\ECS\Components\CameraComponent.h" />
+    <ClInclude Include="include\ECS\Components\CanvasComponent.h" />
+    <ClInclude Include="include\ECS\Components\DirectionalLightComponent.h" />
+    <ClInclude Include="include\ECS\Components\HeadComponent.h" />
+    <ClInclude Include="include\ECS\Components\Light2DSourceComponent.h" />
+    <ClInclude Include="include\ECS\Components\MeshComponent.h" />
+    <ClInclude Include="include\ECS\Components\PointLightComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\AudioEngineSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\Box2DWorldSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Texture2DComponent.h" />
+    <ClInclude Include="include\ECS\Components\TransformComponent.h" />
+    <ClInclude Include="include\ECS\ComponentsCore.h" />
+    <ClInclude Include="include\ECS\Scene.h" />
+    <ClInclude Include="include\ECS\SceneData.h" />
+    <ClInclude Include="include\ECS\Systems\Animation2DSystem.h" />
+    <ClInclude Include="include\ECS\Systems\AnimationSystem.h" />
+    <ClInclude Include="include\ECS\Systems\AudioSystem.h" />
+    <ClInclude Include="include\ECS\Systems\CameraSystem.h" />
+    <ClInclude Include="include\ECS\Systems\CommandSystem.h" />
+    <ClInclude Include="include\ECS\Systems\JobsSystem.h" />
+    <ClInclude Include="include\ECS\Systems\Physics2DSystem.h" />
+    <ClInclude Include="include\ECS\Systems\RendererSystem.h" />
+    <ClInclude Include="include\ECS\Systems\ScriptingSystem.h" />
+    <ClInclude Include="include\ECS\Systems\UISystem.h" />
+    <ClInclude Include="include\ECS\WorldAdmin.h" />
+    <ClInclude Include="include\Frostium3D\Common\BufferElement.h" />
+    <ClInclude Include="include\Frostium3D\Common\BufferLayout.h" />
+    <ClInclude Include="include\Frostium3D\Common\Common.h" />
+    <ClInclude Include="include\Frostium3D\Common\Core.h" />
+    <ClInclude Include="include\Frostium3D\Common\CubeTexture.h" />
+    <ClInclude Include="include\Frostium3D\Common\Events.h" />
+    <ClInclude Include="include\Frostium3D\Common\Flags.h" />
+    <ClInclude Include="include\Frostium3D\Common\Framebuffer.h" />
+    <ClInclude Include="include\Frostium3D\Common\FramebufferSpecification.h" />
+    <ClInclude Include="include\Frostium3D\Common\GraphicsPipelineInfos.h" />
+    <ClInclude Include="include\Frostium3D\Common\IndexBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Common\Input.h" />
+    <ClInclude Include="include\Frostium3D\Common\InputCodes.h" />
+    <ClInclude Include="include\Frostium3D\Common\Material.h" />
+    <ClInclude Include="include\Frostium3D\Common\Mesh.h" />
+    <ClInclude Include="include\Frostium3D\Common\RendererShared.h" />
+    <ClInclude Include="include\Frostium3D\Common\SLog.h" />
+    <ClInclude Include="include\Frostium3D\Common\Shader.h" />
+    <ClInclude Include="include\Frostium3D\Common\SubTexture.h" />
+    <ClInclude Include="include\Frostium3D\Common\Text.h" />
+    <ClInclude Include="include\Frostium3D\Common\Texture.h" />
+    <ClInclude Include="include\Frostium3D\Common\Time.h" />
+    <ClInclude Include="include\Frostium3D\Common\VertexArray.h" />
+    <ClInclude Include="include\Frostium3D\Common\VertexBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Common\Window.h" />
+    <ClInclude Include="include\Frostium3D\EditorCamera.h" />
+    <ClInclude Include="include\Frostium3D\GraphicsContext.h" />
+    <ClInclude Include="include\Frostium3D\GraphicsPipeline.h" />
+    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiContext.h" />
+    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiExtension.h" />
+    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiVulkanImpl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\allocators.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\document.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodedstream.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodings.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\en.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\error.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filereadstream.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filewritestream.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\fwd.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\itoa.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\meta.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\pow10.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\regex.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\stack.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strtod.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\swap.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorybuffer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorystream.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\pointer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\prettywriter.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\rapidjson.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\reader.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\schema.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stream.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stringbuffer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\writer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\common.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\exponential.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\geometric.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\integer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\matrix.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\neon.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\packing.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\platform.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\trigonometric.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\vector_relational.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImCurveEdit.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImGradient.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImGuizmo.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImSequencer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_allegro5.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx10.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx11.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx12.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx9.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_glfw.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_glut.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_marmalade.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_metal.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl2.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_osx.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_sdl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_vulkan.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_win32.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\gl3w.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\glcorearb.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3native.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\usynergy\uSynergy.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imconfig.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imgui.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imgui_internal.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_rectpack.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_textedit.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_truetype.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\freetype\imgui_freetype.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\single_file\imgui_single_file.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\implot\implot.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\implot\implot_internal.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\bench\utils.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async_logger-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async_logger.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\argv.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\env.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\log_levels.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\common-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\common.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\circular_q.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\console_globals.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\fmt_helper.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\mpmc_blocking_q.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\null_mutex.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\os-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\os.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\registry-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\registry.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\synchronous_factory.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client-windows.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\windows_include.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bin_to_hex.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\chrono.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\color.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\compile.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\core.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\locale.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ostream.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\posix.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\printf.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ranges.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\fmt.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\ostr.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\formatter.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fwd.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\logger-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\logger.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\android_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\daily_file_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dist_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dup_filter_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\msvc_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\null_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ostream_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ringbuffer_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\syslog_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\systemd_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\tcp_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\win_eventlog_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\spdlog-inl.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\spdlog.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\tweakme.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\version.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\Common.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\ConstantUnion.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\PoolAlloc.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\ResourceLimits.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\Types.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\arrays.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\intermediate.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\Versions.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\localintermediate.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Public\ShaderLang.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\GlslangToSpv.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\Logger.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SPVRemapper.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SpvTools.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\spvIR.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\env.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\shaderc.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\status.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\visibility.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers\GLSL.std.450.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers\spirv.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-tools\libspirv.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\GLSL.std.450.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv_cross_c.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_icd.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_layer.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_platform.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_sdk_platform.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_android.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_beta.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_core.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_directfb.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_fuchsia.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ggp.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ios.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_macos.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_metal.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_vi.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_wayland.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_win32.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xcb.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib.h" />
+    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib_xrandr.h" />
+    <ClInclude Include="include\Frostium3D\MaterialLibrary.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglBuffer.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglContext.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglFramebuffer.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglRendererAPI.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglShader.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglTexture.h" />
+    <ClInclude Include="include\Frostium3D\OpenGL\OpenglVertexArray.h" />
+    <ClInclude Include="include\Frostium3D\RayTracer.h" />
+    <ClInclude Include="include\Frostium3D\RaytracingPipeline.h" />
+    <ClInclude Include="include\Frostium3D\Renderer.h" />
+    <ClInclude Include="include\Frostium3D\Renderer2D.h" />
+    <ClInclude Include="include\Frostium3D\RendererDebug.h" />
+    <ClInclude Include="include\Frostium3D\Utils\Frustum.h" />
+    <ClInclude Include="include\Frostium3D\Utils\GLM.h" />
+    <ClInclude Include="include\Frostium3D\Utils\SSAOGenerator.h" />
+    <ClInclude Include="include\Frostium3D\Utils\Utils.h" />
+    <ClInclude Include="include\Frostium3D\Utils\glTFImporter.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\Vulkan.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanAccelerationStructure.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanBufferPool.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanCommandBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanCommandPool.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanContext.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanDescriptor.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanDevice.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanFramebuffer.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanIndexBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanMemoryAllocator.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanPBR.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanPipeline.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanRaytracingPipeline.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanRenderPass.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanScratchBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanSemaphore.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanShader.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanShaderResources.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanStagingBuffer.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanSwapchain.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanTexture.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanUtils.h" />
+    <ClInclude Include="include\Frostium3D\Vulkan\VulkanVertexBuffer.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_block_allocator.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_body.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_broad_phase.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_chain_shape.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_circle_shape.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_collision.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_contact.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_contact_manager.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_distance.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_distance_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_draw.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_dynamic_tree.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_edge_shape.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_fixture.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_friction_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_gear_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_growable_stack.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_math.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_motor_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_mouse_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_polygon_shape.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_prismatic_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_pulley_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_revolute_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_rope.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_rope_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_settings.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_shape.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_stack_allocator.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_time_of_impact.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_time_step.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_timer.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_weld_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_wheel_joint.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_world.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_world_callbacks.h" />
+    <ClInclude Include="include\Libraries\box_2D\include\box2d\box2d.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_codec.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_common.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_dsp.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_dsp_effects.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_errors.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_output.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_studio.h" />
+    <ClInclude Include="include\Libraries\fmod\include\fmod_studio_common.h" />
+    <ClInclude Include="include\Networking\NetworkManager.h" />
+    <ClInclude Include="include\Physics2D\Box2D\Body2D.h" />
+    <ClInclude Include="include\Physics2D\Box2D\Body2DDefs.h" />
+    <ClInclude Include="include\Physics2D\Box2D\CollisionFilter2D.h" />
+    <ClInclude Include="include\Physics2D\Box2D\CollisionListener2D.h" />
+    <ClInclude Include="include\Physics2D\Box2D\RayCast2D.h" />
+    <ClInclude Include="include\Scripting\BehaviourPrimitive.h" />
+    <ClInclude Include="include\SmolEngineCore.h" />
+    <ClInclude Include="include\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Audio\AudioClip.cpp" />
+    <ClCompile Include="src\Audio\AudioEngine.cpp" />
+    <ClCompile Include="src\Core\Engine.cpp" />
+    <ClCompile Include="src\Core\EntryPoint.cpp" />
+    <ClCompile Include="src\Core\FileDialog.cpp" />
+    <ClCompile Include="src\Core\Layer.cpp" />
+    <ClCompile Include="src\Core\LayerManager.cpp" />
+    <ClCompile Include="src\Core\MaterialLibraryInterface.cpp" />
+    <ClCompile Include="src\ECS\Actor.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
+    <ClCompile Include="src\ECS\Scene.cpp" />
+    <ClCompile Include="src\ECS\SceneData.cpp" />
+    <ClCompile Include="src\ECS\Systems\Animation2DSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\AnimationSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\AudioSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\CameraSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\CommandSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\JobsSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\Physics2DSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\RendererSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\ScriptingSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\UISystem.cpp" />
+    <ClCompile Include="src\ECS\WorldAdmin.cpp" />
+    <ClCompile Include="src\Physics2D\Box2D\Body2D.cpp" />
+    <ClCompile Include="src\Physics2D\Box2D\CollisionFilter2D.cpp" />
+    <ClCompile Include="src\Physics2D\Box2D\CollisionListener2D.cpp" />
+    <ClCompile Include="src\Physics2D\Box2D\RayCast2D.cpp" />
+    <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\vendor\box2d\Box2D.vcxproj">
+      <Project>{A434E80C-1049-10BE-D9CA-B31D459E0CEF}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

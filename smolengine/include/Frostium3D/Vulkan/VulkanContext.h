@@ -13,6 +13,8 @@ struct GLFWwindow;
 
 namespace Frostium
 {
+	struct GraphicsContextState;
+
 	class VulkanContext
 	{
 	public:
@@ -21,7 +23,7 @@ namespace Frostium
 		~VulkanContext();
 
 		void OnResize(uint32_t* width, uint32_t* height);
-		void Setup(GLFWwindow* window, uint32_t* width, uint32_t* height);
+		void Setup(GLFWwindow* window, GraphicsContextState* state, uint32_t* width, uint32_t* height);
 		void BeginFrame();
 		void SwapBuffers(bool skip = false);
 
@@ -39,10 +41,8 @@ namespace Frostium
 
 
 	private:
-
-		bool                                m_IsInitialized = false;
-		bool                                m_UseImGUI = false;
 		GLFWwindow*                         m_Window = nullptr;
+		GraphicsContextState*               m_ContextState = nullptr;
 
 		inline static VulkanContext*        s_ContextInstance = nullptr;
 		inline static VkCommandBuffer       m_CurrentVkCmdBuffer = nullptr;

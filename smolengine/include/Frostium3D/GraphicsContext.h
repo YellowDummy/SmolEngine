@@ -24,6 +24,7 @@ namespace Frostium
 {
 	struct WindowCreateInfo;
 	struct WindowData;
+	struct GraphicsContextState;
 	class Framebuffer;
 	class MaterialLibrary;
 
@@ -49,7 +50,6 @@ namespace Frostium
 	class GraphicsContext
 	{
 	public:
-
 		GraphicsContext(GraphicsContextInitInfo* info);
 		~GraphicsContext();
 
@@ -69,38 +69,28 @@ namespace Frostium
 		Window* GetWindow();
 	    WindowData* GetWindowData();
 		Frustum* GetFrustum();
-
 		float GetTime() const;
 		float GetLastFrameTime() const;
-
-		// Helpers
-		DeltaTime CalculateDeltaTime();
-		bool IsWindowMinimized() const;
-
 #ifdef  FROSTIUM_OPENGL_IMPL
 		static OpenglRendererAPI* GetOpenglRendererAPI();
 #else
 		static VulkanContext& GetVulkanContext();
 #endif
-
+		// Helpers
+		DeltaTime CalculateDeltaTime();
+		bool IsWindowMinimized() const;
 	private:
-
 		// Events
 		void OnResize(uint32_t* width, uint32_t* height);
 		void OnEvent(Event& event);
-
 	private:
-
 		static GraphicsContext*         s_Instance;
 		MSAASamples                     m_MSAASamples;
 		Flags                           m_Flags;
 		Texture*                        m_DummyTexure = nullptr;
 		EditorCamera*                   m_EditorCamera = nullptr;
 		MaterialLibrary*                m_MaterialLibrary = nullptr;
-		bool                            m_Initialized = false;
-		bool                            m_WindowMinimized = false;
-		const bool                      m_UseImGUI = false;
-		const bool                      m_UseEditorCamera = false;
+		GraphicsContextState*           m_State = nullptr;
 		float                           m_LastFrameTime = 1.0f;
 #ifdef  FROSTIUM_OPENGL_IMPL
 		OpenglContext                   m_OpenglContext = {};

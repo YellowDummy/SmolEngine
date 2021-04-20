@@ -1,5 +1,4 @@
 #pragma once
-#include "yojimbo.h"
 
 namespace SmolEngine
 {
@@ -7,6 +6,5 @@ namespace SmolEngine
 	{
 	public:
 
-		NetworkManager() = default;
 	};
 }

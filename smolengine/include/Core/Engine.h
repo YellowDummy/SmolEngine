@@ -10,22 +10,20 @@
 
 namespace SmolEngine
 {
-	class WorldAdmin;
-
 	struct PhysicsContextCreateInfo
 	{
 
 	};
 
+	class WorldAdmin;
 	class Engine
 	{
 	public:
+		virtual ~Engine();
+		Engine();
 
 		void Init();
 		void Shutdown();
-
-		virtual ~Engine();
-		Engine();
 
 		// Methods to implement
 		virtual void SetGraphicsContext(Frostium::GraphicsContextInitInfo* info) {};
@@ -34,15 +32,14 @@ namespace SmolEngine
 		virtual void SetScripts(ScriptingSystem* scriptingSytem) {};
 
 		// Getters
-		const uint32_t GetWindowHeight();
-		const uint32_t GetWindowWidth();
 		inline static Engine* GetEngine() { return s_Instance; }
+		Frostium::GraphicsContext* GetGraphicsContext() const;
+		const uint32_t GetWindowHeight() const;
+		const uint32_t GetWindowWidth() const;
 		inline Frostium::Window* GetWindow();
 
 	private:
-
 		void Run();
-
 		// Events
 		void OnWindowClose(Frostium::Event& e);
 		void OnEvent(Frostium::Event& event);

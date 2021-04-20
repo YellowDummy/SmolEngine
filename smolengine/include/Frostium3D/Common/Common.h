@@ -6,6 +6,17 @@
 
 namespace Frostium
 {
+	struct GraphicsContextState
+	{
+		GraphicsContextState(bool cam, bool imgui, bool swapchain)
+			:UseEditorCamera(cam), UseImGUI(imgui), UseSwapchain(swapchain) {}
+
+		bool           WindowMinimized = false;
+		const bool     UseImGUI = false;
+		const bool     UseEditorCamera = false;
+		const bool     UseSwapchain = true;
+	};
+
 	struct VertexInputInfo
 	{
 		VertexInputInfo(uint32_t stride, const BufferLayout& layout, bool isInputRateInstance = false)

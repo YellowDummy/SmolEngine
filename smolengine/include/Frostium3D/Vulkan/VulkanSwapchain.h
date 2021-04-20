@@ -36,7 +36,7 @@ namespace Frostium
 		VulkanSwapchain();
 		~VulkanSwapchain();
 
-		bool Init(VulkanInstance* instance, VulkanDevice* device, GLFWwindow* window);
+		bool Init(VulkanInstance* instance, VulkanDevice* device, GLFWwindow* window, bool clearOP);
 		bool Prepare(uint32_t width, uint32_t height);
 		void Create(uint32_t* width, uint32_t* height, bool vSync = false);
 		void CleanUp();
@@ -65,7 +65,7 @@ namespace Frostium
 
 		VkResult CreateFramebuffers(uint32_t width, uint32_t height);
 		VkResult InitSurface(GLFWwindow* window);
-		VkResult CreateRenderPass();
+		VkResult CreateRenderPass(bool clearOP);
 		VkResult CreateDepthStencil();
 		void GetPtrs();
 		void FindColorSpaceFormat();

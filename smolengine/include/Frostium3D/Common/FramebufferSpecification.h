@@ -55,9 +55,8 @@ namespace Frostium
 	enum class FramebufferSpecialisation : uint16_t
 	{
 		None,
-		RaytracingStorage,
+		Raytracing,
 		ShadowMap,
-		OmniShadow
 	};
 
 	enum class MSAASamples : uint16_t

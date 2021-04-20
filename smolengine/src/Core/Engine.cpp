@@ -30,6 +30,9 @@ namespace SmolEngine
 		m_World->Init();
 
 		bool bSwapChain = true;
+#ifdef SMOLENGINE_EDITOR
+		bSwapChain = false;
+#endif // SMOLENGINE_EDITOR
 		Frostium::WindowCreateInfo windowCI = {};
 		windowCI.bFullscreen = false;
 		windowCI.bVSync = false;
@@ -37,12 +40,10 @@ namespace SmolEngine
 		windowCI.Height = 480;
 		windowCI.Title = "SmolEngine";
 
-		Frostium::EditorCameraCreateInfo editorCameraCI = {};
 		Frostium::GraphicsContextInitInfo graphicsContextCI = {};
 		graphicsContextCI.bTargetsSwapchain = bSwapChain;
 		graphicsContextCI.eMSAASamples = Frostium::MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 		graphicsContextCI.eShadowMapSize = Frostium::ShadowMapSize::SIZE_8;
-		graphicsContextCI.pEditorCameraCI = &editorCameraCI;
 		graphicsContextCI.pWindowCI = &windowCI;
 		graphicsContextCI.ResourcesFolderPath = "../resources/";
 		graphicsContextCI.Flags = Frostium::Features_Renderer_3D_Flags | Frostium::Features_Renderer_2D_Flags
@@ -92,10 +93,12 @@ namespace SmolEngine
 			m_GraphicsContext->BeginFrame(deltaTime);
 			{
 				for (Layer* layer : *m_LayerHandler)
+				{
 					layer->OnUpdate(deltaTime);
+					layer->OnImGuiRender();
+				}
 			}
 			m_GraphicsContext->SwapBuffers();
-
 		}
 	}
 
@@ -108,9 +111,7 @@ namespace SmolEngine
 		{
 			(*--result)->OnEvent(e);
 			if (e.m_Handled)
-			{
 				break;
-			}
 		}
 	}
 
@@ -120,12 +121,17 @@ namespace SmolEngine
 		exit(0);
 	}
 
-	const uint32_t Engine::GetWindowHeight()
+	Frostium::GraphicsContext* Engine::GetGraphicsContext() const
+	{
+		return m_GraphicsContext;
+	}
+
+	const uint32_t Engine::GetWindowHeight() const
 	{
 		return m_GraphicsContext->GetWindowData()->Height;
 	}
 
-	const uint32_t Engine::GetWindowWidth()
+	const uint32_t Engine::GetWindowWidth() const
 	{
 		return m_GraphicsContext->GetWindowData()->Width;
 	}

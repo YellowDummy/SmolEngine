@@ -64,9 +64,6 @@ namespace SmolEngine
 
 	void EditorLayer::OnUpdate(Frostium::DeltaTime deltaTime)
 	{
-		ImGui::Begin("SomeW");
-		ImGui::End();
-
 		ClearInfo clearInfo = {};
 		Renderer::BeginScene(&clearInfo);
 		Renderer::EndScene();
@@ -90,18 +87,10 @@ namespace SmolEngine
 	{
 		//---------------------------------------WINDOW-STATES----------------------------------------//
 
-		static bool showActorCreationWindow;
 		static bool showRenderer2Dstats;
 		static bool showConsole = true;
 		static bool showGameView = false;
-		static bool showSettingsWindow = false;
-		static bool showBuildPanel = false;
-		static bool showAnimationPanel = false;
 		static bool showMaterialLibrary = false;
-
-		//TEMP
-
-		static bool showNodeEditorTest = false;
 
 		//---------------------------------------WINDOW-STATES----------------------------------------//
 
@@ -274,11 +263,6 @@ namespace SmolEngine
 
 			if (ImGui::BeginMenu("Window"))
 			{
-				if (ImGui::MenuItem("Settings"))
-				{
-					showSettingsWindow = true;
-				}
-
 				if (ImGui::MenuItem("Material Library"))
 				{
 					showMaterialLibrary = true;
@@ -601,11 +585,9 @@ namespace SmolEngine
 				if (ImGui::IsWindowHovered()) { m_IsSceneViewFocused = true; }
 				else { m_IsSceneViewFocused = false; }
 
+				Frostium::Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
 				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
-
-				const auto& frameBuffer = GraphicsContext::GetSingleton()->GetFramebuffer();
 				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
 				{
 					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
@@ -613,9 +595,9 @@ namespace SmolEngine
 				}
 
 #ifdef SMOLENGINE_OPENGL_IMPL
-				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
+				//ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
 #else
-				ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
+				ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
 #endif
 				// Gizmos
 				if (m_SelectedActor != nullptr && !m_Scene->IsInPlayMode())
