@@ -29,10 +29,6 @@ namespace SmolEngine
 		m_World = new WorldAdmin();
 		m_World->Init();
 
-		bool bSwapChain = true;
-#ifdef SMOLENGINE_EDITOR
-		bSwapChain = false;
-#endif // SMOLENGINE_EDITOR
 		Frostium::WindowCreateInfo windowCI = {};
 		windowCI.bFullscreen = false;
 		windowCI.bVSync = false;
@@ -41,7 +37,6 @@ namespace SmolEngine
 		windowCI.Title = "SmolEngine";
 
 		Frostium::GraphicsContextInitInfo graphicsContextCI = {};
-		graphicsContextCI.bTargetsSwapchain = bSwapChain;
 		graphicsContextCI.eMSAASamples = Frostium::MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 		graphicsContextCI.eShadowMapSize = Frostium::ShadowMapSize::SIZE_8;
 		graphicsContextCI.pWindowCI = &windowCI;
