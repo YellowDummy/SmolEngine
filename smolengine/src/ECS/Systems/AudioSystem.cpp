@@ -5,6 +5,8 @@
 #include "Audio/AudioEngine.h"
 #include "Audio/AudioClip.h"
 
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
+
 namespace SmolEngine
 {
 	AudioSystem::AudioSystem()
@@ -12,11 +14,11 @@ namespace SmolEngine
 
 	}
 
-	void AudioSystem::OnAwake(entt::registry& registry, AudioEngine* audioEngine)
+	void AudioSystem::OnAwake(AudioEngine* audioEngine)
 	{
-		OnReset(registry, audioEngine);
-
-		const auto& view = registry.view<AudioSourceComponent>();
+		OnReset(audioEngine);
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		const auto& view = reg->view<AudioSourceComponent>();
 		for (const auto& entity : view)
 		{
 			auto& audio = view.get<AudioSourceComponent>(entity);
@@ -35,9 +37,10 @@ namespace SmolEngine
 		}
 	}
 
-	void AudioSystem::OnReset(entt::registry& registry, AudioEngine* audioEngine)
+	void AudioSystem::OnReset(AudioEngine* audioEngine)
 	{
-		const auto& view = registry.view<AudioSourceComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		const auto& view = reg->view<AudioSourceComponent>();
 		for (const auto& entity : view)
 		{
 			auto& audio = view.get<AudioSourceComponent>(entity);

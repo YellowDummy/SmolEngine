@@ -4,6 +4,7 @@
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Components/Singletons/Box2DWorldSComponent.h"
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 
 #include "Physics2D/Box2D/Body2DDefs.h"
 #include "Physics2D/Box2D/RayCast2D.h"
@@ -15,10 +16,9 @@ namespace SmolEngine
 {
 	void Physics2DSystem::OnBegin(Box2DWorldSComponent* data)
 	{
-		//Setting Box2D Filtering
+		//Setting Box2D filtering
 		data->World.SetContactFilter(&data->m_CollisionFilter2D);
-
-		//Setting Box2D Collision Callbacks
+		//Setting Box2D collision callbacks
 		data->World.SetContactListener(&data->m_CollisionListener2D);
 	}
 
@@ -69,9 +69,11 @@ namespace SmolEngine
 		}
 	}
 
-	void Physics2DSystem::DeleteBodies(entt::registry& registry, b2World* world)
+	void Physics2DSystem::DeleteBodies(b2World* world)
 	{
-		const auto& group = registry.view<Body2DComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
+		const auto& group = reg->view<Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			auto& body = group.get<Body2DComponent>(entity);
@@ -399,9 +401,11 @@ namespace SmolEngine
 		return true;
 	}
 
-	void Physics2DSystem::UpdateTransforms(entt::registry& registry)
+	void Physics2DSystem::UpdateTransforms()
 	{
-		const auto& group = registry.view<TransformComponent, Body2DComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
+		const auto& group = reg->view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
@@ -422,13 +426,13 @@ namespace SmolEngine
 		body->Body.m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, wakeBody);
 	}
 
-	const RayCast2DHitInfo Physics2DSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition)
+	void Physics2DSystem::RayCast(const glm::vec2& startPoisition, const glm::vec2& targerPosition, RayCast2DHitInfo& hitInfo)
 	{
 		RayCast2D ray2D;
 		Box2DWorldSComponent::Get()->World.RayCast(&ray2D, { startPoisition.x, startPoisition.y }
 		, { targerPosition.x, targerPosition.y });
 		
-		return ray2D.GetHitInfo();
+		hitInfo = ray2D.GetHitInfo();
 	}
 
 	void Physics2DSystem::CircleCast(const glm::vec2& startPoisition, const float distance, std::vector<RayCast2DHitInfo>& outHits)

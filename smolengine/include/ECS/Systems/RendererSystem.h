@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <entt/entt.hpp>
 #include <glm/glm.hpp>
 
 namespace SmolEngine
@@ -21,13 +20,13 @@ namespace SmolEngine
 		static void BeginDraw(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar);
 		static void EndDraw();
 
-		static void SubmitMeshes(entt::registry& registry);
-		static void SubmitLights(entt::registry& registry);
-		static void Submit2DTextures(entt::registry& registry);
-		static void Submit2DAnimations(entt::registry& registry);
-		static void SubmitCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform);
+		static void SubmitMeshes();
+		static void SubmitLights();
+		static void Submit2DTextures();
+		static void Submit2DAnimations();
+		static void SubmitCanvases(CameraComponent* camera, TransformComponent* cameraTransform);
 
-		static void DebugDraw(entt::registry& registry);
+		static void DebugDraw();
 		static void CheckLayerIndex(int& index);
 
 	private:

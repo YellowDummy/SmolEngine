@@ -44,12 +44,12 @@ namespace SmolEngine
 		graphicsContextCI.Flags = Frostium::Features_Renderer_3D_Flags | Frostium::Features_Renderer_2D_Flags
 			| Frostium::Features_ImGui_Flags;
 
-		PhysicsContextCreateInfo physicsContextCI = {};
+		Physics2DContextCreateInfo physicsContextCI = {};
 
 		// User Side
 		SetGraphicsContext(&graphicsContextCI);
 		m_GraphicsContext = new Frostium::GraphicsContext(&graphicsContextCI);
-		SetPhysicsContext(&physicsContextCI);
+		SetPhysics2DContext(&physicsContextCI);
 		SetLayers(m_LayerHandler);
 		SetScripts(m_ScriptingSystem);
 
@@ -114,6 +114,14 @@ namespace SmolEngine
 	{
 		Shutdown();
 		exit(0);
+	}
+
+	void Engine::SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback)
+	{
+	}
+
+	void Engine::SetOnSceneUnLoadedCallback(const std::function<void(Scene*)>& callback)
+	{
 	}
 
 	Frostium::GraphicsContext* Engine::GetGraphicsContext() const

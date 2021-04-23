@@ -6,13 +6,5 @@
 
 namespace SmolEngine
 {
-	void UISystem::OnUpdate(entt::registry& registry)
-	{
 
-	}
-
-	void UISystem::OnEvent(entt::registry& registry, Frostium::Event& e)
-	{
-
-	}
 }

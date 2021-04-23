@@ -27,7 +27,7 @@ namespace SmolEngine
 		info->bTargetsSwapchain = false; // render imgui to the swap chain and later on render whole scene as imgui texture
 	}
 
-	void Editor::SetPhysicsContext(PhysicsContextCreateInfo* info)
+	void Editor::SetPhysics2DContext(Physics2DContextCreateInfo* info)
 	{
 
 	}

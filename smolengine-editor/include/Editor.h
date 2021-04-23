@@ -13,7 +13,7 @@ namespace SmolEngine
 		~Editor();
 
 		void SetGraphicsContext(Frostium::GraphicsContextInitInfo* info) override;
-		void SetPhysicsContext(PhysicsContextCreateInfo* info)override;
+		void SetPhysics2DContext(Physics2DContextCreateInfo* info)override;
 		void SetLayers(LayerManager* layerManager) override;
 		void SetScripts(ScriptingSystem* scriptingSytem) override;
 

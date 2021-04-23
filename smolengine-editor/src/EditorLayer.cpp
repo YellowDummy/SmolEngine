@@ -12,10 +12,8 @@
 #include "ECS/Systems/Physics2DSystem.h"
 #include "ECS/Systems/AudioSystem.h"
 #include "ECS/Systems/CameraSystem.h"
-#include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
-#include "ECS/Systems/CommandSystem.h"
 #include "ECS/Components/Singletons/AudioEngineSComponent.h"
 #include "ECS/Components/Singletons/Box2DWorldSComponent.h"
 #include "ECS/Components/Singletons/ProjectConfigSComponent.h"
@@ -1122,7 +1120,7 @@ namespace SmolEngine
 			const auto& result = FileDialog::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
 			if (result.has_value())
 			{
-				CommandSystem::LoadMeshComponent(meshComponent, result.value());
+				//CommandSystem::LoadMeshComponent(meshComponent, result.value());
 			}
 		}
 		ImGui::NewLine();

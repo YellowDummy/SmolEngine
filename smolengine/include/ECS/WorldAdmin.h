@@ -12,6 +12,7 @@ namespace Frostium
 {
 	class Mesh;
 	class Texture;
+	struct MaterialCreateInfo;
 }
 
 namespace SmolEngine
@@ -22,6 +23,7 @@ namespace SmolEngine
 	struct BehaviourComponent;
 	struct SystemInstance;
 	struct SceneData;
+	struct MeshComponent;
 	class Scene;
 	class AudioEngine;
 
@@ -68,11 +70,13 @@ namespace SmolEngine
 		void ReloadMeshMaterials(entt::registry& registry, SceneData* data);
 		bool LoadStaticComponents();
 
+		bool LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset = true);
+		bool SetMeshMaterial(MeshComponent* component, Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path);
+
 	private:
 
 		inline static WorldAdmin*            s_World = nullptr;
 		WorldAdminStateSComponent*           m_State = nullptr;
-
 		entt::registry                       m_GlobalRegistry;
 
 	private:

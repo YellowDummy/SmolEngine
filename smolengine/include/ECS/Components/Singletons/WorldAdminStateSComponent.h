@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <entt/entt.hpp>
 
 namespace SmolEngine
 {
@@ -17,14 +18,10 @@ namespace SmolEngine
 		WorldAdminStateSComponent(const WorldAdminStateSComponent& another);
 
 		static WorldAdminStateSComponent* GetSingleton() { return s_Instance; }
-
-		// Data
 														    
 		inline static WorldAdminStateSComponent*            s_Instance = nullptr;
 		bool                                                m_InPlayMode = false;
-												            
-		uint32_t                                            m_NumLoadedScene = 0;
-		uint32_t                                            m_MaxAssetPoolLiftime = 3; // in NumLoadedScene
+		entt::registry*                                     m_CurrentRegistry = nullptr;
 		size_t                                              m_ActiveSceneID = 0;
 		std::hash<std::string_view>                         m_Hash{};
 		std::unordered_map<size_t, Ref<Frostium::Mesh>>     m_MeshMap;

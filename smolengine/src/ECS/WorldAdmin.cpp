@@ -6,7 +6,6 @@
 #include "ECS/Systems/Physics2DSystem.h"
 #include "ECS/Systems/AudioSystem.h"
 #include "ECS/Systems/CameraSystem.h"
-#include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/Singletons/AudioEngineSComponent.h"
@@ -58,10 +57,8 @@ namespace SmolEngine
 		Save(sceneData.m_filePath);
 #endif
 		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
-
 		// Setting Box2D Callbacks
 		Physics2DSystem::OnBegin(world);
-
 		// Creating rigidbodies and joints
 		{
 			const auto& view = sceneData.m_Registry.view<TransformComponent, Body2DComponent>();
@@ -72,10 +69,9 @@ namespace SmolEngine
 		}
 
 		// Finding which animation / audio clip should play on awake
-		AudioSystem::OnAwake(sceneData.m_Registry, &AudioEngineSComponent::Get()->Engine);
-
+		AudioSystem::OnAwake(&AudioEngineSComponent::Get()->Engine);
 		// Sending start callback to all enabled scripts
-		ScriptingSystem::OnBegin(sceneData.m_Registry);
+		ScriptingSystem::OnBegin();
 		m_State->m_InPlayMode = true;
 	}
 
@@ -83,13 +79,11 @@ namespace SmolEngine
 	{
 		m_State->m_InPlayMode = false;
 		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
-		ScriptingSystem::OnEnd(registry);
-
+		ScriptingSystem::OnEnd();
 		// Deleting all Rigidbodies
-		Physics2DSystem::DeleteBodies(registry, &Box2DWorldSComponent::Get()->World);
-
+		Physics2DSystem::DeleteBodies(&Box2DWorldSComponent::Get()->World);
 		// Resetting Animation / Audio clips
-		AudioSystem::OnReset(registry, &AudioEngineSComponent::Get()->Engine);
+		AudioSystem::OnReset(&AudioEngineSComponent::Get()->Engine);
 		AudioEngineSComponent::Get()->Engine.Reset();
 
 #ifdef SMOLENGINE_EDITOR
@@ -106,7 +100,7 @@ namespace SmolEngine
 			// Updating Phycics
 			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 			// Sending OnProcess callback
-			ScriptingSystem::OnTick(registry, deltaTime);
+			ScriptingSystem::OnTick(deltaTime);
 		}
 #else
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
@@ -145,18 +139,18 @@ namespace SmolEngine
 		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
-			Physics2DSystem::UpdateTransforms(registry);
+			Physics2DSystem::UpdateTransforms();
 #else
 		Box2DPhysicsSystem::UpdateTransfroms(registry);
 
 #endif
 		RendererSystem::BeginDraw(view, proj, camPos, zNear, zFar);
 		{
-			RendererSystem::SubmitMeshes(registry);
-			RendererSystem::Submit2DTextures(registry);
-			RendererSystem::SubmitLights(registry);
+			RendererSystem::SubmitMeshes();
+			RendererSystem::Submit2DTextures();
+			RendererSystem::SubmitLights();
 			if (targetCamera != nullptr && cameraTranform != nullptr)
-				RendererSystem::SubmitCanvases(registry, targetCamera, cameraTranform);
+				RendererSystem::SubmitCanvases(targetCamera, cameraTranform);
 		}
 		RendererSystem::EndDraw();
 
@@ -177,12 +171,12 @@ namespace SmolEngine
 		Reload2DAnimations(registry);
 		ReloadCanvases(registry);
 		ReloadMeshMaterials(registry, &activeScene->m_SceneData);
-		ScriptingSystem::ReloadScripts(registry);
+		ScriptingSystem::ReloadScripts();
 	}
 
 	void WorldAdmin::OnGameViewResize(float width, float height)
 	{
-		CameraSystem::OnResize(GetActiveScene()->m_SceneData.m_Registry, width, height);
+		CameraSystem::OnResize(width, height);
 	}
 
 	bool WorldAdmin::Save(const std::string& filePath)
@@ -302,6 +296,7 @@ namespace SmolEngine
 	{
 		m_State->m_ActiveSceneID++;
 		m_State->m_SceneMap[m_State->m_ActiveSceneID].Init(filePath);
+		m_State->m_CurrentRegistry = &m_State->m_SceneMap[m_State->m_ActiveSceneID].GetSceneData().m_Registry;
 		ReloadAssets();
 	}
 
@@ -406,32 +401,6 @@ namespace SmolEngine
 
 			NATIVE_ERROR("Material {} not found!", path);
 		}
-
-		// Load Meshes and updates components
-		const auto& view = registry.view<MeshComponent>();
-		view.each([&](MeshComponent& component)
-			{
-				if (!component.FilePath.empty())
-				{
-					CommandSystem::LoadMeshComponent(&component, component.FilePath, false);
-
-					if ((component.MeshData.size() > 0))
-					{
-						uint32_t index = 0;
-						int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialHash);
-						component.MeshData[index].MaterialID = id;
-						index++;
-
-						for (auto& sub : component.Mesh->GetSubMeshes())
-						{
-							int32_t id = instance->GetMaterialID(component.MeshData[index].MaterialHash);
-							component.MeshData[index].MaterialID = id;
-							index++;
-						}
-					}
-				}
-
-			});
 	}
 
 	bool WorldAdmin::LoadStaticComponents()
@@ -447,6 +416,54 @@ namespace SmolEngine
 		m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(id);
 		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(id);
 
+		return true;
+	}
+
+	bool WorldAdmin::LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset)
+	{
+		if (reset)
+		{
+			component->MeshData.clear();
+			component->Mesh = nullptr;
+
+			Frostium::Mesh::Create(filePath, component->Mesh.get());
+			component->MeshData.resize(component->Mesh->GetSubMeshes().size() + 1);
+			for (auto& data : component->MeshData)
+				data.MaterialID = 0;
+
+			component->FilePath = filePath;
+			return true;
+		}
+
+		Frostium::Mesh::Create(filePath, component->Mesh.get());
+		for (auto& data : component->MeshData)
+			data.MaterialID = 0;
+
+		return true;
+	}
+
+	bool WorldAdmin::SetMeshMaterial(MeshComponent* component, Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path)
+	{
+		int32_t id = Frostium::MaterialLibrary::GetSinglenton()->Add(info);
+		if (id == -1)
+			return false;
+
+		uint32_t index = 0;
+		if (component->Mesh.get() != target_mesh)
+		{
+			index++;
+			for (auto& sub : component->Mesh->GetSubMeshes())
+			{
+				if (sub == target_mesh)
+					break;
+				index++;
+			}
+		}
+
+		std::hash<std::string_view> hash{};
+		component->MeshData[index].MaterialPath = material_path;
+		component->MeshData[index].MaterialID = id;
+		component->MeshData[index].MaterialHash = hash(material_path);
 		return true;
 	}
 }

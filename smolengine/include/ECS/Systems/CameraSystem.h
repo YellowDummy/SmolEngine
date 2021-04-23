@@ -1,14 +1,11 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <entt/entt.hpp>
 
 namespace SmolEngine
 {
 	struct CameraComponent;
-
 	struct TransformComponent;
-
 	class Event;
 
 	class CameraSystem
@@ -17,16 +14,13 @@ namespace SmolEngine
 
 		CameraSystem();
 
-
 		static void CalculateView(CameraComponent* camera, TransformComponent* tranform);
-
 		static void SetProjection(CameraComponent* camera, float left, float right, float buttom, float top, float zNear = -1.0f, float zFar = 1.0f);
 
 	private:
 
-		static void OnResize(entt::registry& registry, float width, float height);
-
-		static void OnEvent(entt::registry& registry, Event& e);
+		static void OnResize(float width, float height);
+		static void OnEvent(Event& e);
 
 	private:
 

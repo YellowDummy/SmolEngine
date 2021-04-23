@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "ECS/Systems/RendererSystem.h"
+
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/UISystem.h"
 
@@ -34,11 +36,13 @@ namespace SmolEngine
 		Renderer2D::EndScene();
 	}
 
-	void RendererSystem::SubmitLights(entt::registry& registry)
+	void RendererSystem::SubmitLights()
 	{
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
 		// Point Lights
 		{
-			const auto& pGroup = registry.view<TransformComponent, PointLightComponent>();
+			const auto& pGroup = reg->view<TransformComponent, PointLightComponent>();
 			for (const auto& entity : pGroup)
 			{
 				const auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
@@ -52,7 +56,7 @@ namespace SmolEngine
 		// Directional Lights
 		{
 			bool shadows_casted = false;
-			const auto& dView = registry.view<DirectionalLightComponent>();
+			const auto& dView = reg->view<DirectionalLightComponent>();
 			for (const auto& entity : dView)
 			{
 				auto& light = dView.get<DirectionalLightComponent>(entity);
@@ -71,7 +75,7 @@ namespace SmolEngine
 
 		// 2D Point Light
 		{
-			const auto& group = registry.view<TransformComponent, Light2DSourceComponent>();
+			const auto& group = reg->view<TransformComponent, Light2DSourceComponent>();
 			for (const auto& entity : group)
 			{
 				const auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
@@ -83,9 +87,11 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::SubmitMeshes(entt::registry& registry)
+	void RendererSystem::SubmitMeshes()
 	{
-		const auto& group = registry.view<TransformComponent, MeshComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
+		const auto& group = reg->view<TransformComponent, MeshComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
@@ -94,9 +100,11 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::Submit2DTextures(entt::registry& registry)
+	void RendererSystem::Submit2DTextures()
 	{
-		const auto& group = registry.view<TransformComponent, Texture2DComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
+		const auto& group = reg->view<TransformComponent, Texture2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
@@ -110,14 +118,16 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::Submit2DAnimations(entt::registry& registry)
+	void RendererSystem::Submit2DAnimations()
 	{
 
 	}
 
-	void RendererSystem::SubmitCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform)
+	void RendererSystem::SubmitCanvases(CameraComponent* camera, TransformComponent* cameraTransform)
 	{
-		const auto& group = registry.view<CanvasComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
+		const auto& group = reg->view<CanvasComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& canvas = group.get<CanvasComponent>(entity);
@@ -137,9 +147,11 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::DebugDraw(entt::registry& registry)
+	void RendererSystem::DebugDraw()
 	{
-		const auto& group = registry.view<TransformComponent, Body2DComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+
+		const auto& group = reg->view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);

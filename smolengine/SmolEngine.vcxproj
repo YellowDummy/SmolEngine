@@ -136,7 +136,6 @@
     <ClInclude Include="include\ECS\SceneData.h" />
     <ClInclude Include="include\ECS\Systems\AudioSystem.h" />
     <ClInclude Include="include\ECS\Systems\CameraSystem.h" />
-    <ClInclude Include="include\ECS\Systems\CommandSystem.h" />
     <ClInclude Include="include\ECS\Systems\JobsSystem.h" />
     <ClInclude Include="include\ECS\Systems\Physics2DSystem.h" />
     <ClInclude Include="include\ECS\Systems\RendererSystem.h" />
@@ -510,7 +509,6 @@
     <ClCompile Include="src\ECS\SceneData.cpp" />
     <ClCompile Include="src\ECS\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\CameraSystem.cpp" />
-    <ClCompile Include="src\ECS\Systems\CommandSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\JobsSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\Physics2DSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\RendererSystem.cpp" />

@@ -2,7 +2,6 @@
 #include "Core/Core.h"
 
 #include <glm/glm.hpp>
-#include <entt/entt.hpp>
 #include <Frostium3D/Common/Events.h>
 
 namespace SmolEngine
@@ -14,9 +13,6 @@ namespace SmolEngine
 	public:
 
 		UISystem() = default;
-
-		static void OnUpdate(entt::registry& registry);
-		static void OnEvent(entt::registry& registry, Frostium::Event& e);
 
 	private:
 

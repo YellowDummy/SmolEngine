@@ -10,12 +10,13 @@
 
 namespace SmolEngine
 {
-	struct PhysicsContextCreateInfo
+	struct Physics2DContextCreateInfo
 	{
-
+		glm::vec2 GravityDir = glm::vec2(0.0f, -9.81f);
 	};
 
 	class WorldAdmin;
+	class Scene;
 	class Engine
 	{
 	public:
@@ -27,7 +28,7 @@ namespace SmolEngine
 
 		// Methods to implement
 		virtual void SetGraphicsContext(Frostium::GraphicsContextInitInfo* info) {};
-		virtual void SetPhysicsContext(PhysicsContextCreateInfo* info) {};
+		virtual void SetPhysics2DContext(Physics2DContextCreateInfo* info) {};
 		virtual void SetLayers(LayerManager* layerManager) {};
 		virtual void SetScripts(ScriptingSystem* scriptingSytem) {};
 
@@ -38,6 +39,10 @@ namespace SmolEngine
 		const uint32_t GetWindowWidth() const;
 		inline Frostium::Window* GetWindow();
 
+		// Callbacks
+		void SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback);
+		void SetOnSceneUnLoadedCallback(const std::function<void(Scene*)>& callback);
+
 	private:
 		void Run();
 		// Events
@@ -46,11 +51,14 @@ namespace SmolEngine
 
 	private:
 		static Engine*               s_Instance;
+		bool                         m_Running = false;
 		Frostium::GraphicsContext*   m_GraphicsContext = nullptr;
 		WorldAdmin*                  m_World = nullptr;
 		LayerManager*                m_LayerHandler = nullptr;
 		ScriptingSystem*             m_ScriptingSystem = nullptr;
-		bool                         m_Running = false;
+
+		std::function<void(Scene*)>  m_SceneLoadCl = nullptr;
+		std::function<void(Scene*)>  m_SceneUnLoadCl = nullptr;
 	};
 
 	Engine* CreateEngineContext();

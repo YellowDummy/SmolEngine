@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ECS/Systems/CameraSystem.h"
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/ComponentsCore.h"
 
 #include <glm/glm.hpp>
@@ -30,9 +31,10 @@ namespace SmolEngine
 		camera->ViewProjectionMatrix = camera->ProjectionMatrix * camera->ViewMatrix;
 	}
 
-	void CameraSystem::OnResize(entt::registry& registry, float width, float height)
+	void CameraSystem::OnResize(float width, float height)
 	{
-		const auto& group = registry.view<CameraComponent>();
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		const auto& group = reg->view<CameraComponent>();
 		for (const auto& entity : group)
 		{
 			auto& camera = group.get<CameraComponent>(entity);
@@ -42,7 +44,7 @@ namespace SmolEngine
 		}
 	}
 
-	void CameraSystem::OnEvent(entt::registry& registry, Event& e)
+	void CameraSystem::OnEvent(Event& e)
 	{
 
 	}

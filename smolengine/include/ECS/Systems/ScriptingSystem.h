@@ -3,7 +3,6 @@
 #include "Scripting/BehaviourPrimitive.h"
 #include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
 
-#include <entt/entt.hpp>
 #include <meta/factory.hpp>
 #include <Frostium3D/Common/Time.h>
 
@@ -63,18 +62,18 @@ namespace SmolEngine
 
 		static bool AttachNativeScript(Ref<Actor>& actor, const std::string& scriptName);
 
-		static void OnBegin(entt::registry& registry);
-		static void OnEnd(entt::registry& registry);
+		static void OnBegin();
+		static void OnEnd();
 		static void OnDestroy(Ref<Actor>& actor);
 
-		static void OnTick(entt::registry& registry, Frostium::DeltaTime deltaTime);
+		static void OnTick(Frostium::DeltaTime deltaTime);
 		static void OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger);
 		static void OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger);
-		static void OnDebugDraw(entt::registry& registry);
+		static void OnDebugDraw();
 
 	private:
 
-		static void ReloadScripts(entt::registry& registry);
+		static void ReloadScripts();
 
 	private:
 
