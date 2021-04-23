@@ -28,7 +28,6 @@ namespace SmolEngine
 	class WorldAdmin
 	{
 	public:
-
 		WorldAdmin();
 
 		void Init();

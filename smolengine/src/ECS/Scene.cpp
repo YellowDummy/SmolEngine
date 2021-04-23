@@ -173,7 +173,6 @@ namespace SmolEngine
 		m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
 		m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<AnimatorComponent>(*actor);
 
 		actor = nullptr;
 	}
@@ -191,7 +190,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, AnimatorComponent>(output);
+				PointLightComponent>(output);
 		}
 
 		// Serializing scene data
@@ -278,7 +277,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, AnimatorComponent>(regisrtyInput);
+				PointLightComponent>(regisrtyInput);
 		}
 
 		// Updating ActorList

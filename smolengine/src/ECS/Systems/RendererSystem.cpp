@@ -4,7 +4,6 @@
 #include "ECS/Systems/UISystem.h"
 
 #include "Core/Engine.h"
-#include "Animation/AnimationClip2D.h"
 
 #include <Frostium3D/Renderer.h>
 #include <Frostium3D/Renderer2D.h>
@@ -113,22 +112,7 @@ namespace SmolEngine
 
 	void RendererSystem::Submit2DAnimations(entt::registry& registry)
 	{
-		const auto& group = registry.view<TransformComponent, Animation2DComponent>();
-		for (const auto& entity : group)
-		{
-			const auto& [transform, anim] = group.get<TransformComponent, Animation2DComponent>(entity);
 
-			if (anim.CurrentClip)
-			{
-				const auto frameKey = anim.CurrentClip->m_CurrentFrameKey;
-				if (frameKey != nullptr)
-				{
-					CheckLayerIndex(anim.IndexLayer);
-					Renderer2D::SubmitSprite(transform.WorldPos, transform.Scale, transform.Rotation.x,
-						anim.IndexLayer, frameKey->Texture.get(), frameKey->TextureColor);
-				}
-			}
-		}
 	}
 
 	void RendererSystem::SubmitCanvases(entt::registry& registry, CameraComponent* camera, TransformComponent* cameraTransform)

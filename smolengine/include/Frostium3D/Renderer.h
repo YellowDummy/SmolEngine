@@ -17,7 +17,6 @@ namespace Frostium
 
 	struct RendererInitInfo
 	{
-		bool           HDR;
 		ShadowMapSize  sMapSize;
 		std::string    resourcesFilePath;
 	};
@@ -43,7 +42,11 @@ namespace Frostium
 		static void SetAmbientLighting(const glm::vec3& diffuseColor, glm::vec3& specularColor,
 			float IBLscale, bool enableIBL, glm::vec3& ambient);
 		static void SetShadowLightDirection(const glm::vec3& dir);
-		static void SetActiveDebugView(bool value);
+
+		static void SetActiveDebugView(bool active);
+		static void SetActiveBloomPass(bool active);
+		static void SetActiveBlurPass(bool active);
+
 		static void SetAmbientMixer(float value);
 		static void SetExposure(float value);
 		static void SetGamma(float value);

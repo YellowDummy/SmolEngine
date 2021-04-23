@@ -34,7 +34,8 @@ layout (location = 23) in vec4 v_WorldPos;
 layout (location = 24) in mat3 v_TBN;
 
 // Out
-layout (location = 0) out vec4 outColor;
+layout (location = 0) out vec4 outColor0;
+layout (location = 1) out vec4 outColor1;
 
 // Samplers
 layout (binding = 1) uniform sampler2D shadowMap;
@@ -295,11 +296,13 @@ void main()
 		float shadow = filterPCF(v_ShadowCoord / v_ShadowCoord.w);
 		color*= shadow;
 	}
-	// Tone mapping
-	color = Uncharted2Tonemap(color * v_Exposure);
-	color = color * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
-	// Gamma correction
-	color = pow(color, vec3(1.0f / v_Gamma));
 
-	outColor = vec4(color, 1.0);
+	// Color with manual exposure into attachment 0
+	outColor0.rgb = vec3(1.0) - exp(-color.rgb * 1.0);
+
+	// Bright parts for bloom into attachment 1
+	float l = dot(outColor0.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float threshold = 0.75;
+	outColor1.rgb = (l > threshold) ? outColor0.rgb : vec3(0.0);
+	outColor1.a = 1.0;
 }

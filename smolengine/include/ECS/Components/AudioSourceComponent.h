@@ -14,12 +14,10 @@ namespace SmolEngine
 		AudioSourceComponent(uint32_t id)
 			: BaseComponent(id) {}
 
-		// Data
-		std::unordered_map <std::string, Ref<AudioClip>>   AudioClips;
 		bool                                               PlayOnAwake = true;
+		std::unordered_map <std::string, Ref<AudioClip>>   AudioClips;
 
 	private:
-
 		friend class cereal::access;
 		friend class EditorLayer;
 		friend class WorldAdmin;

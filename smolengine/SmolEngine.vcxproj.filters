@@ -252,15 +252,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Animation\Animation2DFrameKey.h">
-      <Filter>include\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Animation\AnimationClip2D.h">
-      <Filter>include\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Animation\SkeletalAnimationClip.h">
-      <Filter>include\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="include\Audio\AudioClip.h">
       <Filter>include\Audio</Filter>
     </ClInclude>
@@ -298,9 +289,6 @@
       <Filter>include\ECS</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Animation2DComponent.h">
-      <Filter>include\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECS\Components\AnimatorComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\AudioSourceComponent.h">
@@ -368,12 +356,6 @@
     </ClInclude>
     <ClInclude Include="include\ECS\SceneData.h">
       <Filter>include\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECS\Systems\Animation2DSystem.h">
-      <Filter>include\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECS\Systems\AnimationSystem.h">
-      <Filter>include\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Systems\AudioSystem.h">
       <Filter>include\ECS\Systems</Filter>
@@ -1492,12 +1474,6 @@
     </ClCompile>
     <ClCompile Include="src\ECS\SceneData.cpp">
       <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\Animation2DSystem.cpp">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\AnimationSystem.cpp">
-      <Filter>src\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Systems\AudioSystem.cpp">
       <Filter>src\ECS\Systems</Filter>

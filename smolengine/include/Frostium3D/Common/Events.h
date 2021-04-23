@@ -47,7 +47,7 @@ namespace Frostium
 		template<typename T>
 		T* Cast()
 		{
-			return static_cast<T*>(this);
+			return dynamic_cast<T*>(this);
 		}
 
 	public:

@@ -5,7 +5,6 @@
 #include "ECS/Systems/RendererSystem.h"
 #include "ECS/Systems/Physics2DSystem.h"
 #include "ECS/Systems/AudioSystem.h"
-#include "ECS/Systems/Animation2DSystem.h"
 #include "ECS/Systems/CameraSystem.h"
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
@@ -74,7 +73,6 @@ namespace SmolEngine
 
 		// Finding which animation / audio clip should play on awake
 		AudioSystem::OnAwake(sceneData.m_Registry, &AudioEngineSComponent::Get()->Engine);
-		Animation2DSystem::OnAwake(sceneData.m_Registry);
 
 		// Sending start callback to all enabled scripts
 		ScriptingSystem::OnBegin(sceneData.m_Registry);
@@ -92,7 +90,6 @@ namespace SmolEngine
 
 		// Resetting Animation / Audio clips
 		AudioSystem::OnReset(registry, &AudioEngineSComponent::Get()->Engine);
-		Animation2DSystem::OnReset(registry);
 		AudioEngineSComponent::Get()->Engine.Reset();
 
 #ifdef SMOLENGINE_EDITOR
@@ -155,16 +152,9 @@ namespace SmolEngine
 #endif
 		RendererSystem::BeginDraw(view, proj, camPos, zNear, zFar);
 		{
-			// 3D
 			RendererSystem::SubmitMeshes(registry);
-			// 2D
 			RendererSystem::Submit2DTextures(registry);
-			// Animations
-			Animation2DSystem::Update(registry);
-			RendererSystem::Submit2DAnimations(registry);
-			// Lights
 			RendererSystem::SubmitLights(registry);
-			//UI
 			if (targetCamera != nullptr && cameraTranform != nullptr)
 				RendererSystem::SubmitCanvases(registry, targetCamera, cameraTranform);
 		}
@@ -338,28 +328,7 @@ namespace SmolEngine
 
 	void WorldAdmin::Reload2DAnimations(entt::registry& registry)
 	{
-		const auto& view = registry.view<Animation2DComponent>();
-		view.each([&](Animation2DComponent& anim)
-			{
-				for (const auto& pair : anim.m_Clips)
-				{
-					auto& [key, clip] = pair;
 
-					for (const auto& framePair : clip->m_Frames)
-					{
-						const auto& [key, frame] = framePair;
-
-						if (!Frostium::Utils::IsPathValid(frame->TexturePath))
-						{
-							NATIVE_ERROR("Animation2D reload: texture not found, path: {}!", frame->FileName.c_str());
-							continue;
-						}
-
-						Frostium::Texture::Create(frame->TexturePath, frame->Texture.get());
-					}
-				}
-
-			});
 	}
 
 	void WorldAdmin::ReloadAudioClips(entt::registry& registry, AudioEngine* engine)

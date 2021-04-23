@@ -3,7 +3,6 @@
 
 #include "Core/MaterialLibraryInterface.h"
 #include "Core/FileDialog.h"
-#include "Animation/AnimationClip2D.h"
 #include "Audio/AudioClip.h"
 
 #include "ECS/WorldAdmin.h"
@@ -12,7 +11,6 @@
 #include "ECS/Systems/RendererSystem.h"
 #include "ECS/Systems/Physics2DSystem.h"
 #include "ECS/Systems/AudioSystem.h"
-#include "ECS/Systems/Animation2DSystem.h"
 #include "ECS/Systems/CameraSystem.h"
 #include "ECS/Systems/CommandSystem.h"
 #include "ECS/Systems/UISystem.h"
@@ -80,11 +78,6 @@ namespace SmolEngine
 	void EditorLayer::OnEvent(Frostium::Event& e)
 	{
 		m_Camera->OnEvent(e);
-		if(e.IsType(Frostium::EventType::WINDOW_RESIZE))
-		{
-			auto& resizeE = static_cast<Frostium::WindowResizeEvent&>(e);
-			m_ViewPortSize = { resizeE.GetWidth(), resizeE.GetHeight() };
-		}
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -483,57 +476,7 @@ namespace SmolEngine
 
 	void EditorLayer::DrawAnimation2D(Animation2DComponent* anim)
 	{
-		for (auto& pair : anim->m_Clips)
-		{
-			auto& [key, clip] = pair;
 
-			// Tree
-			ImGui::NewLine();
-			ImGui::Extensions::InputInt("Layer", anim->IndexLayer, 130.0f, "AnimationPanel");
-			ImGui::NewLine();
-			std::stringstream ss;
-			ss << "Animation Clip #" << clip->m_ClipName;
-
-			if(ImGui::TreeNodeEx(ss.str().c_str()))
-			{
-				ImGui::NewLine();
-				if (ImGui::Extensions::InputRawString("Key Name", m_TempString))
-				{
-					if (!m_TempString.empty())
-					{
-						Animation2DSystem::RenameClip(*anim, clip->m_ClipName, m_TempString);
-					}
-
-					ImGui::TreePop();
-					break;
-				}
-
-				ImGui::Extensions::CheckBox("Default Clip", clip->m_bIsDefaultClip);
-				ImGui::NewLine();
-				if (ImGui::Extensions::SmallButton("Debug", "Play"))
-				{
-					Animation2DSystem::Play(clip->m_ClipName, *anim);
-				}
-
-				ImGui::SameLine();
-				if (ImGui::SmallButton("Stop"))
-				{
-					Animation2DSystem::Stop(clip->m_ClipName, *anim);
-				}
-				ImGui::TreePop();
-			}
-
-			ImGui::Separator();
-			m_TempString = "";
-		}
-
-		ImGui::NewLine();
-		ImGui::NewLine();
-
-		if (ImGui::Button("New Animation Clip", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
-		{
-
-		}
 	}
 
 	void EditorLayer::DrawCanvas(CanvasComponent* canvas)
@@ -595,7 +538,6 @@ namespace SmolEngine
 				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
 				{
 					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					//m_Camera->OnResize(static_cast<uint32_t>(m_ViewPortSize.y), static_cast<uint32_t>(m_ViewPortSize.x));
 				}
 
 #ifdef SMOLENGINE_OPENGL_IMPL

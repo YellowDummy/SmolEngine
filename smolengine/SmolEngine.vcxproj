@@ -99,9 +99,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Animation\Animation2DFrameKey.h" />
-    <ClInclude Include="include\Animation\AnimationClip2D.h" />
-    <ClInclude Include="include\Animation\SkeletalAnimationClip.h" />
     <ClInclude Include="include\Audio\AudioClip.h" />
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Core\Core.h" />
@@ -115,7 +112,6 @@
     <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\ECS\Actor.h" />
     <ClInclude Include="include\ECS\Components\Animation2DComponent.h" />
-    <ClInclude Include="include\ECS\Components\AnimatorComponent.h" />
     <ClInclude Include="include\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\BaseComponent.h" />
     <ClInclude Include="include\ECS\Components\BehaviourComponent.h" />
@@ -138,8 +134,6 @@
     <ClInclude Include="include\ECS\ComponentsCore.h" />
     <ClInclude Include="include\ECS\Scene.h" />
     <ClInclude Include="include\ECS\SceneData.h" />
-    <ClInclude Include="include\ECS\Systems\Animation2DSystem.h" />
-    <ClInclude Include="include\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="include\ECS\Systems\AudioSystem.h" />
     <ClInclude Include="include\ECS\Systems\CameraSystem.h" />
     <ClInclude Include="include\ECS\Systems\CommandSystem.h" />
@@ -514,8 +508,6 @@
     <ClCompile Include="src\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
     <ClCompile Include="src\ECS\Scene.cpp" />
     <ClCompile Include="src\ECS\SceneData.cpp" />
-    <ClCompile Include="src\ECS\Systems\Animation2DSystem.cpp" />
-    <ClCompile Include="src\ECS\Systems\AnimationSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\CameraSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\CommandSystem.cpp" />

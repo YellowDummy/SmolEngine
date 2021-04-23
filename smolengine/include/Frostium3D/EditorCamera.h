@@ -1,8 +1,6 @@
 #pragma once
-#include "Common/Time.h"
-#include "Common/Events.h"
 
-#include <glm/glm.hpp>
+#include "Common/Camera.h"
 
 namespace Frostium
 {
@@ -25,15 +23,17 @@ namespace Frostium
 		CameraType        Type = CameraType::Perspective;
 	};
 
-	class EditorCamera
+	class EditorCamera: public Camera
 	{
 	public:
 
 		EditorCamera(EditorCameraCreateInfo* createInfo = nullptr);
 
 		// Evenst
-		void OnUpdate(DeltaTime delta);
-		void OnEvent(Event& event);
+		void OnUpdate(DeltaTime delta) override;
+		void OnEvent(Event& event) override;
+		void OnResize(uint32_t width, uint32_t height);
+		void OnMouseScroll(float x, float y);
 
 		// Setters
 		void SetDistance(float distance) { m_Distance = distance; }
@@ -41,17 +41,17 @@ namespace Frostium
 		void SetCameraType(CameraType type);
 
 		// Getters
-		const glm::mat4 GetViewProjection() const { return m_Projection * m_ViewMatrix; }
-		const glm::mat4& GetProjection() const { return m_Projection; }
-		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		const glm::vec3& GetPosition() const { return m_Position; }
+		const glm::mat4 GetViewProjection() const override { return m_Projection * m_ViewMatrix; }
+		const glm::mat4& GetProjection() const override { return m_Projection; }
+		const glm::mat4& GetViewMatrix() const override { return m_ViewMatrix; }
+		const glm::vec3& GetPosition() const override { return m_Position; }
 		const glm::vec3& GetFPoint() const { return m_FocalPoint; }
 
 		float GetDistance() const { return m_Distance; }
 		float GetPitch() const { return m_Pitch; }
 		float GetYaw() const { return m_Yaw; }
-		float GetNearClip() const { return m_NearClip; }
-		float GetFarClip() const { return m_FarClip; }
+		float GetNearClip() const override { return m_NearClip; }
+		float GetFarClip() const override { return m_FarClip; }
 
 		glm::vec3 GetForwardDirection() const;
 		glm::vec3 GetRightDirection() const;

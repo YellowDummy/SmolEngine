@@ -42,7 +42,7 @@ namespace SmolEngine
 		graphicsContextCI.pWindowCI = &windowCI;
 		graphicsContextCI.ResourcesFolderPath = "../resources/";
 		graphicsContextCI.Flags = Frostium::Features_Renderer_3D_Flags | Frostium::Features_Renderer_2D_Flags
-			| Frostium::Features_ImGui_Flags | Frostium::Features_HDR_Flags;
+			| Frostium::Features_ImGui_Flags;
 
 		PhysicsContextCreateInfo physicsContextCI = {};
 

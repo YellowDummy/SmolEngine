@@ -3,14 +3,15 @@
 layout (binding = 0) uniform sampler2D samplerColor1;
 
 layout (location = 0) in vec2 inUV;
-
 layout (location = 0) out vec4 outColor;
-
-layout (constant_id = 0) const int dir = 1;
+layout(push_constant) uniform ConstantData
+{
+    uint dir;
+};
 
 void main(void)
 {
-	// From the OpenGL Super bible
+// From the OpenGL Super bible
 	const float weights[] = float[](0.0024499299678342,
 									0.0043538453346397,
 									0.0073599963704157,
@@ -38,20 +39,18 @@ void main(void)
 									0.0024499299678342);
 
 
-	const float blurScale = 0.003;
+	const float blurScale = 0.0003;
 	const float blurStrength = 1.0;
 
 	float ar = 1.0;
 	// Aspect ratio for vertical blur pass
 	if (dir == 1)
 	{
-		vec2 ts = textureSize(samplerColor1, 0);
+		vec2 ts = 1.0 / textureSize(samplerColor1, 0);
 		ar = ts.y / ts.x;
 	}
 
 	vec2 P = inUV.xy - vec2(0, (weights.length() >> 1) * ar * blurScale);
-
-
 	vec4 color = vec4(0.0);
 	for (int i = 0; i < weights.length(); i++)
 	{
