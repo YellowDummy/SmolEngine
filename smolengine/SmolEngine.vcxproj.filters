@@ -4,9 +4,6 @@
     <Filter Include="include">
       <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Animation">
-      <UniqueIdentifier>{B8270F86-243E-0D1C-6DB5-983DD90ADEA3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Audio">
       <UniqueIdentifier>{4A00A5A2-B6C0-20D9-7FFB-6956EB7A65B5}</UniqueIdentifier>
     </Filter>
@@ -202,6 +199,15 @@
     <Filter Include="include\Libraries\box_2D\include\box2d">
       <UniqueIdentifier>{63814C48-4FD3-2338-38F2-604824E33C21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Libraries\entt">
+      <UniqueIdentifier>{9F505AB5-8B4A-8307-74B7-19186050E973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\entt\config">
+      <UniqueIdentifier>{E4167A4C-502F-6176-19DC-F00F85B3F50F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\entt\core">
+      <UniqueIdentifier>{773CBB30-E349-E916-6C30-E501D83CB5CD}</UniqueIdentifier>
+    </Filter>
     <Filter Include="include\Libraries\fmod">
       <UniqueIdentifier>{0AD85AB5-F6D1-8307-DF3E-1A18CBD7E973}</UniqueIdentifier>
     </Filter>
@@ -324,10 +330,16 @@
     <ClInclude Include="include\ECS\Components\PointLightComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Components\SceneStateComponent.h">
+      <Filter>include\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\AudioEngineSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\Box2DWorldSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Components\Singletons\GraphicsEngineSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h">
@@ -385,6 +397,9 @@
       <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Frostium3D\Common\BufferLayout.h">
+      <Filter>include\Frostium3D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Frostium3D\Common\Camera.h">
       <Filter>include\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Frostium3D\Common\Common.h">
@@ -1364,6 +1379,15 @@
     </ClInclude>
     <ClInclude Include="include\Libraries\box_2D\include\box2d\box2d.h">
       <Filter>include\Libraries\box_2D\include\box2d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\entt\config\config.h">
+      <Filter>include\Libraries\entt\config</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\entt\config\version.h">
+      <Filter>include\Libraries\entt\config</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\entt\core\attribute.h">
+      <Filter>include\Libraries\entt\core</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\fmod\include\fmod.h">
       <Filter>include\Libraries\fmod\include</Filter>

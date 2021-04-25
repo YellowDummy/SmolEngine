@@ -123,8 +123,10 @@
     <ClInclude Include="include\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\MeshComponent.h" />
     <ClInclude Include="include\ECS\Components\PointLightComponent.h" />
+    <ClInclude Include="include\ECS\Components\SceneStateComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\AudioEngineSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\Box2DWorldSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\GraphicsEngineSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
@@ -144,6 +146,7 @@
     <ClInclude Include="include\ECS\WorldAdmin.h" />
     <ClInclude Include="include\Frostium3D\Common\BufferElement.h" />
     <ClInclude Include="include\Frostium3D\Common\BufferLayout.h" />
+    <ClInclude Include="include\Frostium3D\Common\Camera.h" />
     <ClInclude Include="include\Frostium3D\Common\Common.h" />
     <ClInclude Include="include\Frostium3D\Common\Core.h" />
     <ClInclude Include="include\Frostium3D\Common\CubeTexture.h" />
@@ -470,6 +473,9 @@
     <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_world.h" />
     <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_world_callbacks.h" />
     <ClInclude Include="include\Libraries\box_2D\include\box2d\box2d.h" />
+    <ClInclude Include="include\Libraries\entt\config\config.h" />
+    <ClInclude Include="include\Libraries\entt\config\version.h" />
+    <ClInclude Include="include\Libraries\entt\core\attribute.h" />
     <ClInclude Include="include\Libraries\fmod\include\fmod.h" />
     <ClInclude Include="include\Libraries\fmod\include\fmod_codec.h" />
     <ClInclude Include="include\Libraries\fmod\include\fmod_common.h" />

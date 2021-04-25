@@ -14,32 +14,62 @@ using namespace Frostium;
 
 namespace SmolEngine
 {
-	void RendererSystem::BeginDraw(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar)
+	void RendererSystem::CheckLayerIndex(int& index)
 	{
-		static ClearInfo clearInfo = {};
-		clearInfo.bClear = true;
-		static BeginSceneInfo info;
-		info.farClip = zFar;
-		info.nearClip = zNear;
-		info.view = view;
-		info.proj = proj;
-		info.pos = camPos;
+		if (index > 10)
+		{
+			index = 10;
+		}
 
-		Renderer::BeginScene(&clearInfo, &info);
-		clearInfo.bClear = false;
-		Renderer2D::BeginScene(&clearInfo, &info);
+		if (index < 0)
+		{
+			index = 0;
+		}
 	}
 
-	void RendererSystem::EndDraw()
+	void RendererSystem::BeginSubmit(const Frostium::BeginSceneInfo* info)
+	{
+		ClearInfo clear = {};
+		Renderer::BeginScene(&clear, info);
+		clear.bClear = false;
+		Renderer2D::BeginScene(&clear, info);
+	}
+
+	void RendererSystem::EndSubmit()
 	{
 		Renderer::EndScene();
 		Renderer2D::EndScene();
 	}
 
-	void RendererSystem::SubmitLights()
+	void RendererSystem::Update()
 	{
 		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
 
+		// Meshes
+		{
+			const auto& group = reg->view<TransformComponent, MeshComponent>();
+			for (const auto& entity : group)
+			{
+				const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
+				if (mesh.bShow && mesh.Mesh)
+					Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh.get());
+			}
+		}
+		// 2D Textures
+		{
+			const auto& group = reg->view<TransformComponent, Texture2DComponent>();
+			for (const auto& entity : group)
+			{
+				const auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
+
+				CheckLayerIndex(texture2D.LayerIndex);
+				if (texture2D.Enabled && texture2D.Texture != nullptr)
+				{
+					Renderer2D::SubmitSprite(transform.WorldPos,
+						transform.Scale, transform.Rotation.x, texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
+				}
+			}
+		}
 		// Point Lights
 		{
 			const auto& pGroup = reg->view<TransformComponent, PointLightComponent>();
@@ -52,7 +82,6 @@ namespace SmolEngine
 				}
 			}
 		}
-
 		// Directional Lights
 		{
 			bool shadows_casted = false;
@@ -72,7 +101,6 @@ namespace SmolEngine
 				}
 			}
 		}
-
 		// 2D Point Light
 		{
 			const auto& group = reg->view<TransformComponent, Light2DSourceComponent>();
@@ -85,73 +113,22 @@ namespace SmolEngine
 				}
 			}
 		}
-	}
-
-	void RendererSystem::SubmitMeshes()
-	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-
-		const auto& group = reg->view<TransformComponent, MeshComponent>();
-		for (const auto& entity : group)
+		// Canvas
 		{
-			const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
-			if (mesh.bShow && mesh.Mesh)
-				Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh.get());
-		}
-	}
-
-	void RendererSystem::Submit2DTextures()
-	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-
-		const auto& group = reg->view<TransformComponent, Texture2DComponent>();
-		for (const auto& entity : group)
-		{
-			const auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
-
-			CheckLayerIndex(texture2D.LayerIndex);
-			if (texture2D.Enabled && texture2D.Texture != nullptr)
+			const auto& group = reg->view<CanvasComponent>();
+			for (const auto& entity : group)
 			{
-				Renderer2D::SubmitSprite(transform.WorldPos,
-					transform.Scale, transform.Rotation.x, texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
+				const auto& canvas = group.get<CanvasComponent>(entity);
 			}
 		}
-	}
 
-	void RendererSystem::Submit2DAnimations()
-	{
-
-	}
-
-	void RendererSystem::SubmitCanvases(CameraComponent* camera, TransformComponent* cameraTransform)
-	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-
-		const auto& group = reg->view<CanvasComponent>();
-		for (const auto& entity : group)
-		{
-			const auto& canvas = group.get<CanvasComponent>(entity);
-		}
-	}
-
-	void RendererSystem::CheckLayerIndex(int& index)
-	{
-		if (index > 10)
-		{
-			index = 10;
-		}
-
-		if (index < 0)
-		{
-			index = 0;
-		}
 	}
 
 	void RendererSystem::DebugDraw()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		entt::registry& reg = WorldAdmin::GetSingleton()->GetActiveScene()->GetRegistry();
 
-		const auto& group = reg->view<TransformComponent, Body2DComponent>();
+		const auto& group = reg.view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);

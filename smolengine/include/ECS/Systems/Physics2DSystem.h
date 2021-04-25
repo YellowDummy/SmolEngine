@@ -41,7 +41,7 @@ namespace SmolEngine
 		static void OnUpdate(Frostium::DeltaTime delta, uint32_t velocityIterations, uint32_t positionIterations, Box2DWorldSComponent* data);
 
 		// Body Factory
-		static void CreateBody(Body2DComponent* body, TransformComponent* tranform, b2World* world, Ref<Actor> actor);
+		static void CreateBody(Body2DComponent* body, TransformComponent* tranform, b2World* world, Actor* actor);
 		static void DeleteBodies(b2World* world);
 		// Joint Factory
 		static const bool BindJoint(Body2DComponent* bodyA, Body2DComponent* bodyB, JointType type, JointInfo* info, b2World* world);

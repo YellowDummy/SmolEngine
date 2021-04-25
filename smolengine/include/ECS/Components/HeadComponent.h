@@ -3,8 +3,8 @@
 #include "ECS/Components/BaseComponent.h"
 
 #include <string>
+#include <vector>
 #include <cereal/cereal.hpp>
-
 
 namespace SmolEngine
 {
@@ -14,14 +14,17 @@ namespace SmolEngine
 		HeadComponent(uint32_t id)
 			: BaseComponent(id) {}
 		HeadComponent(const std::string& name, const std::string tag, uint32_t id)
-			:Name(name), Tag(tag), ID(id) {}
+			:Name(name), Tag(tag), ActorID(id) {}
 
 
-		std::string Name = "";
-		std::string Tag = "";
-
-		uint32_t ID = 0;
-		bool IsEnabled = true;
+		Actor*                Parent = nullptr;
+		bool                  IsEnabled = true;
+		bool                  ShowComponentUI = false;
+		uint32_t              ActorID = 0;
+		uint32_t              ComponentsCount = 0;
+		std::string           Name = "";
+		std::string           Tag = "";
+		std::vector<Actor*>   Childs;
 
 	private:
 
@@ -32,7 +35,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ID, Name, Tag, IsEnabled, ComponentID);
+			archive(ActorID, Name, Tag, IsEnabled, ShowComponentUI, ComponentID, ComponentsCount);
 		}
 	};
 }

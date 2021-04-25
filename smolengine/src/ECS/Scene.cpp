@@ -5,99 +5,114 @@
 
 namespace SmolEngine
 {
-	Scene::Scene()
-	{
-
-	}
-
-	Scene::~Scene()
-	{
-
-	}
-
 	Scene::Scene(const Scene& another)
 	{
-		assert(false);
+
 	}
 
-	void Scene::Init(const std::string& filePath)
+	void Scene::Create(const std::string& filePath)
 	{
 		std::filesystem::path p(filePath);
-		m_SceneData = SceneData(filePath, p.filename().string());
-		m_SceneData.Prepare();
+		m_SceneData.Init();
+		m_State = &m_SceneData.m_Registry.emplace<SceneStateComponent>(m_SceneData.m_Entity);
 	}
 
 	void Scene::Free()
 	{
-		m_IDSet.clear();
 		m_SceneData.m_Registry.clear();
-		m_SceneData = {};
+		m_State = nullptr;
+		m_SceneData.Free();
 	}
 
-	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
+	Actor* Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
-		Ref<Actor> new_actor = nullptr;
-		// Checking if actor already exists
-		const auto searchNameResult = m_IDSet.find(name);
-		if (searchNameResult != m_IDSet.end())
+		SceneStateComponent* state = GetStateComponent();
+		const auto searchNameResult = state->ActorNameSet.find(name);
+		if (searchNameResult != state->ActorNameSet.end())
 		{
 			NATIVE_ERROR("Actor {} already exist!", name);
-			return new_actor;
+			return nullptr;
 		}
 
-		// Getting ID
 		auto actorEntity = m_SceneData.m_Registry.create();
-		uint32_t id = (uint32_t)actorEntity;
-
-		// Creating Actor
-		new_actor = std::make_shared<Actor>(actorEntity, m_SceneData.m_ActorPool.size());
+		uint32_t id = (uint32_t)actorEntity - 1;
+		state->Actors.push_back(Actor(actorEntity));
+		Actor* actor = &state->Actors.back();
 
 		// Add Head
-		auto head = AddComponent<HeadComponent>(*new_actor.get());
-		head->ID = id;
-		head->Name = name;
-		head->Tag = tag;
+		HeadComponent& head = m_SceneData.m_Registry.emplace<HeadComponent>(*actor);
+		head.ComponentID = 0;
+		head.ComponentsCount++;
+		head.ActorID = id;
+		head.Name = name;
+		head.Tag = tag;
 
 		// Add Transform
-		AddComponent<TransformComponent>(*new_actor.get());
-		m_IDSet[name] = id;
-		m_SceneData.m_ActorPool[id] = new_actor;
-		m_SceneData.m_ActorList.push_back(new_actor);
-
-		return new_actor;
-	}
-
-	Ref<Actor> Scene::FindActorByName(const std::string& name)
-	{
-		const auto& result = m_IDSet.find(name);
-		if (result == m_IDSet.end())
-			return nullptr;
-
-		return FindActorByID(result->second);
-	}
-
-	Ref<Actor> Scene::FindActorByTag(const std::string& tag)
-	{
-		Ref<Actor> actor = nullptr;
-		for (const auto& obj : m_SceneData.m_ActorList)
-		{
-			if (obj->GetTag() == tag)
-			{
-				actor = obj;
-				break;
-			}
-		}
-
+		AddComponent<TransformComponent>(actor);
+		state->ActorNameSet[name] = actor;
 		return actor;
 	}
 
-	Ref<Actor> Scene::FindActorByID(const uint32_t id)
+	Actor* Scene::FindActorByName(const std::string& name)
 	{
-		const auto& result = m_SceneData.m_ActorPool.find(id);
-		if (result != m_SceneData.m_ActorPool.end())
-			return result->second;
+		const auto& it = m_State->ActorNameSet.find(name);
+		if (it != m_State->ActorNameSet.end())
+			return it->second;
 
 		return nullptr;
+	}
+
+	Actor* Scene::FindActorByTag(const std::string& tag)
+	{
+		for (auto& actor : m_State->Actors)
+			if (tag == actor.GetTag())
+				return &actor;
+
+		return nullptr;
+	}
+
+	Actor* Scene::FindActorByID(uint32_t id)
+	{
+		if (id < m_State->Actors.size())
+			return &m_State->Actors[id];
+
+		return nullptr;
+	}
+
+	void Scene::GetActors(std::vector<Actor*>& outList)
+	{
+		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
+
+		outList.resize(count);
+		for(uint32_t i = 0; i < count; ++i)
+			outList[i] = &m_State->Actors[i];
+	}
+
+	void Scene::GetActorsByID(std::vector<Actor*>& outList)
+	{
+		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
+
+		outList.reserve(count);
+		for (uint32_t i = 0; i < count; ++i)
+		{
+			for (uint32_t x = 0; x < count; ++x)
+			{
+				Actor* actor = &m_State->Actors[x];
+				if (i == (uint32_t)actor->m_Entity)
+					outList.push_back(actor);
+			}
+		}
+	}
+
+	void Scene::GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList)
+	{
+		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
+		for (uint32_t i = 0; i < count; ++i)
+		{
+			Actor* actor = &m_State->Actors[i];
+			if (tag == actor->GetTag())
+				outList.push_back(actor);
+		}
 	}
 
 	void Scene::RemoveChild(Actor* parent, Actor* child)
@@ -112,8 +127,7 @@ namespace SmolEngine
 		child->SetParent(parent);
 	}
 
-	// TODO: add more components
-	void Scene::DuplicateActor(Ref<Actor>& actor)
+	void Scene::DuplicateActor(Actor* actor)
 	{
 		auto newObj = CreateActor(actor->GetName() + "_D", actor->GetTag());
 		auto newT = newObj->GetComponent<TransformComponent>();
@@ -145,44 +159,35 @@ namespace SmolEngine
 
 	}
 
-	void Scene::DeleteActor(Ref<Actor>& actor)
+	void Scene::DeleteActor(Actor* actor)
 	{
-		m_IDSet.erase(actor->GetName());
-		m_SceneData.m_ActorPool.erase(actor->GetID());
-
-		std::vector<Ref<Actor>> tempList;
-		tempList.reserve(m_SceneData.m_ActorList.size() - 1);
-		for (auto& actorRef : m_SceneData.m_ActorList)
+		if (actor != nullptr)
 		{
-			if (actorRef != actor)
-				tempList.push_back(actorRef);
+			m_State->ActorNameSet.erase(actor->GetName());
+			std::remove(m_State->Actors.begin(), m_State->Actors.end(), *actor);
+
+			m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<Body2DComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<Texture2DComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<BehaviourComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<Animation2DComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<Light2DSourceComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<CanvasComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<AudioSourceComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
+
+			actor = nullptr;
 		}
-
-		m_SceneData.m_ActorList = std::move(tempList);
-
-		m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<Body2DComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<Texture2DComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<BehaviourComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<Animation2DComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<Light2DSourceComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<CanvasComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<AudioSourceComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
-		m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
-
-		actor = nullptr;
 	}
 
 	bool Scene::Save(const std::string& filePath)
 	{
 		std::stringstream storageRegistry;
-		std::stringstream storageSceneData;
-
-		// Serializing all Components
+		// Serializing all components and states
 		{
 			cereal::JSONOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<
@@ -190,24 +195,14 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent>(output);
+				PointLightComponent, SceneStateComponent>(output);
 		}
-
-		// Serializing scene data
-		{
-			cereal::JSONOutputArchive output{ storageSceneData };
-			m_SceneData.serialize(output);
-		}
-
-		// Merging two streams
-		std::stringstream result;
-		result << storageRegistry.str() << "|" << storageSceneData.str();
 
 		// Writing result to a file
 		std::ofstream myfile(filePath);
 		if (myfile.is_open())
 		{
-			myfile << result.str();
+			myfile << storageRegistry.str();
 			myfile.close();
 			NATIVE_WARN(std::string("Scene saved successfully"));
 			return true;
@@ -226,100 +221,40 @@ namespace SmolEngine
 			NATIVE_ERROR("Could not open the file: {}", filePath);
 			return false;
 		}
-
 		// Copying file content to a buffer
 		buffer << file.rdbuf();
 		file.close();
-
-		std::string segment;
-		std::vector<std::string> seglist;
-
-		// Spliting string into two
-		while (std::getline(buffer, segment, '|'))
-		{
-			seglist.push_back(segment);
-		}
-
-		if (seglist.size() != 2)
-		{
-			return false;
-		}
-
-		// Components
-		std::stringstream regisrtyStorage;
-		regisrtyStorage << seglist.front();
-
-		// Scene data
-		std::stringstream sceneDataStorage;
-		sceneDataStorage << seglist.back();
-
-		// Deserializing scene data to a new scene object
-		{
-			cereal::JSONInputArchive sceneDataInput{ sceneDataStorage };
-
-			sceneDataInput(m_SceneData.m_MaterialPaths,
-				m_SceneData.m_ActorPool, m_SceneData.m_AssetMap,
-				m_SceneData.m_Entity, m_SceneData.m_Gravity.x,
-				m_SceneData.m_Gravity.y, m_SceneData.m_ID,
-				m_SceneData.m_filePath,
-				m_SceneData.m_Name, m_SceneData.m_AmbientStrength);
-		}
-
 		// The registry must be cleared before writing new data
 		CleanRegistry();
-
 		// Deserializing components data to an existing registry object
 		{
-			cereal::JSONInputArchive regisrtyInput{ regisrtyStorage };
+			cereal::JSONInputArchive regisrtyInput{ buffer };
 
 			entt::snapshot_loader{ m_SceneData.m_Registry }.entities(regisrtyInput).component<
 				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent>(regisrtyInput);
+				PointLightComponent, SceneStateComponent>(regisrtyInput);
 		}
-
-		// Updating ActorList
-		m_SceneData.m_ActorList.clear();
-		m_SceneData.m_ActorList.reserve(m_SceneData.m_ActorPool.size());
-		for (const auto& [key, actor] : m_SceneData.m_ActorPool)
+		// Updates sets
+		m_State = GetStateComponent();
+		for (Actor& actor : m_State->Actors)
 		{
-			m_SceneData.m_ActorList.push_back(actor);
+			m_State->ActorNameSet[actor.GetName()] = &actor;
 		}
-
 		NATIVE_WARN(std::string("Scene loaded successfully"));
 		return true;
 	}
 
-	bool Scene::OnActorNameChanged(const std::string& lastName, const std::string& newName)
+	SceneStateComponent* Scene::GetStateComponent()
 	{
-		auto resultNew = m_IDSet.find(newName);
-		if (resultNew != m_IDSet.end())
+		if (HasComponent<SceneStateComponent>(m_SceneData.m_Entity))
 		{
-			NATIVE_WARN("Actor with name " + newName + " already exist!");
-			return false;
+			&m_SceneData.m_Registry.get<SceneStateComponent>(m_SceneData.m_Entity);
 		}
 
-		uint32_t id = m_IDSet[lastName];
-		if (m_IDSet.erase(lastName) == 1)
-		{
-			m_IDSet[newName] = id;
-			return true;
-		}
-		return false;
-	}
-
-	void Scene::UpdateIDSet()
-	{
-		m_IDSet.clear();
-		{
-			const auto& view = m_SceneData.m_Registry.view<HeadComponent>();
-			view.each([&](HeadComponent& head)
-				{
-					m_IDSet[head.Name] = head.ID;
-				});
-		}
+		return nullptr;
 	}
 
 	void Scene::CleanRegistry()
@@ -329,10 +264,10 @@ namespace SmolEngine
 
 	bool Scene::AddAsset(const std::string& fileName, const std::string& filePath)
 	{
-		const auto& result = m_SceneData.m_AssetMap.find(fileName);
-		if (result == m_SceneData.m_AssetMap.end())
+		const auto& result = m_State->AssetMap.find(fileName);
+		if (result == m_State->AssetMap.end())
 		{
-			m_SceneData.m_AssetMap[fileName] = filePath;
+			m_State->AssetMap[fileName] = filePath;
 			return true;
 		}
 
@@ -345,58 +280,21 @@ namespace SmolEngine
 		if (fileName == "")
 			return false;
 
-		return m_SceneData.m_AssetMap.erase(fileName);
+		return m_State->AssetMap.erase(fileName);
 	}
 
 	const std::unordered_map<std::string, std::string>& Scene::GetAssetMap()
 	{
-		return m_SceneData.m_AssetMap;
+		return m_State->AssetMap;
 	}
 
-	std::unordered_map<uint32_t, Ref<Actor>>& Scene::GetActorPool()
+	SceneStateComponent* Scene::GetSceneState()
 	{
-		return m_SceneData.m_ActorPool;
+		return m_State;
 	}
 
-	void Scene::GetActorList(std::vector<Ref<Actor>>& outList)
+	entt::registry& Scene::GetRegistry()
 	{
-		outList = m_SceneData.m_ActorList;
-	}
-
-	void Scene::GetSortedActorList(std::vector<Ref<Actor>>& outList)
-	{
-		outList.reserve(m_SceneData.m_ActorPool.size());
-		for (uint32_t i = 0; i < m_SceneData.m_ActorList.size(); ++i)
-		{
-			for (const auto& actor : m_SceneData.m_ActorList)
-			{
-				if (actor->m_Index == i)
-				{
-					outList.push_back(actor);
-				}
-			}
-		}
-	}
-
-	void Scene::GetActorListByTag(const std::string& tag, std::vector<Ref<Actor>>& outList)
-	{
-		for (const auto& actor : m_SceneData.m_ActorList)
-		{
-			if (actor->GetTag() == tag)
-			{
-				outList.push_back(actor);
-			}
-		}
-	}
-
-
-	SceneData& Scene::GetSceneData()
-	{
-		return m_SceneData;
-	}
-
-	std::unordered_map<std::string, uint32_t>& Scene::GetIDSet()
-	{
-		return m_IDSet;
+		return m_SceneData.m_Registry;
 	}
 }

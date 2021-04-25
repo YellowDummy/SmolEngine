@@ -3,6 +3,12 @@
 
 #include <glm/glm.hpp>
 
+namespace Frostium
+{
+	struct BeginSceneInfo;
+	struct ClearInfo;
+}
+
 namespace SmolEngine
 {
 	struct Animation2DComponent;
@@ -17,14 +23,9 @@ namespace SmolEngine
 	{
 	private:
 
-		static void BeginDraw(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar);
-		static void EndDraw();
-
-		static void SubmitMeshes();
-		static void SubmitLights();
-		static void Submit2DTextures();
-		static void Submit2DAnimations();
-		static void SubmitCanvases(CameraComponent* camera, TransformComponent* cameraTransform);
+		static void BeginSubmit(const Frostium::BeginSceneInfo* info);
+		static void EndSubmit();
+		static void Update();
 
 		static void DebugDraw();
 		static void CheckLayerIndex(int& index);

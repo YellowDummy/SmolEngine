@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/BehaviourComponent.h"
+#include "ECS/Components/HeadComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/WorldAdmin.h"
 
@@ -8,7 +9,7 @@
 
 namespace SmolEngine
 {
-	bool ScriptingSystem::AttachNativeScript(Ref<Actor>& actor, const std::string& scriptName)
+	bool ScriptingSystem::AttachNativeScript(Actor* actor, const std::string& scriptName)
 	{
 		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
 		if (instance == nullptr)
@@ -19,17 +20,17 @@ namespace SmolEngine
 			return false;
 
 		BehaviourComponent* component = nullptr;
-		if (!WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<BehaviourComponent>(*actor))
+		if (!WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<BehaviourComponent>(actor))
 		{
-			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<BehaviourComponent>(*actor);
+			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<BehaviourComponent>(actor);
 			component->Actor = actor;
 			component->ActorID = actor->GetID();
 		}
 		else
-			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(*actor);
+			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(actor);
 
-		int32_t index = static_cast<int32_t>(actor->m_ComponentsCount);
-		actor->m_ComponentsCount++;
+		int32_t index = static_cast<int32_t>(actor->GetComponentsCount());
+		actor->GetInfo()->ComponentsCount++;
 
 		BehaviourComponent::ScriptInstance scriptInstance = {};
 		scriptInstance.KeyName = scriptName;
@@ -125,11 +126,11 @@ namespace SmolEngine
 		}
 	}
 
-	void ScriptingSystem::OnDestroy(Ref<Actor>& actor)
+	void ScriptingSystem::OnDestroy(Actor* actor)
 	{
 		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
 
-		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(*actor.get());
+		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(actor);
 		if (behaviour && instance)
 		{
 			for (auto& script : behaviour->Scripts)
@@ -146,7 +147,7 @@ namespace SmolEngine
 		for (const auto& entity : view)
 		{
 			auto& behaviour = view.get<BehaviourComponent>(entity);
-			Ref<Actor> actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(behaviour.ActorID);
+			Actor* actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(behaviour.ActorID);
 			if (!actor)
 			{
 				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");

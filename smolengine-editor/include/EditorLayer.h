@@ -80,9 +80,9 @@ namespace SmolEngine
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
 		{
-			if (m_World->GetActiveScene()->HasComponent<T>(*m_SelectedActor.get()))
+			if (m_World->GetActiveScene()->HasComponent<T>(m_SelectedActor))
 			{
-				auto comp = m_World->GetActiveScene()->GetComponent<T>(*m_SelectedActor.get());
+				auto comp = m_World->GetActiveScene()->GetComponent<T>(m_SelectedActor);
 				BaseComponent* baseComp = static_cast<BaseComponent*>(comp);
 				return baseComp->ComponentID == index;
 			}
@@ -101,7 +101,7 @@ namespace SmolEngine
 		WorldAdmin*                                 m_World = nullptr;
 		Frostium::EditorCamera*                     m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
-		Ref<Actor>                                  m_SelectedActor = nullptr;
+		Actor*                                      m_SelectedActor = nullptr;
 		std::unique_ptr<MaterialLibraryInterface>   m_MaterialLibraryInterface = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;
 		glm::vec2                                   m_GameViewSize = { 0.0f, 0.0f };

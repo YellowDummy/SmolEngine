@@ -14,20 +14,8 @@ namespace SmolEngine
 		const std::string& GetName();
 		const std::string& GetTag();
 		const size_t GetID();
-		void GetActors(std::vector<Ref<Actor>>& outList);
-		void GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
-
-		template<typename T>
-		T* GetComponent()
-		{
-			return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(*m_Actor);
-		}
-
-		template<typename T>
-		T* HasComponent()
-		{
-			return WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<T>(*m_Actor);
-		}
+		void GetActors(std::vector<Actor*>& outList);
+		void GetActorsWithTag(const std::string& tag, std::vector<Actor*>& outList);
 
 		// Search
 		Actor* FindActorByName(const std::string& name);
@@ -71,6 +59,12 @@ namespace SmolEngine
 			return nullptr;
 		}
 
+		template<typename T>
+		T* GetComponent() { return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(m_Actor); }
+
+		template<typename T>
+		T* HasComponent() { return WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<T>(m_Actor); }
+
 	private:
 
 		enum class OutValueType : uint16_t
@@ -88,7 +82,7 @@ namespace SmolEngine
 			OutValueType Type = OutValueType::None;
 		};
 
-		Ref<Actor>               m_Actor = nullptr;
+		Actor*                   m_Actor = nullptr;
 		std::vector<OutValue>    m_OutValues;
 
 	private:

@@ -27,7 +27,7 @@ namespace SmolEngine
 		data->World.Step(delta, velocityIterations, positionIterations);
 	}
 
-	void Physics2DSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Ref<Actor> actor)
+	void Physics2DSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Actor* actor)
 	{
 		auto& body = body2D->Body;
 		{
@@ -38,7 +38,7 @@ namespace SmolEngine
 			bodyDef.awake = body.m_IsAwake;
 			bodyDef.allowSleep = body.m_canSleep;
 			bodyDef.angle = tranform->Rotation.x;
-			bodyDef.userData = actor.get();
+			bodyDef.userData = actor;
 
 			bodyDef.position.Set(tranform->WorldPos.x, tranform->WorldPos.y);
 			body.m_Body = world->CreateBody(&bodyDef);
@@ -403,9 +403,9 @@ namespace SmolEngine
 
 	void Physics2DSystem::UpdateTransforms()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		entt::registry& reg = WorldAdmin::GetSingleton()->GetActiveScene()->GetRegistry();
 
-		const auto& group = reg->view<TransformComponent, Body2DComponent>();
+		auto& group = reg.view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);

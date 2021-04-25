@@ -21,26 +21,26 @@ namespace SmolEngine
 
 	Actor* BehaviourPrimitive::FindActorByName(const std::string& name)
 	{
-		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByName(name).get();
+		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByName(name);
 	}
 
 	Actor* BehaviourPrimitive::FindActorByTag(const std::string& tag)
 	{
-		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByTag(tag).get();
+		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByTag(tag);
 	}
 
 	Actor* BehaviourPrimitive::FindActorByID(uint32_t id)
 	{
-		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(id).get();
+		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(id);
 	}
 
-	void BehaviourPrimitive::GetActors(std::vector<Ref<Actor>>& outList)
+	void BehaviourPrimitive::GetActors(std::vector<Actor*>& outList)
 	{
-		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActorList(outList);
+		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActors(outList);
 	}
 
-	void BehaviourPrimitive::GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList)
+	void BehaviourPrimitive::GetActorsWithTag(const std::string& tag, std::vector<Actor*>& outList)
 	{
-		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActorListByTag(tag, outList);
+		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActorsByTag(tag, outList);
 	}
 }

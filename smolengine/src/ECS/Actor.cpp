@@ -5,26 +5,17 @@
 
 namespace SmolEngine
 {
-	Actor::Actor()
-		: 
-		m_Parent(nullptr) {}
-
-	Actor::Actor(entt::entity entity, size_t index)
-		:
-		m_Parent(nullptr),
-		m_Entity(entity),
-		m_Index(index) {}
+	Actor::Actor(entt::entity entity)
+		: m_Entity(entity) {}
 
 	std::vector<Actor*>& Actor::GetChilds()
 	{
-		return m_Childs;
+		return GetInfo()->Childs;
 	}
 
 	Actor* Actor::GetChildByName(const std::string& name)
 	{
-		if (m_Childs.empty()) { return nullptr; }
-		auto& set = WorldAdmin::GetSingleton()->GetActiveScene()->GetIDSet();
-		size_t id = set[name];
+		if (GetHead()->Childs.empty()) { return nullptr; }
 
 		return nullptr;
 	}
@@ -36,31 +27,41 @@ namespace SmolEngine
 
 	const std::string& Actor::GetName() const
 	{
-		return GetInfo()->Name;
+		return GetHead()->Name;
 	}
 
 	const std::string& Actor::GetTag() const
 	{
-		return GetInfo()->Tag;
+		return GetHead()->Tag;
 	}
 
-	const uint32_t Actor::GetID() const
+	uint32_t Actor::GetID() const
 	{
-		return GetInfo()->ID;
+		return GetHead()->ActorID;
 	}
 
-	const size_t Actor::GetComponentsCount() const
+	uint32_t Actor::GetComponentsCount() const
 	{
-		return m_ComponentsCount;
+		return GetHead()->ComponentsCount;
 	}
 
-	void Actor::SetParent(Actor* parent)
+	bool Actor::SetParent(Actor* parent)
 	{
+		return false;
 	}
 
-	const HeadComponent* Actor::GetInfo() const
+	bool Actor::SetName(const std::string& name)
 	{
+		return WorldAdmin::GetSingleton()->ChangeActorName(this, name);
+	}
 
+	HeadComponent* Actor::GetInfo()
+	{
+		return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<HeadComponent>(m_Entity);
+	}
+
+	const HeadComponent* Actor::GetHead() const
+	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<HeadComponent>(m_Entity);
 	}
 }

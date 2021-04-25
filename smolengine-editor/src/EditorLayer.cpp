@@ -167,10 +167,9 @@ namespace SmolEngine
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
-							m_World->GetActiveScene()->GetSceneData().m_filePath = result.value();
 							std::filesystem::path path = result.value();
-							m_World->GetActiveScene()->GetSceneData().m_Name = path.filename().stem().string();
-							m_World->Save(result.value());
+							m_World->GetActiveScene()->GetSceneState()->Name = path.filename().stem().string();
+							m_World->SaveScene(result.value());
 						}
 					}
 
@@ -180,7 +179,7 @@ namespace SmolEngine
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
-							m_World->Load(result.value());
+							m_World->LoadScene(result.value());
 						}
 					}
 				}
@@ -300,13 +299,9 @@ namespace SmolEngine
 	{
 		m_TempActorName = head->Name;
 		m_TempActorTag = head->Tag;
+
 		if (ImGui::Extensions::InputRawString("Name", m_TempActorName))
-		{
-			if (m_World->GetActiveScene()->OnActorNameChanged(head->Name, m_TempActorName))
-			{
-				head->Name = m_TempActorName;
-			}
-		}
+			m_SelectedActor->SetName(m_TempActorName);
 
 		ImGui::Extensions::InputString("Tag", head->Tag, m_TempActorTag);
 		ImGui::Extensions::CheckBox("Enabled", head->IsEnabled, 130.0f, "HeadPanel");
@@ -402,10 +397,10 @@ namespace SmolEngine
 			{
 				const size_t id = m_SelectedActor->GetID();
 
-				SceneData& data = m_World->GetActiveScene()->GetSceneData();
-				data.m_Registry.view<HeadComponent, CameraComponent>().each([&](HeadComponent& head, CameraComponent& camera)
+				entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
+				reg.view<HeadComponent, CameraComponent>().each([&](HeadComponent& head, CameraComponent& camera)
 				{
-					if (head.ID != id)
+					if (head.ActorID != id)
 						camera.isPrimaryCamera = false;
 				});
 			}
@@ -546,7 +541,7 @@ namespace SmolEngine
 				// Gizmos
 				if (m_SelectedActor != nullptr && !m_World->IsInPlayMode())
 				{
-					auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(*m_SelectedActor.get());
+					auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
 					if (transformComponent)
 					{
 						switch (m_Camera->GetType())
@@ -670,13 +665,13 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Mesh"))
 						{
-							m_World->GetActiveScene()->AddComponent<MeshComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<MeshComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Texture"))
 						{
-							m_World->GetActiveScene()->AddComponent<Texture2DComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<Texture2DComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 						ImGui::EndMenu();
@@ -686,19 +681,19 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Point Light 2D"))
 						{
-							m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Point Light"))
 						{
-							m_World->GetActiveScene()->AddComponent<PointLightComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<PointLightComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Directional Light"))
 						{
-							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 						ImGui::EndMenu();
@@ -708,7 +703,7 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Rigidbody 2D"))
 						{
-							m_World->GetActiveScene()->AddComponent<Body2DComponent>(*m_SelectedActor.get(), m_SelectedActor, 0);
+							m_World->GetActiveScene()->AddComponent<Body2DComponent>(m_SelectedActor, m_SelectedActor, 0);
 							ImGui::CloseCurrentPopup();
 						}
 						ImGui::EndMenu();
@@ -719,25 +714,25 @@ namespace SmolEngine
 
 						if (ImGui::MenuItem("Animation 2D"))
 						{
-							m_World->GetActiveScene()->AddComponent<Animation2DComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<Animation2DComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Audio Source"))
 						{
-							m_World->GetActiveScene()->AddComponent<AudioSourceComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<AudioSourceComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Camera"))
 						{
-							m_World->GetActiveScene()->AddComponent<CameraComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<CameraComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
 						if (ImGui::MenuItem("Canvas"))
 						{
-							m_World->GetActiveScene()->AddComponent<CanvasComponent>(*m_SelectedActor.get());
+							m_World->GetActiveScene()->AddComponent<CanvasComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
 
@@ -751,7 +746,7 @@ namespace SmolEngine
 				if (ImGui::CollapsingHeader("Head"))
 				{
 					ImGui::NewLine();
-					auto info = m_World->GetActiveScene()->GetComponent<HeadComponent>(*m_SelectedActor.get());
+					auto info = m_World->GetActiveScene()->GetComponent<HeadComponent>(m_SelectedActor);
 					DrawInfo(info);
 				}
 
@@ -760,7 +755,7 @@ namespace SmolEngine
 				if (ImGui::CollapsingHeader("Tranform"))
 				{
 					ImGui::NewLine();
-					DrawTransform(m_World->GetActiveScene()->GetComponent<TransformComponent>(*m_SelectedActor.get()));
+					DrawTransform(m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor));
 				}
 
 				for (uint32_t i = 0; i < m_SelectedActor->GetComponentsCount(); ++i)
@@ -770,7 +765,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Texture 2D"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Texture2DComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<Texture2DComponent>(m_SelectedActor);
 							DrawTexture(component);
 						}
 					}
@@ -780,7 +775,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Rigidbody 2D"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Body2DComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<Body2DComponent>(m_SelectedActor);
 							DrawBody2D(component);
 						}
 					}
@@ -790,7 +785,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Animation 2D"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Animation2DComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<Animation2DComponent>(m_SelectedActor);
 							DrawAnimation2D(component);
 						}
 					}
@@ -800,7 +795,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Audio Source"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<AudioSourceComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<AudioSourceComponent>(m_SelectedActor);
 							DrawAudioSource(component);
 						}
 					}
@@ -810,7 +805,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Light 2D"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Light2DSourceComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<Light2DSourceComponent>(m_SelectedActor);
 							DrawLight2D(component);
 						}
 					}
@@ -820,7 +815,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Mesh"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<MeshComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
 							DrawMeshComponent(component);
 						}
 					}
@@ -830,7 +825,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Directional Light"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<DirectionalLightComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<DirectionalLightComponent>(m_SelectedActor);
 							DrawDirectionalLightComponent(component);
 						}
 					}
@@ -840,7 +835,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Point Light"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<PointLightComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<PointLightComponent>(m_SelectedActor);
 							DrawPointLightComponent(component);
 						}
 					}
@@ -850,7 +845,7 @@ namespace SmolEngine
 						if (ImGui::CollapsingHeader("Camera"))
 						{
 							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<CameraComponent>(*m_SelectedActor.get());
+							auto component = m_World->GetActiveScene()->GetComponent<CameraComponent>(m_SelectedActor);
 							DrawCamera(component);
 						}
 					}
@@ -877,11 +872,11 @@ namespace SmolEngine
 			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
 			ImGui::Separator();
 			std::string sceneStr = "Scene";
-			SceneData& data = m_World->GetActiveScene()->GetSceneData();
+			SceneStateComponent* state = m_World->GetActiveScene()->GetSceneState();
 
-			if (!data.m_Name.empty())
+			if (!state->Name.empty())
 			{
-				sceneStr = "Scene: " + data.m_Name;
+				sceneStr = "Scene: " + state->Name;
 			}
 
 			ImGui::BeginChild("Scene");
@@ -905,7 +900,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Empty Actor"))
 					{
-						ss << "New_EmptyActor_" << data.m_ActorPool.size();
+						ss << "New_EmptyActor_" << state->Actors.size();
 						m_World->GetActiveScene()->CreateActor(ss.str());
 					}
 
@@ -913,23 +908,23 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Point Light 2D"))
 						{
-							ss << "New_Light2D_" << data.m_ActorPool.size();
+							ss << "New_Light2D_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Point Light"))
 						{
-							ss << "New_PointLight_" << data.m_ActorPool.size();
+							ss << "New_PointLight_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<PointLightComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Directional Light"))
 						{
-							ss << "New_DirectionalLight_" << data.m_ActorPool.size();
+							ss << "New_DirectionalLight_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						ImGui::EndMenu();
@@ -939,9 +934,9 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Rigidbody 2D"))
 						{
-							ss << "New_Rigidbody2D_" << data.m_ActorPool.size();
-							Ref<Actor> actor = m_World->GetActiveScene()->CreateActor(ss.str());
-							m_World->GetActiveScene()->AddComponent<Body2DComponent>(*actor,
+							ss << "New_Rigidbody2D_" << state->Actors.size();
+							Actor* actor = m_World->GetActiveScene()->CreateActor(ss.str());
+							m_World->GetActiveScene()->AddComponent<Body2DComponent>(actor,
 								actor, 0);
 						}
 
@@ -952,9 +947,9 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Sprite"))
 						{
-							ss << "New_Sprite_" << data.m_ActorPool.size();
+							ss << "New_Sprite_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<Texture2DComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						ImGui::EndMenu();
@@ -964,9 +959,9 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Mesh"))
 						{
-							ss << "New_Mesh_" << data.m_ActorPool.size();
+							ss << "New_Mesh_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<MeshComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 
@@ -977,30 +972,30 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Audio Source"))
 						{
-							ss << "New_AudioSource_" << data.m_ActorPool.size();
+							ss << "New_AudioSource_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<AudioSourceComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Animation 2D"))
 						{
-							ss << "New_Animation2D_" << data.m_ActorPool.size();
+							ss << "New_Animation2D_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<Animation2DComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Canvas"))
 						{
-							ss << "New_Canvas_" << data.m_ActorPool.size();
+							ss << "New_Canvas_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<CanvasComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Camera"))
 						{
-							ss << "New_Camera_" << data.m_ActorPool.size();
+							ss << "New_Camera_" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<CameraComponent>
-								(*m_World->GetActiveScene()->CreateActor(ss.str()).get());
+								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						ImGui::EndMenu();
@@ -1012,8 +1007,8 @@ namespace SmolEngine
 
 				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					std::vector<Ref<Actor>> actors;
-					m_World->GetActiveScene()->GetSortedActorList(actors);
+					std::vector<Actor*> actors;
+					m_World->GetActiveScene()->GetActorsByID(actors);
 					for (const auto& actor : actors)
 					{
 						auto result = actor->GetName().find(name);
@@ -1044,7 +1039,7 @@ namespace SmolEngine
 							m_SelectionFlags = SelectionFlags::Inspector;
 							if (m_SelectedActor != nullptr)
 							{
-								m_SelectedActor->m_showComponentUI = false;
+								m_SelectedActor->GetInfo()->ShowComponentUI = false;
 								m_SelectedActor = nullptr;
 							}
 
@@ -1130,8 +1125,9 @@ namespace SmolEngine
 	{
 		if (ImGui::Extensions::CheckBox("Cast Shadows", light->bCastShadows))
 		{
-			entt::registry& registry = m_World->GetActiveScene()->GetSceneData().m_Registry;
-			const auto& view = registry.view<DirectionalLightComponent>();
+			entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
+
+			const auto& view = reg.view<DirectionalLightComponent>();
 			for (const auto& entity : view)
 			{
 				auto& lightRef = view.get<DirectionalLightComponent>(entity);
@@ -1154,7 +1150,7 @@ namespace SmolEngine
 
 	void EditorLayer::DrawMeshInspector(bool& show)
 	{
-		auto* meshComponent = m_World->GetActiveScene()->GetComponent<MeshComponent>(*m_SelectedActor.get());
+		auto* meshComponent = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
 		if (!meshComponent)
 			return;
 
@@ -1204,9 +1200,9 @@ namespace SmolEngine
 
 	void EditorLayer::DrawScriptComponent(uint32_t index)
 	{
-		if (m_World->GetActiveScene()->HasComponent<BehaviourComponent>(*m_SelectedActor.get()))
+		if (m_World->GetActiveScene()->HasComponent<BehaviourComponent>(m_SelectedActor))
 		{
-			BehaviourComponent* comp = m_World->GetActiveScene()->GetComponent<BehaviourComponent>(*m_SelectedActor.get());
+			BehaviourComponent* comp = m_World->GetActiveScene()->GetComponent<BehaviourComponent>(m_SelectedActor);
 			std::string scriptName = "";
 			BehaviourComponent::OutData* data = nullptr;
 			for (auto& [name, container] : comp->OutValues)

@@ -46,25 +46,27 @@ namespace SmolEngine
 
 	void WorldAdmin::OnBeginWorld()
 	{
-		SceneData& sceneData = GetActiveScene()->GetSceneData();
+		Scene* scene = GetActiveScene();
+		SceneStateComponent* sceneState = scene->GetSceneState();
 #ifdef SMOLENGINE_EDITOR
-		if (!Frostium::Utils::IsPathValid(sceneData.m_filePath))
+		if (!Frostium::Utils::IsPathValid(sceneState->FilePath))
 		{
-			NATIVE_ERROR("Failed to start the game!");
+			NATIVE_ERROR("Path is not valid: {}", sceneState->FilePath);
 			return;
 		}
 		// We save the current scene before starting the simulation
-		Save(sceneData.m_filePath);
+		SaveCurrentScene();
 #endif
 		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
 		// Setting Box2D Callbacks
 		Physics2DSystem::OnBegin(world);
 		// Creating rigidbodies and joints
 		{
-			const auto& view = sceneData.m_Registry.view<TransformComponent, Body2DComponent>();
+			const auto& view = scene->GetRegistry().view<TransformComponent, Body2DComponent>();
 			view.each([&](TransformComponent& tranform, Body2DComponent& body)
 			{
-					Physics2DSystem::CreateBody(&body, &tranform, &world->World, GetActiveScene()->FindActorByID(body.ActorID));
+					Actor* actor = scene->FindActorByID(body.ActorID);
+					Physics2DSystem::CreateBody(&body, &tranform, &world->World, actor);
 			});
 		}
 
@@ -75,10 +77,20 @@ namespace SmolEngine
 		m_State->m_InPlayMode = true;
 	}
 
+	void WorldAdmin::OnBeginFrame()
+	{
+		RendererSystem::BeginSubmit(nullptr); // temp
+	}
+
+	void WorldAdmin::OnEndFrame()
+	{
+		RendererSystem::EndSubmit();
+	}
+
 	void WorldAdmin::OnEndWorld()
 	{
+		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
 		m_State->m_InPlayMode = false;
-		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 		ScriptingSystem::OnEnd();
 		// Deleting all Rigidbodies
 		Physics2DSystem::DeleteBodies(&Box2DWorldSComponent::Get()->World);
@@ -87,13 +99,12 @@ namespace SmolEngine
 		AudioEngineSComponent::Get()->Engine.Reset();
 
 #ifdef SMOLENGINE_EDITOR
-		Load(GetActiveScene()->m_SceneData.m_filePath);
+		LoadScene(sceneState->FilePath);
 #endif
 	}
 
 	void WorldAdmin::OnUpdate(Frostium::DeltaTime deltaTime)
 	{
-		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 		{
@@ -108,6 +119,7 @@ namespace SmolEngine
 #endif
 
 		// Extracting Camera
+		entt::registry& registry = GetActiveScene()->GetRegistry();
 		const auto& cameraGroup = registry.view<CameraComponent, TransformComponent>();
 		for (const auto& entity : cameraGroup)
 		{
@@ -130,13 +142,16 @@ namespace SmolEngine
 	void WorldAdmin::OnEvent(Frostium::Event& e)
 	{
 		if (!m_State->m_InPlayMode) { return; }
-		//UISystem::OnEvent(GetActiveScene()->m_SceneData.m_Registry, e);
+	}
+
+	void WorldAdmin::OnGameViewResize(float width, float height)
+	{
+
 	}
 
 	void WorldAdmin::RenderScene(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar, bool debugDrawEnabled,
 		CameraComponent* targetCamera, TransformComponent* cameraTranform)
 	{
-		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 			Physics2DSystem::UpdateTransforms();
@@ -144,16 +159,7 @@ namespace SmolEngine
 		Box2DPhysicsSystem::UpdateTransfroms(registry);
 
 #endif
-		RendererSystem::BeginDraw(view, proj, camPos, zNear, zFar);
-		{
-			RendererSystem::SubmitMeshes();
-			RendererSystem::Submit2DTextures();
-			RendererSystem::SubmitLights();
-			if (targetCamera != nullptr && cameraTranform != nullptr)
-				RendererSystem::SubmitCanvases(targetCamera, cameraTranform);
-		}
-		RendererSystem::EndDraw();
-
+		RendererSystem::Update();
 		if (debugDrawEnabled)
 		{
 
@@ -163,10 +169,10 @@ namespace SmolEngine
 	void WorldAdmin::ReloadAssets()
 	{
 		Scene* activeScene = GetActiveScene();
-		entt::registry& registry = GetActiveScene()->m_SceneData.m_Registry;
+		SceneStateComponent* sceneState = activeScene->GetSceneState();
+		entt::registry& registry = activeScene->m_SceneData.m_Registry;
 
-		activeScene->UpdateIDSet();
-		Reload2DTextures(registry, activeScene->m_SceneData.m_AssetMap);
+		Reload2DTextures(registry, sceneState->AssetMap);
 		ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
 		Reload2DAnimations(registry);
 		ReloadCanvases(registry);
@@ -174,17 +180,7 @@ namespace SmolEngine
 		ScriptingSystem::ReloadScripts();
 	}
 
-	void WorldAdmin::OnGameViewResize(float width, float height)
-	{
-		CameraSystem::OnResize(width, height);
-	}
-
-	bool WorldAdmin::Save(const std::string& filePath)
-	{
-		return GetActiveScene()->Save(filePath);
-	}
-
-	bool WorldAdmin::Load(const std::string& filePath)
+	bool WorldAdmin::LoadScene(const std::string& filePath)
 	{
 		std::string path = filePath;
 		std::ifstream file(path);
@@ -196,10 +192,6 @@ namespace SmolEngine
 
 		// temp
 		{
-			size_t hash = m_State->m_Hash("DummuTexture");
-			auto& it = m_State->m_TexturesMap.find(hash);
-			auto dummy = it->second;
-
 			m_State->m_MeshMap.clear();
 			m_State->m_TexturesMap.clear();
 			Frostium::MaterialLibrary::GetSinglenton()->Reset();
@@ -208,15 +200,16 @@ namespace SmolEngine
 			defMat.SetRoughness(1.0f);
 			defMat.SetMetalness(0.2f);
 			Frostium::MaterialLibrary::GetSinglenton()->Add(&defMat);
+			Frostium::Renderer::UpdateMaterials();
 
-			m_State->m_TexturesMap[hash] = dummy;
-
-			m_State->m_SceneMap.clear();
 			m_State->m_ActiveSceneID = 0;
 		}
 
-		CreateScene(path);
+		Scene* current_scene = m_State->m_Scenes[m_State->m_ActiveSceneID];
+		if (current_scene)
+			delete current_scene;
 
+		CreateScene(path);
 		if (GetActiveScene()->Load(path))
 		{
 			// Reloading Assets
@@ -228,18 +221,35 @@ namespace SmolEngine
 		return false;
 	}
 
+	bool WorldAdmin::LoadSceneAtIndex(const std::string& filePath, uint32_t index)
+	{
+		return false;
+	}
+
+	bool WorldAdmin::LoadSceneBG(const std::string& filePath)
+	{
+		return false;
+	}
+
+	bool WorldAdmin::SwapScene(uint32_t index)
+	{
+		return false;
+	}
+
 	bool WorldAdmin::SaveCurrentScene()
 	{
-		if (m_State->m_SceneMap.size() == 0)
-			return false;
-
-		SceneData& data = GetActiveScene()->GetSceneData();
-		if (Frostium::Utils::IsPathValid(data.m_filePath))
+		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
+		if (Frostium::Utils::IsPathValid(sceneState->FilePath))
 		{
-			return Save(data.m_filePath);
+			return SaveScene(sceneState->FilePath);
 		}
 
 		return false;
+	}
+
+	bool WorldAdmin::SaveScene(const std::string& filePath)
+	{
+		return GetActiveScene()->Save(filePath);
 	}
 
 	bool WorldAdmin::IsInPlayMode()
@@ -292,20 +302,23 @@ namespace SmolEngine
 	}
 
 
-	void WorldAdmin::CreateScene(const std::string& filePath)
+	bool WorldAdmin::CreateScene(const std::string& filePath)
 	{
+		Scene* scene = new Scene();
+		scene->Create(filePath);
+
 		m_State->m_ActiveSceneID++;
-		m_State->m_SceneMap[m_State->m_ActiveSceneID].Init(filePath);
-		m_State->m_CurrentRegistry = &m_State->m_SceneMap[m_State->m_ActiveSceneID].GetSceneData().m_Registry;
+		m_State->m_Scenes[m_State->m_ActiveSceneID] = scene;
+		m_State->m_CurrentRegistry = &scene->m_SceneData.m_Registry;
 		ReloadAssets();
+
+		return true; // temp
 	}
 
 	Scene* WorldAdmin::GetActiveScene()
 	{
-		assert(m_State->m_SceneMap.size() > 0);
 		assert(m_State->m_ActiveSceneID > 0);
-
-		return &m_State->m_SceneMap[m_State->m_ActiveSceneID];
+		return m_State->m_Scenes[m_State->m_ActiveSceneID];
 	}
 
 	void WorldAdmin::Reload2DTextures(entt::registry& registry, const std::unordered_map<std::string, std::string>& assetMap)
@@ -386,21 +399,6 @@ namespace SmolEngine
 				});
 
 		}
-
-		data->m_MaterialPaths = std::move(usedMaterials);
-		// Scene materials
-		for (auto& path : data->m_MaterialPaths)
-		{
-			materialCI = {};
-			bool load = instance->Load(path, materialCI);
-			if (load)
-			{
-				instance->Add(&materialCI, path);
-				continue;
-			}
-
-			NATIVE_ERROR("Material {} not found!", path);
-		}
 	}
 
 	bool WorldAdmin::LoadStaticComponents()
@@ -417,6 +415,20 @@ namespace SmolEngine
 		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(id);
 
 		return true;
+	}
+
+	bool WorldAdmin::ChangeActorName(Actor* actor, const std::string& name)
+	{
+		SceneStateComponent* state = GetActiveScene()->GetSceneState();
+		std::string oldName = actor->GetName();
+		auto& it = state->ActorNameSet.find(name);
+		if (it == state->ActorNameSet.end())
+		{
+			state->ActorNameSet[name] = actor;
+			return true;
+		}
+
+		return false;
 	}
 
 	bool WorldAdmin::LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset)
