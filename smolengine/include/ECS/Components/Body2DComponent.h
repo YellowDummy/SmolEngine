@@ -5,7 +5,6 @@
 
 #include <cereal/cereal.hpp>
 
-
 namespace SmolEngine
 {
 	class Actor;

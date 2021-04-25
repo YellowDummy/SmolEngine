@@ -3,6 +3,8 @@
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
 
+#include <cereal/archives/yaml.hpp>
+
 namespace SmolEngine
 {
 	Scene::Scene(const Scene& another)
@@ -26,9 +28,8 @@ namespace SmolEngine
 
 	Actor* Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
-		SceneStateComponent* state = GetStateComponent();
-		const auto searchNameResult = state->ActorNameSet.find(name);
-		if (searchNameResult != state->ActorNameSet.end())
+		const auto searchNameResult = m_State->ActorNameSet.find(name);
+		if (searchNameResult != m_State->ActorNameSet.end())
 		{
 			NATIVE_ERROR("Actor {} already exist!", name);
 			return nullptr;
@@ -36,8 +37,8 @@ namespace SmolEngine
 
 		auto actorEntity = m_SceneData.m_Registry.create();
 		uint32_t id = (uint32_t)actorEntity - 1;
-		state->Actors.push_back(Actor(actorEntity));
-		Actor* actor = &state->Actors.back();
+		m_State->Actors.push_back(Actor(actorEntity));
+		Actor* actor = &m_State->Actors.back();
 
 		// Add Head
 		HeadComponent& head = m_SceneData.m_Registry.emplace<HeadComponent>(*actor);
@@ -49,7 +50,7 @@ namespace SmolEngine
 
 		// Add Transform
 		AddComponent<TransformComponent>(actor);
-		state->ActorNameSet[name] = actor;
+		m_State->ActorNameSet[name] = actor;
 		return actor;
 	}
 
@@ -189,7 +190,7 @@ namespace SmolEngine
 		std::stringstream storageRegistry;
 		// Serializing all components and states
 		{
-			cereal::JSONOutputArchive output{ storageRegistry };
+			cereal::YAMLOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<
 				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
@@ -228,7 +229,7 @@ namespace SmolEngine
 		CleanRegistry();
 		// Deserializing components data to an existing registry object
 		{
-			cereal::JSONInputArchive regisrtyInput{ buffer };
+			cereal::YAMLInputArchive regisrtyInput{ buffer };
 
 			entt::snapshot_loader{ m_SceneData.m_Registry }.entities(regisrtyInput).component<
 				HeadComponent, CameraComponent,

@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include <entt/entt.hpp>
+#include <entt/entity/registry.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/unordered_map.hpp>

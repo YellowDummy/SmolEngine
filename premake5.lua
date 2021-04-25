@@ -13,6 +13,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
 include "vendor/box2d"
+include "vendor/yaml-cpp"
 group ""
 
 
@@ -39,18 +40,20 @@ project "SmolEngine"
 	{
 		"smolengine/include/",
 		"smolengine/include/Libraries/",
+		"smolengine/include/Libraries/yaml-cpp/include/",
 		"smolengine/include/Libraries/box_2D/include/",
 		"smolengine/include/Libraries/fmod/include/",
-		"smolengine/include/Frostium3D/",
-		"smolengine/include/Frostium3D/Libraries/",
-		"smolengine/include/Frostium3D/Libraries/spdlog/include/",
-		"smolengine/include/Frostium3D/Libraries/cereal/include/",
-		"smolengine/include/Frostium3D/Libraries/glm/",
+		"smolengine/include/Libraries/Frostium3D/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
 	}
 
 	links 
 	{ 
 		"Box2D",
+		"Yaml-cpp",
 		"vendor/fmod/libs/fmodL_vc.lib",
 		"vendor/fmod/libs/fmodstudioL_vc.lib"
 	}
@@ -125,11 +128,11 @@ project "GameX"
 		"smolengine/include/Libraries/",
 		"smolengine/include/Libraries/box_2D/include/",
 		"smolengine/include/Libraries/fmod/include/",
-		"smolengine/include/Frostium3D/",
-		"smolengine/include/Frostium3D/Libraries/",
-		"smolengine/include/Frostium3D/Libraries/spdlog/include/",
-		"smolengine/include/Frostium3D/Libraries/cereal/include/",
-		"smolengine/include/Frostium3D/Libraries/glm/",
+		"smolengine/include/Libraries/Frostium3D/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
 	}
 
 	links
@@ -184,11 +187,11 @@ project "GameX"
 		"smolengine/include/Libraries/",
 		"smolengine/include/Libraries/box_2D/include/",
 		"smolengine/include/Libraries/fmod/include/",
-		"smolengine/include/Frostium3D/",
-		"smolengine/include/Frostium3D/Libraries/",
-		"smolengine/include/Frostium3D/Libraries/spdlog/include/",
-		"smolengine/include/Frostium3D/Libraries/cereal/include/",
-		"smolengine/include/Frostium3D/Libraries/glm/",
+		"smolengine/include/Libraries/Frostium3D/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
 	}
 
 	links

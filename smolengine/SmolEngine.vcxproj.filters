@@ -22,173 +22,173 @@
     <Filter Include="include\ECS\Systems">
       <UniqueIdentifier>{5A39334A-C69A-1058-4F08-570ABB684717}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Frostium3D">
-      <UniqueIdentifier>{489D14B1-3481-D506-9DE1-CF5989E4BF88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Common">
-      <UniqueIdentifier>{80E9F6CA-ECAB-2A55-355C-B9E1A15D0333}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\ImGUI">
-      <UniqueIdentifier>{32E4BFC0-1E09-0F41-4754-F4D033D80D5F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries">
-      <UniqueIdentifier>{B44A053A-A005-F5E5-49BD-6D3035573F76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal">
-      <UniqueIdentifier>{8F7E7B58-FB37-E602-8497-00DDF04F9C72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include">
-      <UniqueIdentifier>{02C529EF-6E2A-BD75-F702-5F4E6367B2E4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal">
-      <UniqueIdentifier>{1D95A1B8-0929-9760-72ED-F0145EA0D152}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external">
-      <UniqueIdentifier>{0F54845D-7B11-2D94-04DC-18FC70989FE8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson">
-      <UniqueIdentifier>{887C6E1A-F4F0-0378-BD3A-5187296E8FAB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error">
-      <UniqueIdentifier>{E1595244-4D6F-C09A-D62B-9AFB4240042A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal">
-      <UniqueIdentifier>{D4B7706D-C0E5-DD60-A941-7926950ED6BF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes">
-      <UniqueIdentifier>{579F3276-43F8-A2F9-6CF2-849358AA48F7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\glm">
-      <UniqueIdentifier>{030F6FFC-EF5F-5A3E-18C4-48000474EDA7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\glm\glm">
-      <UniqueIdentifier>{D262B0AB-BE49-72A3-679A-D8C05360EB09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\glm\glm\simd">
-      <UniqueIdentifier>{6E52AC00-DA6C-0FA2-238F-1F368FE836A9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgizmo">
-      <UniqueIdentifier>{DF90AD47-CB77-6F3F-74C8-D55C608EE8A5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgizmo\src">
-      <UniqueIdentifier>{76A6D493-6223-C8D6-8BA0-C8EA777C646A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui">
-      <UniqueIdentifier>{1E8F93D4-0ACB-963E-73DD-AE355F383F59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples">
-      <UniqueIdentifier>{8CBE97A2-F823-2B29-81FC-CC01ED602098}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs">
-      <UniqueIdentifier>{653A4057-51E3-A786-7A79-C3056681C2C7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w">
-      <UniqueIdentifier>{B14E9A19-1D6B-8C0A-E642-F977521EF6CB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL">
-      <UniqueIdentifier>{736E8116-5F43-C9C9-88F2-08C67426D7E0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw">
-      <UniqueIdentifier>{44559A19-B071-8C0A-7949-F977E524F6CB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include">
-      <UniqueIdentifier>{B780BA50-2349-88D4-ECD9-90E65861B80F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW">
-      <UniqueIdentifier>{5646A517-4232-3D87-ABA8-FCD997B3DDB7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\examples\libs\usynergy">
-      <UniqueIdentifier>{3A21E58F-A693-27AC-EF27-5D305BD9F1A4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\misc">
-      <UniqueIdentifier>{B9C4AF83-2554-716E-2E50-52869A5EAC7A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\misc\cpp">
-      <UniqueIdentifier>{0BF320AB-7758-B431-0031-560A6C95A9A0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\misc\freetype">
-      <UniqueIdentifier>{8C23D0DA-78CC-370A-A162-53898D6A524B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\imgui\misc\single_file">
-      <UniqueIdentifier>{296BDDB6-957C-855D-1ECE-179D8ADE0E97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\implot">
-      <UniqueIdentifier>{383D0A67-A4F6-7411-2D56-8FEB990E2B81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog">
-      <UniqueIdentifier>{6C888D7E-D841-F828-61A1-1203CD59AE98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\bench">
-      <UniqueIdentifier>{BB43EE52-275E-51F4-7080-6188DCD978FB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include">
-      <UniqueIdentifier>{DF5BA2F6-4BC1-357D-D499-D75540FE2AEC}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog">
-      <UniqueIdentifier>{373BBC56-23CF-B1FE-8C93-0BB37846ECF0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg">
-      <UniqueIdentifier>{36776084-2221-9693-0BF2-9DAEF73A3682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details">
-      <UniqueIdentifier>{AC725C6D-9832-ED11-0150-D51CED2E0024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt">
-      <UniqueIdentifier>{ED846084-D92E-9693-C2FF-9DAEAE483682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled">
-      <UniqueIdentifier>{DA40A5D6-C616-2CD4-AFC0-46279B355F75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks">
-      <UniqueIdentifier>{EE757E1F-DA4A-C6D2-03FA-05CFEF2DD4E9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan">
-      <UniqueIdentifier>{D4D9EB85-4093-5630-C9F2-700A35AB0CA0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include">
-      <UniqueIdentifier>{47954F2E-B3FA-E2B4-3CD3-848DA837D823}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang">
-      <UniqueIdentifier>{3E7DA726-AA8E-4FCD-33E0-E10C9FF0D806}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include">
-      <UniqueIdentifier>{916A3D32-FD27-E668-86F2-D1D0F2AE58BD}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent">
-      <UniqueIdentifier>{50F31ED5-3CF5-62E5-2578-59DE11195E8A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\Public">
-      <UniqueIdentifier>{AC0EB586-98CE-452B-01EC-2D36EDCA583D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV">
-      <UniqueIdentifier>{E17AD98F-4DED-1BAC-9681-51300233E6A4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\shaderc">
-      <UniqueIdentifier>{30A9C3B7-9CBA-6B5E-250C-FE9D911CF597}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers">
-      <UniqueIdentifier>{5385334C-BFF7-7568-088C-ABEC743D4061}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\spirv-tools">
-      <UniqueIdentifier>{28F1C203-94D8-ADF9-9DC6-AF75092D51BC}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross">
-      <UniqueIdentifier>{13E63277-7FCD-1D6D-88BB-1FE9F421C12F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Libraries\vulkan\include\vulkan">
-      <UniqueIdentifier>{07214C34-F3B4-41DC-5C79-9B90482C7CCE}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\OpenGL">
-      <UniqueIdentifier>{7C8502E7-E847-3671-31F8-C4FD9DF90E4F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Utils">
-      <UniqueIdentifier>{A8749DC1-9499-EC41-BDE4-D1D1A968EB5F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Frostium3D\Vulkan">
-      <UniqueIdentifier>{C8E9B4F7-34AC-E881-7D5C-770EE95DC15F}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Libraries">
       <UniqueIdentifier>{35E2EFDA-A1F8-ED70-EA6F-799256C5BEF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D">
+      <UniqueIdentifier>{744CED53-6007-DDFF-09BF-554AF5582790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Common">
+      <UniqueIdentifier>{2C4FA566-9808-1011-2168-2AEB8D20C680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\ImGUI">
+      <UniqueIdentifier>{5E442270-4A80-25DA-B392-3DD19FEDCDF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries">
+      <UniqueIdentifier>{E0E0B396-CC32-8B86-B551-C896A142A46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal">
+      <UniqueIdentifier>{3BEB7513-A75B-788C-707A-F214DCA9B08D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include">
+      <UniqueIdentifier>{AE1D6CC7-1A3A-5EB8-E311-CB254FEDC779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal">
+      <UniqueIdentifier>{49F40BD0-355F-CCDB-DE7A-3141CAC48FBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external">
+      <UniqueIdentifier>{BB84DA09-27F9-6F67-F042-BD765C76FB9A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson">
+      <UniqueIdentifier>{34748AA6-A05F-9D07-A938-A48015A39A45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error">
+      <UniqueIdentifier>{8D626C61-F92E-55F7-C2EA-266F2E7656AB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal">
+      <UniqueIdentifier>{00110CB1-EC95-0CCE-15A9-36E7018D79B5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes">
+      <UniqueIdentifier>{83F3080E-6F63-3E6D-D8E4-3979C473C5E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\glm">
+      <UniqueIdentifier>{2FDB949D-1B43-5B6B-84AE-6F8170357257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\glm\glm">
+      <UniqueIdentifier>{FE64F8C5-EAE2-485F-D3DA-06F7BFF78A87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd">
+      <UniqueIdentifier>{1A90E8D8-86A1-907F-0FF3-22BF7B031AB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgizmo">
+      <UniqueIdentifier>{0B93F561-F710-46FB-E008-0493CC258823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgizmo\src">
+      <UniqueIdentifier>{A2DE69B9-8E72-5F61-F736-B915E3E99953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui">
+      <UniqueIdentifier>{4A165D56-3629-5DAF-DF12-3A9CCB04FAFC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples">
+      <UniqueIdentifier>{3817DA7A-A433-CC6B-6D0B-39D9D9E6352D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs">
+      <UniqueIdentifier>{91DEF07F-7D9E-8124-E6BB-692FD29A9436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\gl3w">
+      <UniqueIdentifier>{5D6EF424-C901-56D3-D2E8-C5893EFBEC9A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL">
+      <UniqueIdentifier>{9F7EF9AC-8B6A-911C-F4E0-506FE0EB314D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw">
+      <UniqueIdentifier>{F074F424-5C08-56D3-65EF-C589D101ED9A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw\include">
+      <UniqueIdentifier>{638C5F6B-CFCB-2384-D8AB-EA9B446A83C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW">
+      <UniqueIdentifier>{827D60DB-6E40-91FF-178E-A27B03304F77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\usynergy">
+      <UniqueIdentifier>{E6365FF5-52A0-F457-DBE3-A202474CA59C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\misc">
+      <UniqueIdentifier>{65A728DA-D16D-85F6-1AC9-135986CEF35A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\misc\cpp">
+      <UniqueIdentifier>{B74B6383-2368-5574-EC3F-C2E1581BBF35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\misc\freetype">
+      <UniqueIdentifier>{B8C78003-A487-11A8-0DA5-F9B2F98324BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\imgui\misc\single_file">
+      <UniqueIdentifier>{D5AF93BB-4178-613F-0A09-6A517690917A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\implot">
+      <UniqueIdentifier>{E4A90422-501A-079B-1939-812385683F9C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog">
+      <UniqueIdentifier>{18F58739-8465-8AB2-4D84-043BB9B3C2B3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\bench">
+      <UniqueIdentifier>{67812A2B-D392-D2D1-5CE4-6411C8F45B0B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include">
+      <UniqueIdentifier>{8BB4E4CE-F7D0-D6BF-C0A8-432D2C844081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog">
+      <UniqueIdentifier>{639A266E-4F05-E779-F820-4CDFE46AAA5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg">
+      <UniqueIdentifier>{628CFEFA-4E8D-9275-7755-FFF963B50830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details">
+      <UniqueIdentifier>{D83D1982-C4D4-5B37-6D89-D23759FF2112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt">
+      <UniqueIdentifier>{199AFEFA-059B-9275-2E63-FFF91AC30830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled">
+      <UniqueIdentifier>{06C2EB45-F2EE-3777-1BD0-DA87075C8B47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks">
+      <UniqueIdentifier>{1A86F6B5-0672-8E25-6FE8-4D785BF32E56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan">
+      <UniqueIdentifier>{8046E640-ECB6-E8B9-B5D5-6242210521BB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include">
+      <UniqueIdentifier>{F3ED9106-5F0A-84F7-28E2-F06494BDEDB8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang">
+      <UniqueIdentifier>{EAC15D2B-568A-2BAF-1F1B-34C18BA25BEA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include">
+      <UniqueIdentifier>{3D9B93DE-A90F-293C-7259-764BDE8CB46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent">
+      <UniqueIdentifier>{7CE0B9E4-6839-2A68-9133-0C027DEBCF65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Public">
+      <UniqueIdentifier>{D8D9719B-C470-B450-6D25-2B51599B7A2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV">
+      <UniqueIdentifier>{8D9053F5-F9F9-E857-823D-9702EEA5999C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc">
+      <UniqueIdentifier>{DCED79BC-48B6-4740-1147-50527DCE777B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-headers">
+      <UniqueIdentifier>{FF9AADB1-6B04-4314-F447-F1BE60B0F358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-tools">
+      <UniqueIdentifier>{D4AB234E-40CA-371B-8997-3D2DF5F47224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross">
+      <UniqueIdentifier>{BFA093C1-2BBF-A78E-748C-ADA0E0E9E297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan">
+      <UniqueIdentifier>{3380B64B-1FEB-7657-C806-DCBCB4503A3A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\OpenGL">
+      <UniqueIdentifier>{28EBB082-94A4-1B2D-1D04-360789BCD19C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Utils">
+      <UniqueIdentifier>{D4D4FF70-C010-03DB-2923-1BD2157EABF5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Vulkan">
+      <UniqueIdentifier>{744F6393-E008-CE3D-6968-E817D52084AD}</UniqueIdentifier>
     </Filter>
     <Filter Include="include\Libraries\box_2D">
       <UniqueIdentifier>{E271456E-CE96-94EE-F7E1-797EE365930C}</UniqueIdentifier>
@@ -213,6 +213,24 @@
     </Filter>
     <Filter Include="include\Libraries\fmod\include">
       <UniqueIdentifier>{7D691CF6-698F-E65C-52D5-6B283E9A0B29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\yaml-cpp">
+      <UniqueIdentifier>{8794E400-73A4-90D1-DC5D-F5EFC88C7F6A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\yaml-cpp\include">
+      <UniqueIdentifier>{FA5265FE-E68E-6868-4FA1-805F3BFC1083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\yaml-cpp\include\yaml-cpp">
+      <UniqueIdentifier>{ECB29993-5818-2D1A-E1F0-CEF24D552289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\yaml-cpp\include\yaml-cpp\contrib">
+      <UniqueIdentifier>{EC26B435-5838-5CDC-E189-EE1B4D9AE515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\yaml-cpp\include\yaml-cpp\node">
+      <UniqueIdentifier>{411D8B1B-2DC6-F24A-565C-0ECA42640D8C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail">
+      <UniqueIdentifier>{E38199D5-4F69-84CB-5857-8647C4BD278E}</UniqueIdentifier>
     </Filter>
     <Filter Include="include\Networking">
       <UniqueIdentifier>{00113DAD-ECF4-FD02-5555-F8554158E884}</UniqueIdentifier>
@@ -393,878 +411,878 @@
     <ClInclude Include="include\ECS\WorldAdmin.h">
       <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\BufferElement.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\BufferElement.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\BufferLayout.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\BufferLayout.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Camera.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Camera.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Common.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Common.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Core.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Core.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\CubeTexture.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\CubeTexture.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Events.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Events.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Flags.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Flags.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Framebuffer.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Framebuffer.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\FramebufferSpecification.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\FramebufferSpecification.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\GraphicsPipelineInfos.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\GraphicsPipelineInfos.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\IndexBuffer.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\IndexBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Input.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Input.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\InputCodes.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\InputCodes.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Material.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Material.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Mesh.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Mesh.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\RendererShared.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\RendererShared.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\SLog.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\SLog.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Shader.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Shader.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\SubTexture.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\SubTexture.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Text.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Text.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Texture.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Texture.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Time.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Time.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\VertexArray.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\VertexArray.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\VertexBuffer.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\VertexBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Common\Window.h">
-      <Filter>include\Frostium3D\Common</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Window.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\EditorCamera.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\GraphicsContext.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\GraphicsContext.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\GraphicsPipeline.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\GraphicsPipeline.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiContext.h">
-      <Filter>include\Frostium3D\ImGUI</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiContext.h">
+      <Filter>include\Libraries\Frostium3D\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiExtension.h">
-      <Filter>include\Frostium3D\ImGUI</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiExtension.h">
+      <Filter>include\Libraries\Frostium3D\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\ImGUI\ImGuiVulkanImpl.h">
-      <Filter>include\Frostium3D\ImGUI</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiVulkanImpl.h">
+      <Filter>include\Libraries\Frostium3D\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\allocators.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\allocators.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\cursorstreamwrapper.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\cursorstreamwrapper.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\document.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\document.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodedstream.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodedstream.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodings.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\encodings.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\en.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\en.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\error.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error\error.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\error</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filereadstream.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filereadstream.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filewritestream.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\filewritestream.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\fwd.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\fwd.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\biginteger.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\biginteger.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\diyfp.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\diyfp.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\dtoa.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\dtoa.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\ieee754.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\ieee754.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\itoa.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\itoa.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\meta.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\meta.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\pow10.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\pow10.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\regex.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\regex.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\stack.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\stack.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strfunc.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strfunc.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strtod.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\strtod.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\swap.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal\swap.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\istreamwrapper.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\istreamwrapper.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorybuffer.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorybuffer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorystream.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\memorystream.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\inttypes.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\inttypes.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\stdint.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes\stdint.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\ostreamwrapper.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\ostreamwrapper.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\pointer.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\pointer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\prettywriter.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\prettywriter.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\rapidjson.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\rapidjson.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\reader.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\reader.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\schema.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\schema.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stream.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stream.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stringbuffer.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\stringbuffer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\writer.h">
-      <Filter>include\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\writer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\common.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\common.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\exponential.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\exponential.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\geometric.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\geometric.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\integer.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\integer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\matrix.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\matrix.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\neon.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\neon.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\packing.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\packing.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\platform.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\platform.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\trigonometric.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\trigonometric.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\glm\glm\simd\vector_relational.h">
-      <Filter>include\Frostium3D\Libraries\glm\glm\simd</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\glm\glm\simd\vector_relational.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\glm\glm\simd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImCurveEdit.h">
-      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgizmo\src\ImCurveEdit.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImGradient.h">
-      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgizmo\src\ImGradient.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImGuizmo.h">
-      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgizmo\src\ImGuizmo.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgizmo\src\ImSequencer.h">
-      <Filter>include\Frostium3D\Libraries\imgizmo\src</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgizmo\src\ImSequencer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgizmo\src</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_allegro5.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_allegro5.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx10.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_dx10.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx11.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_dx11.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx12.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_dx12.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_dx9.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_dx9.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_glfw.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_glfw.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_glut.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_glut.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_marmalade.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_marmalade.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_metal.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_metal.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl2.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl2.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl3.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_opengl3.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_osx.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_osx.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_sdl.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_sdl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_vulkan.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_vulkan.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\imgui_impl_win32.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\imgui_impl_win32.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\gl3w.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\gl3w.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\glcorearb.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL\glcorearb.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples\libs\gl3w\GL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3native.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW\glfw3native.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples\libs\glfw\include\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\examples\libs\usynergy\uSynergy.h">
-      <Filter>include\Frostium3D\Libraries\imgui\examples\libs\usynergy</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\examples\libs\usynergy\uSynergy.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\examples\libs\usynergy</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\imconfig.h">
-      <Filter>include\Frostium3D\Libraries\imgui</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\imconfig.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\imgui.h">
-      <Filter>include\Frostium3D\Libraries\imgui</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\imgui.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\imgui_internal.h">
-      <Filter>include\Frostium3D\Libraries\imgui</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\imgui_internal.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_rectpack.h">
-      <Filter>include\Frostium3D\Libraries\imgui</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\imstb_rectpack.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_textedit.h">
-      <Filter>include\Frostium3D\Libraries\imgui</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\imstb_textedit.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\imstb_truetype.h">
-      <Filter>include\Frostium3D\Libraries\imgui</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\imstb_truetype.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\cpp\imgui_stdlib.h">
-      <Filter>include\Frostium3D\Libraries\imgui\misc\cpp</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\misc\cpp</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\freetype\imgui_freetype.h">
-      <Filter>include\Frostium3D\Libraries\imgui\misc\freetype</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\misc\freetype\imgui_freetype.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\misc\freetype</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\imgui\misc\single_file\imgui_single_file.h">
-      <Filter>include\Frostium3D\Libraries\imgui\misc\single_file</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\imgui\misc\single_file\imgui_single_file.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\imgui\misc\single_file</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\implot\implot.h">
-      <Filter>include\Frostium3D\Libraries\implot</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\implot\implot.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\implot</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\implot\implot_internal.h">
-      <Filter>include\Frostium3D\Libraries\implot</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\implot\implot_internal.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\implot</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\bench\utils.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\bench</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\bench\utils.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\bench</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\async.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async_logger-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\async_logger-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\async_logger.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\async_logger.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\argv.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg\argv.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\env.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg\env.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg\helpers.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\cfg\log_levels.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg\log_levels.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\cfg</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\common-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\common-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\common.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\common.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\backtracer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\circular_q.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\circular_q.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\console_globals.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\console_globals.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\file_helper.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\fmt_helper.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\fmt_helper.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\log_msg_buffer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\mpmc_blocking_q.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\mpmc_blocking_q.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\null_mutex.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\null_mutex.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\os-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\os-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\os.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\os.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\periodic_worker.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\registry-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\registry-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\registry.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\registry.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\synchronous_factory.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\synchronous_factory.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client-windows.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client-windows.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\tcp_client.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\thread_pool.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\details\windows_include.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details\windows_include.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bin_to_hex.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bin_to_hex.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\chrono.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\chrono.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\color.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\color.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\compile.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\compile.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\core.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\core.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\format.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\locale.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\locale.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ostream.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ostream.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\posix.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\posix.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\printf.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\printf.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ranges.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled\ranges.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\bundled</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\fmt.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\fmt.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fmt\ostr.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt\ostr.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\formatter.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\formatter.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\fwd.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\fwd.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\logger-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\logger-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\logger.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\logger.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\pattern_formatter.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\android_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\android_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ansicolor_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\base_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\basic_file_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\daily_file_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\daily_file_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dist_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dist_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dup_filter_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\dup_filter_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\msvc_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\msvc_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\null_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\null_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ostream_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ostream_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ringbuffer_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\ringbuffer_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\rotating_file_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_color_sinks.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\stdout_sinks.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\syslog_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\syslog_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\systemd_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\systemd_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\tcp_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\tcp_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\win_eventlog_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\win_eventlog_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks\wincolor_sink.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\spdlog-inl.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\spdlog-inl.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\spdlog.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\spdlog.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\tweakme.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\tweakme.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\spdlog\include\spdlog\version.h">
-      <Filter>include\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\version.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\Common.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\Common.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\ConstantUnion.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\ConstantUnion.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\PoolAlloc.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\PoolAlloc.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\ResourceLimits.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\ResourceLimits.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\Types.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\Types.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\arrays.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\arrays.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Include\intermediate.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\intermediate.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\Versions.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\Versions.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\localintermediate.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent\localintermediate.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\MachineIndependent</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\Public\ShaderLang.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\Public</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Public\ShaderLang.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Public</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\GlslangToSpv.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\GlslangToSpv.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\Logger.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\Logger.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SPVRemapper.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SPVRemapper.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SpvTools.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\SpvTools.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\spvIR.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV\spvIR.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\SPIRV</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\env.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc\env.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\shaderc.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc\shaderc.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\status.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc\status.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\shaderc\visibility.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc\visibility.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\shaderc</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers\GLSL.std.450.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv-headers</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-headers\GLSL.std.450.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-headers</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-headers\spirv.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv-headers</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-headers\spirv.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-headers</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv-tools\libspirv.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv-tools</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-tools\libspirv.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\spirv-tools</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\GLSL.std.450.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross\GLSL.std.450.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv_cross_c.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross\spirv_cross_c.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\spirv_cross</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_icd.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vk_icd.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_layer.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vk_layer.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_platform.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vk_platform.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vk_sdk_platform.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vk_sdk_platform.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_android.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_android.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_beta.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_beta.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_core.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_core.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_directfb.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_directfb.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_fuchsia.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_fuchsia.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ggp.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ggp.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ios.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_ios.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_macos.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_macos.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_metal.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_metal.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_vi.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_vi.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_wayland.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_wayland.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_win32.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_win32.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xcb.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xcb.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib_xrandr.h">
-      <Filter>include\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan\vulkan_xlib_xrandr.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\MaterialLibrary.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\MaterialLibrary.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglBuffer.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglBuffer.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglContext.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglContext.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglFramebuffer.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglFramebuffer.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglRendererAPI.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglRendererAPI.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglShader.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglShader.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglTexture.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglTexture.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\OpenGL\OpenglVertexArray.h">
-      <Filter>include\Frostium3D\OpenGL</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglVertexArray.h">
+      <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\RayTracer.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\RayTracer.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\RaytracingPipeline.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\RaytracingPipeline.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Renderer.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Renderer.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Renderer2D.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Renderer2D.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\RendererDebug.h">
-      <Filter>include\Frostium3D</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\RendererDebug.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Utils\Frustum.h">
-      <Filter>include\Frostium3D\Utils</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Utils\Frustum.h">
+      <Filter>include\Libraries\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Utils\GLM.h">
-      <Filter>include\Frostium3D\Utils</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Utils\GLM.h">
+      <Filter>include\Libraries\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Utils\SSAOGenerator.h">
-      <Filter>include\Frostium3D\Utils</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Utils\SSAOGenerator.h">
+      <Filter>include\Libraries\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Utils\Utils.h">
-      <Filter>include\Frostium3D\Utils</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Utils\Utils.h">
+      <Filter>include\Libraries\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Utils\glTFImporter.h">
-      <Filter>include\Frostium3D\Utils</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Utils\glTFImporter.h">
+      <Filter>include\Libraries\Frostium3D\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\Vulkan.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\Vulkan.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanAccelerationStructure.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanAccelerationStructure.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanBuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanBufferPool.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanBufferPool.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanCommandBuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanCommandBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanCommandPool.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanCommandPool.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanContext.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanContext.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanDescriptor.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanDescriptor.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanDevice.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanDevice.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanFramebuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanFramebuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanIndexBuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanIndexBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanInstance.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanInstance.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanMemoryAllocator.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanMemoryAllocator.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanPBR.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanPBR.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanPipeline.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanPipeline.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanRaytracingPipeline.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanRaytracingPipeline.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanRenderPass.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanRenderPass.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanScratchBuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanScratchBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanSemaphore.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanSemaphore.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanShader.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanShader.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanShaderResources.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanShaderResources.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanStagingBuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanStagingBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanSwapchain.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanSwapchain.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanTexture.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanTexture.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanUtils.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanUtils.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\Frostium3D\Vulkan\VulkanVertexBuffer.h">
-      <Filter>include\Frostium3D\Vulkan</Filter>
+    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanVertexBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\box_2D\include\box2d\b2_block_allocator.h">
       <Filter>include\Libraries\box_2D\include\box2d</Filter>
@@ -1415,6 +1433,117 @@
     </ClInclude>
     <ClInclude Include="include\Libraries\fmod\include\fmod_studio_common.h">
       <Filter>include\Libraries\fmod\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\anchor.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\binary.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\contrib\anchordict.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\contrib\graphbuilder.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\depthguard.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\dll.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\emitfromevents.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\emitter.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\emitterdef.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\emittermanip.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\emitterstyle.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\eventhandler.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\exceptions.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\mark.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\convert.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\impl.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\iterator.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\iterator_fwd.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\memory.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\node.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\node_data.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\node_iterator.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\detail\node_ref.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\emit.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\impl.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\iterator.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\node.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\parse.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\ptr.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\node\type.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\noexcept.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\null.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\ostream_wrapper.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\parser.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\stlemitter.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\traits.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\yaml-cpp\include\yaml-cpp\yaml.h">
+      <Filter>include\Libraries\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
     <ClInclude Include="include\Networking\NetworkManager.h">
       <Filter>include\Networking</Filter>

@@ -35,6 +35,5 @@ namespace SmolEngine
 		{
 			archive(SceneID, FilePath, Name, AssetMap, Actors, MaterialPaths);
 		}
-
 	};
 }

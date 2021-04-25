@@ -50,7 +50,6 @@ namespace SmolEngine
 		m_Console = new EditorConsole();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene.s_scene"));
-
 	}
 
 	void EditorLayer::OnDetach()
