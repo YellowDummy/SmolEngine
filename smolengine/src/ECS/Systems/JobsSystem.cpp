@@ -6,13 +6,13 @@ namespace SmolEngine
 	void JobsSystem::Complete(bool wait)
 	{
 		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
-		instance->Executor->run(*instance->Taskflow).wait();
+		instance->Executor.run(instance->Taskflow).wait();
 	}
 
 	void JobsSystem::Clear()
 	{
 		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
-		instance->Taskflow->clear();
+		instance->Taskflow.clear();
 	}
 
 	void JobsSystem::BeginSubmition()

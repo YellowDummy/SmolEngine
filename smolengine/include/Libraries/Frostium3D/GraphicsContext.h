@@ -8,6 +8,7 @@
 #include "Vulkan/VulkanContext.h"
 #endif
 
+#include "Common/RendererShared.h"
 #include "Common/Core.h"
 #include "Common/Window.h"
 #include "Common/Framebuffer.h"
@@ -26,16 +27,10 @@ namespace Frostium
 	struct WindowCreateInfo;
 	struct WindowData;
 	struct GraphicsContextState;
+	struct Renderer2DStorage;
+	struct RendererStorage;
 	class Framebuffer;
 	class MaterialLibrary;
-
-	enum class ShadowMapSize : uint16_t
-	{
-		SIZE_2,
-		SIZE_4,
-		SIZE_8,
-		SIZE_16
-	};
 
 	struct GraphicsContextInitInfo
 	{
@@ -45,12 +40,15 @@ namespace Frostium
 		ShadowMapSize            eShadowMapSize = ShadowMapSize::SIZE_8;
 		Camera*                  pDefaultCamera = nullptr;
 		WindowCreateInfo*        pWindowCI = nullptr;
+		Renderer2DStorage*       pRenderer2DStorage = nullptr;
+		RendererStorage*         pRendererStorage = nullptr;
 		std::string              ResourcesFolderPath = "../resources/";
 	};
 
 	class GraphicsContext
 	{
 	public:
+		GraphicsContext() = default;
 		GraphicsContext(GraphicsContextInitInfo* info);
 		~GraphicsContext();
 
@@ -84,6 +82,8 @@ namespace Frostium
 		void OnResize(uint32_t* width, uint32_t* height);
 	private:
 		void OnEvent(Event& event);
+		bool InitRenderer2DStorage(Renderer2DStorage* storage);
+		bool InitRendererStorage(RendererStorage* storage, ShadowMapSize shadow_map_size);
 	private:
 		static GraphicsContext*         s_Instance;
 		MSAASamples                     m_MSAASamples;
@@ -92,6 +92,8 @@ namespace Frostium
 		Camera*                         m_DefaultCamera = nullptr;
 		MaterialLibrary*                m_MaterialLibrary = nullptr;
 		GraphicsContextState*           m_State = nullptr;
+		Renderer2DStorage*              m_Renderer2DStorage = nullptr;
+		RendererStorage*                m_RendererStorage = nullptr;
 		float                           m_LastFrameTime = 1.0f;
 #ifdef  FROSTIUM_OPENGL_IMPL
 		OpenglContext                   m_OpenglContext = {};
@@ -104,7 +106,6 @@ namespace Frostium
 		Window                          m_Window = {};
 		ImGuiContext                    m_ImGuiContext = {};
 		EventSender                     m_EventHandler = {};
-
 		std::string                     m_ResourcesFolderPath = "";
 		std::function<void(Event&)>     m_EventCallback;
 

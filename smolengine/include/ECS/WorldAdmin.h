@@ -80,9 +80,10 @@ namespace SmolEngine
 
 	private:
 
-		inline static WorldAdmin*            s_World = nullptr;
-		WorldAdminStateSComponent*           m_State = nullptr;
-		entt::registry                       m_GlobalRegistry;
+		inline static WorldAdmin*    s_World = nullptr;
+		WorldAdminStateSComponent*   m_State = nullptr;
+		entt::registry               m_GlobalRegistry{};
+		entt::entity                 m_GlobalEntity{};
 
 	private:
 

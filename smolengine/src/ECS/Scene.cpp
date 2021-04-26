@@ -21,7 +21,6 @@ namespace SmolEngine
 
 	void Scene::Free()
 	{
-		m_SceneData.m_Registry.clear();
 		m_State = nullptr;
 		m_SceneData.Free();
 	}

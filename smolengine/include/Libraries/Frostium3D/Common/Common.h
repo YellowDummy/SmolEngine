@@ -12,6 +12,8 @@ namespace Frostium
 			:UseEditorCamera(cam), UseImGUI(imgui), UseSwapchain(swapchain) {}
 
 		bool           WindowMinimized = false;
+		bool           Is2DStoragePreAlloc = false;
+		bool           IsStoragePreAlloc = false;
 		const bool     UseImGUI = false;
 		const bool     UseEditorCamera = false;
 		const bool     UseSwapchain = true;

@@ -12,9 +12,4 @@ namespace SmolEngine
 	{
 		s_Instance = nullptr;
 	}
-
-	WorldAdminStateSComponent::WorldAdminStateSComponent(const WorldAdminStateSComponent& another)
-	{
-		// dummy
-	}
 }

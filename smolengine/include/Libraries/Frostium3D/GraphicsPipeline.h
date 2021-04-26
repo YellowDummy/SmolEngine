@@ -9,15 +9,15 @@
 #include "Common/VertexArray.h"
 #include "Common/VertexBuffer.h"
 #include "Common/IndexBuffer.h"
-#include "Common/Texture.h"
 #include "Common/Common.h"
-#include "Common/Shader.h"
 
 namespace Frostium
 {
 	class Framebuffer;
 	class CubeTexture;
 	class Mesh;
+	class Shader;
+	class Texture;
 
 	class GraphicsPipeline
 	{

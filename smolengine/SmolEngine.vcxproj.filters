@@ -145,6 +145,15 @@
     <Filter Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\sinks">
       <UniqueIdentifier>{1A86F6B5-0672-8E25-6FE8-4D785BF32E56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spir_v_cross">
+      <UniqueIdentifier>{4B1CE728-B72D-8FCF-407F-210FAC8F1809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include">
+      <UniqueIdentifier>{BE5E45D7-2A1C-EE0D-B3E6-D9751FA36062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross">
+      <UniqueIdentifier>{0A9A4BBB-76D9-0FD4-7FB9-D6EBEB776F18}</UniqueIdentifier>
+    </Filter>
     <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan">
       <UniqueIdentifier>{8046E640-ECB6-E8B9-B5D5-6242210521BB}</UniqueIdentifier>
     </Filter>
@@ -459,7 +468,13 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\Mesh.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Renderer2DStorage.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
+    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\RendererShared.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\RendererStorage.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\SLog.h">
@@ -1013,6 +1028,9 @@
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\version.h">
       <Filter>include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross\external_interface.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h">
       <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>
@@ -1605,6 +1623,9 @@
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Components\Singletons\GraphicsEngineSComponent.cpp">
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp">

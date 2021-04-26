@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Core/Engine.h"
 
+#include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
+
 namespace SmolEngine 
 {
 	Engine* Engine::s_Instance = nullptr;
@@ -47,10 +49,17 @@ namespace SmolEngine
 		Physics2DContextCreateInfo physicsContextCI = {};
 
 		// User Side
+		// Graphics Context
 		SetGraphicsContext(&graphicsContextCI);
+		GraphicsEngineSComponent* graphicsEngine = GraphicsEngineSComponent::Get();
+		graphicsContextCI.pRendererStorage = &graphicsEngine->Strorage;
+		graphicsContextCI.pRenderer2DStorage = &graphicsEngine->Storage2D;
 		m_GraphicsContext = new Frostium::GraphicsContext(&graphicsContextCI);
+		// 2D Physics
 		SetPhysics2DContext(&physicsContextCI);
+		// Layers
 		SetLayers(m_LayerHandler);
+		// Scripts
 		SetScripts(m_ScriptingSystem);
 
 		m_GraphicsContext->SetEventCallback(std::bind(&Engine::OnEvent, this, std::placeholders::_1));
@@ -68,9 +77,7 @@ namespace SmolEngine
 			m_Running = false;
 			WorldAdmin::GetSingleton()->ShutDown();
 			m_GraphicsContext->ShutDown();
-
-			delete m_World, m_LayerHandler, m_GraphicsContext, m_ScriptingSystem;
-
+			exit(0);
 		}
 	}
 
@@ -113,7 +120,6 @@ namespace SmolEngine
 	void Engine::OnWindowClose(Frostium::Event& e)
 	{
 		Shutdown();
-		exit(0);
 	}
 
 	void Engine::SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback)

@@ -11,6 +11,9 @@ namespace SmolEngine
 		ScriptingSystemStateSComponent();
 		~ScriptingSystemStateSComponent();
 
+		// Getters
+		static ScriptingSystemStateSComponent* GetSingleton();
+
 		struct MetaData
 		{
 			meta::any  ClassInstance;
@@ -24,11 +27,10 @@ namespace SmolEngine
 			meta::func OnDebugDrawFunc;
 		};
 
-		inline static ScriptingSystemStateSComponent*  Instance = nullptr;
 		std::hash<std::string_view>                    Hash{};
 		std::unordered_map<std::string, MetaData>      MetaMap;
 
-		// Getters
-		static ScriptingSystemStateSComponent* GetSingleton();
+	private:
+		inline static ScriptingSystemStateSComponent* Instance = nullptr;
 	};
 }

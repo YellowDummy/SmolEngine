@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -79,7 +79,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -160,7 +160,9 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\InputCodes.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Material.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Mesh.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Renderer2DStorage.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\RendererShared.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Common\RendererStorage.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\SLog.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Shader.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\SubTexture.h" />
@@ -345,6 +347,7 @@
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\spdlog.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\tweakme.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\version.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross\external_interface.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\Common.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\ConstantUnion.h" />
@@ -544,6 +547,7 @@
     <ClCompile Include="src\ECS\Actor.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\GraphicsEngineSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />

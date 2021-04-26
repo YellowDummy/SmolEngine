@@ -8,12 +8,14 @@
 #include "ECS/Systems/CameraSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
+
 #include "ECS/Components/Singletons/AudioEngineSComponent.h"
 #include "ECS/Components/Singletons/Box2DWorldSComponent.h"
 #include "ECS/Components/Singletons/ProjectConfigSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
+#include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 
 #include <Frostium3D/Renderer.h>
 #include <Frostium3D/Renderer2D.h>
@@ -205,9 +207,8 @@ namespace SmolEngine
 			m_State->m_ActiveSceneID = 0;
 		}
 
-		Scene* current_scene = m_State->m_Scenes[m_State->m_ActiveSceneID];
-		if (current_scene)
-			delete current_scene;
+		Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
+		current_scene->Free();
 
 		CreateScene(path);
 		if (GetActiveScene()->Load(path))
@@ -304,11 +305,9 @@ namespace SmolEngine
 
 	bool WorldAdmin::CreateScene(const std::string& filePath)
 	{
-		Scene* scene = new Scene();
-		scene->Create(filePath);
-
 		m_State->m_ActiveSceneID++;
-		m_State->m_Scenes[m_State->m_ActiveSceneID] = scene;
+		Scene* scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
+		scene->Create(filePath);
 		m_State->m_CurrentRegistry = &scene->m_SceneData.m_Registry;
 		ReloadAssets();
 
@@ -318,7 +317,7 @@ namespace SmolEngine
 	Scene* WorldAdmin::GetActiveScene()
 	{
 		assert(m_State->m_ActiveSceneID > 0);
-		return m_State->m_Scenes[m_State->m_ActiveSceneID];
+		return &m_State->m_Scenes[m_State->m_ActiveSceneID];
 	}
 
 	void WorldAdmin::Reload2DTextures(entt::registry& registry, const std::unordered_map<std::string, std::string>& assetMap)
@@ -403,16 +402,17 @@ namespace SmolEngine
 
 	bool WorldAdmin::LoadStaticComponents()
 	{
-		auto id = m_GlobalRegistry.create();
+		m_GlobalEntity = m_GlobalRegistry.create();
 
 		// Engines
-		m_GlobalRegistry.emplace<AudioEngineSComponent>(id);
-		m_GlobalRegistry.emplace<Box2DWorldSComponent>(id);
+		m_GlobalRegistry.emplace<AudioEngineSComponent>(m_GlobalEntity);
+		m_GlobalRegistry.emplace<Box2DWorldSComponent>(m_GlobalEntity);
+		m_GlobalRegistry.emplace<GraphicsEngineSComponent>(m_GlobalEntity);
 		// System States
-		m_State = &m_GlobalRegistry.emplace<WorldAdminStateSComponent>(id);
-		m_GlobalRegistry.emplace<ProjectConfigSComponent>(id);
-		m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(id);
-		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(id);
+		m_State = &m_GlobalRegistry.emplace<WorldAdminStateSComponent>(m_GlobalEntity);
+		m_GlobalRegistry.emplace<ProjectConfigSComponent>(m_GlobalEntity);
+		m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(m_GlobalEntity);
+		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(m_GlobalEntity);
 
 		return true;
 	}

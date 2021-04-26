@@ -3,13 +3,14 @@
 
 namespace Frostium
 {
+	struct Renderer2DStorage;
 	class GraphicsPipeline;
 	class Text;
 	class Renderer2D
 	{
 	public:
 
-		static void Init();
+		static void Init(Renderer2DStorage* storage);
 		static void Shutdown();
 		static void BeginScene(const ClearInfo* clearInfo, const BeginSceneInfo* info = nullptr);
 		static void EndScene();
@@ -32,15 +33,6 @@ namespace Frostium
 		static void CreatePipelines();
 		static void CreateFramebuffers();
 		static void Prepare();
-
-	public:
-
-#ifdef FROSTIUM_OPENGL_IMPL
-		static const uint32_t MaxTextureSlot = 32;
-#else
-		static const uint32_t MaxTextureSlot = 4096;
-#endif
-
 	private:
 
 		inline static Renderer2DStats* Stats = nullptr;

@@ -10,14 +10,20 @@ namespace SmolEngine
 	{
 		JobsSystemStateSComponent();
 		~JobsSystemStateSComponent();
+		// Dummy c-tors - required by EnTT
+		JobsSystemStateSComponent(JobsSystemStateSComponent& another) {}
+		JobsSystemStateSComponent(JobsSystemStateSComponent&& other) {}
+		JobsSystemStateSComponent& operator=(JobsSystemStateSComponent other) { return *this; }
 
 		// Getetrs
 		static JobsSystemStateSComponent* GetSingleton();
 
 		// Data
-		bool                                       bBeginSubmition = false;
-		inline static JobsSystemStateSComponent*   Instance = nullptr;			      	                                               
-		tf::Taskflow*                              Taskflow = nullptr;
-		tf::Executor*                              Executor = nullptr;
+		bool                                       bBeginSubmition = false;	      	                                               
+		tf::Taskflow                               Taskflow;
+		tf::Executor                               Executor;
+
+	private:
+		inline static JobsSystemStateSComponent* Instance = nullptr;
 	};
 }

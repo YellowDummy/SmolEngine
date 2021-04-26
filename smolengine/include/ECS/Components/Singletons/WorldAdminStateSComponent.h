@@ -17,7 +17,10 @@ namespace SmolEngine
 	{
 		WorldAdminStateSComponent();
 		~WorldAdminStateSComponent();
-		WorldAdminStateSComponent(const WorldAdminStateSComponent& another);
+		// Dummy c-tors - required by EnTT
+		WorldAdminStateSComponent(WorldAdminStateSComponent& another) {}
+		WorldAdminStateSComponent(WorldAdminStateSComponent&& other) {}
+		WorldAdminStateSComponent& operator=(WorldAdminStateSComponent other) { return *this; }
 
 		static WorldAdminStateSComponent* GetSingleton() { return s_Instance; }
 														    
@@ -25,7 +28,7 @@ namespace SmolEngine
 		bool                                                  m_InPlayMode = false;
 		entt::registry*                                       m_CurrentRegistry = nullptr;
 		uint32_t                                              m_ActiveSceneID = 0;
-		Scene*                                                m_Scenes[maxScenes];
+		Scene                                                 m_Scenes[maxScenes];
 		std::hash<std::string_view>                           m_Hash{};
 		std::unordered_map<uint32_t, Ref<Frostium::Mesh>>     m_MeshMap;
 		std::unordered_map<uint32_t, Ref<Frostium::Texture>>  m_TexturesMap;
