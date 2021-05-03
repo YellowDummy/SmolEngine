@@ -76,7 +76,7 @@ namespace SmolEngine
 		bool ChangeActorName(Actor* actor, const std::string& name);
 
 		bool LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset = true);
-		bool SetMeshMaterial(MeshComponent* component, Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path);
+		bool SetMeshMaterial(MeshComponent* component, const Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path);
 
 	private:
 

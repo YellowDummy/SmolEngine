@@ -1,4 +1,4 @@
-#version 450
+#version 460
 #define ambient 0.1
 
 // In
@@ -66,17 +66,17 @@ struct PointLightBuffer
 	vec4 params;
 };
 
-layout(std140, binding = 28) readonly buffer DirectionalLightStorage
+layout(std140, binding = 30) readonly buffer DirectionalLightStorage
 {   
 	DirectionalLightBuffer directionalLights[];
 };
 
-layout(std140, binding = 29) readonly buffer PointLightStorage
+layout(std140, binding = 31) readonly buffer PointLightStorage
 {   
 	PointLightBuffer pointLights[];
 };
 
-layout(std140, binding = 30) uniform AmbientLightingStorage
+layout(std140, binding = 32) uniform AmbientLightingStorage
 {   
 	AmbientLightingBuffer ambientLightingData;
 };

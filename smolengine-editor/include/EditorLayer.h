@@ -83,7 +83,7 @@ namespace SmolEngine
 			if (m_World->GetActiveScene()->HasComponent<T>(m_SelectedActor))
 			{
 				auto comp = m_World->GetActiveScene()->GetComponent<T>(m_SelectedActor);
-				BaseComponent* baseComp = static_cast<BaseComponent*>(comp);
+				BaseComponent* baseComp = dynamic_cast<BaseComponent*>(comp);
 				return baseComp->ComponentID == index;
 			}
 

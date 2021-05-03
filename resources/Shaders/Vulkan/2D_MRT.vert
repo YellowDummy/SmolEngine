@@ -14,19 +14,15 @@ struct Instance
 	ivec4 params; // x - texture index
 };
 
-struct SceneData
+layout (std140, binding = 27) uniform SceneBuffer
 {
 	mat4 projection;
 	mat4 view;
 	mat4 skyBoxMatrix;
 	vec4 camPos;
 	vec4 params;
-};
-
-layout (std140, binding = 27) uniform SceneDataBuffer
-{
-    SceneData sceneData;
-};
+	
+} sceneData;
 
 layout(std140, binding = 1) readonly buffer ShaderDataBuffer
 {   

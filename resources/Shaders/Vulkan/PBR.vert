@@ -1,4 +1,4 @@
-#version 450 core
+#version 460 core
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normal;
@@ -9,46 +9,55 @@ layout(location = 5) in vec4 a_Weight;
 
 struct MaterialData
 {
-   ivec4 TextureStates;
-   ivec4 TextureStates_2;
+	vec4 PBR;
 
-   ivec4 TextureIndexes;
-   ivec4 TextureIndexes_2;
+	uint UseAlbedroTex;
+	uint UseNormalTex;
+	uint UseMetallicTex;
+	uint UseRoughnessTex;
 
-   vec4  PBRValues;
+	uint UseAOTex;
+	uint AlbedroTexIndex;
+	uint NormalTexIndex;
+	uint MetallicTexIndex;
+
+	uint RoughnessTexIndex;
+	uint AOTexIndex;
 };
 
-struct ShaderData
+struct InstanceData
 {
+	uint matID;
+	uint isAnimated;
+	uint animOffset;
+	uint entityID;
 	mat4 model;
-	vec4 data;
 };
 
-struct SceneData
+layout(std140, binding = 25) readonly buffer InstancesBuffer
+{   
+	InstanceData instances[];
+};
+
+layout(std140, binding = 26) readonly buffer MaterialsBuffer
+{   
+	MaterialData materials[];
+};
+
+layout (std140, binding = 27) uniform SceneBuffer
 {
 	mat4 projection;
 	mat4 view;
 	mat4 skyBoxMatrix;
 	vec4 camPos;
 	vec4 params;
-};
 
-layout(std140, binding = 25) readonly buffer ShaderDataBuffer
-{   
-	ShaderData data[];
-
-} shaderDataBuffer;
-
-layout(std140, binding = 26) readonly buffer ObjectBuffer
-{   
-	MaterialData materials[];
-
-} materialBuffer;
-
-layout (std140, binding = 27) uniform SceneDataBuffer
-{
-    SceneData data;
 } sceneData;
+
+layout(std430, binding = 28) readonly buffer JointMatrices
+{
+	mat4 joints[];
+};
 
 layout(push_constant) uniform ConstantData
 {
@@ -99,47 +108,61 @@ layout (location = 24) out mat3 v_TBN;
 
 void main()
 {
-	mat4 model = shaderDataBuffer.data[dataOffset + gl_InstanceIndex].model;
-	int materialIndex = int(shaderDataBuffer.data[dataOffset + gl_InstanceIndex].data.x);
+	const uint instanceID = dataOffset + gl_InstanceIndex;
 
-	v_ModelPos = vec3(model * vec4(a_Position, 1.0));
-	v_Normal =  mat3(model) * a_Normal;
-	v_CameraPos = sceneData.data.camPos.rgb;
-	v_UV = a_UV;
-	v_Exposure = sceneData.data.params.x;
-	v_Gamma = sceneData.data.params.y;
-	v_Ambient = sceneData.data.params.z;
+	const mat4 model = instances[instanceID].model;
+	const uint materialIndex = instances[instanceID].matID;
+	const uint animOffset = instances[instanceID].animOffset;
+	const bool isAnimated = bool(instances[instanceID].isAnimated);
+
+	mat4 skinMat = mat4(1.0);
+	if(isAnimated)
+	{
+		skinMat = 
+		a_Weight.x * joints[animOffset + uint(a_BoneIDs.x)] +
+		a_Weight.y * joints[animOffset + uint(a_BoneIDs.y)] +
+		a_Weight.z * joints[animOffset + uint(a_BoneIDs.z)] +
+		a_Weight.w * joints[animOffset + uint(a_BoneIDs.w)];
+	}
+
+	v_ModelPos = vec3(model * skinMat *  vec4(a_Position, 1.0));
+	v_Normal =  mat3(model * skinMat) * a_Normal;
+	v_CameraPos = sceneData.camPos.rgb;
+	v_Exposure = sceneData.params.x;
+	v_Gamma = sceneData.params.y;
+	v_Ambient = sceneData.params.z;
 	v_DirectionalLightCount = directionalLights;
 	v_PointLightCount = pointLights;
-	v_ShadowCoord = ( biasMat * lightSpace * model ) * vec4(a_Position, 1.0);	
+	v_ShadowCoord = ( biasMat * lightSpace * model * skinMat) * vec4(a_Position, 1.0);	
 	v_WorldPos = vec4(a_Position, 1.0);
+	v_UV = a_UV;
 
 	// TBN matrix
-	vec4 modelTangent = vec4(mat3(model) * a_Tangent.xyz, 1.0);
+	vec4 modelTangent = vec4(mat3(model * skinMat) * a_Tangent.xyz, 1.0);
 	vec3 N = normalize(v_Normal);
 	vec3 T = normalize(modelTangent.xyz);
 	vec3 B = normalize(cross(N, T));
 	v_TBN = mat3(T, B, N);
 
 	// PBR Params
-	v_Metallic = materialBuffer.materials[materialIndex].PBRValues.x;
-	v_Roughness = materialBuffer.materials[materialIndex].PBRValues.y;
-	float c =  materialBuffer.materials[materialIndex].PBRValues.z;
+	v_Metallic = materials[materialIndex].PBR.x;
+	v_Roughness = materials[materialIndex].PBR.y;
+	float c =  materials[materialIndex].PBR.z;
 	v_Color = vec4(c, c, c, 1);
 
 	// states
-	v_UseAlbedroMap = materialBuffer.materials[materialIndex].TextureStates.x;
-	v_UseNormalMap = materialBuffer.materials[materialIndex].TextureStates.y;
-	v_UseMetallicMap = materialBuffer.materials[materialIndex].TextureStates.z;
-	v_UseRoughnessMap = materialBuffer.materials[materialIndex].TextureStates.w;
-	v_UseAOMap = materialBuffer.materials[materialIndex].TextureStates_2.x;
+	v_UseAlbedroMap = materials[materialIndex].UseAlbedroTex;
+	v_UseNormalMap = materials[materialIndex].UseNormalTex;
+	v_UseMetallicMap = materials[materialIndex].UseMetallicTex;
+	v_UseRoughnessMap = materials[materialIndex].UseRoughnessTex;
+	v_UseAOMap = materials[materialIndex].UseAOTex;
 
 	// index
-	v_AlbedroMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.x;
-	v_NormalMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.y;
-	v_MetallicMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.z;
-	v_RoughnessMapIndex = materialBuffer.materials[materialIndex].TextureIndexes.w;
-	v_AOMapIndex = materialBuffer.materials[materialIndex].TextureIndexes_2.x;
+	v_AlbedroMapIndex = materials[materialIndex].AlbedroTexIndex;
+	v_NormalMapIndex = materials[materialIndex].NormalTexIndex;
+	v_MetallicMapIndex = materials[materialIndex].MetallicTexIndex;
+	v_RoughnessMapIndex = materials[materialIndex].RoughnessTexIndex;
+	v_AOMapIndex = materials[materialIndex].AOTexIndex;
 
-	gl_Position =  sceneData.data.projection * sceneData.data.view * vec4(v_ModelPos, 1.0);
+	gl_Position =  sceneData.projection * sceneData.view * model * skinMat * vec4(a_Position, 1.0);
 }

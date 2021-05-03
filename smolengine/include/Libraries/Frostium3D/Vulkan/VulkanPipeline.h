@@ -21,12 +21,10 @@ namespace Frostium
 	class VulkanPipeline
 	{
 	public:
-
 		VulkanPipeline();
 		~VulkanPipeline();
 
 		// Main
-
 		bool Invalidate(GraphicsPipelineCreateInfo* pipelineSpec, VulkanShader* shader);
 		bool CreatePipeline(DrawMode mode);
 		bool ReCreate();
@@ -44,7 +42,6 @@ namespace Frostium
 		const VkPipeline& GetVkPipeline(DrawMode mode);
 		const VkPipelineLayout& GetVkPipelineLayot() const;
 		const VkDescriptorSet GetVkDescriptorSets(uint32_t setIndex = 0) const;
-
 	private:
 
 		bool IsBlendEnableEnabled();
@@ -57,7 +54,6 @@ namespace Frostium
 		VkBlendOp GetVkBlendOp(BlendOp op);
 
 	private:
-
 		VkPipelineLayout                                m_PipelineLayout = VK_NULL_HANDLE;
 		VkRenderPass                                    m_TargetRenderPass = nullptr;
 		VkDevice                                        m_Device = nullptr;

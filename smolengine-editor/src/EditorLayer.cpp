@@ -568,7 +568,7 @@ namespace SmolEngine
 
 						glm::mat4 transform;
 
-						Utils::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, false, transform);
+						Utils::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, transform);
 						float snapValues[3] = { snapValue, snapValue, snapValue };
 
 						ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
@@ -1158,12 +1158,12 @@ namespace SmolEngine
 			ImGui::Begin("Mesh Inspector", &show);
 			{
 				ImGui::Extensions::Text("Mesh & SubMeshes", "");
-				for (uint32_t i = 0; i < static_cast<uint32_t>(meshComponent->Mesh->GetAllMeshes().size()); ++i)
+				for (uint32_t i = 0; i < static_cast<uint32_t>(meshComponent->Mesh->GetMeshes().size()); ++i)
 				{
-					Frostium::Mesh* mesh = meshComponent->Mesh->GetAllMeshes()[i];
+					const Frostium::Mesh* mesh = &meshComponent->Mesh->GetMeshes()[i];
 					auto& meshData = meshComponent->MeshData[i];
 
-					std::string name = "Mesh #" + mesh->GetName();
+					std::string name = "Mesh #" + std::to_string(i);
 					if (ImGui::CollapsingHeader(name.c_str()))
 					{
 						std::string id = name + "IDMat";

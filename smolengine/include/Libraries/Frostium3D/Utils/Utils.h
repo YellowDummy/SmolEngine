@@ -21,7 +21,9 @@ namespace Frostium
 		static bool DecomposeTransform(const glm::mat4& transform, glm::vec3& out_translation, 
 			glm::vec3& out_rotation, glm::vec3& out_scale);
 		static bool ComposeTransform(const glm::vec3& translation, const glm::vec3& rotation
-			, const glm::vec3& scale, bool is3D, glm::mat4& out_transform);
+			, const glm::vec3& scale, glm::mat4& out_transform);
+		static bool ComposeTransform2D(const glm::vec2& translation, const glm::vec2& rotation
+			, const glm::vec2& scale, glm::mat4& out_transform);
 		// Files
 		static std::optional<std::string> OpenFile(const char* filter);
 		static std::optional<std::string> SaveFile(const char* filter, const std::string& initialName = "");

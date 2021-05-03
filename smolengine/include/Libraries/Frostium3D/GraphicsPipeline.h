@@ -22,28 +22,25 @@ namespace Frostium
 	class GraphicsPipeline
 	{
 	public:
-
 		GraphicsPipeline() = default;
 		~GraphicsPipeline();
 
 		PipelineCreateResult Create(GraphicsPipelineCreateInfo* pipelineInfo);
 		PipelineCreateResult Reload();
-		void Destroy();
 
-		// Render Pass
 		void ClearColors(const glm::vec4& clearColors = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		void BeginRenderPass(uint32_t framebufferIndex = 0, bool flip = false);
 		void EndRenderPass();
-
-		// Cmd Buffer
 		void BeginCommandBuffer(bool isMainCmdBufferInUse = false);
 		void EndCommandBuffer();
+		void Destroy();
 
 		// Draw
 		void DrawIndexed(DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0,  uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
 		void DrawIndexed(VertexBuffer* vb, IndexBuffer* ib, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
 		void Draw(VertexBuffer* vb, uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
 		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
+		void DrawMeshIndexed(Mesh* mesh, uint32_t instances = 1, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
 		void DrawMesh(Mesh* mesh, uint32_t instances = 1, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
 
 		// Resources
@@ -63,14 +60,6 @@ namespace Frostium
 		bool UpdateSampler(Framebuffer* framebuffer, uint32_t bindingPoint, uint32_t attachmentIndex = 0, uint32_t descriptorSetIndex = 0);
 		bool UpdateSampler(Framebuffer* framebuffer, uint32_t bindingPoint, const std::string& attachmentName, uint32_t descriptorSetIndex = 0);
 		bool UpdateCubeMap(Texture* cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
-		template<typename T>
-		void SubmitUniform(const std::string& name, const void* data, uint32_t arrayElements = 0, size_t size = 0)
-		{
-#ifdef FROSTIUM_OPENGL_IMPL
-			m_Shader->Bind();
-			m_Shader->SumbitUniform<T>(name, data, arrayElements, size);
-#endif
-		}
 
 #ifndef FROSTIUM_OPENGL_IMPL
 		const VkPipeline& GetVkPipeline(DrawMode mode);
@@ -81,7 +70,6 @@ namespace Frostium
 		void BindOpenGLShader();
 #endif
 	private:
-
 		// Helpres
 		bool IsPipelineCreateInfoValid(const GraphicsPipelineCreateInfo* pipelineInfo);
 

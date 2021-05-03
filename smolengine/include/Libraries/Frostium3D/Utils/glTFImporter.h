@@ -1,10 +1,12 @@
 #pragma once
 #include "Common/Core.h"
 #include "Common/Common.h"
+#include "Common/Animation.h"
+#include "Utils/GLM.h"
 
-#include <glm/glm.hpp>
 #include <vector>
 #include <string>
+#include <limits>
 
 namespace Frostium
 {
@@ -45,39 +47,37 @@ namespace Frostium
 		uint32_t                         SamplerIndex;
 	};								     
 									     
-	struct Animation				     
+	struct glTFAnimation
 	{								     
 		std::string                      Name;
+		AnimationProperties              Properties{};
 		std::vector<AnimationSampler>    Samplers;
 		std::vector<AnimationChannel>    Channels;
-		float                            Start = std::numeric_limits<float>::max();
-		float                            End = std::numeric_limits<float>::min();
-		float                            CurrentTime = 0.0f;
 	};
 
 	struct Primitive
 	{
-		uint32_t                         FirstIndex;
-		uint32_t                         IndexCount;
-		int32_t                          MaterialIndex;
+		std::string                      MeshName = "";
+		std::vector<PBRVertex>           VertexBuffer;
+		std::vector<uint32_t>            IndexBuffer;
 	};
 
 	struct ImportedDataGlTF
 	{
 		ImportedDataGlTF() = default;
 		~ImportedDataGlTF();
-		// TEMP
-		void UpdateJoints(glTFNode* node);
-		void UpdateAnimation(float deltaTime);
+
+		void UpdateJoints(glTFNode* node, AnimationProperties* data);
+		void UpdateAnimation();
+		void ResetAnimation(uint32_t index);
+
 		glm::mat4 GetNodeMatrix(glTFNode* node);
 
+	public:
 		uint32_t                         ActiveAnimation = 0;
-
 		std::vector<Skin>                Skins;
 		std::vector<glTFNode*>           Nodes;
-		std::vector<Animation>           Animations;
-		std::vector<PBRVertex>           VertexBuffer;
-		std::vector<uint32_t>            IndexBuffer;
+		std::vector<glTFAnimation>       Animations;
 		std::vector<Primitive>           Primitives;
 	};
 

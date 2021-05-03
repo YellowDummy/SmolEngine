@@ -8,81 +8,49 @@
         {
             "name" : "Scene",
             "nodes" : [
-                1
+                0,
+                1,
+                2
             ]
         }
     ],
     "nodes" : [
         {
-            "mesh" : 0,
-            "name" : "Plane",
+            "name" : "Light",
             "rotation" : [
-                0.7071068286895752,
-                0,
-                0,
-                0.7071067094802856
+                0.16907575726509094,
+                0.7558803558349609,
+                -0.27217137813568115,
+                0.570947527885437
             ],
-            "scale" : [
-                0.10999999940395355,
-                0.09999999403953552,
-                0.09999999403953552
+            "translation" : [
+                4.076245307922363,
+                5.903861999511719,
+                -1.0054539442062378
             ]
         },
         {
-            "children" : [
-                0
-            ],
-            "name" : "Yup2Zup",
+            "name" : "Camera",
             "rotation" : [
-                0.7071067690849304,
-                0,
-                0,
-                0.7071067690849304
-            ]
-        }
-    ],
-    "animations" : [
-        {
-            "channels" : [
-                {
-                    "sampler" : 0,
-                    "target" : {
-                        "node" : 0,
-                        "path" : "translation"
-                    }
-                },
-                {
-                    "sampler" : 1,
-                    "target" : {
-                        "node" : 0,
-                        "path" : "rotation"
-                    }
-                },
-                {
-                    "sampler" : 2,
-                    "target" : {
-                        "node" : 0,
-                        "path" : "scale"
-                    }
-                }
+                0.483536034822464,
+                0.33687159419059753,
+                -0.20870360732078552,
+                0.7804827094078064
             ],
-            "name" : "Plane|Plane|PlaneAction|Plane|PlaneAction_Plane",
-            "samplers" : [
-                {
-                    "input" : 5,
-                    "interpolation" : "LINEAR",
-                    "output" : 6
-                },
-                {
-                    "input" : 5,
-                    "interpolation" : "LINEAR",
-                    "output" : 7
-                },
-                {
-                    "input" : 5,
-                    "interpolation" : "LINEAR",
-                    "output" : 8
-                }
+            "translation" : [
+                7.358891487121582,
+                4.958309173583984,
+                6.925790786743164
+            ]
+        },
+        {
+            "mesh" : 0,
+            "name" : "Plane",
+            "rotation" : [
+                0.7071070075035095,
+                0,
+                0,
+                -0.7071070075035095
             ]
         }
     ],
@@ -94,10 +62,9 @@
                     "attributes" : {
                         "POSITION" : 0,
                         "NORMAL" : 1,
-                        "TANGENT" : 2,
-                        "TEXCOORD_0" : 3
+                        "TEXCOORD_0" : 2
                     },
-                    "indices" : 4
+                    "indices" : 3
                 }
             ]
         }
@@ -109,13 +76,13 @@
             "count" : 4,
             "max" : [
                 1,
-                1,
-                0
+                0,
+                1
             ],
             "min" : [
                 -1,
-                -1,
-                0
+                0,
+                -1
             ],
             "type" : "VEC3"
         },
@@ -129,49 +96,13 @@
             "bufferView" : 2,
             "componentType" : 5126,
             "count" : 4,
-            "type" : "VEC4"
-        },
-        {
-            "bufferView" : 3,
-            "componentType" : 5126,
-            "count" : 4,
             "type" : "VEC2"
         },
         {
-            "bufferView" : 4,
+            "bufferView" : 3,
             "componentType" : 5123,
             "count" : 6,
             "type" : "SCALAR"
-        },
-        {
-            "bufferView" : 5,
-            "componentType" : 5126,
-            "count" : 2,
-            "max" : [
-                0.08333333333333333
-            ],
-            "min" : [
-                0.041666666666666664
-            ],
-            "type" : "SCALAR"
-        },
-        {
-            "bufferView" : 6,
-            "componentType" : 5126,
-            "count" : 2,
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 7,
-            "componentType" : 5126,
-            "count" : 2,
-            "type" : "VEC4"
-        },
-        {
-            "bufferView" : 8,
-            "componentType" : 5126,
-            "count" : 2,
-            "type" : "VEC3"
         }
     ],
     "bufferViews" : [
@@ -187,44 +118,19 @@
         },
         {
             "buffer" : 0,
-            "byteLength" : 64,
+            "byteLength" : 32,
             "byteOffset" : 96
         },
         {
             "buffer" : 0,
-            "byteLength" : 32,
-            "byteOffset" : 160
-        },
-        {
-            "buffer" : 0,
             "byteLength" : 12,
-            "byteOffset" : 192
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 8,
-            "byteOffset" : 204
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 24,
-            "byteOffset" : 212
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 32,
-            "byteOffset" : 236
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 24,
-            "byteOffset" : 268
+            "byteOffset" : 128
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 292,
-            "uri" : "data:application/octet-stream;base64,AACAPwAAgD8AAACAAACAPwAAgL8AAACAAACAvwAAgL8AAACAAACAvwAAgD8AAACAAAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AACAPwAAAAAAAACAAACAPwAAgD8AAAAAAAAAgAAAgD8AAIA/AAAAAAAAAIAAAIA/AACAPwAAAAAAAACAAACAPwAAgD8AAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAABAAIAAAACAAMAq6oqPauqqj0AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAID0BDU/AAAAAAAAAIDyBDU/9AQ1PwAAAAAAAACA8gQ1P65H4T3MzMw9zMzMPa5H4T3MzMw9zMzMPQ=="
+            "byteLength" : 140,
+            "uri" : "data:application/octet-stream;base64,AACAPwAAAAAAAIA/AACAPwAAAAAAAIC/AACAvwAAAAAAAIC/AACAvwAAAAAAAIA/AAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAEAAgAAAAIAAwA="
         }
     ]
 }

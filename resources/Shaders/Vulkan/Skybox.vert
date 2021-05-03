@@ -2,19 +2,15 @@
 
 layout(location = 0) in vec3 a_Position;
 
-struct SceneData
+layout (std140, binding = 27) uniform SceneBuffer
 {
 	mat4 projection;
 	mat4 view;
 	mat4 skyBoxMatrix;
 	vec4 camPos;
 	vec4 params;
-};
-
-layout (std140, binding = 27) uniform SceneDataBuffer
-{
-    SceneData sceneData;
-};
+	
+} sceneData;
 
 layout(location = 0) out vec3 v_WorldPos;
 layout(location = 1) out float v_Gamma;

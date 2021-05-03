@@ -439,7 +439,7 @@ namespace SmolEngine
 			component->Mesh = nullptr;
 
 			Frostium::Mesh::Create(filePath, component->Mesh.get());
-			component->MeshData.resize(component->Mesh->GetSubMeshes().size() + 1);
+			component->MeshData.resize(component->Mesh->GetMeshes().size() + 1);
 			for (auto& data : component->MeshData)
 				data.MaterialID = 0;
 
@@ -454,7 +454,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	bool WorldAdmin::SetMeshMaterial(MeshComponent* component, Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path)
+	bool WorldAdmin::SetMeshMaterial(MeshComponent* component, const Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path)
 	{
 		int32_t id = Frostium::MaterialLibrary::GetSinglenton()->Add(info);
 		if (id == -1)
@@ -464,9 +464,9 @@ namespace SmolEngine
 		if (component->Mesh.get() != target_mesh)
 		{
 			index++;
-			for (auto& sub : component->Mesh->GetSubMeshes())
+			for (auto& sub : component->Mesh->GetMeshes())
 			{
-				if (sub == target_mesh)
+				if (&sub == target_mesh)
 					break;
 				index++;
 			}

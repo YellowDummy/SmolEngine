@@ -66,7 +66,7 @@ namespace SmolEngine
 				if (texture2D.Enabled && texture2D.Texture != nullptr)
 				{
 					Renderer2D::SubmitSprite(transform.WorldPos,
-						transform.Scale, transform.Rotation.x, texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
+						transform.Scale, glm::vec2(transform.Rotation), texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
 				}
 			}
 		}

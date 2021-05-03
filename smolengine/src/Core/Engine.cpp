@@ -94,11 +94,14 @@ namespace SmolEngine
 
 			m_GraphicsContext->BeginFrame(deltaTime);
 			{
+				//m_World->OnBeginFrame();
 				for (Layer* layer : *m_LayerHandler)
 				{
 					layer->OnUpdate(deltaTime);
 					layer->OnImGuiRender();
 				}
+				//m_World->OnUpdate(deltaTime);
+				//m_World->OnEndFrame();
 			}
 			m_GraphicsContext->SwapBuffers();
 		}

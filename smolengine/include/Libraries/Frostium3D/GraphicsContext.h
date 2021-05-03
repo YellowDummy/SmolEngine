@@ -68,7 +68,8 @@ namespace Frostium
 		Window* GetWindow();
 	    WindowData* GetWindowData();
 		Frustum* GetFrustum();
-		float GetTime() const;
+		float GetGltfTime() const;
+		float GetDeltaTime() const;
 		float GetLastFrameTime() const;
 #ifdef  FROSTIUM_OPENGL_IMPL
 		static OpenglRendererAPI* GetOpenglRendererAPI();
@@ -95,6 +96,7 @@ namespace Frostium
 		Renderer2DStorage*              m_Renderer2DStorage = nullptr;
 		RendererStorage*                m_RendererStorage = nullptr;
 		float                           m_LastFrameTime = 1.0f;
+		float                           m_DeltaTime = 0.0f;
 #ifdef  FROSTIUM_OPENGL_IMPL
 		OpenglContext                   m_OpenglContext = {};
 		OpenglRendererAPI*              m_RendererAPI = nullptr;
