@@ -19,22 +19,8 @@ namespace SmolEngine
 		bool                                 bShow = true;			             
 		int                                  ShadowType = 2;	                 
 		Ref<Frostium::Mesh>                  Mesh = nullptr;
-		std::string                          FilePath = "";
-
-		struct MeshData
-		{
-			std::string  MaterialPath;
-			size_t       MaterialHash;
-			int32_t      MaterialID; // runtime value, no need to serialize
-
-			template<typename Archive>
-			void serialize(Archive& archive)
-			{
-				archive(MaterialPath, MaterialHash);
-			}
-		};
-
-		std::vector<MeshData>                MeshData;
+		std::string                          ModelPath = "";
+		std::vector<std::string>             MaterialPaths;
 
 	private:
 
@@ -43,7 +29,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(MeshData, bCastShadows, bIsStatic, bShow,  ShadowType, FilePath, ComponentID);
+			archive(MaterialPaths, bCastShadows, bIsStatic, bShow,  ShadowType, ModelPath, ComponentID);
 		}
 	};
 }

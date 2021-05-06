@@ -111,6 +111,7 @@
     <ClInclude Include="include\Core\MaterialLibraryInterface.h" />
     <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\ECS\Actor.h" />
+    <ClInclude Include="include\ECS\ComponentHandler.h" />
     <ClInclude Include="include\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="include\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\BaseComponent.h" />
@@ -545,6 +546,7 @@
     <ClCompile Include="src\Core\LayerManager.cpp" />
     <ClCompile Include="src\Core\MaterialLibraryInterface.cpp" />
     <ClCompile Include="src\ECS\Actor.cpp" />
+    <ClCompile Include="src\ECS\ComponentHandler.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\GraphicsEngineSComponent.cpp" />

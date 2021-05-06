@@ -13,6 +13,7 @@ namespace Frostium
 	class Mesh;
 	class Texture;
 	struct MaterialCreateInfo;
+	struct BeginSceneInfo;
 }
 
 namespace SmolEngine
@@ -30,6 +31,7 @@ namespace SmolEngine
 	class WorldAdmin
 	{
 	public:
+
 		WorldAdmin();
 
 		bool SaveCurrentScene();
@@ -40,6 +42,10 @@ namespace SmolEngine
 		bool LoadSceneBG(const std::string& filePath);
 		bool SwapScene(uint32_t index);
 
+		// Setters
+		void SetBeginSceneInfo(Frostium::BeginSceneInfo* info);
+
+		// Getters
 		inline static WorldAdmin* GetSingleton() { return s_World; }
 		Scene* GetActiveScene();
 
@@ -58,25 +64,14 @@ namespace SmolEngine
 		void OnGameViewResize(float width, float height);
 
 		bool IsInPlayMode();
-		bool IsTetxureInPool(const std::string& filePath);
-		bool IsMeshInPool(const std::string& filePath);
-		void RenderScene(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos,
-			float zNear, float zFar, bool debugDrawEnabled,
-			CameraComponent* target = nullptr, TransformComponent* tranform = nullptr);
-
-		Ref<Frostium::Mesh> AddOrGetMeshFromPool(const std::string& path);
-		Ref<Frostium::Texture> AddOrGetTextureFromPool(const std::string& path);
-
-		void Reload2DTextures(entt::registry& registry, const std::unordered_map<std::string, std::string>& assetMap);
-		void Reload2DAnimations(entt::registry& registry);
-		void ReloadAudioClips(entt::registry& registry, AudioEngine* engine);
-		void ReloadCanvases(entt::registry& registry);
-		void ReloadMeshMaterials(entt::registry& registry, SceneData* data);
 		bool LoadStaticComponents();
 		bool ChangeActorName(Actor* actor, const std::string& name);
 
-		bool LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset = true);
-		bool SetMeshMaterial(MeshComponent* component, const Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path);
+		void Reload2DTextures(entt::registry& registry);
+		void Reload2DAnimations(entt::registry& registry);
+		void ReloadAudioClips(entt::registry& registry, AudioEngine* engine);
+		void ReloadCanvases(entt::registry& registry);
+		void ReloadMeshes(entt::registry& registry, SceneData* data);
 
 	private:
 

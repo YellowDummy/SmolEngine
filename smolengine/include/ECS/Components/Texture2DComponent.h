@@ -16,12 +16,11 @@ namespace SmolEngine
 		Texture2DComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		bool                    Enabled = true;
 		Ref<Frostium::Texture>  Texture = nullptr;
+		bool                    Enabled = true;
 		int                     LayerIndex = 0;
 		glm::vec4               Color = glm::vec4(1.0f);
 		std::string             TexturePath = "";
-		std::string             FileName = "";
 
 	private:
 
@@ -32,7 +31,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive & archive)
 		{
-			archive(Color.r, Color.g, Color.b, Color.a, LayerIndex, TexturePath, FileName, Enabled, ComponentID);
+			archive(Color.r, Color.g, Color.b, Color.a, LayerIndex, TexturePath,  Enabled, ComponentID);
 		}
 	};
 }

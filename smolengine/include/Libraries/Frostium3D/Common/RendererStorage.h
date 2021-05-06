@@ -28,6 +28,12 @@ namespace Frostium
 		Mesh*                            Mesh = nullptr;
 	};
 
+	struct DirectionalLightBuffer
+	{
+		glm::vec4                        Position;
+		glm::vec4                        Color;
+	};
+
 	struct InstanceData
 	{
 		alignas(4) uint32_t              MaterialID = 0;
@@ -59,9 +65,7 @@ namespace Frostium
 
 		// States
 		bool                             m_IsInitialized = false;
-		bool                             m_ShowDebugView = false;
-		bool                             m_IsBloomPassActive = true;
-		bool                             m_IsBlurPassActive = false;
+		RendererState                    m_State{};
 		ShadowMapSize                    m_MapSize = ShadowMapSize::SIZE_8;
 		// Bindings
 		const uint32_t                   m_TexturesBinding = 24;
@@ -89,7 +93,10 @@ namespace Frostium
 		GraphicsPipeline                 m_SkyboxPipeline = {};
 		GraphicsPipeline                 m_OmniPipeline = {};
 		GraphicsPipeline                 m_DepthPassPipeline = {};
+		GraphicsPipeline                 m_GridPipeline = {};
 		GraphicsPipeline                 m_DebugPipeline = {};
+		//Meshes
+		Mesh                             m_PlaneMesh = {};
 		// Framebuffers
 		Framebuffer*                     m_MainFramebuffer = nullptr;
 		Framebuffer                      m_PBRFramebuffer = {};
@@ -123,12 +130,6 @@ namespace Frostium
 			uint32_t                     DirectionalLights = 0;
 			uint32_t                     PointLights = 0;
 		};
-		struct DebugView
-		{
-			uint32_t                     ShowOmniCube = 0;
-			uint32_t                     ShowMRT = 0;
-			uint32_t                     MRTattachmentIndex = 0;
-		};
 		struct ShadowMatrix
 		{
 			glm::mat4                    shadowTransforms[6];
@@ -138,15 +139,13 @@ namespace Frostium
 		float                            m_NearClip = 1.0f;
 		float                            m_FarClip = 1000.0f;
 		glm::vec3                        m_ShadowLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
-		Frustum* m_Frustum = nullptr;
-		DebugView                        m_DebugView = {};
-		SceneData                        m_SceneData = {};
+		glm::mat4                        m_GridModel{};
+		Frustum*                         m_Frustum = nullptr;
+		SceneData*                       m_SceneData = nullptr;
 		PushConstant                     m_MainPushConstant = {};
 		ShadowMatrix                     m_ShadowMatrix = {};
 		AmbientLighting                  m_AmbientLighting = {};
 		// Sizes
-		const size_t                     m_DebugViewSize = sizeof(DebugView);
-		const size_t                     m_SceneDataSize = sizeof(SceneData);
 		const size_t                     m_PushConstantSize = sizeof(PushConstant);
 		const size_t                     m_AmbientLightingSize = sizeof(AmbientLighting);
 	};

@@ -33,7 +33,6 @@ namespace SmolEngine
 		void GetActors(std::vector<Actor*>& outList);
 		void GetActorsByID(std::vector<Actor*>& outList);
 		void GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList);
-		const std::unordered_map<std::string, std::string>& GetAssetMap();
 		SceneStateComponent* GetSceneState();
 		entt::registry& GetRegistry();
 
@@ -95,8 +94,6 @@ namespace SmolEngine
 		void Free();
 
 		SceneStateComponent* GetStateComponent();
-		bool AddAsset(const std::string& fileName, const std::string& filePath);
-		bool DeleteAsset(const std::string& fileName);
 		void CleanRegistry();
 
 	private:

@@ -15,6 +15,7 @@ namespace Frostium
 	enum class CullMode : uint16_t;
 	enum class BlendFactor : uint16_t;
 	enum class BlendOp : uint16_t;
+	enum class PolygonMode : uint16_t;
 
 	struct GraphicsPipelineCreateInfo;
 
@@ -48,8 +49,8 @@ namespace Frostium
 		void BuildDescriptors(VulkanShader* shader, uint32_t DescriptorSets);
 		VkFormat GetVkInputFormat(DataTypes type);
 		VkPrimitiveTopology GetVkTopology(DrawMode mode);
-		VkPolygonMode GetVkPolygonMode(DrawMode mode);
 		VkCullModeFlags GetVkCullMode(CullMode mode);
+		VkPolygonMode GetVkPolygonMode(PolygonMode mode);
 		VkBlendFactor GetVkBlendFactor(BlendFactor factor);
 		VkBlendOp GetVkBlendOp(BlendOp op);
 

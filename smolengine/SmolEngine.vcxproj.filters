@@ -1590,6 +1590,7 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\ComponentHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1688,5 +1689,6 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\ComponentHandler.cpp" />
   </ItemGroup>
 </Project>

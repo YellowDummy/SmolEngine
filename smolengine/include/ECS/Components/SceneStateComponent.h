@@ -17,11 +17,8 @@ namespace SmolEngine
 		uint32_t                                       SceneID = 0;
 		std::string                                    FilePath = "";
 		std::string                                    Name = std::string("");
-
-		std::unordered_map<std::string, std::string>   AssetMap;
 		std::unordered_map<std::string, Actor*>        ActorNameSet;
 		std::vector<Actor>                             Actors;
-		std::vector<std::string>                       MaterialPaths;
 
 	public:
 
@@ -33,7 +30,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(SceneID, FilePath, Name, AssetMap, Actors, MaterialPaths);
+			archive(SceneID, FilePath, Name, Actors);
 		}
 	};
 }

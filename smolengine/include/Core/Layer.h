@@ -17,6 +17,8 @@ namespace SmolEngine
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
+		virtual void OnBeginFrame(Frostium::DeltaTime deltaTime) {};
+		virtual void OnEndFrame(Frostium::DeltaTime deltaTime) {};
 		virtual void OnUpdate(Frostium::DeltaTime deltaTime) {}
 		virtual void OnEvent(Frostium::Event& event) {}
 		virtual void OnImGuiRender() {}

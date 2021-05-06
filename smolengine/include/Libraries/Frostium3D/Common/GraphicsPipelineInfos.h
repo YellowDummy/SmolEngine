@@ -57,7 +57,16 @@ namespace Frostium
 	{
 		Triangle,
 		Line,
-		Fan
+		Fan,
+
+		Triangle_Strip,
+	};
+
+	enum class PolygonMode : uint16_t
+	{
+		Fill,
+		Line,
+		Point
 	};
 
 	enum class CullMode : uint16_t
@@ -88,6 +97,7 @@ namespace Frostium
 		BlendOp                              eColorBlendOp = BlendOp::ADD;
 		BlendOp                              eAlphaBlendOp = BlendOp::ADD;
 		CullMode                             eCullMode = CullMode::Back;
+		PolygonMode                          ePolygonMode = PolygonMode::Fill;
 
 		bool                                 bDepthTestEnabled = true;
 		bool                                 bDepthWriteEnabled = true;

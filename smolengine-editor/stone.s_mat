@@ -1,0 +1,27 @@
+{
+    "value0": 1.0,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": [
+        {
+            "key": 0,
+            "value": "C:/Dev/Frostium3D/samples/Assets/materials/stone/Tiles087_1K_Color.png"
+        },
+        {
+            "key": 1,
+            "value": "C:/Dev/Frostium3D/samples/Assets/materials/stone/Tiles087_1K_Normal.png"
+        },
+        {
+            "key": 3,
+            "value": "C:/Dev/Frostium3D/samples/Assets/materials/stone/Tiles087_1K_Roughness.png"
+        },
+        {
+            "key": 4,
+            "value": "C:/Dev/Frostium3D/samples/Assets/materials/stone/Tiles087_1K_AmbientOcclusion.png"
+        },
+        {
+            "key": 2,
+            "value": ""
+        }
+    ]
+}

@@ -12,15 +12,13 @@ namespace Frostium
 
 		static void Init(Renderer2DStorage* storage);
 		static void Shutdown();
-		static void BeginScene(const ClearInfo* clearInfo, const BeginSceneInfo* info = nullptr);
+		static void BeginScene(const ClearInfo* clearInfo);
 		static void EndScene();
 
 		// Submit
-		static void SubmitSprite(const glm::vec2& worldPos, const glm::vec2& scale, const glm::vec2& rotation, uint32_t layerIndex, Texture* texture,
-			const glm::vec4& color = glm::vec4(1.0f), GraphicsPipeline* material = nullptr);
-		static void SubmitQuad(const glm::vec2& worldPos, const glm::vec2& scale, const glm::vec2& rotation, uint32_t layerIndex,
-			const glm::vec4& color = glm::vec4(1.0f), GraphicsPipeline* material = nullptr);
-		static void SubmitLight2D(const glm::vec2& worldPos, const glm::vec4& color, float radius, float lightIntensity);
+		static void SubmitSprite(const glm::vec3& worldPos, const glm::vec3& scale, const glm::vec3& rotation, uint32_t layerIndex, Texture* texture, const glm::vec4& color = glm::vec4(1.0f), GraphicsPipeline* material = nullptr);
+		static void SubmitQuad(const glm::vec3& worldPos, const glm::vec3& scale, const glm::vec3& rotation, uint32_t layerIndex, const glm::vec4& color = glm::vec4(1.0f), GraphicsPipeline* material = nullptr);
+		static void SubmitLight2D(const glm::vec3& worldPos, const glm::vec4& color, float radius, float lightIntensity);
 		static void SubmitText(Text* text);
 
 	private:

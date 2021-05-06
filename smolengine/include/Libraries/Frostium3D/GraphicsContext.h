@@ -54,6 +54,7 @@ namespace Frostium
 
 		void ProcessEvents();
 		void BeginFrame(DeltaTime time);
+		void UpdateSceneData(BeginSceneInfo* sceneInfo = nullptr);
 		void SwapBuffers();
 		void ShutDown();
 
@@ -108,6 +109,7 @@ namespace Frostium
 		Window                          m_Window = {};
 		ImGuiContext                    m_ImGuiContext = {};
 		EventSender                     m_EventHandler = {};
+		SceneData                       m_SceneData = {};
 		std::string                     m_ResourcesFolderPath = "";
 		std::function<void(Event&)>     m_EventCallback;
 
@@ -116,6 +118,7 @@ namespace Frostium
 		friend class GraphicsPipeline;
 		friend class Renderer;
 		friend class Renderer2D;
+		friend class DebugRenderer;
 		friend class ImGuiContext;
 		friend class VulkanPBR;
 		friend class VulkanDescriptor;

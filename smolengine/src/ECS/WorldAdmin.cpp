@@ -81,7 +81,31 @@ namespace SmolEngine
 
 	void WorldAdmin::OnBeginFrame()
 	{
-		RendererSystem::BeginSubmit(nullptr); // temp
+#ifndef SMOLENGINE_EDITOR
+		// Extracting Camera
+		entt::registry& registry = GetActiveScene()->GetRegistry();
+		const auto& cameraGroup = registry.view<CameraComponent, TransformComponent>();
+		for (const auto& entity : cameraGroup)
+		{
+			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
+
+			// There is no need to render the scene if the camera is not our target or is disabled
+			if (!camera.isPrimaryCamera || !camera.isEnabled) { continue; }
+
+			// Calculating ViewProj
+			CameraSystem::CalculateView(&camera, &transform);
+
+			m_State->m_SceneInfo.View = camera.ViewMatrix;
+			m_State->m_SceneInfo.Proj = camera.ProjectionMatrix;
+			m_State->m_SceneInfo.NearClip = camera.zNear;
+			m_State->m_SceneInfo.FarClip = camera.zFar;
+			m_State->m_SceneInfo.Pos = transform.WorldPos;
+
+			// At the moment we support only one viewport
+			break;
+		}
+#endif 
+		RendererSystem::BeginSubmit(&m_State->m_SceneInfo);
 	}
 
 	void WorldAdmin::OnEndFrame()
@@ -110,35 +134,20 @@ namespace SmolEngine
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 		{
-			// Updating Phycics
+			// Updade 2D phycics
 			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
-			// Sending OnProcess callback
+			// Send OnProcess callback
 			ScriptingSystem::OnTick(deltaTime);
+			// Set transforms
+			Physics2DSystem::UpdateTransforms();
 		}
 #else
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 		ScriptingSystem::OnTick(registry, deltaTime);
+		Box2DPhysicsSystem::UpdateTransfroms(registry);
 #endif
 
-		// Extracting Camera
-		entt::registry& registry = GetActiveScene()->GetRegistry();
-		const auto& cameraGroup = registry.view<CameraComponent, TransformComponent>();
-		for (const auto& entity : cameraGroup)
-		{
-			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
-
-			// There is no need to render the scene if the camera is not our target or is disabled
-			if (!camera.isPrimaryCamera || !camera.isEnabled) { continue; }
-
-			// Calculating ViewProj
-			CameraSystem::CalculateView(&camera, &transform);
-
-			// Rendering scene to target framebuffer
-			//RenderScene(tuple.Camera.ViewProjectionMatrix, FramebufferSComponent::Get()[0], false, &tuple.Camera, &transform);
-
-			// At the moment we support only one viewport
-			break;
-		}
+		RendererSystem::Update();
 	}
 
 	void WorldAdmin::OnEvent(Frostium::Event& e)
@@ -151,34 +160,18 @@ namespace SmolEngine
 
 	}
 
-	void WorldAdmin::RenderScene(const glm::mat4& view, const glm::mat4& proj, const glm::vec3 camPos, float zNear, float zFar, bool debugDrawEnabled,
-		CameraComponent* targetCamera, TransformComponent* cameraTranform)
-	{
-#ifdef SMOLENGINE_EDITOR
-		if (m_State->m_InPlayMode)
-			Physics2DSystem::UpdateTransforms();
-#else
-		Box2DPhysicsSystem::UpdateTransfroms(registry);
-
-#endif
-		RendererSystem::Update();
-		if (debugDrawEnabled)
-		{
-
-		}
-	}
-
 	void WorldAdmin::ReloadAssets()
 	{
 		Scene* activeScene = GetActiveScene();
 		SceneStateComponent* sceneState = activeScene->GetSceneState();
 		entt::registry& registry = activeScene->m_SceneData.m_Registry;
 
-		Reload2DTextures(registry, sceneState->AssetMap);
+		Reload2DTextures(registry);
 		ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
 		Reload2DAnimations(registry);
 		ReloadCanvases(registry);
-		ReloadMeshMaterials(registry, &activeScene->m_SceneData);
+		ReloadMeshes(registry, &activeScene->m_SceneData);
+
 		ScriptingSystem::ReloadScripts();
 	}
 
@@ -194,8 +187,6 @@ namespace SmolEngine
 
 		// temp
 		{
-			m_State->m_MeshMap.clear();
-			m_State->m_TexturesMap.clear();
 			Frostium::MaterialLibrary::GetSinglenton()->Reset();
 
 			Frostium::MaterialCreateInfo defMat = {};
@@ -237,6 +228,11 @@ namespace SmolEngine
 		return false;
 	}
 
+	void WorldAdmin::SetBeginSceneInfo(Frostium::BeginSceneInfo* info)
+	{
+		m_State->m_SceneInfo = *info;
+	}
+
 	bool WorldAdmin::SaveCurrentScene()
 	{
 		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
@@ -258,51 +254,6 @@ namespace SmolEngine
 		return m_State->m_InPlayMode == true;
 	}
 
-	bool WorldAdmin::IsTetxureInPool(const std::string& filePath)
-	{
-		size_t hash = m_State->m_Hash(filePath);
-		auto& it = m_State->m_TexturesMap.find(hash);
-		if (it != m_State->m_TexturesMap.end())
-			return true;
-
-		return false;
-	}
-
-	bool WorldAdmin::IsMeshInPool(const std::string& filePath)
-	{
-		size_t hash = m_State->m_Hash(filePath);
-		auto& it = m_State->m_MeshMap.find(hash);
-		if (it != m_State->m_MeshMap.end())
-			return true;
-
-		return false;
-	}
-
-	Ref<Frostium::Mesh> WorldAdmin::AddOrGetMeshFromPool(const std::string& path)
-	{
-		size_t hash = m_State->m_Hash(path);
-		auto& it = m_State->m_MeshMap.find(hash);
-		if (it != m_State->m_MeshMap.end())
-			return it->second;
-
-		Ref<Frostium::Mesh> mesh = std::make_shared<Frostium::Mesh>();
-		m_State->m_MeshMap[hash] = mesh;
-		return mesh;
-	}
-
-	Ref<Frostium::Texture> WorldAdmin::AddOrGetTextureFromPool(const std::string& path)
-	{
-		size_t hash = m_State->m_Hash(path);
-		auto& it = m_State->m_TexturesMap.find(hash);
-		if (it != m_State->m_TexturesMap.end())
-			return it->second;
-
-		Ref<Frostium::Texture> texture = std::make_shared<Frostium::Texture>();
-		m_State->m_TexturesMap[hash] = texture;
-		return texture;
-	}
-
-
 	bool WorldAdmin::CreateScene(const std::string& filePath)
 	{
 		m_State->m_ActiveSceneID++;
@@ -320,16 +271,14 @@ namespace SmolEngine
 		return &m_State->m_Scenes[m_State->m_ActiveSceneID];
 	}
 
-	void WorldAdmin::Reload2DTextures(entt::registry& registry, const std::unordered_map<std::string, std::string>& assetMap)
+	void WorldAdmin::Reload2DTextures(entt::registry& registry)
 	{
 		const auto& view = registry.view<Texture2DComponent>();
-		view.each([&](Texture2DComponent& texture)
+		view.each([&](Texture2DComponent& comp)
 			{
-				auto search = assetMap.find(texture.FileName);
-				if (search != assetMap.end())
-				{
-					Frostium::Texture::Create(search->second, texture.Texture.get());
-				}
+				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
+				Frostium::Texture::Create(comp.TexturePath, tex.get());
+				comp.Texture = tex;
 			});
 	}
 
@@ -357,47 +306,48 @@ namespace SmolEngine
 			});
 	}
 
-	void WorldAdmin::ReloadMeshMaterials(entt::registry& registry, SceneData* data)
+	void WorldAdmin::ReloadMeshes(entt::registry& registry, SceneData* data)
 	{
-		Frostium::MaterialLibrary* instance = Frostium::MaterialLibrary::GetSinglenton();
-		instance->Reset();
+		Frostium::MaterialLibrary* lib = Frostium::MaterialLibrary::GetSinglenton();
+		lib->Reset();
 
-		// Default Material = ID 0
+		// Adds default material
 		Frostium::MaterialCreateInfo materialCI = {};
-		instance->Add(&materialCI, "Default Material");
+		lib->Add(&materialCI);
 
-		std::vector<std::string> usedMaterials;
-		{
-			const auto& view = registry.view<MeshComponent>();
-			view.each([&](MeshComponent& component)
+		const auto& view = registry.view<MeshComponent>();
+		view.each([&](MeshComponent& component)
+			{
+				// Loads mesh
+				Ref<Frostium::Mesh> mesh = std::make_shared<Frostium::Mesh>();
+				Frostium::Mesh::Create(component.ModelPath, mesh.get());
+
+				// Loads materials if exist
+				for (uint32_t i = 0; i < static_cast<uint32_t>(component.MaterialPaths.size()); ++i)
 				{
-					bool found = false;
-					for (auto& meshData : component.MeshData)
+					const std::string& materialPath = component.MaterialPaths[i];
+					if (materialPath.empty() == false && std::filesystem::exists(materialPath))
 					{
-						if (usedMaterials.size() > 1)
+						if (lib->Load(materialPath, materialCI))
 						{
-							bool found = false;
-							for (auto& usedMaterials : usedMaterials)
+							uint32_t matID = lib->Add(&materialCI);
+							if (i == 0) // root node
 							{
-								if (meshData.MaterialPath == usedMaterials)
-								{
-									found = true;
-									break;
-								}
+								mesh->SetMaterialID(matID);
+								continue;
 							}
 
-							if (!found)
-								usedMaterials.push_back(meshData.MaterialPath);
-
-							continue;
+							auto& childs = mesh->GetChilds();
+							childs[i].SetMaterialID(matID);
 						}
-
-						usedMaterials.push_back(meshData.MaterialPath);
 					}
+				}
 
-				});
+				component.Mesh = mesh;
 
-		}
+			});
+
+		Frostium::Renderer::UpdateMaterials();
 	}
 
 	bool WorldAdmin::LoadStaticComponents()
@@ -425,57 +375,10 @@ namespace SmolEngine
 		if (it == state->ActorNameSet.end())
 		{
 			state->ActorNameSet[name] = actor;
+			actor->GetInfo()->Name = name;
 			return true;
 		}
 
 		return false;
-	}
-
-	bool WorldAdmin::LoadMeshComponent(MeshComponent* component, const std::string& filePath, bool reset)
-	{
-		if (reset)
-		{
-			component->MeshData.clear();
-			component->Mesh = nullptr;
-
-			Frostium::Mesh::Create(filePath, component->Mesh.get());
-			component->MeshData.resize(component->Mesh->GetMeshes().size() + 1);
-			for (auto& data : component->MeshData)
-				data.MaterialID = 0;
-
-			component->FilePath = filePath;
-			return true;
-		}
-
-		Frostium::Mesh::Create(filePath, component->Mesh.get());
-		for (auto& data : component->MeshData)
-			data.MaterialID = 0;
-
-		return true;
-	}
-
-	bool WorldAdmin::SetMeshMaterial(MeshComponent* component, const Frostium::Mesh* target_mesh, Frostium::MaterialCreateInfo* info, const std::string& material_path)
-	{
-		int32_t id = Frostium::MaterialLibrary::GetSinglenton()->Add(info);
-		if (id == -1)
-			return false;
-
-		uint32_t index = 0;
-		if (component->Mesh.get() != target_mesh)
-		{
-			index++;
-			for (auto& sub : component->Mesh->GetMeshes())
-			{
-				if (&sub == target_mesh)
-					break;
-				index++;
-			}
-		}
-
-		std::hash<std::string_view> hash{};
-		component->MeshData[index].MaterialPath = material_path;
-		component->MeshData[index].MaterialID = id;
-		component->MeshData[index].MaterialHash = hash(material_path);
-		return true;
 	}
 }

@@ -49,6 +49,7 @@ namespace SmolEngine
 		// Override
 		void OnAttach() override;
 		void OnDetach() override;
+		void OnBeginFrame(Frostium::DeltaTime deltaTime) override;
 		void OnUpdate(Frostium::DeltaTime deltaTime) override;
 		void OnEvent(Frostium::Event& event) override;
 		void OnImGuiRender() override;
@@ -65,7 +66,6 @@ namespace SmolEngine
 		void DrawBehaviorComponent(std::vector<OutValue>& outValues);
 		void DrawLight2D(Light2DSourceComponent* light);
 		void DrawSceneView(bool enabled);
-		void DrawGameView(bool enabled);
 		void DrawInspector();
 		void DrawHierarchy();
 		void DrawMeshComponent(MeshComponent* meshComponent);

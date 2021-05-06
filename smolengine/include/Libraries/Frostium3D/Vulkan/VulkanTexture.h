@@ -14,7 +14,7 @@ namespace Frostium
 		VulkanTexture();
 		~VulkanTexture();
 
-		void LoadTexture(const std::string& filePath, bool flip, TextureFormat format);
+		void LoadTexture(const std::string& filePath, TextureFormat format, bool flip, bool imgui_handler);
 		void LoadCubeMap(const std::string& filePath, TextureFormat format);
 		void GenTexture(const void* data, uint32_t size, uint32_t width, uint32_t height, TextureFormat format);
 		void GenWhiteTetxure(uint32_t width, uint32_t height);
@@ -80,14 +80,11 @@ namespace Frostium
 		VkImageLayout                m_ImageLayout;
 		VkDeviceMemory               m_DeviceMemory;
 
-		void* m_ImGuiTextureID = nullptr;
-		bool                        m_IsCreated = false;
+		void*                       m_ImGuiTextureID = nullptr;
 
 		uint32_t                    m_Height = 0;
 		uint32_t                    m_Width = 0;
 		size_t                      m_ID = 0;
-
-		std::string                 m_FilePath = "";
 
 	private:
 

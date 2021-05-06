@@ -28,9 +28,12 @@ namespace Frostium
 		void SetActiveAnimation(uint32_t index);
 
 		// Getters
-		const std::vector<Mesh>& GetMeshes() const;
+		std::vector<Mesh>& GetChilds();
 		uint32_t GetVertexCount() const;
 		uint32_t GetAnimationsCount() const;
+		uint32_t GetChildCount() const;
+		uint32_t GetMaterialID() const;
+		std::string_view GetName() const;
 		VertexBuffer* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
 		Mesh* GetMeshByName(const std::string& name);
@@ -58,7 +61,7 @@ namespace Frostium
 		Ref<IndexBuffer>                            m_IndexBuffer = nullptr;
 		ImportedDataGlTF*                           m_ImportedData = nullptr;
 		std::unordered_map<std::string, Mesh*>      m_MeshMap;
-		std::vector<Mesh>                           m_Meshes;
+		std::vector<Mesh>                           m_Childs;
 
 	private:
 

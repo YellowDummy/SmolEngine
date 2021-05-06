@@ -35,6 +35,7 @@ namespace SmolEngine
 	void Editor::SetLayers(LayerManager* layerManager)
 	{
 		Frostium::EditorCameraCreateInfo camCI = {};
+		camCI.WorldPos = { 0, 5, 0 };
 		m_Camera = new Frostium::EditorCamera(&camCI);
 		EditorLayer* editorLayer = new EditorLayer(m_Camera);
 

@@ -6,6 +6,7 @@
 #include "Audio/AudioClip.h"
 
 #include "ECS/WorldAdmin.h"
+#include "ECS/ComponentHandler.h"
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/RendererSystem.h"
@@ -49,7 +50,7 @@ namespace SmolEngine
 
 		m_Console = new EditorConsole();
 		m_World = WorldAdmin::GetSingleton();
-		m_World->CreateScene(std::string("TestScene.s_scene"));
+		m_World->CreateScene(std::string("TestScene2.s_scene"));
 	}
 
 	void EditorLayer::OnDetach()
@@ -57,19 +58,21 @@ namespace SmolEngine
 
 	}
 
-	void EditorLayer::OnUpdate(Frostium::DeltaTime deltaTime)
+	void EditorLayer::OnBeginFrame(Frostium::DeltaTime deltaTime)
 	{
 		if (m_IsSceneViewFocused)
 		{
 			m_Camera->OnUpdate(deltaTime);
 		}
 
-		BeginSceneInfo bSeneIngo = {};
-		bSeneIngo.Update(m_Camera);
-		ClearInfo clearInfo = {};
+		BeginSceneInfo bSeneInfo = {};
+		bSeneInfo.Update(m_Camera);
+		m_World->SetBeginSceneInfo(&bSeneInfo);
+	}
 
-		Renderer::BeginScene(&clearInfo, &bSeneIngo);
-		Renderer::EndScene();
+	void EditorLayer::OnUpdate(Frostium::DeltaTime deltaTime)
+	{
+
 	}
 
 	void EditorLayer::OnEvent(Frostium::Event& e)
@@ -186,21 +189,6 @@ namespace SmolEngine
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Animation"))
-			{
-				if (ImGui::MenuItem("New Clip"))
-				{
-
-				}
-
-				if (ImGui::MenuItem("Load Clip"))
-				{
-
-				}
-
-				ImGui::EndMenu();
-			}
-
 			if (ImGui::BeginMenu("Simulation"))
 			{
 				if (ImGui::MenuItem("Play Mode"))
@@ -238,22 +226,6 @@ namespace SmolEngine
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Build"))
-			{
-
-				if (ImGui::MenuItem("Windows"))
-				{
-
-				}
-
-				if (ImGui::MenuItem("Android"))
-				{
-
-				}
-
-				ImGui::EndMenu();
-			}
-
 			if (ImGui::BeginMenu("Window"))
 			{
 				if (ImGui::MenuItem("Material Library"))
@@ -271,11 +243,6 @@ namespace SmolEngine
 					showConsole = true;
 				}
 
-				if (ImGui::MenuItem("Game View"))
-				{
-					showGameView = true;
-				}
-
 				ImGui::EndMenu();
 			}
 
@@ -285,7 +252,6 @@ namespace SmolEngine
 
 		m_Console->Update(showConsole);
 		DrawSceneView(true);
-		DrawGameView(showGameView);
 		m_MaterialLibraryInterface->Draw(showMaterialLibrary);
 
 		DrawHierarchy();
@@ -315,27 +281,29 @@ namespace SmolEngine
 	{
 		if (texture->Texture != nullptr)
 		{
-			ImGui::Extensions::Texture("Texture", texture->Texture->GetImGuiTexture());
-			ImGui::NewLine();
 			ImGui::Extensions::ColorInput3("Color", texture->Color);
 			ImGui::Extensions::InputInt("Layer", texture->LayerIndex, 130.0f, "TexturePanel");
 			ImGui::NewLine();
-			if (ImGui::Extensions::CheckBox("Enabled?", texture->Enabled, 130.0f, "TexturePanel")) 
+			if (ImGui::Extensions::CheckBox("Enabled?", texture->Enabled, 130.0f, "TexturePanel"))
 
 			ImGui::NewLine();
 			ImGui::NewLine();
 			if (ImGui::Button("Change", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 			{
-
+				const auto& result = FileDialog::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
+				if (result.has_value())
+					ComponentHandler::ValidateTexture2DComponent(texture, result.value());
 			}
+
+			return;
 		}
-		else
-		{
-			ImGui::NewLine();
-			if (ImGui::Button("New texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
-			{
 
-			}
+
+		if (ImGui::Button("New texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+		{
+			const auto& result = FileDialog::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
+			if (result.has_value())
+				ComponentHandler::ValidateTexture2DComponent(texture, result.value());
 		}
 
 	}
@@ -582,6 +550,8 @@ namespace SmolEngine
 
 							transformComponent->WorldPos = tranlation;
 							transformComponent->Rotation.x += deltaRot.x;
+							transformComponent->Rotation.y += deltaRot.y;
+							transformComponent->Rotation.z += deltaRot.z;
 							transformComponent->Scale = scale;
 						}
 					}
@@ -589,36 +559,6 @@ namespace SmolEngine
 			}
 			ImGui::End();
 			ImGui::PopStyleVar();
-		}
-	}
-
-	void EditorLayer::DrawGameView(bool enabled)
-	{
-		return;
-		if (enabled)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-			ImGui::Begin("Game View", &enabled);
-			{
-				ImGui::SetWindowSize("Game View", { 720.0f, 480.0f });
-
-				m_GameViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
-
-				if (ImGui::IsWindowFocused()) { m_IsGameViewFocused = true; }
-				else { m_IsGameViewFocused = false; }
-
-				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-
-				if (ViewPortSize.x != m_GameViewPortSize.x || ViewPortSize.y != m_GameViewPortSize.y)
-				{
-					m_GameViewPortSize = { ViewPortSize.x, ViewPortSize.y };
-					m_World->OnGameViewResize(m_GameViewPortSize.x, m_GameViewPortSize.y);
-				}
-			}
-
-			ImGui::End();
-			ImGui::PopStyleVar();
-
 		}
 	}
 
@@ -1085,16 +1025,16 @@ namespace SmolEngine
 		ImGui::End();
 	}
 
-	void EditorLayer::DrawMeshComponent(MeshComponent* meshComponent)
+	void EditorLayer::DrawMeshComponent(MeshComponent* comp)
 	{
 		static bool showMeshInspector = false;
-		if (meshComponent->Mesh)
+		if (comp->Mesh)
 		{
 			ImGui::NewLine();
 
-			ImGui::Extensions::CheckBox("Show", meshComponent->bShow);
-			ImGui::Extensions::CheckBox("Static", meshComponent->bIsStatic);
-			ImGui::Extensions::CheckBox("Cast Shadows", meshComponent->bIsStatic);
+			ImGui::Extensions::CheckBox("Show", comp->bShow);
+			ImGui::Extensions::CheckBox("Static", comp->bIsStatic);
+			ImGui::Extensions::CheckBox("Cast Shadows", comp->bIsStatic);
 
 			ImGui::NewLine();
 
@@ -1114,9 +1054,10 @@ namespace SmolEngine
 			const auto& result = FileDialog::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
 			if (result.has_value())
 			{
-				//CommandSystem::LoadMeshComponent(meshComponent, result.value());
+				ComponentHandler::ValidateMeshComponent(comp, result.value());
 			}
 		}
+
 		ImGui::NewLine();
 	}
 
@@ -1149,19 +1090,33 @@ namespace SmolEngine
 
 	void EditorLayer::DrawMeshInspector(bool& show)
 	{
-		auto* meshComponent = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
-		if (!meshComponent)
+		auto* comp = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
+		if (!comp)
 			return;
 
 		if (show)
 		{
+			uint32_t count = static_cast<uint32_t>(comp->Mesh->GetChildCount());
+			std::vector<Frostium::Mesh*> meshes(count + 1);
+			for (uint32_t i = 0; i < count + 1; ++i)
+			{
+				if (i == 0)
+				{
+					meshes[0] = comp->Mesh.get();
+					continue;
+				}
+
+				Frostium::Mesh* mesh = &comp->Mesh->GetChilds()[i - 1];
+				meshes[i] = mesh;
+			}
+
 			ImGui::Begin("Mesh Inspector", &show);
 			{
 				ImGui::Extensions::Text("Mesh & SubMeshes", "");
-				for (uint32_t i = 0; i < static_cast<uint32_t>(meshComponent->Mesh->GetMeshes().size()); ++i)
+
+				for (uint32_t i = 0; i < static_cast<uint32_t>(meshes.size()); ++i)
 				{
-					const Frostium::Mesh* mesh = &meshComponent->Mesh->GetMeshes()[i];
-					auto& meshData = meshComponent->MeshData[i];
+					Frostium::Mesh* mesh = meshes[i];
 
 					std::string name = "Mesh #" + std::to_string(i);
 					if (ImGui::CollapsingHeader(name.c_str()))
@@ -1169,15 +1124,16 @@ namespace SmolEngine
 						std::string id = name + "IDMat";
 						ImGui::PushID(id.c_str());
 						{
-							std::filesystem::path p(meshData.MaterialPath);
-
-							ImGui::Extensions::Text("Material Name", p.filename().stem().string());
-							ImGui::Extensions::Text("Material ID", std::to_string(meshData.MaterialID));
-
+							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
 							if (ImGui::Button("Select Material"))
 							{
-
+								const auto& result = FileDialog::OpenFile("SmolEngine Material (*s_mat)\0*.s_mat\0");
+								if (result.has_value())
+								{
+									ComponentHandler::SetMeshMaterial(comp, mesh, result.value());
+								}
 							}
+
 						}
 						ImGui::PopID();
 					}

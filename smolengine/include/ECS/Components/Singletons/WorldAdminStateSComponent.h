@@ -4,6 +4,7 @@
 
 #include <Frostium3D/Common/Mesh.h>
 #include <Frostium3D/Common/Texture.h>
+#include <Frostium3D/Common/RendererShared.h>
 
 #include <unordered_map>
 #include <string>
@@ -28,9 +29,8 @@ namespace SmolEngine
 		bool                                                  m_InPlayMode = false;
 		entt::registry*                                       m_CurrentRegistry = nullptr;
 		uint32_t                                              m_ActiveSceneID = 0;
+		Frostium::BeginSceneInfo                              m_SceneInfo{};
 		Scene                                                 m_Scenes[maxScenes];
 		std::hash<std::string_view>                           m_Hash{};
-		std::unordered_map<uint32_t, Ref<Frostium::Mesh>>     m_MeshMap;
-		std::unordered_map<uint32_t, Ref<Frostium::Texture>>  m_TexturesMap;
 	};
 }

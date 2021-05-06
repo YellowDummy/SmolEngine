@@ -39,7 +39,7 @@ namespace Frostium
 
 		// Factory
 		static void CreateWhiteTexture(Texture* out_texture);
-		static void Create(const std::string& filePath, Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool flip_vertically = true);
+		static void Create(const std::string& filePath, Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool flip = true, bool imgui_handler = false);
 		static void Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height, Texture* out_texture,
 			TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
 

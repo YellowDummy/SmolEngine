@@ -27,12 +27,16 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::BeginSubmit(const Frostium::BeginSceneInfo* info)
+	void RendererSystem::BeginSubmit(Frostium::BeginSceneInfo* info)
 	{
+		GraphicsContext::GetSingleton()->UpdateSceneData(info);
+
 		ClearInfo clear = {};
-		Renderer::BeginScene(&clear, info);
+		clear.bClear = true;
+
+		Renderer::BeginScene(&clear);
 		clear.bClear = false;
-		Renderer2D::BeginScene(&clear, info);
+		Renderer2D::BeginScene(&clear);
 	}
 
 	void RendererSystem::EndSubmit()
@@ -45,80 +49,88 @@ namespace SmolEngine
 	{
 		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
 
-		// Meshes
+		// 3D
 		{
-			const auto& group = reg->view<TransformComponent, MeshComponent>();
-			for (const auto& entity : group)
+			// Meshes
 			{
-				const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
-				if (mesh.bShow && mesh.Mesh)
-					Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh.get());
-			}
-		}
-		// 2D Textures
-		{
-			const auto& group = reg->view<TransformComponent, Texture2DComponent>();
-			for (const auto& entity : group)
-			{
-				const auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
-
-				CheckLayerIndex(texture2D.LayerIndex);
-				if (texture2D.Enabled && texture2D.Texture != nullptr)
+				const auto& group = reg->view<TransformComponent, MeshComponent>();
+				for (const auto& entity : group)
 				{
-					Renderer2D::SubmitSprite(transform.WorldPos,
-						transform.Scale, glm::vec2(transform.Rotation), texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
+					const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
+					if (mesh.bShow && mesh.Mesh)
+						Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh.get(), mesh.Mesh->GetMaterialID());
 				}
 			}
-		}
-		// Point Lights
-		{
-			const auto& pGroup = reg->view<TransformComponent, PointLightComponent>();
-			for (const auto& entity : pGroup)
+			// Point Lights
 			{
-				const auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
-				if (light.bEnabled)
+				const auto& pGroup = reg->view<TransformComponent, PointLightComponent>();
+				for (const auto& entity : pGroup)
 				{
-					Renderer::SubmitPointLight({ transform.WorldPos + light.Offset }, light.Color, light.Constant, light.Linear, light.Exposure);
-				}
-			}
-		}
-		// Directional Lights
-		{
-			bool shadows_casted = false;
-			const auto& dView = reg->view<DirectionalLightComponent>();
-			for (const auto& entity : dView)
-			{
-				auto& light = dView.get<DirectionalLightComponent>(entity);
-				if (light.bEnabled)
-				{
-					if (light.bCastShadows && !shadows_casted)
+					const auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
+					if (light.bEnabled)
 					{
-						Renderer::SetShadowLightDirection(light.Direction);
-						shadows_casted = true;
+						Renderer::SubmitPointLight({ transform.WorldPos + light.Offset }, light.Color, light.Constant, light.Linear, light.Exposure);
 					}
-
-					Renderer::SubmitDirectionalLight(light.Direction, light.Color);
 				}
 			}
-		}
-		// 2D Point Light
-		{
-			const auto& group = reg->view<TransformComponent, Light2DSourceComponent>();
-			for (const auto& entity : group)
+			// Directional Lights
 			{
-				const auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
-				if (light2D.IsEnabled)
+				bool shadows_casted = false;
+				const auto& dView = reg->view<DirectionalLightComponent>();
+				for (const auto& entity : dView)
 				{
-					Renderer2D::SubmitLight2D(transform.WorldPos + glm::vec3(light2D.Offset, 0), light2D.Color, light2D.Radius, light2D.Intensity);
+					auto& light = dView.get<DirectionalLightComponent>(entity);
+					if (light.bEnabled)
+					{
+						if (light.bCastShadows && !shadows_casted)
+						{
+							Renderer::SetShadowLightDirection(light.Direction);
+							shadows_casted = true;
+						}
+
+						Renderer::SubmitDirectionalLight(light.Direction, light.Color);
+					}
 				}
 			}
 		}
-		// Canvas
+		
+		//2D
 		{
-			const auto& group = reg->view<CanvasComponent>();
-			for (const auto& entity : group)
+			// 2D Textures
 			{
-				const auto& canvas = group.get<CanvasComponent>(entity);
+				const auto& group = reg->view<TransformComponent, Texture2DComponent>();
+				for (const auto& entity : group)
+				{
+					const auto& [transform, texture2D] = group.get<TransformComponent, Texture2DComponent>(entity);
+
+					CheckLayerIndex(texture2D.LayerIndex);
+					if (texture2D.Enabled && texture2D.Texture != nullptr)
+					{
+						Renderer2D::SubmitSprite(transform.WorldPos,
+							transform.Scale, transform.Rotation, texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
+					}
+				}
+			}
+			// 2D Point Light
+			{
+				const auto& group = reg->view<TransformComponent, Light2DSourceComponent>();
+				for (const auto& entity : group)
+				{
+					const auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
+					if (light2D.IsEnabled)
+					{
+						transform.WorldPos = +glm::vec3(light2D.Offset, 0);
+						Renderer2D::SubmitLight2D(transform.WorldPos, light2D.Color, light2D.Radius, light2D.Intensity);
+					}
+				}
+			}
+			// Canvas
+			{
+				const auto& group = reg->view<CanvasComponent>();
+				for (const auto& entity : group)
+				{
+					const auto& canvas = group.get<CanvasComponent>(entity);
+				}
 			}
 		}
 

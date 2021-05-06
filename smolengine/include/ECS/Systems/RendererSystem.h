@@ -23,7 +23,7 @@ namespace SmolEngine
 	{
 	private:
 
-		static void BeginSubmit(const Frostium::BeginSceneInfo* info);
+		static void BeginSubmit(Frostium::BeginSceneInfo* info);
 		static void EndSubmit();
 		static void Update();
 

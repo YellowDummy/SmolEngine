@@ -17,6 +17,7 @@ namespace SmolEngine
 		std::filesystem::path p(filePath);
 		m_SceneData.Init();
 		m_State = &m_SceneData.m_Registry.emplace<SceneStateComponent>(m_SceneData.m_Entity);
+		m_State->FilePath = filePath;
 	}
 
 	void Scene::Free()
@@ -93,7 +94,7 @@ namespace SmolEngine
 		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
 
 		outList.reserve(count);
-		for (uint32_t i = 0; i < count; ++i)
+		for (uint32_t i = 1; i < count + 1; ++i)
 		{
 			for (uint32_t x = 0; x < count; ++x)
 			{
@@ -144,8 +145,8 @@ namespace SmolEngine
 			meshNew->bCastShadows = meshOld->bCastShadows;
 			meshNew->bIsStatic = meshOld->bIsStatic;
 			meshNew->bShow = meshOld->bShow;
-			meshNew->FilePath = meshOld->FilePath;
-			meshNew->MeshData = meshOld->MeshData;
+			meshNew->ModelPath = meshOld->ModelPath;
+			meshNew->MaterialPaths = meshOld->MaterialPaths;
 			meshNew->ShadowType = meshOld->ShadowType;
 			meshNew->Mesh = meshOld->Mesh;
 		}
@@ -204,6 +205,7 @@ namespace SmolEngine
 		{
 			myfile << storageRegistry.str();
 			myfile.close();
+			m_State->FilePath = filePath;
 			NATIVE_WARN(std::string("Scene saved successfully"));
 			return true;
 		}
@@ -250,9 +252,7 @@ namespace SmolEngine
 	SceneStateComponent* Scene::GetStateComponent()
 	{
 		if (HasComponent<SceneStateComponent>(m_SceneData.m_Entity))
-		{
-			&m_SceneData.m_Registry.get<SceneStateComponent>(m_SceneData.m_Entity);
-		}
+			return &m_SceneData.m_Registry.get<SceneStateComponent>(m_SceneData.m_Entity);
 
 		return nullptr;
 	}
@@ -260,32 +260,6 @@ namespace SmolEngine
 	void Scene::CleanRegistry()
 	{
 		m_SceneData.m_Registry.clear();
-	}
-
-	bool Scene::AddAsset(const std::string& fileName, const std::string& filePath)
-	{
-		const auto& result = m_State->AssetMap.find(fileName);
-		if (result == m_State->AssetMap.end())
-		{
-			m_State->AssetMap[fileName] = filePath;
-			return true;
-		}
-
-		NATIVE_WARN("AssetMap: File already exists!");
-		return false;
-	}
-
-	bool Scene::DeleteAsset(const std::string& fileName)
-	{
-		if (fileName == "")
-			return false;
-
-		return m_State->AssetMap.erase(fileName);
-	}
-
-	const std::unordered_map<std::string, std::string>& Scene::GetAssetMap()
-	{
-		return m_State->AssetMap;
 	}
 
 	SceneStateComponent* Scene::GetSceneState()

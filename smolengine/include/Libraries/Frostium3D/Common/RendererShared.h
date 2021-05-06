@@ -17,6 +17,7 @@ namespace Frostium
 
 	class EditorCamera;
 	class Frustum;
+
 	enum class DebugPrimitives : uint16_t
 	{
 		None = 0,
@@ -32,54 +33,66 @@ namespace Frostium
 		SIZE_16
 	};
 
+	struct RendererState
+	{
+		bool bBloomPass = true;
+		bool bBlurPass = false;
+		bool bDrawSkyBox = true;
+		bool bDrawGrid = true;
+	};
+
+
 	struct BeginSceneInfo
 	{
-		void Update(EditorCamera* cam)
+		void Update(Camera* cam)
 		{
-			view = cam->GetViewMatrix();
-			proj = cam->GetProjection();
-			pos = cam->GetPosition();
-			nearClip = cam->GetNearClip();
-			farClip = cam->GetFarClip();
+			View = cam->GetViewMatrix();
+			Proj = cam->GetProjection();
+			Pos = cam->GetPosition();
+			NearClip = cam->GetNearClip();
+			FarClip = cam->GetFarClip();
 		}
 
 	public:
 
-		float                  nearClip;
-		float                  farClip;
-					           
-		glm::vec3              pos;
-		glm::mat4              proj;
-		glm::mat4              view;
+		float                              NearClip = 0.0f;
+		float                              FarClip = 0.0f;
+		float                              Exoposure = 0.0f;
+					                       
+		glm::vec3                          Pos = glm::vec3(0.0f);
+		glm::mat4                          Proj = glm::mat4(1.0f);
+		glm::mat4                          View = glm::mat4(1.0f);
 	};
 
 	struct ClearInfo
 	{
-		bool                   bClear = false;
-		glm::vec4              color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+		bool                               bClear = true;
+		glm::vec4                          color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 	};
 
 	struct SceneData
 	{
-		glm::mat4              Projection = glm::mat4(1.0f);
-		glm::mat4              View = glm::mat4(1.0f);
-		glm::mat4              SkyBoxMatrix = glm::mat4(1.0f);
-		glm::vec4              CamPos = glm::vec4(1.0f);
+		alignas(4) float                   NearClip = 0.0f;
+		alignas(4) float                   FarClip = 0.0f;
+		alignas(4) float                   Exoposure = 1.0f;
+		alignas(4) float                   Pad1 = 0.0f;
 
-		glm::vec4              Params = glm::vec4(2.0f, 4.0f, 1.0f, 1.0f);
-	};
-
-	struct DirectionalLightBuffer
-	{
-		glm::vec4              Position;
-		glm::vec4              Color;
+		alignas(16) glm::mat4              Projection = glm::mat4(1.0f);
+		alignas(16) glm::mat4              View = glm::mat4(1.0f);
+		alignas(16) glm::mat4              SkyBoxMatrix = glm::mat4(1.0f);
+		alignas(16) glm::vec4              CamPos = glm::vec4(1.0f);
+		alignas(16) glm::vec4              AmbientColor = glm::vec4(1.0f);
 	};
 
 	struct PointLightBuffer
 	{
-		glm::vec4              Position;
-		glm::vec4              Color;
-		glm::vec4              Params; // x = Constant, y = Linear, z = Exp
+		alignas(4)  float                  Constant = 1.0f;
+		alignas(4)  float                  Linear = 1.0f;
+		alignas(4)  float                  Exposure = 1.0f;
+		alignas(4)  float                  Pad1 = 1.0f;
+
+		alignas(16) glm::vec4              Position = glm::vec4(0.0f);
+		alignas(16) glm::vec4              Color = glm::vec4(1.0f);
 	};
 
 	struct FullscreenVertex
@@ -105,12 +118,5 @@ namespace Frostium
 
 		inline uint32_t GetTotalVertexCount() { return QuadCount * 4; }
 		inline uint32_t GetTotalIndexCount() { return QuadCount * 6; }
-	};
-
-	struct DebugViewInfo
-	{
-		bool                  bShowOmniCube = false;
-		bool                  bShowMRT = false;
-		uint32_t              mrtAttachmentIndex = 0;
 	};
 }
