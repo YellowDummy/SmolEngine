@@ -180,6 +180,8 @@ namespace SmolEngine
 			m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<RigidbodyComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<StaticBodyComponent>(*actor);
 
 			actor = nullptr;
 		}
@@ -196,7 +198,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent>(output);
+				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticBodyComponent>(output);
 		}
 
 		// Writing result to a file
@@ -237,7 +239,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent>(regisrtyInput);
+				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticBodyComponent>(regisrtyInput);
 		}
 		// Updates sets
 		m_State = GetStateComponent();

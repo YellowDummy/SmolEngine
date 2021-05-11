@@ -64,6 +64,7 @@ namespace SmolEngine
 
 	private:
 
+		inline static WorldAdminStateSComponent*  m_World = nullptr;
 		friend class EditorLayer;
 		friend class WorldAdmin;
 	};

@@ -1,8 +1,7 @@
 #version 460
-#define ambient 0.1
 
 // In
-layout (location = 0)  in vec3 v_ModelPos;
+layout (location = 0)  in vec3 v_FragPos;
 layout (location = 1)  in vec3 v_Normal;
 layout (location = 2)  in vec3 v_CameraPos;
 layout (location = 3)  in vec2 v_UV;
@@ -21,17 +20,11 @@ layout (location = 13) flat in uint v_AOMapIndex;
 
 layout (location = 14) in float v_Metallic;
 layout (location = 15) in float v_Roughness;
-layout (location = 16) in float v_Exposure;
-layout (location = 17) in float v_Gamma;
-layout (location = 18) in float v_Ambient;
 
-layout (location = 19) flat in uint v_DirectionalLightCount;
-layout (location = 20) flat in uint v_PointLightCount;
-
-layout (location = 21) in vec4 v_Color;
-layout (location = 22) in vec4 v_ShadowCoord;
-layout (location = 23) in vec4 v_WorldPos;
-layout (location = 24) in mat3 v_TBN;
+layout (location = 16) in vec4 v_Color;
+layout (location = 17) in vec4 v_ShadowCoord;
+layout (location = 18) in vec4 v_WorldPos;
+layout (location = 19) in mat3 v_TBN;
 
 // Out
 layout (location = 0) out vec4 outColor0;
@@ -45,46 +38,119 @@ layout (binding = 4) uniform samplerCube prefilteredMap;
 layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 // Buffers
-struct DirectionalLightBuffer
+// -----------------------------------------------------------------------------------------------------------------------
+struct SpotLight 
 {
     vec4 position;
+	vec4 direction;
 	vec4 color;
+	
+	float intensity;
+	float cutOff;
+	float outerCutOff;
+    float raduis;
+	
+	float bias;
+	uint is_active;
+	uint cast_shadows;
 };
 
-struct AmbientLightingBuffer
-{
-	vec4 diffuseColor;
-	vec4 specularColor;
-	vec4 ambientColor;
-	vec4 params; // x = IBL scale, y = enable IBL;
-};
-
-struct PointLightBuffer
+struct PointLight 
 {
     vec4 position;
+    vec4 color;
+	
+	float intensity;
+    float raduis;
+	float bias;
+	uint is_active;
+	uint cast_shadows;
+};
+
+layout(std140, binding = 30) readonly buffer PointLightBuffer
+{   
+	PointLight pointLights[];
+};
+
+layout(std140, binding = 31) readonly buffer SpotLightBuffer
+{   
+	SpotLight spotLights[];
+};
+
+layout(std140, binding = 32) uniform DirLightBuffer
+{   
+	vec4 direction;
 	vec4 color;
-	vec4 params;
-};
+	float intensity;
+	float bias;
+	uint is_active;
+	uint cast_shadows;
+	uint soft_shadows;
+} dirLight;
 
-layout(std140, binding = 30) readonly buffer DirectionalLightStorage
+layout(std140, binding = 33) uniform SceneState
 {   
-	DirectionalLightBuffer directionalLights[];
-};
+	float hdrExposure;
+	uint use_ibl;
+	uint numPointsLights;
+	uint numSpotLights;
 
-layout(std140, binding = 31) readonly buffer PointLightStorage
-{   
-	PointLightBuffer pointLights[];
-};
+} sceneState;
 
-layout(std140, binding = 32) uniform AmbientLightingStorage
-{   
-	AmbientLightingBuffer ambientLightingData;
-};
-
-// Constant normal incidence Fresnel factor for all dielectrics.
-const vec3 Fdielectric = vec3(0.04);
-const float PI = 3.141592;
+// PBR functions
+// -----------------------------------------------------------------------------------------------------------------------
+const float PI = 3.14159265359;
 const float Epsilon = 0.00001;
+
+float DistributionGGX(vec3 N, vec3 H, float a)
+{
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+	
+    float nom    = a2;
+    float denom  = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom        = PI * denom * denom;
+	
+    return nom / denom;
+}
+
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
+}
+
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}  
+
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+float insideBox3d(vec3 v, vec3 bl, vec3 br)
+{
+	vec3 s = step(bl, v) - step(br, v);
+	return s.x * s.y * s.z;
+}
 
 float textureProj(vec4 shadowCoord, vec2 off)
 {
@@ -94,7 +160,7 @@ float textureProj(vec4 shadowCoord, vec2 off)
 		float dist = texture( shadowMap, shadowCoord.st + off ).r;
 		if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
 		{
-			shadow = ambient;
+			shadow = 0.1;
 		}
 	}
 	return shadow;
@@ -123,182 +189,206 @@ float filterPCF(vec4 sc)
 	return shadowFactor / count;
 }
 
-// From http://filmicgames.com/archives/75
-vec3 Uncharted2Tonemap(vec3 x)
+vec3 CalcIBL(vec3 N, vec3 V, vec3 F0, vec3 ao, vec3 albedo_color, float metallic_color, float roughness_color)
 {
-	float A = 0.15;
-	float B = 0.50;
-	float C = 0.10;
-	float D = 0.20;
-	float E = 0.02;
-	float F = 0.30;
-	return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+	float cosLo = max(dot(N, -V), 0.0);
+	vec3 ReflDirectionWS = reflect(-V, N);
+    vec3 F = fresnelSchlickRoughness(cosLo, F0, roughness_color);
+	
+    vec3 kD = (1.0 - F) * (1.0 - metallic_color);
+    
+    vec3 irradiance = texture(samplerIrradiance, -N).rgb;
+	vec3 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, 1.0 - roughness_color)).rgb;
+    vec3 diffuseIBL = irradiance * ( kD * albedo_color);
+    
+	int specularTextureLevels = textureQueryLevels(prefilteredMap);
+	vec3 specularIrradiance =  textureLod(prefilteredMap, -ReflDirectionWS, roughness_color * specularTextureLevels).rgb;
+    vec3 specularIBL = specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
+	specularIBL = specularIBL / 2.5;
+    
+	return (diffuseIBL + specularIBL) * ao;
 }
 
-vec4 tonemap(vec4 color)
+vec3 CalcDirLight(vec3 V, vec3 N, vec3 F0, vec3 albedo_color, float metallic_color, float roughness_color)
 {
-	vec3 outcol = Uncharted2Tonemap(color.rgb * v_Exposure);
-	outcol = outcol * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
-	return vec4(pow(outcol, vec3(1.0f / v_Gamma)), color.a);
+	vec3 L = normalize(dirLight.direction.xyz - v_FragPos);
+    vec3 H = normalize(V + L);
+	float NdotL = max(dot(N, L), 0.0);       
+	
+    // Cook-Torrance BRDF
+    float NDF = DistributionGGX(N, H, roughness_color);   
+    float G   = GeometrySmith(N, V, L, roughness_color);      
+    vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	
+    vec3 kd = mix(vec3(1.0) - F, vec3(0.0), metallic_color);
+	vec3 diffuseBRDF = kd * albedo_color;
+	vec3 specularBRDF = (F * NDF * G) / max(Epsilon, 4.0 * NdotL * 0.8);
+	
+	return ((albedo_color / PI + diffuseBRDF + specularBRDF) * vec3(1.0) * NdotL) * dirLight.intensity * 5.0 * dirLight.color.rgb;
 }
 
-// GGX/Towbridge-Reitz normal distribution function.
-// Uses Disney's reparametrization of alpha = roughness^2.
-float ndfGGX(float cosLh, float roughness)
-{
-	float alpha   = roughness * roughness;
-	float alphaSq = alpha * alpha;
+vec3 CalcPointLight(PointLight light, vec3 V, vec3 N, vec3 F0, vec3 albedo_color, float metallic_color, float roughness_color)
+{           
+    float distance = length(light.position.xyz - v_FragPos);
+	if(distance > light.raduis) return vec3(0);
 
-	float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
-	return alphaSq / (PI * denom * denom);
+	vec3 L = normalize(light.position.xyz - v_FragPos);
+    vec3 H = normalize(V + L);
+	float NdotL = max(dot(N, L), 0.0);       
+	
+	//float attenuation = 1 * ((distance + light.quadratic/light.linear) * (distance * distance)) / (light.linear * distance);
+
+    float attenuation;// = smoothstep(light.raduis, 0, distance);//1.0 - (distance / (light.raduis));
+	attenuation = clamp(1.0 - distance/light.raduis, 0.0, 1.0); attenuation *= attenuation;
+	//attenuation = clamp(1.0 - distance*distance/(light.raduis*light.raduis), 0.0, 1.0); attenuation *= attenuation;
+	//if(attenuation < 0) attenuation = 0;
+	//if(attenuation > 1) attenuation = 1;
+	
+    vec3 radiance = vec3(1.0) * attenuation * light.intensity;
+	
+    // Cook-Torrance BRDF
+    float NDF = DistributionGGX(N, H, roughness_color);   
+    float G   = GeometrySmith(N, V, L, roughness_color);      
+    vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	
+    vec3 kd = mix(vec3(1.0) - F, vec3(0.0), metallic_color);
+	vec3 diffuseBRDF = kd * albedo_color;
+	vec3 specularBRDF = (F * NDF * G) / max(Epsilon, 4.0 * NdotL * 0.8);      
+	
+	return (albedo_color / PI + diffuseBRDF + specularBRDF) * radiance * NdotL * light.color.rgb;
 }
 
-// Single term for separable Schlick-GGX below.
-float gaSchlickG1(float cosTheta, float k)
+vec3 CalcSpotLight(SpotLight light, vec3 V, vec3 N, vec3 F0, vec3 albedo_color, float metallic_color, float roughness_color)
 {
-	return cosTheta / (cosTheta * (1.0 - k) + k);
-}
+    float distance = length(light.position.xyz - v_FragPos);
+	if(distance > light.raduis) return vec3(0);
+	
+	vec3 L = normalize(light.position.xyz - v_FragPos);
+	float theta = dot(L, normalize(-light.direction.xyz));
+	
+	if(theta > light.outerCutOff) return vec3(0); // we're working with angles as cosines instead of degrees so a '>' is used.
+	
+	// spotlight (soft edges)
+    float epsilon = (light.cutOff - light.outerCutOff);
+    float intensitys = clamp((light.outerCutOff - theta) / epsilon, 0.0, 1.0);
+	vec3 H = normalize(V + L);
+	float NdotL = max(dot(N, L), 0.0);   
 
-// Schlick-GGX approximation of geometric attenuation function using Smith's method.
-float gaSchlickGGX(float cosLi, float cosLo, float roughness)
-{
-	float r = roughness + 1.0;
-	float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
-	return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
-}
-
-// Shlick's approximation of the Fresnel factor.
-vec3 fresnelSchlick(vec3 F0, float cosTheta)
-{
-	return F0 + (vec3(1.0) - F0) * pow(1.0 - cosTheta, 5.0);
+    float attenuation = 1.0 - (distance / (light.raduis));
+	if(attenuation < 0) attenuation = 0;
+	if(attenuation > 1) attenuation = 1;
+	
+    vec3 radiance = vec3(1.0) * attenuation * light.intensity * intensitys;
+	
+    // Cook-Torrance BRDF direction
+    float NDF = DistributionGGX(N, H, roughness_color);   
+    float G   = GeometrySmith(N, V, L, roughness_color);      
+    vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	
+    vec3 kd = mix(vec3(1.0) - F, vec3(0.0), metallic_color);
+	vec3 diffuseBRDF = kd * albedo_color;
+	vec3 specularBRDF = (F * NDF * G) / max(Epsilon, 4.0 * NdotL * 0.8);	       
+	
+	return (albedo_color / PI + diffuseBRDF + specularBRDF) * radiance * NdotL * light.color.rgb;
 }
 
 vec3 getNormal()
 {
-    if(v_UseNormalMap == 1)
+	if(v_UseNormalMap == 1)
 	{
-		return v_TBN * normalize(texture(texturesMap[v_NormalMapIndex], v_UV).xyz * 2.0 - vec3(1.0));
+		 vec3 tangentNormal = texture(texturesMap[v_NormalMapIndex], v_UV).xyz * 2.0 - 1.0;
+	    return normalize(v_TBN * tangentNormal);
 	}
-
-	return v_TBN[2];
+	
+	return normalize(v_Normal);
 }
 
 void main()
 {	
-	// Getting Values 
-	vec3 N = getNormal();
+	// Getting Values
+	//--------------------------------------------
+	vec3 N = getNormal(); 						
+	vec3 V = normalize(v_CameraPos - v_FragPos); 
 	vec3 ao = v_UseAOMap == 1 ? texture(texturesMap[v_AOMapIndex], v_UV).rrr : vec3(1, 1, 1);
 	vec3 albedro = v_UseAlbedroMap == 1 ? texture(texturesMap[v_AlbedroMapIndex], v_UV).rgb : v_Color.rgb;
-	albedro = pow(albedro, vec3(2.2));
-
 	float metallic = v_UseMetallicMap == 1 ? texture(texturesMap[v_MetallicMapIndex], v_UV).r : v_Metallic;
 	float roughness = v_UseRoughnessMap == 1 ? texture(texturesMap[v_RoughnessMapIndex], v_UV).r: v_Roughness;
-	
-	// Outgoing light direction (vector from world-space fragment position to the "eye").
-	vec3 Lo = normalize(v_CameraPos - v_ModelPos);
+	albedro = pow(albedro, vec3(2.2));
 
-	// Angle between surface normal and outgoing light direction.
-	float cosLo = max(0.0, dot(N, Lo));
-
-	// Specular reflection vector.
-	vec3 Lr = 2.0 * cosLo * N - Lo;
-	vec3 F0 = vec3(0.04); 
-	F0 = mix(F0, albedro, metallic);
-
-    // Ambient lighting (IBL).
-	vec3 ambientLighting = ambientLightingData.ambientColor.rgb;
-	if(ambientLightingData.params.y == 1.0)
+	// Ambient Lighting (IBL)
+	//--------------------------------------------
+	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
+    vec3 ambient = vec3(0.0);
+	if(sceneState.use_ibl == 1)
 	{
-		vec3 F = fresnelSchlick(F0, cosLo);
-		// Get diffuse contribution factor (as with direct lighting).
-		vec3 kd = mix(vec3(1.0), F, metallic);
-
-		// Sample diffuse irradiance at normal direction.
-		vec3 irradiance = texture(samplerIrradiance, -N).rgb;
-		// Split-sum approximation factors for Cook-Torrance specular BRDF.
-		vec3 specularBRDF = texture(samplerBRDFLUT, vec2(cosLo, 1.0 - roughness)).rgb;
-		// Sample pre-filtered specular reflection environment at correct mipmap level.
-		int specularTextureLevels = textureQueryLevels(prefilteredMap);
-		vec3 specularIrradiance =  textureLod(prefilteredMap, -Lr, roughness * specularTextureLevels).rgb;
-		
-		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
-		vec3 diffuseIBL = irradiance * ( kd * albedro * ambientLightingData.diffuseColor.rgb);
-
-		// Total specular IBL contribution.
-		vec3 specularIBL = specularIrradiance * (F0 * ambientLightingData.specularColor.rgb * specularBRDF.x + specularBRDF.y);
-
-		diffuseIBL *= ambientLightingData.params.x; // x = IBL scale
-		specularIBL *= ambientLightingData.params.x;
-
-		// Total ambient lighting contribution.
-		ambientLighting = diffuseIBL + specularIBL;
-	}
-	
-	// Direct lighting calculation for analytical lights.
-	vec3 directLighting = vec3(0);
-	for(int i=0; i< v_DirectionalLightCount; ++i)
-	{
-		vec3 L = normalize(directionalLights[0].position.xyz - v_WorldPos.xyz);
-		vec3 Lradiance = directionalLights[i].color.rgb;
-
-		// Half-vector between Li and Lo.
-		vec3 Lh = normalize(L + Lo);
-
-		// Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0, dot(N, L));
-		float cosLh = max(0.0, dot(N, Lh));
-
-		// Calculate Fresnel term for direct lighting. 
-		vec3 F  = fresnelSchlick(F0, max(0.0, dot(Lh, Lo)));
-		// Calculate normal distribution for specular BRDF.
-		float D = ndfGGX(cosLh, roughness);
-		// Calculate geometric attenuation for specular BRDF.
-		float G = gaSchlickGGX(cosLi, cosLo, roughness);
-
-		// Diffuse scattering happens due to light being refracted multiple times by a dielectric medium.
-		// Metals on the other hand either reflect or absorb energy, so diffuse contribution is always zero.
-		// To be energy conserving we must scale diffuse BRDF contribution based on Fresnel factor & metalness.
-		vec3 kd = mix(vec3(1.0) - F, vec3(0.0), metallic);
-
-		// Lambert diffuse BRDF.
-		// We don't scale by 1/PI for lighting & material units to be more convenient.
-		// See: https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
-		vec3 diffuseBRDF = kd * albedro;
-
-		// Cook-Torrance specular microfacet BRDF.
-		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * 0.8);
-		vec3 result = (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
-		// Total contribution for this light.
-		directLighting += result * 2.0; // temp
+		ambient = CalcIBL(N, V, F0, ao, albedro, metallic, roughness);
 	}
 
-	// Point lighting calculation
-	vec3 pointLighting = vec3(0);
-	for(int i=0; i< v_PointLightCount; ++i)
+	vec3 Lo = vec3(0.0);
+	// Direct Lighting
+	//--------------------------------------------
+	 if(dirLight.is_active == 1)
+	 {
+		 Lo += CalcDirLight(V, N, F0, albedro, metallic, roughness);
+	 }
+
+	// Point Lighting
+	//--------------------------------------------
+	for(int i = 0; i < sceneState.numPointsLights; i++)
 	{
-		float constantAtt = pointLights[i].params.x;
-		float linearAtt = pointLights[i].params.y;
-		float expAtt = pointLights[i].params.z;
-
-	    vec3 posToLight = v_ModelPos - pointLights[i].position.xyz;
-	    float dist = length(posToLight);
-	    posToLight = normalize(posToLight);
-		float diffuse = max(0.0, dot(N, -posToLight));
-
-		float attTotal = constantAtt + linearAtt * dist + expAtt * dist * dist;
-		pointLighting += pointLights[i].color.rgb * (ambientLighting + diffuse) / attTotal;
+		if(pointLights[i].is_active == 1)
+		{
+			Lo += CalcPointLight(pointLights[i], V, N, F0, albedro, metallic, roughness);
+		}
 	}
 
-	vec3 color = directLighting + pointLighting;
-	color += ambientLighting;
-	if(v_DirectionalLightCount > 0)
+	// Spot Lighting
+	//--------------------------------------------
+	for(int i = 0; i < sceneState.numSpotLights; i++)
 	{
-		float shadow = filterPCF(v_ShadowCoord / v_ShadowCoord.w);
-		color*= shadow;
+		if(spotLights[i].is_active == 1)
+		{
+			Lo += CalcSpotLight(spotLights[i], V, N, F0, albedro, metallic, roughness);
+		}
 	}
 
+	// Final Shading
+	//--------------------------------------------
+	vec3 color = ambient + Lo;
+	float shadow = 0.0;
+	if(dirLight.cast_shadows == 1)
+	{
+		if(dirLight.soft_shadows == 1)
+		{
+			shadow = filterPCF(v_ShadowCoord / v_ShadowCoord.w);
+		}
+		else
+		{
+			ivec2 texDim = textureSize(shadowMap, 0);
+			shadow = textureProj(v_ShadowCoord, texDim);
+		}
+
+		color *= shadow;
+    }
+
+	// Emission
+	//--------------------------------------------
+
+	//if (use_emission)
+	//{
+		// emission
+	//	vec3 emi = emission * emission_power;
+	//	if(use_tex_emission){
+	//		emi *= texture(tex_emission, TexCoords).r;
+	//	}
+	//	color += emi;
+	//}
+
+	// HDR
+	//--------------------------------------------
 	// Color with manual exposure into attachment 0
-	outColor0.rgb = vec3(1.0) - exp(-color.rgb * 1.0);
+
+	outColor0.rgb = vec3(1.0) - exp(-color.rgb * sceneState.hdrExposure);
 
 	// Bright parts for bloom into attachment 1
 	float l = dot(outColor0.rgb, vec3(0.2126, 0.7152, 0.0722));

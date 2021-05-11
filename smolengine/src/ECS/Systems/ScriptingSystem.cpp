@@ -11,7 +11,7 @@ namespace SmolEngine
 {
 	bool ScriptingSystem::AttachNativeScript(Actor* actor, const std::string& scriptName)
 	{
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		ScriptingSystemStateSComponent* instance = m_State;
 		if (instance == nullptr)
 			return false;
 
@@ -86,8 +86,8 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnBegin()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		entt::registry* reg = m_World->m_CurrentRegistry;
+		ScriptingSystemStateSComponent* instance = m_State;
 
 		const auto& view = reg->view<BehaviourComponent>();
 		for (const auto& entity : view)
@@ -100,8 +100,8 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnEnd()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		entt::registry* reg = m_World->m_CurrentRegistry;
+		ScriptingSystemStateSComponent* instance = m_State;
 
 		const auto& view = reg->view<BehaviourComponent>();
 		for (const auto& entity : view)
@@ -114,8 +114,8 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnTick(Frostium::DeltaTime deltaTime)
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		entt::registry* reg = m_World->m_CurrentRegistry;
+		ScriptingSystemStateSComponent* instance = m_State;
 
 		const auto& view = reg->view<BehaviourComponent>();
 		for (const auto& entity : view)
@@ -128,7 +128,7 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnDestroy(Actor* actor)
 	{
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		ScriptingSystemStateSComponent* instance = m_State;
 
 		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(actor);
 		if (behaviour && instance)
@@ -140,8 +140,8 @@ namespace SmolEngine
 
 	void ScriptingSystem::ReloadScripts()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		entt::registry* reg = m_World->m_CurrentRegistry;
+		ScriptingSystemStateSComponent* instance = m_State;
 
 		const auto& view = reg->view<BehaviourComponent>();
 		for (const auto& entity : view)
@@ -239,8 +239,8 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnDebugDraw()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		entt::registry* reg = m_World->m_CurrentRegistry;
+		ScriptingSystemStateSComponent* instance = m_State;
 
 		const auto& view = reg->view<BehaviourComponent>();
 		for (const auto& entity : view)

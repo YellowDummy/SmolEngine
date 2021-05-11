@@ -17,14 +17,14 @@ namespace SmolEngine
 
 	void JobsSystem::BeginSubmition()
 	{
-		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
+		JobsSystemStateSComponent* instance = m_State;
 		instance->bBeginSubmition = true;
 		Clear();
 	}
 
 	void JobsSystem::EndSubmition(bool wait)
 	{
-		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
+		JobsSystemStateSComponent* instance = m_State;
 		instance->bBeginSubmition = false;
 		Complete(wait);
 	}

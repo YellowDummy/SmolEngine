@@ -6,8 +6,8 @@
 #include "ECS/Components/Singletons/Box2DWorldSComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 
-#include "Physics2D/Box2D/Body2DDefs.h"
-#include "Physics2D/Box2D/RayCast2D.h"
+#include "Physics/Box2D/Body2DDefs.h"
+#include "Physics/Box2D/RayCast2D.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -46,11 +46,11 @@ namespace SmolEngine
 
 		if (body.m_Density == 1.0f)
 		{
-			if (body.m_ShapeType == (int)ShapeType::Box)
+			if (body.m_ShapeType == (int)Shape2DType::Box)
 			{
 				body.m_Density = body.m_Mass / ((body.m_Shape.x * 2.0f) * (body.m_Shape.y * 2.0f));
 			}
-			if (body.m_ShapeType == (int)ShapeType::Cirlce)
+			if (body.m_ShapeType == (int)Shape2DType::Cirlce)
 			{
 				body.m_Density = body.m_Mass / ((body.m_Radius * 2.0f) * (body.m_Radius));
 			}
@@ -71,7 +71,7 @@ namespace SmolEngine
 
 	void Physics2DSystem::DeleteBodies(b2World* world)
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		entt::registry* reg = m_World->m_CurrentRegistry;
 
 		const auto& group = reg->view<Body2DComponent>();
 		for (const auto& entity : group)
@@ -184,14 +184,14 @@ namespace SmolEngine
 	{
 		switch (bodyDef->m_ShapeType)
 		{
-		case (int)ShapeType::Box:
+		case (int)Shape2DType::Box:
 		{
 			b2PolygonShape box;
 			box.SetAsBox(bodyDef->m_Shape.x / 2, bodyDef->m_Shape.y / 2);
 			bodyDef->m_Fixture = bodyDef->m_Body->CreateFixture(&box, 0.0f);
 			break;
 		}
-		case (int)ShapeType::Cirlce:
+		case (int)Shape2DType::Cirlce:
 		{
 			b2CircleShape circle;
 			circle.m_radius = bodyDef->m_Radius;
@@ -219,7 +219,7 @@ namespace SmolEngine
 
 		switch (bodyDef->m_ShapeType)
 		{
-		case (int)ShapeType::Box:
+		case (int)Shape2DType::Box:
 		{
 			b2PolygonShape box;
 			box.SetAsBox(bodyDef->m_Shape.x / 2, bodyDef->m_Shape.y / 2);
@@ -233,7 +233,7 @@ namespace SmolEngine
 			bodyDef->m_Fixture = bodyDef->m_Body->CreateFixture(&fixtureDef);
 			break;
 		}
-		case (int)ShapeType::Cirlce:
+		case (int)Shape2DType::Cirlce:
 		{
 			b2CircleShape circle;
 			circle.m_radius = bodyDef->m_Radius;
@@ -268,7 +268,7 @@ namespace SmolEngine
 
 		switch (bodyDef->m_ShapeType)
 		{
-		case (int)ShapeType::Box:
+		case (int)Shape2DType::Box:
 		{
 			b2PolygonShape box;
 			box.SetAsBox(bodyDef->m_Shape.x / 2, bodyDef->m_Shape.y / 2);
@@ -282,7 +282,7 @@ namespace SmolEngine
 			bodyDef->m_Fixture = bodyDef->m_Body->CreateFixture(&fixtureDef);
 			break;
 		}
-		case (int)ShapeType::Cirlce:
+		case (int)Shape2DType::Cirlce:
 		{
 			b2CircleShape circle;
 			circle.m_radius = bodyDef->m_Radius;
@@ -403,9 +403,9 @@ namespace SmolEngine
 
 	void Physics2DSystem::UpdateTransforms()
 	{
-		entt::registry& reg = WorldAdmin::GetSingleton()->GetActiveScene()->GetRegistry();
+		entt::registry* reg = m_World->m_CurrentRegistry;
 
-		auto& group = reg.view<TransformComponent, Body2DComponent>();
+		auto& group = reg->view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);

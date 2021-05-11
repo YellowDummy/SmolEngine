@@ -5,6 +5,8 @@
 
 namespace SmolEngine
 {
+	struct JobsSystemStateSComponent;
+
 	enum class JobPriority : uint32_t
 	{
 		General,
@@ -29,5 +31,10 @@ namespace SmolEngine
 
 		static void Complete(bool wait);
 		static void Clear();
+
+	private:
+
+		inline static JobsSystemStateSComponent* m_State;
+		friend class WorldAdmin;
 	};
 }

@@ -38,6 +38,7 @@ bin/
 vendor/bin-int/
 vendor/fmod/libs/
 vendor/frostium/libs/
+vendor/physx/libs/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/

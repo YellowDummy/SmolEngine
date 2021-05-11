@@ -49,6 +49,7 @@ project "SmolEngine"
 		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
+		"vendor/physx/include/"
 	}
 
 	links 
@@ -85,12 +86,17 @@ project "SmolEngine"
 
 		links 
 		{ 
-		   "vendor/frostium/libs/Frostium_d.lib"
+		   "vendor/frostium/libs/Frostium_d.lib",
+		   "vendor/physx/lib/debug/PhysX_64.lib",
+		   "vendor/physx/lib/debug/PhysXCommon_64.lib",
+		   "vendor/physx/lib/debug/PhysXFoundation_64.lib",
+		   "vendor/physx/lib/debug/PhysXExtensions_static_64.lib",
 		}
 
 		defines
 		{
-			"SMOLENGINE_DEBUG"
+			"SMOLENGINE_DEBUG",
+			"_DEBUG"
 		}
 		
 
@@ -102,7 +108,16 @@ project "SmolEngine"
 
 		links 
 		{ 
-		   "vendor/frostium/libs/Frostium.lib"
+		   "vendor/frostium/libs/Frostium.lib",
+		   "vendor/physx/lib/release/PhysX_64.lib",
+		   "vendor/physx/lib/release/PhysXCommon_64.lib",
+		   "vendor/physx/lib/release/PhysXFoundation_64.lib",
+		   "vendor/physx/lib/release/PhysXExtensions_static_64.lib",
+		}
+
+		defines
+		{
+			"NDEBUG"
 		}
 
 

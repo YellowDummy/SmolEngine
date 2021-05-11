@@ -39,7 +39,7 @@ void main(void)
 									0.0024499299678342);
 
 
-	const float blurScale = 0.0003;
+	const float blurScale = 0.00045;
 	const float blurStrength = 1.0;
 
 	float ar = 1.0;

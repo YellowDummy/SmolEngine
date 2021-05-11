@@ -70,8 +70,6 @@ layout(push_constant) uniform ConstantData
 	mat4 lightSpace;
 
 	uint dataOffset;
-	uint directionalLights;
-	uint pointLights;
 };
 
 const mat4 biasMat = mat4( 
@@ -81,7 +79,7 @@ const mat4 biasMat = mat4(
 	0.5, 0.5, 0.0, 1.0 
 );
 
-layout (location = 0)  out vec3 v_ModelPos;
+layout (location = 0)  out vec3 v_FragPos;
 layout (location = 1)  out vec3 v_Normal;
 layout (location = 2)  out vec3 v_CameraPos;
 layout (location = 3)  out vec2 v_UV;
@@ -100,17 +98,11 @@ layout (location = 13) out uint v_AOMapIndex;
 
 layout (location = 14) out float v_Metallic;
 layout (location = 15) out float v_Roughness;
-layout (location = 16) out float v_Exposure;
-layout (location = 17) out float v_Gamma;
-layout (location = 18) out float v_Ambient;
 
-layout (location = 19) out uint v_DirectionalLightCount;
-layout (location = 20) out uint v_PointLightCount;
-
-layout (location = 21) out vec4 v_Color;
-layout (location = 22) out vec4 v_ShadowCoord;
-layout (location = 23) out vec4 v_WorldPos;
-layout (location = 24) out mat3 v_TBN;
+layout (location = 16) out vec4 v_Color;
+layout (location = 17) out vec4 v_ShadowCoord;
+layout (location = 18) out vec4 v_WorldPos;
+layout (location = 19) out mat3 v_TBN;
 
 void main()
 {
@@ -131,25 +123,18 @@ void main()
 		a_Weight.w * joints[animOffset + uint(a_BoneIDs.w)];
 	}
 
-	v_ModelPos = vec3(model * skinMat *  vec4(a_Position, 1.0));
-	v_Normal =  mat3(model * skinMat) * a_Normal;
-	v_CameraPos = sceneData.camPos.rgb;
-	v_DirectionalLightCount = directionalLights;
-	v_PointLightCount = pointLights;
-	v_ShadowCoord = ( biasMat * lightSpace * model * skinMat) * vec4(a_Position, 1.0);	
+	const mat4 modelSkin = model * skinMat;
+	v_FragPos = vec3(modelSkin *  vec4(a_Position, 1.0));
+	v_Normal =  mat3(transpose(inverse(modelSkin))) * a_Normal;
+	v_CameraPos = sceneData.camPos.xyz;
+	v_ShadowCoord = ( biasMat * lightSpace * modelSkin) * vec4(a_Position, 1.0);	
 	v_WorldPos = vec4(a_Position, 1.0);
 	v_UV = a_UV;
 
-	// temp
-	v_Exposure = 1.0;
-	v_Gamma = 1.0;
-	v_Ambient = 1.0;
-
 	// TBN matrix
-	vec4 modelTangent = vec4(mat3(model * skinMat) * a_Tangent.xyz, 1.0);
-	vec3 N = normalize(v_Normal);
-	vec3 T = normalize(modelTangent.xyz);
-	vec3 B = normalize(cross(N, T));
+	vec3 T = normalize(vec3(modelSkin * vec4(a_Tangent, 0.0)));
+	vec3 N = normalize(vec3(modelSkin * vec4(a_Normal, 0.0)));
+	vec3 B = normalize(vec3(modelSkin * vec4(cross(N, T), 0.0)));
 	v_TBN = mat3(T, B, N);
 
 	// PBR Params

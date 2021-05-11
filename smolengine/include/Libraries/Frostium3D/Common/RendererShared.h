@@ -33,15 +33,6 @@ namespace Frostium
 		SIZE_16
 	};
 
-	struct RendererState
-	{
-		bool bBloomPass = true;
-		bool bBlurPass = false;
-		bool bDrawSkyBox = true;
-		bool bDrawGrid = true;
-	};
-
-
 	struct BeginSceneInfo
 	{
 		void Update(Camera* cam)
@@ -82,17 +73,6 @@ namespace Frostium
 		alignas(16) glm::mat4              SkyBoxMatrix = glm::mat4(1.0f);
 		alignas(16) glm::vec4              CamPos = glm::vec4(1.0f);
 		alignas(16) glm::vec4              AmbientColor = glm::vec4(1.0f);
-	};
-
-	struct PointLightBuffer
-	{
-		alignas(4)  float                  Constant = 1.0f;
-		alignas(4)  float                  Linear = 1.0f;
-		alignas(4)  float                  Exposure = 1.0f;
-		alignas(4)  float                  Pad1 = 1.0f;
-
-		alignas(16) glm::vec4              Position = glm::vec4(0.0f);
-		alignas(16) glm::vec4              Color = glm::vec4(1.0f);
 	};
 
 	struct FullscreenVertex

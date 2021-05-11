@@ -3,6 +3,8 @@
 
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 
+#include "Physics/PhysX/PhysXBase.h"
+
 namespace SmolEngine 
 {
 	Engine* Engine::s_Instance = nullptr;

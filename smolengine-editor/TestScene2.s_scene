@@ -6,77 +6,51 @@ value4: 1
 value5: 1
 value6:
   value0: 0
-  value1: New_Sprite_0
+  value1: New_Mesh_0
   value2: Default
   value3: true
   value4: false
   value5: 0
-  value6: 4
+  value6: 3
 value7: 0
 value8: 0
-value9: 1
-value10: 1
-value11:
-  value0: 1
-  value1: 1
-  value2: 1
-  value3: 1
-  value4: 0
-  value5: C:\Dev\Test\Lion_Albedo.PNG
-  value6: true
-  value7: 2
+value9: 0
+value10: 0
+value11: 0
 value12: 0
-value13: 0
-value14: 0
-value15: 1
-value16: 1
-value17:
+value13: 1
+value14: 1
+value15:
   value0: 0
   value1: 0
   value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
+  value3: 2
+  value4: 2
+  value5: 2
   value6: 0
-  value7: 5.2580618858337402
+  value7: 10.739204406738281
   value8: 0
   value9: 1
-value18: 0
+value16: 0
+value17: 0
+value18: 1
 value19: 1
-value20: 1
-value21:
+value20:
   value0:
-    value0: true
-    value1: 1
-    value2: 0.30000001192092896
-    value3: 0
-    value4: 0
-    value5: 1
-    value6: 1
-    value7: true
-    value8: false
-    value9: false
-    value10: 0
-    value11: 1
-    value12: 1
-    value13: 2
-    value14: 0
-    value15: 0.5
-    value16: 0
-    value17: 0
-    value18: 0
-    value19: 0
-  value1: 0
-  value2: true
-  value3: 3
+    - C:\Dev\SmolEngine\smolengine-editor\stone.s_mat
+  value1: true
+  value2: false
+  value3: true
+  value4: 2
+  value5: C:\Dev\Frostium3D\samples\Assets\cylinder.gltf
+  value6: 2
+value21: 0
 value22: 0
-value23: 0
+value23: 1
 value24: 0
-value25: 1
-value26: 0
-value27:
+value25:
   value0: 0
   value1: TestScene2.s_scene
-  value2: ""
+  value2: TestScene2
   value3:
     - value0: 1

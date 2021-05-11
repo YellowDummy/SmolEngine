@@ -315,13 +315,13 @@ namespace SmolEngine
 		ImGui::Extensions::InputInt("Layer", rb->Body.m_CollisionLayer);
 		ImGui::NewLine();
 
-		if (rb->Body.m_ShapeType == (int)ShapeType::Box)
+		if (rb->Body.m_ShapeType == (int)Shape2DType::Box)
 		{
 			ImGui::Extensions::InputFloat2Base("Size", rb->Body.m_Shape);
 			ImGui::NewLine();
 		}
 
-		if (rb->Body.m_ShapeType == (int)ShapeType::Cirlce)
+		if (rb->Body.m_ShapeType == (int)Shape2DType::Cirlce)
 		{
 			ImGui::Extensions::InputFloat("Radius", rb->Body.m_Radius);
 			ImGui::Extensions::InputFloat2Base("Offset", rb->Body.m_Offset);
@@ -839,7 +839,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Empty Actor"))
 					{
-						ss << "New_EmptyActor_" << state->Actors.size();
+						ss << "EmptyActor" << state->Actors.size();
 						m_World->GetActiveScene()->CreateActor(ss.str());
 					}
 
@@ -847,21 +847,21 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Point Light 2D"))
 						{
-							ss << "New_Light2D_" << state->Actors.size();
+							ss << "Light2D" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Point Light"))
 						{
-							ss << "New_PointLight_" << state->Actors.size();
+							ss << "PointLight" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<PointLightComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Directional Light"))
 						{
-							ss << "New_DirectionalLight_" << state->Actors.size();
+							ss << "DirectionalLight" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
@@ -873,7 +873,7 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Rigidbody 2D"))
 						{
-							ss << "New_Rigidbody2D_" << state->Actors.size();
+							ss << "Rigidbody2D" << state->Actors.size();
 							Actor* actor = m_World->GetActiveScene()->CreateActor(ss.str());
 							m_World->GetActiveScene()->AddComponent<Body2DComponent>(actor,
 								actor, 0);
@@ -886,7 +886,7 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Sprite"))
 						{
-							ss << "New_Sprite_" << state->Actors.size();
+							ss << "Sprite" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<Texture2DComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
@@ -898,7 +898,7 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Mesh"))
 						{
-							ss << "New_Mesh_" << state->Actors.size();
+							ss << "Mesh" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<MeshComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
@@ -911,28 +911,28 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Audio Source"))
 						{
-							ss << "New_AudioSource_" << state->Actors.size();
+							ss << "AudioSource" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<AudioSourceComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Animation 2D"))
 						{
-							ss << "New_Animation2D_" << state->Actors.size();
+							ss << "Animation2D" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<Animation2DComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Canvas"))
 						{
-							ss << "New_Canvas_" << state->Actors.size();
+							ss << "Canvas" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<CanvasComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
 
 						if (ImGui::MenuItem("Camera"))
 						{
-							ss << "New_Camera_" << state->Actors.size();
+							ss << "Camera" << state->Actors.size();
 							m_World->GetActiveScene()->AddComponent<CameraComponent>
 								(m_World->GetActiveScene()->CreateActor(ss.str()));
 						}
@@ -1061,31 +1061,18 @@ namespace SmolEngine
 		ImGui::NewLine();
 	}
 
-	void EditorLayer::DrawDirectionalLightComponent(DirectionalLightComponent* light)
+	void EditorLayer::DrawDirectionalLightComponent(DirectionalLightComponent* comp)
 	{
-		if (ImGui::Extensions::CheckBox("Cast Shadows", light->bCastShadows))
-		{
-			entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
+		glm::vec3* dir = (glm::vec3*)&comp->Light.Direction;
+		bool* cast_shadow = (bool*)&comp->Light.IsCastShadows;
+		bool* is_active = (bool*)&comp->Light.IsActive;
 
-			const auto& view = reg.view<DirectionalLightComponent>();
-			for (const auto& entity : view)
-			{
-				auto& lightRef = view.get<DirectionalLightComponent>(entity);
+		ImGui::Extensions::CheckBox("Use", *is_active);
+		ImGui::Extensions::CheckBox("Cast Shadows", *cast_shadow);
 
-				if (light->bCastShadows)
-				{
-					if (&lightRef != light)
-						lightRef.bCastShadows = false;
-					continue;
-				}
-
-				lightRef.bCastShadows = false;
-			}
-		}
-
-		ImGui::Extensions::InputFloat("Intensity", light->Intensity);
-		ImGui::Extensions::DragFloat3Base("Direction", light->Direction);
-		ImGui::Extensions::ColorInput3("Color", light->Color);
+		ImGui::Extensions::InputFloat("Intensity", comp->Light.Intensity);
+		ImGui::Extensions::DragFloat3Base("Direction", *dir);
+		ImGui::Extensions::ColorInput3("Color", comp->Light.Color);
 	}
 
 	void EditorLayer::DrawMeshInspector(bool& show)
@@ -1143,14 +1130,15 @@ namespace SmolEngine
 		}
 	}
 
-	void EditorLayer::DrawPointLightComponent(PointLightComponent* light)
+	void EditorLayer::DrawPointLightComponent(PointLightComponent* comp)
 	{
-		ImGui::Extensions::CheckBox("Enabled", light->bEnabled);
-		ImGui::Extensions::InputFloat("Constant", light->Constant);
-		ImGui::Extensions::InputFloat("Linear", light->Linear);
-		ImGui::Extensions::InputFloat("Exposure", light->Exposure);
-		ImGui::Extensions::InputFloat3Base("Offset", light->Offset);
-		ImGui::Extensions::ColorInput3("Color", light->Color);
+		bool* cast_shadow = (bool*)&comp->Light.IsCastShadows;
+		bool* is_active = (bool*)&comp->Light.IsActive;
+
+		ImGui::Extensions::CheckBox("Enabled", *is_active);
+		ImGui::Extensions::InputFloat("Exposure", comp->Light.Intensity);
+		ImGui::Extensions::InputFloat("Radius", comp->Light.Raduis);
+		ImGui::Extensions::ColorInput3("Color", comp->Light.Color);
 	}
 
 	void EditorLayer::DrawScriptComponent(uint32_t index)

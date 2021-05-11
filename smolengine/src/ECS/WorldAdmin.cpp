@@ -4,10 +4,12 @@
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/RendererSystem.h"
 #include "ECS/Systems/Physics2DSystem.h"
+#include "ECS/Systems/PhysicsSystem.h"
 #include "ECS/Systems/AudioSystem.h"
 #include "ECS/Systems/CameraSystem.h"
 #include "ECS/Systems/UISystem.h"
 #include "ECS/Systems/ScriptingSystem.h"
+#include "ECS/Systems/JobsSystem.h"
 
 #include "ECS/Components/Singletons/AudioEngineSComponent.h"
 #include "ECS/Components/Singletons/Box2DWorldSComponent.h"
@@ -15,6 +17,7 @@
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
+#include "ECS/Components/Singletons/PhysXWorldSComponent.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 
 #include <Frostium3D/Renderer.h>
@@ -357,13 +360,18 @@ namespace SmolEngine
 		// Engines
 		m_GlobalRegistry.emplace<AudioEngineSComponent>(m_GlobalEntity);
 		m_GlobalRegistry.emplace<Box2DWorldSComponent>(m_GlobalEntity);
+		PhysicsSystem::m_State = &m_GlobalRegistry.emplace<PhysXWorldSComponent>(m_GlobalEntity);
 		m_GlobalRegistry.emplace<GraphicsEngineSComponent>(m_GlobalEntity);
 		// System States
 		m_State = &m_GlobalRegistry.emplace<WorldAdminStateSComponent>(m_GlobalEntity);
+		ScriptingSystem::m_State = &m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(m_GlobalEntity);
+		JobsSystem::m_State = &m_GlobalRegistry.emplace<JobsSystemStateSComponent>(m_GlobalEntity);
 		m_GlobalRegistry.emplace<ProjectConfigSComponent>(m_GlobalEntity);
-		m_GlobalRegistry.emplace<ScriptingSystemStateSComponent>(m_GlobalEntity);
-		m_GlobalRegistry.emplace<JobsSystemStateSComponent>(m_GlobalEntity);
 
+		PhysicsSystem::m_World = m_State;
+		ScriptingSystem::m_World = m_State;
+		RendererSystem::m_World = m_State;
+		Physics2DSystem::m_World = m_State;
 		return true;
 	}
 

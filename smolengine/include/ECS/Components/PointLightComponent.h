@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
 
+#include <Frostium3D/Common/RendererStorage.h>
 #include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 
@@ -13,12 +14,7 @@ namespace SmolEngine
 		PointLightComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		bool          bEnabled = true;
-		float         Constant = 0.5f;
-		float         Linear = 0.1f;
-		float         Exposure = 0.0080f;
-		glm::vec3     Offset = glm::vec3(0.0f);
-		glm::vec4     Color = glm::vec4(1.0f);
+		Frostium::PointLight Light{};
 				      
 	private:
 
@@ -27,8 +23,13 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(bEnabled, Constant, Linear, Exposure, Offset.x, Offset.y, Offset.z,
-				Color.r, Color.g, Color.b, Color.a, ComponentID);
+			archive(Light.Color.r, Light.Color.g, Light.Color.b, Light.Color.a,
+				Light.Position.x, Light.Position.y, Light.Position.z, Light.Position.w,
+				Light.Bias,
+				Light.Intensity, 
+				Light.IsActive,
+				Light.IsCastShadows,
+				ComponentID);
 		}
 	};
 }

@@ -8,6 +8,8 @@
 
 namespace SmolEngine
 {
+	struct WorldAdminStateSComponent;
+	struct ScriptingSystemStateSComponent;
 	class Actor;
 	class ScriptingSystem
 	{
@@ -77,8 +79,10 @@ namespace SmolEngine
 
 	private:
 
+		inline static ScriptingSystemStateSComponent*  m_State = nullptr;
+		inline static WorldAdminStateSComponent*       m_World = nullptr;
+
 		friend class WorldAdmin;
 		friend class CollisionListener2D;
-
 	};
 }

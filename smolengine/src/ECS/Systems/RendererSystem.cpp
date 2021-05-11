@@ -47,7 +47,7 @@ namespace SmolEngine
 
 	void RendererSystem::Update()
 	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		entt::registry* reg = m_World->m_CurrentRegistry;
 
 		// 3D
 		{
@@ -61,34 +61,33 @@ namespace SmolEngine
 						Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh.get(), mesh.Mesh->GetMaterialID());
 				}
 			}
+
 			// Point Lights
 			{
 				const auto& pGroup = reg->view<TransformComponent, PointLightComponent>();
 				for (const auto& entity : pGroup)
 				{
-					const auto& [transform, light] = pGroup.get<TransformComponent, PointLightComponent>(entity);
-					if (light.bEnabled)
-					{
-						Renderer::SubmitPointLight({ transform.WorldPos + light.Offset }, light.Color, light.Constant, light.Linear, light.Exposure);
-					}
+					const auto& [transform, comp] = pGroup.get<TransformComponent, PointLightComponent>(entity);
+					comp.Light.Position = glm::vec4(transform.WorldPos, 1.0);
+
+					Renderer::SubmitPointLight(&comp.Light);
 				}
 			}
+
 			// Directional Lights
 			{
 				bool shadows_casted = false;
 				const auto& dView = reg->view<DirectionalLightComponent>();
 				for (const auto& entity : dView)
 				{
-					auto& light = dView.get<DirectionalLightComponent>(entity);
-					if (light.bEnabled)
-					{
-						if (light.bCastShadows && !shadows_casted)
-						{
-							Renderer::SetShadowLightDirection(light.Direction);
-							shadows_casted = true;
-						}
+					auto& component = dView.get<DirectionalLightComponent>(entity);
+					Renderer::SubmitDirLight(&component.Light);
 
-						Renderer::SubmitDirectionalLight(light.Direction, light.Color);
+					if (component.Light.IsCastShadows)
+					{
+						Frostium::DepthPassProperties depth{};
+						depth.lightPos = component.Light.Direction;
+						Renderer::SetDepthPassProperties(&depth);
 					}
 				}
 			}
@@ -138,9 +137,9 @@ namespace SmolEngine
 
 	void RendererSystem::DebugDraw()
 	{
-		entt::registry& reg = WorldAdmin::GetSingleton()->GetActiveScene()->GetRegistry();
+		entt::registry* reg = m_World->m_CurrentRegistry;
 
-		const auto& group = reg.view<TransformComponent, Body2DComponent>();
+		const auto& group = reg->view<TransformComponent, Body2DComponent>();
 		for (const auto& entity : group)
 		{
 			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
@@ -154,11 +153,11 @@ namespace SmolEngine
 			switch (body.m_ShapeType)
 			{
 
-			case (int)ShapeType::Box:
+			case (int)Shape2DType::Box:
 			{
 				break;
 			}
-			case (int)ShapeType::Cirlce:
+			case (int)Shape2DType::Cirlce:
 			{
 				break;
 			}

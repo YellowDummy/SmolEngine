@@ -244,11 +244,14 @@
     <Filter Include="include\Networking">
       <UniqueIdentifier>{00113DAD-ECF4-FD02-5555-F8554158E884}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Physics2D">
-      <UniqueIdentifier>{711DF9AD-DD33-F743-26AB-82659200C8CB}</UniqueIdentifier>
+    <Filter Include="include\Physics">
+      <UniqueIdentifier>{FB2BBE45-67B7-2B0A-70C8-AEFEDCD2870A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Physics2D\Box2D">
-      <UniqueIdentifier>{3F589B4A-AB8F-E3E1-B499-470520500ADB}</UniqueIdentifier>
+    <Filter Include="include\Physics\Box2D">
+      <UniqueIdentifier>{49A65710-B512-130B-7E06-AB68EA313573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Physics\PhysX">
+      <UniqueIdentifier>{66335111-D29F-0C0C-9B93-A46907BF2E74}</UniqueIdentifier>
     </Filter>
     <Filter Include="include\Scripting">
       <UniqueIdentifier>{CBE3813C-37FA-7FD2-8071-0BF4ECC6505A}</UniqueIdentifier>
@@ -274,11 +277,14 @@
     <Filter Include="src\ECS\Systems">
       <UniqueIdentifier>{FECA3740-6A56-A504-7367-28F9DF710105}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Physics2D">
-      <UniqueIdentifier>{15F6A409-81B6-2040-4AF1-69BDB670651C}</UniqueIdentifier>
+    <Filter Include="src\Physics">
+      <UniqueIdentifier>{9F8B9316-0B41-0C0C-9435-06E300EA0210}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Physics2D\Box2D">
-      <UniqueIdentifier>{E31B18EE-4F7D-F5FB-D8EA-3BAE444B2CBB}</UniqueIdentifier>
+    <Filter Include="src\Physics\Box2D">
+      <UniqueIdentifier>{ED30C799-5947-C52F-A2BE-50510E1496B7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics\PhysX">
+      <UniqueIdentifier>{0ABEC09A-76D4-BE30-BF4B-4A522BA18FB8}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scripting">
       <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
@@ -321,6 +327,9 @@
     <ClInclude Include="include\ECS\Actor.h">
       <Filter>include\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\ComponentHandler.h">
+      <Filter>include\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Components\Animation2DComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
@@ -357,6 +366,9 @@
     <ClInclude Include="include\ECS\Components\PointLightComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Components\RigidbodyComponent.h">
+      <Filter>include\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Components\SceneStateComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
@@ -372,6 +384,9 @@
     <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Components\Singletons\PhysXWorldSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
@@ -380,6 +395,9 @@
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Components\StaticBodyComponent.h">
+      <Filter>include\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Texture2DComponent.h">
       <Filter>include\ECS\Components</Filter>
@@ -408,6 +426,9 @@
     <ClInclude Include="include\ECS\Systems\Physics2DSystem.h">
       <Filter>include\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Systems\PhysicsSystem.h">
+      <Filter>include\ECS\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Systems\RendererSystem.h">
       <Filter>include\ECS\Systems</Filter>
     </ClInclude>
@@ -419,6 +440,9 @@
     </ClInclude>
     <ClInclude Include="include\ECS\WorldAdmin.h">
       <Filter>include\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\Animation.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\BufferElement.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
@@ -480,6 +504,9 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\SLog.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\SPIRVReflection.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
+    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Shader.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
@@ -503,6 +530,9 @@
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Window.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\DebugRenderer.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h">
       <Filter>include\Libraries\Frostium3D</Filter>
@@ -1206,9 +1236,6 @@
     <ClInclude Include="include\Libraries\Frostium3D\Renderer2D.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\RendererDebug.h">
-      <Filter>include\Libraries\Frostium3D</Filter>
-    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Utils\Frustum.h">
       <Filter>include\Libraries\Frostium3D\Utils</Filter>
     </ClInclude>
@@ -1566,20 +1593,32 @@
     <ClInclude Include="include\Networking\NetworkManager.h">
       <Filter>include\Networking</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics2D\Box2D\Body2D.h">
-      <Filter>include\Physics2D\Box2D</Filter>
+    <ClInclude Include="include\Physics\Box2D\Body2D.h">
+      <Filter>include\Physics\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics2D\Box2D\Body2DDefs.h">
-      <Filter>include\Physics2D\Box2D</Filter>
+    <ClInclude Include="include\Physics\Box2D\Body2DDefs.h">
+      <Filter>include\Physics\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics2D\Box2D\CollisionFilter2D.h">
-      <Filter>include\Physics2D\Box2D</Filter>
+    <ClInclude Include="include\Physics\Box2D\CollisionFilter2D.h">
+      <Filter>include\Physics\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics2D\Box2D\CollisionListener2D.h">
-      <Filter>include\Physics2D\Box2D</Filter>
+    <ClInclude Include="include\Physics\Box2D\CollisionListener2D.h">
+      <Filter>include\Physics\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics2D\Box2D\RayCast2D.h">
-      <Filter>include\Physics2D\Box2D</Filter>
+    <ClInclude Include="include\Physics\Box2D\RayCast2D.h">
+      <Filter>include\Physics\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Physics\PhysX\PhysXBase.h">
+      <Filter>include\Physics\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Physics\PhysX\RigidActor.h">
+      <Filter>include\Physics\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Physics\PhysX\RigidBody.h">
+      <Filter>include\Physics\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Physics\PhysX\StaticBody.h">
+      <Filter>include\Physics\PhysX</Filter>
     </ClInclude>
     <ClInclude Include="include\Scripting\BehaviourPrimitive.h">
       <Filter>include\Scripting</Filter>
@@ -1590,7 +1629,6 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\ComponentHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1620,6 +1658,9 @@
     <ClCompile Include="src\ECS\Actor.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\ComponentHandler.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\AudioEngineSComponent.cpp">
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
@@ -1630,6 +1671,9 @@
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Components\Singletons\PhysXWorldSComponent.cpp">
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
@@ -1659,6 +1703,9 @@
     <ClCompile Include="src\ECS\Systems\Physics2DSystem.cpp">
       <Filter>src\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\Systems\PhysicsSystem.cpp">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="src\ECS\Systems\RendererSystem.cpp">
       <Filter>src\ECS\Systems</Filter>
     </ClCompile>
@@ -1671,17 +1718,26 @@
     <ClCompile Include="src\ECS\WorldAdmin.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics2D\Box2D\Body2D.cpp">
-      <Filter>src\Physics2D\Box2D</Filter>
+    <ClCompile Include="src\Physics\Box2D\Body2D.cpp">
+      <Filter>src\Physics\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics2D\Box2D\CollisionFilter2D.cpp">
-      <Filter>src\Physics2D\Box2D</Filter>
+    <ClCompile Include="src\Physics\Box2D\CollisionFilter2D.cpp">
+      <Filter>src\Physics\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics2D\Box2D\CollisionListener2D.cpp">
-      <Filter>src\Physics2D\Box2D</Filter>
+    <ClCompile Include="src\Physics\Box2D\CollisionListener2D.cpp">
+      <Filter>src\Physics\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics2D\Box2D\RayCast2D.cpp">
-      <Filter>src\Physics2D\Box2D</Filter>
+    <ClCompile Include="src\Physics\Box2D\RayCast2D.cpp">
+      <Filter>src\Physics\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\PhysX\RigidActor.cpp">
+      <Filter>src\Physics\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\PhysX\RigidBody.cpp">
+      <Filter>src\Physics\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\PhysX\StaticBody.cpp">
+      <Filter>src\Physics\PhysX</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp">
       <Filter>src\Scripting</Filter>
@@ -1689,6 +1745,5 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\ComponentHandler.cpp" />
   </ItemGroup>
 </Project>

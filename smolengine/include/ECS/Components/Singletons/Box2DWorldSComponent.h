@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Physics2D/Box2D/CollisionListener2D.h"
-#include "Physics2D/Box2D/CollisionFilter2D.h"
+#include "Physics/Box2D/CollisionListener2D.h"
+#include "Physics/Box2D/CollisionFilter2D.h"
 
 namespace SmolEngine
 {

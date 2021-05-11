@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
 
+#include <Frostium3D/Common/RendererStorage.h>
 #include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 
@@ -13,11 +14,7 @@ namespace SmolEngine
 		DirectionalLightComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		bool       bCastShadows = false;
-		bool       bEnabled = true;
-		float      Intensity = 1.0f;
-		glm::vec3  Direction = glm::vec3(0, 0, 0);
-		glm::vec4  Color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		Frostium::DirectionalLight   Light{};
 
 	private:
 
@@ -28,8 +25,14 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(bCastShadows, bEnabled, Intensity, Direction.x, Direction.y, Direction.z,
-				Color.r, Color.g, Color.b, Color.a, ComponentID);
+			archive(Light.Color.r, Light.Color.g, Light.Color.b, Light.Color.a, 
+				Light.Direction.x, Light.Direction.y, Light.Direction.z, Light.Direction.w,
+				Light.Intensity,
+				Light.Bias,
+				Light.IsActive,
+				Light.IsCastShadows,
+				Light.IsUseSoftShadows,
+				ComponentID);
 		}
 	};
 }
