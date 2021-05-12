@@ -63,8 +63,10 @@ namespace SmolEngine
 		SaveCurrentScene();
 #endif
 		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
-		// Setting Box2D Callbacks
+
 		Physics2DSystem::OnBegin(world);
+		PhysicsSystem::OnBeginWorld();
+
 		// Creating rigidbodies and joints
 		{
 			const auto& view = scene->GetRegistry().view<TransformComponent, Body2DComponent>();
@@ -123,6 +125,7 @@ namespace SmolEngine
 		ScriptingSystem::OnEnd();
 		// Deleting all Rigidbodies
 		Physics2DSystem::DeleteBodies(&Box2DWorldSComponent::Get()->World);
+		PhysicsSystem::OnEndWorld();
 		// Resetting Animation / Audio clips
 		AudioSystem::OnReset(&AudioEngineSComponent::Get()->Engine);
 		AudioEngineSComponent::Get()->Engine.Reset();
@@ -139,15 +142,19 @@ namespace SmolEngine
 		{
 			// Updade 2D phycics
 			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
+			PhysicsSystem::OnUpdate();
 			// Send OnProcess callback
 			ScriptingSystem::OnTick(deltaTime);
 			// Set transforms
 			Physics2DSystem::UpdateTransforms();
+			PhysicsSystem::UpdateTransforms();
 		}
 #else
+		PhysicsSystem::OnUpdate();
 		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 		ScriptingSystem::OnTick(registry, deltaTime);
-		Box2DPhysicsSystem::UpdateTransfroms(registry);
+		Box2DPhysicsSystem::UpdateTransfroms();
+		PhysicsSystem::UpdateTransforms();
 #endif
 
 		RendererSystem::Update();
@@ -173,7 +180,8 @@ namespace SmolEngine
 		ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
 		Reload2DAnimations(registry);
 		ReloadCanvases(registry);
-		ReloadMeshes(registry, &activeScene->m_SceneData);
+		ReloadMeshes(registry);
+		ReloadRigidBodies(registry);
 
 		ScriptingSystem::ReloadScripts();
 	}
@@ -309,7 +317,7 @@ namespace SmolEngine
 			});
 	}
 
-	void WorldAdmin::ReloadMeshes(entt::registry& registry, SceneData* data)
+	void WorldAdmin::ReloadMeshes(entt::registry& registry)
 	{
 		Frostium::MaterialLibrary* lib = Frostium::MaterialLibrary::GetSinglenton();
 		lib->Reset();
@@ -351,6 +359,28 @@ namespace SmolEngine
 			});
 
 		Frostium::Renderer::UpdateMaterials();
+	}
+
+	void WorldAdmin::ReloadRigidBodies(entt::registry& registry)
+	{
+		Scene* activeScene = GetActiveScene();
+		{
+			const auto& view = registry.view<RigidbodyComponent>();
+			view.each([&](RigidbodyComponent& component)
+				{
+					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
+
+				});
+		}
+
+		{
+			const auto& view = registry.view<StaticbodyComponent>();
+			view.each([&](StaticbodyComponent& component)
+				{
+					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
+
+				});
+		}
 	}
 
 	bool WorldAdmin::LoadStaticComponents()

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ECS/ComponentHandler.h"
-#include "ECS/Components/MeshComponent.h"
-#include "ECS/Components/Texture2DComponent.h"
+#include "ECS/ComponentsCore.h"
 
 #include <Frostium3D/Renderer.h>
 #include <Frostium3D/MaterialLibrary.h>
@@ -66,6 +65,42 @@ namespace SmolEngine
 
 			comp->TexturePath = filePath;
 			comp->Texture = tex;
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ComponentHandler::ValidateBody2DComponent(Body2DComponent* comp, Actor* actor)
+	{
+		if (comp && actor)
+		{
+			comp->Actor = actor;
+			comp->ActorID = actor->GetID();
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ComponentHandler::ValidateRigidBodyComponent(RigidbodyComponent* comp, Actor* actor)
+	{
+		if (comp && actor)
+		{
+			comp->CreateInfo.pActor = actor;
+			comp->CreateInfo.ActorID = actor->GetID();
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ComponentHandler::ValidateStaticBodyComponent(StaticbodyComponent* comp, Actor* actor)
+	{
+		if (comp && actor)
+		{
+			comp->CreateInfo.pActor = actor;
+			comp->CreateInfo.ActorID = actor->GetID();
 			return true;
 		}
 

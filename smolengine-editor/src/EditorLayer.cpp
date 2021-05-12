@@ -2,7 +2,6 @@
 #include "EditorLayer.h"
 
 #include "Core/MaterialLibraryInterface.h"
-#include "Core/FileDialog.h"
 #include "Audio/AudioClip.h"
 
 #include "ECS/WorldAdmin.h"
@@ -31,6 +30,7 @@
 #include <Frostium3D/Libraries/imgui/imgui_internal.h>
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtc/matrix_transform.hpp>
+#include <Frostium3D/Utils/Utils.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <Frostium3D/Libraries/glm/glm/gtx/quaternion.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtx/matrix_decompose.hpp>
@@ -44,6 +44,22 @@ using namespace Frostium;
 
 namespace SmolEngine
 {
+	static bool showConsole = true;
+	static bool showGameView = false;
+	static bool showMaterialLibrary = false;
+
+	void EditorLayer::LoadAssets()
+	{
+		const bool flip = true;
+		const bool imguiDescriptor = true;
+
+		Frostium::Texture::Create("assets/buttons/play_button.png", &m_PlayButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/pause_button.png", &m_StopButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/move_button.png", &m_MoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/rotate_button.png", &m_RotateButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+	}
+
 	void EditorLayer::OnAttach()
 	{
 		m_MaterialLibraryInterface = std::make_unique<MaterialLibraryInterface>();
@@ -51,6 +67,68 @@ namespace SmolEngine
 		m_Console = new EditorConsole();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
+
+		LoadAssets();
+
+		{
+			ImGui::GetStyle().FrameRounding = 4.0f;
+			ImGui::GetStyle().GrabRounding = 4.0f;
+
+			ImVec4* colors = ImGui::GetStyle().Colors;
+			colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
+			colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
+			colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+			colors[ImGuiCol_ChildBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+			colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+			colors[ImGuiCol_Border] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
+			colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+			colors[ImGuiCol_FrameBg] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+			colors[ImGuiCol_FrameBgHovered] = ImVec4(0.12f, 0.20f, 0.28f, 1.00f);
+			colors[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
+			colors[ImGuiCol_TitleBg] = ImVec4(0.09f, 0.12f, 0.14f, 0.65f);
+			colors[ImGuiCol_TitleBgActive] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
+			colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.5f);
+			colors[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+			colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.39f);
+			colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+			colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
+			colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.09f, 0.21f, 0.31f, 1.00f);
+			colors[ImGuiCol_CheckMark] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+			colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+			colors[ImGuiCol_SliderGrabActive] = ImVec4(0.37f, 0.61f, 1.00f, 1.00f);
+			colors[ImGuiCol_Header] = ImVec4(0.20f, 0.25f, 0.29f, 0.55f);
+			colors[ImGuiCol_HeaderHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+			colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+			colors[ImGuiCol_Separator] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+			colors[ImGuiCol_SeparatorHovered] = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
+			colors[ImGuiCol_SeparatorActive] = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
+			colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
+			colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+			colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+			colors[ImGuiCol_Tab] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+			colors[ImGuiCol_TabHovered] = ImVec4(0.1f, 0.1f, 0.1f, 0.1f);
+			colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+			colors[ImGuiCol_TabUnfocused] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+			colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+			colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+			colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+			colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+			colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+			colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+			colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+			colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+			colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+			colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+			colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+
+			// Buttons
+			colors[ImGuiCol_Button] = ImVec4(0.21f, 0.68f, 0.80f, 1.00f);
+			colors[ImGuiCol_ButtonHovered] = ImVec4(0.45f, 0.70f, 0.82f, 1.00f);
+			colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
+
+			colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
+			colors[ImGuiCol_DockingPreview] = ImVec4(0.85f, 0.85f, 0.85f, 0.28f);
+		}
 	}
 
 	void EditorLayer::OnDetach()
@@ -82,14 +160,6 @@ namespace SmolEngine
 
 	void EditorLayer::OnImGuiRender()
 	{
-		//---------------------------------------WINDOW-STATES----------------------------------------//
-
-		static bool showRenderer2Dstats;
-		static bool showConsole = true;
-		static bool showGameView = false;
-		static bool showMaterialLibrary = false;
-
-		//---------------------------------------WINDOW-STATES----------------------------------------//
 
 		static bool p_open = true;
 		static bool opt_fullscreen_persistant = true;
@@ -120,7 +190,6 @@ namespace SmolEngine
 			ImGui::PopStyleVar(2);
 
 		// DockSpace
-
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
@@ -128,10 +197,25 @@ namespace SmolEngine
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
+		DrawToolsBar();
+		DrawSceneView(true);
+
+		m_Console->Update(showConsole);
+		m_MaterialLibraryInterface->Draw(showMaterialLibrary);
+
+		DrawHierarchy();
+		DrawInspector();
+
+		ImGui::End();
+
+	}
+
+	void EditorLayer::DrawToolsBar()
+	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 10.0f, 10.0f });
 		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::BeginMenu("File")) 
+			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("Close"))
 				{
@@ -147,7 +231,7 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("New"))
 					{
-						const auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						const auto& result = Frostium::Utils::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -165,7 +249,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Save as"))
 					{
-						const auto& result = FileDialog::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						const auto& result = Frostium::Utils::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -177,7 +261,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Load"))
 					{
-						const auto& result = FileDialog::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
+						const auto& result = Frostium::Utils::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -189,53 +273,11 @@ namespace SmolEngine
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Simulation"))
-			{
-				if (ImGui::MenuItem("Play Mode"))
-				{
-					if (!m_World->IsInPlayMode())
-					{
-						m_World->OnBeginWorld();
-					}
-					else
-					{
-						CONSOLE_WARN("The scene is already in play mode!");
-					}
-				}
-
-				if (ImGui::MenuItem("Stop"))
-				{
-					if (m_World->IsInPlayMode())
-					{
-						uint32_t selectedActorID = 0;
-						if (m_SelectedActor != nullptr)
-						{
-							selectedActorID = m_SelectedActor->GetID();
-						}
-
-						m_SelectedActor = nullptr;
-						m_World->OnEndWorld();
-						m_SelectedActor = m_World->GetActiveScene()->FindActorByID(selectedActorID);
-					}
-					else
-					{
-						CONSOLE_WARN("The scene is not in play mode!");
-					}
-				}
-
-				ImGui::EndMenu();
-			}
-
 			if (ImGui::BeginMenu("Window"))
 			{
 				if (ImGui::MenuItem("Material Library"))
 				{
 					showMaterialLibrary = true;
-				}
-
-				if (ImGui::MenuItem("Renderer2D Stats"))
-				{
-					showRenderer2Dstats = true;
 				}
 
 				if (ImGui::MenuItem("Console"))
@@ -250,14 +292,86 @@ namespace SmolEngine
 		ImGui::EndMainMenuBar();
 		ImGui::PopStyleVar();
 
-		m_Console->Update(showConsole);
-		DrawSceneView(true);
-		m_MaterialLibraryInterface->Draw(showMaterialLibrary);
+	}
 
-		DrawHierarchy();
-		DrawInspector();
-		ImGui::End();
+	void EditorLayer::DrawSceneTetxure()
+	{
+		const float snapValue = 0.5f;
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
+		ImGui::BeginChild("TetxureScene");
+		{
+
+			if (ImGui::IsWindowHovered()) { m_IsSceneViewFocused = true; }
+			else { m_IsSceneViewFocused = false; }
+
+			Frostium::Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
+			m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+			ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
+			if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
+			{
+				m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+			}
+
+#ifdef SMOLENGINE_OPENGL_IMPL
+			//ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
+#else
+			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
+#endif
+			// Gizmos
+			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode())
+			{
+				auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
+				if (transformComponent)
+				{
+					switch (m_Camera->GetType())
+					{
+					case CameraType::Perspective:
+					{
+						ImGuizmo::SetOrthographic(false);
+						break;
+					}
+					case CameraType::Ortho:
+					{
+						ImGuizmo::SetOrthographic(true);
+						break;
+					}
+					default:
+						break;
+					}
+
+					ImGuizmo::SetDrawlist();
+
+					float width = (float)ImGui::GetWindowSize().x;
+					float height = (float)ImGui::GetWindowSize().y;
+
+					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
+
+					glm::mat4 transform;
+
+					Utils::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, transform);
+					float snapValues[3] = { snapValue, snapValue, snapValue };
+
+					ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
+						m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snapValues);
+
+					if (ImGuizmo::IsUsing())
+					{
+						glm::vec3 tranlation, rotation, scale;
+						Utils::DecomposeTransform(transform, tranlation, rotation, scale);
+						glm::vec3 deltaRot = rotation - transformComponent->Rotation;
+
+						transformComponent->WorldPos = tranlation;
+						transformComponent->Rotation.x += deltaRot.x;
+						transformComponent->Rotation.y += deltaRot.y;
+						transformComponent->Rotation.z += deltaRot.z;
+						transformComponent->Scale = scale;
+					}
+				}
+			}
+		}
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::DrawInfo(HeadComponent* head)
@@ -284,13 +398,15 @@ namespace SmolEngine
 			ImGui::Extensions::ColorInput3("Color", texture->Color);
 			ImGui::Extensions::InputInt("Layer", texture->LayerIndex, 130.0f, "TexturePanel");
 			ImGui::NewLine();
-			if (ImGui::Extensions::CheckBox("Enabled?", texture->Enabled, 130.0f, "TexturePanel"))
+			ImGui::Extensions::CheckBox("Enabled", texture->Enabled, 130.0f, "TexturePanel");
 
 			ImGui::NewLine();
 			ImGui::NewLine();
+			ImGui::SetCursorPosX(10);
 			if (ImGui::Button("Change", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 			{
-				const auto& result = FileDialog::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
+
+				const auto& result = Frostium::Utils::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
 				if (result.has_value())
 					ComponentHandler::ValidateTexture2DComponent(texture, result.value());
 			}
@@ -298,10 +414,10 @@ namespace SmolEngine
 			return;
 		}
 
-
+		ImGui::SetCursorPosX(10);
 		if (ImGui::Button("New texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 		{
-			const auto& result = FileDialog::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
+			const auto& result = Frostium::Utils::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
 			if (result.has_value())
 				ComponentHandler::ValidateTexture2DComponent(texture, result.value());
 		}
@@ -373,8 +489,7 @@ namespace SmolEngine
 			}
 		}
 
-		ImGui::Extensions::CheckBox("Is Enabled?", camera->isEnabled);
-		ImGui::Extensions::CheckBox("Show Shape?", camera->ShowCanvasShape);
+		ImGui::Extensions::CheckBox("Enabled", camera->isEnabled);
 	}
 
 	void EditorLayer::DrawAudioSource(AudioSourceComponent* audio)
@@ -402,9 +517,9 @@ namespace SmolEngine
 				ImGui::NewLine();
 				ImGui::Extensions::InputFloat("Volume", clip->Volume);
 				ImGui::NewLine();
-				ImGui::Extensions::CheckBox("Default Clip?", clip->isDefaultClip);
-				ImGui::Extensions::CheckBox("Is Looping?", clip->IsLooping);
-				ImGui::Extensions::CheckBox("Is 3D?", clip->B3D);
+				ImGui::Extensions::CheckBox("Default Clip", clip->isDefaultClip);
+				ImGui::Extensions::CheckBox("Looping", clip->IsLooping);
+				ImGui::Extensions::CheckBox("Is 3D", clip->B3D);
 
 				ImGui::NewLine();
 				if (ImGui::Extensions::SmallButton("Debug", "Play"))
@@ -463,102 +578,69 @@ namespace SmolEngine
 
 	void EditorLayer::DrawSceneView(bool enabled)
 	{
-		bool snap = false;
-		float snapValue = 0.5f;
-		if (Input::IsKeyPressed(KeyCode::LeftShift))
-		{
-			snap = true;
-		}
-		if (Input::IsKeyPressed(KeyCode::Z))
-		{
-			m_GizmoOperation = ImGuizmo::OPERATION::SCALE;
-		}
-		if (Input::IsKeyPressed(KeyCode::Q))
-		{
-			m_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
-			snapValue = 45.0f;
-		}
-		if (Input::IsKeyPressed(KeyCode::E))
-		{
-			m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-		}
-
 		if (enabled)
 		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-			ImGui::Begin("Scene View", &enabled);
+			ImGui::Begin("Scene View", nullptr, ImGuiWindowFlags_NoDecoration);
 			{
-
-				if (ImGui::IsWindowHovered()) { m_IsSceneViewFocused = true; }
-				else { m_IsSceneViewFocused = false; }
-
-				Frostium::Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
-				m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
-				ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-				if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
+				ImGui::NewLine();
+				ImGui::SetCursorPosX(10);
+				if (ImGui::ImageButton(m_MoveButton.GetImGuiTexture(), { 25, 25 }))
 				{
-					m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+					m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 				}
 
-#ifdef SMOLENGINE_OPENGL_IMPL
-				//ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
-#else
-				ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
-#endif
-				// Gizmos
-				if (m_SelectedActor != nullptr && !m_World->IsInPlayMode())
+				ImGui::SameLine();
+				if (ImGui::ImageButton(m_RotateButton.GetImGuiTexture(), { 25, 25 }))
 				{
-					auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
-					if (transformComponent)
+					m_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
+				}
+
+
+				ImGui::SameLine();
+				if (ImGui::ImageButton(m_ScaleButton.GetImGuiTexture(), { 25, 25 }))
+				{
+					m_GizmoOperation = ImGuizmo::OPERATION::SCALE;
+				}
+
+				ImGui::SameLine();
+				ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.0f) - 25);
+				if (ImGui::ImageButton(m_PlayButton.GetImGuiTexture(), { 25, 25 }))
+				{
+					if (!m_World->IsInPlayMode())
 					{
-						switch (m_Camera->GetType())
-						{
-						case CameraType::Perspective:
-						{
-							ImGuizmo::SetOrthographic(false);
-							break;
-						}
-						case CameraType::Ortho:
-						{
-							ImGuizmo::SetOrthographic(true);
-							break;
-						}
-						default:
-							break;
-						}
-
-						ImGuizmo::SetDrawlist();
-
-						float width = (float)ImGui::GetWindowSize().x;
-						float height = (float)ImGui::GetWindowSize().y;
-
-						ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
-
-						glm::mat4 transform;
-
-						Utils::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, transform);
-						float snapValues[3] = { snapValue, snapValue, snapValue };
-
-						ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
-							m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
-
-						if (ImGuizmo::IsUsing())
-						{
-							glm::vec3 tranlation, rotation, scale;
-							Utils::DecomposeTransform(transform, tranlation, rotation, scale);
-							glm::vec3 deltaRot = rotation - transformComponent->Rotation;
-
-							transformComponent->WorldPos = tranlation;
-							transformComponent->Rotation.x += deltaRot.x;
-							transformComponent->Rotation.y += deltaRot.y;
-							transformComponent->Rotation.z += deltaRot.z;
-							transformComponent->Scale = scale;
-						}
+						m_World->OnBeginWorld();
+					}
+					else
+					{
+						CONSOLE_WARN("The scene is already in play mode!");
 					}
 				}
+
+				ImGui::SameLine();
+				if (ImGui::ImageButton(m_StopButton.GetImGuiTexture(), { 25, 25 }))
+				{
+					if (m_World->IsInPlayMode())
+					{
+						uint32_t selectedActorID = 0;
+						if (m_SelectedActor != nullptr)
+						{
+							selectedActorID = m_SelectedActor->GetID();
+						}
+
+						m_SelectedActor = nullptr;
+						m_World->OnEndWorld();
+						m_SelectedActor = m_World->GetActiveScene()->FindActorByID(selectedActorID);
+					}
+					else
+					{
+						CONSOLE_WARN("The scene is not in play mode!");
+					}
+				}
+
+				/////////////////// Child window
+				DrawSceneTetxure();
 			}
 			ImGui::End();
-			ImGui::PopStyleVar();
 		}
 	}
 
@@ -635,16 +717,33 @@ namespace SmolEngine
 							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
+
 						ImGui::EndMenu();
 					}
 
 					if (ImGui::BeginMenu("Physics"))
 					{
-						if (ImGui::MenuItem("Rigidbody 2D"))
+						if (ImGui::MenuItem("Body 2D"))
 						{
-							m_World->GetActiveScene()->AddComponent<Body2DComponent>(m_SelectedActor, m_SelectedActor, 0);
+							auto comp = m_World->GetActiveScene()->AddComponent<Body2DComponent>(m_SelectedActor);
+							ComponentHandler::ValidateBody2DComponent(comp,m_SelectedActor);
 							ImGui::CloseCurrentPopup();
 						}
+
+						if (ImGui::MenuItem("RigidBody"))
+						{
+							auto comp = m_World->GetActiveScene()->AddComponent<RigidbodyComponent>(m_SelectedActor);
+							ComponentHandler::ValidateRigidBodyComponent(comp, m_SelectedActor);
+							ImGui::CloseCurrentPopup();
+						}
+
+						if (ImGui::MenuItem("Static Body"))
+						{
+							auto comp = m_World->GetActiveScene()->AddComponent<StaticbodyComponent>(m_SelectedActor);
+							ComponentHandler::ValidateStaticBodyComponent(comp, m_SelectedActor);
+							ImGui::CloseCurrentPopup();
+						}
+
 						ImGui::EndMenu();
 					}
 
@@ -711,7 +810,7 @@ namespace SmolEngine
 
 					if (IsCurrentComponent<Body2DComponent>(i))
 					{
-						if (ImGui::CollapsingHeader("Rigidbody 2D"))
+						if (ImGui::CollapsingHeader("Body 2D"))
 						{
 							ImGui::NewLine();
 							auto component = m_World->GetActiveScene()->GetComponent<Body2DComponent>(m_SelectedActor);
@@ -789,6 +888,26 @@ namespace SmolEngine
 						}
 					}
 
+					if (IsCurrentComponent<RigidbodyComponent>(i))
+					{
+						if (ImGui::CollapsingHeader("Rigidbody"))
+						{
+							ImGui::NewLine();
+							auto component = m_World->GetActiveScene()->GetComponent<RigidbodyComponent>(m_SelectedActor);
+							DrawRigidBodyComponent(component);
+						}
+					}
+
+					if (IsCurrentComponent<StaticbodyComponent>(i))
+					{
+						if (ImGui::CollapsingHeader("Static Body"))
+						{
+							ImGui::NewLine();
+							auto component = m_World->GetActiveScene()->GetComponent<StaticbodyComponent>(m_SelectedActor);
+							DrawStaticBodyComponent(component);
+						}
+					}
+
 					DrawScriptComponent(i);
 				}
 
@@ -840,106 +959,8 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Empty Actor"))
 					{
 						ss << "EmptyActor" << state->Actors.size();
-						m_World->GetActiveScene()->CreateActor(ss.str());
+						m_SelectedActor = m_World->GetActiveScene()->CreateActor(ss.str());
 					}
-
-					if (ImGui::BeginMenu("Lights"))
-					{
-						if (ImGui::MenuItem("Point Light 2D"))
-						{
-							ss << "Light2D" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						if (ImGui::MenuItem("Point Light"))
-						{
-							ss << "PointLight" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<PointLightComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						if (ImGui::MenuItem("Directional Light"))
-						{
-							ss << "DirectionalLight" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Physics"))
-					{
-						if (ImGui::MenuItem("Rigidbody 2D"))
-						{
-							ss << "Rigidbody2D" << state->Actors.size();
-							Actor* actor = m_World->GetActiveScene()->CreateActor(ss.str());
-							m_World->GetActiveScene()->AddComponent<Body2DComponent>(actor,
-								actor, 0);
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("2D"))
-					{
-						if (ImGui::MenuItem("Sprite"))
-						{
-							ss << "Sprite" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<Texture2DComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("3D"))
-					{
-						if (ImGui::MenuItem("Mesh"))
-						{
-							ss << "Mesh" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<MeshComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Common"))
-					{
-						if (ImGui::MenuItem("Audio Source"))
-						{
-							ss << "AudioSource" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<AudioSourceComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						if (ImGui::MenuItem("Animation 2D"))
-						{
-							ss << "Animation2D" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<Animation2DComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						if (ImGui::MenuItem("Canvas"))
-						{
-							ss << "Canvas" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<CanvasComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						if (ImGui::MenuItem("Camera"))
-						{
-							ss << "Camera" << state->Actors.size();
-							m_World->GetActiveScene()->AddComponent<CameraComponent>
-								(m_World->GetActiveScene()->CreateActor(ss.str()));
-						}
-
-						ImGui::EndMenu();
-					}
-
 
 					ImGui::EndPopup();
 				}
@@ -1030,16 +1051,13 @@ namespace SmolEngine
 		static bool showMeshInspector = false;
 		if (comp->Mesh)
 		{
-			ImGui::NewLine();
-
 			ImGui::Extensions::CheckBox("Show", comp->bShow);
 			ImGui::Extensions::CheckBox("Static", comp->bIsStatic);
-			ImGui::Extensions::CheckBox("Cast Shadows", comp->bIsStatic);
-
 			ImGui::NewLine();
 
 			if (!showMeshInspector)
 			{
+				ImGui::SetCursorPosX(10);
 				if (ImGui::Button("Mesh Inspector", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 				{
 					showMeshInspector = true;
@@ -1049,9 +1067,10 @@ namespace SmolEngine
 			DrawMeshInspector(showMeshInspector);
 		}
 
+		ImGui::SetCursorPosX(10);
 		if (ImGui::Button("Load Mesh", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 		{
-			const auto& result = FileDialog::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
+			const auto& result = Frostium::Utils::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
 			if (result.has_value())
 			{
 				ComponentHandler::ValidateMeshComponent(comp, result.value());
@@ -1114,7 +1133,7 @@ namespace SmolEngine
 							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
 							if (ImGui::Button("Select Material"))
 							{
-								const auto& result = FileDialog::OpenFile("SmolEngine Material (*s_mat)\0*.s_mat\0");
+								const auto& result = Frostium::Utils::OpenFile("SmolEngine Material (*s_mat)\0*.s_mat\0");
 								if (result.has_value())
 								{
 									ComponentHandler::SetMeshMaterial(comp, mesh, result.value());
@@ -1139,6 +1158,59 @@ namespace SmolEngine
 		ImGui::Extensions::InputFloat("Exposure", comp->Light.Intensity);
 		ImGui::Extensions::InputFloat("Radius", comp->Light.Raduis);
 		ImGui::Extensions::ColorInput3("Color", comp->Light.Color);
+	}
+
+	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)
+	{
+		ImGui::Extensions::Combo("Shape", "Sphere\0Capsule\0Box\0Custom\0", component->CreateInfo.ShapeIndex);
+		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
+
+		if (component->CreateInfo.ShapeIndex == 0)
+		{
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
+		}
+
+		if (component->CreateInfo.ShapeIndex == 1)
+		{
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
+			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
+		}
+
+		if (component->CreateInfo.ShapeIndex == 2)
+		{
+			ImGui::Extensions::InputFloat("Side X", component->CreateInfo.BoxShapeInfo.X);
+			ImGui::Extensions::InputFloat("Side Y", component->CreateInfo.BoxShapeInfo.Y);
+			ImGui::Extensions::InputFloat("Side Z", component->CreateInfo.BoxShapeInfo.Z);
+		}
+
+		ImGui::Separator();
+		ImGui::NewLine();
+		ImGui::Extensions::InputFloat("Mass", component->CreateInfo.Mass);
+		ImGui::Extensions::InputFloat("Density", component->CreateInfo.Density);
+	}
+
+	void EditorLayer::DrawStaticBodyComponent(StaticbodyComponent* component)
+	{
+		ImGui::Extensions::Combo("Shape", "Sphere\0Capsule\0Box\0Custom\0", component->CreateInfo.ShapeIndex);
+		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
+
+		if (component->CreateInfo.ShapeIndex == 0)
+		{
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
+		}
+
+		if (component->CreateInfo.ShapeIndex == 1)
+		{
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
+			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
+		}
+
+		if (component->CreateInfo.ShapeIndex == 2)
+		{
+			ImGui::Extensions::InputFloat("Side X", component->CreateInfo.BoxShapeInfo.X);
+			ImGui::Extensions::InputFloat("Side Y", component->CreateInfo.BoxShapeInfo.Y);
+			ImGui::Extensions::InputFloat("Side Z", component->CreateInfo.BoxShapeInfo.Z);
+		}
 	}
 
 	void EditorLayer::DrawScriptComponent(uint32_t index)

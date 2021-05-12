@@ -83,6 +83,9 @@ layout(std140, binding = 32) uniform DirLightBuffer
 	vec4 color;
 	float intensity;
 	float bias;
+	float zNear;
+	float zFar;
+	float lightFOV;
 	uint is_active;
 	uint cast_shadows;
 	uint soft_shadows;
@@ -354,7 +357,11 @@ void main()
 
 	// Final Shading
 	//--------------------------------------------
+
 	vec3 color = ambient + Lo;
+
+	// Shadow Mapping
+	//--------------------------------------------
 	float shadow = 0.0;
 	if(dirLight.cast_shadows == 1)
 	{

@@ -25,6 +25,7 @@ namespace SmolEngine
 		info->pWindowCI->Title = "SmolEngine Editor x64 - Vulkan - Release";
 #endif
 		info->bTargetsSwapchain = false; // render imgui to the swap chain and later on render whole scene as imgui texture
+		info->bCustomImguiStyle = true;
 	}
 
 	void Editor::SetPhysics2DContext(Physics2DContextCreateInfo* info)

@@ -12,6 +12,10 @@ namespace SmolEngine
 {
 	struct MeshComponent;
 	struct Texture2DComponent;
+	struct Body2DComponent;
+	struct RigidbodyComponent;
+	struct StaticbodyComponent;
+	class Actor;
 
 	class ComponentHandler
 	{
@@ -24,7 +28,9 @@ namespace SmolEngine
 		//Texture
 		static bool ValidateTexture2DComponent(Texture2DComponent* comp, const std::string& filePath);
 
-		//Physics2D
-
+		//Physics
+		static bool ValidateBody2DComponent(Body2DComponent* comp, Actor* actor);
+		static bool ValidateRigidBodyComponent(RigidbodyComponent* comp, Actor* actor);
+		static bool ValidateStaticBodyComponent(StaticbodyComponent* comp, Actor* actor);
 	};
 }

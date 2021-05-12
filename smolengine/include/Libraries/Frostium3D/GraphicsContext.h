@@ -11,6 +11,7 @@
 #include "Common/RendererShared.h"
 #include "Common/Core.h"
 #include "Common/Window.h"
+#include "Common/Mesh.h"
 #include "Common/Framebuffer.h"
 #include "Common/Events.h"
 #include "Common/Texture.h"
@@ -35,6 +36,7 @@ namespace Frostium
 	struct GraphicsContextInitInfo
 	{
 		bool                     bTargetsSwapchain = true;
+		bool                     bCustomImguiStyle = false;
 		Flags                    Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
 		MSAASamples              eMSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 		ShadowMapSize            eShadowMapSize = ShadowMapSize::SIZE_8;
@@ -69,6 +71,9 @@ namespace Frostium
 		Window* GetWindow();
 	    WindowData* GetWindowData();
 		Frustum* GetFrustum();
+		Mesh* GetBoxMesh();
+		Mesh* GetCapsuleMesh();
+		Mesh*  GetSphereMesh();
 		float GetGltfTime() const;
 		float GetDeltaTime() const;
 		float GetLastFrameTime() const;
@@ -84,6 +89,7 @@ namespace Frostium
 		void OnResize(uint32_t* width, uint32_t* height);
 	private:
 		void OnEvent(Event& event);
+		bool LoadMeshes();
 		bool InitRenderer2DStorage(Renderer2DStorage* storage);
 		bool InitRendererStorage(RendererStorage* storage, ShadowMapSize shadow_map_size);
 	private:
@@ -110,6 +116,9 @@ namespace Frostium
 		ImGuiContext                    m_ImGuiContext = {};
 		EventSender                     m_EventHandler = {};
 		SceneData                       m_SceneData = {};
+		Mesh                            m_BoxMesh{};
+		Mesh                            m_SphereMesh{};
+		Mesh                            m_CapsuleMesh{};
 		std::string                     m_ResourcesFolderPath = "";
 		std::function<void(Event&)>     m_EventCallback;
 

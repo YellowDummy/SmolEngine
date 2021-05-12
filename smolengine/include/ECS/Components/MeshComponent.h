@@ -14,7 +14,6 @@ namespace SmolEngine
 		MeshComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		bool                                 bCastShadows = true;
 		bool                                 bIsStatic = false;
 		bool                                 bShow = true;			             
 		int                                  ShadowType = 2;	                 
@@ -29,7 +28,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(MaterialPaths, bCastShadows, bIsStatic, bShow,  ShadowType, ModelPath, ComponentID);
+			archive(MaterialPaths, bIsStatic, bShow,  ShadowType, ModelPath, ComponentID);
 		}
 	};
 }

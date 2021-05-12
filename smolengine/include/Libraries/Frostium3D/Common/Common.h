@@ -21,15 +21,16 @@ namespace Frostium
 
 	struct VertexInputInfo
 	{
+		VertexInputInfo() = default;
 		VertexInputInfo(uint32_t stride, const BufferLayout& layout, bool isInputRateInstance = false)
 			:
 			Stride(stride),
 			Layout(layout),
 			IsInputRateInstance(isInputRateInstance) {}
 
-		uint32_t          Stride;
-		BufferLayout      Layout;
-		bool              IsInputRateInstance;
+		uint32_t          Stride = 0;
+		BufferLayout      Layout{};
+		bool              IsInputRateInstance = false;
 	};
 
 	struct TextureLoadedData

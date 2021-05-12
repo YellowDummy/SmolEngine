@@ -8,6 +8,7 @@ namespace physx
 	class PxFoundation;
 	class PxPhysics;
 	class PxScene;
+	class PxMaterial;
 }
 
 namespace SmolEngine
@@ -40,6 +41,7 @@ namespace SmolEngine
 		physx::PxFoundation*      mFoundation = nullptr;
 		physx::PxPhysics*         mPhysics = nullptr;
 		physx::PxScene*           mScene = nullptr;
+		physx::PxMaterial*        mDefaultMaterial = nullptr;
 		Ref<PhysXAllocator>       mAllocator = nullptr;
 		Ref<PhysXErrorCallback>   mErrorCallback = nullptr;
 

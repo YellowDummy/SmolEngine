@@ -5,6 +5,7 @@
 #include <PxFoundation.h>
 #include <PxPhysics.h>
 #include <PxPhysicsVersion.h>
+#include <PxMaterial.h>
 #include <common/PxTolerancesScale.h>
 
 namespace SmolEngine
@@ -39,6 +40,10 @@ namespace SmolEngine
 		scale.speed = info->Speed;
 
 		mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale);
+		mDefaultMaterial = mPhysics->createMaterial(0.5f,
+			0.5f, 0.6f);
+
+		mDefaultMaterial->setFrictionCombineMode(physx::PxCombineMode::eMULTIPLY);
 		Instance = this;
 	}
 }

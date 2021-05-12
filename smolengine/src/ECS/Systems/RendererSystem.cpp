@@ -68,9 +68,12 @@ namespace SmolEngine
 				for (const auto& entity : pGroup)
 				{
 					const auto& [transform, comp] = pGroup.get<TransformComponent, PointLightComponent>(entity);
-					comp.Light.Position = glm::vec4(transform.WorldPos, 1.0);
 
-					Renderer::SubmitPointLight(&comp.Light);
+					if (comp.Light.IsActive)
+					{
+						comp.Light.Position = glm::vec4(transform.WorldPos, 1.0);
+						Renderer::SubmitPointLight(&comp.Light);
+					}
 				}
 			}
 
@@ -81,14 +84,8 @@ namespace SmolEngine
 				for (const auto& entity : dView)
 				{
 					auto& component = dView.get<DirectionalLightComponent>(entity);
-					Renderer::SubmitDirLight(&component.Light);
-
-					if (component.Light.IsCastShadows)
-					{
-						Frostium::DepthPassProperties depth{};
-						depth.lightPos = component.Light.Direction;
-						Renderer::SetDepthPassProperties(&depth);
-					}
+					if(component.Light.IsActive)
+						Renderer::SubmitDirLight(&component.Light);
 				}
 			}
 		}

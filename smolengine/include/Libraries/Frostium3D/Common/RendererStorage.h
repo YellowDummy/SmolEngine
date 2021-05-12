@@ -20,14 +20,6 @@ namespace Frostium
 	static const uint32_t  s_MaxLights = 100;
 	static const uint32_t  s_InstanceDataMaxCount = s_MaxPackages * s_MaxInstances;
 
-	struct DepthPassProperties
-	{
-		float                  zNear = 1.0f;
-		float                  zFar = 500.0f;
-		float                  lightFOV = 45.0f;
-		glm::vec3              lightPos = glm::vec3(20, 60, 0);
-	};
-
 	struct SceneState
 	{
 		alignas(4) float       HDRExposure = 1.0f;
@@ -39,13 +31,12 @@ namespace Frostium
 		friend class Renderer;
 	};
 
-	struct RendererState
+	struct RenderingState
 	{
 		bool                   bBloomPass = true;
 		bool                   bBlurPass = false;
 		bool                   bDrawSkyBox = true;
 		bool                   bDrawGrid = true;       
-		SceneState*            pSceneState = nullptr;
 	};
 
 	struct CommandBuffer
@@ -62,14 +53,12 @@ namespace Frostium
 							   
 		alignas(4) float       Intensity = 1.0f;
 		alignas(4) float       Bias = 1.0f;
+		alignas(4) float       zNear = 1.0f;
+		alignas(4) float       zFar = 350.0f;
+		alignas(4) float       lightFOV = 45.0f;
 		alignas(4) uint32_t    IsActive = false;
 		alignas(4) uint32_t    IsCastShadows = false;
 		alignas(4) uint32_t    IsUseSoftShadows = true;
-
-	private:
-		alignas(4) uint32_t    pad1 = 0;
-		alignas(4) uint32_t    pad2 = 0;
-		alignas(4) uint32_t    pad3 = 0;
 	};						   
 
 	struct PointLight
@@ -138,7 +127,6 @@ namespace Frostium
 
 		// States
 		bool                                               m_IsInitialized = false;
-		RendererState                                      m_State{};
 		ShadowMapSize                                      m_MapSize = ShadowMapSize::SIZE_8;
 		// Bindings						                   
 		const uint32_t                                     m_TexturesBinding = 24;
@@ -178,9 +166,9 @@ namespace Frostium
 		Framebuffer                                        m_BlurFramebuffer = {};
 		Framebuffer                                        m_DepthFramebuffer = {};
 		// Buffers
+		RenderingState                                     m_State{};
 		SceneState                                         m_SceneState{};
 		DirectionalLight                                   m_DirLight{};
-		DepthPassProperties                                m_DepthPassProperties{};
 		std::array<Mesh*, s_MaxPackages>                   m_UsedMeshes;
 		std::array<InstanceData, s_InstanceDataMaxCount>   m_InstancesData;
 		std::array<CommandBuffer, s_MaxPackages>           m_DrawList;

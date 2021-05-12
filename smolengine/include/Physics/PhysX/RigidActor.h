@@ -29,30 +29,31 @@ namespace SmolEngine
 	struct CapsuleShapeCreateInfo
 	{
 		float                      Radius = 1.0f;
-		float                      HalfHeight = 1.0f;
+		float                      Height = 11.0f;
 	};
 
 	struct BoxShapeCreateInfo
 	{
-		float                      X = 10.0f;
-		float                      Y = 10.0f;
-		float                      Z = 10.0f;
+		float                      X = 1.0f;
+		float                      Y = 1.0f;
+		float                      Z = 1.0f;
 	};
 
-	struct PhysicsMaterialCreateInfo
+	struct SphereShapeCreateInfo
 	{
-		float                      Density = 1.0f;
-		float                      StaticFriction = 0.5f;
-		float                      DynamicFriction = 0.5f;
-		float                      Restitution = 0.6f;
+		float                      Radius = 1.0f;
 	};
 
 	struct BodyCreateInfo
 	{
 		Actor*                     pActor = nullptr;
+		uint32_t                   ActorID = 0;
+		int                        ShapeIndex = 0;
+		float                      Mass = 1.0f;
+		float                      Density = 0.5f;
 		RigidBodyShape             eShape = RigidBodyShape::Box;
-		PhysicsMaterialCreateInfo  Material{};
 		BoxShapeCreateInfo         BoxShapeInfo{};
+		SphereShapeCreateInfo      SphereShape{};
 		CapsuleShapeCreateInfo     CapsuleShapeInfo{};
 		glm::vec3                  LocalPos = glm::vec3(0, 0, 1);
 
@@ -63,10 +64,10 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(eShape,
-				Material.Density, Material.DynamicFriction, Material.StaticFriction, Material.Restitution,
+			archive(eShape, ShapeIndex, ActorID, Mass, Density,
+				SphereShape.Radius,
 				BoxShapeInfo.X, BoxShapeInfo.Y, BoxShapeInfo.Z,
-				CapsuleShapeInfo.HalfHeight, CapsuleShapeInfo.Radius,
+				CapsuleShapeInfo.Height, CapsuleShapeInfo.Radius,
 				LocalPos.x, LocalPos.y, LocalPos.z);
 		}
 	};
@@ -83,7 +84,6 @@ namespace SmolEngine
 		{
 			physx::PxRigidActor*  Body = nullptr;
 			physx::PxShape*       Shape = nullptr;
-			physx::PxMaterial*    Material = nullptr;
 			BodyCreateInfo*       BodyInfo = nullptr;
 		};
 

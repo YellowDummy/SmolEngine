@@ -71,7 +71,8 @@ namespace SmolEngine
 		void Reload2DAnimations(entt::registry& registry);
 		void ReloadAudioClips(entt::registry& registry, AudioEngine* engine);
 		void ReloadCanvases(entt::registry& registry);
-		void ReloadMeshes(entt::registry& registry, SceneData* data);
+		void ReloadMeshes(entt::registry& registry);
+		void ReloadRigidBodies(entt::registry& registry);
 
 	private:
 

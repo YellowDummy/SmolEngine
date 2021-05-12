@@ -142,7 +142,6 @@ namespace SmolEngine
 			auto meshOld = actor->GetComponent<MeshComponent>();
 			auto meshNew = newObj->AddComponent<MeshComponent>();
 
-			meshNew->bCastShadows = meshOld->bCastShadows;
 			meshNew->bIsStatic = meshOld->bIsStatic;
 			meshNew->bShow = meshOld->bShow;
 			meshNew->ModelPath = meshOld->ModelPath;
@@ -181,7 +180,7 @@ namespace SmolEngine
 			m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<RigidbodyComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<StaticBodyComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<StaticbodyComponent>(*actor);
 
 			actor = nullptr;
 		}
@@ -198,7 +197,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticBodyComponent>(output);
+				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticbodyComponent>(output);
 		}
 
 		// Writing result to a file
@@ -239,7 +238,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticBodyComponent>(regisrtyInput);
+				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticbodyComponent>(regisrtyInput);
 		}
 		// Updates sets
 		m_State = GetStateComponent();

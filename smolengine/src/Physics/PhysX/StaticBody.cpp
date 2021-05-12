@@ -12,6 +12,8 @@ namespace SmolEngine
 	{
 		if (info->pActor && m_BaseBody == nullptr)
 		{
+			m_Engine = PhysXWorldSComponent::Get();
+
 			physx::PxTransform transform{};
 			GlmToPxTransform(pos, rot, &transform);
 

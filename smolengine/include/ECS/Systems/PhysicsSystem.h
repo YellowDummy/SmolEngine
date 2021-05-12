@@ -23,9 +23,11 @@ namespace SmolEngine
 
 		static void OnBeginWorld();
 		static void OnEndWorld();
+		static void OnUpdate();
 
 		static void CreateScene();
 		static void DeleteScene();
+		static void UpdateTransforms();
 		static void AttachBodyToActiveScene(RigidActor* body);
 
 	private:

@@ -5,6 +5,7 @@
 #include <PxPhysics.h>
 #include <PxRigidDynamic.h>
 #include <PxMaterial.h>
+#include <extensions/PxRigidBodyExt.h>
 
 namespace SmolEngine
 {
@@ -12,6 +13,8 @@ namespace SmolEngine
 	{
 		if (info->pActor && m_BaseBody == nullptr)
 		{
+			m_Engine = PhysXWorldSComponent::Get();
+
 			physx::PxTransform transform{};
 			GlmToPxTransform(pos, rot, &transform);
 
@@ -20,6 +23,10 @@ namespace SmolEngine
 			m_BaseBody->userData = info->pActor;
 
 			InitRigidActor(info, m_BaseBody);
+
+
+			m_DynamicBody->setMass(info->Mass);
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_DynamicBody, info->Density);
 		}
 	}
 

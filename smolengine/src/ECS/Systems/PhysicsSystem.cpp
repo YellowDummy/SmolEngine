@@ -57,17 +57,17 @@ namespace SmolEngine
 		for (const auto& entity : dynamic_group)
 		{
 			const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, RigidbodyComponent>(entity);
-			RigidActor* body = &rigidbodyComponent.DynamicBody;
+			auto body = &rigidbodyComponent.DynamicBody;
 			BodyCreateInfo* info = &rigidbodyComponent.CreateInfo;
 
 			body->Create(info, transform.WorldPos, transform.Rotation);
 			AttachBodyToActiveScene(body);
 		}
 
-		const auto& static_group = m_World->m_CurrentRegistry->view<TransformComponent, StaticBodyComponent>();
+		const auto& static_group = m_World->m_CurrentRegistry->view<TransformComponent, StaticbodyComponent>();
 		for (const auto& entity : static_group)
 		{
-			const auto& [transform, rigidbodyComponent] = static_group.get<TransformComponent, StaticBodyComponent>(entity);
+			const auto& [transform, rigidbodyComponent] = static_group.get<TransformComponent, StaticbodyComponent>(entity);
 			RigidActor* body = &rigidbodyComponent.StaticBody;
 			BodyCreateInfo* info = &rigidbodyComponent.CreateInfo;
 
@@ -87,20 +87,31 @@ namespace SmolEngine
 			body.Destroy();
 		}
 
-		const auto& static_group = m_World->m_CurrentRegistry->view<StaticBodyComponent>();
+		const auto& static_group = m_World->m_CurrentRegistry->view<StaticbodyComponent>();
 		for (const auto& entity : static_group)
 		{
-			auto& body = static_group.get<StaticBodyComponent>(entity).StaticBody;
+			auto& body = static_group.get<StaticbodyComponent>(entity).StaticBody;
 			body.Destroy();
 		}
 
 		DeleteScene();
 	}
 
+	void PhysicsSystem::OnUpdate()
+	{
+		constexpr float simTime = 1.0f / 60.0f;
+
+		m_State->mScene->simulate(simTime);
+		m_State->mScene->fetchResults(true);
+	}
+
 	void PhysicsSystem::CreateScene()
 	{
-		auto& scale = m_State->mPhysics->getTolerancesScale();
+		const auto& scale = m_State->mPhysics->getTolerancesScale();
+		const auto& gravity = m_State->CreateInfo.Gravity;
+
 		physx::PxSceneDesc sceneDesc(scale);
+		sceneDesc.gravity = { gravity.x, gravity.y, gravity.z };
 		sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(m_State->CreateInfo.NumWorkThreads);
 		sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
 		m_State->mScene = m_State->mPhysics->createScene(sceneDesc);
@@ -110,6 +121,22 @@ namespace SmolEngine
 	{
 		m_State->mScene->release();
 		m_State->mScene = nullptr;
+	}
+
+	void PhysicsSystem::UpdateTransforms()
+	{
+		entt::registry* reg = m_World->m_CurrentRegistry;
+
+		const auto& dynamic_group = m_World->m_CurrentRegistry->view<TransformComponent, RigidbodyComponent>();
+		for (const auto& entity : dynamic_group)
+		{
+			const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, RigidbodyComponent>(entity);
+			RigidActor* body = &rigidbodyComponent.DynamicBody;
+			auto& pxPos = body->m_BaseBody->getGlobalPose();
+
+			transform.Rotation = glm::vec3(pxPos.q.x, pxPos.q.y, pxPos.q.z);
+			transform.WorldPos = glm::vec3(pxPos.p.x, pxPos.p.y, pxPos.p.z);
+		}
 	}
 
 	void PhysicsSystem::AttachBodyToActiveScene(RigidActor* body)

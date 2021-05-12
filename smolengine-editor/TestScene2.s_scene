@@ -1,56 +1,127 @@
-value0: 2
+value0: 3
 value1: 0
 value2: 1
-value3: 1048575
-value4: 1
-value5: 1
-value6:
+value3: 2
+value4: 1048575
+value5: 2
+value6: 1
+value7:
   value0: 0
-  value1: New_Mesh_0
+  value1: EmptyActor0
   value2: Default
   value3: true
   value4: false
   value5: 0
-  value6: 3
-value7: 0
-value8: 0
-value9: 0
+  value6: 4
+value8: 2
+value9:
+  value0: 1
+  value1: EmptyActor1
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 4
 value10: 0
 value11: 0
 value12: 0
-value13: 1
-value14: 1
-value15:
+value13: 0
+value14: 0
+value15: 0
+value16: 2
+value17: 1
+value18:
   value0: 0
   value1: 0
   value2: 0
-  value3: 2
-  value4: 2
-  value5: 2
+  value3: 5
+  value4: 1
+  value5: 5
   value6: 0
-  value7: 10.739204406738281
-  value8: 0
+  value7: 2.0600495338439941
+  value8: 3.3871948719024658
   value9: 1
-value16: 0
-value17: 0
-value18: 1
-value19: 1
+value19: 2
 value20:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: -1.0553474426269531
+  value7: 34.995090484619141
+  value8: 2.5867786407470703
+  value9: 1
+value21: 0
+value22: 0
+value23: 2
+value24: 1
+value25:
   value0:
-    - C:\Dev\SmolEngine\smolengine-editor\stone.s_mat
+    - ""
   value1: true
   value2: false
   value3: true
   value4: 2
-  value5: C:\Dev\Frostium3D\samples\Assets\cylinder.gltf
+  value5: C:\Dev\Frostium3D\samples\Assets\cube.gltf
   value6: 2
-value21: 0
-value22: 0
-value23: 1
-value24: 0
-value25:
+value26: 2
+value27:
+  value0:
+    - ""
+  value1: true
+  value2: false
+  value3: true
+  value4: 2
+  value5: C:\Dev\Frostium3D\samples\Assets\cube.gltf
+  value6: 2
+value28: 0
+value29: 0
+value30: 1
+value31: 0
+value32:
   value0: 0
-  value1: TestScene2.s_scene
+  value1: C:\Dev\SmolEngine\smolengine-editor\TestScene2.s_scene
   value2: TestScene2
   value3:
     - value0: 1
+    - value0: 2
+value33: 1
+value34: 2
+value35:
+  value0:
+    value0: 2
+    value1: 2
+    value2: 1
+    value3: 55
+    value4: 1
+    value5: 1
+    value6: 1
+    value7: 1
+    value8: 1
+    value9: 11
+    value10: 1
+    value11: 0
+    value12: 0
+    value13: 1
+  value1: 3
+value36: 1
+value37: 1
+value38:
+  value0:
+    value0: 2
+    value1: 2
+    value2: 0
+    value3: 1
+    value4: 0.5
+    value5: 1
+    value6: 5
+    value7: 1
+    value8: 5
+    value9: 11
+    value10: 1
+    value11: 0
+    value12: 0
+    value13: 1
+  value1: 3

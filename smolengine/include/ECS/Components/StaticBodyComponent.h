@@ -7,10 +7,12 @@
 
 namespace SmolEngine
 {
-	struct StaticBodyComponent : public BaseComponent
+	class Actor;
+
+	struct StaticbodyComponent : public BaseComponent
 	{
-		StaticBodyComponent() = default;
-		StaticBodyComponent(uint32_t id)
+		StaticbodyComponent() = default;
+		StaticbodyComponent(uint32_t id)
 			:BaseComponent(id) {}
 
 		BodyCreateInfo  CreateInfo{};

@@ -7,6 +7,8 @@
 
 namespace SmolEngine
 {
+	class Actor;
+
 	struct RigidbodyComponent : public BaseComponent
 	{
 		RigidbodyComponent() = default;

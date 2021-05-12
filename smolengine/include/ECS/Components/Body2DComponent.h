@@ -15,12 +15,7 @@ namespace SmolEngine
 		Body2DComponent(uint32 id)
 			:BaseComponent(id) {}
 
-		Body2DComponent(Actor* actor, int type)
-		{
-			Body.m_Type = type;
-			ActorID = actor->GetID();
-		}
-
+		Actor*           Actor = nullptr;
 		Body2D           Body;
 		uint32_t         ActorID = 0;
 		bool             ShowShape = true;

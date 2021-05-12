@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "Core/MaterialLibraryInterface.h"
-#include "Core/FileDialog.h"
 
 #include "ECS/Systems/JobsSystem.h"
 
 #include <imgui/imgui.h>
 #include <Frostium3D/ImGUI/ImGuiExtension.h>
+#include <Frostium3D/Utils/Utils.h>
 
 namespace SmolEngine
 {
@@ -25,7 +25,7 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("Save as"))
 					{
-						const auto& result = FileDialog::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
+						const auto& result = Frostium::Utils::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
 						if (result.has_value())
 						{
 
@@ -35,7 +35,7 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Load"))
 					{
 						Reset();
-						const auto& result = FileDialog::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
+						const auto& result = Frostium::Utils::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
 						if (result.has_value())
 						{
 
@@ -89,7 +89,7 @@ namespace SmolEngine
 		ImGui::SameLine();
 		if(ImGui::SmallButton("Add"))
 		{
-			const auto& result = FileDialog::OpenFile("");
+			const auto& result = Frostium::Utils::OpenFile("");
 			if (result.has_value())
 				dummy = result.value();
 		}

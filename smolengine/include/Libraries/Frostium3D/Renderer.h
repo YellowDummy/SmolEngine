@@ -18,12 +18,14 @@ namespace Frostium
 		static void Shutdown();
 		static void BeginScene(const ClearInfo* clearInfo);
 		static void EndScene();
+
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale, Mesh* mesh, const uint32_t& PBRmaterialID = 0);
 		static void SubmitDirLight(DirectionalLight* light);
 		static void SubmitPointLight(PointLight* light);
 		static void SubmitSpotLight(SpotLight* light);
-		static void SetRendererState(RendererState* state);
-		static void SetDepthPassProperties(DepthPassProperties* properties);
+
+		static void SetRenderingState(RenderingState* state);
+		static void SetSceneState(SceneState* state);
 
 		// Getters
 		static Framebuffer* GetFramebuffer();

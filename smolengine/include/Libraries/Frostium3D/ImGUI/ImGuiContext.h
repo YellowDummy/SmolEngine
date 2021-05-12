@@ -7,12 +7,14 @@
 
 namespace Frostium 
 {
+	struct GraphicsContextInitInfo;
+
 	class Window;
 	class ImGuiContext
 	{
 	public:
 
-		void Init();
+		void Init(GraphicsContextInitInfo* info);
 		void ShutDown();
 
 		// Events

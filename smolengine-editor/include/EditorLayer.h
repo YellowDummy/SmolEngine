@@ -10,6 +10,7 @@
 #include <Frostium3D/Libraries/imgizmo/src/ImGuizmo.h>
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
 #include <Frostium3D/EditorCamera.h>
+#include <Frostium3D/Common/Texture.h>
 
 namespace SmolEngine
 {
@@ -26,6 +27,8 @@ namespace SmolEngine
 	struct MeshComponent;
 	struct DirectionalLightComponent;
 	struct PointLightComponent;
+	struct RigidbodyComponent;
+	struct StaticbodyComponent;
 
 	class Actor;
 	class EditorCamera;
@@ -44,7 +47,9 @@ namespace SmolEngine
 		EditorLayer(Frostium::EditorCamera* camera)
 			:m_Camera(camera), Layer("EditorLayer") {}
 
-		~EditorLayer() {}
+		~EditorLayer() = default;
+
+		void LoadAssets();
 
 		// Override
 		void OnAttach() override;
@@ -55,6 +60,8 @@ namespace SmolEngine
 		void OnImGuiRender() override;
 
 		// Draw
+		void DrawToolsBar();
+		void DrawSceneTetxure();
 		void DrawInfo(HeadComponent* head);
 		void DrawTransform(TransformComponent* transform);
 		void DrawTexture(Texture2DComponent* texture);
@@ -72,6 +79,8 @@ namespace SmolEngine
 		void DrawDirectionalLightComponent(DirectionalLightComponent* light);
 		void DrawMeshInspector(bool& show);
 		void DrawPointLightComponent(PointLightComponent* light);
+		void DrawRigidBodyComponent(RigidbodyComponent* component);
+		void DrawStaticBodyComponent(StaticbodyComponent* component);
 
 	private:
 
@@ -111,6 +120,13 @@ namespace SmolEngine
 		std::string                                 m_FilePath = "";
 		std::string                                 m_FileName = "";
 		size_t                                      m_IDBuffer = 0;
+
+		// UI
+		Frostium::Texture                           m_PlayButton{};
+		Frostium::Texture                           m_StopButton{};
+		Frostium::Texture                           m_MoveButton{};
+		Frostium::Texture                           m_ScaleButton{};
+		Frostium::Texture                           m_RotateButton{};
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";
