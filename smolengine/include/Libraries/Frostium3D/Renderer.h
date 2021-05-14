@@ -20,6 +20,7 @@ namespace Frostium
 		static void EndScene();
 
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale, Mesh* mesh, const uint32_t& PBRmaterialID = 0);
+		static void SubmitMeshEx(const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale, Mesh* mesh, const uint32_t& PBRmaterialID);
 		static void SubmitDirLight(DirectionalLight* light);
 		static void SubmitPointLight(PointLight* light);
 		static void SubmitSpotLight(SpotLight* light);

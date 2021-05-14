@@ -15,7 +15,8 @@ namespace SmolEngine
 			Frostium::Mesh::Create(filePath, mesh.get());
 			if (mesh->GetVertexCount() > 0)
 			{
-				comp->MaterialPaths.resize(mesh->GetChilds().size() + 1);
+				uint32_t size = static_cast<uint32_t>(mesh->GetChilds().size()) + 1;
+				comp->MaterialsData.resize(size);
 				comp->Mesh = mesh;
 				comp->ModelPath = filePath;
 				return true;
@@ -47,8 +48,8 @@ namespace SmolEngine
 				uint32_t id = lib->Add(&matInfo);
 				Frostium::Renderer::UpdateMaterials();
 
-				mesh->SetMaterialID(id);
-				comp->MaterialPaths[index] = material_path;
+				comp->MaterialsData[index].Path = material_path;
+				comp->MaterialsData[index].ID = id;
 				return true;
 			}
 		}

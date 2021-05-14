@@ -21,6 +21,7 @@ namespace Frostium
 
 		Texture() = default;
 		~Texture() = default;
+		bool operator==(const Texture& other) const;
 
 		void Bind(uint32_t slot = 0) const;
 		void UnBind() const;
@@ -34,21 +35,14 @@ namespace Frostium
 #ifndef  FROSTIUM_OPENGL_IMPL
 		VulkanTexture* GetVulkanTexture() { return &m_VulkanTexture; }
 #endif
-		// Setters
-		void SetData(void* data, uint32_t size);
-
 		// Factory
 		static void CreateWhiteTexture(Texture* out_texture);
 		static void Create(const std::string& filePath, Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool flip = true, bool imgui_handler = false);
-		static void Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height, Texture* out_texture,
-			TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
-
-		// Helpers
-		static void LoadTexture(const std::string& path, TextureLoadedData* outData);
-		bool operator==(const Texture& other) const;
+		static void Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height, Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
 
 	private:
 
+		uint32_t        m_ID = 0;
 #ifdef  FROSTIUM_OPENGL_IMPL
 		OpenglTexture2D m_OpenglTexture2D = {};
 #else

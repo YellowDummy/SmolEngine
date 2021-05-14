@@ -1,6 +1,7 @@
 #pragma once
 #ifndef FROSTIUM_OPENGL_IMPL
-#include "Vulkan/Vulkan.h"
+#include "Vulkan/VulkanTexture.h"
+
 #include <imgui/examples/imgui_impl_vulkan.h>
 
 struct GLFWwindow;
@@ -17,9 +18,9 @@ namespace Frostium
 		void InitResources();
 
 
-		VkDevice         g_Device;
-		VkPipelineCache  g_PipelineCache = VK_NULL_HANDLE;
-		VkDescriptorPool g_DescriptorPool = VK_NULL_HANDLE;
+		VkDevice                                    g_Device;
+		VkPipelineCache                             g_PipelineCache = VK_NULL_HANDLE;
+		VkDescriptorPool                            g_DescriptorPool = VK_NULL_HANDLE;
 	};
 }
 

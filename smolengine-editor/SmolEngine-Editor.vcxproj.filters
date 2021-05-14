@@ -4,8 +4,14 @@
     <Filter Include="include">
       <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\FileBrowser">
+      <UniqueIdentifier>{7CC2F271-E823-D07F-7191-1632DDF1063F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\FileBrowser">
+      <UniqueIdentifier>{2054F767-8CDF-642C-95F0-E72001FBC02C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -15,12 +21,24 @@
     <ClInclude Include="include\EditorLayer.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\FileBrowser\ImFileDialog.h">
+      <Filter>include\FileBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileBrowser\ImFileDialog.cpp">
+      <Filter>src\FileBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

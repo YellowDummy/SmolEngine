@@ -36,7 +36,6 @@ namespace Frostium
 	struct GraphicsContextInitInfo
 	{
 		bool                     bTargetsSwapchain = true;
-		bool                     bCustomImguiStyle = false;
 		Flags                    Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
 		MSAASamples              eMSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 		ShadowMapSize            eShadowMapSize = ShadowMapSize::SIZE_8;

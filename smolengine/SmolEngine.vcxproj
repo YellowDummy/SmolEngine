@@ -355,6 +355,8 @@
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\tweakme.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spdlog\include\spdlog\version.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross\external_interface.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\stb_image\stb_image.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\stb_image\stb_image_write.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\Common.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\ConstantUnion.h" />

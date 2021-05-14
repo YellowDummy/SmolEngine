@@ -56,9 +56,20 @@ namespace SmolEngine
 				const auto& group = reg->view<TransformComponent, MeshComponent>();
 				for (const auto& entity : group)
 				{
-					const auto& [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
-					if (mesh.bShow && mesh.Mesh)
-						Renderer::SubmitMesh(transform.WorldPos, transform.Rotation, transform.Scale, mesh.Mesh.get(), mesh.Mesh->GetMaterialID());
+					const auto& [transform, mesh_component] = group.get<TransformComponent, MeshComponent>(entity);
+					if (mesh_component.bShow && mesh_component.Mesh)
+					{
+						Frostium::Mesh* mesh = mesh_component.Mesh.get();
+						std::vector<Frostium::Mesh>& childs = mesh->GetChilds();
+						uint32_t childCount = mesh->GetChildCount();
+
+						Renderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[0].ID);
+						for (uint32_t i = 0; i < childCount; i++)
+						{
+							mesh = &childs[i];
+							Renderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[i + 1].ID);
+						}
+					}
 				}
 			}
 

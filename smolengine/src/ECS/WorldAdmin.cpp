@@ -196,7 +196,7 @@ namespace SmolEngine
 			return false;
 		}
 
-		// temp
+		// Add default materials
 		{
 			Frostium::MaterialLibrary::GetSinglenton()->Reset();
 
@@ -205,18 +205,18 @@ namespace SmolEngine
 			defMat.SetMetalness(0.2f);
 			Frostium::MaterialLibrary::GetSinglenton()->Add(&defMat);
 			Frostium::Renderer::UpdateMaterials();
-
 			m_State->m_ActiveSceneID = 0;
 		}
 
 		Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
 		current_scene->Free();
 
-		CreateScene(path);
 		if (GetActiveScene()->Load(path))
 		{
 			// Reloading Assets
 			ReloadAssets();
+			m_State->m_ActiveSceneID++;
+			m_State->m_CurrentRegistry = &current_scene->m_SceneData.m_Registry;
 			NATIVE_WARN(std::string("Scene loaded successfully"));
 			return true;
 		}
@@ -334,22 +334,17 @@ namespace SmolEngine
 				Frostium::Mesh::Create(component.ModelPath, mesh.get());
 
 				// Loads materials if exist
-				for (uint32_t i = 0; i < static_cast<uint32_t>(component.MaterialPaths.size()); ++i)
+				for (uint32_t i = 0; i < static_cast<uint32_t>(component.MaterialsData.size()); ++i)
 				{
-					const std::string& materialPath = component.MaterialPaths[i];
-					if (materialPath.empty() == false && std::filesystem::exists(materialPath))
+					MeshComponent::MaterialData& materialData = component.MaterialsData[i];
+					const std::string& path = materialData.Path;
+
+					if (path.empty() == false && std::filesystem::exists(path))
 					{
-						if (lib->Load(materialPath, materialCI))
+						if (lib->Load(path, materialCI))
 						{
 							uint32_t matID = lib->Add(&materialCI);
-							if (i == 0) // root node
-							{
-								mesh->SetMaterialID(matID);
-								continue;
-							}
-
-							auto& childs = mesh->GetChilds();
-							childs[i].SetMaterialID(matID);
+							materialData.ID = matID;
 						}
 					}
 				}

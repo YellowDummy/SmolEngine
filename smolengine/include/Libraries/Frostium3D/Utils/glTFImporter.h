@@ -57,14 +57,6 @@ namespace Frostium
 
 	struct Primitive
 	{
-		struct BoundingBox 
-		{
-			glm::vec3 min;
-			glm::vec3 max;
-
-			BoundingBox CalculateAABB(const glm::mat4& model);
-		};
-
 		std::string                      MeshName = "";
 		std::vector<PBRVertex>           VertexBuffer;
 		std::vector<uint32_t>            IndexBuffer;

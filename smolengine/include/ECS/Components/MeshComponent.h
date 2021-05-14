@@ -19,7 +19,20 @@ namespace SmolEngine
 		int                                  ShadowType = 2;	                 
 		Ref<Frostium::Mesh>                  Mesh = nullptr;
 		std::string                          ModelPath = "";
-		std::vector<std::string>             MaterialPaths;
+		struct MaterialData
+		{
+			std::string                      Path = "";
+			uint32_t                         ID = 0;
+
+			template<typename Archive>
+			void serialize(Archive& archive)
+			{
+				archive(Path);
+			}
+
+		};				                     
+
+		std::vector<MaterialData>            MaterialsData;
 
 	private:
 
@@ -28,7 +41,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(MaterialPaths, bIsStatic, bShow,  ShadowType, ModelPath, ComponentID);
+			archive(MaterialsData, bIsStatic, bShow,  ShadowType, ModelPath, ComponentID);
 		}
 	};
 }

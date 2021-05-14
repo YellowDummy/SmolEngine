@@ -33,6 +33,7 @@ namespace Frostium
 		uint32_t GetAnimationsCount() const;
 		uint32_t GetChildCount() const;
 		uint32_t GetMaterialID() const;
+		uint32_t GetMeshID() const;
 		std::string_view GetName() const;
 		VertexBuffer* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
@@ -53,13 +54,14 @@ namespace Frostium
 
 	private:
 
-		bool                                        m_Initialized = false;
-		uint32_t                                    m_MaterialID = 0;
-		uint32_t                                    m_VertexCount = 0;
 		Mesh*                                       m_Root = nullptr;
 		Ref<VertexBuffer>                           m_VertexBuffer = nullptr;
 		Ref<IndexBuffer>                            m_IndexBuffer = nullptr;
 		ImportedDataGlTF*                           m_ImportedData = nullptr;
+		bool                                        m_Initialized = false;
+		uint32_t                                    m_MaterialID = 0;
+		uint32_t                                    m_VertexCount = 0;
+		uint32_t                                    m_ID = 0;
 		std::unordered_map<std::string, Mesh*>      m_MeshMap;
 		std::vector<Mesh>                           m_Childs;
 

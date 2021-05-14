@@ -33,15 +33,6 @@ namespace Frostium
 		bool              IsInputRateInstance = false;
 	};
 
-	struct TextureLoadedData
-	{
-		int            Height = 0;
-		int            Width = 0;
-		int            Channels = 0;
-		std::string    FilePath = "";
-		unsigned char* Data = nullptr;
-	};
-
 	struct PBRVertex
 	{
 		glm::vec3          Pos = glm::vec3(0.0f);
@@ -56,6 +47,14 @@ namespace Frostium
 	{
 		glm::vec3 Pos;
 		glm::vec2 UV;
+	};
+
+	struct BoundingBox
+	{
+		glm::vec3 min;
+		glm::vec3 max;
+
+		void CalculateAABB(const glm::mat4& m);
 	};
 
 	enum class ShaderType : uint32_t
@@ -75,6 +74,7 @@ namespace Frostium
 	{
 		R8_UNORM,
 		R8G8B8A8_UNORM,
+		B8G8R8A8_UNORM,
 		R32G32B32A32_SFLOAT,
 		R16G16B16A16_SFLOAT // HDR
 	};

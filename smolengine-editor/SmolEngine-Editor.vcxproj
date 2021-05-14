@@ -97,10 +97,14 @@
   <ItemGroup>
     <ClInclude Include="include\Editor.h" />
     <ClInclude Include="include\EditorLayer.h" />
+    <ClInclude Include="include\FileBrowser\ImFileDialog.h" />
+    <ClInclude Include="include\FileManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\EditorLayer.cpp" />
+    <ClCompile Include="src\FileBrowser\ImFileDialog.cpp" />
+    <ClCompile Include="src\FileManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\smolengine\SmolEngine.vcxproj">

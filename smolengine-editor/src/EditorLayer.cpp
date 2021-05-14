@@ -47,6 +47,7 @@ namespace SmolEngine
 	static bool showConsole = true;
 	static bool showGameView = false;
 	static bool showMaterialLibrary = false;
+	static bool showContentBrowser = true;
 
 	void EditorLayer::LoadAssets()
 	{
@@ -58,6 +59,8 @@ namespace SmolEngine
 		Frostium::Texture::Create("assets/buttons/move_button.png", &m_MoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 		Frostium::Texture::Create("assets/buttons/rotate_button.png", &m_RotateButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 		Frostium::Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 	}
 
 	void EditorLayer::OnAttach()
@@ -65,6 +68,8 @@ namespace SmolEngine
 		m_MaterialLibraryInterface = std::make_unique<MaterialLibraryInterface>();
 
 		m_Console = new EditorConsole();
+		m_FileManager = new FileManager();
+		m_FileManager->Init();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
 
@@ -201,6 +206,7 @@ namespace SmolEngine
 		DrawSceneView(true);
 
 		m_Console->Update(showConsole);
+		m_FileManager->Update(showContentBrowser);
 		m_MaterialLibraryInterface->Draw(showMaterialLibrary);
 
 		DrawHierarchy();
@@ -318,6 +324,18 @@ namespace SmolEngine
 #else
 			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
 #endif
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
+				{
+					std::string path;
+					std::filesystem::path* p = (std::filesystem::path*)payload->Data;
+					if (FileExtensionCheck(p, ".s_scene", path))
+						m_World->LoadScene(path);
+				}
+				ImGui::EndDragDropTarget();
+			}
+
 			// Gizmos
 			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode())
 			{
@@ -399,27 +417,31 @@ namespace SmolEngine
 			ImGui::Extensions::InputInt("Layer", texture->LayerIndex, 130.0f, "TexturePanel");
 			ImGui::NewLine();
 			ImGui::Extensions::CheckBox("Enabled", texture->Enabled, 130.0f, "TexturePanel");
-
-			ImGui::NewLine();
-			ImGui::NewLine();
-			ImGui::SetCursorPosX(10);
-			if (ImGui::Button("Change", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
-			{
-
-				const auto& result = Frostium::Utils::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
-				if (result.has_value())
-					ComponentHandler::ValidateTexture2DComponent(texture, result.value());
-			}
-
-			return;
 		}
 
+		ImGui::NewLine();
 		ImGui::SetCursorPosX(10);
-		if (ImGui::Button("New texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
+		if (ImGui::Button("Load Texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 		{
 			const auto& result = Frostium::Utils::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
 			if (result.has_value())
 				ComponentHandler::ValidateTexture2DComponent(texture, result.value());
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
+			{
+				std::string path;
+				std::filesystem::path* p = (std::filesystem::path*)payload->Data;
+
+				if (FileExtensionCheck(p, ".png", path))
+					ComponentHandler::ValidateTexture2DComponent(texture, path);
+
+				if (FileExtensionCheck(p, ".jpg", path))
+					ComponentHandler::ValidateTexture2DComponent(texture, path);
+			}
+			ImGui::EndDragDropTarget();
 		}
 
 	}
@@ -926,9 +948,15 @@ namespace SmolEngine
 		ImGui::Begin("Hierarchy");
 		{
 			ImGui::SetWindowFontScale(0.9f);
+			ImGui::Image(m_SearchButton.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::SameLine();
+
+			float pos = ImGui::GetCursorPosY();
+			ImGui::SetCursorPosY(pos + 3);
 			static char name[128];
-			ImGui::InputTextWithHint("Search", "Name", name, IM_ARRAYSIZE(name));
+			ImGui::InputTextWithHint("", "Search", name, IM_ARRAYSIZE(name));
 			ImGui::Separator();
+
 			std::string sceneStr = "Scene";
 			SceneStateComponent* state = m_World->GetActiveScene()->GetSceneState();
 
@@ -1036,6 +1064,7 @@ namespace SmolEngine
 					if (ImGui::MenuItem("Delete"))
 					{
 						m_World->GetActiveScene()->DeleteActor(m_SelectedActor);
+						m_SelectedActor = nullptr;
 					}
 
 					ImGui::EndPopup();
@@ -1075,6 +1104,18 @@ namespace SmolEngine
 			{
 				ComponentHandler::ValidateMeshComponent(comp, result.value());
 			}
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
+			{
+				std::string path;
+				std::filesystem::path* p = (std::filesystem::path*)payload->Data;
+				if (FileExtensionCheck(p, ".gltf", path))
+					ComponentHandler::ValidateMeshComponent(comp, path);
+			}
+			ImGui::EndDragDropTarget();
 		}
 
 		ImGui::NewLine();
@@ -1138,6 +1179,18 @@ namespace SmolEngine
 								{
 									ComponentHandler::SetMeshMaterial(comp, mesh, result.value());
 								}
+							}
+
+							if (ImGui::BeginDragDropTarget())
+							{
+								if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
+								{
+									std::string path;
+									std::filesystem::path* p = (std::filesystem::path*)payload->Data;
+									if (FileExtensionCheck(p, ".s_mat", path))
+										ComponentHandler::SetMeshMaterial(comp, mesh, path);
+								}
+								ImGui::EndDragDropTarget();
 							}
 
 						}
@@ -1211,6 +1264,17 @@ namespace SmolEngine
 			ImGui::Extensions::InputFloat("Side Y", component->CreateInfo.BoxShapeInfo.Y);
 			ImGui::Extensions::InputFloat("Side Z", component->CreateInfo.BoxShapeInfo.Z);
 		}
+	}
+
+	bool EditorLayer::FileExtensionCheck(std::filesystem::path* path, const std::string& name, std::string& strPath)
+	{
+		if (path->extension().filename() == name)
+		{
+			strPath = path->u8string();
+			return true;
+		}
+
+		return false;
 	}
 
 	void EditorLayer::DrawScriptComponent(uint32_t index)

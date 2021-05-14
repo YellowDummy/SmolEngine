@@ -154,6 +154,9 @@
     <Filter Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross">
       <UniqueIdentifier>{0A9A4BBB-76D9-0FD4-7FB9-D6EBEB776F18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Libraries\stb_image">
+      <UniqueIdentifier>{7A29E51E-66D2-4C4E-8F68-68CD7B70678F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="include\Libraries\Frostium3D\Libraries\vulkan">
       <UniqueIdentifier>{8046E640-ECB6-E8B9-B5D5-6242210521BB}</UniqueIdentifier>
     </Filter>
@@ -1058,6 +1061,12 @@
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross\external_interface.h">
       <Filter>include\Libraries\Frostium3D\Libraries\spir_v_cross\include\spirv_cross</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\stb_image\stb_image.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Libraries\stb_image\stb_image_write.h">
+      <Filter>include\Libraries\Frostium3D\Libraries\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include\BaseTypes.h">
       <Filter>include\Libraries\Frostium3D\Libraries\vulkan\include\glslang\Include</Filter>

@@ -18,6 +18,7 @@ namespace Frostium
 		void LoadCubeMap(const std::string& filePath, TextureFormat format);
 		void GenTexture(const void* data, uint32_t size, uint32_t width, uint32_t height, TextureFormat format);
 		void GenWhiteTetxure(uint32_t width, uint32_t height);
+		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, const void* data, VkFormat format, bool imgui_handler);
 
 		// Getters
 		const VkDescriptorImageInfo& GetVkDescriptorImageInfo() const;
@@ -25,7 +26,6 @@ namespace Frostium
 		uint32_t GetHeight() const;
 		uint32_t GetWidth() const;
 		bool IsActive() const;
-		size_t GetID() const;
 
 		static VkImage CreateVkImage(uint32_t width, uint32_t height, int32_t mipLevels,
 			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
@@ -63,9 +63,8 @@ namespace Frostium
 	private:
 
 		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, int32_t mipMaps, VkImageSubresourceRange& range);
-		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, const void* data);
 		void CreateFromBuffer(const void* data, VkDeviceSize size, uint32_t width, uint32_t height);
-		void CreateSamplerAndImageView(uint32_t mipMaps);
+		void CreateSamplerAndImageView(uint32_t mipMaps, VkFormat format);
 		VkFormat GetImageFormat(TextureFormat format);
 
 	private:
@@ -79,12 +78,9 @@ namespace Frostium
 		VkImageView                  m_ImageView;
 		VkImageLayout                m_ImageLayout;
 		VkDeviceMemory               m_DeviceMemory;
-
-		void*                       m_ImGuiTextureID = nullptr;
-
-		uint32_t                    m_Height = 0;
-		uint32_t                    m_Width = 0;
-		size_t                      m_ID = 0;
+		void*                        m_ImGuiTextureID = nullptr;
+		uint32_t                     m_Height = 0;
+		uint32_t                     m_Width = 0;
 
 	private:
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "SmolEngineCore.h"
+#include "FileManager.h"
 #include "Core/Layer.h"
 #include "Core/MaterialLibraryInterface.h"
 #include "Core/EditorConsole.h"
@@ -84,7 +85,7 @@ namespace SmolEngine
 
 	private:
 
-		void ResetFileBrowser();
+		bool FileExtensionCheck(std::filesystem::path* path, const std::string& name, std::string& strPath);
 
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
@@ -107,6 +108,7 @@ namespace SmolEngine
 		bool                                        m_IsGameViewFocused = false;
 		bool                                        m_GizmoEnabled = true;
 
+		FileManager*                                m_FileManager = nullptr;
 		WorldAdmin*                                 m_World = nullptr;
 		Frostium::EditorCamera*                     m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
@@ -127,6 +129,8 @@ namespace SmolEngine
 		Frostium::Texture                           m_MoveButton{};
 		Frostium::Texture                           m_ScaleButton{};
 		Frostium::Texture                           m_RotateButton{};
+		Frostium::Texture                           m_SearchButton{};
+		Frostium::Texture                           m_RemoveButton{};
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";

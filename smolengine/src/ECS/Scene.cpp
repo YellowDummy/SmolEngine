@@ -145,7 +145,7 @@ namespace SmolEngine
 			meshNew->bIsStatic = meshOld->bIsStatic;
 			meshNew->bShow = meshOld->bShow;
 			meshNew->ModelPath = meshOld->ModelPath;
-			meshNew->MaterialPaths = meshOld->MaterialPaths;
+			meshNew->MaterialsData= meshOld->MaterialsData;
 			meshNew->ShadowType = meshOld->ShadowType;
 			meshNew->Mesh = meshOld->Mesh;
 		}
@@ -163,8 +163,9 @@ namespace SmolEngine
 	{
 		if (actor != nullptr)
 		{
+			uint32_t position = actor->GetID();
 			m_State->ActorNameSet.erase(actor->GetName());
-			std::remove(m_State->Actors.begin(), m_State->Actors.end(), *actor);
+			m_State->Actors.erase(m_State->Actors.begin() + position);
 
 			m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
@@ -182,6 +183,7 @@ namespace SmolEngine
 			m_SceneData.m_Registry.remove_if_exists<RigidbodyComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<StaticbodyComponent>(*actor);
 
+			m_SceneData.m_Registry.destroy(*actor);
 			actor = nullptr;
 		}
 	}
@@ -242,6 +244,7 @@ namespace SmolEngine
 		}
 		// Updates sets
 		m_State = GetStateComponent();
+		m_State->FilePath = filePath;
 		for (Actor& actor : m_State->Actors)
 		{
 			m_State->ActorNameSet[actor.GetName()] = &actor;
