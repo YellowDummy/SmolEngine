@@ -76,6 +76,7 @@ namespace Frostium
 	private:
 
 #ifndef FROSTIUM_OPENGL_IMPL
+		CommandBufferStorage              m_CmdStorage{};
 		VulkanPipeline                    m_VulkanPipeline = {};
 		VkCommandBuffer                   m_CommandBuffer = nullptr;
 		bool                              m_IsMainCmdBufferInUse = false;

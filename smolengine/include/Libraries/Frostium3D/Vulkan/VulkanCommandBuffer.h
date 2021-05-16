@@ -1,39 +1,45 @@
 #pragma once
 #ifndef FROSTIUM_OPENGL_IMPL
 #include "Common/Core.h"
+#include "Common/Common.h"
 #include "Vulkan/Vulkan.h"
+
+#include <mutex>
 
 namespace Frostium
 {
 	class VulkanDevice;
-	class VulkanSwapchain;
 	class VulkanCommandPool;
+
+	struct CommandBufferStorage
+	{
+		VkCommandBuffer Buffer = VK_NULL_HANDLE;
+		VkCommandPool   Pool = VK_NULL_HANDLE;
+	};
 
 	class VulkanCommandBuffer
 	{
 	public:
 
 		VulkanCommandBuffer();
-		~VulkanCommandBuffer();
 
-		// Main
-		bool Init(VulkanDevice* device, VulkanCommandPool* commandPool, VulkanSwapchain* targetSwapchain);
-		bool Recrate();
+		bool                           Init(VulkanDevice* device);
+		bool                           Create();
+		bool                           Recrate();
 
-		static void EndSingleCommandBuffer(const VkCommandBuffer cmdBuffer);
-		static void FlushCommandBuffer(const VkCommandBuffer cmdBuffer);
-		static const VkCommandBuffer CreateSingleCommandBuffer(bool oneCommand = true);
+		static void                    CreateCommandBuffer(CommandBufferStorage* data);
+		static void                    ExecuteCommandBuffer(CommandBufferStorage* data);
 
 		// Getters
-		const VkCommandBuffer GetVkCommandBuffer() const;
-		size_t GetBufferSize() const;
-		std::vector<VkCommandBuffer> m_CommandBuffers;
+		VkCommandBuffer                GetVkCommandBuffer() const;
+		VkCommandPool                  GetVkCommandPool() const;
+		size_t                         GetBufferSize() const;
 
 	private:
 
-		VulkanSwapchain* m_TargetSwapchain = nullptr;
-		VulkanCommandPool* m_CommandPool = nullptr;
-		VulkanDevice* m_Device = nullptr;
+		VkCommandPool                  m_CommandPool = VK_NULL_HANDLE;
+		VulkanDevice*                  m_Device = nullptr;
+		std::vector<VkCommandBuffer>   m_CommandBuffers;
 	};
 }
 #endif

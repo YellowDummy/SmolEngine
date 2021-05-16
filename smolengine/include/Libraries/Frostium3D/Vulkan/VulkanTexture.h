@@ -62,7 +62,7 @@ namespace Frostium
 
 	private:
 
-		void GenerateMipMaps(VkImage image, int32_t width, int32_t height, int32_t mipMaps, VkImageSubresourceRange& range);
+		void GenerateMipMaps(VkImage image, VkCommandBuffer cmd, int32_t width, int32_t height, int32_t mipMaps, VkImageSubresourceRange& range);
 		void CreateFromBuffer(const void* data, VkDeviceSize size, uint32_t width, uint32_t height);
 		void CreateSamplerAndImageView(uint32_t mipMaps, VkFormat format);
 		VkFormat GetImageFormat(TextureFormat format);

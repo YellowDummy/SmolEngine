@@ -48,6 +48,7 @@ project "SmolEngine"
 		"smolengine/include/Libraries/Frostium3D/Libraries/vulkan/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/taskflow/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
 		"vendor/physx/include/"
 	}
@@ -64,7 +65,8 @@ project "SmolEngine"
 	{
         "_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE",
-		"SMOLENGINE_EDITOR"
+		"SMOLENGINE_EDITOR",
+		"FROSTIUM_SMOLENGINE_IMPL"
 	}
 
 	filter "system:windows"
@@ -147,6 +149,7 @@ project "GameX"
 		"smolengine/include/Libraries/Frostium3D/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/vulkan/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/taskflow/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
@@ -206,6 +209,7 @@ project "GameX"
 		"smolengine/include/Libraries/fmod/include/",
 		"smolengine/include/Libraries/Frostium3D/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/taskflow/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/vulkan/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",

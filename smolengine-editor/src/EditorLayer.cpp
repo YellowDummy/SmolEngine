@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "EditorLayer.h"
-
-#include "Core/MaterialLibraryInterface.h"
 #include "Audio/AudioClip.h"
 
 #include "ECS/WorldAdmin.h"
@@ -47,7 +45,6 @@ namespace SmolEngine
 	static bool showConsole = true;
 	static bool showGameView = false;
 	static bool showMaterialLibrary = false;
-	static bool showContentBrowser = true;
 
 	void EditorLayer::LoadAssets()
 	{
@@ -61,19 +58,19 @@ namespace SmolEngine
 		Frostium::Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 		Frostium::Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 		Frostium::Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Frostium::Texture::Create("assets/buttons/folder_button.png", &m_FolderButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 	}
 
 	void EditorLayer::OnAttach()
 	{
-		m_MaterialLibraryInterface = std::make_unique<MaterialLibraryInterface>();
+		LoadAssets();
 
+		m_MaterialLibraryInterface = new MaterialLibraryInterface(this);
 		m_Console = new EditorConsole();
 		m_FileManager = new FileManager();
 		m_FileManager->Init();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
-
-		LoadAssets();
 
 		{
 			ImGui::GetStyle().FrameRounding = 4.0f;
@@ -160,7 +157,8 @@ namespace SmolEngine
 
 	void EditorLayer::OnEvent(Frostium::Event& e)
 	{
-		m_Camera->OnEvent(e);
+		if(m_IsSceneViewFocused)
+			m_Camera->OnEvent(e);
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -206,8 +204,8 @@ namespace SmolEngine
 		DrawSceneView(true);
 
 		m_Console->Update(showConsole);
-		m_FileManager->Update(showContentBrowser);
-		m_MaterialLibraryInterface->Draw(showMaterialLibrary);
+		m_FileManager->Update();
+		m_MaterialLibraryInterface->Update(showMaterialLibrary);
 
 		DrawHierarchy();
 		DrawInspector();
@@ -289,6 +287,11 @@ namespace SmolEngine
 				if (ImGui::MenuItem("Console"))
 				{
 					showConsole = true;
+				}
+
+				if (ImGui::MenuItem("Content Broser"))
+				{
+					m_FileManager->Open();
 				}
 
 				ImGui::EndMenu();
@@ -1174,7 +1177,7 @@ namespace SmolEngine
 							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
 							if (ImGui::Button("Select Material"))
 							{
-								const auto& result = Frostium::Utils::OpenFile("SmolEngine Material (*s_mat)\0*.s_mat\0");
+								const auto& result = Frostium::Utils::OpenFile("SmolEngine Material (*s_material)\0*.s_material\0");
 								if (result.has_value())
 								{
 									ComponentHandler::SetMeshMaterial(comp, mesh, result.value());

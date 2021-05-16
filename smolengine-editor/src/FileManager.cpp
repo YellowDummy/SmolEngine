@@ -37,14 +37,16 @@ namespace SmolEngine
 		};
 
 		insatnce.SetZoom(4);
-		insatnce.Open("ContentBrowser", "Content Browser", "files (*.png;*.jpg;*.jpeg;*.gltf;*.s_scene;*.s_mat){.png,.jpg,.jpeg,.gltf,.s_scene,.s_mat},.*");
+		insatnce.Open("ContentBrowser", "Content Browser", "files (*.png;*.jpg;*.jpeg;*.gltf;*.s_scene;*.s_material){.png,.jpg,.jpeg,.gltf,.s_scene,.s_material},.*");
 	}
 
-	void FileManager::Update(bool& enbaled)
+	void FileManager::Open()
 	{
-		if (ifd::FileDialog::Instance().IsDone("ContentBrowser")) 
-		{
+		ifd::FileDialog::Instance().Open();
+	}
 
-		}
+	void FileManager::Update()
+	{
+		ifd::FileDialog::Instance().IsDone("ContentBrowser");
 	}
 }

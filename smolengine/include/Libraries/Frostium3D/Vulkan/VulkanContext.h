@@ -4,7 +4,6 @@
 
 #include "Vulkan/VulkanInstance.h"
 #include "Vulkan/VulkanDevice.h"
-#include "Vulkan/VulkanCommandPool.h"
 #include "Vulkan/VulkanSwapchain.h"
 #include "Vulkan/VulkanCommandBuffer.h"
 #include "Vulkan/VulkanSemaphore.h"
@@ -32,7 +31,6 @@ namespace Frostium
 		inline GLFWwindow* GetWindow() { return m_Window; }
 
 		inline static VulkanCommandBuffer& GetCommandBuffer() { return m_CommandBuffer; }
-		inline static VulkanCommandPool& GetCommandPool() { return m_CommandPool; }
 		inline static VulkanSwapchain& GetSwapchain() { return m_Swapchain; }
 		inline static VulkanInstance& GetInstance() { return m_Instance; }
 		inline static VulkanDevice& GetDevice() { return m_Device; }
@@ -47,7 +45,6 @@ namespace Frostium
 		inline static VulkanContext*        s_ContextInstance = nullptr;
 		inline static VkCommandBuffer       m_CurrentVkCmdBuffer = nullptr;
 		inline static VulkanCommandBuffer   m_CommandBuffer = {};
-		inline static VulkanCommandPool     m_CommandPool = {};
 		inline static VulkanSwapchain       m_Swapchain = {};
 		inline static VulkanSemaphore       m_Semaphore = {};
 		inline static VulkanInstance        m_Instance = {};

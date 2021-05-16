@@ -18,15 +18,15 @@ namespace Frostium
 
 	struct DepthStencil
 	{
-		VkImage Image;
-		VkImageView ImageView;
-		VkDeviceMemory DeviceMemory;
+		VkImage Image =  VK_NULL_HANDLE;
+		VkImageView ImageView = VK_NULL_HANDLE;;
+		VkDeviceMemory DeviceMemory = VK_NULL_HANDLE;;
 	};
 
 	struct SwapchainBuffer
 	{
-		VkImage Image;
-		VkImageView View;
+		VkImage Image = VK_NULL_HANDLE;;
+		VkImageView View = VK_NULL_HANDLE;;
 	};
 
 	class VulkanSwapchain
@@ -74,21 +74,21 @@ namespace Frostium
 
 	private:
 
-		DepthStencil                       m_DepthStencil = {};
 		VkClearAttachment                  m_ClearAttachments[2] = {};
 
 		VkFormat                           m_ColorFormat = VK_FORMAT_B8G8R8A8_UNORM;
 		VkFormat                           m_DepthBufferFormat = VK_FORMAT_B8G8R8A8_UNORM;
 		VkColorSpaceKHR                    m_ColorSpace = VkColorSpaceKHR::VK_COLORSPACE_SRGB_NONLINEAR_KHR;
 
+		DepthStencil*                      m_DepthStencil = nullptr;
 		VkRenderPass                       m_RenderPass = nullptr;
 		VkSwapchainKHR                     m_Swapchain = nullptr;
 		VkPipelineCache                    m_PipelineCash = nullptr;
-		VulkanInstance* m_Instance = nullptr;
-		VulkanDevice* m_Device = nullptr;
+		VulkanInstance*                    m_Instance = nullptr;
+		VulkanDevice*                      m_Device = nullptr;
 		VkSurfaceKHR                       m_Surface = nullptr;
-		VkSurfaceFormatKHR* m_SurfaceFormat = nullptr;
-		VkPresentModeKHR* m_PresentMode = nullptr;
+		VkSurfaceFormatKHR*                m_SurfaceFormat = nullptr;
+		VkPresentModeKHR*                  m_PresentMode = nullptr;
 
 		uint32_t                           m_PresentModeCount = 0;
 		uint32_t                           m_SurfaceFormatCount = 0;

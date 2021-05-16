@@ -3,29 +3,32 @@
 
 namespace SmolEngine
 {
-	void JobsSystem::Complete(bool wait)
+	void JobsSystem::BeginSubmition(QueueType type)
 	{
-		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
-		instance->Executor.run(instance->Taskflow).wait();
+		tf::Taskflow* queue = nullptr;
+
+		switch (type)
+		{
+		case QueueType::PRIMARY: queue = &m_State->QueuePrimary; break;
+		case QueueType::SECONDARY: queue = &m_State->QueueSecondary; break;
+		}
+
+		queue->clear();
 	}
 
-	void JobsSystem::Clear()
+	void JobsSystem::EndSubmition(QueueType type, bool wait)
 	{
-		JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
-		instance->Taskflow.clear();
-	}
+		tf::Executor* executor = m_State->Executor;
+		tf::Taskflow* queue = nullptr;
 
-	void JobsSystem::BeginSubmition()
-	{
-		JobsSystemStateSComponent* instance = m_State;
-		instance->bBeginSubmition = true;
-		Clear();
-	}
+		switch (type)
+		{
+		case QueueType::PRIMARY: queue = &m_State->QueuePrimary; break;
+		case QueueType::SECONDARY: queue = &m_State->QueueSecondary; break;
+		}
 
-	void JobsSystem::EndSubmition(bool wait)
-	{
-		JobsSystemStateSComponent* instance = m_State;
-		instance->bBeginSubmition = false;
-		Complete(wait);
+		executor->run(*queue);
+		if (wait)
+			executor->wait_for_all();
 	}
 }

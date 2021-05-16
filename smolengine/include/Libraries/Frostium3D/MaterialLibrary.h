@@ -6,6 +6,7 @@
 
 #include <string>
 #include <optional>
+#include <mutex>
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/vector.hpp>
@@ -48,6 +49,11 @@ namespace Frostium
 		void SetRoughness(float value);
 		void SetAlbedro(float value);
 		void SetTexture(MaterialTexture type, const std::string& filePath);
+
+		// Getters
+		float* GetMetalness();
+		float* GetRoughness();
+		std::unordered_map<MaterialTexture, std::string>& GetTexturesInfo();
 
 	private:
 
@@ -106,6 +112,9 @@ namespace Frostium
 		static MaterialLibrary*               s_Instance;
 		uint32_t                              m_MaterialIndex = 0;
 		uint32_t                              m_TextureIndex = 0;
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+		std::mutex                            m_Mutex{};
+#endif
 		std::vector<PBRMaterial>              m_Materials;
 		std::vector<Texture*>                 m_Textures;
 		std::hash<std::string_view>           m_Hash{};

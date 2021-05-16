@@ -7,30 +7,22 @@ namespace SmolEngine
 {
 	struct JobsSystemStateSComponent;
 
-	enum class JobPriority : uint32_t
-	{
-		General,
-		Rendering
-	};
-
 	class JobsSystem
 	{
 	public:
 
-		static void BeginSubmition();
-		static void EndSubmition(bool wait = true);
+		static void BeginSubmition(QueueType type);
+		static void EndSubmition(QueueType type, bool wait = true);
 
-		template<typename F>
-		static void Schedule(F&& f)
+		template<typename... F>
+		static void Schedule(F&&... f)
 		{
-			JobsSystemStateSComponent* instance = JobsSystemStateSComponent::GetSingleton();
-			instance->Taskflow->emplace(std::forward<F>(f));
+			switch (m_State->Type)
+			{
+			case QueueType::PRIMARY: m_State->QueuePrimary.emplace(std::forward<F>(f)...); break;
+			case QueueType::SECONDARY: m_State->QueueSecondary.emplace(std::forward<F>(f)...); break;
+			}
 		}
-
-	private:
-
-		static void Complete(bool wait);
-		static void Clear();
 
 	private:
 

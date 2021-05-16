@@ -11,6 +11,8 @@
 #include "Utils/Frustum.h"
 #include "Utils/GLM.h"
 
+#include <mutex>
+
 namespace Frostium
 {
 	static const uint32_t  s_MaxInstances = 1000;
@@ -128,6 +130,9 @@ namespace Frostium
 		// States
 		bool                                               m_IsInitialized = false;
 		ShadowMapSize                                      m_MapSize = ShadowMapSize::SIZE_8;
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+		std::mutex                                         m_Mutex = {};
+#endif
 		// Bindings						                   
 		const uint32_t                                     m_TexturesBinding = 24;
 		const uint32_t                                     m_ShaderDataBinding = 25;

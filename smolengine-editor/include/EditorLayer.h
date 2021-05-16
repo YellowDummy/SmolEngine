@@ -2,7 +2,7 @@
 #include "SmolEngineCore.h"
 #include "FileManager.h"
 #include "Core/Layer.h"
-#include "Core/MaterialLibraryInterface.h"
+#include "MaterialLibraryInterface.h"
 #include "Core/EditorConsole.h"
 #include "ECS/Components/BaseComponent.h"
 
@@ -85,7 +85,7 @@ namespace SmolEngine
 
 	private:
 
-		bool FileExtensionCheck(std::filesystem::path* path, const std::string& name, std::string& strPath);
+		static bool FileExtensionCheck(std::filesystem::path* path, const std::string& name, std::string& strPath);
 
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
@@ -113,7 +113,7 @@ namespace SmolEngine
 		Frostium::EditorCamera*                     m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
 		Actor*                                      m_SelectedActor = nullptr;
-		std::unique_ptr<MaterialLibraryInterface>   m_MaterialLibraryInterface = nullptr;
+		MaterialLibraryInterface*                   m_MaterialLibraryInterface = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;
 		glm::vec2                                   m_GameViewSize = { 0.0f, 0.0f };
 		glm::vec2                                   m_SceneViewSize = { 0.0f, 0.0f };
@@ -131,11 +131,14 @@ namespace SmolEngine
 		Frostium::Texture                           m_RotateButton{};
 		Frostium::Texture                           m_SearchButton{};
 		Frostium::Texture                           m_RemoveButton{};
+		Frostium::Texture                           m_FolderButton{};
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";
 		inline static std::string                   m_TempString = "";               
 		inline static ImGuizmo::OPERATION           m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+
+		friend class MaterialLibraryInterface;
 	};
 }
 

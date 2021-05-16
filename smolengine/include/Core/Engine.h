@@ -23,31 +23,31 @@ namespace SmolEngine
 		virtual ~Engine();
 		Engine();
 
-		void Init();
-		void Shutdown();
-
-		// Methods to implement
-		virtual void SetGraphicsContext(Frostium::GraphicsContextInitInfo* info) {};
-		virtual void SetPhysics2DContext(Physics2DContextCreateInfo* info) {};
-		virtual void SetLayers(LayerManager* layerManager) {};
-		virtual void SetScripts(ScriptingSystem* scriptingSytem) {};
-
-		// Getters
-		inline static Engine* GetEngine() { return s_Instance; }
-		Frostium::GraphicsContext* GetGraphicsContext() const;
-		const uint32_t GetWindowHeight() const;
-		const uint32_t GetWindowWidth() const;
-		inline Frostium::Window* GetWindow();
-
-		// Callbacks
-		void SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback);
-		void SetOnSceneUnLoadedCallback(const std::function<void(Scene*)>& callback);
-
-	private:
-		void Run();
-		// Events
-		void OnWindowClose(Frostium::Event& e);
-		void OnEvent(Frostium::Event& event);
+		void                         Init();
+		void                         Shutdown();
+									 
+		// Methods to implement		 
+		virtual void                 SetGraphicsContext(Frostium::GraphicsContextInitInfo* info) {};
+		virtual void                 SetPhysics2DContext(Physics2DContextCreateInfo* info) {};
+		virtual void                 SetLayers(LayerManager* layerManager) {};
+		virtual void                 SetScripts(ScriptingSystem* scriptingSytem) {};
+									 
+		// Getters					 
+		inline static Engine*        GetEngine() { return s_Instance; }
+		Frostium::GraphicsContext*   GetGraphicsContext() const;
+		const uint32_t               GetWindowHeight() const;
+		const uint32_t               GetWindowWidth() const;
+		inline Frostium::Window*     GetWindow();
+									 
+		// Callbacks				 
+		void                         SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback);
+		void                         SetOnSceneUnLoadedCallback(const std::function<void(Scene*)>& callback);
+									 
+	private:						 
+		void                         Run();
+		// Events					 
+		void                         OnWindowClose(Frostium::Event& e);
+		void                         OnEvent(Frostium::Event& event);
 
 	private:
 		static Engine*               s_Instance;
@@ -61,7 +61,7 @@ namespace SmolEngine
 		std::function<void(Scene*)>  m_SceneUnLoadCl = nullptr;
 	};
 
-	Engine* CreateEngineContext();
+	Engine*                          CreateEngineContext();
 
 }
 

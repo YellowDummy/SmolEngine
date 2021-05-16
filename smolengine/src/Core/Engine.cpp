@@ -2,8 +2,9 @@
 #include "Core/Engine.h"
 
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
+#include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 
-#include "Physics/PhysX/PhysXBase.h"
+#include <Frostium3D/Extensions/JobsSystem.h>
 
 namespace SmolEngine 
 {
@@ -57,6 +58,10 @@ namespace SmolEngine
 		graphicsContextCI.pRendererStorage = &graphicsEngine->Strorage;
 		graphicsContextCI.pRenderer2DStorage = &graphicsEngine->Storage2D;
 		m_GraphicsContext = new Frostium::GraphicsContext(&graphicsContextCI);
+		// Graphics engine and game engine use the same jobs system,
+		// but different queues in use
+		JobsSystemStateSComponent::GetSingleton()->Executor = m_GraphicsContext->GetJobsSystemInstance()->GetExecutor();
+
 		// 2D Physics
 		SetPhysics2DContext(&physicsContextCI);
 		// Layers

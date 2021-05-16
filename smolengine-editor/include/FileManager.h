@@ -11,7 +11,8 @@ namespace SmolEngine
 	public:
 		
 		void Init();
-		void Update(bool& enbaled);
+		void Open();
+		void Update();
 
 	private:
 

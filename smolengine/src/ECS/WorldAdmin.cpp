@@ -199,6 +199,7 @@ namespace SmolEngine
 		// Add default materials
 		{
 			Frostium::MaterialLibrary::GetSinglenton()->Reset();
+			Frostium::Renderer::ResetStates();
 
 			Frostium::MaterialCreateInfo defMat = {};
 			defMat.SetRoughness(1.0f);

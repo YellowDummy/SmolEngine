@@ -31,6 +31,9 @@
     <Filter Include="include\Libraries\Frostium3D\Common">
       <UniqueIdentifier>{2C4FA566-9808-1011-2168-2AEB8D20C680}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Extensions">
+      <UniqueIdentifier>{13D981F6-7F68-43E1-8864-24F9F4727EED}</UniqueIdentifier>
+    </Filter>
     <Filter Include="include\Libraries\Frostium3D\ImGUI">
       <UniqueIdentifier>{5E442270-4A80-25DA-B392-3DD19FEDCDF4}</UniqueIdentifier>
     </Filter>
@@ -318,9 +321,6 @@
     <ClInclude Include="include\Core\LayerManager.h">
       <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\Core\MaterialLibraryInterface.h">
-      <Filter>include\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\Core\Timer.h">
       <Filter>include\Core</Filter>
     </ClInclude>
@@ -536,6 +536,12 @@
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h">
       <Filter>include\Libraries\Frostium3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystem.h">
+      <Filter>include\Libraries\Frostium3D\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\Profiler.h">
+      <Filter>include\Libraries\Frostium3D\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsContext.h">
       <Filter>include\Libraries\Frostium3D</Filter>
@@ -1653,9 +1659,6 @@
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\LayerManager.cpp">
-      <Filter>src\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\MaterialLibraryInterface.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Actor.cpp">

@@ -1,11 +1,17 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <taskflow/taskflow/include/taskflow.hpp>
+#include <taskflow/include/taskflow.hpp>
 #include <unordered_map>
 
 namespace SmolEngine
 {
+	enum class QueueType
+	{
+		PRIMARY,
+		SECONDARY
+	};
+
 	struct JobsSystemStateSComponent
 	{
 		JobsSystemStateSComponent();
@@ -18,12 +24,13 @@ namespace SmolEngine
 		// Getetrs
 		static JobsSystemStateSComponent* GetSingleton();
 
-		// Data
-		bool                                       bBeginSubmition = false;	      	                                               
-		tf::Taskflow                               Taskflow;
-		tf::Executor                               Executor;
+		// Data	
+		QueueType                                  Type = QueueType::PRIMARY;
+		tf::Executor*                              Executor = nullptr;
+		tf::Taskflow                               QueuePrimary;
+		tf::Taskflow                               QueueSecondary;
 
 	private:
-		inline static JobsSystemStateSComponent* Instance = nullptr;
+		inline static JobsSystemStateSComponent*   Instance = nullptr;
 	};
 }

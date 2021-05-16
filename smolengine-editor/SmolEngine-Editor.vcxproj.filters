@@ -27,6 +27,9 @@
     <ClInclude Include="include\FileManager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\MaterialLibraryInterface.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">
@@ -39,6 +42,9 @@
       <Filter>src\FileBrowser</Filter>
     </ClCompile>
     <ClCompile Include="src\FileManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MaterialLibraryInterface.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

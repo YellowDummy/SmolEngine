@@ -1,0 +1,27 @@
+{
+    "value0": 1.0,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": [
+        {
+            "key": 0,
+            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Lion_Albedo.png"
+        },
+        {
+            "key": 1,
+            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Lion_Normal.png"
+        },
+        {
+            "key": 2,
+            "value": ""
+        },
+        {
+            "key": 3,
+            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Lion_Roughness.png"
+        },
+        {
+            "key": 4,
+            "value": ""
+        }
+    ]
+}

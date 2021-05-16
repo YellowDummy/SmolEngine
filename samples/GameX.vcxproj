@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\taskflow;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -77,7 +77,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\taskflow;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

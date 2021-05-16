@@ -559,6 +559,11 @@ namespace ifd {
 				break;
 			}
 	}
+
+	void FileDialog::Open()
+	{
+		m_isOpen = true;
+	}
 	
 	void FileDialog::m_select(const std::filesystem::path& path, bool isCtrlDown)
 	{

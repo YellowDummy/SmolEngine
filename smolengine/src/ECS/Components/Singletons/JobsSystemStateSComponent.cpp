@@ -5,12 +5,12 @@ namespace SmolEngine
 {
 	JobsSystemStateSComponent::JobsSystemStateSComponent()
 	{
-		NATIVE_INFO("ThreadPool -> avalable thareads: {}", Executor.num_workers());
 		Instance = this;
 	}
 
 	JobsSystemStateSComponent::~JobsSystemStateSComponent()
 	{
+
 	}
 
 	JobsSystemStateSComponent* JobsSystemStateSComponent::GetSingleton()

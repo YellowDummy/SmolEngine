@@ -1,0 +1,27 @@
+{
+    "value0": 1.0,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": [
+        {
+            "key": 0,
+            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Ceiling_diffuse.png"
+        },
+        {
+            "key": 1,
+            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Ceiling_normal.png"
+        },
+        {
+            "key": 2,
+            "value": ""
+        },
+        {
+            "key": 3,
+            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Ceiling_roughness.png"
+        },
+        {
+            "key": 4,
+            "value": ""
+        }
+    ]
+}

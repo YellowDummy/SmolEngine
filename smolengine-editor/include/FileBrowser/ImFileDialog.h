@@ -26,9 +26,7 @@ namespace ifd {
 		~FileDialog();
 
 		bool Save(const std::string& key, const std::string& title, const std::string& filter, const std::string& startingDir = "");
-
 		bool Open(const std::string& key, const std::string& title, const std::string& filter, bool isMultiselect = false, const std::string& startingDir = "");
-
 		bool IsDone(const std::string& key);
 
 		inline bool HasResult() { return m_result.size(); }
@@ -39,6 +37,7 @@ namespace ifd {
 
 		void RemoveFavorite(const std::string& path);
 		void AddFavorite(const std::string& path);
+		void Open();
 		inline const std::vector<std::string>& GetFavorites() { return m_favorites; }
 
 		inline void SetZoom(float z) { 

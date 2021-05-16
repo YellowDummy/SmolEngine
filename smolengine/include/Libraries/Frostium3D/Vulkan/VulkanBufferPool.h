@@ -5,6 +5,8 @@
 #include "Vulkan/Vulkan.h"
 #include "Vulkan/VulkanBuffer.h"
 
+#include <mutex>
+
 namespace Frostium
 {
 	struct BufferObject
@@ -29,6 +31,9 @@ namespace Frostium
 	private:
 
 		static VulkanBufferPool*                           s_Instance;
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+		std::mutex                                         m_Mutex{};
+#endif
 		std::unordered_map<uint32_t, Ref<BufferObject>>    m_Buffers;
 	};
 }
