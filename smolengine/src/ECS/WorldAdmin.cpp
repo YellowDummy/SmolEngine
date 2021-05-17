@@ -170,20 +170,41 @@ namespace SmolEngine
 
 	}
 
-	void WorldAdmin::ReloadAssets()
+	void WorldAdmin::ReloadActiveScene()
 	{
 		Scene* activeScene = GetActiveScene();
 		SceneStateComponent* sceneState = activeScene->GetSceneState();
 		entt::registry& registry = activeScene->m_SceneData.m_Registry;
 
-		Reload2DTextures(registry);
-		ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
-		Reload2DAnimations(registry);
-		ReloadCanvases(registry);
-		ReloadMeshes(registry);
-		ReloadRigidBodies(registry);
+		// Recrates actor's name & id sets
+		{
+			activeScene->m_State->ActorIDSet.clear();
+			activeScene->m_State->ActorNameSet.clear();
 
-		ScriptingSystem::ReloadScripts();
+			auto& actors = activeScene->m_State->Actors;
+			uint32_t actorCount = static_cast<uint32_t>(actors.size());
+
+			for (uint32_t i = 0; i < actorCount; ++i)
+			{
+				Actor* actor = &actors[i];
+				uint32_t actorID = actor->GetID();
+				std::string name = actor->GetName();
+
+				activeScene->m_State->ActorIDSet[actorID] = actor;
+				activeScene->m_State->ActorNameSet[name] = actor;
+			}
+		}
+
+		// Loads Assets
+		{
+			Reload2DTextures(registry);
+			ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
+			Reload2DAnimations(registry);
+			ReloadCanvases(registry);
+			ReloadMeshes(registry);
+			ReloadRigidBodies(registry);
+			ReloadScripts(registry);
+		}
 	}
 
 	bool WorldAdmin::LoadScene(const std::string& filePath)
@@ -196,7 +217,7 @@ namespace SmolEngine
 			return false;
 		}
 
-		// Add default materials
+		// Add default materials and reset renderer
 		{
 			Frostium::MaterialLibrary::GetSinglenton()->Reset();
 			Frostium::Renderer::ResetStates();
@@ -206,7 +227,6 @@ namespace SmolEngine
 			defMat.SetMetalness(0.2f);
 			Frostium::MaterialLibrary::GetSinglenton()->Add(&defMat);
 			Frostium::Renderer::UpdateMaterials();
-			m_State->m_ActiveSceneID = 0;
 		}
 
 		Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
@@ -214,9 +234,7 @@ namespace SmolEngine
 
 		if (GetActiveScene()->Load(path))
 		{
-			// Reloading Assets
-			ReloadAssets();
-			m_State->m_ActiveSceneID++;
+			ReloadActiveScene();
 			m_State->m_CurrentRegistry = &current_scene->m_SceneData.m_Registry;
 			NATIVE_WARN(std::string("Scene loaded successfully"));
 			return true;
@@ -242,6 +260,7 @@ namespace SmolEngine
 
 	void WorldAdmin::SetBeginSceneInfo(Frostium::BeginSceneInfo* info)
 	{
+		assert(info != nullptr);
 		m_State->m_SceneInfo = *info;
 	}
 
@@ -268,30 +287,34 @@ namespace SmolEngine
 
 	bool WorldAdmin::CreateScene(const std::string& filePath)
 	{
-		m_State->m_ActiveSceneID++;
 		Scene* scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
 		scene->Create(filePath);
-		m_State->m_CurrentRegistry = &scene->m_SceneData.m_Registry;
-		ReloadAssets();
 
-		return true; // temp
+		m_State->m_CurrentRegistry = &scene->m_SceneData.m_Registry;
+		return true;
 	}
 
 	Scene* WorldAdmin::GetActiveScene()
 	{
-		assert(m_State->m_ActiveSceneID > 0);
 		return &m_State->m_Scenes[m_State->m_ActiveSceneID];
 	}
 
 	void WorldAdmin::Reload2DTextures(entt::registry& registry)
 	{
 		const auto& view = registry.view<Texture2DComponent>();
-		view.each([&](Texture2DComponent& comp)
+
+		JobsSystem::BeginSubmition();
+		{
+			view.each([&](Texture2DComponent& comp)
 			{
-				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-				Frostium::Texture::Create(comp.TexturePath, tex.get());
-				comp.Texture = tex;
+				JobsSystem::Schedule([&comp]() 
+				{
+					comp.Texture = std::make_shared<Frostium::Texture>();
+					Frostium::Texture::Create(comp.TexturePath, comp.Texture.get());
+				});
 			});
+		}
+		JobsSystem::EndSubmition();
 	}
 
 	void WorldAdmin::Reload2DAnimations(entt::registry& registry)
@@ -321,23 +344,34 @@ namespace SmolEngine
 	void WorldAdmin::ReloadMeshes(entt::registry& registry)
 	{
 		Frostium::MaterialLibrary* lib = Frostium::MaterialLibrary::GetSinglenton();
-		lib->Reset();
-
-		// Adds default material
-		Frostium::MaterialCreateInfo materialCI = {};
-		lib->Add(&materialCI);
-
 		const auto& view = registry.view<MeshComponent>();
-		view.each([&](MeshComponent& component)
+
+		// Mesh loading
+		JobsSystem::BeginSubmition();
+		{
+			view.each([&](MeshComponent& component)
 			{
-				// Loads mesh
-				Ref<Frostium::Mesh> mesh = std::make_shared<Frostium::Mesh>();
-				Frostium::Mesh::Create(component.ModelPath, mesh.get());
+				JobsSystem::Schedule([&component]()
+					{
+						component.Mesh = std::make_shared<Frostium::Mesh>();
+						Frostium::Mesh::Create(component.ModelPath, component.Mesh.get());
+					});
+
+			});
+		}
+		JobsSystem::EndSubmition();
+
+		// Loads materials if exist
+		{
+			view.each([&](MeshComponent& component)
+			{
+				Frostium::MaterialCreateInfo materialCI = {};
 
 				// Loads materials if exist
-				for (uint32_t i = 0; i < static_cast<uint32_t>(component.MaterialsData.size()); ++i)
+				uint32_t count = static_cast<uint32_t>(component.MaterialsData.size());
+				for (uint32_t i = 0; i < count; ++i)
 				{
-					MeshComponent::MaterialData& materialData = component.MaterialsData[i];
+					auto& materialData = component.MaterialsData[i];
 					const std::string& path = materialData.Path;
 
 					if (path.empty() == false && std::filesystem::exists(path))
@@ -349,33 +383,111 @@ namespace SmolEngine
 						}
 					}
 				}
-
-				component.Mesh = mesh;
-
 			});
+		}
 
 		Frostium::Renderer::UpdateMaterials();
 	}
 
 	void WorldAdmin::ReloadRigidBodies(entt::registry& registry)
 	{
+		const auto& rigid_view = registry.view<RigidbodyComponent>();
+		const auto& static_view = registry.view<StaticbodyComponent>();
 		Scene* activeScene = GetActiveScene();
+
+		JobsSystem::BeginSubmition();
 		{
-			const auto& view = registry.view<RigidbodyComponent>();
-			view.each([&](RigidbodyComponent& component)
+			rigid_view.each([&activeScene](RigidbodyComponent& component)
+			{
+				JobsSystem::Schedule([&component, &activeScene]()
 				{
 					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
-
 				});
+
+			});
+
+			static_view.each([&activeScene](StaticbodyComponent& component)
+			{
+				JobsSystem::Schedule([&component, &activeScene]()
+				{
+					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
+				});
+
+			});
 		}
+		JobsSystem::EndSubmition();
 
+	}
+
+	void WorldAdmin::ReloadScripts(entt::registry& reg)
+	{
+		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+
+		const auto& view = reg.view<BehaviourComponent>();
+		for (const auto& entity : view)
 		{
-			const auto& view = registry.view<StaticbodyComponent>();
-			view.each([&](StaticbodyComponent& component)
-				{
-					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
+			auto& behaviour = view.get<BehaviourComponent>(entity);
+			Actor* actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(behaviour.ActorID);
+			if (!actor)
+			{
+				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
+				continue;
+			}
 
-				});
+			behaviour.Actor = actor;
+			for (auto& script : behaviour.Scripts)
+			{
+				auto& it = instance->MetaMap.find(script.KeyName);
+				if (it == instance->MetaMap.end())
+				{
+					NATIVE_ERROR("ScriptingSystem::ReloadScripts::Script {} not found!", script.KeyName);
+					continue;
+				}
+
+				script.Script = it->second.ClassInstance;
+				auto& primitive = script.Script.cast<BehaviourPrimitive>();
+				primitive.m_Actor = actor;
+
+				auto& s_it = behaviour.OutValues.find(script.KeyName);
+				if (s_it == behaviour.OutValues.end())
+					continue;
+
+				for (auto& valueInt : s_it->second.Ints)
+				{
+					for (auto& primitiveValue : primitive.m_OutValues)
+					{
+						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Int)
+						{
+							if (valueInt.Name == primitiveValue.ValueName)
+								primitiveValue.Ptr = &valueInt.Value;
+						}
+					}
+				}
+
+				for (auto& valueFloat : s_it->second.Floats)
+				{
+					for (auto& primitiveValue : primitive.m_OutValues)
+					{
+						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Float)
+						{
+							if (valueFloat.Name == primitiveValue.ValueName)
+								primitiveValue.Ptr = &valueFloat.Value;
+						}
+					}
+				}
+
+				for (auto& valueString : s_it->second.Strings)
+				{
+					for (auto& primitiveValue : primitive.m_OutValues)
+					{
+						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::String)
+						{
+							if (valueString.Name == primitiveValue.ValueName)
+								primitiveValue.Ptr = &valueString.Value;
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -398,6 +510,7 @@ namespace SmolEngine
 		ScriptingSystem::m_World = m_State;
 		RendererSystem::m_World = m_State;
 		Physics2DSystem::m_World = m_State;
+
 		return true;
 	}
 

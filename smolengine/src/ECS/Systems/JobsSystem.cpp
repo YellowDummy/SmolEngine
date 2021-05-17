@@ -6,7 +6,7 @@ namespace SmolEngine
 	void JobsSystem::BeginSubmition(QueueType type)
 	{
 		tf::Taskflow* queue = nullptr;
-
+		m_State->Type = type;
 		switch (type)
 		{
 		case QueueType::PRIMARY: queue = &m_State->QueuePrimary; break;

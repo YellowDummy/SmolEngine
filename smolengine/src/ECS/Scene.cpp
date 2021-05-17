@@ -36,7 +36,7 @@ namespace SmolEngine
 		}
 
 		auto actorEntity = m_SceneData.m_Registry.create();
-		uint32_t id = (uint32_t)actorEntity - 1;
+		uint32_t id = m_State->LastActorID;
 		m_State->Actors.push_back(Actor(actorEntity));
 		Actor* actor = &m_State->Actors.back();
 
@@ -51,6 +51,8 @@ namespace SmolEngine
 		// Add Transform
 		AddComponent<TransformComponent>(actor);
 		m_State->ActorNameSet[name] = actor;
+		m_State->ActorIDSet[id] = actor;
+		m_State->LastActorID++;
 		return actor;
 	}
 
@@ -74,8 +76,9 @@ namespace SmolEngine
 
 	Actor* Scene::FindActorByID(uint32_t id)
 	{
-		if (id < m_State->Actors.size())
-			return &m_State->Actors[id];
+		auto& it = m_State->ActorIDSet.find(id);
+		if (it != m_State->ActorIDSet.end())
+			return it->second;
 
 		return nullptr;
 	}
@@ -92,14 +95,14 @@ namespace SmolEngine
 	void Scene::GetActorsByID(std::vector<Actor*>& outList)
 	{
 		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
-
 		outList.reserve(count);
-		for (uint32_t i = 1; i < count + 1; ++i)
+
+		for (uint32_t i = 0; i < m_State->LastActorID; ++i)
 		{
 			for (uint32_t x = 0; x < count; ++x)
 			{
 				Actor* actor = &m_State->Actors[x];
-				if (i == (uint32_t)actor->m_Entity)
+				if (i == actor->GetID())
 					outList.push_back(actor);
 			}
 		}
@@ -242,14 +245,10 @@ namespace SmolEngine
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
 				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticbodyComponent>(regisrtyInput);
 		}
+
 		// Updates sets
 		m_State = GetStateComponent();
 		m_State->FilePath = filePath;
-		for (Actor& actor : m_State->Actors)
-		{
-			m_State->ActorNameSet[actor.GetName()] = &actor;
-		}
-		NATIVE_WARN(std::string("Scene loaded successfully"));
 		return true;
 	}
 

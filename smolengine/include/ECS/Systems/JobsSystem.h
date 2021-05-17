@@ -11,8 +11,8 @@ namespace SmolEngine
 	{
 	public:
 
-		static void BeginSubmition(QueueType type);
-		static void EndSubmition(QueueType type, bool wait = true);
+		static void BeginSubmition(QueueType type = QueueType::PRIMARY);
+		static void EndSubmition(QueueType type = QueueType::PRIMARY, bool wait = true);
 
 		template<typename... F>
 		static void Schedule(F&&... f)

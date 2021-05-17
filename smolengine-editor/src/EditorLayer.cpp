@@ -1190,7 +1190,7 @@ namespace SmolEngine
 								{
 									std::string path;
 									std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-									if (FileExtensionCheck(p, ".s_mat", path))
+									if (FileExtensionCheck(p, ".s_material", path))
 										ComponentHandler::SetMeshMaterial(comp, mesh, path);
 								}
 								ImGui::EndDragDropTarget();

@@ -15,9 +15,11 @@ namespace SmolEngine
 	struct SceneStateComponent
 	{
 		uint32_t                                       SceneID = 0;
+		uint32_t                                       LastActorID = 0;
 		std::string                                    FilePath = "";
 		std::string                                    Name = std::string("");
 		std::unordered_map<std::string, Actor*>        ActorNameSet;
+		std::unordered_map<uint32_t, Actor*>           ActorIDSet;
 		std::vector<Actor>                             Actors;
 
 	public:
@@ -30,7 +32,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(SceneID, FilePath, Name, Actors);
+			archive(SceneID, LastActorID, FilePath, Name, Actors);
 		}
 	};
 }

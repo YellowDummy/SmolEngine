@@ -53,7 +53,7 @@ namespace SmolEngine
 
 		void Init();
 		void ShutDown();
-		void ReloadAssets();
+		void ReloadActiveScene();
 
 		void OnEndWorld();
 		void OnBeginWorld();
@@ -73,6 +73,7 @@ namespace SmolEngine
 		void ReloadCanvases(entt::registry& registry);
 		void ReloadMeshes(entt::registry& registry);
 		void ReloadRigidBodies(entt::registry& registry);
+		void ReloadScripts(entt::registry& registry);
 
 	private:
 

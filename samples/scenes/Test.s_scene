@@ -1,28 +1,124 @@
-value0: 3
+value0: 4
 value1: 0
-value2: 1048578
-value3: 2097151
-value4: 1
-value5: 0
-value6: 0
-value7: 0
-value8: 0
-value9: 0
-value10: 0
-value11: 0
-value12: 0
+value2: 1
+value3: 2
+value4: 3
+value5: 1048575
+value6: 3
+value7: 1
+value8:
+  value0: 0
+  value1: EmptyActor0
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
+value9: 2
+value10:
+  value0: 1
+  value1: EmptyActor1
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
+value11: 3
+value12:
+  value0: 2
+  value1: EmptyActor2
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
 value13: 0
 value14: 0
 value15: 0
 value16: 0
 value17: 0
-value18: 1
-value19: 0
-value20:
+value18: 0
+value19: 3
+value20: 1
+value21:
   value0: 0
-  value1: TestScene2.s_scene
-  value2: Test
-  value3:
-    []
-value21: 0
-value22: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 5
+  value8: -7.5
+  value9: 1
+value22: 2
+value23:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 17.5
+  value7: 0
+  value8: 2
+  value9: 1
+value24: 3
+value25:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 5.5
+  value8: 0
+  value9: 1
+value26: 0
+value27: 0
+value28: 3
+value29: 1
+value30:
+  value0:
+    - value0: C:\Dev\SmolEngine\samples\materials\details.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: C:\Dev\SmolEngine\resources\Models\box.gltf
+  value5: 2
+value31: 2
+value32:
+  value0:
+    - value0: C:\Dev\SmolEngine\samples\materials\arch.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: C:\Dev\SmolEngine\resources\Models\capsule.gltf
+  value5: 2
+value33: 3
+value34:
+  value0:
+    - value0: C:\Dev\SmolEngine\samples\materials\red_curt.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: C:\Dev\SmolEngine\resources\Models\sphere.gltf
+  value5: 2
+value35: 0
+value36: 0
+value37: 1
+value38: 0
+value39:
+  value0: 0
+  value1: 3
+  value2: C:\Dev\SmolEngine\samples\scenes\Test.s_scene
+  value3: Test
+  value4:
+    - value0: 1
+    - value0: 2
+    - value0: 3
+value40: 0
+value41: 0

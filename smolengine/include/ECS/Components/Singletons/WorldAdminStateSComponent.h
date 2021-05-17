@@ -12,8 +12,6 @@
 
 namespace SmolEngine
 {
-	static const uint32_t maxScenes = 10;
-
 	struct WorldAdminStateSComponent
 	{
 		WorldAdminStateSComponent();
@@ -30,7 +28,7 @@ namespace SmolEngine
 		entt::registry*                                       m_CurrentRegistry = nullptr;
 		uint32_t                                              m_ActiveSceneID = 0;
 		Frostium::BeginSceneInfo                              m_SceneInfo{};
-		Scene                                                 m_Scenes[maxScenes];
+		Scene                                                 m_Scenes[2];
 		std::hash<std::string_view>                           m_Hash{};
 	};
 }

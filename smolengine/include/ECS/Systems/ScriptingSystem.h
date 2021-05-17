@@ -75,10 +75,6 @@ namespace SmolEngine
 
 	private:
 
-		static void ReloadScripts();
-
-	private:
-
 		inline static ScriptingSystemStateSComponent*  m_State = nullptr;
 		inline static WorldAdminStateSComponent*       m_World = nullptr;
 
