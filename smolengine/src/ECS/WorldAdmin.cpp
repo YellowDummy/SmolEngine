@@ -116,6 +116,10 @@ namespace SmolEngine
 	void WorldAdmin::OnEndFrame()
 	{
 		RendererSystem::EndSubmit();
+#ifdef SMOLENGINE_EDITOR
+		if(m_State->m_InPlayMode)
+			PhysicsSystem::DebugDraw();
+#endif
 	}
 
 	void WorldAdmin::OnEndWorld()
@@ -142,10 +146,10 @@ namespace SmolEngine
 		{
 			// Send OnProcess callback
 			ScriptingSystem::OnTick(deltaTime);
-			// Updade 2D phycics
+			// Updade phycics
 			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
 			PhysicsSystem::OnUpdate(deltaTime);
-			// Set transforms
+			// Updade transforms
 			Physics2DSystem::UpdateTransforms();
 			PhysicsSystem::UpdateTransforms();
 		}
@@ -156,7 +160,6 @@ namespace SmolEngine
 		Box2DPhysicsSystem::UpdateTransfroms();
 		PhysicsSystem::UpdateTransforms();
 #endif
-
 		RendererSystem::Update();
 	}
 

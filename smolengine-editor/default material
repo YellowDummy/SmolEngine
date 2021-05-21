@@ -4,7 +4,15 @@
     "value2": 1.0,
     "value3": [
         {
+            "key": 0,
+            "value": ""
+        },
+        {
             "key": 1,
+            "value": ""
+        },
+        {
+            "key": 4,
             "value": ""
         },
         {
@@ -12,15 +20,7 @@
             "value": ""
         },
         {
-            "key": 0,
-            "value": ""
-        },
-        {
             "key": 2,
-            "value": ""
-        },
-        {
-            "key": 4,
             "value": ""
         }
     ]

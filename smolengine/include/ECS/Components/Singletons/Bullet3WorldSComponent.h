@@ -13,6 +13,7 @@ namespace SmolEngine
 {
 	class PhysXAllocator;
 	class PhysXErrorCallback;
+	class BulletDebugDraw;
 
 	struct PhysicsContextCreateInfo
 	{
@@ -40,7 +41,7 @@ namespace SmolEngine
 		btBroadphaseInterface*                 Broadphase = nullptr;
 		btSequentialImpulseConstraintSolver*   Solver = nullptr;
 		btDiscreteDynamicsWorld*               World = nullptr;
-
+		BulletDebugDraw*                       DebugDraw = nullptr;
 		PhysicsContextCreateInfo               CreateInfo{};
 	private:
 

@@ -7,6 +7,7 @@
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/Components/Singletons/Bullet3WorldSComponent.h"
 
+#include <Frostium3D/DebugRenderer.h>
 #include <btBulletDynamicsCommon.h>
 
 
@@ -114,5 +115,14 @@ namespace SmolEngine
 	{
 		btRigidBody* bd = body->m_Body;
 		m_State->World->addRigidBody(bd);
+	}
+
+	void PhysicsSystem::DebugDraw()
+	{
+		Frostium::DebugRenderer::BeginDebug();
+		{
+			m_State->World->debugDrawWorld();
+		}
+		Frostium::DebugRenderer::EndDebug();
 	}
 }

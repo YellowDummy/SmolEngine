@@ -28,6 +28,7 @@ namespace SmolEngine
 
 		static void UpdateTransforms();
 		static void AttachBodyToActiveScene(RigidActor* body);
+		static void DebugDraw();
 
 	private:
 

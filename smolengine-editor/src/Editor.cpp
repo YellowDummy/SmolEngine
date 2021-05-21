@@ -21,6 +21,7 @@ namespace SmolEngine
 	{
 		info->pWindowCI->Height = 1080;
 		info->pWindowCI->Width = 1920;
+		info->Flags |= Frostium::Features_Renderer_Debug_Flags;
 #ifdef EDITOR_DEBUG
 		info->pWindowCI->Title = "SmolEngine Editor x64 - Vulkan - Debug";
 #else
