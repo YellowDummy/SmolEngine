@@ -2,6 +2,7 @@
 #include "ECS/Scene.h"
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
+#include "ECS/Systems/ScriptingSystem.h"
 
 #include <cereal/archives/yaml.hpp>
 
@@ -184,7 +185,6 @@ namespace SmolEngine
 			m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<RigidbodyComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<StaticbodyComponent>(*actor);
 
 			m_SceneData.m_Registry.destroy(*actor);
 			actor = nullptr;
@@ -202,7 +202,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticbodyComponent>(output);
+				PointLightComponent, SceneStateComponent, RigidbodyComponent>(output);
 		}
 
 		// Writing result to a file
@@ -243,7 +243,7 @@ namespace SmolEngine
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent, RigidbodyComponent, StaticbodyComponent>(regisrtyInput);
+				PointLightComponent, SceneStateComponent, RigidbodyComponent>(regisrtyInput);
 		}
 
 		// Updates sets
@@ -273,5 +273,10 @@ namespace SmolEngine
 	entt::registry& Scene::GetRegistry()
 	{
 		return m_SceneData.m_Registry;
+	}
+
+	bool Scene::AddScript(Actor* actor, const std::string& name)
+	{
+		return ScriptingSystem::AttachNativeScript(actor, name);
 	}
 }

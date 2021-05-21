@@ -29,7 +29,7 @@ namespace SmolEngine
 
 	void RendererSystem::BeginSubmit(Frostium::BeginSceneInfo* info)
 	{
-		GraphicsContext::GetSingleton()->UpdateSceneData(info);
+		GraphicsContext::GetSingleton()->UpdateSceneInfo(info);
 
 		ClearInfo clear = {};
 		clear.bClear = true;

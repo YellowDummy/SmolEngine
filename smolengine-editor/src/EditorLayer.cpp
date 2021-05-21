@@ -662,7 +662,6 @@ namespace SmolEngine
 					}
 				}
 
-				/////////////////// Child window
 				DrawSceneTetxure();
 			}
 			ImGui::End();
@@ -674,272 +673,32 @@ namespace SmolEngine
 		ImGui::Begin("Inspector");
 		{
 			ImGui::BeginChild("InspectorChild");
-
-			ImGui::SetWindowFontScale(0.9f);
-			if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
 			{
-				ImGui::Text("No Actor selected");
-				ImGui::EndChild();
-				ImGui::End();
-				return;
+				ImGui::SetWindowFontScale(0.9f);
+				if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
+				{
+					ImGui::Text("No Actor selected");
+					ImGui::EndChild();
+					ImGui::End();
+					return;
+				}
+				else
+				{
+					std::stringstream ss;
+
+					if (ImGui::Button("Add Component"))
+						ImGui::OpenPopup("AddComponentPopUp");
+
+					ImGui::SameLine();
+					if (ImGui::Button("Add C++ Script"))
+						ImGui::OpenPopup("AddCScriptPopUp");
+
+					DrawScriptPopUp();
+					DrawComponentPopUp();
+
+					DrawComponents();
+				}
 			}
-			else
-			{
-				std::stringstream ss;
-
-				if (ImGui::Button("Add Component"))
-					ImGui::OpenPopup("AddComponentPopUp");
-
-				ImGui::SameLine();
-				if (ImGui::Button("Add C++ Script"))
-					ImGui::OpenPopup("AddCScriptPopUp");
-
-
-				if (ImGui::BeginPopup("AddCScriptPopUp"))
-				{
-					ImGui::MenuItem("New Script", NULL, false, false);
-					ImGui::Separator();
-					ImGui::EndPopup();
-				}
-
-				if (ImGui::BeginPopup("AddComponentPopUp"))
-				{
-					ImGui::MenuItem("New Component", NULL, false, false);
-					ImGui::Separator();
-
-					if (ImGui::BeginMenu("Base"))
-					{
-						if (ImGui::MenuItem("Mesh"))
-						{
-							m_World->GetActiveScene()->AddComponent<MeshComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Texture"))
-						{
-							m_World->GetActiveScene()->AddComponent<Texture2DComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Light"))
-					{
-						if (ImGui::MenuItem("Point Light 2D"))
-						{
-							m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Point Light"))
-						{
-							m_World->GetActiveScene()->AddComponent<PointLightComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Directional Light"))
-						{
-							m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Physics"))
-					{
-						if (ImGui::MenuItem("Body 2D"))
-						{
-							auto comp = m_World->GetActiveScene()->AddComponent<Body2DComponent>(m_SelectedActor);
-							ComponentHandler::ValidateBody2DComponent(comp,m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("RigidBody"))
-						{
-							auto comp = m_World->GetActiveScene()->AddComponent<RigidbodyComponent>(m_SelectedActor);
-							ComponentHandler::ValidateRigidBodyComponent(comp, m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Static Body"))
-						{
-							auto comp = m_World->GetActiveScene()->AddComponent<StaticbodyComponent>(m_SelectedActor);
-							ComponentHandler::ValidateStaticBodyComponent(comp, m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Common"))
-					{
-
-						if (ImGui::MenuItem("Animation 2D"))
-						{
-							m_World->GetActiveScene()->AddComponent<Animation2DComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Audio Source"))
-						{
-							m_World->GetActiveScene()->AddComponent<AudioSourceComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Camera"))
-						{
-							m_World->GetActiveScene()->AddComponent<CameraComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Canvas"))
-						{
-							m_World->GetActiveScene()->AddComponent<CanvasComponent>(m_SelectedActor);
-							ImGui::CloseCurrentPopup();
-						}
-
-						ImGui::EndMenu();
-					}
-
-					ImGui::EndPopup();
-				}
-
-				// Head
-				if (ImGui::CollapsingHeader("Head"))
-				{
-					ImGui::NewLine();
-					auto info = m_World->GetActiveScene()->GetComponent<HeadComponent>(m_SelectedActor);
-					DrawInfo(info);
-				}
-
-				// Transform 
-
-				if (ImGui::CollapsingHeader("Tranform"))
-				{
-					ImGui::NewLine();
-					DrawTransform(m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor));
-				}
-
-				for (uint32_t i = 0; i < m_SelectedActor->GetComponentsCount(); ++i)
-				{
-					if (IsCurrentComponent<Texture2DComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Texture 2D"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Texture2DComponent>(m_SelectedActor);
-							DrawTexture(component);
-						}
-					}
-
-					if (IsCurrentComponent<Body2DComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Body 2D"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Body2DComponent>(m_SelectedActor);
-							DrawBody2D(component);
-						}
-					}
-
-					if (IsCurrentComponent<Animation2DComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Animation 2D"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Animation2DComponent>(m_SelectedActor);
-							DrawAnimation2D(component);
-						}
-					}
-
-					if (IsCurrentComponent<AudioSourceComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Audio Source"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<AudioSourceComponent>(m_SelectedActor);
-							DrawAudioSource(component);
-						}
-					}
-
-					if (IsCurrentComponent<Light2DSourceComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Light 2D"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<Light2DSourceComponent>(m_SelectedActor);
-							DrawLight2D(component);
-						}
-					}
-
-					if (IsCurrentComponent<MeshComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Mesh"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
-							DrawMeshComponent(component);
-						}
-					}
-
-					if (IsCurrentComponent<DirectionalLightComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Directional Light"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<DirectionalLightComponent>(m_SelectedActor);
-							DrawDirectionalLightComponent(component);
-						}
-					}
-
-					if (IsCurrentComponent<PointLightComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Point Light"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<PointLightComponent>(m_SelectedActor);
-							DrawPointLightComponent(component);
-						}
-					}
-
-					if (IsCurrentComponent<CameraComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Camera"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<CameraComponent>(m_SelectedActor);
-							DrawCamera(component);
-						}
-					}
-
-					if (IsCurrentComponent<RigidbodyComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Rigidbody"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<RigidbodyComponent>(m_SelectedActor);
-							DrawRigidBodyComponent(component);
-						}
-					}
-
-					if (IsCurrentComponent<StaticbodyComponent>(i))
-					{
-						if (ImGui::CollapsingHeader("Static Body"))
-						{
-							ImGui::NewLine();
-							auto component = m_World->GetActiveScene()->GetComponent<StaticbodyComponent>(m_SelectedActor);
-							DrawStaticBodyComponent(component);
-						}
-					}
-
-					DrawScriptComponent(i);
-				}
-
-				ImGui::Separator();
-				ImGui::NewLine();
-			}
-
 			ImGui::EndChild();
 		}
 
@@ -1218,7 +977,9 @@ namespace SmolEngine
 
 	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)
 	{
+		ImGui::Extensions::Combo("Type", "Dynamic\0Static\0", component->CreateInfo.StateIndex);
 		ImGui::Extensions::Combo("Shape", "Sphere\0Capsule\0Box\0Custom\0", component->CreateInfo.ShapeIndex);
+
 		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
 
 		if (component->CreateInfo.ShapeIndex == 0)
@@ -1241,31 +1002,263 @@ namespace SmolEngine
 
 		ImGui::Separator();
 		ImGui::NewLine();
+
 		ImGui::Extensions::InputFloat("Mass", component->CreateInfo.Mass);
 		ImGui::Extensions::InputFloat("Density", component->CreateInfo.Density);
+		ImGui::Extensions::InputFloat("Friction", component->CreateInfo.Friction);
+		ImGui::Extensions::InputFloat("Restitution", component->CreateInfo.Restitution);
+		ImGui::Extensions::InputFloat("Linear Damping", component->CreateInfo.LinearDamping);
+		ImGui::Extensions::InputFloat("Angular Damping", component->CreateInfo.AngularDamping);
+		ImGui::Extensions::InputFloat("Rolling Friction", component->CreateInfo.RollingFriction);
+		ImGui::Extensions::InputFloat("Spinning Friction", component->CreateInfo.SpinningFriction);
+		ImGui::Extensions::InputFloat3Base("Local Inertia", component->CreateInfo.LocalInertia);
 	}
 
-	void EditorLayer::DrawStaticBodyComponent(StaticbodyComponent* component)
+	void EditorLayer::DrawComponents()
 	{
-		ImGui::Extensions::Combo("Shape", "Sphere\0Capsule\0Box\0Custom\0", component->CreateInfo.ShapeIndex);
-		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
-
-		if (component->CreateInfo.ShapeIndex == 0)
+		// Head
+		if (ImGui::CollapsingHeader("Head"))
 		{
-			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
+			ImGui::NewLine();
+			auto info = m_World->GetActiveScene()->GetComponent<HeadComponent>(m_SelectedActor);
+			DrawInfo(info);
 		}
 
-		if (component->CreateInfo.ShapeIndex == 1)
+		// Transform 
+
+		if (ImGui::CollapsingHeader("Tranform"))
 		{
-			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
-			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
+			ImGui::NewLine();
+			DrawTransform(m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor));
 		}
 
-		if (component->CreateInfo.ShapeIndex == 2)
+		for (uint32_t i = 0; i < m_SelectedActor->GetComponentsCount(); ++i)
 		{
-			ImGui::Extensions::InputFloat("Side X", component->CreateInfo.BoxShapeInfo.X);
-			ImGui::Extensions::InputFloat("Side Y", component->CreateInfo.BoxShapeInfo.Y);
-			ImGui::Extensions::InputFloat("Side Z", component->CreateInfo.BoxShapeInfo.Z);
+			if (IsCurrentComponent<Texture2DComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Texture 2D"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<Texture2DComponent>(m_SelectedActor);
+					DrawTexture(component);
+				}
+			}
+
+			if (IsCurrentComponent<Body2DComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Body 2D"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<Body2DComponent>(m_SelectedActor);
+					DrawBody2D(component);
+				}
+			}
+
+			if (IsCurrentComponent<Animation2DComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Animation 2D"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<Animation2DComponent>(m_SelectedActor);
+					DrawAnimation2D(component);
+				}
+			}
+
+			if (IsCurrentComponent<AudioSourceComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Audio Source"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<AudioSourceComponent>(m_SelectedActor);
+					DrawAudioSource(component);
+				}
+			}
+
+			if (IsCurrentComponent<Light2DSourceComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Light 2D"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<Light2DSourceComponent>(m_SelectedActor);
+					DrawLight2D(component);
+				}
+			}
+
+			if (IsCurrentComponent<MeshComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Mesh"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
+					DrawMeshComponent(component);
+				}
+			}
+
+			if (IsCurrentComponent<DirectionalLightComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Directional Light"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<DirectionalLightComponent>(m_SelectedActor);
+					DrawDirectionalLightComponent(component);
+				}
+			}
+
+			if (IsCurrentComponent<PointLightComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Point Light"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<PointLightComponent>(m_SelectedActor);
+					DrawPointLightComponent(component);
+				}
+			}
+
+			if (IsCurrentComponent<CameraComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Camera"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<CameraComponent>(m_SelectedActor);
+					DrawCamera(component);
+				}
+			}
+
+			if (IsCurrentComponent<RigidbodyComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Rigidbody"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<RigidbodyComponent>(m_SelectedActor);
+					DrawRigidBodyComponent(component);
+				}
+			}
+
+			DrawScriptComponent(i);
+		}
+
+		ImGui::Separator();
+		ImGui::NewLine();
+	}
+
+	void EditorLayer::DrawComponentPopUp()
+	{
+		if (ImGui::BeginPopup("AddComponentPopUp"))
+		{
+			ImGui::MenuItem("New Component", NULL, false, false);
+			ImGui::Separator();
+
+			if (ImGui::BeginMenu("Base"))
+			{
+				if (ImGui::MenuItem("Mesh"))
+				{
+					m_World->GetActiveScene()->AddComponent<MeshComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Texture"))
+				{
+					m_World->GetActiveScene()->AddComponent<Texture2DComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Light"))
+			{
+				if (ImGui::MenuItem("Point Light 2D"))
+				{
+					m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Point Light"))
+				{
+					m_World->GetActiveScene()->AddComponent<PointLightComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Directional Light"))
+				{
+					m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Physics"))
+			{
+				if (ImGui::MenuItem("Body 2D"))
+				{
+					auto comp = m_World->GetActiveScene()->AddComponent<Body2DComponent>(m_SelectedActor);
+					ComponentHandler::ValidateBody2DComponent(comp, m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("RigidBody"))
+				{
+					auto comp = m_World->GetActiveScene()->AddComponent<RigidbodyComponent>(m_SelectedActor);
+					ComponentHandler::ValidateRigidBodyComponent(comp, m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Common"))
+			{
+
+				if (ImGui::MenuItem("Animation 2D"))
+				{
+					m_World->GetActiveScene()->AddComponent<Animation2DComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Audio Source"))
+				{
+					m_World->GetActiveScene()->AddComponent<AudioSourceComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Camera"))
+				{
+					m_World->GetActiveScene()->AddComponent<CameraComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Canvas"))
+				{
+					m_World->GetActiveScene()->AddComponent<CanvasComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	void EditorLayer::DrawScriptPopUp()
+	{
+		if (ImGui::BeginPopup("AddCScriptPopUp"))
+		{
+			ImGui::MenuItem("New Script", NULL, false, false);
+			ImGui::Separator();
+
+			ScriptingSystemStateSComponent* state = ScriptingSystemStateSComponent::GetSingleton();
+
+			for (const auto& [name, meta] : state->MetaMap)
+			{
+				if (ImGui::MenuItem(name.c_str()))
+				{
+					m_World->GetActiveScene()->AddScript(m_SelectedActor, name);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			ImGui::EndPopup();
 		}
 	}
 
@@ -1304,6 +1297,7 @@ namespace SmolEngine
 			{
 				ImGui::NewLine();
 				ImGui::Extensions::Text("Script Type", "C++ Script");
+				ImGui::Separator();
 				ImGui::NewLine();
 
 				for (auto& f : data->Floats)

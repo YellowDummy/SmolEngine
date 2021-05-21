@@ -4,6 +4,7 @@
 #include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
 
 #include <meta/meta.hpp>
+#include <meta/factory.hpp>
 #include <Frostium3D/Common/Time.h>
 
 namespace SmolEngine
@@ -35,7 +36,6 @@ namespace SmolEngine
 			size_t onDestroyHash = hash("OnDestroy");
 			size_t onCollBeginHash = hash("OnCollisionContact");
 			size_t onCollExitHash = hash("OnCollisionExit");
-			size_t onDebugDrawHash = hash("OnDebugDraw");
 			// Registry Part
 			auto factory = meta::reflect<T>(nameHash);
 			factory.base<BehaviourPrimitive>();
@@ -44,7 +44,6 @@ namespace SmolEngine
 			factory.func<&T::OnDestroy>(onDestroyHash);
 			factory.func<&T::OnCollisionContact>(onCollBeginHash);
 			factory.func<&T::OnCollisionExit>(onCollExitHash);
-			factory.func<&T::OnDebugDraw>(onDebugDrawHash);
 
 			// Reflection Part
 			ScriptingSystemStateSComponent::MetaData metaData = {};
@@ -54,7 +53,6 @@ namespace SmolEngine
 			metaData.OnProcessFunc = meta::resolve(nameHash).func(onProcessHash);
 			metaData.OnCollBeginFunc = meta::resolve(nameHash).func(onCollBeginHash);
 			metaData.OnCollEndFunc = meta::resolve(nameHash).func(onCollExitHash);
-			metaData.OnDebugDrawFunc = meta::resolve(nameHash).func(onDebugDrawHash);
 
 			instance->MetaMap[name] = std::move(metaData);
 			return true;
@@ -79,6 +77,7 @@ namespace SmolEngine
 		inline static WorldAdminStateSComponent*       m_World = nullptr;
 
 		friend class WorldAdmin;
+		friend class Scene;
 		friend class CollisionListener2D;
 	};
 }

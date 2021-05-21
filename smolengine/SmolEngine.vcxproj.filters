@@ -256,8 +256,8 @@
     <Filter Include="include\Physics\Box2D">
       <UniqueIdentifier>{49A65710-B512-130B-7E06-AB68EA313573}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Physics\PhysX">
-      <UniqueIdentifier>{66335111-D29F-0C0C-9B93-A46907BF2E74}</UniqueIdentifier>
+    <Filter Include="include\Physics\Bullet3">
+      <UniqueIdentifier>{C5932092-31CB-6829-3AD5-CC4CA68B8F22}</UniqueIdentifier>
     </Filter>
     <Filter Include="include\Scripting">
       <UniqueIdentifier>{CBE3813C-37FA-7FD2-8071-0BF4ECC6505A}</UniqueIdentifier>
@@ -289,8 +289,8 @@
     <Filter Include="src\Physics\Box2D">
       <UniqueIdentifier>{ED30C799-5947-C52F-A2BE-50510E1496B7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Physics\PhysX">
-      <UniqueIdentifier>{0ABEC09A-76D4-BE30-BF4B-4A522BA18FB8}</UniqueIdentifier>
+    <Filter Include="src\Physics\Bullet3">
+      <UniqueIdentifier>{69579D35-D5B8-7A43-5E26-C1F5CA86B102}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scripting">
       <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
@@ -378,13 +378,13 @@
     <ClInclude Include="include\ECS\Components\Singletons\Box2DWorldSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Components\Singletons\Bullet3WorldSComponent.h">
+      <Filter>include\ECS\Components\Singletons</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\GraphicsEngineSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h">
-      <Filter>include\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECS\Components\Singletons\PhysXWorldSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h">
@@ -395,9 +395,6 @@
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECS\Components\StaticBodyComponent.h">
-      <Filter>include\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\Texture2DComponent.h">
       <Filter>include\ECS\Components</Filter>
@@ -1620,17 +1617,11 @@
     <ClInclude Include="include\Physics\Box2D\RayCast2D.h">
       <Filter>include\Physics\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics\PhysX\PhysXBase.h">
-      <Filter>include\Physics\PhysX</Filter>
+    <ClInclude Include="include\Physics\Bullet3\RigidActor.h">
+      <Filter>include\Physics\Bullet3</Filter>
     </ClInclude>
-    <ClInclude Include="include\Physics\PhysX\RigidActor.h">
-      <Filter>include\Physics\PhysX</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Physics\PhysX\RigidBody.h">
-      <Filter>include\Physics\PhysX</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Physics\PhysX\StaticBody.h">
-      <Filter>include\Physics\PhysX</Filter>
+    <ClInclude Include="include\Physics\Bullet3\RigidBody.h">
+      <Filter>include\Physics\Bullet3</Filter>
     </ClInclude>
     <ClInclude Include="include\Scripting\BehaviourPrimitive.h">
       <Filter>include\Scripting</Filter>
@@ -1673,13 +1664,13 @@
     <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp">
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\Components\Singletons\Bullet3WorldSComponent.cpp">
+      <Filter>src\ECS\Components\Singletons</Filter>
+    </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\GraphicsEngineSComponent.cpp">
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp">
-      <Filter>src\ECS\Components\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Components\Singletons\PhysXWorldSComponent.cpp">
       <Filter>src\ECS\Components\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Singletons\ProjectConfigSComponent.cpp">
@@ -1736,14 +1727,11 @@
     <ClCompile Include="src\Physics\Box2D\RayCast2D.cpp">
       <Filter>src\Physics\Box2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics\PhysX\RigidActor.cpp">
-      <Filter>src\Physics\PhysX</Filter>
+    <ClCompile Include="src\Physics\Bullet3\RigidActor.cpp">
+      <Filter>src\Physics\Bullet3</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics\PhysX\RigidBody.cpp">
-      <Filter>src\Physics\PhysX</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Physics\PhysX\StaticBody.cpp">
-      <Filter>src\Physics\PhysX</Filter>
+    <ClCompile Include="src\Physics\Bullet3\RigidBody.cpp">
+      <Filter>src\Physics\Bullet3</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp">
       <Filter>src\Scripting</Filter>

@@ -40,16 +40,19 @@ namespace Frostium
 		MAX
 	};
 
+	struct ShaderBufferInfo
+	{
+		bool   bStatic = false;
+		bool   bGlobal = true;
+		void*  Data = nullptr;
+		size_t Size = 0;
+	};
+
 	struct GraphicsPipelineShaderCreateInfo
 	{
-		bool                                 Optimize = false;
-		bool                                 UseSingleFile = false;
 
-		std::unordered_map<ShaderType,
-			std::string>                     FilePaths;
-		std::unordered_map<uint32_t,
-			size_t>                          StorageBuffersSizes;
-		std::string                          SingleFilePath = "";
+		std::unordered_map<ShaderType,std::string>      FilePaths;
+		std::unordered_map<uint32_t, ShaderBufferInfo>  BufferInfos;
 
 	};
 

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "ECS/Actor.h"
 #include "ECS/WorldAdmin.h"
-#include "ECS/ComponentsCore.h"
+#include "ECS/Components/HeadComponent.h"
+#include "ECS/Scene.h"
 
 namespace SmolEngine
 {

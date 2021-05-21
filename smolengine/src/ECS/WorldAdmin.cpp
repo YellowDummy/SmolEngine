@@ -17,7 +17,7 @@
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Components/Singletons/ScriptingSystemStateSComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
-#include "ECS/Components/Singletons/PhysXWorldSComponent.h"
+#include "ECS/Components/Singletons/Bullet3WorldSComponent.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 
 #include <Frostium3D/Renderer.h>
@@ -140,11 +140,11 @@ namespace SmolEngine
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 		{
-			// Updade 2D phycics
-			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
-			PhysicsSystem::OnUpdate();
 			// Send OnProcess callback
 			ScriptingSystem::OnTick(deltaTime);
+			// Updade 2D phycics
+			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
+			PhysicsSystem::OnUpdate(deltaTime);
 			// Set transforms
 			Physics2DSystem::UpdateTransforms();
 			PhysicsSystem::UpdateTransforms();
@@ -392,7 +392,6 @@ namespace SmolEngine
 	void WorldAdmin::ReloadRigidBodies(entt::registry& registry)
 	{
 		const auto& rigid_view = registry.view<RigidbodyComponent>();
-		const auto& static_view = registry.view<StaticbodyComponent>();
 		Scene* activeScene = GetActiveScene();
 
 		JobsSystem::BeginSubmition();
@@ -404,16 +403,7 @@ namespace SmolEngine
 					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
 				});
 
-			});
-
-			static_view.each([&activeScene](StaticbodyComponent& component)
-			{
-				JobsSystem::Schedule([&component, &activeScene]()
-				{
-					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
-				});
-
-			});
+			});;
 		}
 		JobsSystem::EndSubmition();
 
@@ -498,7 +488,7 @@ namespace SmolEngine
 		// Engines
 		m_GlobalRegistry.emplace<AudioEngineSComponent>(m_GlobalEntity);
 		m_GlobalRegistry.emplace<Box2DWorldSComponent>(m_GlobalEntity);
-		PhysicsSystem::m_State = &m_GlobalRegistry.emplace<PhysXWorldSComponent>(m_GlobalEntity);
+		PhysicsSystem::m_State = &m_GlobalRegistry.emplace<Bullet3WorldSComponent>(m_GlobalEntity);
 		m_GlobalRegistry.emplace<GraphicsEngineSComponent>(m_GlobalEntity);
 		// System States
 		m_State = &m_GlobalRegistry.emplace<WorldAdminStateSComponent>(m_GlobalEntity);

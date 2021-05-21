@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
-#include "Physics/PhysX/RigidBody.h"
+#include "Physics/Bullet3/RigidBody.h"
 
 #include <cereal/cereal.hpp>
 
@@ -16,7 +16,7 @@ namespace SmolEngine
 			:BaseComponent(id) {}
 
 		BodyCreateInfo  CreateInfo{};
-		RigidBody       DynamicBody{};
+		RigidBody       Body{};
 
 	private:
 

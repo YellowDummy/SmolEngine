@@ -50,7 +50,7 @@ project "SmolEngine"
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/taskflow/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
-		"vendor/physx/include/"
+		"vendor/bullet3/include/"
 	}
 
 	links 
@@ -89,10 +89,9 @@ project "SmolEngine"
 		links 
 		{ 
 		   "vendor/frostium/libs/Frostium_d.lib",
-		   "vendor/physx/lib/debug/PhysX_64.lib",
-		   "vendor/physx/lib/debug/PhysXCommon_64.lib",
-		   "vendor/physx/lib/debug/PhysXFoundation_64.lib",
-		   "vendor/physx/lib/debug/PhysXExtensions_static_64.lib",
+		   "vendor/bullet3/libs/BulletCollision_Debug.lib",
+		   "vendor/bullet3/libs/BulletDynamics_Debug.lib",
+		   "vendor/bullet3/libs/LinearMath_Debug.lib"
 		}
 
 		defines
@@ -111,10 +110,9 @@ project "SmolEngine"
 		links 
 		{ 
 		   "vendor/frostium/libs/Frostium.lib",
-		   "vendor/physx/lib/release/PhysX_64.lib",
-		   "vendor/physx/lib/release/PhysXCommon_64.lib",
-		   "vendor/physx/lib/release/PhysXFoundation_64.lib",
-		   "vendor/physx/lib/release/PhysXExtensions_static_64.lib",
+		   "vendor/bullet3/libs/BulletCollision.lib",
+		   "vendor/bullet3/libs/BulletDynamics.lib",
+		   "vendor/bullet3/libs/LinearMath.lib"
 		}
 
 		defines

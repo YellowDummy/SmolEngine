@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ECS/ComponentHandler.h"
 #include "ECS/ComponentsCore.h"
+#include "ECS/Systems/PhysicsSystem.h"
 
 #include <Frostium3D/Renderer.h>
 #include <Frostium3D/MaterialLibrary.h>
@@ -96,12 +97,13 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool ComponentHandler::ValidateStaticBodyComponent(StaticbodyComponent* comp, Actor* actor)
+	bool ComponentHandler::ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Actor* actor)
 	{
-		if (comp && actor)
+		if (ValidateRigidBodyComponent(comp, actor))
 		{
-			comp->CreateInfo.pActor = actor;
-			comp->CreateInfo.ActorID = actor->GetID();
+			TransformComponent* transform = actor->GetComponent<TransformComponent>();
+			comp->Body.Create(&comp->CreateInfo, transform->WorldPos, transform->Rotation);
+			PhysicsSystem::AttachBodyToActiveScene(&comp->Body);
 			return true;
 		}
 

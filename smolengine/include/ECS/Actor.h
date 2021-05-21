@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ECS/Scene.h"
+#include "ECS/WorldAdmin.h"
 
 #include <functional>
 #include <vector>

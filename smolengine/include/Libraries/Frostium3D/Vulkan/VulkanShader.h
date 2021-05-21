@@ -21,22 +21,22 @@ namespace Frostium
 
 		VulkanShader();
 		~VulkanShader();
-
-		bool Init(std::unordered_map<ShaderType, std::vector<uint32_t>>& binary, ReflectionData* reflectData,
-			GraphicsPipelineShaderCreateInfo* createInfo);
-		void Clean();
-		std::vector<VkPipelineShaderStageCreateInfo>& GetVkPipelineShaderStages();
-		static VkShaderStageFlagBits GetVkShaderStage(ShaderType type);
+														         
+		bool                                                     Init(std::unordered_map<ShaderType, std::vector<uint32_t>>& binary, ReflectionData* reflectData, GraphicsPipelineShaderCreateInfo* createInfo);
+		void                                                     Clean();
+														         
+		std::vector<VkPipelineShaderStageCreateInfo>&            GetVkPipelineShaderStages();
+		static VkShaderStageFlagBits                             GetVkShaderStage(ShaderType type);
+														         
+	private:											         
+		void                                                     DeleteShaderModules();
 
 	private:
-		void DeleteShaderModules();
-
-	private:
-		ReflectionData*                                     m_ReflectionData = nullptr;
-		GraphicsPipelineShaderCreateInfo*                   m_CreateInfo = nullptr;
-		std::unordered_map<ShaderType, VkShaderModule>      m_ShaderModules;
-		std::vector<VkPushConstantRange>                    m_VkPushConstantRanges;
-		std::vector<VkPipelineShaderStageCreateInfo>        m_PipelineShaderStages;
+		ReflectionData*                                          m_ReflectionData = nullptr;
+		GraphicsPipelineShaderCreateInfo*                        m_CreateInfo = nullptr;
+		std::unordered_map<ShaderType, VkShaderModule>           m_ShaderModules;
+		std::vector<VkPushConstantRange>                         m_VkPushConstantRanges;
+		std::vector<VkPipelineShaderStageCreateInfo>             m_PipelineShaderStages;
 
 	private:
 

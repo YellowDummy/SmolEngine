@@ -1,10 +1,12 @@
 #include "Editor.h"
 #include "EditorLayer.h"
+#include "Scripts/BasePlayerScript.h"
 
 #include "ECS/Systems/ScriptingSystem.h"
 
 namespace SmolEngine
 {
+
 	Engine* CreateEngineContext()
 	{
 		return new Editor;
@@ -44,6 +46,6 @@ namespace SmolEngine
 
 	void Editor::SetScripts(ScriptingSystem* scriptingSytem)
 	{
-
+		scriptingSytem->AddNativeClass<BasePlayerScript>("Base Player Script");
 	}
 }

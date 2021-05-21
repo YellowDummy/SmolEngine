@@ -65,7 +65,6 @@ namespace Frostium
 		Compute,
 		Geometry,
 
-		//Raytracing
 		RayGen,
 		RayMiss,
 		RayHit

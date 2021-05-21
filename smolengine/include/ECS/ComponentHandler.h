@@ -31,6 +31,6 @@ namespace SmolEngine
 		//Physics
 		static bool ValidateBody2DComponent(Body2DComponent* comp, Actor* actor);
 		static bool ValidateRigidBodyComponent(RigidbodyComponent* comp, Actor* actor);
-		static bool ValidateStaticBodyComponent(StaticbodyComponent* comp, Actor* actor);
+		static bool ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Actor* actor);
 	};
 }

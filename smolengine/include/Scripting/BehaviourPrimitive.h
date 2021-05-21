@@ -1,5 +1,13 @@
 #pragma once
 
+#include "ECS/WorldAdmin.h"
+#include "ECS/Scene.h"
+#include "ECS/Actor.h"
+
+#include <string>
+#include <vector>
+#include <type_traits>
+
 namespace SmolEngine
 {
 	class Actor;
@@ -60,10 +68,10 @@ namespace SmolEngine
 		}
 
 		template<typename T>
-		T* GetComponent() { return WorldAdmin::GetSingleton()->GetActiveScene().GetComponent<T>(m_Actor); }
+		T* GetComponent() { return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<T>(m_Actor); }
 
 		template<typename T>
-		T* HasComponent() { return WorldAdmin::GetSingleton()->GetActiveScene().HasComponent<T>(m_Actor); }
+		bool HasComponent() { return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Actor); }
 
 	private:
 

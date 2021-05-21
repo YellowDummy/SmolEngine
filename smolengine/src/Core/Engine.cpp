@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Core/Engine.h"
 
+#include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 
@@ -29,6 +30,8 @@ namespace SmolEngine
 	{
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
+
+
 		m_LayerHandler = new LayerManager();
 		m_ScriptingSystem = new ScriptingSystem();
 		m_World = new WorldAdmin();

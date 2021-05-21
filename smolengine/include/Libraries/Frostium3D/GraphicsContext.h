@@ -57,7 +57,7 @@ namespace Frostium
 								      
 		void                          ProcessEvents();
 		void                          BeginFrame(DeltaTime time);
-		void                          UpdateSceneData(BeginSceneInfo* sceneInfo = nullptr);
+		void                          UpdateSceneInfo(BeginSceneInfo* sceneInfo = nullptr);
 		void                          SwapBuffers();
 		void                          ShutDown();
 								      
@@ -67,14 +67,14 @@ namespace Frostium
 		// Getters				      
 		static GraphicsContext*       GetSingleton();
 		Camera*                       GetDefaultCamera() const;
-		Framebuffer*                  GetFramebuffer();
+		Framebuffer*                  GetFramebuffer() const;
 		GLFWwindow*                   GetNativeWindow();
-		Window*                       GetWindow();
+		Window*                       GetWindow() const;
 	    WindowData*                   GetWindowData();
-		Frustum*                      GetFrustum();
-		Mesh*                         GetBoxMesh();
-		Mesh*                         GetCapsuleMesh();
-		Mesh*                         GetSphereMesh();
+		Frustum*                      GetFrustum() const;
+		Mesh*                         GetBoxMesh() const;
+		Mesh*                         GetCapsuleMesh() const;
+		Mesh*                         GetSphereMesh() const;
 		Texture*                      GetWhiteTexture() const;
 		float                         GetGltfTime() const;
 		float                         GetDeltaTime() const;
@@ -99,34 +99,34 @@ namespace Frostium
 		bool                          InitRendererStorage(RendererStorage* storage, ShadowMapSize shadow_map_size);
 	private:						  
 		static GraphicsContext*       s_Instance;
-		MSAASamples                   m_MSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
-		Flags                         m_Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags;
 		Texture*                      m_DummyTexure = nullptr;
 		Camera*                       m_DefaultCamera = nullptr;
 		MaterialLibrary*              m_MaterialLibrary = nullptr;
 		GraphicsContextState*         m_State = nullptr;
 		Renderer2DStorage*            m_Renderer2DStorage = nullptr;
 		RendererStorage*              m_RendererStorage = nullptr;
+		Frustum*                      m_Frustum = nullptr;
+		Framebuffer*                  m_Framebuffer = nullptr;
+		Window*                       m_Window = nullptr;
+		ImGuiContext*                 m_ImGuiContext = nullptr;
+		Mesh*                         m_BoxMesh = nullptr;
+		Mesh*                         m_SphereMesh = nullptr;
+		Mesh*                         m_CapsuleMesh = nullptr;
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+		JobsSystem*                   m_JobsSystem = nullptr;
+#endif
+		MSAASamples                   m_MSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+		Flags                         m_Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags;
 		float                         m_LastFrameTime = 1.0f;
 		float                         m_DeltaTime = 0.0f;
 #ifdef  FROSTIUM_OPENGL_IMPL		  
 		OpenglContext                 m_OpenglContext = {};
-		OpenglRendererAPI*            m_RendererAPI = nullptr;
+		OpenglRendererAPI* m_RendererAPI = nullptr;
 #else								  
 		VulkanContext                 m_VulkanContext = {};
 #endif
-#ifdef FROSTIUM_SMOLENGINE_IMPL
-		JobsSystem*                   m_JobsSystem = nullptr;
-#endif
-		Frustum                       m_Frustum = {};
-		Framebuffer                   m_Framebuffer = {};
-		Window                        m_Window = {};
-		ImGuiContext                  m_ImGuiContext = {};
 		EventSender                   m_EventHandler = {};
 		SceneData                     m_SceneData = {};
-		Mesh                          m_BoxMesh{};
-		Mesh                          m_SphereMesh{};
-		Mesh                          m_CapsuleMesh{};
 		std::string                   m_ResourcesFolderPath = "";
 		std::function<void(Event&)>   m_EventCallback;
 

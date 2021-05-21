@@ -26,6 +26,9 @@ namespace Frostium
 		void BeginFrame();
 		void SwapBuffers(bool skip = false);
 
+		void BeginFrameEx(VkCommandBuffer cmdBuffer);
+		void SwapBuffersEx(VkCommandBuffer cmdBuffer);
+
 		// Getters
 		inline static VulkanContext* GetSingleton() { return s_ContextInstance; }
 		inline GLFWwindow* GetWindow() { return m_Window; }

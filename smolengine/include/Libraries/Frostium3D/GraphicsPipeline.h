@@ -33,33 +33,33 @@ namespace Frostium
 		void EndRenderPass();
 		void BeginCommandBuffer(bool isMainCmdBufferInUse = false);
 		void EndCommandBuffer();
+		void ResetStates();
 		void Destroy();
 
-		// Draw
-		void DrawIndexed(DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0,  uint32_t indexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
-		void DrawIndexed(VertexBuffer* vb, IndexBuffer* ib, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
-		void Draw(VertexBuffer* vb, uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
-		void Draw(uint32_t vertextCount, DrawMode mode = DrawMode::Triangle, uint32_t vertexBufferIndex = 0, uint32_t descriptorSetIndex = 0);
-		void DrawMeshIndexed(Mesh* mesh, uint32_t instances = 1, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
-		void DrawMesh(Mesh* mesh, uint32_t instances = 1, DrawMode mode = DrawMode::Triangle, uint32_t descriptorSetIndex = 0);
+		void DrawIndexed(uint32_t vertexBufferIndex = 0,  uint32_t indexBufferIndex = 0);
+		void DrawIndexed(VertexBuffer* vb, IndexBuffer* ib);
+		void Draw(VertexBuffer* vb, uint32_t vertextCount);
+		void Draw(uint32_t vertextCount, uint32_t vertexBufferIndex = 0);
+		void DrawMeshIndexed(Mesh* mesh, uint32_t instances = 1);
+		void DrawMesh(Mesh* mesh, uint32_t instances = 1);
 
-		// Resources
-		void SubmitBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
+		bool SubmitBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 		void SubmitPushConstant(ShaderType shaderStage, size_t size, const void* data);
 		void SetVertexBuffers(const std::vector<Ref<VertexBuffer>>& buffer);
 		void SetIndexBuffers(const std::vector<Ref<IndexBuffer>>& buffer);
-		void UpdateVertextBuffer(void* vertices, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0);
-		void UpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex = 0, uint32_t offset = 0);
 #ifndef FROSTIUM_OPENGL_IMPL
 		void CmdUpdateVertextBuffer(const void* data, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0);
 		void CmdUpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex = 0, uint32_t offset = 0);
-		bool UpdateVulkanImageDescriptor(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo, uint32_t descriptorSetIndex = 0);
+		bool UpdateVulkanImageDescriptor(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo);
 #endif
-		bool UpdateSamplers(const std::vector<Texture*>& textures, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
-		bool UpdateSampler(Texture* tetxure, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
-		bool UpdateSampler(Framebuffer* framebuffer, uint32_t bindingPoint, uint32_t attachmentIndex = 0, uint32_t descriptorSetIndex = 0);
-		bool UpdateSampler(Framebuffer* framebuffer, uint32_t bindingPoint, const std::string& attachmentName, uint32_t descriptorSetIndex = 0);
-		bool UpdateCubeMap(Texture* cubeMap, uint32_t bindingPoint, uint32_t descriptorSetIndex = 0);
+		bool UpdateSamplers(const std::vector<Texture*>& textures, uint32_t bindingPoint);
+		bool UpdateSampler(Texture* tetxure, uint32_t bindingPoint);
+		bool UpdateSampler(Framebuffer* framebuffer, uint32_t bindingPoint, uint32_t attachmentIndex = 0);
+		bool UpdateSampler(Framebuffer* framebuffer, uint32_t bindingPoint, const std::string& attachmentName);
+		bool UpdateCubeMap(Texture* cubeMap, uint32_t bindingPoint);
+
+		void SetDescriptorIndex(uint32_t value);
+		void SetDrawMode(DrawMode mode);
 
 #ifndef FROSTIUM_OPENGL_IMPL
 		const VkPipeline& GetVkPipeline(DrawMode mode);
@@ -70,7 +70,6 @@ namespace Frostium
 		void BindOpenGLShader();
 #endif
 	private:
-		// Helpres
 		bool IsPipelineCreateInfoValid(const GraphicsPipelineCreateInfo* pipelineInfo);
 
 	private:
@@ -85,7 +84,8 @@ namespace Frostium
 		Ref<Shader>                       m_Shader = nullptr;
 		GraphicsContext*                  m_GraphicsContext = nullptr;
 		GraphicsPipelineCreateInfo        m_PiplineCreateInfo;
-
+		DrawMode                          m_DrawMode = DrawMode::Triangle;
+		uint32_t                          m_DescriptorIndex = 0;
 		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
 		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;
 	};

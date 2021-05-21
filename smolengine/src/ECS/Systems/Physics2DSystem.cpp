@@ -412,7 +412,7 @@ namespace SmolEngine
 			auto& b2Pos = body2D.Body.m_Body->GetTransform();
 
 			transform.WorldPos = { b2Pos.p.x, b2Pos.p.y, transform.WorldPos.z };
-			transform.Rotation = { b2Pos.q.GetAngle(),transform.Rotation.y, transform.Rotation.z };
+			transform.Rotation = { b2Pos.q.GetAngle(), transform.Rotation.y, transform.Rotation.z };
 		}
 	}
 

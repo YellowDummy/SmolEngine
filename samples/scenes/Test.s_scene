@@ -8,110 +8,126 @@ value6: 3
 value7: 1
 value8:
   value0: 0
-  value1: EmptyActor0
+  value1: Cube
   value2: Default
   value3: true
   value4: false
   value5: 0
-  value6: 3
+  value6: 6
 value9: 2
 value10:
   value0: 1
-  value1: EmptyActor1
+  value1: Floor
   value2: Default
   value3: true
   value4: false
   value5: 0
-  value6: 3
+  value6: 4
 value11: 3
 value12:
   value0: 2
-  value1: EmptyActor2
+  value1: Cube2
   value2: Default
   value3: true
   value4: false
   value5: 0
-  value6: 3
+  value6: 4
 value13: 0
-value14: 0
-value15: 0
-value16: 0
+value14: 1
+value15: 1
+value16:
+  value0: 0
+  value1:
+    - value0: Base Player Script
+  value2:
+    - key: Base Player Script
+      value:
+        value0: 5
+        value1:
+          - value0: 0
+            value1: Level
+        value2:
+          - value0: 5
+            value1: Speed
+        value3:
+          []
+  value3: 4
 value17: 0
 value18: 0
-value19: 3
-value20: 1
-value21:
-  value0: 0
-  value1: 0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 0
-  value7: 5
-  value8: -7.5
-  value9: 1
-value22: 2
+value19: 0
+value20: 0
+value21: 3
+value22: 1
 value23:
   value0: 0
   value1: 0
   value2: 0
   value3: 1
-  value4: 1
-  value5: 1
-  value6: 17.5
-  value7: 0
-  value8: 2
+  value4: 0.99998694658279419
+  value5: 0.99998247623443604
+  value6: -6.6495323181152344
+  value7: 38.5
+  value8: 1.8293800354003906
   value9: 1
-value24: 3
+value24: 2
 value25:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 10
+  value4: 1
+  value5: 10
+  value6: -4.3600001335144043
+  value7: 15.5
+  value8: 0
+  value9: 1
+value26: 3
+value27:
   value0: 0
   value1: 0
   value2: 0
   value3: 1
   value4: 1
   value5: 1
-  value6: 0
-  value7: 5.5
-  value8: 0
+  value6: -4.5
+  value7: 25
+  value8: 1.5
   value9: 1
-value26: 0
-value27: 0
-value28: 3
-value29: 1
-value30:
+value28: 0
+value29: 0
+value30: 3
+value31: 1
+value32:
   value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\details.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt.s_material
   value1: false
   value2: true
   value3: 2
   value4: C:\Dev\SmolEngine\resources\Models\box.gltf
   value5: 2
-value31: 2
-value32:
-  value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\arch.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
-  value1: false
-  value2: true
-  value3: 2
-  value4: C:\Dev\SmolEngine\resources\Models\capsule.gltf
-  value5: 2
-value33: 3
+value33: 2
 value34:
   value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\red_curt.s_material
+    - value0: ""
   value1: false
   value2: true
   value3: 2
-  value4: C:\Dev\SmolEngine\resources\Models\sphere.gltf
+  value4: C:\Dev\SmolEngine\resources\Models\box.gltf
   value5: 2
-value35: 0
-value36: 0
-value37: 1
+value35: 3
+value36:
+  value0:
+    - value0: ""
+  value1: false
+  value2: true
+  value3: 2
+  value4: C:\Dev\SmolEngine\resources\Models\box.gltf
+  value5: 2
+value37: 0
 value38: 0
-value39:
+value39: 1
+value40: 0
+value41:
   value0: 0
   value1: 3
   value2: C:\Dev\SmolEngine\samples\scenes\Test.s_scene
@@ -120,5 +136,79 @@ value39:
     - value0: 1
     - value0: 2
     - value0: 3
-value40: 0
-value41: 0
+value42: 3
+value43: 1
+value44:
+  value0:
+    value0: 2
+    value1: 0
+    value2: 2
+    value3: 0
+    value4: 5
+    value5: 0
+    value6: 0.10000000149011612
+    value7: 0.60000002384185791
+    value8: 0
+    value9: 0
+    value10: 0
+    value11: 0
+    value12: 1
+    value13: 1
+    value14: 1
+    value15: 1
+    value16: 11
+    value17: 1
+    value18: 0
+    value19: 0
+    value20: 0
+  value1: 3
+value45: 2
+value46:
+  value0:
+    value0: 2
+    value1: 1
+    value2: 2
+    value3: 1
+    value4: 1
+    value5: 0.5
+    value6: 0.10000000149011612
+    value7: 0.20000000298023224
+    value8: 4
+    value9: 0
+    value10: 0.10000000149011612
+    value11: 0.10000000149011612
+    value12: 1
+    value13: 10
+    value14: 1
+    value15: 10
+    value16: 11
+    value17: 1
+    value18: 0
+    value19: 0
+    value20: 0
+  value1: 3
+value47: 3
+value48:
+  value0:
+    value0: 2
+    value1: 0
+    value2: 2
+    value3: 2
+    value4: 1
+    value5: 0.5
+    value6: 0.5
+    value7: 0.30000001192092896
+    value8: 0
+    value9: 0
+    value10: 0.10000000149011612
+    value11: 0.10000000149011612
+    value12: 1
+    value13: 1
+    value14: 1
+    value15: 1
+    value16: 11
+    value17: 1
+    value18: 0
+    value19: 0
+    value20: 0
+  value1: 3

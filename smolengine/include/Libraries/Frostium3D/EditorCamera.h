@@ -39,6 +39,9 @@ namespace Frostium
 		void SetDistance(float distance) { m_Distance = distance; }
 		void SetViewportSize(float width, float height);
 		void SetCameraType(CameraType type);
+		void SetPosition(const glm::vec3& pos);
+		void SetYaw(float value);
+		void SetPitch(float value);
 
 		// Getters
 		const glm::mat4 GetViewProjection() const override { return m_Projection * m_ViewMatrix; }

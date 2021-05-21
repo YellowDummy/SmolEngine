@@ -1,7 +1,6 @@
 #pragma once
 #include "Core.h"
 #include "Core/LayerManager.h"
-#include "ECS/Systems/ScriptingSystem.h"
 
 #include <memory>
 #include <functional>
@@ -17,6 +16,7 @@ namespace SmolEngine
 
 	class WorldAdmin;
 	class Scene;
+	class ScriptingSystem;
 	class Engine
 	{
 	public:

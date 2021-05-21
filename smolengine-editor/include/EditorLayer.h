@@ -81,7 +81,10 @@ namespace SmolEngine
 		void DrawMeshInspector(bool& show);
 		void DrawPointLightComponent(PointLightComponent* light);
 		void DrawRigidBodyComponent(RigidbodyComponent* component);
-		void DrawStaticBodyComponent(StaticbodyComponent* component);
+
+		void DrawComponents();
+		void DrawComponentPopUp();
+		void DrawScriptPopUp();
 
 	private:
 

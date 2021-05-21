@@ -6,6 +6,7 @@ namespace Frostium
 {
 	class VulkanShader;
 	class VulkanTexture;
+	struct BufferObject;
 
 	class VulkanDescriptor
 	{
@@ -14,6 +15,7 @@ namespace Frostium
 		VulkanDescriptor();
 		~VulkanDescriptor();
 
+		void Free();
 		void GenDescriptorSet(VulkanShader* shader, VkDescriptorPool pool);
 		void GenBuffersDescriptors(VulkanShader* shader);
 		void GenSamplersDescriptors(VulkanShader* shader);
@@ -22,6 +24,7 @@ namespace Frostium
 		bool Update2DSamplers(const std::vector<VulkanTexture*>& textures, uint32_t bindingPoint);
 		bool UpdateImageResource(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo);
 		bool UpdateCubeMap(const VulkanTexture* cubeMap, uint32_t bindingPoint);
+		bool UpdateBuffer(uint32_t binding, size_t size, const void* data, uint32_t offset = 0);
 		void UpdateWriteSets();
 
 		// Getters
@@ -42,13 +45,14 @@ namespace Frostium
 			VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
 	private:
-
-		VkDescriptorSetLayout                   m_DescriptorSetLayout;
-		VkDescriptorSet                         m_DescriptorSet;
-		VkDevice                                m_Device;
-
-		std::vector<VkWriteDescriptorSet>       m_WriteSets;
-		VkDescriptorImageInfo                   m_ImageInfo;
+												    
+		VkDescriptorSetLayout                            m_DescriptorSetLayout;
+		VkDescriptorSet                                  m_DescriptorSet;
+		VkDevice                                         m_Device;
+												         
+		std::vector<VkWriteDescriptorSet>                m_WriteSets;
+		std::unordered_map<uint32_t, Ref<BufferObject>>  m_LocalBuffers;
+		VkDescriptorImageInfo                            m_ImageInfo;
 
 	private:
 

@@ -36,7 +36,6 @@ namespace SmolEngine
 		SceneStateComponent* GetSceneState();
 		entt::registry& GetRegistry();
 
-
 		template<typename T, typename... Args>
 		T* AddComponent(Actor* actor, Args&&... args)
 		{
@@ -88,6 +87,8 @@ namespace SmolEngine
 
 			return &m_SceneData.m_Registry.get<T>(*actor);
 		}
+
+		bool AddScript(Actor* actor, const std::string& script_name);
 
 	private:
 		void Create(const std::string& filePath);

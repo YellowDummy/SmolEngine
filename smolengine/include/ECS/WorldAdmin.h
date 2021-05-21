@@ -26,6 +26,7 @@ namespace SmolEngine
 	struct SceneData;
 	struct MeshComponent;
 	class Scene;
+	class Actor;
 	class AudioEngine;
 
 	class WorldAdmin

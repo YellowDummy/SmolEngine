@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Scripting/BehaviourPrimitive.h"
+#include "ECS/Scene.h"
 
 
 namespace SmolEngine

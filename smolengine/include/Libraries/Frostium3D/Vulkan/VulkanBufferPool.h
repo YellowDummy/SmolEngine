@@ -19,8 +19,7 @@ namespace Frostium
 	{
 	public:
 
-		void Add(size_t size, uint32_t binding, VkMemoryPropertyFlags mem, VkBufferUsageFlags usage,
-			VkDescriptorBufferInfo& outDescriptorBufferInfo);
+		void Add(size_t size, uint32_t binding, VkBufferUsageFlags usage, VkDescriptorBufferInfo& outDescriptorBufferInfo, bool isStatic = false, void* data = nullptr);
 		bool IsBindingExist(uint32_t binding);
 
 		// Getters

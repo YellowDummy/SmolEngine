@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\physx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -70,7 +70,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium_d.lib;..\vendor\physx\lib\debug\PhysX_64.lib;..\vendor\physx\lib\debug\PhysXCommon_64.lib;..\vendor\physx\lib\debug\PhysXFoundation_64.lib;..\vendor\physx\lib\debug\PhysXExtensions_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium_d.lib;..\vendor\bullet3\libs\BulletCollision_Debug.lib;..\vendor\bullet3\libs\BulletDynamics_Debug.lib;..\vendor\bullet3\libs\LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -79,7 +79,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\physx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -95,7 +95,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium.lib;..\vendor\physx\lib\release\PhysX_64.lib;..\vendor\physx\lib\release\PhysXCommon_64.lib;..\vendor\physx\lib\release\PhysXFoundation_64.lib;..\vendor\physx\lib\release\PhysXExtensions_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium.lib;..\vendor\bullet3\libs\BulletCollision.lib;..\vendor\bullet3\libs\BulletDynamics.lib;..\vendor\bullet3\libs\LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -126,13 +126,12 @@
     <ClInclude Include="include\ECS\Components\SceneStateComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\AudioEngineSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\Box2DWorldSComponent.h" />
+    <ClInclude Include="include\ECS\Components\Singletons\Bullet3WorldSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\GraphicsEngineSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\JobsSystemStateSComponent.h" />
-    <ClInclude Include="include\ECS\Components\Singletons\PhysXWorldSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h" />
-    <ClInclude Include="include\ECS\Components\StaticBodyComponent.h" />
     <ClInclude Include="include\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="include\ECS\Components\TransformComponent.h" />
     <ClInclude Include="include\ECS\ComponentsCore.h" />
@@ -540,10 +539,8 @@
     <ClInclude Include="include\Physics\Box2D\CollisionFilter2D.h" />
     <ClInclude Include="include\Physics\Box2D\CollisionListener2D.h" />
     <ClInclude Include="include\Physics\Box2D\RayCast2D.h" />
-    <ClInclude Include="include\Physics\PhysX\PhysXBase.h" />
-    <ClInclude Include="include\Physics\PhysX\RigidActor.h" />
-    <ClInclude Include="include\Physics\PhysX\RigidBody.h" />
-    <ClInclude Include="include\Physics\PhysX\StaticBody.h" />
+    <ClInclude Include="include\Physics\Bullet3\RigidActor.h" />
+    <ClInclude Include="include\Physics\Bullet3\RigidBody.h" />
     <ClInclude Include="include\Scripting\BehaviourPrimitive.h" />
     <ClInclude Include="include\SmolEngineCore.h" />
     <ClInclude Include="include\stdafx.h" />
@@ -559,9 +556,9 @@
     <ClCompile Include="src\ECS\ComponentHandler.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\AudioEngineSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\Box2DWorldSComponent.cpp" />
+    <ClCompile Include="src\ECS\Components\Singletons\Bullet3WorldSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\GraphicsEngineSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\JobsSystemStateSComponent.cpp" />
-    <ClCompile Include="src\ECS\Components\Singletons\PhysXWorldSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\ProjectConfigSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
@@ -580,9 +577,8 @@
     <ClCompile Include="src\Physics\Box2D\CollisionFilter2D.cpp" />
     <ClCompile Include="src\Physics\Box2D\CollisionListener2D.cpp" />
     <ClCompile Include="src\Physics\Box2D\RayCast2D.cpp" />
-    <ClCompile Include="src\Physics\PhysX\RigidActor.cpp" />
-    <ClCompile Include="src\Physics\PhysX\RigidBody.cpp" />
-    <ClCompile Include="src\Physics\PhysX\StaticBody.cpp" />
+    <ClCompile Include="src\Physics\Bullet3\RigidActor.cpp" />
+    <ClCompile Include="src\Physics\Bullet3\RigidBody.cpp" />
     <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
