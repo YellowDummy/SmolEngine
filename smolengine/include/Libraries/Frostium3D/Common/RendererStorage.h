@@ -13,7 +13,11 @@
 
 #include <mutex>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	static const uint32_t  s_MaxInstances = 1000;
 	static const uint32_t  s_MaxAnimations = 100;

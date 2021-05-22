@@ -3,7 +3,11 @@
 #include "Common/RendererShared.h"
 #include "Common/RendererStorage.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class Mesh;
 	class Framebuffer;

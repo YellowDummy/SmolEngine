@@ -5,6 +5,9 @@
 
 #include <meta/meta.hpp>
 #include <meta/factory.hpp>
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
 #include <Frostium3D/Common/Time.h>
 
 namespace SmolEngine
@@ -62,11 +65,11 @@ namespace SmolEngine
 
 		static bool AttachNativeScript(Actor* actor, const std::string& scriptName);
 
-		static void OnBegin();
-		static void OnEnd();
+		static void OnBeginWorld();
+		static void OnEndWorld();
 		static void OnDestroy(Actor* actor);
 
-		static void OnTick(Frostium::DeltaTime deltaTime);
+		static void OnUpdate(DeltaTime deltaTime);
 		static void OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger);
 		static void OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger);
 		static void OnDebugDraw();

@@ -2,7 +2,11 @@
 
 #include "Common/Camera.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class Framebuffer;
 	enum class CameraType : uint16_t

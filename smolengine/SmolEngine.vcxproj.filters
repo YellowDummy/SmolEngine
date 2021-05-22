@@ -342,7 +342,7 @@
     <ClInclude Include="include\ECS\Components\BehaviourComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\Components\Body2DComponent.h">
+    <ClInclude Include="include\ECS\Components\Rigidbody2DComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\CameraComponent.h">
@@ -408,7 +408,7 @@
     <ClInclude Include="include\ECS\Scene.h">
       <Filter>include\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\SceneData.h">
+    <ClInclude Include="include\ECS\SceneRegisrty.h">
       <Filter>include\ECS</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Systems\AudioSystem.h">
@@ -535,6 +535,9 @@
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystem.h">
+      <Filter>include\Libraries\Frostium3D\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystemInstance.h">
       <Filter>include\Libraries\Frostium3D\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\Profiler.h">
@@ -1685,7 +1688,7 @@
     <ClCompile Include="src\ECS\Scene.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\SceneData.cpp">
+    <ClCompile Include="src\ECS\SceneRegisrty.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Systems\AudioSystem.cpp">

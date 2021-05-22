@@ -4,6 +4,9 @@
 
 #include <memory>
 #include <functional>
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
 #include <Frostium3D/Common/Events.h>
 #include <Frostium3D/GraphicsContext.h>
 
@@ -27,17 +30,17 @@ namespace SmolEngine
 		void                         Shutdown();
 									 
 		// Methods to implement		 
-		virtual void                 SetGraphicsContext(Frostium::GraphicsContextInitInfo* info) {};
+		virtual void                 SetGraphicsContext(GraphicsContextInitInfo* info) {};
 		virtual void                 SetPhysics2DContext(Physics2DContextCreateInfo* info) {};
 		virtual void                 SetLayers(LayerManager* layerManager) {};
 		virtual void                 SetScripts(ScriptingSystem* scriptingSytem) {};
 									 
 		// Getters					 
 		inline static Engine*        GetEngine() { return s_Instance; }
-		Frostium::GraphicsContext*   GetGraphicsContext() const;
+		GraphicsContext*             GetGraphicsContext() const;
 		const uint32_t               GetWindowHeight() const;
 		const uint32_t               GetWindowWidth() const;
-		inline Frostium::Window*     GetWindow();
+		inline Window*               GetWindow();
 									 
 		// Callbacks				 
 		void                         SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback);
@@ -46,13 +49,13 @@ namespace SmolEngine
 	private:						 
 		void                         Run();
 		// Events					 
-		void                         OnWindowClose(Frostium::Event& e);
-		void                         OnEvent(Frostium::Event& event);
+		void                         OnWindowClose(Event& e);
+		void                         OnEvent(Event& event);
 
 	private:
 		static Engine*               s_Instance;
 		bool                         m_Running = false;
-		Frostium::GraphicsContext*   m_GraphicsContext = nullptr;
+		GraphicsContext*             m_GraphicsContext = nullptr;
 		WorldAdmin*                  m_World = nullptr;
 		LayerManager*                m_LayerHandler = nullptr;
 		ScriptingSystem*             m_ScriptingSystem = nullptr;

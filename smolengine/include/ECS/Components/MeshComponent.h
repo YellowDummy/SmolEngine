@@ -2,7 +2,11 @@
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
 
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
 #include <Frostium3D/Common/Mesh.h>
+
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 
@@ -17,7 +21,7 @@ namespace SmolEngine
 		bool                                 bIsStatic = false;
 		bool                                 bShow = true;			             
 		int                                  ShadowType = 2;	                 
-		Ref<Frostium::Mesh>                  Mesh = nullptr;
+		Ref<Mesh>                            Mesh = nullptr;
 		std::string                          ModelPath = "";
 		struct MaterialData
 		{

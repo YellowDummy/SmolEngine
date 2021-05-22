@@ -12,7 +12,11 @@
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/vector.hpp>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	enum class MaterialTexture : uint32_t
 	{
@@ -109,13 +113,12 @@ namespace Frostium
 		size_t GetHash(MaterialCreateInfo* infoCI);
 
 	private:
-
+		static MaterialLibrary*               s_Instance;
+		uint32_t                              m_MaterialIndex = 0;
+		uint32_t                              m_TextureIndex = 0;
 		std::unordered_map<size_t, uint32_t>  m_MaterialMap;
 		std::vector<PBRMaterial>              m_Materials;
 		std::vector<Texture*>                 m_Textures;
-		uint32_t                              m_MaterialIndex = 0;
-		uint32_t                              m_TextureIndex = 0;
 		std::hash<std::string_view>           m_Hash{};
-		static MaterialLibrary* s_Instance;
 	};
 }

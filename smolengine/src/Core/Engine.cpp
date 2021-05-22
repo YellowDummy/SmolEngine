@@ -5,7 +5,7 @@
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 
-#include <Frostium3D/Extensions/JobsSystem.h>
+#include <Frostium3D/Extensions/JobsSystemInstance.h>
 
 namespace SmolEngine 
 {
@@ -37,20 +37,19 @@ namespace SmolEngine
 		m_World = new WorldAdmin();
 		m_World->Init();
 
-		Frostium::WindowCreateInfo windowCI = {};
+		WindowCreateInfo windowCI = {};
 		windowCI.bFullscreen = false;
 		windowCI.bVSync = false;
 		windowCI.Width = 720;
 		windowCI.Height = 480;
 		windowCI.Title = "SmolEngine";
 
-		Frostium::GraphicsContextInitInfo graphicsContextCI = {};
-		graphicsContextCI.eMSAASamples = Frostium::MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
-		graphicsContextCI.eShadowMapSize = Frostium::ShadowMapSize::SIZE_8;
+		GraphicsContextInitInfo graphicsContextCI = {};
+		graphicsContextCI.eMSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+		graphicsContextCI.eShadowMapSize = ShadowMapSize::SIZE_8;
 		graphicsContextCI.pWindowCI = &windowCI;
 		graphicsContextCI.ResourcesFolderPath = "../resources/";
-		graphicsContextCI.Flags = Frostium::Features_Renderer_3D_Flags | Frostium::Features_Renderer_2D_Flags
-			| Frostium::Features_ImGui_Flags;
+		graphicsContextCI.Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
 
 		Physics2DContextCreateInfo physicsContextCI = {};
 
@@ -60,7 +59,7 @@ namespace SmolEngine
 		GraphicsEngineSComponent* graphicsEngine = GraphicsEngineSComponent::Get();
 		graphicsContextCI.pRendererStorage = &graphicsEngine->Strorage;
 		graphicsContextCI.pRenderer2DStorage = &graphicsEngine->Storage2D;
-		m_GraphicsContext = new Frostium::GraphicsContext(&graphicsContextCI);
+		m_GraphicsContext = new GraphicsContext(&graphicsContextCI);
 		// Graphics engine and game engine use the same jobs system,
 		// but different queues in use
 		JobsSystemStateSComponent::GetSingleton()->Executor = m_GraphicsContext->GetJobsSystemInstance()->GetExecutor();
@@ -97,7 +96,7 @@ namespace SmolEngine
 		while (m_Running)
 		{
 			m_GraphicsContext->ProcessEvents();
-			Frostium::DeltaTime deltaTime = m_GraphicsContext->CalculateDeltaTime();
+			DeltaTime deltaTime = m_GraphicsContext->CalculateDeltaTime();
 
 			if (m_GraphicsContext->IsWindowMinimized())
 				continue;
@@ -126,9 +125,9 @@ namespace SmolEngine
 		}
 	}
 
-	void Engine::OnEvent(Frostium::Event& e)
+	void Engine::OnEvent(Event& e)
 	{
-		if (e.IsType(Frostium::EventType::WINDOW_CLOSE))
+		if (e.IsType(EventType::WINDOW_CLOSE))
 			OnWindowClose(e);
 
 		for (auto result = m_LayerHandler->end(); result != m_LayerHandler->begin();)
@@ -139,7 +138,7 @@ namespace SmolEngine
 		}
 	}
 
-	void Engine::OnWindowClose(Frostium::Event& e)
+	void Engine::OnWindowClose(Event& e)
 	{
 		Shutdown();
 	}
@@ -152,7 +151,7 @@ namespace SmolEngine
 	{
 	}
 
-	Frostium::GraphicsContext* Engine::GetGraphicsContext() const
+	GraphicsContext* Engine::GetGraphicsContext() const
 	{
 		return m_GraphicsContext;
 	}

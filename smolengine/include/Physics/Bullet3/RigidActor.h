@@ -56,7 +56,7 @@ namespace SmolEngine
 		BoxShapeCreateInfo         BoxShapeInfo{};
 		SphereShapeCreateInfo      SphereShape{};
 		CapsuleShapeCreateInfo     CapsuleShapeInfo{};
-		glm::vec3                  LocalInertia = glm::vec3(0, 0, 0);
+		glm::vec3                  LocalInertia = glm::vec3(1, 0, 0);
 
 	private:
 

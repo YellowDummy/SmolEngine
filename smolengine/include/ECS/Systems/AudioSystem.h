@@ -4,6 +4,7 @@
 namespace SmolEngine
 {
 	struct AudioSourceComponent;
+	struct AudioEngineSComponent;
 	struct AudioClip;
 	class AudioEngine;
 
@@ -13,8 +14,8 @@ namespace SmolEngine
 
 		AudioSystem();
 
-		static void OnAwake(AudioEngine* audioEngine);
-		static void OnReset(AudioEngine* audioEngine);
+		static void OnBeginWorld();
+		static void OnEndWorld();
 		static void PlayClip(const std::string& keyName, AudioSourceComponent& audioSource, AudioEngine* audioEngine);
 		static void StopClip(const std::string& keyName, AudioSourceComponent& audioSource, AudioEngine* audioEngine);
 		static bool AddClip(AudioSourceComponent& audioSource, Ref<AudioClip> clip);
@@ -29,6 +30,8 @@ namespace SmolEngine
 		static void DebugStop(Ref<AudioClip> clip, AudioEngine* audioEngine);
 
 	private:
+
+		inline static AudioEngineSComponent* m_State = nullptr;
 
 		friend class EditorLayer;
 		friend class WorldAdmin;

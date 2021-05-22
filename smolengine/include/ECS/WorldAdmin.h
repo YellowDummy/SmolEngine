@@ -5,16 +5,11 @@
 #include <unordered_map>
 #include <entt/entt.hpp>
 
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
 #include <Frostium3D/Common/Time.h>
 #include <Frostium3D/Common/Events.h>
-
-namespace Frostium
-{
-	class Mesh;
-	class Texture;
-	struct MaterialCreateInfo;
-	struct BeginSceneInfo;
-}
 
 namespace SmolEngine
 { 
@@ -25,9 +20,13 @@ namespace SmolEngine
 	struct SystemInstance;
 	struct SceneData;
 	struct MeshComponent;
+	struct MaterialCreateInfo;
+	struct BeginSceneInfo;
 	class Scene;
 	class Actor;
 	class AudioEngine;
+	class Mesh;
+	class Texture;
 
 	class WorldAdmin
 	{
@@ -39,12 +38,10 @@ namespace SmolEngine
 		bool CreateScene(const std::string& filePath);
 		bool SaveScene(const std::string& filePath);
 		bool LoadScene(const std::string& filePath);
-		bool LoadSceneAtIndex(const std::string& filePath, uint32_t index);
-		bool LoadSceneBG(const std::string& filePath);
 		bool SwapScene(uint32_t index);
 
 		// Setters
-		void SetBeginSceneInfo(Frostium::BeginSceneInfo* info);
+		void SetBeginSceneInfo(BeginSceneInfo* info);
 
 		// Getters
 		inline static WorldAdmin* GetSingleton() { return s_World; }
@@ -60,8 +57,8 @@ namespace SmolEngine
 		void OnBeginWorld();
 		void OnBeginFrame();
 		void OnEndFrame();
-		void OnUpdate(Frostium::DeltaTime deltaTime);
-		void OnEvent(Frostium::Event& e);
+		void OnUpdate(DeltaTime deltaTime);
+		void OnEvent(Event& e);
 		void OnGameViewResize(float width, float height);
 
 		bool IsInPlayMode();

@@ -4,6 +4,9 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
 #include <Frostium3D/Common/Texture.h>
 
 namespace SmolEngine
@@ -16,7 +19,7 @@ namespace SmolEngine
 		Texture2DComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		Ref<Frostium::Texture>  Texture = nullptr;
+		Ref<Texture>            Texture = nullptr;
 		bool                    Enabled = true;
 		int                     LayerIndex = 0;
 		glm::vec4               Color = glm::vec4(1.0f);

@@ -12,7 +12,11 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct GraphicsPipelineShaderCreateInfo;
 
@@ -46,5 +50,6 @@ namespace Frostium
 #else										
 		VulkanShader                        m_VulkanShader{};
 #endif 
+		friend class GraphicsPipeline;
 	};
 }

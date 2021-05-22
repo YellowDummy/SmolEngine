@@ -2,7 +2,11 @@
 #ifdef FROSTIUM_OPENGL_IMPL
 #include "Common/BufferLayout.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class OpenglVertexBuffer
 	{

@@ -119,10 +119,10 @@ namespace SmolEngine
 
 	void PhysicsSystem::DebugDraw()
 	{
-		Frostium::DebugRenderer::BeginDebug();
+		DebugRenderer::BeginDebug();
 		{
 			m_State->World->debugDrawWorld();
 		}
-		Frostium::DebugRenderer::EndDebug();
+		DebugRenderer::EndDebug();
 	}
 }

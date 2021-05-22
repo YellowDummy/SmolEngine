@@ -1,10 +1,5 @@
 #include "Scripts/BasePlayerScript.h"
-
-#include <Frostium3D/Common/SLog.h>
-#include <Frostium3D/Common/Input.h>
-
-#include "ECS/ComponentsCore.h"
-#include "ECS/Systems/PhysicsSystem.h"
+#include "SmolEngineCore.h"
 
 namespace SmolEngine
 {
@@ -20,19 +15,19 @@ namespace SmolEngine
 	{
 		if (rigid)
 		{
-			if (Frostium::Input::IsKeyPressed(Frostium::KeyCode::G))
+			if (Input::IsKeyPressed(KeyCode::G))
 			{
 				PhysicsSystem::AddForce(rigid, { 0, -(*m_Speed * 10), 0 });
 			}
-			if (Frostium::Input::IsKeyPressed(Frostium::KeyCode::T))
+			if (Input::IsKeyPressed(KeyCode::T))
 			{
 				PhysicsSystem::AddForce(rigid, { 0, *m_Speed * 10, 0 });
 			}
-			if (Frostium::Input::IsKeyPressed(Frostium::KeyCode::F))
+			if (Input::IsKeyPressed(KeyCode::F))
 			{
 				PhysicsSystem::AddForce(rigid, { 0, 0, (*m_Speed * 10) / 2.0f,});
 			}
-			if (Frostium::Input::IsKeyPressed(Frostium::KeyCode::H))
+			if (Input::IsKeyPressed(KeyCode::H))
 			{
 				PhysicsSystem::AddForce(rigid, { (*m_Speed * 10) / 2.0f, 0, 0 });
 			}

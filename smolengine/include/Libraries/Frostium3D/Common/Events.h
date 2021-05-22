@@ -4,7 +4,11 @@
 
 #include <functional>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	enum class EventType : uint32_t
 	{
@@ -42,7 +46,7 @@ namespace Frostium
 
 		bool IsType(EventType type);
 		bool IsCategory(EventCategory category);
-		static bool IsEventReceived(Frostium::EventType type, Event& event);
+		static bool IsEventReceived(EventType type, Event& event);
 
 		template<typename T>
 		T* Cast()

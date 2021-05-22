@@ -2,7 +2,11 @@
 #include "Common/Core.h"
 #include "Common/Texture.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class SubTexture2D
 	{

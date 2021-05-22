@@ -8,7 +8,11 @@
 #include <string>
 #include <limits>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct glTFNode
 	{								     

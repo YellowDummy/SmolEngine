@@ -39,26 +39,26 @@ namespace SmolEngine
 					{
 						if (ImGui::MenuItem("Save as"))
 						{
-							const auto& result = Frostium::Utils::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
+							const auto& result = Utils::SaveFile("SmolEngine Material (*.s_material)\0*.s_material\0", "new_material.s_material");
 							if (result.has_value())
-								Frostium::MaterialLibrary::GetSinglenton()->Save(result.value(), m_MaterialCI);
+								MaterialLibrary::GetSinglenton()->Save(result.value(), m_MaterialCI);
 						}
 
 						if (ImGui::MenuItem("Load"))
 						{
 							Reset();
-							const auto& result = Frostium::Utils::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
+							const auto& result = Utils::OpenFile("SmolEngine Material (*.s_material)\0*.s_material\0");
 							if (result.has_value())
 							{
 								std::string value = result.value();
-								Frostium::MaterialLibrary::GetSinglenton()->Load(value, m_MaterialCI);
+								MaterialLibrary::GetSinglenton()->Load(value, m_MaterialCI);
 								auto& textures = m_MaterialCI.GetTexturesInfo();
 
-								m_Buffer.albedro = textures[Frostium::MaterialTexture::Albedro];
-								m_Buffer.normal = textures[Frostium::MaterialTexture::Normal];
-								m_Buffer.metallic = textures[Frostium::MaterialTexture::Metallic];
-								m_Buffer.roughness = textures[Frostium::MaterialTexture::Roughness];
-								m_Buffer.ao = textures[Frostium::MaterialTexture::AO];
+								m_Buffer.albedro = textures[MaterialTexture::Albedro];
+								m_Buffer.normal = textures[MaterialTexture::Normal];
+								m_Buffer.metallic = textures[MaterialTexture::Metallic];
+								m_Buffer.roughness = textures[MaterialTexture::Roughness];
+								m_Buffer.ao = textures[MaterialTexture::AO];
 							}
 						}
 					}
@@ -67,11 +67,11 @@ namespace SmolEngine
 				}
 
 				auto& textures = m_MaterialCI.GetTexturesInfo();
-				DrawTextureInfo("Albedro", textures[Frostium::MaterialTexture::Albedro], m_Buffer.albedro);
-				DrawTextureInfo("Normal", textures[Frostium::MaterialTexture::Normal], m_Buffer.normal);
-				DrawTextureInfo("Metallic", textures[Frostium::MaterialTexture::Metallic], m_Buffer.metallic);
-				DrawTextureInfo("Roughness", textures[Frostium::MaterialTexture::Roughness], m_Buffer.roughness);
-				DrawTextureInfo("AO", textures[Frostium::MaterialTexture::AO], m_Buffer.ao);
+				DrawTextureInfo("Albedro", textures[MaterialTexture::Albedro], m_Buffer.albedro);
+				DrawTextureInfo("Normal", textures[MaterialTexture::Normal], m_Buffer.normal);
+				DrawTextureInfo("Metallic", textures[MaterialTexture::Metallic], m_Buffer.metallic);
+				DrawTextureInfo("Roughness", textures[MaterialTexture::Roughness], m_Buffer.roughness);
+				DrawTextureInfo("AO", textures[MaterialTexture::AO], m_Buffer.ao);
 
 				ImGui::NewLine();
 				if (ImGui::Button("Generate Preview", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
@@ -93,7 +93,7 @@ namespace SmolEngine
 		m_UBO = {};
 
 		// Reset image descriptors
-		Frostium::Texture* whiteTex = Frostium::GraphicsContext::GetSingleton()->GetWhiteTexture();
+		Texture* whiteTex = GraphicsContext::GetSingleton()->GetWhiteTexture();
 		m_Data.Pipeline->UpdateSampler(whiteTex, 5);
 		m_Data.Pipeline->UpdateSampler(whiteTex, 6);
 		m_Data.Pipeline->UpdateSampler(whiteTex, 7);
@@ -115,17 +115,17 @@ namespace SmolEngine
 		m_Data.Pipeline->BeginCommandBuffer();
 		m_Data.Pipeline->BeginRenderPass();
 		{
-			Frostium::Mesh* mesh = nullptr;
+			Mesh* mesh = nullptr;
 			switch (m_GeometryType)
 			{
-			case 0: mesh = Frostium::GraphicsContext::GetSingleton()->GetBoxMesh(); break;
-			case 1: mesh = Frostium::GraphicsContext::GetSingleton()->GetSphereMesh(); break;
-			case 2: mesh = Frostium::GraphicsContext::GetSingleton()->GetCapsuleMesh(); break;
+			case 0: mesh = GraphicsContext::GetSingleton()->GetBoxMesh(); break;
+			case 1: mesh = GraphicsContext::GetSingleton()->GetSphereMesh(); break;
+			case 2: mesh = GraphicsContext::GetSingleton()->GetCapsuleMesh(); break;
 			}
 
 			glm::mat4 viewProj = m_Data.Camera->GetProjection() * m_Data.Camera->GetViewMatrix();
 
-			m_Data.Pipeline->SubmitPushConstant(Frostium::ShaderType::Vertex, sizeof(glm::mat4), &viewProj);
+			m_Data.Pipeline->SubmitPushConstant(ShaderType::Vertex, sizeof(glm::mat4), &viewProj);
 			m_Data.Pipeline->DrawMeshIndexed(mesh);
 		}
 		m_Data.Pipeline->EndRenderPass();
@@ -138,79 +138,79 @@ namespace SmolEngine
 	{
 		// Editor Camera
 		{
-			Frostium::EditorCameraCreateInfo info{};
+			EditorCameraCreateInfo info{};
 			info.FOV = 35;
-			m_Data.Camera = std::make_shared<Frostium::EditorCamera>(&info);
+			m_Data.Camera = std::make_shared<EditorCamera>(&info);
 		}
 
 		// Framebuffer
 		{
-			Ref<Frostium::Framebuffer> fb = std::make_shared<Frostium::Framebuffer>();
+			Ref<Framebuffer> fb = std::make_shared<Framebuffer>();
 
-			Frostium::FramebufferSpecification framebufferCI = {};
+			FramebufferSpecification framebufferCI = {};
 			framebufferCI.Width = 380;
 			framebufferCI.Height = 200;
 			framebufferCI.bResizable = false;
 			framebufferCI.bUsedByImGui = true;
 			framebufferCI.NumSubpassDependencies = 0;
-			framebufferCI.Attachments = { Frostium::FramebufferAttachment(Frostium::AttachmentFormat::Color, true) };
-			framebufferCI.eMSAASampels = Frostium::MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+			framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+			framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 
-			Frostium::Framebuffer::Create(framebufferCI, fb.get());
+			Framebuffer::Create(framebufferCI, fb.get());
 			m_Data.Framebuffer = fb;
 		}
 
 		// Pipeline
 		{
-			Ref<Frostium::GraphicsPipeline> pipeline = std::make_shared<Frostium::GraphicsPipeline>();
+			Ref<GraphicsPipeline> pipeline = std::make_shared<GraphicsPipeline>();
 
-			Frostium::BufferLayout mainLayout =
+			BufferLayout mainLayout =
 			{
-				{ Frostium::DataTypes::Float3, "aPos" },
-				{ Frostium::DataTypes::Float3, "aNormal" },
-				{ Frostium::DataTypes::Float3, "aTangent" },
-				{ Frostium::DataTypes::Float2, "aUV" },
-				{ Frostium::DataTypes::Int4,   "aBoneIDs"},
-				{ Frostium::DataTypes::Float4, "aWeight"}
+				{ DataTypes::Float3, "aPos" },
+				{ DataTypes::Float3, "aNormal" },
+				{ DataTypes::Float3, "aTangent" },
+				{ DataTypes::Float2, "aUV" },
+				{ DataTypes::Int4,   "aBoneIDs"},
+				{ DataTypes::Float4, "aWeight"}
 			};
 
-			Frostium::VertexInputInfo vertexMain(sizeof(Frostium::PBRVertex), mainLayout);
+			VertexInputInfo vertexMain(sizeof(PBRVertex), mainLayout);
 
-			Frostium::GraphicsPipelineShaderCreateInfo shaderCI = {};
+			GraphicsPipelineShaderCreateInfo shaderCI = {};
 			{
-				shaderCI.FilePaths[Frostium::ShaderType::Vertex] = "assets/shaders/PBR_Preview.vert";
-				shaderCI.FilePaths[Frostium::ShaderType::Fragment] = "assets/shaders/PBR_Preview.frag";
+				shaderCI.FilePaths[ShaderType::Vertex] = "assets/shaders/PBR_Preview.vert";
+				shaderCI.FilePaths[ShaderType::Fragment] = "assets/shaders/PBR_Preview.frag";
 			};
 
-			Frostium::GraphicsPipelineCreateInfo DynamicPipelineCI = {};
+			GraphicsPipelineCreateInfo DynamicPipelineCI = {};
 			{
 				DynamicPipelineCI.VertexInputInfos = { vertexMain };
 				DynamicPipelineCI.PipelineName = "PBR_Preview";
-				DynamicPipelineCI.pShaderCreateInfo = &shaderCI;
+				DynamicPipelineCI.ShaderCreateInfo = shaderCI;
 				DynamicPipelineCI.pTargetFramebuffer = m_Data.Framebuffer.get();
 			}
 
 			auto result = pipeline->Create(&DynamicPipelineCI);
-			assert(result == Frostium::PipelineCreateResult::SUCCESS);
+			assert(result == PipelineCreateResult::SUCCESS);
 
-			pipeline->UpdateVulkanImageDescriptor(2, Frostium::VulkanPBR::GetIrradianceImageInfo());
-			pipeline->UpdateVulkanImageDescriptor(3, Frostium::VulkanPBR::GetBRDFLUTImageInfo());
-			pipeline->UpdateVulkanImageDescriptor(4, Frostium::VulkanPBR::GetPrefilteredCubeImageInfo());
+			pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
+			pipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
+			pipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
 
 			m_Data.Pipeline = pipeline;
 		}
 	}
 
-	void MaterialLibraryInterface::LoadTexture(const std::string& filePath, Frostium::MaterialTexture type)
+	void MaterialLibraryInterface::LoadTexture(const std::string& filePath, MaterialTexture type)
 	{
 		switch (type)
 		{
-		case Frostium::MaterialTexture::Albedro: 
+		case MaterialTexture::Albedro: 
 		{
 			if (!filePath.empty())
 			{
-				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-				Frostium::Texture::Create(filePath, tex.get());
+				Ref<Texture> tex = std::make_shared<Texture>();
+				Texture::Create(filePath, tex.get());
 
 				m_UBO.useAlbedro = true;
 				m_Data.Pipeline->UpdateSampler(tex.get(), 5);
@@ -219,12 +219,12 @@ namespace SmolEngine
 
 			break;
 		}
-		case Frostium::MaterialTexture::Normal:
+		case MaterialTexture::Normal:
 		{
 			if (!filePath.empty())
 			{
-				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-				Frostium::Texture::Create(filePath, tex.get());
+				Ref<Texture> tex = std::make_shared<Texture>();
+				Texture::Create(filePath, tex.get());
 
 				m_UBO.useNormal = true;
 				m_Data.Pipeline->UpdateSampler(tex.get(), 6);
@@ -233,12 +233,12 @@ namespace SmolEngine
 
 			break;
 		}
-		case Frostium::MaterialTexture::Metallic:
+		case MaterialTexture::Metallic:
 		{
 			if (!filePath.empty())
 			{
-				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-				Frostium::Texture::Create(filePath, tex.get());
+				Ref<Texture> tex = std::make_shared<Texture>();
+				Texture::Create(filePath, tex.get());
 
 				m_UBO.useMetallic = true;
 				m_Data.Pipeline->UpdateSampler(tex.get(), 7);
@@ -247,12 +247,12 @@ namespace SmolEngine
 
 			break;
 		}
-		case Frostium::MaterialTexture::Roughness:
+		case MaterialTexture::Roughness:
 		{
 			if (!filePath.empty())
 			{
-				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-				Frostium::Texture::Create(filePath, tex.get());
+				Ref<Texture> tex = std::make_shared<Texture>();
+				Texture::Create(filePath, tex.get());
 
 				m_UBO.useRoughness = true;
 				m_Data.Pipeline->UpdateSampler(tex.get(), 8);
@@ -261,12 +261,12 @@ namespace SmolEngine
 
 			break;
 		}
-		case Frostium::MaterialTexture::AO:
+		case MaterialTexture::AO:
 		{
 			if (!filePath.empty())
 			{
-				Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-				Frostium::Texture::Create(filePath, tex.get());
+				Ref<Texture> tex = std::make_shared<Texture>();
+				Texture::Create(filePath, tex.get());
 
 				m_UBO.useAO = true;
 				m_Data.Pipeline->UpdateSampler(tex.get(), 9);
@@ -288,7 +288,7 @@ namespace SmolEngine
 		ImGui::SameLine();
 		if (ImGui::ImageButton(m_FolderTexture->GetImGuiTexture(), { 15, 15 }))
 		{
-			const auto& result = Frostium::Utils::OpenFile("");
+			const auto& result = Utils::OpenFile("");
 			if (result.has_value())
 				dummy = result.value();
 		}

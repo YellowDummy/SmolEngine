@@ -18,27 +18,18 @@
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Scene.h"
 
-#include <Frostium3D/ImGUI/ImGuiExtension.h>
-#include <Frostium3D/Utils/Utils.h>
-#include <Frostium3D/Common/Input.h>
-#include <Frostium3D/Renderer2D.h>
-#include <Frostium3D/Renderer.h>
-
 #include <Frostium3D/Libraries/imgui/imgui.h>
 #include <Frostium3D/Libraries/imgui/imgui_internal.h>
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtc/matrix_transform.hpp>
 #include <Frostium3D/Utils/Utils.h>
+#include <Frostium3D/ImGUI/ImGuiExtension.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <Frostium3D/Libraries/glm/glm/gtx/quaternion.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtx/matrix_decompose.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtc/type_ptr.hpp>
 #include <Libraries/entt/entt.hpp>
-
-
 #include <fstream>
-
-using namespace Frostium;
 
 namespace SmolEngine
 {
@@ -51,14 +42,14 @@ namespace SmolEngine
 		const bool flip = true;
 		const bool imguiDescriptor = true;
 
-		Frostium::Texture::Create("assets/buttons/play_button.png", &m_PlayButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/pause_button.png", &m_StopButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/move_button.png", &m_MoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/rotate_button.png", &m_RotateButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Frostium::Texture::Create("assets/buttons/folder_button.png", &m_FolderButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/play_button.png", &m_PlayButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/pause_button.png", &m_StopButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/move_button.png", &m_MoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/rotate_button.png", &m_RotateButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+		Texture::Create("assets/buttons/folder_button.png", &m_FolderButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 	}
 
 	void EditorLayer::OnAttach()
@@ -138,7 +129,7 @@ namespace SmolEngine
 
 	}
 
-	void EditorLayer::OnBeginFrame(Frostium::DeltaTime deltaTime)
+	void EditorLayer::OnBeginFrame(DeltaTime deltaTime)
 	{
 		if (m_IsSceneViewFocused)
 		{
@@ -150,12 +141,12 @@ namespace SmolEngine
 		m_World->SetBeginSceneInfo(&bSeneInfo);
 	}
 
-	void EditorLayer::OnUpdate(Frostium::DeltaTime deltaTime)
+	void EditorLayer::OnUpdate(DeltaTime deltaTime)
 	{
 
 	}
 
-	void EditorLayer::OnEvent(Frostium::Event& e)
+	void EditorLayer::OnEvent(Event& e)
 	{
 		if(m_IsSceneViewFocused)
 			m_Camera->OnEvent(e);
@@ -235,7 +226,7 @@ namespace SmolEngine
 				{
 					if (ImGui::MenuItem("New"))
 					{
-						const auto& result = Frostium::Utils::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						const auto& result = Utils::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -253,7 +244,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Save as"))
 					{
-						const auto& result = Frostium::Utils::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
+						const auto& result = Utils::SaveFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0", "new_scene.s_scene");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -265,7 +256,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Load"))
 					{
-						const auto& result = Frostium::Utils::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
+						const auto& result = Utils::OpenFile("SmolEngine Scene (*.s_scene)\0*.s_scene\0");
 						if (result.has_value())
 						{
 							m_SelectedActor = nullptr;
@@ -314,7 +305,7 @@ namespace SmolEngine
 			if (ImGui::IsWindowHovered()) { m_IsSceneViewFocused = true; }
 			else { m_IsSceneViewFocused = false; }
 
-			Frostium::Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
+			Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
 			m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
 			ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 			if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
@@ -426,7 +417,7 @@ namespace SmolEngine
 		ImGui::SetCursorPosX(10);
 		if (ImGui::Button("Load Texture", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 		{
-			const auto& result = Frostium::Utils::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
+			const auto& result = Utils::OpenFile("png (*png)\0*.png\0jpg (*jpg)\0*.jpg\0");
 			if (result.has_value())
 				ComponentHandler::ValidateTexture2DComponent(texture, result.value());
 		}
@@ -449,7 +440,7 @@ namespace SmolEngine
 
 	}
 
-	void EditorLayer::DrawBody2D(Body2DComponent* rb)
+	void EditorLayer::DrawRigidBody2D(Rigidbody2DComponent* rb)
 	{
 		ImGui::Extensions::Combo("Type", "Static\0Kinematic\0Dynamic\0\0", rb->Body.m_Type);
 		ImGui::Extensions::Combo("Shape", "Box\0Circle\0\0", rb->Body.m_ShapeType);
@@ -731,12 +722,12 @@ namespace SmolEngine
 			{
 				if (ImGui::IsWindowHovered())
 				{
-					if (Frostium::Input::IsMouseButtonPressed(Frostium::MouseCode::Button1))
+					if (Input::IsMouseButtonPressed(MouseCode::Button1))
 					{
 						ImGui::OpenPopup("CreateActorPopUp");
 					}
 
-					if (Frostium::Input::IsMouseButtonPressed(Frostium::MouseCode::Button0))
+					if (Input::IsMouseButtonPressed(MouseCode::Button0))
 						m_SelectedActor = nullptr;
 				}
 
@@ -861,7 +852,7 @@ namespace SmolEngine
 		ImGui::SetCursorPosX(10);
 		if (ImGui::Button("Load Mesh", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 		{
-			const auto& result = Frostium::Utils::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
+			const auto& result = Utils::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
 			if (result.has_value())
 			{
 				ComponentHandler::ValidateMeshComponent(comp, result.value());
@@ -906,7 +897,7 @@ namespace SmolEngine
 		if (show)
 		{
 			uint32_t count = static_cast<uint32_t>(comp->Mesh->GetChildCount());
-			std::vector<Frostium::Mesh*> meshes(count + 1);
+			std::vector<Mesh*> meshes(count + 1);
 			for (uint32_t i = 0; i < count + 1; ++i)
 			{
 				if (i == 0)
@@ -915,7 +906,7 @@ namespace SmolEngine
 					continue;
 				}
 
-				Frostium::Mesh* mesh = &comp->Mesh->GetChilds()[i - 1];
+				Mesh* mesh = &comp->Mesh->GetChilds()[i - 1];
 				meshes[i] = mesh;
 			}
 
@@ -925,7 +916,7 @@ namespace SmolEngine
 
 				for (uint32_t i = 0; i < static_cast<uint32_t>(meshes.size()); ++i)
 				{
-					Frostium::Mesh* mesh = meshes[i];
+					Mesh* mesh = meshes[i];
 
 					std::string name = "Mesh #" + std::to_string(i);
 					if (ImGui::CollapsingHeader(name.c_str()))
@@ -936,7 +927,7 @@ namespace SmolEngine
 							ImGui::Extensions::Text("Material ID", std::to_string(mesh->GetMaterialID()));
 							if (ImGui::Button("Select Material"))
 							{
-								const auto& result = Frostium::Utils::OpenFile("SmolEngine Material (*s_material)\0*.s_material\0");
+								const auto& result = Utils::OpenFile("SmolEngine Material (*s_material)\0*.s_material\0");
 								if (result.has_value())
 								{
 									ComponentHandler::SetMeshMaterial(comp, mesh, result.value());
@@ -1044,13 +1035,13 @@ namespace SmolEngine
 				}
 			}
 
-			if (IsCurrentComponent<Body2DComponent>(i))
+			if (IsCurrentComponent<Rigidbody2DComponent>(i))
 			{
-				if (ImGui::CollapsingHeader("Body 2D"))
+				if (ImGui::CollapsingHeader("Rigidbody 2D"))
 				{
 					ImGui::NewLine();
-					auto component = m_World->GetActiveScene()->GetComponent<Body2DComponent>(m_SelectedActor);
-					DrawBody2D(component);
+					auto component = m_World->GetActiveScene()->GetComponent<Rigidbody2DComponent>(m_SelectedActor);
+					DrawRigidBody2D(component);
 				}
 			}
 
@@ -1145,11 +1136,10 @@ namespace SmolEngine
 	{
 		if (ImGui::BeginPopup("AddComponentPopUp"))
 		{
-			ImGui::MenuItem("New Component", NULL, false, false);
-			ImGui::Separator();
-
-			if (ImGui::BeginMenu("Base"))
+			ImGui::MenuItem("#Common", NULL, false, false);
 			{
+				ImGui::Separator();
+
 				if (ImGui::MenuItem("Mesh"))
 				{
 					m_World->GetActiveScene()->AddComponent<MeshComponent>(m_SelectedActor);
@@ -1159,65 +1149,6 @@ namespace SmolEngine
 				if (ImGui::MenuItem("Texture"))
 				{
 					m_World->GetActiveScene()->AddComponent<Texture2DComponent>(m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::BeginMenu("Light"))
-			{
-				if (ImGui::MenuItem("Point Light 2D"))
-				{
-					m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Point Light"))
-				{
-					m_World->GetActiveScene()->AddComponent<PointLightComponent>(m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Directional Light"))
-				{
-					m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::BeginMenu("Physics"))
-			{
-				if (ImGui::MenuItem("Body 2D"))
-				{
-					auto comp = m_World->GetActiveScene()->AddComponent<Body2DComponent>(m_SelectedActor);
-					ComponentHandler::ValidateBody2DComponent(comp, m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("RigidBody"))
-				{
-					auto comp = m_World->GetActiveScene()->AddComponent<RigidbodyComponent>(m_SelectedActor);
-					ComponentHandler::ValidateRigidBodyComponent(comp, m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::BeginMenu("Common"))
-			{
-
-				if (ImGui::MenuItem("Animation 2D"))
-				{
-					m_World->GetActiveScene()->AddComponent<Animation2DComponent>(m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Audio Source"))
-				{
-					m_World->GetActiveScene()->AddComponent<AudioSourceComponent>(m_SelectedActor);
 					ImGui::CloseCurrentPopup();
 				}
 
@@ -1233,7 +1164,53 @@ namespace SmolEngine
 					ImGui::CloseCurrentPopup();
 				}
 
-				ImGui::EndMenu();
+				if (ImGui::MenuItem("AudioSource"))
+				{
+					m_World->GetActiveScene()->AddComponent<AudioSourceComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			ImGui::MenuItem("#Lighting", NULL, false, false);
+			{
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("PointLight"))
+				{
+					m_World->GetActiveScene()->AddComponent<PointLightComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("PointLight 2D"))
+				{
+					m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Directional Light"))
+				{
+					m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			ImGui::MenuItem("#Physics", NULL, false, false);
+			{
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("RigidBody 2D"))
+				{
+					auto comp = m_World->GetActiveScene()->AddComponent<Rigidbody2DComponent>(m_SelectedActor);
+					ComponentHandler::ValidateBody2DComponent(comp, m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("RigidBody"))
+				{
+					auto comp = m_World->GetActiveScene()->AddComponent<RigidbodyComponent>(m_SelectedActor);
+					ComponentHandler::ValidateRigidBodyComponent(comp, m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
 			}
 
 			ImGui::EndPopup();
@@ -1257,7 +1234,6 @@ namespace SmolEngine
 					ImGui::CloseCurrentPopup();
 				}
 			}
-
 			ImGui::EndPopup();
 		}
 	}

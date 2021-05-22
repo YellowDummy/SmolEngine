@@ -5,7 +5,11 @@
 #endif
 #include "Common/Events.h"
 
-namespace Frostium 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
+namespace Frostium
+#endif
 {
 	struct GraphicsContextInitInfo;
 

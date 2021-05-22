@@ -84,7 +84,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	void ScriptingSystem::OnBegin()
+	void ScriptingSystem::OnBeginWorld()
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
@@ -98,7 +98,7 @@ namespace SmolEngine
 		}
 	}
 
-	void ScriptingSystem::OnEnd()
+	void ScriptingSystem::OnEndWorld()
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
@@ -112,7 +112,7 @@ namespace SmolEngine
 		}
 	}
 
-	void ScriptingSystem::OnTick(Frostium::DeltaTime deltaTime)
+	void ScriptingSystem::OnUpdate(DeltaTime deltaTime)
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;

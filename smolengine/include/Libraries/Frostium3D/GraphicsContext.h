@@ -23,7 +23,11 @@
 
 #include <functional>
 
-namespace Frostium 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
+namespace Frostium
+#endif
 {
 	struct WindowCreateInfo;
 	struct WindowData;
@@ -32,7 +36,7 @@ namespace Frostium
 	struct RendererStorage;
 	class Framebuffer;
 	class MaterialLibrary;
-	class JobsSystem;
+	class JobsSystemInstance;
 
 	struct GraphicsContextInitInfo
 	{
@@ -85,7 +89,7 @@ namespace Frostium
 		static VulkanContext&         GetVulkanContext();
 #endif
 #ifdef FROSTIUM_SMOLENGINE_IMPL
-		JobsSystem*                   GetJobsSystemInstance();
+		JobsSystemInstance*            GetJobsSystemInstance();
 #endif
 		// Helpers				      
 		DeltaTime                     CalculateDeltaTime();
@@ -113,7 +117,7 @@ namespace Frostium
 		Mesh*                         m_SphereMesh = nullptr;
 		Mesh*                         m_CapsuleMesh = nullptr;
 #ifdef FROSTIUM_SMOLENGINE_IMPL
-		JobsSystem*                   m_JobsSystem = nullptr;
+		JobsSystemInstance*           m_JobsSystem = nullptr;
 #endif
 		MSAASamples                   m_MSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 		Flags                         m_Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags;

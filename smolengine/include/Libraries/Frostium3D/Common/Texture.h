@@ -11,7 +11,11 @@
 #include <glm/glm.hpp>
 #include <string>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct TextureLoadedData;
 

@@ -2,7 +2,11 @@
 #ifdef FROSTIUM_OPENGL_IMPL
 #include "Common/FramebufferSpecification.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct FramebufferData;
 

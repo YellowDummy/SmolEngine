@@ -12,8 +12,8 @@ namespace SmolEngine
 	{
 		if (comp)
 		{
-			Ref<Frostium::Mesh> mesh = std::make_shared<Frostium::Mesh>();
-			Frostium::Mesh::Create(filePath, mesh.get());
+			Ref<Mesh> mesh = std::make_shared<Mesh>();
+			Mesh::Create(filePath, mesh.get());
 			if (mesh->GetVertexCount() > 0)
 			{
 				uint32_t size = static_cast<uint32_t>(mesh->GetChilds().size()) + 1;
@@ -27,7 +27,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool ComponentHandler::SetMeshMaterial(MeshComponent* comp, Frostium::Mesh* mesh, const std::string& material_path)
+	bool ComponentHandler::SetMeshMaterial(MeshComponent* comp, Mesh* mesh, const std::string& material_path)
 	{
 		if (comp && mesh)
 		{
@@ -42,12 +42,12 @@ namespace SmolEngine
 				}
 			}
 
-			Frostium::MaterialLibrary* lib = Frostium::MaterialLibrary::GetSinglenton();
-			Frostium::MaterialCreateInfo matInfo = {};
+			MaterialLibrary* lib = MaterialLibrary::GetSinglenton();
+			MaterialCreateInfo matInfo = {};
 			if (lib->Load(material_path, matInfo))
 			{
 				uint32_t id = lib->Add(&matInfo);
-				Frostium::Renderer::UpdateMaterials();
+				Renderer::UpdateMaterials();
 
 				comp->MaterialsData[index].Path = material_path;
 				comp->MaterialsData[index].ID = id;
@@ -62,8 +62,8 @@ namespace SmolEngine
 	{
 		if (comp)
 		{
-			Ref<Frostium::Texture> tex = std::make_shared<Frostium::Texture>();
-			Frostium::Texture::Create(filePath, tex.get());
+			Ref<Texture> tex = std::make_shared<Texture>();
+			Texture::Create(filePath, tex.get());
 
 			comp->TexturePath = filePath;
 			comp->Texture = tex;
@@ -73,7 +73,7 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool ComponentHandler::ValidateBody2DComponent(Body2DComponent* comp, Actor* actor)
+	bool ComponentHandler::ValidateBody2DComponent(Rigidbody2DComponent* comp, Actor* actor)
 	{
 		if (comp && actor)
 		{

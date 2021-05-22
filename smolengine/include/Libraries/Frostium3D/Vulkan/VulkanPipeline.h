@@ -6,7 +6,11 @@
 #include "Vulkan/VulkanDescriptor.h"
 #include "Common/BufferElement.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class VulkanShader;
 	class VulkanTexture;

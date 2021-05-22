@@ -3,7 +3,11 @@
 #include "Vulkan/Vulkan.h"
 #include "Common/FramebufferSpecification.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct RenderPassGenInfo
 	{

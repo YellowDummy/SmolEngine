@@ -5,7 +5,11 @@
 #include <optional>
 #include <string>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	enum class CachedPathType
 	{

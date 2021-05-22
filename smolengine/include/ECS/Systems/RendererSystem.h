@@ -3,12 +3,6 @@
 
 #include <glm/glm.hpp>
 
-namespace Frostium
-{
-	struct BeginSceneInfo;
-	struct ClearInfo;
-}
-
 namespace SmolEngine
 {
 	struct Animation2DComponent;
@@ -17,15 +11,17 @@ namespace SmolEngine
 	struct TransformComponent;
 	struct CameraComponent;
 	struct Texture2DComponent;
+	struct BeginSceneInfo;
+	struct ClearInfo;
 	class Framebuffer;
 
 	class RendererSystem
 	{
 	private:
 
-		static void BeginSubmit(Frostium::BeginSceneInfo* info);
+		static void BeginSubmit(BeginSceneInfo* info);
 		static void EndSubmit();
-		static void Update();
+		static void OnUpdate();
 
 		static void DebugDraw();
 		static void CheckLayerIndex(int& index);

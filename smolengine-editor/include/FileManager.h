@@ -2,10 +2,10 @@
 
 #include <unordered_map>
 
-class Frostium::VulkanTexture;
-
 namespace SmolEngine
 {
+	class VulkanTexture;
+
 	class FileManager
 	{
 	public:
@@ -16,6 +16,6 @@ namespace SmolEngine
 
 	private:
 
-		std::unordered_map<void*, Frostium::VulkanTexture*>  m_FileTextures;
+		std::unordered_map<void*, VulkanTexture*>  m_FileTextures;
 	};
 }

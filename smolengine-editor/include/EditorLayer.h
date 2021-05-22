@@ -1,9 +1,10 @@
 #pragma once
+
 #include "SmolEngineCore.h"
 #include "FileManager.h"
 #include "Core/Layer.h"
-#include "MaterialLibraryInterface.h"
 #include "Core/EditorConsole.h"
+#include "MaterialLibraryInterface.h"
 #include "ECS/Components/BaseComponent.h"
 
 #include <Frostium3D/EditorCamera.h>
@@ -18,7 +19,7 @@ namespace SmolEngine
 	struct TransformComponent;
 	struct Texture2DComponent;
 	struct HeadComponent;
-	struct Body2DComponent;
+	struct Rigidbody2DComponent;
 	struct CameraComponent;
 	struct AudioSourceComponent;
 	struct Animation2DComponent;
@@ -45,7 +46,7 @@ namespace SmolEngine
 	{
 	public:
 
-		EditorLayer(Frostium::EditorCamera* camera)
+		EditorLayer(EditorCamera* camera)
 			:m_Camera(camera), Layer("EditorLayer") {}
 
 		~EditorLayer() = default;
@@ -55,9 +56,9 @@ namespace SmolEngine
 		// Override
 		void OnAttach() override;
 		void OnDetach() override;
-		void OnBeginFrame(Frostium::DeltaTime deltaTime) override;
-		void OnUpdate(Frostium::DeltaTime deltaTime) override;
-		void OnEvent(Frostium::Event& event) override;
+		void OnBeginFrame(DeltaTime deltaTime) override;
+		void OnUpdate(DeltaTime deltaTime) override;
+		void OnEvent(Event& event) override;
 		void OnImGuiRender() override;
 
 		// Draw
@@ -66,7 +67,7 @@ namespace SmolEngine
 		void DrawInfo(HeadComponent* head);
 		void DrawTransform(TransformComponent* transform);
 		void DrawTexture(Texture2DComponent* texture);
-		void DrawBody2D(Body2DComponent* rb);
+		void DrawRigidBody2D(Rigidbody2DComponent* rb);
 		void DrawCamera(CameraComponent* camera);
 		void DrawAudioSource(AudioSourceComponent* audio);
 		void DrawAnimation2D(Animation2DComponent* anim);
@@ -113,7 +114,7 @@ namespace SmolEngine
 
 		FileManager*                                m_FileManager = nullptr;
 		WorldAdmin*                                 m_World = nullptr;
-		Frostium::EditorCamera*                     m_Camera = nullptr;
+		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
 		Actor*                                      m_SelectedActor = nullptr;
 		MaterialLibraryInterface*                   m_MaterialLibraryInterface = nullptr;
@@ -127,14 +128,14 @@ namespace SmolEngine
 		size_t                                      m_IDBuffer = 0;
 
 		// UI
-		Frostium::Texture                           m_PlayButton{};
-		Frostium::Texture                           m_StopButton{};
-		Frostium::Texture                           m_MoveButton{};
-		Frostium::Texture                           m_ScaleButton{};
-		Frostium::Texture                           m_RotateButton{};
-		Frostium::Texture                           m_SearchButton{};
-		Frostium::Texture                           m_RemoveButton{};
-		Frostium::Texture                           m_FolderButton{};
+		Texture                                     m_PlayButton{};
+		Texture                                     m_StopButton{};
+		Texture                                     m_MoveButton{};
+		Texture                                     m_ScaleButton{};
+		Texture                                     m_RotateButton{};
+		Texture                                     m_SearchButton{};
+		Texture                                     m_RemoveButton{};
+		Texture                                     m_FolderButton{};
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";

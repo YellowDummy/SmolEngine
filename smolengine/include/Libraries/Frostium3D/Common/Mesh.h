@@ -8,7 +8,11 @@
 
 #include <memory>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct ImportedDataGlTF;
 	struct Primitive;
@@ -29,12 +33,13 @@ namespace Frostium
 
 		// Getters
 		std::vector<Mesh>& GetChilds();
+		BoundingBox& GetAABB();
 		uint32_t GetVertexCount() const;
 		uint32_t GetAnimationsCount() const;
 		uint32_t GetChildCount() const;
 		uint32_t GetMaterialID() const;
 		uint32_t GetMeshID() const;
-		std::string_view GetName() const;
+		std::string GetName() const;
 		VertexBuffer* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
 		Mesh* GetMeshByName(const std::string& name);
@@ -62,7 +67,8 @@ namespace Frostium
 		uint32_t                                    m_MaterialID = 0;
 		uint32_t                                    m_VertexCount = 0;
 		uint32_t                                    m_ID = 0;
-		std::unordered_map<std::string, Mesh*>      m_MeshMap;
+		std::string                                 m_Name = "";
+		BoundingBox                                 m_AABB = {};
 		std::vector<Mesh>                           m_Childs;
 
 	private:

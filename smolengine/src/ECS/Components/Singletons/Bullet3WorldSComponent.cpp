@@ -3,7 +3,6 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <LinearMath/btIDebugDraw.h>
-
 #include <Frostium3D/DebugRenderer.h>
 
 namespace SmolEngine
@@ -14,14 +13,14 @@ namespace SmolEngine
 
 		void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override
 		{
-			Frostium::DebugRenderer::DrawLine({ from.x(), from.y(), from.z() }, { to.x(), to.y(), to.z() });
+			DebugRenderer::DrawLine({ from.x(), from.y(), from.z() }, { to.x(), to.y(), to.z() });
 		}
 
 		void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) override
 		{
 			btVector3 to = PointOnB + normalOnB * distance;
 			const btVector3& from = PointOnB;
-			Frostium::DebugRenderer::DrawLine({ from.x(), from.y(), from.z() }, { to.x(), to.y(), to.z() });
+			DebugRenderer::DrawLine({ from.x(), from.y(), from.z() }, { to.x(), to.y(), to.z() });
 		}
 
 		void reportErrorWarning(const char* warningString) override

@@ -114,7 +114,7 @@
     <ClInclude Include="include\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\BaseComponent.h" />
     <ClInclude Include="include\ECS\Components\BehaviourComponent.h" />
-    <ClInclude Include="include\ECS\Components\Body2DComponent.h" />
+    <ClInclude Include="include\ECS\Components\Rigidbody2DComponent.h" />
     <ClInclude Include="include\ECS\Components\CameraComponent.h" />
     <ClInclude Include="include\ECS\Components\CanvasComponent.h" />
     <ClInclude Include="include\ECS\Components\DirectionalLightComponent.h" />
@@ -136,7 +136,7 @@
     <ClInclude Include="include\ECS\Components\TransformComponent.h" />
     <ClInclude Include="include\ECS\ComponentsCore.h" />
     <ClInclude Include="include\ECS\Scene.h" />
-    <ClInclude Include="include\ECS\SceneData.h" />
+    <ClInclude Include="include\ECS\SceneRegisrty.h" />
     <ClInclude Include="include\ECS\Systems\AudioSystem.h" />
     <ClInclude Include="include\ECS\Systems\CameraSystem.h" />
     <ClInclude Include="include\ECS\Systems\JobsSystem.h" />
@@ -179,6 +179,7 @@
     <ClInclude Include="include\Libraries\Frostium3D\DebugRenderer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystem.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystemInstance.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\Profiler.h" />
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsContext.h" />
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsPipeline.h" />
@@ -563,7 +564,7 @@
     <ClCompile Include="src\ECS\Components\Singletons\ScriptingSystemStateSComponent.cpp" />
     <ClCompile Include="src\ECS\Components\Singletons\WorldAdminStateSComponent.cpp" />
     <ClCompile Include="src\ECS\Scene.cpp" />
-    <ClCompile Include="src\ECS\SceneData.cpp" />
+    <ClCompile Include="src\ECS\SceneRegisrty.cpp" />
     <ClCompile Include="src\ECS\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\CameraSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\JobsSystem.cpp" />

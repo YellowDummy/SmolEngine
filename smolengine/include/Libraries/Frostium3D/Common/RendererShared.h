@@ -10,7 +10,11 @@
 
 #include <glm/glm.hpp>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct RendererStorage;
 	struct Renderer2DStorage;

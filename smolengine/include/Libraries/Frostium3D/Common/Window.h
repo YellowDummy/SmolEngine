@@ -6,7 +6,11 @@
 
 struct GLFWwindow;
 
-namespace Frostium 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
+namespace Frostium
+#endif
 {
 	class EventSender;
 

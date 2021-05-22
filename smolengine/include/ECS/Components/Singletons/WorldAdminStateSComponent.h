@@ -2,8 +2,9 @@
 #include "Core/Core.h"
 #include "ECS/Scene.h"
 
-#include <Frostium3D/Common/Mesh.h>
-#include <Frostium3D/Common/Texture.h>
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL;
+#endif
 #include <Frostium3D/Common/RendererShared.h>
 
 #include <unordered_map>
@@ -27,7 +28,7 @@ namespace SmolEngine
 		bool                                                  m_InPlayMode = false;
 		entt::registry*                                       m_CurrentRegistry = nullptr;
 		uint32_t                                              m_ActiveSceneID = 0;
-		Frostium::BeginSceneInfo                              m_SceneInfo{};
+		BeginSceneInfo                                        m_SceneInfo{};
 		Scene                                                 m_Scenes[2];
 		std::hash<std::string_view>                           m_Hash{};
 	};

@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL;
+#endif
 #include "Frostium3D/GraphicsContext.h"
 #include "Frostium3D/Common/RendererStorage.h"
 #include "Frostium3D/Common/Renderer2DStorage.h"
@@ -15,8 +18,8 @@ namespace SmolEngine
 		GraphicsEngineSComponent(GraphicsEngineSComponent&& other) {}
 		GraphicsEngineSComponent& operator=(GraphicsEngineSComponent other) { return *this; }
 		
-		Frostium::RendererStorage   Strorage{};
-		Frostium::Renderer2DStorage Storage2D{};
+		RendererStorage   Strorage{};
+		Renderer2DStorage Storage2D{};
 
 		static GraphicsEngineSComponent* Get() { return Instance; }
 

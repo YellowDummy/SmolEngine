@@ -5,7 +5,11 @@
 #include <unordered_map>
 #include <string>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	enum class BlendFactor: uint16_t
 	{
@@ -50,10 +54,8 @@ namespace Frostium
 
 	struct GraphicsPipelineShaderCreateInfo
 	{
-
 		std::unordered_map<ShaderType,std::string>      FilePaths;
 		std::unordered_map<uint32_t, ShaderBufferInfo>  BufferInfos;
-
 	};
 
 	enum class DrawMode : uint16_t
@@ -91,7 +93,6 @@ namespace Frostium
 	struct GraphicsPipelineCreateInfo
 	{
 		Framebuffer*                         pTargetFramebuffer = nullptr;
-		GraphicsPipelineShaderCreateInfo*    pShaderCreateInfo = nullptr;
 
 		BlendFactor                          eSrcColorBlendFactor = BlendFactor::NONE;
 		BlendFactor                          eDstColorBlendFactor = BlendFactor::NONE;
@@ -111,6 +112,7 @@ namespace Frostium
 		int32_t                              StageCount = -1;
 
 		std::string                          PipelineName = "";
+		GraphicsPipelineShaderCreateInfo     ShaderCreateInfo = {};
 		std::vector<DrawMode>                PipelineDrawModes = { DrawMode::Triangle };
 		std::vector<VertexInputInfo>         VertexInputInfos;
 	};

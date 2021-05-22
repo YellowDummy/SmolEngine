@@ -6,7 +6,11 @@
 
 struct GLFWwindow;
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class VulkanCommandBuffer;
 	class ImGuiVulkanImpl

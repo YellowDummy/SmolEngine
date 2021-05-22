@@ -18,7 +18,7 @@ namespace SmolEngine
 			const uint32_t height = static_cast<uint32_t>(h);
 			const uint32_t mipLevels = static_cast<uint32_t>(floor(log2(std::max(width, height)))) + 1;
 
-			Frostium::VulkanTexture* tex = new Frostium::VulkanTexture();
+			VulkanTexture* tex = new VulkanTexture();
 			tex->CreateTexture(width, height, mipLevels, data, format, true);
 			descriptor = tex->GetImGuiTextureID();
 
@@ -31,7 +31,7 @@ namespace SmolEngine
 			const auto& it = m_FileTextures.find(tex);
 			if (it != m_FileTextures.end())
 			{
-				Frostium::VulkanTexture* tex = it->second;
+				VulkanTexture* tex = it->second;
 				delete tex;
 			}
 		};

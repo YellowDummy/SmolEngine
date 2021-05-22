@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 
 #include "ECS/Actor.h"
-#include "ECS/SceneData.h"
+#include "ECS/SceneRegisrty.h"
 
 namespace SmolEngine
 {
@@ -98,7 +98,7 @@ namespace SmolEngine
 		void CleanRegistry();
 
 	private:
-		SceneData              m_SceneData;
+		SceneRegisrty          m_SceneData;
 		SceneStateComponent*   m_State = nullptr;
 	private:
 		friend class WorldAdmin;

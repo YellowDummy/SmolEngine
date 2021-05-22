@@ -11,7 +11,11 @@
 #include "Common/IndexBuffer.h"
 #include "Common/Common.h"
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class Framebuffer;
 	class CubeTexture;
@@ -83,9 +87,9 @@ namespace Frostium
 		Ref<VertexArray>                  m_VextexArray = nullptr;
 		Ref<Shader>                       m_Shader = nullptr;
 		GraphicsContext*                  m_GraphicsContext = nullptr;
-		GraphicsPipelineCreateInfo        m_PiplineCreateInfo;
 		DrawMode                          m_DrawMode = DrawMode::Triangle;
 		uint32_t                          m_DescriptorIndex = 0;
+		GraphicsPipelineCreateInfo        m_PiplineCreateInfo;
 		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
 		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;
 	};

@@ -4,7 +4,11 @@
 
 #include <glm/glm.hpp>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	class OrthographicCamera;
 	class VertexArray;

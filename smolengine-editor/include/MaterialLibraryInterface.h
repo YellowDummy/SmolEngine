@@ -3,21 +3,20 @@
 
 #include <Frostium3D/MaterialLibrary.h>
 
-class Frostium::GraphicsPipeline;
-class Frostium::Framebuffer;
-class Frostium::Mesh;
-class Frostium::EditorCamera;
-class Frostium::Texture;
-
 namespace SmolEngine
 {
 	class EditorLayer;
+	class GraphicsPipeline;
+	class Framebuffer;
+	class Mesh;
+	class EditorCamera;
+	class Texture;
 
 	struct PreviewRenderingData
 	{
-		Ref<Frostium::GraphicsPipeline>   Pipeline = nullptr;
-		Ref<Frostium::Framebuffer>        Framebuffer = nullptr;
-		Ref<Frostium::EditorCamera>       Camera = nullptr;
+		Ref<GraphicsPipeline>   Pipeline = nullptr;
+		Ref<Framebuffer>        Framebuffer = nullptr;
+		Ref<EditorCamera>       Camera = nullptr;
 	};
 
 	struct MaterialLibraryBuffer
@@ -43,7 +42,7 @@ namespace SmolEngine
 	private:
 
 		void InitPreviewRenderer();
-		void LoadTexture(const std::string& filePath, Frostium::MaterialTexture type);
+		void LoadTexture(const std::string& filePath, MaterialTexture type);
 		void DrawTextureInfo(const char* header, std::string& outString, std::string& dummy);
 		void RenderImage();
 		void Reset();
@@ -64,12 +63,12 @@ namespace SmolEngine
 		bool                                 m_bShowPreview = false;
 		int                                  m_GeometryType = 1;
 		const uint32_t                       m_BindingPoint = 277;
-		Frostium::Texture*                   m_RemoveTexture = nullptr;
-		Frostium::Texture*                   m_FolderTexture = nullptr;
-		Frostium::MaterialCreateInfo         m_MaterialCI = {};
+		Texture*                             m_RemoveTexture = nullptr;
+		Texture*                             m_FolderTexture = nullptr;
+		MaterialCreateInfo                   m_MaterialCI = {};
 		PreviewRenderingData                 m_Data = {};
 		MaterialLibraryBuffer                m_Buffer = {};
 		UniformBuffer                        m_UBO{};
-		std::vector< Ref<Frostium::Texture>> m_Textures;
+		std::vector<Ref<Texture>>            m_Textures;
 	};
 }

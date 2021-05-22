@@ -174,7 +174,7 @@ namespace SmolEngine
 			m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<Body2DComponent>(*actor);
+			m_SceneData.m_Registry.remove_if_exists<Rigidbody2DComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<Texture2DComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<BehaviourComponent>(*actor);
 			m_SceneData.m_Registry.remove_if_exists<Animation2DComponent>(*actor);
@@ -201,7 +201,7 @@ namespace SmolEngine
 				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
+				CanvasComponent, Rigidbody2DComponent, MeshComponent, DirectionalLightComponent,
 				PointLightComponent, SceneStateComponent, RigidbodyComponent>(output);
 		}
 
@@ -242,7 +242,7 @@ namespace SmolEngine
 				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Body2DComponent, MeshComponent, DirectionalLightComponent,
+				CanvasComponent, Rigidbody2DComponent, MeshComponent, DirectionalLightComponent,
 				PointLightComponent, SceneStateComponent, RigidbodyComponent>(regisrtyInput);
 		}
 

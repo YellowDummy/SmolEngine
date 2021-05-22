@@ -10,8 +10,6 @@
 #include <Frostium3D/Renderer.h>
 #include <Frostium3D/Renderer2D.h>
 
-using namespace Frostium;
-
 namespace SmolEngine
 {
 	void RendererSystem::CheckLayerIndex(int& index)
@@ -27,7 +25,7 @@ namespace SmolEngine
 		}
 	}
 
-	void RendererSystem::BeginSubmit(Frostium::BeginSceneInfo* info)
+	void RendererSystem::BeginSubmit(BeginSceneInfo* info)
 	{
 		GraphicsContext::GetSingleton()->UpdateSceneInfo(info);
 
@@ -45,7 +43,7 @@ namespace SmolEngine
 		Renderer2D::EndScene();
 	}
 
-	void RendererSystem::Update()
+	void RendererSystem::OnUpdate()
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
 
@@ -59,8 +57,8 @@ namespace SmolEngine
 					const auto& [transform, mesh_component] = group.get<TransformComponent, MeshComponent>(entity);
 					if (mesh_component.bShow && mesh_component.Mesh)
 					{
-						Frostium::Mesh* mesh = mesh_component.Mesh.get();
-						std::vector<Frostium::Mesh>& childs = mesh->GetChilds();
+						Mesh* mesh = mesh_component.Mesh.get();
+						std::vector<Mesh>& childs = mesh->GetChilds();
 						uint32_t childCount = mesh->GetChildCount();
 
 						Renderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[0].ID);
@@ -147,31 +145,5 @@ namespace SmolEngine
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
 
-		const auto& group = reg->view<TransformComponent, Body2DComponent>();
-		for (const auto& entity : group)
-		{
-			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
-			const auto& body = body2D.Body;
-
-			if (!body2D.ShowShape)
-			{
-				return;
-			}
-
-			switch (body.m_ShapeType)
-			{
-
-			case (int)Shape2DType::Box:
-			{
-				break;
-			}
-			case (int)Shape2DType::Cirlce:
-			{
-				break;
-			}
-			default:
-				break;
-			}
-		}
 	}
 }

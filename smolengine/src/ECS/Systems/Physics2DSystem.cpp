@@ -14,20 +14,12 @@
 
 namespace SmolEngine
 {
-	void Physics2DSystem::OnBegin(Box2DWorldSComponent* data)
+	void Physics2DSystem::OnUpdate(float delta)
 	{
-		//Setting Box2D filtering
-		data->World.SetContactFilter(&data->m_CollisionFilter2D);
-		//Setting Box2D collision callbacks
-		data->World.SetContactListener(&data->m_CollisionListener2D);
+		m_State->World.Step(delta, 6, 2);
 	}
 
-	void Physics2DSystem::OnUpdate(Frostium::DeltaTime delta, uint32_t velocityIterations, uint32_t positionIterations, Box2DWorldSComponent* data)
-	{
-		data->World.Step(delta, velocityIterations, positionIterations);
-	}
-
-	void Physics2DSystem::CreateBody(Body2DComponent* body2D, TransformComponent* tranform, b2World* world, Actor* actor)
+	void Physics2DSystem::CreateBody(Rigidbody2DComponent* body2D, TransformComponent* tranform, Actor* actor)
 	{
 		auto& body = body2D->Body;
 		{
@@ -41,7 +33,7 @@ namespace SmolEngine
 			bodyDef.userData = actor;
 
 			bodyDef.position.Set(tranform->WorldPos.x, tranform->WorldPos.y);
-			body.m_Body = world->CreateBody(&bodyDef);
+			body.m_Body = m_State->World.CreateBody(&bodyDef);
 		}
 
 		if (body.m_Density == 1.0f)
@@ -69,19 +61,7 @@ namespace SmolEngine
 		}
 	}
 
-	void Physics2DSystem::DeleteBodies(b2World* world)
-	{
-		entt::registry* reg = m_World->m_CurrentRegistry;
-
-		const auto& group = reg->view<Body2DComponent>();
-		for (const auto& entity : group)
-		{
-			auto& body = group.get<Body2DComponent>(entity);
-			world->DestroyBody(body.Body.m_Body);
-		}
-	}
-
-	const bool Physics2DSystem::BindJoint(Body2DComponent* bodyA, Body2DComponent* bodyB, JointType type, JointInfo* info, b2World* world)
+	const bool Physics2DSystem::BindJoint(Rigidbody2DComponent* bodyA, Rigidbody2DComponent* bodyB, JointType type, JointInfo* info, b2World* world)
 	{
 		auto& bodyRefA = bodyA->Body;
 		auto& bodyRefB = bodyB->Body;
@@ -156,7 +136,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	const bool Physics2DSystem::DeleteJoint(Body2DComponent* body, b2World* world)
+	const bool Physics2DSystem::DeleteJoint(Rigidbody2DComponent* body, b2World* world)
 	{
 		world->DestroyJoint(body->Body.m_Joint);
 		return true;
@@ -405,10 +385,10 @@ namespace SmolEngine
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
 
-		auto& group = reg->view<TransformComponent, Body2DComponent>();
+		auto& group = reg->view<TransformComponent, Rigidbody2DComponent>();
 		for (const auto& entity : group)
 		{
-			const auto& [transform, body2D] = group.get<TransformComponent, Body2DComponent>(entity);
+			const auto& [transform, body2D] = group.get<TransformComponent, Rigidbody2DComponent>(entity);
 			auto& b2Pos = body2D.Body.m_Body->GetTransform();
 
 			transform.WorldPos = { b2Pos.p.x, b2Pos.p.y, transform.WorldPos.z };
@@ -416,12 +396,12 @@ namespace SmolEngine
 		}
 	}
 
-	void Physics2DSystem::AddForce(Body2DComponent* body, const glm::vec2& force, bool wakeBody)
+	void Physics2DSystem::AddForce(Rigidbody2DComponent* body, const glm::vec2& force, bool wakeBody)
 	{
 		body->Body.m_Body->ApplyForceToCenter({ force.x, force.y }, wakeBody);
 	}
 
-	void Physics2DSystem::AddForce(Body2DComponent* body, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
+	void Physics2DSystem::AddForce(Rigidbody2DComponent* body, const glm::vec2& force, const glm::vec2& point, bool wakeBody)
 	{
 		body->Body.m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, wakeBody);
 	}
@@ -438,8 +418,7 @@ namespace SmolEngine
 	void Physics2DSystem::CircleCast(const glm::vec2& startPoisition, const float distance, std::vector<RayCast2DHitInfo>& outHits)
 	{
 		std::vector<size_t> idList;
-
-		b2World* world = &Box2DWorldSComponent::Get()->World;
+		b2World* world = &m_State->World;
 
 		for (float r = 0; r < 360; ++r)
 		{
@@ -463,6 +442,31 @@ namespace SmolEngine
 					outHits.push_back(info);
 				}
 			}
+		}
+	}
+
+	void Physics2DSystem::OnBeginWorld()
+	{
+		entt::registry* reg = m_World->m_CurrentRegistry;
+
+		const auto& dynamic_group = m_World->m_CurrentRegistry->view<TransformComponent, Rigidbody2DComponent>();
+		for (const auto& entity : dynamic_group)
+		{
+			const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, Rigidbody2DComponent>(entity);
+			Actor* actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(rigidbodyComponent.ActorID);
+			CreateBody(&rigidbodyComponent, &transform, actor);
+		}
+	}
+
+	void Physics2DSystem::OnEndWorld()
+	{
+		entt::registry* reg = m_World->m_CurrentRegistry;
+
+		const auto& group = reg->view<Rigidbody2DComponent>();
+		for (const auto& entity : group)
+		{
+			auto& body = group.get<Rigidbody2DComponent>(entity);
+			m_State->World.DestroyBody(body.Body.m_Body);
 		}
 	}
 }

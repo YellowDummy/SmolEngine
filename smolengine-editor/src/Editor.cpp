@@ -17,11 +17,11 @@ namespace SmolEngine
 		delete m_Camera;
 	}
 
-	void Editor::SetGraphicsContext(Frostium::GraphicsContextInitInfo* info)
+	void Editor::SetGraphicsContext(GraphicsContextInitInfo* info)
 	{
 		info->pWindowCI->Height = 1080;
 		info->pWindowCI->Width = 1920;
-		info->Flags |= Frostium::Features_Renderer_Debug_Flags;
+		info->Flags |= Features_Renderer_Debug_Flags;
 #ifdef EDITOR_DEBUG
 		info->pWindowCI->Title = "SmolEngine Editor x64 - Vulkan - Debug";
 #else
@@ -37,9 +37,9 @@ namespace SmolEngine
 
 	void Editor::SetLayers(LayerManager* layerManager)
 	{
-		Frostium::EditorCameraCreateInfo camCI = {};
+		EditorCameraCreateInfo camCI = {};
 		camCI.WorldPos = { 0, 5, 0 };
-		m_Camera = new Frostium::EditorCamera(&camCI);
+		m_Camera = new EditorCamera(&camCI);
 		EditorLayer* editorLayer = new EditorLayer(m_Camera);
 
 		layerManager->AddLayer(editorLayer);

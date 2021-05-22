@@ -54,7 +54,7 @@ namespace SmolEngine
 		Scene* scene = GetActiveScene();
 		SceneStateComponent* sceneState = scene->GetSceneState();
 #ifdef SMOLENGINE_EDITOR
-		if (!Frostium::Utils::IsPathValid(sceneState->FilePath))
+		if (!Utils::IsPathValid(sceneState->FilePath))
 		{
 			NATIVE_ERROR("Path is not valid: {}", sceneState->FilePath);
 			return;
@@ -62,25 +62,11 @@ namespace SmolEngine
 		// We save the current scene before starting the simulation
 		SaveCurrentScene();
 #endif
-		Box2DWorldSComponent* world = Box2DWorldSComponent::Get();
-
-		Physics2DSystem::OnBegin(world);
+		Physics2DSystem::OnBeginWorld();
 		PhysicsSystem::OnBeginWorld();
+		AudioSystem::OnBeginWorld();
+		ScriptingSystem::OnBeginWorld();
 
-		// Creating rigidbodies and joints
-		{
-			const auto& view = scene->GetRegistry().view<TransformComponent, Body2DComponent>();
-			view.each([&](TransformComponent& tranform, Body2DComponent& body)
-			{
-					Actor* actor = scene->FindActorByID(body.ActorID);
-					Physics2DSystem::CreateBody(&body, &tranform, &world->World, actor);
-			});
-		}
-
-		// Finding which animation / audio clip should play on awake
-		AudioSystem::OnAwake(&AudioEngineSComponent::Get()->Engine);
-		// Sending start callback to all enabled scripts
-		ScriptingSystem::OnBegin();
 		m_State->m_InPlayMode = true;
 	}
 
@@ -126,44 +112,40 @@ namespace SmolEngine
 	{
 		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
 		m_State->m_InPlayMode = false;
-		ScriptingSystem::OnEnd();
-		// Deleting all Rigidbodies
-		Physics2DSystem::DeleteBodies(&Box2DWorldSComponent::Get()->World);
+
+		ScriptingSystem::OnEndWorld();
+		Physics2DSystem::OnEndWorld();
 		PhysicsSystem::OnEndWorld();
-		// Resetting Animation / Audio clips
-		AudioSystem::OnReset(&AudioEngineSComponent::Get()->Engine);
-		AudioEngineSComponent::Get()->Engine.Reset();
+		AudioSystem::OnBeginWorld();
 
 #ifdef SMOLENGINE_EDITOR
 		LoadScene(sceneState->FilePath);
 #endif
 	}
 
-	void WorldAdmin::OnUpdate(Frostium::DeltaTime deltaTime)
+	void WorldAdmin::OnUpdate(DeltaTime deltaTime)
 	{
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 		{
-			// Send OnProcess callback
-			ScriptingSystem::OnTick(deltaTime);
-			// Updade phycics
-			Physics2DSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
+			ScriptingSystem::OnUpdate(deltaTime);
+			Physics2DSystem::OnUpdate(deltaTime);
 			PhysicsSystem::OnUpdate(deltaTime);
-			// Updade transforms
+
 			Physics2DSystem::UpdateTransforms();
 			PhysicsSystem::UpdateTransforms();
 		}
 #else
-		PhysicsSystem::OnUpdate();
-		Box2DPhysicsSystem::OnUpdate(deltaTime, 6, 2, Box2DWorldSComponent::Get());
-		ScriptingSystem::OnTick(registry, deltaTime);
-		Box2DPhysicsSystem::UpdateTransfroms();
+		ScriptingSystem::OnUpdate(deltaTime);
+		Physics2DSystem::OnUpdate(deltaTime);
+		PhysicsSystem::OnUpdate(deltaTime);
+		Physics2DSystem::UpdateTransforms();
 		PhysicsSystem::UpdateTransforms();
 #endif
-		RendererSystem::Update();
+		RendererSystem::OnUpdate();
 	}
 
-	void WorldAdmin::OnEvent(Frostium::Event& e)
+	void WorldAdmin::OnEvent(Event& e)
 	{
 		if (!m_State->m_InPlayMode) { return; }
 	}
@@ -222,14 +204,14 @@ namespace SmolEngine
 
 		// Add default materials and reset renderer
 		{
-			Frostium::MaterialLibrary::GetSinglenton()->Reset();
-			Frostium::Renderer::ResetStates();
+			MaterialLibrary::GetSinglenton()->Reset();
+			Renderer::ResetStates();
 
-			Frostium::MaterialCreateInfo defMat = {};
+			MaterialCreateInfo defMat = {};
 			defMat.SetRoughness(1.0f);
 			defMat.SetMetalness(0.2f);
-			Frostium::MaterialLibrary::GetSinglenton()->Add(&defMat);
-			Frostium::Renderer::UpdateMaterials();
+			MaterialLibrary::GetSinglenton()->Add(&defMat);
+			Renderer::UpdateMaterials();
 		}
 
 		Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
@@ -246,22 +228,12 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool WorldAdmin::LoadSceneAtIndex(const std::string& filePath, uint32_t index)
-	{
-		return false;
-	}
-
-	bool WorldAdmin::LoadSceneBG(const std::string& filePath)
-	{
-		return false;
-	}
-
 	bool WorldAdmin::SwapScene(uint32_t index)
 	{
-		return false;
+		return false; //temp
 	}
 
-	void WorldAdmin::SetBeginSceneInfo(Frostium::BeginSceneInfo* info)
+	void WorldAdmin::SetBeginSceneInfo(BeginSceneInfo* info)
 	{
 		assert(info != nullptr);
 		m_State->m_SceneInfo = *info;
@@ -270,7 +242,7 @@ namespace SmolEngine
 	bool WorldAdmin::SaveCurrentScene()
 	{
 		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
-		if (Frostium::Utils::IsPathValid(sceneState->FilePath))
+		if (Utils::IsPathValid(sceneState->FilePath))
 		{
 			return SaveScene(sceneState->FilePath);
 		}
@@ -312,8 +284,8 @@ namespace SmolEngine
 			{
 				JobsSystem::Schedule([&comp]() 
 				{
-					comp.Texture = std::make_shared<Frostium::Texture>();
-					Frostium::Texture::Create(comp.TexturePath, comp.Texture.get());
+					comp.Texture = std::make_shared<Texture>();
+					Texture::Create(comp.TexturePath, comp.Texture.get());
 				});
 			});
 		}
@@ -346,7 +318,7 @@ namespace SmolEngine
 
 	void WorldAdmin::ReloadMeshes(entt::registry& registry)
 	{
-		Frostium::MaterialLibrary* lib = Frostium::MaterialLibrary::GetSinglenton();
+		MaterialLibrary* lib = MaterialLibrary::GetSinglenton();
 		const auto& view = registry.view<MeshComponent>();
 
 		// Mesh loading
@@ -356,8 +328,8 @@ namespace SmolEngine
 			{
 				JobsSystem::Schedule([&component]()
 					{
-						component.Mesh = std::make_shared<Frostium::Mesh>();
-						Frostium::Mesh::Create(component.ModelPath, component.Mesh.get());
+						component.Mesh = std::make_shared<Mesh>();
+						Mesh::Create(component.ModelPath, component.Mesh.get());
 					});
 
 			});
@@ -368,7 +340,7 @@ namespace SmolEngine
 		{
 			view.each([&](MeshComponent& component)
 			{
-				Frostium::MaterialCreateInfo materialCI = {};
+				MaterialCreateInfo materialCI = {};
 
 				// Loads materials if exist
 				uint32_t count = static_cast<uint32_t>(component.MaterialsData.size());
@@ -389,7 +361,7 @@ namespace SmolEngine
 			});
 		}
 
-		Frostium::Renderer::UpdateMaterials();
+		Renderer::UpdateMaterials();
 	}
 
 	void WorldAdmin::ReloadRigidBodies(entt::registry& registry)
@@ -490,7 +462,7 @@ namespace SmolEngine
 
 		// Engines
 		m_GlobalRegistry.emplace<AudioEngineSComponent>(m_GlobalEntity);
-		m_GlobalRegistry.emplace<Box2DWorldSComponent>(m_GlobalEntity);
+		Physics2DSystem::m_State = &m_GlobalRegistry.emplace<Box2DWorldSComponent>(m_GlobalEntity);
 		PhysicsSystem::m_State = &m_GlobalRegistry.emplace<Bullet3WorldSComponent>(m_GlobalEntity);
 		m_GlobalRegistry.emplace<GraphicsEngineSComponent>(m_GlobalEntity);
 		// System States

@@ -4,7 +4,11 @@
 
 #include <glm/glm.hpp>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	struct GraphicsContextState
 	{
@@ -52,9 +56,10 @@ namespace Frostium
 
 	struct BoundingBox
 	{
-		glm::vec3 min;
-		glm::vec3 max;
+		glm::vec3 min = glm::vec3(0);
+		glm::vec3 max = glm::vec3(0);
 
+		void SetBoundingBox(const glm::vec3& min, const glm::vec3& max);
 		void CalculateAABB(const glm::mat4& m);
 	};
 

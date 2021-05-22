@@ -6,7 +6,11 @@
 #include <vector>
 #include <unordered_map>
 
+#ifdef FROSTIUM_SMOLENGINE_IMPL
+namespace SmolEngine
+#else
 namespace Frostium
+#endif
 {
 	enum class BufferType : uint16_t
 	{

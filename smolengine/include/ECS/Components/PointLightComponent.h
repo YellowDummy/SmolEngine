@@ -2,7 +2,11 @@
 #include "Core/Core.h"
 #include "ECS/Components/BaseComponent.h"
 
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
 #include <Frostium3D/Common/RendererStorage.h>
+
 #include <glm/glm.hpp>
 #include <cereal/cereal.hpp>
 
@@ -14,7 +18,7 @@ namespace SmolEngine
 		PointLightComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		Frostium::PointLight Light{};
+		PointLight Light{};
 				      
 	private:
 
