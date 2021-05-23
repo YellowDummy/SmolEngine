@@ -41,6 +41,7 @@ namespace Frostium
 	struct GraphicsContextInitInfo
 	{
 		bool                          bTargetsSwapchain = true;
+		bool                          bAutoResize = true;
 		Flags                         Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
 		MSAASamples                   eMSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 		ShadowMapSize                 eShadowMapSize = ShadowMapSize::SIZE_8;
@@ -65,9 +66,6 @@ namespace Frostium
 		void                          SwapBuffers();
 		void                          ShutDown();
 								      
-		// Setters				      
-		void                          SetEventCallback(std::function<void(Event&)> callback);
-								      
 		// Getters				      
 		static GraphicsContext*       GetSingleton();
 		Camera*                       GetDefaultCamera() const;
@@ -91,17 +89,22 @@ namespace Frostium
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 		JobsSystemInstance*            GetJobsSystemInstance();
 #endif
-		// Helpers				      
+		// Setters				      
+		void                          SetEventCallback(std::function<void(Event&)> callback);
+		void                          SetFramebufferSize(uint32_t width, uint32_t height);
+
 		DeltaTime                     CalculateDeltaTime();
-		bool                          IsWindowMinimized() const;
-		// Events				      
-		void                          OnResize(uint32_t* width, uint32_t* height);
+		bool                          IsWindowMinimized() const;      
+		void                          Resize(uint32_t* width, uint32_t* height);
+
 	private:					      
 		void                          OnEvent(Event& event);
 		bool                          LoadMeshes();
 		bool                          InitRenderer2DStorage(Renderer2DStorage* storage);
 		bool                          InitRendererStorage(RendererStorage* storage, ShadowMapSize shadow_map_size);
-	private:						  
+
+	private:	
+
 		static GraphicsContext*       s_Instance;
 		Texture*                      m_DummyTexure = nullptr;
 		Camera*                       m_DefaultCamera = nullptr;
@@ -116,6 +119,7 @@ namespace Frostium
 		Mesh*                         m_BoxMesh = nullptr;
 		Mesh*                         m_SphereMesh = nullptr;
 		Mesh*                         m_CapsuleMesh = nullptr;
+
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 		JobsSystemInstance*           m_JobsSystem = nullptr;
 #endif

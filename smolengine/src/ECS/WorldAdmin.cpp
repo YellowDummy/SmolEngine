@@ -96,12 +96,10 @@ namespace SmolEngine
 			break;
 		}
 #endif 
-		RendererSystem::BeginSubmit(&m_State->m_SceneInfo);
 	}
 
 	void WorldAdmin::OnEndFrame()
 	{
-		RendererSystem::EndSubmit();
 #ifdef SMOLENGINE_EDITOR
 		if(m_State->m_InPlayMode)
 			PhysicsSystem::DebugDraw();
@@ -142,7 +140,9 @@ namespace SmolEngine
 		Physics2DSystem::UpdateTransforms();
 		PhysicsSystem::UpdateTransforms();
 #endif
+		RendererSystem::BeginSubmit(&m_State->m_SceneInfo);
 		RendererSystem::OnUpdate();
+		RendererSystem::EndSubmit();
 	}
 
 	void WorldAdmin::OnEvent(Event& e)

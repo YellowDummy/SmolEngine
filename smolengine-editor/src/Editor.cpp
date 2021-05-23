@@ -27,6 +27,7 @@ namespace SmolEngine
 #else
 		info->pWindowCI->Title = "SmolEngine Editor x64 - Vulkan - Release";
 #endif
+		info->bAutoResize = false;
 		info->bTargetsSwapchain = false; // render imgui to the swap chain and later on render whole scene as imgui texture
 	}
 

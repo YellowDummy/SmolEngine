@@ -61,6 +61,7 @@ namespace SmolEngine
 		Broadphase = new btDbvtBroadphase();
 		Solver = new btSequentialImpulseConstraintSolver;
 
+		
 		World = new btDiscreteDynamicsWorld(Dispatcher, Broadphase, Solver, Config);
 		World->setGravity(btVector3(info->Gravity.x, info->Gravity.y, info->Gravity.z));
 
@@ -69,6 +70,7 @@ namespace SmolEngine
 		World->setDebugDrawer(DebugDraw);
 		DebugDraw->setDebugMode(1);
 #endif
+
 
 		Instance = this;
 	}

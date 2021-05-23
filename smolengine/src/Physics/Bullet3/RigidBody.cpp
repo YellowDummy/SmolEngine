@@ -7,12 +7,12 @@ namespace SmolEngine
 {
     void RigidBody::Create(BodyCreateInfo* info, const glm::vec3& pos, const glm::vec3& rot)
     {
-        btVector3 localInertia(info->LocalInertia.x, info->LocalInertia.y, info->LocalInertia.z);
         btTransform transform;
         GLMToBulletTransform(pos, rot, &transform);
         InitBase(info);
 
         btDefaultMotionState* myMotionState = new btDefaultMotionState(transform);
+        btVector3 localInertia(info->LocalInertia.x, info->LocalInertia.y, info->LocalInertia.z);
         btRigidBody::btRigidBodyConstructionInfo rbInfo(info->Mass, myMotionState, m_Shape, localInertia);
         rbInfo.m_friction = info->Friction;
         rbInfo.m_restitution = info->Restitution;

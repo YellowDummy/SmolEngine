@@ -111,7 +111,7 @@ namespace SmolEngine
 		bool                                        m_IsSceneViewFocused = false;
 		bool                                        m_IsGameViewFocused = false;
 		bool                                        m_GizmoEnabled = true;
-
+		bool                                        m_SnapEnabled = false;
 		FileManager*                                m_FileManager = nullptr;
 		WorldAdmin*                                 m_World = nullptr;
 		EditorCamera*                               m_Camera = nullptr;
@@ -119,10 +119,7 @@ namespace SmolEngine
 		Actor*                                      m_SelectedActor = nullptr;
 		MaterialLibraryInterface*                   m_MaterialLibraryInterface = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;
-		glm::vec2                                   m_GameViewSize = { 0.0f, 0.0f };
-		glm::vec2                                   m_SceneViewSize = { 0.0f, 0.0f };
-		glm::vec2                                   m_ViewPortSize = {0.0f, 0.0f};
-		glm::vec2                                   m_GameViewPortSize = { 0.0f, 0.0f };
+		glm::vec2                                   m_SceneViewPort = { 0.0f, 0.0f };
 		std::string                                 m_FilePath = "";
 		std::string                                 m_FileName = "";
 		size_t                                      m_IDBuffer = 0;

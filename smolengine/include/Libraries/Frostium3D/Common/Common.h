@@ -12,13 +12,14 @@ namespace Frostium
 {
 	struct GraphicsContextState
 	{
-		GraphicsContextState(bool cam, bool imgui, bool swapchain)
-			:UseEditorCamera(cam), UseImGUI(imgui), UseSwapchain(swapchain) {}
+		GraphicsContextState(bool cam, bool imgui, bool swapchain, bool autoResize)
+			:UseEditorCamera(cam), UseImGUI(imgui), UseSwapchain(swapchain), AutoResize(autoResize) {}
 
 		bool           WindowMinimized = false;
 		bool           Is2DStoragePreAlloc = false;
 		bool           IsStoragePreAlloc = false;
 
+		const bool     AutoResize = true;
 		const bool     UseImGUI = false;
 		const bool     UseEditorCamera = false;
 		const bool     UseSwapchain = true;

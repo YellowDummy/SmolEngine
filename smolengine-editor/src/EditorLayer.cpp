@@ -296,8 +296,6 @@ namespace SmolEngine
 
 	void EditorLayer::DrawSceneTetxure()
 	{
-		const float snapValue = 0.5f;
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
 		ImGui::BeginChild("TetxureScene");
 		{
@@ -306,18 +304,15 @@ namespace SmolEngine
 			else { m_IsSceneViewFocused = false; }
 
 			Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
-			m_SceneViewSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+
 			ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-			if (ViewPortSize.x != m_ViewPortSize.x || ViewPortSize.y != m_ViewPortSize.y)
+			if (ViewPortSize.x != m_SceneViewPort.x || ViewPortSize.y != m_SceneViewPort.y)
 			{
-				m_ViewPortSize = { ViewPortSize.x, ViewPortSize.y };
+				m_SceneViewPort = { ViewPortSize.x, ViewPortSize.y };
+				GraphicsContext::GetSingleton()->SetFramebufferSize(static_cast<uint32_t>(m_SceneViewPort.x), static_cast<uint32_t>(m_SceneViewPort.y));
 			}
 
-#ifdef SMOLENGINE_OPENGL_IMPL
-			//ImGui::Image(frameBuffer->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2(0, 1), ImVec2(1, 0));
-#else
-			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y });
-#endif
+			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_SceneViewPort.x, m_SceneViewPort.y });
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
@@ -336,6 +331,7 @@ namespace SmolEngine
 				auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
 				if (transformComponent)
 				{
+					float snapValue = 0.5f;
 					switch (m_Camera->GetType())
 					{
 					case CameraType::Perspective:
@@ -352,20 +348,24 @@ namespace SmolEngine
 						break;
 					}
 
-					ImGuizmo::SetDrawlist();
+					if (m_GizmoOperation == ImGuizmo::OPERATION::ROTATE)
+						snapValue = 45.0f;
 
+					ImGuizmo::SetDrawlist();
 					float width = (float)ImGui::GetWindowSize().x;
 					float height = (float)ImGui::GetWindowSize().y;
-
 					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
 
 					glm::mat4 transform;
+					glm::mat4 rotation = glm::toMat4(glm::quat(transformComponent->Rotation));
+					transform = glm::translate(glm::mat4(1.0f), transformComponent->WorldPos)
+						* rotation
+						* glm::scale(glm::mat4(1.0f), transformComponent->Scale);
 
-					Utils::ComposeTransform(transformComponent->WorldPos, transformComponent->Rotation, transformComponent->Scale, transform);
 					float snapValues[3] = { snapValue, snapValue, snapValue };
 
 					ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
-						m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snapValues);
+						m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, m_SnapEnabled ? snapValues: nullptr);
 
 					if (ImGuizmo::IsUsing())
 					{
@@ -374,9 +374,7 @@ namespace SmolEngine
 						glm::vec3 deltaRot = rotation - transformComponent->Rotation;
 
 						transformComponent->WorldPos = tranlation;
-						transformComponent->Rotation.x += deltaRot.x;
-						transformComponent->Rotation.y += deltaRot.y;
-						transformComponent->Rotation.z += deltaRot.z;
+						transformComponent->Rotation += deltaRot;
 						transformComponent->Scale = scale;
 					}
 				}
@@ -994,15 +992,19 @@ namespace SmolEngine
 		ImGui::Separator();
 		ImGui::NewLine();
 
-		ImGui::Extensions::InputFloat("Mass", component->CreateInfo.Mass);
-		ImGui::Extensions::InputFloat("Density", component->CreateInfo.Density);
+		if (component->CreateInfo.StateIndex == 0)
+		{
+			ImGui::Extensions::InputFloat("Mass", component->CreateInfo.Mass);
+		}
+
 		ImGui::Extensions::InputFloat("Friction", component->CreateInfo.Friction);
 		ImGui::Extensions::InputFloat("Restitution", component->CreateInfo.Restitution);
 		ImGui::Extensions::InputFloat("Linear Damping", component->CreateInfo.LinearDamping);
 		ImGui::Extensions::InputFloat("Angular Damping", component->CreateInfo.AngularDamping);
 		ImGui::Extensions::InputFloat("Rolling Friction", component->CreateInfo.RollingFriction);
 		ImGui::Extensions::InputFloat("Spinning Friction", component->CreateInfo.SpinningFriction);
-		ImGui::Extensions::InputFloat3Base("Local Inertia", component->CreateInfo.LocalInertia);
+
+		ImGui::NewLine();
 	}
 
 	void EditorLayer::DrawComponents()
@@ -1198,7 +1200,7 @@ namespace SmolEngine
 			{
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("RigidBody 2D"))
+				if (ImGui::MenuItem("RigidBody (2D)"))
 				{
 					auto comp = m_World->GetActiveScene()->AddComponent<Rigidbody2DComponent>(m_SelectedActor);
 					ComponentHandler::ValidateBody2DComponent(comp, m_SelectedActor);
