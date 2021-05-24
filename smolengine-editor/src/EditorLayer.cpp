@@ -320,7 +320,10 @@ namespace SmolEngine
 					std::string path;
 					std::filesystem::path* p = (std::filesystem::path*)payload->Data;
 					if (FileExtensionCheck(p, ".s_scene", path))
+					{
 						m_World->LoadScene(path);
+						m_SelectedActor = nullptr;
+					}
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -371,10 +374,11 @@ namespace SmolEngine
 					{
 						glm::vec3 tranlation, rotation, scale;
 						Utils::DecomposeTransform(transform, tranlation, rotation, scale);
-						glm::vec3 deltaRot = rotation - transformComponent->Rotation;
 
 						transformComponent->WorldPos = tranlation;
-						transformComponent->Rotation += deltaRot;
+						transformComponent->Rotation.x = rotation.x;
+						transformComponent->Rotation.y = rotation.y;
+						transformComponent->Rotation.z = rotation.z;
 						transformComponent->Scale = scale;
 					}
 				}
@@ -1022,7 +1026,10 @@ namespace SmolEngine
 		if (ImGui::CollapsingHeader("Tranform"))
 		{
 			ImGui::NewLine();
-			DrawTransform(m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor));
+			auto trans = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
+			ImGui::Extensions::InputFloat3("Translation", trans->WorldPos);
+			ImGui::Extensions::InputFloat3("Rotation", trans->Rotation);
+			ImGui::Extensions::InputFloat3("Scale", trans->Scale, 1.0f);
 		}
 
 		for (uint32_t i = 0; i < m_SelectedActor->GetComponentsCount(); ++i)

@@ -6,6 +6,7 @@
 
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/Components/Singletons/Bullet3WorldSComponent.h"
+#include "ECS/Systems/JobsSystem.h"
 
 #include <Frostium3D/DebugRenderer.h>
 #include <btBulletDynamicsCommon.h>
@@ -91,24 +92,31 @@ namespace SmolEngine
 
 	void PhysicsSystem::OnUpdate(float delta)
 	{
-		constexpr float simTime = 1.0f / 60.0f;
+		constexpr float simTime = 1.0f / 144.0f;
 		m_State->World->stepSimulation(simTime, 10);
 	}
 
 	void PhysicsSystem::UpdateTransforms()
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
-
 		const auto& dynamic_group = m_World->m_CurrentRegistry->view<TransformComponent, RigidbodyComponent>();
+
+		JobsSystem::BeginSubmition();
 		for (const auto& entity : dynamic_group)
 		{
-			const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, RigidbodyComponent>(entity);
-			btRigidBody* body = rigidbodyComponent.Body.m_Body;
-			btTransform btTransf;
-			body->getMotionState()->getWorldTransform(btTransf);
+			auto& transform = dynamic_group.get<TransformComponent>(entity);
+			const auto& rigidbodyComponent = dynamic_group.get<RigidbodyComponent>(entity);
 
-			RigidActor::BulletToGLMTransform(&btTransf, transform.WorldPos, transform.Rotation);
+			JobsSystem::Schedule([&transform, &rigidbodyComponent]()
+			{
+				btRigidBody* body = rigidbodyComponent.Body.m_Body;
+				btTransform btTransf;
+				body->getMotionState()->getWorldTransform(btTransf);
+
+				RigidActor::BulletToGLMTransform(&btTransf, transform.WorldPos, transform.Rotation);
+			});
 		}
+		JobsSystem::EndSubmition();
 	}
 
 	void PhysicsSystem::AttachBodyToActiveScene(RigidActor* body)

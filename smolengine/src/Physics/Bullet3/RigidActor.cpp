@@ -4,6 +4,7 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <Frostium3D/Utils/Utils.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -15,14 +16,10 @@ namespace SmolEngine
 	void RigidActor::GLMToBulletTransform(const glm::vec3& pos, const glm::vec3& rot, btTransform* transform)
 	{
 		glm::mat4 model;
-		{
-			const glm::mat4 rotation = glm::orientate4(rot);
-			model = glm::translate(glm::mat4(1.0f), pos) * rotation * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-		}
+		Utils::ComposeTransform(pos, rot, { 1,1, 1 }, model);
 
 		transform->setIdentity();
 		transform->setFromOpenGLMatrix(glm::value_ptr(model));
-
 	}
 
 	void RigidActor::BulletToGLMTransform(const btTransform* transform, glm::vec3& pos, glm::vec3& rot)
@@ -70,11 +67,12 @@ namespace SmolEngine
 
 	void RigidActor::CreateCapsule(BodyCreateInfo* info)
 	{
+		m_Shape = new btCapsuleShape(info->CapsuleShapeInfo.Radius, info->CapsuleShapeInfo.Height);
 	}
 
 	void RigidActor::CreateSphere(BodyCreateInfo* info)
 	{
-
+		m_Shape = new btSphereShape(info->SphereShape.Radius);
 	}
 
 	void RigidActor::CreateBox(BodyCreateInfo* info)
