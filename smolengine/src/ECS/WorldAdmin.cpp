@@ -100,10 +100,7 @@ namespace SmolEngine
 
 	void WorldAdmin::OnEndFrame()
 	{
-#ifdef SMOLENGINE_EDITOR
-		if(m_State->m_InPlayMode)
-			PhysicsSystem::DebugDraw();
-#endif
+
 	}
 
 	void WorldAdmin::OnEndWorld()
@@ -161,6 +158,13 @@ namespace SmolEngine
 		SceneStateComponent* sceneState = activeScene->GetSceneState();
 		entt::registry& registry = activeScene->m_SceneData.m_Registry;
 
+		// Clear mesh map
+		m_State->m_MeshMap.clear();
+
+		// Updates renderer states
+		Renderer::SetRenderingState(&sceneState->PipelineState.m_RendererState);
+		Renderer::SetSceneState(&sceneState->PipelineState.m_SceneState);
+
 		// Recrates actor's name & id sets
 		{
 			activeScene->m_State->ActorIDSet.clear();
@@ -210,7 +214,7 @@ namespace SmolEngine
 			MaterialCreateInfo defMat = {};
 			defMat.SetRoughness(1.0f);
 			defMat.SetMetalness(0.2f);
-			MaterialLibrary::GetSinglenton()->Add(&defMat);
+			MaterialLibrary::GetSinglenton()->Add(&defMat, "default material");
 			Renderer::UpdateMaterials();
 		}
 
@@ -353,7 +357,7 @@ namespace SmolEngine
 					{
 						if (lib->Load(path, materialCI))
 						{
-							uint32_t matID = lib->Add(&materialCI);
+							uint32_t matID = lib->Add(&materialCI, path);
 							materialData.ID = matID;
 						}
 					}

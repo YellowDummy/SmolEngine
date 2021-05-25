@@ -2,6 +2,7 @@
 #include "ECS/Systems/RendererSystem.h"
 
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
+#include "ECS/Components/Singletons/Bullet3WorldSComponent.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/UISystem.h"
 
@@ -9,6 +10,8 @@
 
 #include <Frostium3D/Renderer.h>
 #include <Frostium3D/Renderer2D.h>
+#include <Frostium3D/DebugRenderer.h>
+#include <btBulletDynamicsCommon.h>
 
 namespace SmolEngine
 {
@@ -137,9 +140,57 @@ namespace SmolEngine
 
 	}
 
-	void RendererSystem::DebugDraw()
+	void RendererSystem::DebugDraw(const DebugDrawState* state)
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
+
+		DebugRenderer::BeginDebug();
+		{
+			if (state->bDefaultDraw)
+			{
+				const auto& dynamic_group = m_World->m_CurrentRegistry->view<TransformComponent, RigidbodyComponent>();
+				for (const auto& entity : dynamic_group)
+				{
+					const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, RigidbodyComponent>(entity);
+					BodyCreateInfo& info = rigidbodyComponent.CreateInfo;
+
+					switch (info.eShape)
+					{
+					case RigidBodyShape::Box:
+					{
+						DebugRenderer::DrawBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1), transform.WorldPos, transform.Rotation,
+							glm::vec3(info.BoxShapeInfo.X, info.BoxShapeInfo.Y, info.BoxShapeInfo.Z));
+						break;
+					}
+					case RigidBodyShape::Sphere:
+					{
+						DebugRenderer::DrawSphere(info.SphereShape.Radius, transform.WorldPos, transform.Rotation, glm::vec3(1.0f));
+						break;
+					}
+					case RigidBodyShape::Capsule:
+					{
+						DebugRenderer::DrawCapsule(info.CapsuleShapeInfo.Radius, info.CapsuleShapeInfo.Height / 2.0f, 1, transform.WorldPos, transform.Rotation, glm::vec3(1.0f));
+						break;
+					}
+					}
+				}
+			}
+
+			if (state->bWireframes)
+			{
+				const auto& group = reg->view<TransformComponent, MeshComponent>();
+				for (const auto& entity : group)
+				{
+					const auto& [transform, mesh_component] = group.get<TransformComponent, MeshComponent>(entity);
+					if (mesh_component.bShow && mesh_component.Mesh)
+						DebugRenderer::DrawWireframes(transform.WorldPos, transform.Rotation, transform.Scale, mesh_component.Mesh.get());
+				}
+			}
+
+			if (state->bBullet3Draw)
+				Bullet3WorldSComponent::Get()->World->debugDrawWorld();
+		}
+		DebugRenderer::EndDebug();
 
 	}
 }

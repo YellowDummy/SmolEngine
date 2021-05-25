@@ -62,12 +62,11 @@ namespace Frostium
 
 	private:
 
+		std::unordered_map<MaterialTexture, std::string>  Textures;
 		float                                             Metallic = 1.0f;
 		float                                             Albedro = 1.0f;
 		float                                             Roughness = 1.0f;
 		bool                                              Used = false;
-					                                      
-		std::unordered_map<MaterialTexture, std::string>  Textures;
 
 	private:
 
@@ -88,7 +87,7 @@ namespace Frostium
 		MaterialLibrary();
 		~MaterialLibrary();
 
-		uint32_t Add(MaterialCreateInfo* infoCI, const std::string& path = "");
+		uint32_t Add(MaterialCreateInfo* infoCI, const std::string& name);
 		bool Delete(const std::string& name);
 		void Reset();
 
@@ -110,7 +109,6 @@ namespace Frostium
 
 		// Helpers
 		uint32_t AddTexture(const std::string& path, uint32_t& useTetxure);
-		size_t GetHash(MaterialCreateInfo* infoCI);
 
 	private:
 		static MaterialLibrary*               s_Instance;

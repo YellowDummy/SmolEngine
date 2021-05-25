@@ -342,9 +342,6 @@
     <ClInclude Include="include\ECS\Components\BehaviourComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\Components\Rigidbody2DComponent.h">
-      <Filter>include\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="include\ECS\Components\CameraComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
@@ -364,6 +361,9 @@
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\PointLightComponent.h">
+      <Filter>include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Components\Rigidbody2DComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Components\RigidbodyComponent.h">

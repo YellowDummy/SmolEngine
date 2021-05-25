@@ -15,7 +15,7 @@ namespace ImGui
 		static void Text(const std::string& label, const std::string& text, float pos = 130.0f, const std::string& additionalID = "None");
 
 		// Float
-		static void InputFloat(const std::string& label, float& value, float pos = 130.0f, const std::string& additionalID = "None");
+		static bool InputFloat(const std::string& label, float& value, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 		static void InputFloat2(const std::string& label, glm::vec2& vec2, float resetValue = 0.0f,
 			float width = 130.0f, bool enableButtons = true, const std::string& additionalID = "None");
 		static void InputFloat3(const std::string& label, glm::vec3& vec3, float resetValue = 0.0f,
@@ -43,7 +43,7 @@ namespace ImGui
 		static void Texture(const std::string& label, void* textureID, float pos = 130.0f, const std::string& additionalID = "None");
 
 		// Checkbox
-		static bool CheckBox(const std::string& label, bool& value, float pos = 130.0f, const std::string& additionalID = "None");
+		static bool CheckBox(const std::string& label, bool& value, float check_box_pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// Combo
 		static void Combo(const std::string& label, const char* comboText, int& value, float pos = 130.0f, const std::string& additionalID = "None");

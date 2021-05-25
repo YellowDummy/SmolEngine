@@ -2,6 +2,7 @@
 
 #include "SmolEngineCore.h"
 #include "FileManager.h"
+#include "RendererPanel.h"
 #include "Core/Layer.h"
 #include "Core/EditorConsole.h"
 #include "MaterialLibraryInterface.h"
@@ -57,6 +58,7 @@ namespace SmolEngine
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnBeginFrame(DeltaTime deltaTime) override;
+		void OnEndFrame(DeltaTime deltaTime) override;
 		void OnUpdate(DeltaTime deltaTime) override;
 		void OnEvent(Event& event) override;
 		void OnImGuiRender() override;
@@ -116,6 +118,7 @@ namespace SmolEngine
 		WorldAdmin*                                 m_World = nullptr;
 		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
+		RendererPanel*                              m_RendererPanel = nullptr;
 		Actor*                                      m_SelectedActor = nullptr;
 		MaterialLibraryInterface*                   m_MaterialLibraryInterface = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;

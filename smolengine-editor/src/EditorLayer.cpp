@@ -36,6 +36,7 @@ namespace SmolEngine
 	static bool showConsole = true;
 	static bool showGameView = false;
 	static bool showMaterialLibrary = false;
+	static bool showRendererPanel = true;
 
 	void EditorLayer::LoadAssets()
 	{
@@ -56,6 +57,7 @@ namespace SmolEngine
 	{
 		LoadAssets();
 
+		m_RendererPanel = new RendererPanel();
 		m_MaterialLibraryInterface = new MaterialLibraryInterface(this);
 		m_Console = new EditorConsole();
 		m_FileManager = new FileManager();
@@ -141,6 +143,11 @@ namespace SmolEngine
 		m_World->SetBeginSceneInfo(&bSeneInfo);
 	}
 
+	void EditorLayer::OnEndFrame(DeltaTime deltaTime)
+	{
+		RendererSystem::DebugDraw(m_RendererPanel->GetDebugState());
+	}
+
 	void EditorLayer::OnUpdate(DeltaTime deltaTime)
 	{
 
@@ -194,6 +201,7 @@ namespace SmolEngine
 		DrawToolsBar();
 		DrawSceneView(true);
 
+		m_RendererPanel->OnUpdate(showRendererPanel);
 		m_Console->Update(showConsole);
 		m_FileManager->Update();
 		m_MaterialLibraryInterface->Update(showMaterialLibrary);
@@ -271,19 +279,16 @@ namespace SmolEngine
 			if (ImGui::BeginMenu("Window"))
 			{
 				if (ImGui::MenuItem("Material Library"))
-				{
 					showMaterialLibrary = true;
-				}
 
 				if (ImGui::MenuItem("Console"))
-				{
 					showConsole = true;
-				}
+
+				if (ImGui::MenuItem("Renderer Settings"))
+					showRendererPanel = true;
 
 				if (ImGui::MenuItem("Content Broser"))
-				{
 					m_FileManager->Open();
-				}
 
 				ImGui::EndMenu();
 			}
@@ -323,6 +328,35 @@ namespace SmolEngine
 					{
 						m_World->LoadScene(path);
 						m_SelectedActor = nullptr;
+					}
+
+					if (FileExtensionCheck(p, ".gltf", path))
+					{
+						std::string name = "DefaultActor" + std::to_string(m_World->GetActiveScene()->GetSceneState()->Actors.size());
+						Actor* actor = m_World->GetActiveScene()->CreateActor(name);
+						MeshComponent* mesh = actor->AddComponent<MeshComponent>();
+						TransformComponent* transform = actor->GetComponent<TransformComponent>();
+
+						{
+							float rayDistance = 20.0f;
+							float x =  ImGui::GetMousePos().x;
+							float y = ImGui::GetMousePos().y  - (m_SceneViewPort.y / 2.7f);
+
+							glm::vec3 startPos = m_Camera->GetPosition();
+							glm::mat4 viewProj = m_Camera->GetViewProjection();
+
+							transform->WorldPos = Utils::CastRay(startPos, glm::vec2(x, y), m_SceneViewPort.x, m_SceneViewPort.y, rayDistance, viewProj);
+						}
+
+						if (mesh)
+						{
+							ComponentHandler::ValidateMeshComponent(mesh, path);
+							m_SelectedActor = actor;
+						}
+						else
+						{
+							m_SelectedActor = nullptr;
+						}
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -702,7 +736,7 @@ namespace SmolEngine
 	{
 		ImGui::Begin("Hierarchy");
 		{
-			ImGui::SetWindowFontScale(0.9f);
+			ImGui::SetWindowFontScale(0.8f);
 			ImGui::Image(m_SearchButton.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::SameLine();
 
@@ -741,7 +775,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Empty Actor"))
 					{
-						ss << "EmptyActor" << state->Actors.size();
+						ss << "DefaultActor" << state->Actors.size();
 						m_SelectedActor = m_World->GetActiveScene()->CreateActor(ss.str());
 					}
 
@@ -971,26 +1005,26 @@ namespace SmolEngine
 	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)
 	{
 		ImGui::Extensions::Combo("Type", "Dynamic\0Static\0", component->CreateInfo.StateIndex);
-		ImGui::Extensions::Combo("Shape", "Sphere\0Capsule\0Box\0Custom\0", component->CreateInfo.ShapeIndex);
+		ImGui::Extensions::Combo("Shape", "Box\0Sphere\0Capsule\0Custom\0", component->CreateInfo.ShapeIndex);
 
 		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
 
 		if (component->CreateInfo.ShapeIndex == 0)
 		{
-			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
+			ImGui::Extensions::InputFloat("X", component->CreateInfo.BoxShapeInfo.X);
+			ImGui::Extensions::InputFloat("Y", component->CreateInfo.BoxShapeInfo.Y);
+			ImGui::Extensions::InputFloat("Z", component->CreateInfo.BoxShapeInfo.Z);
 		}
 
 		if (component->CreateInfo.ShapeIndex == 1)
 		{
-			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
-			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
 		}
 
 		if (component->CreateInfo.ShapeIndex == 2)
 		{
-			ImGui::Extensions::InputFloat("Side X", component->CreateInfo.BoxShapeInfo.X);
-			ImGui::Extensions::InputFloat("Side Y", component->CreateInfo.BoxShapeInfo.Y);
-			ImGui::Extensions::InputFloat("Side Z", component->CreateInfo.BoxShapeInfo.Z);
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
+			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
 		}
 
 		ImGui::Separator();

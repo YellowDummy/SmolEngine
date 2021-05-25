@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ECS/ComponentHandler.h"
 #include "ECS/ComponentsCore.h"
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/Systems/PhysicsSystem.h"
 
 #include <Frostium3D/Renderer.h>
@@ -8,11 +9,53 @@
 
 namespace SmolEngine
 {
-	bool ComponentHandler::ValidateMeshComponent(MeshComponent* comp, const std::string& filePath)
+	static std::atomic<bool>* flag = new std::atomic<bool>(false);
+
+	bool ComponentHandler::ValidateMeshComponent(MeshComponent* comp, const std::string& filePath, bool pooling)
 	{
 		if (comp)
 		{
-			Ref<Mesh> mesh = std::make_shared<Mesh>();
+			Ref<Mesh> mesh = nullptr;
+			{
+				if (pooling)
+				{
+					WorldAdminStateSComponent* wState = WorldAdminStateSComponent::GetSingleton();
+					size_t hash = wState->m_Hash(filePath);
+
+					auto& it = wState->m_MeshMap.find(hash);
+					{
+						if (it != wState->m_MeshMap.end())
+						{
+							mesh = it->second;
+							uint32_t size = static_cast<uint32_t>(mesh->GetChilds().size()) + 1;
+							comp->MaterialsData.resize(size);
+							comp->Mesh = mesh;
+							comp->ModelPath = filePath;
+
+							return true;
+						}
+						else
+						{
+							mesh = std::make_shared<Mesh>();
+
+							{
+								while (flag->exchange(true, std::memory_order_relaxed));
+								std::atomic_thread_fence(std::memory_order_acquire);
+
+								wState->m_MeshMap[hash] = mesh;
+
+								std::atomic_thread_fence(std::memory_order_release);
+								flag->store(false, std::memory_order_relaxed);
+							}
+						}
+					}
+
+
+				}
+				else
+					mesh = std::make_shared<Mesh>();
+			}
+
 			Mesh::Create(filePath, mesh.get());
 			if (mesh->GetVertexCount() > 0)
 			{
@@ -20,6 +63,7 @@ namespace SmolEngine
 				comp->MaterialsData.resize(size);
 				comp->Mesh = mesh;
 				comp->ModelPath = filePath;
+
 				return true;
 			}
 		}
@@ -46,7 +90,7 @@ namespace SmolEngine
 			MaterialCreateInfo matInfo = {};
 			if (lib->Load(material_path, matInfo))
 			{
-				uint32_t id = lib->Add(&matInfo);
+				uint32_t id = lib->Add(&matInfo, material_path);
 				Renderer::UpdateMaterials();
 
 				comp->MaterialsData[index].Path = material_path;

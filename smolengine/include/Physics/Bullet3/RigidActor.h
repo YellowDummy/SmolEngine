@@ -14,16 +14,16 @@ namespace SmolEngine
 
 	enum class RigidBodyShape: int
 	{
+		Box,
 		Sphere,
 		Capsule,
-		Box,
 		Custom
 	};
 
 	struct CapsuleShapeCreateInfo
 	{
 		float                      Radius = 1.0f;
-		float                      Height = 11.0f;
+		float                      Height = 1.0f;
 	};
 
 	struct BoxShapeCreateInfo

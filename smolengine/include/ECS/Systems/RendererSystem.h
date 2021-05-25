@@ -15,6 +15,13 @@ namespace SmolEngine
 	struct ClearInfo;
 	class Framebuffer;
 
+	struct DebugDrawState
+	{
+		bool bDefaultDraw = true;
+		bool bBullet3Draw = false;
+		bool bWireframes = false;
+	};
+
 	class RendererSystem
 	{
 	private:
@@ -23,7 +30,7 @@ namespace SmolEngine
 		static void EndSubmit();
 		static void OnUpdate();
 
-		static void DebugDraw();
+		static void DebugDraw(const DebugDrawState* state);
 		static void CheckLayerIndex(int& index);
 
 	private:

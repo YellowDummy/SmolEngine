@@ -13,6 +13,8 @@
 
 namespace SmolEngine
 {
+	class Mesh;
+
 	struct WorldAdminStateSComponent
 	{
 		WorldAdminStateSComponent();
@@ -30,6 +32,7 @@ namespace SmolEngine
 		uint32_t                                              m_ActiveSceneID = 0;
 		BeginSceneInfo                                        m_SceneInfo{};
 		Scene                                                 m_Scenes[2];
+		std::unordered_map<size_t, Ref<Mesh>>                 m_MeshMap;
 		std::hash<std::string_view>                           m_Hash{};
 	};
 }

@@ -124,13 +124,4 @@ namespace SmolEngine
 		btRigidBody* bd = body->m_Body;
 		m_State->World->addRigidBody(bd);
 	}
-
-	void PhysicsSystem::DebugDraw()
-	{
-		DebugRenderer::BeginDebug();
-		{
-			m_State->World->debugDrawWorld();
-		}
-		DebugRenderer::EndDebug();
-	}
 }

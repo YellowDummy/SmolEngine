@@ -18,7 +18,7 @@ namespace SmolEngine
 	public:
 
 		// MeshComponent
-		static bool ValidateMeshComponent(MeshComponent* comp, const std::string& filePath);
+		static bool ValidateMeshComponent(MeshComponent* comp, const std::string& filePath, bool pooling = true);
 		static bool SetMeshMaterial(MeshComponent* comp, Mesh* mesh, const std::string& material_path);
 
 		//Texture

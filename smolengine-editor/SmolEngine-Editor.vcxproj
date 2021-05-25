@@ -99,7 +99,9 @@
     <ClInclude Include="include\EditorLayer.h" />
     <ClInclude Include="include\FileBrowser\ImFileDialog.h" />
     <ClInclude Include="include\FileManager.h" />
+    <ClInclude Include="include\ImGuiExtension.h" />
     <ClInclude Include="include\MaterialLibraryInterface.h" />
+    <ClInclude Include="include\RendererPanel.h" />
     <ClInclude Include="include\Scripts\BasePlayerScript.h" />
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +109,9 @@
     <ClCompile Include="src\EditorLayer.cpp" />
     <ClCompile Include="src\FileBrowser\ImFileDialog.cpp" />
     <ClCompile Include="src\FileManager.cpp" />
+    <ClCompile Include="src\ImGuiExtension.cpp" />
     <ClCompile Include="src\MaterialLibraryInterface.cpp" />
+    <ClCompile Include="src\RendererPanel.cpp" />
     <ClCompile Include="src\Scripts\BasePlayerScript.cpp" />
   </ItemGroup>
   <ItemGroup>

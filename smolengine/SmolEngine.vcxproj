@@ -114,7 +114,6 @@
     <ClInclude Include="include\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\BaseComponent.h" />
     <ClInclude Include="include\ECS\Components\BehaviourComponent.h" />
-    <ClInclude Include="include\ECS\Components\Rigidbody2DComponent.h" />
     <ClInclude Include="include\ECS\Components\CameraComponent.h" />
     <ClInclude Include="include\ECS\Components\CanvasComponent.h" />
     <ClInclude Include="include\ECS\Components\DirectionalLightComponent.h" />
@@ -122,6 +121,7 @@
     <ClInclude Include="include\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\MeshComponent.h" />
     <ClInclude Include="include\ECS\Components\PointLightComponent.h" />
+    <ClInclude Include="include\ECS\Components\Rigidbody2DComponent.h" />
     <ClInclude Include="include\ECS\Components\RigidbodyComponent.h" />
     <ClInclude Include="include\ECS\Components\SceneStateComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\AudioEngineSComponent.h" />

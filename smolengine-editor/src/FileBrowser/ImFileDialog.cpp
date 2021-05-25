@@ -1209,22 +1209,24 @@ namespace ifd {
 	}
 	void FileDialog::m_renderPopups()
 	{
-		bool openAreYouSureDlg = false, openNewFileDlg = false, openNewDirectoryDlg = false;
-		if (ImGui::BeginPopupContextItem("##dir_context")) {
-			if (ImGui::Selectable("New file"))
-				openNewFileDlg = true;
-			if (ImGui::Selectable("New directory"))
-				openNewDirectoryDlg = true;
-			if (m_selectedFileItem != -1 && ImGui::Selectable("Delete"))
+		bool openAreYouSureDlg = false, createNewMaterial = false;
+		if (ImGui::BeginPopupContextItem("##dir_context")) 
+		{
+			if (ImGui::Selectable("new material"))
+				createNewMaterial = true;
+
+			if (m_selectedFileItem != -1 && ImGui::Selectable("delete"))
 				openAreYouSureDlg = true;
+
 			ImGui::EndPopup();
 		}
+
 		if (openAreYouSureDlg)
 			ImGui::OpenPopup("Are you sure?##delete");
-		if (openNewFileDlg)
+
+		if (createNewMaterial)
 			ImGui::OpenPopup("Enter file name##newfile");
-		if (openNewDirectoryDlg)
-			ImGui::OpenPopup("Enter directory name##newdir");
+
 		if (ImGui::BeginPopupModal("Are you sure?##delete")) {
 			if (m_selectedFileItem >= m_content.size() || m_content.size() == 0)
 				ImGui::CloseCurrentPopup();
@@ -1243,6 +1245,7 @@ namespace ifd {
 			}
 			ImGui::EndPopup();
 		}
+
 		if (ImGui::BeginPopupModal("Enter file name##newfile")) {
 			ImGui::PushItemWidth(250.0f);
 			ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
