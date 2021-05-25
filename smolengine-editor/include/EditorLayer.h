@@ -40,7 +40,8 @@ namespace SmolEngine
 	{
 		None = 0,
 		Inspector,
-		Actions
+		Actions,
+		MaterialLib
 	};
 
 	class EditorLayer: public Layer

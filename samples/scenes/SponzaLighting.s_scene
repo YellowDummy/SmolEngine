@@ -1,0 +1,273 @@
+value0: 6
+value1: 0
+value2: 1
+value3: 2
+value4: 3
+value5: 4
+value6: 5
+value7: 1048575
+value8: 5
+value9: 1
+value10:
+  value0: 0
+  value1: Sponza
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
+value11: 2
+value12:
+  value0: 1
+  value1: DirLight
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
+value13: 3
+value14:
+  value0: 2
+  value1: PointLight
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
+value15: 4
+value16:
+  value0: 3
+  value1: GroundCollider
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 3
+value17: 5
+value18:
+  value0: 4
+  value1: TestCube
+  value2: Default
+  value3: true
+  value4: false
+  value5: 0
+  value6: 4
+value19: 0
+value20: 0
+value21: 0
+value22: 0
+value23: 0
+value24: 0
+value25: 5
+value26: 1
+value27:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 0.99999988079071045
+  value5: 0.99999988079071045
+  value6: 5.6289553642272949
+  value7: 5.5153160095214844
+  value8: -13.184610366821289
+  value9: 1
+value28: 2
+value29:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value30: 3
+value31:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 11.115365982055664
+  value7: 10.242195129394531
+  value8: -10.311619758605957
+  value9: 1
+value32: 4
+value33:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 5.4546308517456055
+  value8: -12.728936195373535
+  value9: 1
+value34: 5
+value35:
+  value0: -0.60501945018768311
+  value1: -0.36274835467338562
+  value2: -0.99055492877960205
+  value3: 0.20000000298023224
+  value4: 0.20000000298023224
+  value5: 0.20000000298023224
+  value6: 7.3923039436340332
+  value7: 9.1564340591430664
+  value8: -13.070635795593262
+  value9: 1
+value36: 0
+value37: 0
+value38: 2
+value39: 1
+value40:
+  value0:
+    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\vase.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\vase_plant.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\plant.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\green_curt.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\green_curt_2.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt_2.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt_2.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\red_curt_2.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\red_curt.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\vase_2.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\chain.s_material
+    - value0: ""
+    - value0: C:\Dev\SmolEngine\samples\materials\flag.s_material
+    - value0: C:\Dev\SmolEngine\samples\materials\roof.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: C:\Dev\sponza.gltf
+  value5: 2
+value41: 5
+value42:
+  value0:
+    - value0: ""
+  value1: false
+  value2: true
+  value3: 2
+  value4: C:\Dev\SmolEngine\resources\Models\box.gltf
+  value5: 3
+value43: 1
+value44: 2
+value45:
+  value0: 1
+  value1: 1
+  value2: 1
+  value3: 1
+  value4: 12
+  value5: 58
+  value6: -13
+  value7: 0
+  value8: 0.5
+  value9: 1
+  value10: 350
+  value11: 1
+  value12: 45
+  value13: 1
+  value14: 1
+  value15: 1
+  value16: 2
+value46: 1
+value47: 3
+value48:
+  value0: 1
+  value1: 1
+  value2: 1
+  value3: 1
+  value4: 11.115365982055664
+  value5: 10.242195129394531
+  value6: -10.311619758605957
+  value7: 1
+  value8: 1
+  value9: 3
+  value10: 1
+  value11: 0
+  value12: 2
+value49: 1
+value50: 0
+value51:
+  value0: 0
+  value1: 5
+  value2: C:\Dev\SmolEngine\samples\scenes\SponzaLighting.s_scene
+  value3: SponzaLighting
+  value4:
+    value0: true
+    value1: false
+    value2: true
+    value3: true
+    value4: 1
+    value5: 1
+  value5:
+    - value0: 1
+    - value0: 2
+    - value0: 3
+    - value0: 4
+    - value0: 5
+value52: 2
+value53: 4
+value54:
+  value0:
+    value0: 0
+    value1: 1
+    value2: 0
+    value3: 3
+    value4: 1
+    value5: 0.5
+    value6: 0.5
+    value7: 0.40000000596046448
+    value8: 0
+    value9: 0
+    value10: 0.10000000149011612
+    value11: 0.10000000149011612
+    value12: 1
+    value13: 20
+    value14: 0.10000000149011612
+    value15: 6
+    value16: 1
+    value17: 1
+    value18: 1
+    value19: 0
+    value20: 0
+  value1: 2
+value55: 5
+value56:
+  value0:
+    value0: 0
+    value1: 0
+    value2: 0
+    value3: 4
+    value4: 4
+    value5: 0.5
+    value6: 0.5
+    value7: 1
+    value8: 0
+    value9: 0
+    value10: 0.10000000149011612
+    value11: 0.10000000149011612
+    value12: 1
+    value13: 0.20000000298023224
+    value14: 0.20000000298023224
+    value15: 0.20000000298023224
+    value16: 1
+    value17: 1
+    value18: 1
+    value19: 0
+    value20: 0
+  value1: 2

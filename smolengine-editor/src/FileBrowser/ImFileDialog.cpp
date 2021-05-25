@@ -524,6 +524,16 @@ namespace ifd {
 		m_clearIcons();
 	}
 
+	void FileDialog::SetMaterialCreateCallback(const std::function<void(const std::string&, bool)>& func)
+	{
+		m_MatCreateSelectCallback = func;
+	}
+
+	void FileDialog::SetFileDeleteCallback(const std::function<void(const std::string&)>& func)
+	{
+		m_FileDeleteCallback = func;
+	}
+
 	void FileDialog::RemoveFavorite(const std::string& path)
 	{
 		auto itr = std::find(m_favorites.begin(), m_favorites.end(), m_currentDirectory.u8string());
@@ -1181,8 +1191,18 @@ namespace ifd {
 					std::error_code ec;
 					bool isDir = std::filesystem::is_directory(entry.Path, ec);
 
-					if (ImGui::IsMouseDoubleClicked(0)) {
-						if (isDir) {
+					if (ImGui::IsMouseDoubleClicked(0)) 
+					{
+						// is material
+						if (entry.Path.extension().u8string() == ".s_material")
+						{
+							std::ifstream file(entry.Path);
+							bool is_empty = file.peek() == std::ifstream::traits_type::eof();
+							m_MatCreateSelectCallback(std::forward<std::string>(entry.Path.u8string()), is_empty);
+						}
+
+						if (isDir) 
+						{
 							m_setDirectory(entry.Path);
 							break;
 						}
@@ -1209,11 +1229,15 @@ namespace ifd {
 	}
 	void FileDialog::m_renderPopups()
 	{
-		bool openAreYouSureDlg = false, createNewMaterial = false;
+		bool openAreYouSureDlg = false, createNewFile = false, createNewMaterial = false;
+
 		if (ImGui::BeginPopupContextItem("##dir_context")) 
 		{
 			if (ImGui::Selectable("new material"))
-				createNewMaterial = true;
+			{
+				m_popUpFlags = popupFlags::material;
+				createNewFile = true;
+			}
 
 			if (m_selectedFileItem != -1 && ImGui::Selectable("delete"))
 				openAreYouSureDlg = true;
@@ -1224,8 +1248,10 @@ namespace ifd {
 		if (openAreYouSureDlg)
 			ImGui::OpenPopup("Are you sure?##delete");
 
-		if (createNewMaterial)
+		if (createNewFile)
+		{
 			ImGui::OpenPopup("Enter file name##newfile");
+		}
 
 		if (ImGui::BeginPopupModal("Are you sure?##delete")) {
 			if (m_selectedFileItem >= m_content.size() || m_content.size() == 0)
@@ -1233,10 +1259,15 @@ namespace ifd {
 			else {
 				const FileData& data = m_content[m_selectedFileItem];
 				ImGui::TextWrapped("Are you sure you want to delete %s?", data.Path.filename().u8string().c_str());
-				if (ImGui::Button("Yes")) {
+				if (ImGui::Button("Yes")) 
+				{
+					if (m_FileDeleteCallback != nullptr)
+						m_FileDeleteCallback(std::forward<std::string>(data.Path.u8string()));
+
 					std::error_code ec;
 					std::filesystem::remove_all(data.Path, ec);
 					m_setDirectory(m_currentDirectory, false); // refresh
+
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::SameLine();
@@ -1251,39 +1282,38 @@ namespace ifd {
 			ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
 			ImGui::PopItemWidth();
 
-			if (ImGui::Button("OK")) {
-				std::ofstream out((m_currentDirectory / std::string(m_newEntryBuffer)).string());
-				out << "";
-				out.close();
+			if (ImGui::Button("OK")) 
+			{
+				if (m_popUpFlags == popupFlags::none)
+				{
+					std::ofstream out((m_currentDirectory / std::string(m_newEntryBuffer)).string());
+					out << "";
+					out.close();
+				}
 
-				m_setDirectory(m_currentDirectory, false); // refresh
-				m_newEntryBuffer[0] = 0;
+				if (m_popUpFlags == popupFlags::material)
+				{
+					std::string str = std::string(m_newEntryBuffer);
+					str.erase(remove(str.begin(), str.end(), ' '), str.end());
+					str = str + ".s_material";
 
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel")) {
-				m_newEntryBuffer[0] = 0;
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-		if (ImGui::BeginPopupModal("Enter directory name##newdir")) {
-			ImGui::PushItemWidth(250.0f);
-			ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
-			ImGui::PopItemWidth();
+					std::ofstream out((m_currentDirectory / str).string());
+					out << "";
+					out.close();
 
-			if (ImGui::Button("OK")) {
-				std::error_code ec;
-				std::filesystem::create_directory(m_currentDirectory / std::string(m_newEntryBuffer), ec);
+					if (m_MatCreateSelectCallback != nullptr)
+						m_MatCreateSelectCallback(std::forward<std::string>(str), true);
+				}
+
 				m_setDirectory(m_currentDirectory, false); // refresh
 				m_newEntryBuffer[0] = 0;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel")) {
-				ImGui::CloseCurrentPopup();
+			if (ImGui::Button("Cancel"))
+			{
 				m_newEntryBuffer[0] = 0;
+				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
 		}

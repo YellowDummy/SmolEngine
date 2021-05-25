@@ -34,6 +34,8 @@ namespace ifd {
 		inline const std::vector<std::filesystem::path>& GetResults() { return m_result; }
 
 		void Close();
+		void SetMaterialCreateCallback(const std::function<void(const std::string&, bool)>& func);
+		void SetFileDeleteCallback(const std::function<void(const std::string&)>& func);
 
 		void RemoveFavorite(const std::string& path);
 		void AddFavorite(const std::string& path);
@@ -88,9 +90,18 @@ namespace ifd {
 		char m_searchBuffer[128];
 		std::vector<std::string> m_favorites;
 		bool m_calledOpenPopup;
+		std::function<void(const std::string&, bool)> m_MatCreateSelectCallback;
+		std::function<void(const std::string&)> m_FileDeleteCallback;
 		std::stack<std::filesystem::path> m_backHistory, m_forwardHistory;
 		float m_zoom;
 
+		enum class popupFlags
+		{
+			none,
+			material
+		};
+
+		popupFlags  m_popUpFlags = popupFlags::none;
 		std::vector<std::filesystem::path> m_selections;
 		int m_selectedFileItem;
 		void m_select(const std::filesystem::path& path, bool isCtrlDown = false);

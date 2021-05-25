@@ -35,8 +35,8 @@ namespace SmolEngine
 {
 	static bool showConsole = true;
 	static bool showGameView = false;
-	static bool showMaterialLibrary = false;
 	static bool showRendererPanel = true;
+	static bool showMeshInspector = false;
 
 	void EditorLayer::LoadAssets()
 	{
@@ -57,13 +57,31 @@ namespace SmolEngine
 	{
 		LoadAssets();
 
+		m_Console = new EditorConsole();
 		m_RendererPanel = new RendererPanel();
 		m_MaterialLibraryInterface = new MaterialLibraryInterface(this);
-		m_Console = new EditorConsole();
-		m_FileManager = new FileManager();
-		m_FileManager->Init();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
+
+		m_FileManager = new FileManager();
+		m_FileManager->Init();
+		m_FileManager->SetMaterialCreateCallback([this](const std::string& path, bool is_new)
+		{
+			m_SelectedActor = nullptr;
+			m_SelectionFlags = SelectionFlags::MaterialLib;
+
+			if (is_new)
+				m_MaterialLibraryInterface->OpenNew(path);
+			else
+				m_MaterialLibraryInterface->OpenExisting(path);
+		});
+
+		m_FileManager->SetFileDeleteCallback([this](const std::string& path)
+		{
+			m_MaterialLibraryInterface->Close();
+			m_SelectionFlags = SelectionFlags::None;
+		});
+
 
 		{
 			ImGui::GetStyle().FrameRounding = 4.0f;
@@ -204,7 +222,6 @@ namespace SmolEngine
 		m_RendererPanel->OnUpdate(showRendererPanel);
 		m_Console->Update(showConsole);
 		m_FileManager->Update();
-		m_MaterialLibraryInterface->Update(showMaterialLibrary);
 
 		DrawHierarchy();
 		DrawInspector();
@@ -278,16 +295,13 @@ namespace SmolEngine
 
 			if (ImGui::BeginMenu("Window"))
 			{
-				if (ImGui::MenuItem("Material Library"))
-					showMaterialLibrary = true;
-
 				if (ImGui::MenuItem("Console"))
 					showConsole = true;
 
 				if (ImGui::MenuItem("Renderer Settings"))
 					showRendererPanel = true;
 
-				if (ImGui::MenuItem("Content Broser"))
+				if (ImGui::MenuItem("Content Browser"))
 					m_FileManager->Open();
 
 				ImGui::EndMenu();
@@ -702,14 +716,22 @@ namespace SmolEngine
 			ImGui::BeginChild("InspectorChild");
 			{
 				ImGui::SetWindowFontScale(0.9f);
-				if (m_SelectedActor == nullptr || m_SelectionFlags != SelectionFlags::Inspector)
+				if (m_SelectionFlags != SelectionFlags::Inspector)
 				{
-					ImGui::Text("No Actor selected");
+					if (m_SelectionFlags == SelectionFlags::MaterialLib)
+					{
+						m_MaterialLibraryInterface->Update();
+					}
+					else
+					{
+						ImGui::Text("No Actor selected");
+					}
+
 					ImGui::EndChild();
 					ImGui::End();
 					return;
 				}
-				else
+				else if(m_SelectedActor && m_SelectionFlags == SelectionFlags::Inspector)
 				{
 					std::stringstream ss;
 
@@ -764,7 +786,11 @@ namespace SmolEngine
 					}
 
 					if (Input::IsMouseButtonPressed(MouseCode::Button0))
+					{
+						showMeshInspector = false;
 						m_SelectedActor = nullptr;
+						m_SelectionFlags = SelectionFlags::None;
+					}
 				}
 
 				if (ImGui::BeginPopup("CreateActorPopUp"))
@@ -777,6 +803,7 @@ namespace SmolEngine
 					{
 						ss << "DefaultActor" << state->Actors.size();
 						m_SelectedActor = m_World->GetActiveScene()->CreateActor(ss.str());
+						m_SelectionFlags = SelectionFlags::Inspector;
 					}
 
 					ImGui::EndPopup();
@@ -866,7 +893,6 @@ namespace SmolEngine
 
 	void EditorLayer::DrawMeshComponent(MeshComponent* comp)
 	{
-		static bool showMeshInspector = false;
 		if (comp->Mesh)
 		{
 			ImGui::Extensions::CheckBox("Show", comp->bShow);
@@ -954,7 +980,7 @@ namespace SmolEngine
 				{
 					Mesh* mesh = meshes[i];
 
-					std::string name = "Mesh #" + std::to_string(i);
+					std::string name = mesh->GetName() + " #" +std::to_string(i);
 					if (ImGui::CollapsingHeader(name.c_str()))
 					{
 						std::string id = name + "IDMat";

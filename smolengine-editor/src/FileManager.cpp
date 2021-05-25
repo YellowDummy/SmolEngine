@@ -49,4 +49,14 @@ namespace SmolEngine
 	{
 		ifd::FileDialog::Instance().IsDone("ContentBrowser");
 	}
+
+	void FileManager::SetMaterialCreateCallback(const std::function<void(const std::string&, bool)>& func)
+	{
+		ifd::FileDialog::Instance().SetMaterialCreateCallback(func);
+	}
+
+	void FileManager::SetFileDeleteCallback(const std::function<void(const std::string&)>& func)
+	{
+		ifd::FileDialog::Instance().SetFileDeleteCallback(func);
+	}
 }
