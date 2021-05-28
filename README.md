@@ -1,5 +1,6 @@
 ## Level-Editor
 ![SmolEngine](https://i.imgur.com/gzBroKL.png)
+![SmolEngine](https://i.imgur.com/gCC86yp.png)
 ## Core Features
 
 - Custom [graphics engine](https://github.com/YellowDummy/Frostium3D)
@@ -14,4 +15,4 @@
 ### Windows
 1. Run gen-project-vs2019.bat or cmd ```premake5 vs2019```
 2. Extract libs.7z from vendor\frostium
-3. Compile
+3. Copy all dll's from vendor\fmod\libs to output (bin) folder
