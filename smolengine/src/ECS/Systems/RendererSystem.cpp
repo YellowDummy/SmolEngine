@@ -8,7 +8,7 @@
 
 #include "Core/Engine.h"
 
-#include <Frostium3D/Renderer.h>
+#include <Frostium3D/DeferredRenderer.h>
 #include <Frostium3D/Renderer2D.h>
 #include <Frostium3D/DebugRenderer.h>
 #include <btBulletDynamicsCommon.h>
@@ -35,14 +35,14 @@ namespace SmolEngine
 		ClearInfo clear = {};
 		clear.bClear = true;
 
-		Renderer::BeginScene(&clear);
+		DeferredRenderer::BeginScene(&clear);
 		clear.bClear = false;
 		Renderer2D::BeginScene(&clear);
 	}
 
 	void RendererSystem::EndSubmit()
 	{
-		Renderer::EndScene();
+		DeferredRenderer::EndScene();
 		Renderer2D::EndScene();
 	}
 
@@ -62,11 +62,11 @@ namespace SmolEngine
 					std::vector<Mesh>& childs = mesh->GetChilds();
 					uint32_t childCount = mesh->GetChildCount();
 
-					Renderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[0].ID);
+					DeferredRenderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[0].ID);
 					for (uint32_t i = 0; i < childCount; i++)
 					{
 						mesh = &childs[i];
-						Renderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[i + 1].ID);
+						DeferredRenderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[i + 1].ID);
 					}
 				}
 			}
@@ -82,7 +82,7 @@ namespace SmolEngine
 				if (comp.Light.IsActive)
 				{
 					comp.Light.Position = glm::vec4(transform.WorldPos, 1.0);
-					Renderer::SubmitPointLight(&comp.Light);
+					DeferredRenderer::SubmitPointLight(&comp.Light);
 				}
 			}
 		}
@@ -94,8 +94,7 @@ namespace SmolEngine
 			for (const auto& entity : dView)
 			{
 				auto& component = dView.get<DirectionalLightComponent>(entity);
-				if (component.Light.IsActive)
-					Renderer::SubmitDirLight(&component.Light);
+				DeferredRenderer::SubmitDirLight(&component.Light);
 			}
 		}
 		

@@ -73,7 +73,7 @@ namespace Frostium
 
 	private:
 
-		friend class Renderer;
+		friend class DeferredRenderer;
 		friend class Animator;
 		friend class GraphicsPipeline;
 	};

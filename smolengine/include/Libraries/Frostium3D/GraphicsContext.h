@@ -43,7 +43,7 @@ namespace Frostium
 		bool                          bTargetsSwapchain = true;
 		bool                          bAutoResize = true;
 		Flags                         Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
-		MSAASamples                   eMSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+		MSAASamples                   eMSAASamples = MSAASamples::SAMPLE_COUNT_1;
 		ShadowMapSize                 eShadowMapSize = ShadowMapSize::SIZE_8;
 		Camera*                       pDefaultCamera = nullptr;
 		WindowCreateInfo*             pWindowCI = nullptr;
@@ -141,7 +141,7 @@ namespace Frostium
 	private:
 
 		friend class GraphicsPipeline;
-		friend class Renderer;
+		friend class DeferredRenderer;
 		friend class Renderer2D;
 		friend class DebugRenderer;
 		friend class ImGuiContext;

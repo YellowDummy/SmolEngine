@@ -45,7 +45,7 @@ namespace SmolEngine
 		windowCI.Title = "SmolEngine";
 
 		GraphicsContextInitInfo graphicsContextCI = {};
-		graphicsContextCI.eMSAASamples = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+		graphicsContextCI.eMSAASamples = MSAASamples::SAMPLE_COUNT_1;
 		graphicsContextCI.eShadowMapSize = ShadowMapSize::SIZE_8;
 		graphicsContextCI.pWindowCI = &windowCI;
 		graphicsContextCI.ResourcesFolderPath = "../resources/";

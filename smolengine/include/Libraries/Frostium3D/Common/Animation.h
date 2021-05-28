@@ -39,6 +39,6 @@ namespace Frostium
 		std::vector<glm::mat4> Joints;
 
 		friend struct ImportedDataGlTF;
-		friend class Renderer;
+		friend class DeferredRenderer;
 	};
 }

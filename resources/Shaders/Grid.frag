@@ -1,7 +1,7 @@
 #version 460 core
 
 layout (location = 0) in vec2 v_UV;
-layout (location = 0) out vec4 outColor;
+layout (location = 0) out vec4 color;
 
 void main() 
 {
@@ -23,5 +23,5 @@ void main()
         discard;
     }
 
-    outColor = vec4(c, c, c, 0.0);
+    color = vec4(c, c, c, 0.0);
 }

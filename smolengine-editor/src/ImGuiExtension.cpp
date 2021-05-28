@@ -361,17 +361,19 @@ namespace ImGui
 		return result;
 	}
 
-	void Extensions::Combo(const std::string& label, const char* comboText, int& value, float pos, const std::string& additionalID)
+	bool Extensions::Combo(const std::string& label, const char* comboText, int& value, float pos, const std::string& additionalID, float text_pos)
 	{
 		ImGui::PushID(std::string(label + additionalID).c_str());
 
-		ImGui::SetCursorPosX(6);
+		bool use = false;
+		ImGui::SetCursorPosX(text_pos);
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::Combo("##C", &value, comboText);
+		use = ImGui::Combo("##C", &value, comboText);
 
 		ImGui::PopID();
+		return use;
 	}
 
 	bool Extensions::SmallButton(const std::string& label, const std::string& buttonText, float pos, const std::string& additionalID)

@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef FROSTIUM_SMOLENGINE_IMPL
-#define FROSTIUM_SMOLENGINE_IMPL;
+#define FROSTIUM_SMOLENGINE_IMPL
 #endif
 #include "Frostium3D/GraphicsContext.h"
 #include "Frostium3D/Common/RendererStorage.h"

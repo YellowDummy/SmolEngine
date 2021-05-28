@@ -812,7 +812,7 @@ namespace SmolEngine
 				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					std::vector<Actor*> actors;
-					m_World->GetActiveScene()->GetActorsByID(actors);
+					m_World->GetActiveScene()->GetActors(actors);
 					for (const auto& actor : actors)
 					{
 						auto result = actor->GetName().find(name);

@@ -19,12 +19,12 @@ namespace SmolEngine
 namespace Frostium
 #endif
 {
-	static const uint32_t  s_MaxInstances = 1000;
-	static const uint32_t  s_MaxAnimations = 100;
-	static const uint32_t  s_MaxAnimationJoints = 1000;
-	static const uint32_t  s_MaxPackages = 1200;
-	static const uint32_t  s_MaxLights = 100;
-	static const uint32_t  s_InstanceDataMaxCount = s_MaxPackages * s_MaxInstances;
+	static const uint32_t      s_MaxInstances = 1000;
+	static const uint32_t      s_MaxAnimations = 100;
+	static const uint32_t      s_MaxAnimationJoints = 1000;
+	static const uint32_t      s_MaxPackages = 1200;
+	static const uint32_t      s_MaxLights = 100;
+	static const uint32_t      s_InstanceDataMaxCount = s_MaxPackages * s_MaxInstances;
 
 	struct SceneState
 	{
@@ -34,15 +34,25 @@ namespace Frostium
 		alignas(4) uint32_t    NumPointsLights = 0;
 		alignas(4) uint32_t    NumSpotLights = 0;
 
-		friend class Renderer;
+		friend class DeferredRenderer;
 	};
 
-	struct RenderingState
+	enum class PostProcessingFlags: uint32_t
 	{
-		bool                   bBloomPass = true;
-		bool                   bBlurPass = false;
+		None,
+		Bloom,
+		Blur
+	};
+
+	struct RendererState
+	{
 		bool                   bDrawSkyBox = true;
-		bool                   bDrawGrid = true;       
+		bool                   bDrawGrid = true;      
+		bool                   bHDR = true;
+		bool                   bFXAA = true;
+		bool                   bSSAO = false;
+		PostProcessingFlags    eExposureType = PostProcessingFlags::Bloom;
+		SceneState             SceneState = {};
 	};
 
 	struct CommandBuffer
@@ -134,9 +144,6 @@ namespace Frostium
 		// States
 		bool                                               m_IsInitialized = false;
 		ShadowMapSize                                      m_MapSize = ShadowMapSize::SIZE_8;
-#ifdef FROSTIUM_SMOLENGINE_IMPL
-		std::mutex                                         m_Mutex = {};
-#endif
 		// Bindings						                   
 		const uint32_t                                     m_TexturesBinding = 24;
 		const uint32_t                                     m_ShaderDataBinding = 25;
@@ -157,7 +164,8 @@ namespace Frostium
 		uint32_t                                           m_LastAnimationOffset = 0;
 		uint32_t                                           m_MaxObjects = s_MaxPackages;
 		// Pipelines					                   
-		GraphicsPipeline                                   m_PBRPipeline = {};
+		GraphicsPipeline                                   m_GbufferPipeline = {};
+		GraphicsPipeline                                   m_LightingPipeline = {};
 		GraphicsPipeline                                   m_BloomPipeline = {};
 		GraphicsPipeline                                   m_BlurPipeline = {};
 		GraphicsPipeline                                   m_CombinationPipeline = {};
@@ -166,17 +174,18 @@ namespace Frostium
 		GraphicsPipeline                                   m_DepthPassPipeline = {};
 		GraphicsPipeline                                   m_GridPipeline = {};
 		GraphicsPipeline                                   m_DebugPipeline = {};
+		GraphicsPipeline                                   m_HDRPipeline = {};
 		//Meshes						                   
 		Mesh                                               m_PlaneMesh = {};
 		// Framebuffers					                   
 		Framebuffer*                                       m_MainFramebuffer = nullptr;
-		Framebuffer                                        m_PBRFramebuffer = {};
-		Framebuffer                                        m_BloomFramebuffer = {};
-		Framebuffer                                        m_BlurFramebuffer = {};
+		Framebuffer                                        m_GFramebuffer = {};
+		Framebuffer                                        m_LightingFramebuffer = {};
+		Framebuffer                                        m_HDRFramebuffer = {};
+		Framebuffer                                        m_PostProcessingFramebuffer = {};
 		Framebuffer                                        m_DepthFramebuffer = {};
 		// Buffers
-		RenderingState                                     m_State{};
-		SceneState                                         m_SceneState{};
+		RendererState                                      m_State{};
 		DirectionalLight                                   m_DirLight{};
 		std::array<Mesh*, s_MaxPackages>                   m_UsedMeshes;
 		std::array<InstanceData, s_InstanceDataMaxCount>   m_InstancesData;

@@ -31,7 +31,6 @@ namespace SmolEngine
 
 		// Getters
 		void GetActors(std::vector<Actor*>& outList);
-		void GetActorsByID(std::vector<Actor*>& outList);
 		void GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList);
 		SceneStateComponent* GetSceneState();
 		entt::registry& GetRegistry();

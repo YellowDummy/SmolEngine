@@ -4,7 +4,10 @@
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/Systems/PhysicsSystem.h"
 
-#include <Frostium3D/Renderer.h>
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
+#include <Frostium3D/DeferredRenderer.h>
 #include <Frostium3D/MaterialLibrary.h>
 
 namespace SmolEngine
@@ -91,7 +94,7 @@ namespace SmolEngine
 			if (lib->Load(material_path, matInfo))
 			{
 				uint32_t id = lib->Add(&matInfo, material_path);
-				Renderer::UpdateMaterials();
+				DeferredRenderer::UpdateMaterials();
 
 				comp->MaterialsData[index].Path = material_path;
 				comp->MaterialsData[index].ID = id;

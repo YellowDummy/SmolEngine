@@ -20,7 +20,7 @@
 #include "ECS/Components/Singletons/Bullet3WorldSComponent.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 
-#include <Frostium3D/Renderer.h>
+#include <Frostium3D/DeferredRenderer.h>
 #include <Frostium3D/Renderer2D.h>
 #include <Frostium3D/MaterialLibrary.h>
 #include <Frostium3D/Utils/Utils.h>
@@ -162,8 +162,9 @@ namespace SmolEngine
 		m_State->m_MeshMap.clear();
 
 		// Updates renderer states
-		Renderer::SetRenderingState(&sceneState->PipelineState.m_RendererState);
-		Renderer::SetSceneState(&sceneState->PipelineState.m_SceneState);
+		{
+			DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
+		}
 
 		// Recrates actor's name & id sets
 		{
@@ -209,13 +210,13 @@ namespace SmolEngine
 		// Add default materials and reset renderer
 		{
 			MaterialLibrary::GetSinglenton()->Reset();
-			Renderer::ResetStates();
+			DeferredRenderer::ResetStates();
 
 			MaterialCreateInfo defMat = {};
 			defMat.SetRoughness(1.0f);
 			defMat.SetMetalness(0.2f);
 			MaterialLibrary::GetSinglenton()->Add(&defMat, "default material");
-			Renderer::UpdateMaterials();
+			DeferredRenderer::UpdateMaterials();
 		}
 
 		Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
@@ -365,7 +366,7 @@ namespace SmolEngine
 			});
 		}
 
-		Renderer::UpdateMaterials();
+		DeferredRenderer::UpdateMaterials();
 	}
 
 	void WorldAdmin::ReloadRigidBodies(entt::registry& registry)

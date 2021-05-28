@@ -68,7 +68,6 @@ layout(std430, binding = 28) readonly buffer JointMatrices
 layout(push_constant) uniform ConstantData
 {
 	mat4 lightSpace;
-
 	uint dataOffset;
 };
 

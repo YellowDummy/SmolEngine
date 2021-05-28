@@ -23,11 +23,18 @@ namespace SmolEngine
 					if (ImGui::CollapsingHeader("Post-processing"))
 					{
 						ImGui::NewLine();
-						if (ImGui::Extensions::CheckBox("Bloom", state->PipelineState.m_RendererState.bBloomPass, padding, "DebugDraw", 12.0f))
+
+						if (ImGui::Extensions::CheckBox("FXAA", state->PipelineState.State.bFXAA, padding, "DebugDraw", 12.0f))
 							UpdateStates();
 
-						if(ImGui::Extensions::CheckBox("Blur", state->PipelineState.m_RendererState.bBlurPass, padding, "DebugDraw", 12.0f))
+						if (ImGui::Extensions::CheckBox("HDR", state->PipelineState.State.bHDR, padding, "DebugDraw", 12.0f))
 							UpdateStates();
+
+						if (ImGui::Extensions::Combo("Path", "Bloom\0Blur\0", state->PipelineState.ImguiSelectable, padding, "DebugDraw", 12.0f))
+						{
+							state->PipelineState.State.eExposureType = (PostProcessingFlags)state->PipelineState.ImguiSelectable;
+							UpdateStates();
+						}
 
 						ImGui::NewLine();
 					}
@@ -35,18 +42,18 @@ namespace SmolEngine
 					if (ImGui::CollapsingHeader("Graphics Pipeline"))
 					{
 						ImGui::NewLine();
-						bool* useIBl = (bool*)&state->PipelineState.m_SceneState.UseIBL;
+						bool* useIBl = (bool*)&state->PipelineState.State.SceneState.UseIBL;
 
-						if(ImGui::Extensions::CheckBox("Grid", state->PipelineState.m_RendererState.bDrawGrid, padding, "DebugDraw", 12.0f))
+						if(ImGui::Extensions::CheckBox("Grid", state->PipelineState.State.bDrawGrid, padding, "DebugDraw", 12.0f))
 							UpdateStates();
 
-						if(ImGui::Extensions::CheckBox("Skybox", state->PipelineState.m_RendererState.bDrawSkyBox, padding, "DebugDraw", 12.0f))
+						if(ImGui::Extensions::CheckBox("Skybox", state->PipelineState.State.bDrawSkyBox, padding, "DebugDraw", 12.0f))
 							UpdateStates();
 
 						if(ImGui::Extensions::CheckBox("IBL", *useIBl, padding, "DebugDraw", 12.0f))
 							UpdateStates();
 
-						if(ImGui::Extensions::InputFloat("HDR Exposure", state->PipelineState.m_SceneState.HDRExposure, padding, "DebugDraw", 12.0f))
+						if(ImGui::Extensions::InputFloat("HDR Exposure", state->PipelineState.State.SceneState.HDRExposure, padding, "DebugDraw", 12.0f))
 							UpdateStates();
 
 						ImGui::NewLine();
@@ -73,7 +80,6 @@ namespace SmolEngine
 	void RendererPanel::UpdateStates()
 	{
 		SceneStateComponent* state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
-		Renderer::SetRenderingState(&state->PipelineState.m_RendererState);
-		Renderer::SetSceneState(&state->PipelineState.m_SceneState);
+		DeferredRenderer::SetRendererState(&state->PipelineState.State);
 	}
 }

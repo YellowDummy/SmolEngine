@@ -10,14 +10,17 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 
-#include <Frostium3D/Renderer.h>
+#ifndef FROSTIUM_SMOLENGINE_IMPL
+#define FROSTIUM_SMOLENGINE_IMPL
+#endif
+#include <Frostium3D/DeferredRenderer.h>
 
 namespace SmolEngine
 {
 	struct ScenePipelineState
 	{
-		RenderingState   m_RendererState;
-		SceneState       m_SceneState;
+		int            ImguiSelectable = 0; // internal use
+		RendererState  State;
 
 	private:
 
@@ -25,8 +28,8 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_RendererState.bBloomPass, m_RendererState.bBlurPass, m_RendererState.bDrawGrid, m_RendererState.bDrawSkyBox,
-				m_SceneState.HDRExposure, m_SceneState.UseIBL);
+			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bHDR, State.eExposureType,
+				State.SceneState.HDRExposure, State.SceneState.UseIBL);
 		}
 	};
 

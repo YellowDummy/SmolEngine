@@ -1,6 +1,6 @@
 #version 450
 
-layout (binding = 0) uniform sampler2D samplerColor1;
+layout (binding = 0) uniform sampler2D HDRSampler;
 
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outColor;
@@ -41,21 +41,21 @@ void main(void)
 
 	const float blurScale = 0.00045;
 	const float blurStrength = 1.0;
+	vec4 color = vec4(0.0);
 
 	float ar = 1.0;
 	// Aspect ratio for vertical blur pass
 	if (dir == 1)
 	{
-		vec2 ts = 1.0 / textureSize(samplerColor1, 0);
+		vec2 ts = 1.0 / textureSize(HDRSampler, 0);
 		ar = ts.y / ts.x;
 	}
 
 	vec2 P = inUV.xy - vec2(0, (weights.length() >> 1) * ar * blurScale);
-	vec4 color = vec4(0.0);
 	for (int i = 0; i < weights.length(); i++)
 	{
 		vec2 dv = vec2(0.0, i * blurScale) * ar;
-		color += texture(samplerColor1, P + dv) * weights[i] * blurStrength;
+		color += texture(HDRSampler, P + dv) * weights[i] * blurStrength;
 	}
 
 	outColor = color;

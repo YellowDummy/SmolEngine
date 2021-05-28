@@ -74,6 +74,12 @@ namespace Frostium
 		SAMPLE_COUNT_MAX_SUPPORTED
 	};
 
+	enum class SamplerFilter
+	{
+		LINEAR,
+		NEAREST
+	};
+
 	struct FramebufferAttachment
 	{
 		FramebufferAttachment() = default;
@@ -89,11 +95,13 @@ namespace Frostium
 
 	struct FramebufferSpecification
 	{
-		MSAASamples                                eMSAASampels = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+		MSAASamples                                eMSAASampels = MSAASamples::SAMPLE_COUNT_1;
 		FramebufferSpecialisation                  eSpecialisation = FramebufferSpecialisation::None;
+		SamplerFilter                              eSamplerFiltering = SamplerFilter::NEAREST;
 		bool                                       bTargetsSwapchain = false;
 		bool                                       bUsedByImGui = false;
 		bool                                       bResizable = true;
+		bool                                       bDepthSampler = false;
 		int32_t                                    Width = 0;
 		int32_t                                    Height = 0;
 		int32_t                                    NumSubpassDependencies = 1;

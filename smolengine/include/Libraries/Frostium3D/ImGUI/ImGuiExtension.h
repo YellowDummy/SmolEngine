@@ -46,7 +46,7 @@ namespace ImGui
 		static bool CheckBox(const std::string& label, bool& value, float check_box_pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// Combo
-		static void Combo(const std::string& label, const char* comboText, int& value, float pos = 130.0f, const std::string& additionalID = "None");
+		static bool Combo(const std::string& label, const char* comboText, int& value, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// Button
 		static bool SmallButton(const std::string& label, const std::string& buttonText, float pos = 130.0f, const std::string& additionalID = "None");

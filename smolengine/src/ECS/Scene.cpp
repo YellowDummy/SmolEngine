@@ -93,22 +93,6 @@ namespace SmolEngine
 			outList[i] = &m_State->Actors[i];
 	}
 
-	void Scene::GetActorsByID(std::vector<Actor*>& outList)
-	{
-		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
-		outList.reserve(count);
-
-		for (uint32_t i = 0; i < m_State->LastActorID; ++i)
-		{
-			for (uint32_t x = 0; x < count; ++x)
-			{
-				Actor* actor = &m_State->Actors[x];
-				if (i == actor->GetID())
-					outList.push_back(actor);
-			}
-		}
-	}
-
 	void Scene::GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList)
 	{
 		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
@@ -167,26 +151,11 @@ namespace SmolEngine
 	{
 		if (actor != nullptr)
 		{
-			uint32_t position = actor->GetID();
-			m_State->ActorNameSet.erase(actor->GetName());
-			m_State->Actors.erase(m_State->Actors.begin() + position);
-
-			m_SceneData.m_Registry.remove_if_exists<HeadComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<TransformComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<CameraComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<Rigidbody2DComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<Texture2DComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<BehaviourComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<Animation2DComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<Light2DSourceComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<CanvasComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<AudioSourceComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<MeshComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<DirectionalLightComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<PointLightComponent>(*actor);
-			m_SceneData.m_Registry.remove_if_exists<RigidbodyComponent>(*actor);
-
 			m_SceneData.m_Registry.destroy(*actor);
+
+			auto& list = m_State->Actors;
+			list.erase(std::remove(list.begin(), list.end(), *actor), list.end());
+			m_State->ActorNameSet.erase(actor->GetName());
 			actor = nullptr;
 		}
 	}
