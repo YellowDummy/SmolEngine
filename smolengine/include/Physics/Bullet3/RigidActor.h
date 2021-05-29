@@ -10,6 +10,7 @@ class btRigidBody;
 namespace SmolEngine
 {
 	class Actor;
+	class Mesh;
 	struct Bullet3WorldSComponent;
 
 	enum class RigidBodyShape: int
@@ -17,7 +18,7 @@ namespace SmolEngine
 		Box,
 		Sphere,
 		Capsule,
-		Custom
+		Convex
 	};
 
 	struct CapsuleShapeCreateInfo
@@ -38,6 +39,12 @@ namespace SmolEngine
 		float                      Radius = 1.0f;
 	};
 
+	struct ConvexShapeCreateInfo
+	{
+		std::string                FilePath;
+		Ref<Mesh>                  Mesh = nullptr;
+	};
+
 	struct BodyCreateInfo
 	{
 		Actor*                     pActor = nullptr;
@@ -56,6 +63,7 @@ namespace SmolEngine
 		BoxShapeCreateInfo         BoxShapeInfo{};
 		SphereShapeCreateInfo      SphereShape{};
 		CapsuleShapeCreateInfo     CapsuleShapeInfo{};
+		ConvexShapeCreateInfo      ConvexShapeInfo{};
 		glm::vec3                  LocalInertia = glm::vec3(1, 0, 0);
 
 	private:
@@ -71,6 +79,7 @@ namespace SmolEngine
 				SphereShape.Radius,
 				BoxShapeInfo.X, BoxShapeInfo.Y, BoxShapeInfo.Z,
 				CapsuleShapeInfo.Height, CapsuleShapeInfo.Radius,
+				ConvexShapeInfo.FilePath,
 				LocalInertia.x, LocalInertia.y, LocalInertia.z);
 		}
 	};
@@ -90,6 +99,7 @@ namespace SmolEngine
 		void                     CreateCapsule(BodyCreateInfo* info);
 		void                     CreateSphere(BodyCreateInfo* info);
 		void                     CreateBox(BodyCreateInfo* info);
+		void                     CreateConvex(BodyCreateInfo* info);
 		void                     SetActive(bool value);
 
 	private:

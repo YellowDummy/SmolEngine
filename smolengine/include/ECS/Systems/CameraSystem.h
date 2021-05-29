@@ -10,17 +10,10 @@ namespace SmolEngine
 
 	class CameraSystem
 	{
-	public:
-
-		CameraSystem();
-
-		static void CalculateView(CameraComponent* camera, TransformComponent* tranform);
-		static void SetProjection(CameraComponent* camera, float left, float right, float buttom, float top, float zNear = -1.0f, float zFar = 1.0f);
-
-	private:
-
-		static void OnResize(float width, float height);
-		static void OnEvent(Event& e);
+		static void CalculateView(CameraComponent* camera, TransformComponent* transform);
+		static void UpdateViewPerspective(CameraComponent* camera, TransformComponent* transform);
+		static void UpdateViewOrtho(CameraComponent* camera, TransformComponent* transform);
+		static void OnResize(uint32_t width, uint32_t height);
 
 	private:
 

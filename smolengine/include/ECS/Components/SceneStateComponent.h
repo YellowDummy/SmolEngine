@@ -36,13 +36,13 @@ namespace SmolEngine
 	struct SceneStateComponent
 	{
 		uint32_t                                       SceneID = 0;
-		uint32_t                                       LastActorID = 0;
+		uint32_t                                       LastActorID = 1;
 		std::string                                    FilePath = "";
 		std::string                                    Name = "";
 		ScenePipelineState                             PipelineState = {};
 		std::unordered_map<std::string, Actor*>        ActorNameSet;
 		std::unordered_map<uint32_t, Actor*>           ActorIDSet;
-		std::vector<Actor>                             Actors;
+		std::vector<Ref<Actor>>                        Actors;
 
 	public:
 

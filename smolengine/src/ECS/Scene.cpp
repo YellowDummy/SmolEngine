@@ -27,6 +27,37 @@ namespace SmolEngine
 		m_SceneData.Free();
 	}
 
+	void Scene::CalculateRelativePositions() // Note: recursion is not supported
+	{
+		for (auto& parent : m_State->Actors)
+		{
+
+			for (auto child : parent->GetChilds())
+			{
+				TransformComponent* childT = child->GetComponent<TransformComponent>();
+				TransformComponent* parentT = parent->GetComponent<TransformComponent>();
+				childT->RelativePos = parentT->WorldPos - childT->WorldPos;
+			}
+		}
+	}
+
+	void Scene::UpdateChildsPositions() // Note: recursion is not supported
+	{
+		for (auto& parent : m_State->Actors)
+		{
+			for (auto child : parent->GetChilds())
+			{
+				if (child != nullptr)
+				{
+					TransformComponent* childT = child->GetComponent<TransformComponent>();
+					TransformComponent* parentT = parent->GetComponent<TransformComponent>();
+
+					childT->WorldPos = parentT->WorldPos - childT->RelativePos;
+				}
+			}
+		}
+	}
+
 	Actor* Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
 		const auto searchNameResult = m_State->ActorNameSet.find(name);
@@ -36,13 +67,12 @@ namespace SmolEngine
 			return nullptr;
 		}
 
-		auto actorEntity = m_SceneData.m_Registry.create();
+		Ref<Actor> actor = std::make_shared<Actor>();
+		actor->m_Entity = m_SceneData.m_Registry.create();
 		uint32_t id = m_State->LastActorID;
-		m_State->Actors.push_back(Actor(actorEntity));
-		Actor* actor = &m_State->Actors.back();
 
 		// Add Head
-		HeadComponent& head = m_SceneData.m_Registry.emplace<HeadComponent>(*actor);
+		HeadComponent& head = m_SceneData.m_Registry.emplace<HeadComponent>(actor->m_Entity);
 		head.ComponentID = 0;
 		head.ComponentsCount++;
 		head.ActorID = id;
@@ -50,11 +80,12 @@ namespace SmolEngine
 		head.Tag = tag;
 
 		// Add Transform
-		AddComponent<TransformComponent>(actor);
-		m_State->ActorNameSet[name] = actor;
-		m_State->ActorIDSet[id] = actor;
+		AddComponent<TransformComponent>(actor.get());
+		m_State->ActorNameSet[name] = actor.get();
+		m_State->ActorIDSet[id] = actor.get();
 		m_State->LastActorID++;
-		return actor;
+		m_State->Actors.emplace_back(actor);
+		return actor.get();
 	}
 
 	Actor* Scene::FindActorByName(const std::string& name)
@@ -69,8 +100,8 @@ namespace SmolEngine
 	Actor* Scene::FindActorByTag(const std::string& tag)
 	{
 		for (auto& actor : m_State->Actors)
-			if (tag == actor.GetTag())
-				return &actor;
+			if (tag == actor->GetTag())
+				return actor.get();
 
 		return nullptr;
 	}
@@ -90,7 +121,7 @@ namespace SmolEngine
 
 		outList.resize(count);
 		for(uint32_t i = 0; i < count; ++i)
-			outList[i] = &m_State->Actors[i];
+			outList[i] = m_State->Actors[i].get();
 	}
 
 	void Scene::GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList)
@@ -98,22 +129,10 @@ namespace SmolEngine
 		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
 		for (uint32_t i = 0; i < count; ++i)
 		{
-			Actor* actor = &m_State->Actors[i];
+			Actor* actor = m_State->Actors[i].get();
 			if (tag == actor->GetTag())
 				outList.push_back(actor);
 		}
-	}
-
-	void Scene::RemoveChild(Actor* parent, Actor* child)
-	{
-		child->SetParent(nullptr);
-		parent->GetChilds().erase(std::remove(parent->GetChilds().begin(), parent->GetChilds().end(), child), parent->GetChilds().end());
-	}
-
-	void Scene::AddChild(Actor* parent, Actor* child)
-	{
-		parent->GetChilds().push_back(child);
-		child->SetParent(parent);
 	}
 
 	void Scene::DuplicateActor(Actor* actor)
@@ -154,7 +173,11 @@ namespace SmolEngine
 			m_SceneData.m_Registry.destroy(*actor);
 
 			auto& list = m_State->Actors;
-			list.erase(std::remove(list.begin(), list.end(), *actor), list.end());
+			std::vector<Ref<Actor>> tempList = list;
+
+			tempList.erase(std::remove_if(tempList.begin(), tempList.end(), [&](Ref<Actor>& elem) { return elem.get() == actor; }), tempList.end());
+			list = tempList;
+
 			m_State->ActorNameSet.erase(actor->GetName());
 			actor = nullptr;
 		}

@@ -30,7 +30,10 @@ namespace SmolEngine
 						if (ImGui::Extensions::CheckBox("HDR", state->PipelineState.State.bHDR, padding, "DebugDraw", 12.0f))
 							UpdateStates();
 
-						if (ImGui::Extensions::Combo("Path", "Bloom\0Blur\0", state->PipelineState.ImguiSelectable, padding, "DebugDraw", 12.0f))
+						if (ImGui::Extensions::CheckBox("SSAO", state->PipelineState.State.bSSAO, padding, "DebugDraw", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::Combo("Path", "Bloom\0Blur\0", state->PipelineState.ImguiSelectable, 130.f, "DebugDraw"))
 						{
 							state->PipelineState.State.eExposureType = (PostProcessingFlags)state->PipelineState.ImguiSelectable;
 							UpdateStates();

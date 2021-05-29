@@ -177,6 +177,7 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\VertexBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Window.h" />
     <ClInclude Include="include\Libraries\Frostium3D\DebugRenderer.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\DeferredRenderer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystem.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystemInstance.h" />
@@ -414,7 +415,6 @@
     <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglVertexArray.h" />
     <ClInclude Include="include\Libraries\Frostium3D\RayTracer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\RaytracingPipeline.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Renderer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Renderer2D.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Utils\Frustum.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Utils\GLM.h" />

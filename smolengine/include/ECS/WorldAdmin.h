@@ -65,6 +65,7 @@ namespace SmolEngine
 		bool LoadStaticComponents();
 		bool ChangeActorName(Actor* actor, const std::string& name);
 
+		void ReloadActors();
 		void Reload2DTextures(entt::registry& registry);
 		void Reload2DAnimations(entt::registry& registry);
 		void ReloadAudioClips(entt::registry& registry, AudioEngine* engine);

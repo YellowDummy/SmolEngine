@@ -6,7 +6,6 @@
 
 namespace SmolEngine
 {
-
 	Engine* CreateEngineContext()
 	{
 		return new Editor;

@@ -92,8 +92,7 @@ namespace SmolEngine
 
 	void PhysicsSystem::OnUpdate(float delta)
 	{
-		constexpr float simTime = 1.0f / 144.0f;
-		m_State->World->stepSimulation(simTime, 10);
+		m_State->World->stepSimulation(1.f / 60.0f, 2, delta);
 	}
 
 	void PhysicsSystem::UpdateTransforms()

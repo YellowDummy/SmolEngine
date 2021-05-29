@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace SmolEngine
 {
@@ -18,12 +19,14 @@ namespace SmolEngine
 
 
 		Actor*                Parent = nullptr;
-		bool                  IsEnabled = true;
-		bool                  ShowComponentUI = false;
+		bool                  bEnabled = true;
+		bool                  bShowComponentUI = false;
 		uint32_t              ActorID = 0;
+		uint32_t              ParentID = 0;
 		uint32_t              ComponentsCount = 0;
 		std::string           Name = "";
 		std::string           Tag = "";
+		std::vector<uint32_t> ChildsIDs;
 		std::vector<Actor*>   Childs;
 
 	private:
@@ -35,7 +38,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ActorID, Name, Tag, IsEnabled, ShowComponentUI, ComponentID, ComponentsCount);
+			archive(ActorID, Name, Tag, bEnabled, bShowComponentUI, ChildsIDs, ParentID, ComponentID, ComponentsCount);
 		}
 	};
 }

@@ -38,8 +38,9 @@ namespace SmolEngine
 		// Getters					 
 		inline static Engine*        GetEngine() { return s_Instance; }
 		GraphicsContext*             GetGraphicsContext() const;
-		const uint32_t               GetWindowHeight() const;
-		const uint32_t               GetWindowWidth() const;
+		uint32_t                     GetWindowHeight() const;
+		uint32_t                     GetWindowWidth() const;
+		float                        GetFPSCount() const;
 		inline Window*               GetWindow();
 									 
 		// Callbacks				 
@@ -55,6 +56,7 @@ namespace SmolEngine
 	private:
 		static Engine*               s_Instance;
 		bool                         m_Running = false;
+		float                        m_FPSCount = 0.0f;
 		GraphicsContext*             m_GraphicsContext = nullptr;
 		WorldAdmin*                  m_World = nullptr;
 		LayerManager*                m_LayerHandler = nullptr;

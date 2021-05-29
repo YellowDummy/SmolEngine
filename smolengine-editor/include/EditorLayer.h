@@ -65,6 +65,7 @@ namespace SmolEngine
 		void OnImGuiRender() override;
 
 		// Draw
+		void DrawActor(Actor* actor, uint32_t index = 0);
 		void DrawToolsBar();
 		void DrawSceneTetxure();
 		void DrawInfo(HeadComponent* head);
@@ -108,6 +109,7 @@ namespace SmolEngine
 		}
 
 		void DrawScriptComponent(uint32_t index);
+		void CheckActor(Actor* actor);
 
 	private:
 
@@ -126,7 +128,8 @@ namespace SmolEngine
 		glm::vec2                                   m_SceneViewPort = { 0.0f, 0.0f };
 		std::string                                 m_FilePath = "";
 		std::string                                 m_FileName = "";
-		size_t                                      m_IDBuffer = 0;
+		uint32_t                                    m_IDBuffer = 0;
+		std::vector<Actor*>                         m_DisplayedActors;
 
 		// UI
 		Texture                                     m_PlayButton{};

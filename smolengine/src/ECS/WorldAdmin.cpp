@@ -52,6 +52,7 @@ namespace SmolEngine
 	void WorldAdmin::OnBeginWorld()
 	{
 		Scene* scene = GetActiveScene();
+		scene->CalculateRelativePositions();
 		SceneStateComponent* sceneState = scene->GetSceneState();
 #ifdef SMOLENGINE_EDITOR
 		if (!Utils::IsPathValid(sceneState->FilePath))
@@ -72,16 +73,17 @@ namespace SmolEngine
 
 	void WorldAdmin::OnBeginFrame()
 	{
-#ifndef SMOLENGINE_EDITOR
 		// Extracting Camera
 		entt::registry& registry = GetActiveScene()->GetRegistry();
 		const auto& cameraGroup = registry.view<CameraComponent, TransformComponent>();
 		for (const auto& entity : cameraGroup)
 		{
 			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
-
-			// There is no need to render the scene if the camera is not our target or is disabled
-			if (!camera.isPrimaryCamera || !camera.isEnabled) { continue; }
+#ifdef SMOLENGINE_EDITOR
+			if (!camera.bPrimaryCamera || !camera.bShowPreview) { continue; }
+#else
+			if (!camera.bPrimaryCamera) { continue; }
+#endif
 
 			// Calculating ViewProj
 			CameraSystem::CalculateView(&camera, &transform);
@@ -95,7 +97,6 @@ namespace SmolEngine
 			// At the moment we support only one viewport
 			break;
 		}
-#endif 
 	}
 
 	void WorldAdmin::OnEndFrame()
@@ -123,6 +124,9 @@ namespace SmolEngine
 #ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 		{
+			Scene* scene = GetActiveScene();
+			scene->UpdateChildsPositions();
+
 			ScriptingSystem::OnUpdate(deltaTime);
 			Physics2DSystem::OnUpdate(deltaTime);
 			PhysicsSystem::OnUpdate(deltaTime);
@@ -131,6 +135,9 @@ namespace SmolEngine
 			PhysicsSystem::UpdateTransforms();
 		}
 #else
+		Scene* scene = GetActiveScene();
+		scene->UpdateChildsPositions();
+
 		ScriptingSystem::OnUpdate(deltaTime);
 		Physics2DSystem::OnUpdate(deltaTime);
 		PhysicsSystem::OnUpdate(deltaTime);
@@ -176,17 +183,18 @@ namespace SmolEngine
 
 			for (uint32_t i = 0; i < actorCount; ++i)
 			{
-				Actor* actor = &actors[i];
+				auto actor = actors[i];
 				uint32_t actorID = actor->GetID();
 				std::string name = actor->GetName();
 
-				activeScene->m_State->ActorIDSet[actorID] = actor;
-				activeScene->m_State->ActorNameSet[name] = actor;
+				activeScene->m_State->ActorIDSet[actorID] = actor.get();
+				activeScene->m_State->ActorNameSet[name] = actor.get();
 			}
 		}
 
 		// Loads Assets
 		{
+			ReloadActors();
 			Reload2DTextures(registry);
 			ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
 			Reload2DAnimations(registry);
@@ -212,10 +220,10 @@ namespace SmolEngine
 			MaterialLibrary::GetSinglenton()->Reset();
 			DeferredRenderer::ResetStates();
 
-			MaterialCreateInfo defMat = {};
-			defMat.SetRoughness(1.0f);
-			defMat.SetMetalness(0.2f);
-			MaterialLibrary::GetSinglenton()->Add(&defMat, "default material");
+			Scope<MaterialCreateInfo> defMat = std::make_unique<MaterialCreateInfo>();
+			defMat->SetRoughness(1.0f);
+			defMat->SetMetalness(0.2f);
+			MaterialLibrary::GetSinglenton()->Add(defMat.get(), "default material");
 			DeferredRenderer::UpdateMaterials();
 		}
 
@@ -497,5 +505,24 @@ namespace SmolEngine
 		}
 
 		return false;
+	}
+
+	void WorldAdmin::ReloadActors()
+	{
+		Scene* scene = GetActiveScene();
+		for (auto& actor : scene->m_State->Actors)
+		{
+			HeadComponent* info = actor->GetInfo();
+
+			if (info->ParentID > 0)
+				info->Parent = scene->FindActorByID(info->ParentID);
+
+			info->Childs.clear();
+			for (auto& id : info->ChildsIDs)
+			{
+				if (id > 0)
+					info->Childs.emplace_back( scene->FindActorByID(id));
+			}
+		}
 	}
 }

@@ -22,7 +22,6 @@ namespace SmolEngine
 	Engine::~Engine()
 	{
 		NATIVE_INFO("State : Shutdown");
-
 		m_Running = false;
 	}
 
@@ -30,7 +29,6 @@ namespace SmolEngine
 	{
 		NATIVE_INFO("State = Startup");
 		//---------------------------------------------------------------------///
-
 
 		m_LayerHandler = new LayerManager();
 		m_ScriptingSystem = new ScriptingSystem();
@@ -93,11 +91,14 @@ namespace SmolEngine
 	void Engine::Run()
 	{
 		NATIVE_INFO("State = Runtime");
+		uint32_t frames = 0;
+		float t1 = m_GraphicsContext->GetGltfTime();
+
 		while (m_Running)
 		{
 			m_GraphicsContext->ProcessEvents();
-			DeltaTime deltaTime = m_GraphicsContext->CalculateDeltaTime();
 
+			DeltaTime deltaTime = m_GraphicsContext->CalculateDeltaTime();
 			if (m_GraphicsContext->IsWindowMinimized())
 				continue;
 
@@ -122,6 +123,18 @@ namespace SmolEngine
 					layer->OnEndFrame(deltaTime);
 			}
 			m_GraphicsContext->SwapBuffers();
+
+			// Calculates FPS
+			{
+				float t2 = m_GraphicsContext->GetGltfTime();
+				if ((t2 - t1) > 1.0 || frames == 0)
+				{
+					m_FPSCount = static_cast<float>(frames) / (t2 - t1);
+					t1 = t2;
+					frames = 0;
+				}
+				frames++;
+			}
 		}
 	}
 
@@ -156,12 +169,17 @@ namespace SmolEngine
 		return m_GraphicsContext;
 	}
 
-	const uint32_t Engine::GetWindowHeight() const
+	uint32_t Engine::GetWindowHeight() const
 	{
 		return m_GraphicsContext->GetWindowData()->Height;
 	}
 
-	const uint32_t Engine::GetWindowWidth() const
+	float Engine::GetFPSCount() const
+	{
+		return m_FPSCount;
+	}
+
+	uint32_t Engine::GetWindowWidth() const
 	{
 		return m_GraphicsContext->GetWindowData()->Width;
 	}

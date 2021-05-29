@@ -531,6 +531,9 @@
     <ClInclude Include="include\Libraries\Frostium3D\DebugRenderer.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\DeferredRenderer.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
+    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
@@ -1240,9 +1243,6 @@
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\RaytracingPipeline.h">
-      <Filter>include\Libraries\Frostium3D</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Renderer.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Renderer2D.h">

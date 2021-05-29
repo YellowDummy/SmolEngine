@@ -8,6 +8,12 @@
 
 namespace SmolEngine
 {
+	enum class CameraComponentType : int
+	{
+		Perspective,
+		Ortho
+	};
+
 	struct CameraComponent: public BaseComponent
 	{
 		CameraComponent()
@@ -21,19 +27,17 @@ namespace SmolEngine
 			AspectRatio = (float)Engine::GetEngine()->GetWindowWidth() / (float)Engine::GetEngine()->GetWindowHeight();
 		}
 
-		// Data
-		glm::mat4 ViewProjectionMatrix = glm::mat4(1.0f);
-		glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
-		glm::mat4 ViewMatrix = glm::mat4(1.0f);
-
-		float AspectRatio = 1.0;
-		float ZoomLevel = 6.0f;
-		float zNear = -1.0f;
-		float zFar = 1.0f;
-
-		bool isPrimaryCamera = false;
-		bool isEnabled = true;
-		bool ShowCanvasShape = true;
+		glm::mat4            ProjectionMatrix = glm::mat4(1.0f);
+		glm::mat4            ViewMatrix = glm::mat4(1.0f);
+		float                AspectRatio = 1.0;
+		float                ZoomLevel = 6.0f;
+		float                zNear = 0.1f;
+		float                zFar = 1000.0f;
+		int                  ImGuiType = 0;
+		float                FOV = 75.0f;
+		bool                 bPrimaryCamera = false;
+		bool                 bShowPreview = false;
+		CameraComponentType  eType = CameraComponentType::Perspective;
 
 	private:
 
@@ -44,7 +48,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(AspectRatio, ZoomLevel, isPrimaryCamera, isEnabled, zNear, zFar, ShowCanvasShape, ComponentID);
+			archive(AspectRatio, ZoomLevel, bPrimaryCamera, bShowPreview, eType, zNear, zFar, FOV, ImGuiType, ComponentID);
 		}
 	};
 }

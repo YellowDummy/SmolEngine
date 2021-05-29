@@ -26,36 +26,41 @@ namespace SmolEngine
 	public:
 
 		Actor() = default;
-		Actor(entt::entity entity);
 		operator entt::entity() const { return m_Entity; }
 
 		// Getters
-		const std::string& GetName() const;
-		const std::string& GetTag() const;
-		uint32_t GetComponentsCount() const;
-		const HeadComponent* GetHead() const;
-		uint32_t GetID() const;
-
-		std::vector<Actor*>& GetChilds();
-		Actor* GetChildByName(const std::string& name);
-		Actor* GetChildByTag(const std::string& tag);
-		Actor* GetParent();
+		const std::string&           GetName() const;
+		const std::string&           GetTag() const;
+		uint32_t                     GetComponentsCount() const;
+		const HeadComponent*         GetHead() const;
+		uint32_t                     GetID() const;
+		uint32_t                     GetChildsCount() const;
+		Actor*                       GetChildByName(const std::string& name);
+		Actor*                       GetChildByIndex(uint32_t index);
+		std::vector<Actor*>&         GetChilds();
+		Actor*                       GetParent() const;
+		Actor*                       GetRootActor();
+		Actor*                       FindActorByID(uint32_t id);
 
 		// Setters
-		bool SetParent(Actor* parent);
-		bool SetName(const std::string& name);
+		bool                         SetParent(Actor* parent);
+		bool                         SetChild(Actor* child);
+		bool                         SetName(const std::string& name);
+		bool                         RemoveChildAtIndex(uint32_t index);
 
 		template<typename T>
-		T* GetComponent() { return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<T>(m_Entity); }
+		T* GetComponent()            { return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<T>(m_Entity); }
 		template<typename T>
-		bool HasComponent() { return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Entity); }
+		bool HasComponent()          { return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Entity); }
 		template<typename T, typename... Args>
 		T* AddComponent(Args&&... args) { return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<T>(this, args...); }
 
 	private:
-		HeadComponent* GetInfo();
-	private:
-		entt::entity m_Entity;
+
+		HeadComponent*               GetInfo();
+		Actor*                       FindRootActor(Actor* actor);
+		entt::entity                 m_Entity{};
+
 	private:
 		friend class cereal::access;
 		friend struct ScriptableObject;

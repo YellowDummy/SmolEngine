@@ -4,7 +4,10 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <BulletCollision/CollisionShapes/btShapeHull.h>
+
 #include <Frostium3D/Utils/Utils.h>
+#include <Frostium3D/Utils/glTFImporter.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -50,6 +53,7 @@ namespace SmolEngine
 		case RigidBodyShape::Box:     CreateBox(info); break;
 		case RigidBodyShape::Sphere:  CreateSphere(info); break;
 		case RigidBodyShape::Capsule: CreateCapsule(info); break;
+		case RigidBodyShape::Convex:  CreateConvex(info); break;
 		}
 
 		if (info->StateIndex == 1) // static
@@ -78,6 +82,36 @@ namespace SmolEngine
 	void RigidActor::CreateBox(BodyCreateInfo* info)
 	{
 		m_Shape = new btBoxShape(btVector3(info->BoxShapeInfo.X, info->BoxShapeInfo.Y, info->BoxShapeInfo.Z));
+	}
+
+	void RigidActor::CreateConvex(BodyCreateInfo* info)
+	{
+		if (info->ConvexShapeInfo.FilePath.empty() == false)
+		{
+			ImportedDataGlTF* data = new ImportedDataGlTF();
+			if (glTFImporter::Import(info->ConvexShapeInfo.FilePath, data))
+			{
+				auto& model = data->Primitives[0];
+				auto trimesh = new btTriangleMesh();
+				for (uint32_t i = 0; i < static_cast<uint32_t>(model.IndexBuffer.size()); i+=3)
+				{
+					uint32_t index0 = model.IndexBuffer[i];
+					uint32_t index1 = model.IndexBuffer[i + 1];
+					uint32_t index2 = model.IndexBuffer[i + 2];
+
+					btVector3 vertex0(model.VertexBuffer[index0].Pos.x, model.VertexBuffer[index0].Pos.y, model.VertexBuffer[index0].Pos.z);
+					btVector3 vertex1(model.VertexBuffer[index1].Pos.x, model.VertexBuffer[index1].Pos.y, model.VertexBuffer[index1].Pos.z);
+					btVector3 vertex2(model.VertexBuffer[index2].Pos.x, model.VertexBuffer[index2].Pos.y, model.VertexBuffer[index2].Pos.z);
+
+					trimesh->addTriangle(vertex0, vertex1, vertex2);
+				}
+
+				auto trimeshShape = new btBvhTriangleMeshShape(trimesh, true);
+				m_Shape = trimeshShape;
+			}
+
+			delete data;
+		}
 	}
 
 	void RigidActor::SetActive(bool value)

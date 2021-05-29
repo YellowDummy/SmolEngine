@@ -14,16 +14,10 @@ namespace SmolEngine
 		TransformComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		void operator=(const TransformComponent& other)
-		{
-			WorldPos = other.WorldPos;
-			Scale = other.Scale;
-			Rotation = other.Rotation;
-		}
-
-		glm::vec3 WorldPos = glm::vec3(0.0f);
-		glm::vec3 Rotation = glm::vec3(0.0f);;
-		glm::vec3 Scale = glm::vec3(1.0f);;
+		glm::vec3  WorldPos = glm::vec3(0.0f);
+		glm::vec3  Rotation = glm::vec3(0.0f);;
+		glm::vec3  Scale = glm::vec3(1.0f);
+		glm::vec3  RelativePos = glm::vec3(0.0f);
 
 	private:
 

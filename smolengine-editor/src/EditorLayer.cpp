@@ -31,6 +31,8 @@
 #include <Libraries/entt/entt.hpp>
 #include <fstream>
 
+#include <ImGUI/imgui_internal.h>
+
 namespace SmolEngine
 {
 	static bool showConsole = true;
@@ -230,6 +232,82 @@ namespace SmolEngine
 
 	}
 
+	void EditorLayer::DrawActor(Actor* actor, uint32_t index)
+	{
+		if (m_SelectedActor == actor)
+			ImGui::PushStyleColor(ImGuiCol_Text, { 0.1f, 0.3f, 1.0f, 1.0f });
+
+		bool open = ImGui::TreeNodeEx(actor->GetName().c_str(), m_SelectedActor == actor ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_OpenOnArrow);
+
+		if (m_SelectedActor == actor)
+			ImGui::PopStyleColor();
+
+		if (ImGui::IsItemClicked(1))
+		{
+			m_SelectionFlags = SelectionFlags::Actions;
+
+			m_TempActorTag = "";
+			m_TempActorName = "";
+
+			m_SelectedActor = nullptr;
+			m_SelectedActor = actor;
+		}
+
+		if (ImGui::IsItemClicked())
+		{
+			m_SelectionFlags = SelectionFlags::Inspector;
+			if (m_SelectedActor != nullptr)
+			{
+				m_SelectedActor->GetInfo()->bShowComponentUI = false;
+				m_SelectedActor = nullptr;
+			}
+
+			m_TempActorTag = "";
+			m_TempActorName = "";
+			m_SelectedActor = actor;
+
+			if (ImGui::IsMouseDoubleClicked(0))
+			{
+				glm::vec3 pos = m_SelectedActor->GetComponent<TransformComponent>()->WorldPos;
+				m_Camera->SetPosition(pos);
+			}
+		}
+
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("ActorDragAndDrop", actor, sizeof(Actor));
+			ImGui::Text(actor->GetName().c_str());
+			ImGui::EndDragDropSource();
+			m_IDBuffer = index;
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ActorDragAndDrop"))
+			{
+				Actor* target = static_cast<Actor*>(payload->Data);
+				if (target != actor)
+				{
+					actor->SetChild(target);
+				}
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+
+		if (open)
+		{
+			uint32_t i = 0;
+			for (auto child : actor->GetChilds())
+			{
+				DrawActor(child, i);
+				i++;
+			}
+
+			ImGui::TreePop();
+		}
+	}
+
 	void EditorLayer::DrawToolsBar()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 10.0f, 10.0f });
@@ -376,8 +454,23 @@ namespace SmolEngine
 				ImGui::EndDragDropTarget();
 			}
 
+			bool gizmosEnabled = true;
+			{
+				entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
+				const auto& group = reg.view<CameraComponent>();
+				for (const auto& entity : group)
+				{
+					auto& camera = group.get<CameraComponent>(entity);
+					if (camera.bPrimaryCamera && camera.bShowPreview)
+					{
+						gizmosEnabled = false;
+						break;
+					}
+				}
+			}
+
 			// Gizmos
-			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode())
+			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode() && gizmosEnabled)
 			{
 				auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
 				if (transformComponent)
@@ -445,7 +538,7 @@ namespace SmolEngine
 			m_SelectedActor->SetName(m_TempActorName);
 
 		ImGui::Extensions::InputString("Tag", head->Tag, m_TempActorTag);
-		ImGui::Extensions::CheckBox("Enabled", head->IsEnabled, 130.0f, "HeadPanel");
+		ImGui::Extensions::CheckBox("Enabled", head->bEnabled, 130.0f, "HeadPanel");
 	}
 
 	void EditorLayer::DrawTransform(TransformComponent* transform)
@@ -534,28 +627,30 @@ namespace SmolEngine
 
 	void EditorLayer::DrawCamera(CameraComponent* camera)
 	{
+		if (ImGui::Extensions::Combo("Type", "Perspective\0Ortho\0", camera->ImGuiType, 130.0f, "CameraComponent"))
+			camera->eType = (CameraComponentType)camera->ImGuiType;
+
 		ImGui::Extensions::InputFloat("Zoom", camera->ZoomLevel);
+		ImGui::Extensions::InputFloat("FOV", camera->FOV);
 		ImGui::Extensions::InputFloat("Near", camera->zNear);
 		ImGui::Extensions::InputFloat("Far", camera->zFar);
 
 		ImGui::NewLine();
-
-		if(ImGui::Extensions::CheckBox("Primary", camera->isPrimaryCamera))
+		if(ImGui::Extensions::CheckBox("Primary", camera->bPrimaryCamera))
 		{
-			if (camera->isPrimaryCamera)
+			if (camera->bPrimaryCamera)
 			{
 				const size_t id = m_SelectedActor->GetID();
-
 				entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
 				reg.view<HeadComponent, CameraComponent>().each([&](HeadComponent& head, CameraComponent& camera)
 				{
 					if (head.ActorID != id)
-						camera.isPrimaryCamera = false;
+						camera.bPrimaryCamera = false;
 				});
 			}
 		}
 
-		ImGui::Extensions::CheckBox("Enabled", camera->isEnabled);
+		ImGui::Extensions::CheckBox("Preview", camera->bShowPreview);
 	}
 
 	void EditorLayer::DrawAudioSource(AudioSourceComponent* audio)
@@ -809,11 +904,31 @@ namespace SmolEngine
 					ImGui::EndPopup();
 				}
 
-				if (ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				bool open = ImGui::TreeNodeEx(sceneStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+				if (ImGui::BeginDragDropTarget())
 				{
-					std::vector<Actor*> actors;
-					m_World->GetActiveScene()->GetActors(actors);
-					for (const auto& actor : actors)
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ActorDragAndDrop"))
+					{
+						Actor* target = static_cast<Actor*>(payload->Data);
+						Actor* parent = target->GetParent();
+						if (parent != nullptr)
+							parent->RemoveChildAtIndex(m_IDBuffer);
+
+						m_IDBuffer = 0;
+					}
+
+					ImGui::EndDragDropTarget();
+				}
+
+				if (open)
+				{
+					m_DisplayedActors.clear();
+					m_World->GetActiveScene()->GetActors(m_DisplayedActors);
+
+					for (auto obj : m_DisplayedActors)
+						CheckActor(obj);
+
+					for (const auto& actor : m_DisplayedActors)
 					{
 						auto result = actor->GetName().find(name);
 						if (result == std::string::npos)
@@ -821,37 +936,7 @@ namespace SmolEngine
 							continue;
 						}
 
-						if (ImGui::TreeNodeEx(actor->GetName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
-						{
-							ImGui::TreePop();
-						}
-
-
-						if (ImGui::IsItemClicked(1))
-						{
-							m_SelectionFlags = SelectionFlags::Actions;
-
-							m_TempActorTag = "";
-							m_TempActorName = "";
-
-							m_SelectedActor = nullptr;
-							m_SelectedActor = actor;
-						}
-
-						if (ImGui::IsItemClicked())
-						{
-							m_SelectionFlags = SelectionFlags::Inspector;
-							if (m_SelectedActor != nullptr)
-							{
-								m_SelectedActor->GetInfo()->ShowComponentUI = false;
-								m_SelectedActor = nullptr;
-							}
-
-							m_TempActorTag = "";
-							m_TempActorName = "";
-
-							m_SelectedActor = actor;
-						}
+						DrawActor(actor);
 					}
 
 					ImGui::TreePop();
@@ -1031,7 +1116,7 @@ namespace SmolEngine
 	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)
 	{
 		ImGui::Extensions::Combo("Type", "Dynamic\0Static\0", component->CreateInfo.StateIndex);
-		ImGui::Extensions::Combo("Shape", "Box\0Sphere\0Capsule\0Custom\0", component->CreateInfo.ShapeIndex);
+		ImGui::Extensions::Combo("Shape", "Box\0Sphere\0Capsule\0Convex\0", component->CreateInfo.ShapeIndex);
 
 		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
 
@@ -1051,6 +1136,46 @@ namespace SmolEngine
 		{
 			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
 			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
+		}
+
+		if (component->CreateInfo.ShapeIndex == 3)
+		{
+			ImGui::NewLine();
+			ImGui::Separator();
+
+			if (!component->CreateInfo.ConvexShapeInfo.FilePath.empty())
+			{
+				ImGui::SetCursorPosX(10);
+				ImGui::Extensions::Text(component->CreateInfo.ConvexShapeInfo.FilePath, "");
+			}
+
+			ImGui::SetCursorPosX(10);
+			if (ImGui::Button("Select Mesh", { ImGui::GetWindowWidth() - 20.0f, 20.0f }))
+			{
+				const auto& result = Utils::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
+				if (result.has_value())
+					component->CreateInfo.ConvexShapeInfo.FilePath = result.value();
+			}
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
+				{
+					std::string path;
+					std::filesystem::path* p = (std::filesystem::path*)payload->Data;
+					if (FileExtensionCheck(p, ".gltf", path))
+						component->CreateInfo.ConvexShapeInfo.FilePath = path;
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::SetCursorPosX(10);
+			if (ImGui::Button("Clear", { ImGui::GetWindowWidth() - 20.0f, 20.0f }))
+			{
+				component->CreateInfo.ConvexShapeInfo.FilePath = "";
+			}
+
+			ImGui::NewLine();
 		}
 
 		ImGui::Separator();
@@ -1073,15 +1198,12 @@ namespace SmolEngine
 
 	void EditorLayer::DrawComponents()
 	{
-		// Head
 		if (ImGui::CollapsingHeader("Head"))
 		{
 			ImGui::NewLine();
 			auto info = m_World->GetActiveScene()->GetComponent<HeadComponent>(m_SelectedActor);
 			DrawInfo(info);
 		}
-
-		// Transform 
 
 		if (ImGui::CollapsingHeader("Tranform"))
 		{
@@ -1355,6 +1477,22 @@ namespace SmolEngine
 					ImGui::Extensions::InputRawString(str.Name, str.Value, "Value");
 
 				ImGui::NewLine();
+			}
+		}
+	}
+
+	void EditorLayer::CheckActor(Actor* actor)
+	{
+		HeadComponent* head = actor->GetInfo();
+		for (auto child : head->Childs)
+		{
+			if (std::find(m_DisplayedActors.begin(), m_DisplayedActors.end(), child) != m_DisplayedActors.end())
+			{
+				std::vector<Actor*> tmp = m_DisplayedActors;
+				tmp.erase(std::remove(tmp.begin(), tmp.end(), child), tmp.end());
+				m_DisplayedActors = tmp;
+
+				CheckActor(child);
 			}
 		}
 	}
