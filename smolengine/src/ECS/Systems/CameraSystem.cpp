@@ -12,6 +12,9 @@ namespace SmolEngine
 {
 	void CameraSystem::CalculateView(CameraComponent* camera, TransformComponent* transform)
 	{
+		glm::vec2 size = Engine::GetEngine()->GetViewPortSize();
+		camera->AspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+
 		switch (camera->eType)
 		{
 		case CameraComponentType::Ortho:        UpdateViewOrtho(camera, transform); break;
@@ -44,6 +47,36 @@ namespace SmolEngine
 			auto& [camera, transform] = group.get<CameraComponent, TransformComponent>(entity);
 			camera.AspectRatio = static_cast<float>(width) / static_cast<float>(height);
 			CalculateView(&camera, &transform);
+		}
+	}
+
+	void CameraSystem::OnBeginWorld()
+	{
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		const auto& group = reg->view<CameraComponent>();
+		for (const auto& entity : group)
+		{
+			auto& camera = group.get<CameraComponent>(entity);
+			if (camera.bPrimaryCamera)
+			{
+				camera.bShowPreview = true;
+				break;
+			}
+		}
+	}
+
+	void CameraSystem::OnEndWorld()
+	{
+		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
+		const auto& group = reg->view<CameraComponent>();
+		for (const auto& entity : group)
+		{
+			auto& camera = group.get<CameraComponent>(entity);
+			if (camera.bPrimaryCamera)
+			{
+				camera.bShowPreview = false;
+				break;
+			}
 		}
 	}
 

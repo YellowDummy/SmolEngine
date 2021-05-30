@@ -16,6 +16,7 @@ namespace SmolEngine
 		void SetPhysics2DContext(Physics2DContextCreateInfo* info)override;
 		void SetLayers(LayerManager* layerManager) override;
 		void SetScripts(ScriptingSystem* scriptingSytem) override;
+		void SetWorldAdminState(WorldAdminStateSComponent* state) override;
 
 	private:
 

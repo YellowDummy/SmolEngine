@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6A1F1343-D635-11D9-1FAD-9CFA8B02E260}</ProjectGuid>
+    <ProjectGuid>{6468121B-D028-8E51-9963-D7CE05E3D22D}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SmolEngine-Editor</RootNamespace>
+    <RootNamespace>SponzaShooter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -42,24 +42,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-x86_64\SmolEngine-Editor\</OutDir>
-    <IntDir>..\vendor\bin-int\Debug-windows-x86_64\SmolEngine-Editor\</IntDir>
-    <TargetName>SmolEngine-Editor</TargetName>
+    <OutDir>..\bin\Debug-windows-x86_64\SponzaShooter\</OutDir>
+    <IntDir>..\vendor\bin-int\Debug-windows-x86_64\SponzaShooter\</IntDir>
+    <TargetName>SponzaShooter</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-x86_64\SmolEngine-Editor\</OutDir>
-    <IntDir>..\vendor\bin-int\Release-windows-x86_64\SmolEngine-Editor\</IntDir>
-    <TargetName>SmolEngine-Editor</TargetName>
+    <OutDir>..\bin\Release-windows-x86_64\SponzaShooter\</OutDir>
+    <IntDir>..\vendor\bin-int\Release-windows-x86_64\SponzaShooter\</IntDir>
+    <TargetName>SponzaShooter</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>SMOLENGINE_EDITOR;_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;src;..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\taskflow;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\smolengine-editor\include;..\smolengine-editor\src;..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\taskflow;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -76,8 +76,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>SMOLENGINE_EDITOR;_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;src;..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\taskflow;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\smolengine-editor\include;..\smolengine-editor\src;..\smolengine\include;..\smolengine\include\Libraries;..\smolengine\include\Libraries\box_2D\include;..\smolengine\include\Libraries\fmod\include;..\smolengine\include\Libraries\Frostium3D;..\smolengine\include\Libraries\Frostium3D\Libraries;..\smolengine\include\Libraries\Frostium3D\Libraries\taskflow;..\smolengine\include\Libraries\Frostium3D\Libraries\vulkan;..\smolengine\include\Libraries\Frostium3D\Libraries\spdlog\include;..\smolengine\include\Libraries\Frostium3D\Libraries\cereal\include;..\smolengine\include\Libraries\Frostium3D\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -95,24 +95,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Editor.h" />
-    <ClInclude Include="include\EditorLayer.h" />
-    <ClInclude Include="include\FileBrowser\ImFileDialog.h" />
-    <ClInclude Include="include\FileManager.h" />
-    <ClInclude Include="include\ImGuiExtension.h" />
-    <ClInclude Include="include\MaterialLibraryInterface.h" />
-    <ClInclude Include="include\RendererPanel.h" />
-    <ClInclude Include="include\Scripts\BasePlayerScript.h" />
+    <ClInclude Include="Scripts.h" />
+    <ClInclude Include="SponzaShooter.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Editor.cpp" />
-    <ClCompile Include="src\EditorLayer.cpp" />
-    <ClCompile Include="src\FileBrowser\ImFileDialog.cpp" />
-    <ClCompile Include="src\FileManager.cpp" />
-    <ClCompile Include="src\ImGuiExtension.cpp" />
-    <ClCompile Include="src\MaterialLibraryInterface.cpp" />
-    <ClCompile Include="src\RendererPanel.cpp" />
-    <ClCompile Include="src\Scripts\BasePlayerScript.cpp" />
+    <ClCompile Include="Scripts.cpp" />
+    <ClCompile Include="SponzaShooter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\smolengine\SmolEngine.vcxproj">

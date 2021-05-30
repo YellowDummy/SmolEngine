@@ -65,7 +65,6 @@ project "SmolEngine"
 	{
         "_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE",
-		"SMOLENGINE_EDITOR",
 		"FROSTIUM_SMOLENGINE_IMPL"
 	}
 
@@ -122,7 +121,7 @@ project "SmolEngine"
 
 
 group "Samples"
-project "GameX"
+project "SponzaShooter"
 	location "samples"
 	kind "ConsoleApp"
 	language "C++"
@@ -134,20 +133,24 @@ project "GameX"
 
 	files
 	{
-		"%{prj.name}/**.h",
-		"%{prj.name}/**.cpp",
+		"samples/Scripts.h",
+		"samples/Scripts.cpp",
+		"samples/SponzaShooter.h",
+		"samples/SponzaShooter.cpp",
 	}
 
 	includedirs
 	{
+		"smolengine-editor/include/",
+		"smolengine-editor/src/",
 		"smolengine/include/",
 		"smolengine/include/Libraries/",
 		"smolengine/include/Libraries/box_2D/include/",
 		"smolengine/include/Libraries/fmod/include/",
 		"smolengine/include/Libraries/Frostium3D/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/",
-		"smolengine/include/Libraries/Frostium3D/Libraries/vulkan/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/taskflow/",
+		"smolengine/include/Libraries/Frostium3D/Libraries/vulkan/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/spdlog/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",

@@ -6,6 +6,13 @@
 
 namespace SmolEngine
 {
+	void RendererPanel::SetActiveDebugDraw(bool val)
+	{
+		m_DebugDrawState.bDefaultDraw = val;
+		SceneStateComponent* state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
+		DeferredRenderer::SetRendererState(&state->PipelineState.State);
+	}
+
 	void RendererPanel::OnUpdate(bool& open)
 	{
 		constexpr float padding = 170.0f;

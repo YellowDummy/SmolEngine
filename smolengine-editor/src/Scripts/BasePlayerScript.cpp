@@ -1,48 +1,87 @@
 #include "Scripts/BasePlayerScript.h"
 #include "SmolEngineCore.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace SmolEngine
 {
 	RigidbodyComponent* rigid = nullptr;
+	CameraComponent* camera = nullptr;
+	TransformComponent* transform = nullptr;
+	TransformComponent* cameraTransform = nullptr;
 
 	BasePlayerScript::BasePlayerScript()
 	{
 		CreateValue<float>("Speed");
-		CreateValue<int32_t>("Level");
+		CreateValue<float>("Camera Speed");
 	}
 
 	void BasePlayerScript::OnProcess(float deltaTime)
 	{
-		if (rigid)
+		glm::quat q = glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
+		glm::vec3 upDir = glm::rotate(q, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::vec3 forwardDir = glm::rotate(q, glm::vec3(0.0f, 0.0f, -1.0f));
+		glm::vec3 rightDir = glm::rotate(q, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		// Updates Pos
 		{
-			if (Input::IsKeyPressed(KeyCode::G))
+			if (rigid)
 			{
-				PhysicsSystem::AddForce(rigid, { 0, -(*m_Speed * 10), 0 });
+				if (Input::IsKeyPressed(KeyCode::W))
+				{
+					PhysicsSystem::SetLinearVelocity(rigid, (forwardDir * deltaTime) *  (*m_Speed * 2));
+				}
+
+				if (Input::IsKeyPressed(KeyCode::S))
+				{
+					PhysicsSystem::SetLinearVelocity(rigid, (-forwardDir * deltaTime) * (*m_Speed * 2));
+				}
+
+				if (Input::IsKeyPressed(KeyCode::D))
+				{
+					PhysicsSystem::SetLinearVelocity(rigid, (rightDir * deltaTime) * (*m_Speed * 2));
+				}
+
+				if (Input::IsKeyPressed(KeyCode::A))
+				{
+					PhysicsSystem::SetLinearVelocity(rigid, (-rightDir * deltaTime) * (*m_Speed * 2));
+				}
+
+				if (Input::IsKeyPressed(KeyCode::Space))
+				{
+					PhysicsSystem::SetLinearVelocity(rigid, (glm::vec3(0, 1, 0) * deltaTime) * (*m_Speed * 10));
+				}
 			}
-			if (Input::IsKeyPressed(KeyCode::T))
-			{
-				PhysicsSystem::AddForce(rigid, { 0, *m_Speed * 10, 0 });
-			}
-			if (Input::IsKeyPressed(KeyCode::F))
-			{
-				PhysicsSystem::AddForce(rigid, { 0, 0, (*m_Speed * 10) / 2.0f,});
-			}
-			if (Input::IsKeyPressed(KeyCode::H))
-			{
-				PhysicsSystem::AddForce(rigid, { (*m_Speed * 10) / 2.0f, 0, 0 });
-			}
+		}
+
+		// Updates Camera
+		{
+			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
+			glm::vec2 deltaT = (mouse - m_InitialMousePosition) * 0.003f;
+			m_InitialMousePosition = mouse;
+
+			float yawSign = upDir.y;
+			m_Yaw += yawSign * deltaT.x * *m_CameraSpeed;
+			m_Pitch += deltaT.y * *m_CameraSpeed;
+
+			cameraTransform->Rotation = { -m_Pitch, -m_Yaw, 0.0f };
 		}
 	}
 
 	void BasePlayerScript::OnBegin()
 	{
 		m_Speed = GetValue<float>("Speed");
-		m_Level = GetValue<int32_t>("Level");
+		m_CameraSpeed = GetValue<float>("Camera Speed");
 
-		if (HasComponent<RigidbodyComponent>())
-		{
-			rigid = GetComponent<RigidbodyComponent>();
-		}
+		transform = GetComponent<TransformComponent>();
+		rigid = GetComponent<RigidbodyComponent>();
+
+		cameraTransform = GetChildByName("Camera")->GetComponent<TransformComponent>();
+		camera = GetChildByName("Camera")->GetComponent<CameraComponent>();
+
+		PhysicsSystem::SetAngularFactor(rigid, { 0, 1, 0 });
 	}
 
 	void BasePlayerScript::OnDestroy()

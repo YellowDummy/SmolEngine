@@ -13,6 +13,13 @@ namespace SmolEngine
 	class Mesh;
 	struct Bullet3WorldSComponent;
 
+	enum class RigidBodyType: int
+	{
+		Dynamic,
+		Static,
+		Kinematic
+	};
+
 	enum class RigidBodyShape: int
 	{
 		Box,
@@ -60,6 +67,7 @@ namespace SmolEngine
 		float                      RollingFriction = 0.1f;
 		float                      SpinningFriction = 0.1f;
 		RigidBodyShape             eShape = RigidBodyShape::Box;
+		RigidBodyType              eType = RigidBodyType::Static;
 		BoxShapeCreateInfo         BoxShapeInfo{};
 		SphereShapeCreateInfo      SphereShape{};
 		CapsuleShapeCreateInfo     CapsuleShapeInfo{};
@@ -73,7 +81,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(eShape, StateIndex, ShapeIndex, ActorID, Mass, Density,
+			archive(eShape, eType, StateIndex, ShapeIndex, ActorID, Mass, Density,
 				Friction, Restitution, LinearDamping, AngularDamping,
 				RollingFriction, SpinningFriction,
 				SphereShape.Radius,

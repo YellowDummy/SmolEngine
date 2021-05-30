@@ -21,6 +21,13 @@ namespace SmolEngine
 		rb->setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
 	}
 
+	void PhysicsSystem::SetAngularFactor(RigidbodyComponent* component, const glm::vec3& axis)
+	{
+		btRigidBody* rb = component->Body.m_Body;
+		rb->activate(true);
+		rb->setAngularFactor(btVector3(axis.x, axis.y, axis.z));
+	}
+
 	void PhysicsSystem::AddForce(RigidbodyComponent* component, const glm::vec3& dir)
 	{
 		btRigidBody* rb = component->Body.m_Body;

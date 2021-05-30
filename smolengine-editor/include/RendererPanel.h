@@ -8,6 +8,7 @@ namespace SmolEngine
 	{
 	public:
 
+		void SetActiveDebugDraw(bool val);
 		void OnUpdate(bool& open);
 		DebugDrawState* GetDebugState();
 

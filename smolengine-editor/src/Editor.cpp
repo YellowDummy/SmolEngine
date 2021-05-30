@@ -1,16 +1,15 @@
 #include "Editor.h"
 #include "EditorLayer.h"
 #include "Scripts/BasePlayerScript.h"
-
 #include "ECS/Systems/ScriptingSystem.h"
+
+SmolEngine::Engine* CreateEngineContext()
+{
+	return new SmolEngine::Editor;
+}
 
 namespace SmolEngine
 {
-	Engine* CreateEngineContext()
-	{
-		return new Editor;
-	}
-
 	Editor::~Editor()
 	{
 		delete m_Camera;
@@ -48,5 +47,10 @@ namespace SmolEngine
 	void Editor::SetScripts(ScriptingSystem* scriptingSytem)
 	{
 		scriptingSytem->AddNativeClass<BasePlayerScript>("Base Player Script");
+	}
+
+	void Editor::SetWorldAdminState(WorldAdminStateSComponent* state)
+	{
+		state->m_LevelEditorActive = true;
 	}
 }

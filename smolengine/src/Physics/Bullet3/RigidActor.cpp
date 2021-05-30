@@ -56,7 +56,7 @@ namespace SmolEngine
 		case RigidBodyShape::Convex:  CreateConvex(info); break;
 		}
 
-		if (info->StateIndex == 1) // static
+		if (info->eType == RigidBodyType::Static)
 			info->Mass = 0.0f;
 
 		bool isDynamic = info->Mass != 0.0f;

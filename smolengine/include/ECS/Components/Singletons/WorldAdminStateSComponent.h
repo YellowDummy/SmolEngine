@@ -28,6 +28,7 @@ namespace SmolEngine
 														    
 		inline static WorldAdminStateSComponent*              s_Instance = nullptr;
 		bool                                                  m_InPlayMode = false;
+		bool                                                  m_LevelEditorActive = false;
 		entt::registry*                                       m_CurrentRegistry = nullptr;
 		uint32_t                                              m_ActiveSceneID = 0;
 		BeginSceneInfo                                        m_SceneInfo{};

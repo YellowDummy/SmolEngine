@@ -16,6 +16,7 @@
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/PhysicsSystem.h"
+#include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 
 #include <Frostium3D/GraphicsContext.h>
 #include <Frostium3D/DebugRenderer.h>

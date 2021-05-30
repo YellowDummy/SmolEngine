@@ -110,6 +110,7 @@ namespace SmolEngine
 
 		void DrawScriptComponent(uint32_t index);
 		void CheckActor(Actor* actor);
+		void CheckGameCameraState();
 
 	private:
 
@@ -117,6 +118,7 @@ namespace SmolEngine
 		bool                                        m_IsGameViewFocused = false;
 		bool                                        m_GizmoEnabled = true;
 		bool                                        m_SnapEnabled = false;
+		bool                                        m_GameCameraEnabled = false;
 		FileManager*                                m_FileManager = nullptr;
 		WorldAdmin*                                 m_World = nullptr;
 		EditorCamera*                               m_Camera = nullptr;

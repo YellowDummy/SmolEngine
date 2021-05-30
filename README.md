@@ -1,6 +1,5 @@
 ## Level-Editor
-![SmolEngine](https://i.imgur.com/gzBroKL.png)
-![SmolEngine](https://i.imgur.com/gCC86yp.png)
+![SmolEngine](https://i.imgur.com/usic3JV.png)
 ## Core Features
 
 - Custom [graphics engine](https://github.com/YellowDummy/Frostium3D)

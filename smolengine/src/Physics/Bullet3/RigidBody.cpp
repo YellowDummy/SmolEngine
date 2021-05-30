@@ -22,6 +22,12 @@ namespace SmolEngine
         rbInfo.m_spinningFriction = info->SpinningFriction;
         m_Body = new btRigidBody(rbInfo);
 
+        if (info->eType == RigidBodyType::Kinematic)
+        {
+            m_Body->setCollisionFlags(m_Body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+            m_Body->setActivationState(DISABLE_DEACTIVATION);
+        }
+
         m_Body->setUserPointer(info->pActor);
         SetActive(true);
     }

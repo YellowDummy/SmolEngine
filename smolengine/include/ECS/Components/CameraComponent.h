@@ -48,7 +48,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(AspectRatio, ZoomLevel, bPrimaryCamera, bShowPreview, eType, zNear, zFar, FOV, ImGuiType, ComponentID);
+			archive(AspectRatio, ZoomLevel, bPrimaryCamera, eType, zNear, zFar, FOV, ImGuiType, ComponentID);
 		}
 	};
 }

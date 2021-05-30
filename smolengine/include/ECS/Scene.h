@@ -17,12 +17,11 @@ namespace SmolEngine
 		~Scene() = default;
 		Scene(const Scene& another);
 
+		void                    OnUpdate(DeltaTime delta);
 		bool                    Save(const std::string& filePath);
 		bool                    Load(const std::string& filePath);
-			                   
 		void                    DuplicateActor(Actor* actor);
 		void                    DeleteActor(Actor* actor);
-
 		Actor*                  CreateActor(const std::string& name, const std::string& tag = std::string("Default"));
 		Actor*                  FindActorByName(const std::string& name);
 		Actor*                  FindActorByTag(const std::string& tag);

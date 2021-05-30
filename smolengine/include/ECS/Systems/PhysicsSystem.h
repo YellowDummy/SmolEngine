@@ -15,6 +15,7 @@ namespace SmolEngine
 	public:
 
 		static void SetLinearVelocity(RigidbodyComponent* component, const glm::vec3& dir);
+		static void SetAngularFactor(RigidbodyComponent* component, const glm::vec3& axis);
 
 		static void AddForce(RigidbodyComponent* component, const glm::vec3& dir);
 		static void AddImpulse(RigidbodyComponent* component, const glm::vec3& dir);

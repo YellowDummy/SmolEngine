@@ -153,7 +153,7 @@ namespace SmolEngine
 
 	void EditorLayer::OnBeginFrame(DeltaTime deltaTime)
 	{
-		if (m_IsSceneViewFocused)
+		if (m_IsSceneViewFocused && m_GameCameraEnabled == false)
 		{
 			m_Camera->OnUpdate(deltaTime);
 		}
@@ -165,7 +165,10 @@ namespace SmolEngine
 
 	void EditorLayer::OnEndFrame(DeltaTime deltaTime)
 	{
-		RendererSystem::DebugDraw(m_RendererPanel->GetDebugState());
+		if (!m_World->IsInPlayMode())
+		{
+			RendererSystem::DebugDraw(m_RendererPanel->GetDebugState());
+		}
 	}
 
 	void EditorLayer::OnUpdate(DeltaTime deltaTime)
@@ -175,7 +178,7 @@ namespace SmolEngine
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		if(m_IsSceneViewFocused)
+		if(m_IsSceneViewFocused && m_GameCameraEnabled == false)
 			m_Camera->OnEvent(e);
 	}
 
@@ -218,6 +221,7 @@ namespace SmolEngine
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
+		CheckGameCameraState();
 		DrawToolsBar();
 		DrawSceneView(true);
 
@@ -410,6 +414,7 @@ namespace SmolEngine
 			}
 
 			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_SceneViewPort.x, m_SceneViewPort.y });
+
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
@@ -454,23 +459,8 @@ namespace SmolEngine
 				ImGui::EndDragDropTarget();
 			}
 
-			bool gizmosEnabled = true;
-			{
-				entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
-				const auto& group = reg.view<CameraComponent>();
-				for (const auto& entity : group)
-				{
-					auto& camera = group.get<CameraComponent>(entity);
-					if (camera.bPrimaryCamera && camera.bShowPreview)
-					{
-						gizmosEnabled = false;
-						break;
-					}
-				}
-			}
-
 			// Gizmos
-			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode() && gizmosEnabled)
+			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode() && !m_GameCameraEnabled)
 			{
 				auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
 				if (transformComponent)
@@ -769,6 +759,7 @@ namespace SmolEngine
 				{
 					if (!m_World->IsInPlayMode())
 					{
+						m_World->SaveCurrentScene();
 						m_World->OnBeginWorld();
 					}
 					else
@@ -790,6 +781,7 @@ namespace SmolEngine
 
 						m_SelectedActor = nullptr;
 						m_World->OnEndWorld();
+						m_World->LoadLastSceneState();
 						m_SelectedActor = m_World->GetActiveScene()->FindActorByID(selectedActorID);
 					}
 					else
@@ -1115,38 +1107,41 @@ namespace SmolEngine
 
 	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)
 	{
-		ImGui::Extensions::Combo("Type", "Dynamic\0Static\0", component->CreateInfo.StateIndex);
-		ImGui::Extensions::Combo("Shape", "Box\0Sphere\0Capsule\0Convex\0", component->CreateInfo.ShapeIndex);
+		ImGui::Extensions::Combo("Type", "Dynamic\0Static\0Kinematic\0", component->CreateInfo.StateIndex);
+		ImGui::Extensions::Combo("Shape", "Box\0Sphere\0Capsule\0Mesh\0", component->CreateInfo.ShapeIndex);
 
+		component->CreateInfo.eType = (RigidBodyType)component->CreateInfo.StateIndex;
 		component->CreateInfo.eShape = (RigidBodyShape)component->CreateInfo.ShapeIndex;
 
-		if (component->CreateInfo.ShapeIndex == 0)
+		if (component->CreateInfo.eShape == RigidBodyShape::Box)
 		{
 			ImGui::Extensions::InputFloat("X", component->CreateInfo.BoxShapeInfo.X);
 			ImGui::Extensions::InputFloat("Y", component->CreateInfo.BoxShapeInfo.Y);
 			ImGui::Extensions::InputFloat("Z", component->CreateInfo.BoxShapeInfo.Z);
 		}
 
-		if (component->CreateInfo.ShapeIndex == 1)
+		if (component->CreateInfo.eShape == RigidBodyShape::Sphere)
 		{
 			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
 		}
 
-		if (component->CreateInfo.ShapeIndex == 2)
+		if (component->CreateInfo.eShape == RigidBodyShape::Capsule)
 		{
 			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
 			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
 		}
 
-		if (component->CreateInfo.ShapeIndex == 3)
+		if (component->CreateInfo.eShape == RigidBodyShape::Convex)
 		{
 			ImGui::NewLine();
 			ImGui::Separator();
+			ImGui::NewLine();
 
 			if (!component->CreateInfo.ConvexShapeInfo.FilePath.empty())
 			{
-				ImGui::SetCursorPosX(10);
-				ImGui::Extensions::Text(component->CreateInfo.ConvexShapeInfo.FilePath, "");
+				std::filesystem::path p(component->CreateInfo.ConvexShapeInfo.FilePath);
+				ImGui::SetCursorPosX(12);
+				ImGui::Extensions::Text(p.filename().stem().u8string(), "");
 			}
 
 			ImGui::SetCursorPosX(10);
@@ -1181,7 +1176,7 @@ namespace SmolEngine
 		ImGui::Separator();
 		ImGui::NewLine();
 
-		if (component->CreateInfo.StateIndex == 0)
+		if (component->CreateInfo.eType == RigidBodyType::Dynamic)
 		{
 			ImGui::Extensions::InputFloat("Mass", component->CreateInfo.Mass);
 		}
@@ -1493,6 +1488,22 @@ namespace SmolEngine
 				m_DisplayedActors = tmp;
 
 				CheckActor(child);
+			}
+		}
+	}
+
+	void EditorLayer::CheckGameCameraState()
+	{
+		m_GameCameraEnabled = false;
+		entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
+		const auto& group = reg.view<CameraComponent>();
+		for (const auto& entity : group)
+		{
+			auto& camera = group.get<CameraComponent>(entity);
+			if (camera.bPrimaryCamera && camera.bShowPreview)
+			{
+				m_GameCameraEnabled = true;
+				break;
 			}
 		}
 	}

@@ -20,6 +20,10 @@ namespace SmolEngine
 	private:
 
 		float*     m_Speed = nullptr;
-		int32_t*   m_Level = nullptr;
+		float*     m_CameraSpeed = nullptr;
+
+		float      m_Yaw = 0;
+		float      m_Pitch = 0.0f;
+		glm::vec2  m_InitialMousePosition = glm::vec2(0.0f);
 	};
 }

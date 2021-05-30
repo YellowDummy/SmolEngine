@@ -54,15 +54,8 @@ namespace SmolEngine
 		Scene* scene = GetActiveScene();
 		scene->CalculateRelativePositions();
 		SceneStateComponent* sceneState = scene->GetSceneState();
-#ifdef SMOLENGINE_EDITOR
-		if (!Utils::IsPathValid(sceneState->FilePath))
-		{
-			NATIVE_ERROR("Path is not valid: {}", sceneState->FilePath);
-			return;
-		}
-		// We save the current scene before starting the simulation
-		SaveCurrentScene();
-#endif
+
+		CameraSystem::OnBeginWorld();
 		Physics2DSystem::OnBeginWorld();
 		PhysicsSystem::OnBeginWorld();
 		AudioSystem::OnBeginWorld();
@@ -79,11 +72,12 @@ namespace SmolEngine
 		for (const auto& entity : cameraGroup)
 		{
 			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
-#ifdef SMOLENGINE_EDITOR
-			if (!camera.bPrimaryCamera || !camera.bShowPreview) { continue; }
-#else
-			if (!camera.bPrimaryCamera) { continue; }
-#endif
+			if (m_State->m_LevelEditorActive)
+			{
+				if (!camera.bPrimaryCamera || !camera.bShowPreview) { continue; }
+			}
+			else
+				if (!camera.bPrimaryCamera) { continue; }
 
 			// Calculating ViewProj
 			CameraSystem::CalculateView(&camera, &transform);
@@ -106,26 +100,20 @@ namespace SmolEngine
 
 	void WorldAdmin::OnEndWorld()
 	{
-		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
 		m_State->m_InPlayMode = false;
-
+		CameraSystem::OnEndWorld();
 		ScriptingSystem::OnEndWorld();
 		Physics2DSystem::OnEndWorld();
 		PhysicsSystem::OnEndWorld();
 		AudioSystem::OnBeginWorld();
-
-#ifdef SMOLENGINE_EDITOR
-		LoadScene(sceneState->FilePath);
-#endif
 	}
 
 	void WorldAdmin::OnUpdate(DeltaTime deltaTime)
 	{
-#ifdef SMOLENGINE_EDITOR
 		if (m_State->m_InPlayMode)
 		{
 			Scene* scene = GetActiveScene();
-			scene->UpdateChildsPositions();
+			scene->OnUpdate(deltaTime);
 
 			ScriptingSystem::OnUpdate(deltaTime);
 			Physics2DSystem::OnUpdate(deltaTime);
@@ -134,16 +122,7 @@ namespace SmolEngine
 			Physics2DSystem::UpdateTransforms();
 			PhysicsSystem::UpdateTransforms();
 		}
-#else
-		Scene* scene = GetActiveScene();
-		scene->UpdateChildsPositions();
 
-		ScriptingSystem::OnUpdate(deltaTime);
-		Physics2DSystem::OnUpdate(deltaTime);
-		PhysicsSystem::OnUpdate(deltaTime);
-		Physics2DSystem::UpdateTransforms();
-		PhysicsSystem::UpdateTransforms();
-#endif
 		RendererSystem::BeginSubmit(&m_State->m_SceneInfo);
 		RendererSystem::OnUpdate();
 		RendererSystem::EndSubmit();
@@ -152,11 +131,6 @@ namespace SmolEngine
 	void WorldAdmin::OnEvent(Event& e)
 	{
 		if (!m_State->m_InPlayMode) { return; }
-	}
-
-	void WorldAdmin::OnGameViewResize(float width, float height)
-	{
-
 	}
 
 	void WorldAdmin::ReloadActiveScene()
@@ -223,7 +197,7 @@ namespace SmolEngine
 			Scope<MaterialCreateInfo> defMat = std::make_unique<MaterialCreateInfo>();
 			defMat->SetRoughness(1.0f);
 			defMat->SetMetalness(0.2f);
-			MaterialLibrary::GetSinglenton()->Add(defMat.get(), "default material");
+			MaterialLibrary::GetSinglenton()->Add(defMat.get(), "defaultmaterial");
 			DeferredRenderer::UpdateMaterials();
 		}
 
@@ -258,6 +232,26 @@ namespace SmolEngine
 		if (Utils::IsPathValid(sceneState->FilePath))
 		{
 			return SaveScene(sceneState->FilePath);
+		}
+
+		return false;
+	}
+
+	bool WorldAdmin::LoadLastSceneState()
+	{
+		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
+		return LoadScene(sceneState->FilePath);
+	}
+
+	bool WorldAdmin::LoadSceneRuntime(const std::string& path)
+	{
+		if(m_State->m_CurrentRegistry != nullptr)
+			OnEndWorld();
+
+		if (LoadScene(path))
+		{
+			OnBeginWorld();
+			return true;
 		}
 
 		return false;

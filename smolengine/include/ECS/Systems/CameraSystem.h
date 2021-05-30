@@ -14,6 +14,8 @@ namespace SmolEngine
 		static void UpdateViewPerspective(CameraComponent* camera, TransformComponent* transform);
 		static void UpdateViewOrtho(CameraComponent* camera, TransformComponent* transform);
 		static void OnResize(uint32_t width, uint32_t height);
+		static void OnBeginWorld();
+		static void OnEndWorld();
 
 	private:
 

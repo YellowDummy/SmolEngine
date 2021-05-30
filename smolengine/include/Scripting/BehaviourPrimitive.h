@@ -19,16 +19,23 @@ namespace SmolEngine
 		virtual ~BehaviourPrimitive() = default;
 
 		// Getters
-		const std::string& GetName();
-		const std::string& GetTag();
-		const size_t GetID();
-		void GetActors(std::vector<Actor*>& outList);
-		void GetActorsWithTag(const std::string& tag, std::vector<Actor*>& outList);
+		const std::string&      GetName();
+		const std::string&      GetTag();
+		const size_t            GetID();
+		void                    GetActors(std::vector<Actor*>& outList);
+		void                    GetActorsWithTag(const std::string& tag, std::vector<Actor*>& outList);
+		uint32_t                GetChildsCount() const;
+		Actor*                  GetChildByName(const std::string& name);
+		Actor*                  GetChildByIndex(uint32_t index);
+		std::vector<Actor*>&    GetChilds();
+		Actor*                  GetParent() const;
+		Actor*                  GetRootActor();
 
 		// Search
-		Actor* FindActorByName(const std::string& name);
-		Actor* FindActorByTag(const std::string& tag);
-		Actor* FindActorByID(uint32_t id);
+		Actor*                  FindActorByName(const std::string& name);
+		Actor*                  FindActorByTag(const std::string& tag);
+		Actor*                  FindActorByID(uint32_t id);
+
 
 		template<typename T>
 		bool CreateValue(const std::string& name)

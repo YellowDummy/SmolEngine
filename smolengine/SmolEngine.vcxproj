@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -78,7 +78,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SMOLENGINE_EDITOR;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

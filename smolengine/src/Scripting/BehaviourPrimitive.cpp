@@ -44,4 +44,34 @@ namespace SmolEngine
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActorsByTag(tag, outList);
 	}
+
+	uint32_t BehaviourPrimitive::GetChildsCount() const
+	{
+		return m_Actor->GetChildsCount();
+	}
+
+	Actor* BehaviourPrimitive::GetChildByName(const std::string& name)
+	{
+		return m_Actor->GetChildByName(name);
+	}
+
+	Actor* BehaviourPrimitive::GetChildByIndex(uint32_t index)
+	{
+		return m_Actor->GetChildByIndex(index);
+	}
+
+	std::vector<Actor*>& BehaviourPrimitive::GetChilds()
+	{
+		return m_Actor->GetChilds();
+	}
+
+	Actor* BehaviourPrimitive::GetParent() const
+	{
+		return m_Actor->GetParent();
+	}
+
+	Actor* BehaviourPrimitive::GetRootActor()
+	{
+		return m_Actor->GetRootActor();
+	}
 }

@@ -3,11 +3,11 @@
 
 #ifdef PLATFORM_WIN
 
-extern SmolEngine::Engine* SmolEngine::CreateEngineContext();
+extern SmolEngine::Engine* CreateEngineContext();
 
 int main(int argc, char** argv)
 {
-	SmolEngine::Engine* app = SmolEngine::CreateEngineContext();
+	SmolEngine::Engine* app = CreateEngineContext();
 	app->Init();
 }
 

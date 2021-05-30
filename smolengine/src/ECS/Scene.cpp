@@ -170,6 +170,7 @@ namespace SmolEngine
 	{
 		if (actor != nullptr)
 		{
+			m_State->ActorNameSet.erase(actor->GetName());
 			m_SceneData.m_Registry.destroy(*actor);
 
 			auto& list = m_State->Actors;
@@ -177,10 +178,13 @@ namespace SmolEngine
 
 			tempList.erase(std::remove_if(tempList.begin(), tempList.end(), [&](Ref<Actor>& elem) { return elem.get() == actor; }), tempList.end());
 			list = tempList;
-
-			m_State->ActorNameSet.erase(actor->GetName());
 			actor = nullptr;
 		}
+	}
+
+	void Scene::OnUpdate(DeltaTime delta)
+	{
+		UpdateChildsPositions();
 	}
 
 	bool Scene::Save(const std::string& filePath)

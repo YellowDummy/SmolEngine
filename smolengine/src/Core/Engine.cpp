@@ -58,18 +58,17 @@ namespace SmolEngine
 		graphicsContextCI.pRendererStorage = &graphicsEngine->Strorage;
 		graphicsContextCI.pRenderer2DStorage = &graphicsEngine->Storage2D;
 		m_GraphicsContext = new GraphicsContext(&graphicsContextCI);
+		m_GraphicsContext->SetEventCallback(std::bind(&Engine::OnEvent, this, std::placeholders::_1));
 		// Graphics engine and game engine use the same jobs system,
 		// but different queues in use
 		JobsSystemStateSComponent::GetSingleton()->Executor = m_GraphicsContext->GetJobsSystemInstance()->GetExecutor();
 
-		// 2D Physics
 		SetPhysics2DContext(&physicsContextCI);
-		// Layers
 		SetLayers(m_LayerHandler);
-		// Scripts
 		SetScripts(m_ScriptingSystem);
+		SetWorldAdminState(m_World->m_State);
+		OnInitializationComplete(m_World);
 
-		m_GraphicsContext->SetEventCallback(std::bind(&Engine::OnEvent, this, std::placeholders::_1));
 		NATIVE_INFO("Initialized successfully");
 		m_Running = true;
 		Run();
@@ -177,6 +176,12 @@ namespace SmolEngine
 	float Engine::GetFPSCount() const
 	{
 		return m_FPSCount;
+	}
+
+	glm::ivec2 Engine::GetViewPortSize() const
+	{
+		const auto& spec = m_GraphicsContext->GetFramebuffer()->GetSpecification();
+		return glm::ivec2(spec.Width, spec.Height);
 	}
 
 	uint32_t Engine::GetWindowWidth() const

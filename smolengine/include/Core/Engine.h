@@ -17,6 +17,7 @@ namespace SmolEngine
 		glm::vec2 GravityDir = glm::vec2(0.0f, -9.81f);
 	};
 
+	struct WorldAdminStateSComponent;
 	class WorldAdmin;
 	class Scene;
 	class ScriptingSystem;
@@ -34,6 +35,8 @@ namespace SmolEngine
 		virtual void                 SetPhysics2DContext(Physics2DContextCreateInfo* info) {};
 		virtual void                 SetLayers(LayerManager* layerManager) {};
 		virtual void                 SetScripts(ScriptingSystem* scriptingSytem) {};
+		virtual void                 SetWorldAdminState(WorldAdminStateSComponent* state) {};
+		virtual void                 OnInitializationComplete(WorldAdmin* admin) {};
 									 
 		// Getters					 
 		inline static Engine*        GetEngine() { return s_Instance; }
@@ -41,15 +44,15 @@ namespace SmolEngine
 		uint32_t                     GetWindowHeight() const;
 		uint32_t                     GetWindowWidth() const;
 		float                        GetFPSCount() const;
-		inline Window*               GetWindow();
+		glm::ivec2                   GetViewPortSize() const;
 									 
 		// Callbacks				 
 		void                         SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback);
 		void                         SetOnSceneUnLoadedCallback(const std::function<void(Scene*)>& callback);
 									 
 	private:						 
+
 		void                         Run();
-		// Events					 
 		void                         OnWindowClose(Event& e);
 		void                         OnEvent(Event& event);
 
@@ -65,8 +68,7 @@ namespace SmolEngine
 		std::function<void(Scene*)>  m_SceneLoadCl = nullptr;
 		std::function<void(Scene*)>  m_SceneUnLoadCl = nullptr;
 	};
-
-	Engine*                          CreateEngineContext();
-
 }
+
+SmolEngine::Engine* CreateEngineContext();
 
