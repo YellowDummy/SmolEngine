@@ -5,11 +5,11 @@
     "value3": [
         {
             "key": 0,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Arch_diffuse.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Arch_diffuse.png"
         },
         {
             "key": 1,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Arch_normal.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Arch_normal.png"
         },
         {
             "key": 2,
@@ -17,7 +17,7 @@
         },
         {
             "key": 3,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Arch_roughness.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Arch_roughness.png"
         },
         {
             "key": 4,

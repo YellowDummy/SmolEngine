@@ -168,7 +168,7 @@ value43:
   value4: 0.30000001192092896
   value5: 0.30000001192092896
   value6: 6.2881636619567871
-  value7: 4.6777462959289551
+  value7: 5.4256486892700195
   value8: -3.3285584449768066
   value9: 1
 value44: 3
@@ -180,18 +180,18 @@ value45:
   value4: 1
   value5: 1
   value6: 6.2880001068115234
-  value7: 5.3892917633056641
+  value7: 6.1762399673461914
   value8: -3.3289999961853027
   value9: 1
 value46: 4
 value47:
   value0: 0
-  value1: 0
+  value1: -0
   value2: 0
   value3: 1
   value4: 1
   value5: 1
-  value6: 0
+  value6: 0.08984982967376709
   value7: 0
   value8: 0
   value9: 1
@@ -203,9 +203,9 @@ value49:
   value3: 1
   value4: 1
   value5: 1
-  value6: -2.3398323059082031
+  value6: -2.5165035724639893
   value7: 2.9359867572784424
-  value8: -0.15574967861175537
+  value8: 0.0012109875679016113
   value9: 1
 value50: 6
 value51:
@@ -249,45 +249,45 @@ value58: 2
 value59: 1
 value60:
   value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\vase_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\vase_plant.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\plant.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\green_curt.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\green_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\red_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\red_curt.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\vase_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\chain.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\arch.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\flag.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\roof.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\ceiling.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\vase_2.s_material
+    - value0: ../samples/materials\vase_plant.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\plant.s_material
+    - value0: ../samples/materials\green_curt.s_material
+    - value0: ../samples/materials\green_curt_2.s_material
+    - value0: ../samples/materials\blue_curt_2.s_material
+    - value0: ../samples/materials\blue_curt_2.s_material
+    - value0: ../samples/materials\red_curt_2.s_material
+    - value0: ../samples/materials\red_curt.s_material
+    - value0: ../samples/materials\vase_2.s_material
+    - value0: ../samples/materials\chain.s_material
+    - value0: ../samples/materials\arch.s_material
+    - value0: ../samples/materials\flag.s_material
+    - value0: ../samples/materials\roof.s_material
   value1: false
   value2: true
   value3: 2
-  value4: C:\Dev\SmolEngine\samples\models\sponza.gltf
+  value4: ../samples/models\sponza.gltf
   value5: 2
 value61: 2
 value62:
   value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
+    - value0: ../samples/materials\ceiling.s_material
+    - value0: ../samples/materials\ceiling.s_material
   value1: false
   value2: true
   value3: 2
-  value4: C:\Dev\SmolEngine\resources\Models\capsule.gltf
+  value4: D:\Engines\SmolEngine\resources\Models\capsule.gltf
   value5: 2
 value63: 0
 value64: 4
@@ -297,9 +297,9 @@ value66:
   value1: 0.06745445728302002
   value2: 1
   value3: 1
-  value4: -2.3398323059082031
+  value4: -2.5165035724639893
   value5: 2.9359867572784424
-  value6: -0.15574967861175537
+  value6: 0.0012109875679016113
   value7: 1
   value8: 1
   value9: 4
@@ -356,7 +356,7 @@ value74: 0
 value75:
   value0: 0
   value1: 12
-  value2: C:\Dev\SmolEngine\samples\scenes\SponzaGameV3.s_scene
+  value2: D:\Engines\SmolEngine\samples\scenes\SponzaGameV3.s_scene
   value3: SponzaGameV3
   value4:
     value0: false
@@ -423,7 +423,7 @@ value78:
     value16: 1
     value17: 1
     value18: 1
-    value19: C:\Dev\SmolEngine\samples\models\sponza_physics.gltf
+    value19: ../samples/models\sponza_physics.gltf
     value20: 1
     value21: 0
     value22: 0

@@ -5,11 +5,11 @@
     "value3": [
         {
             "key": 0,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\sponza_flagpole_diff.png"
+            "value": "../samples/materials\\sponza_textures\\sponza_flagpole_diff.png"
         },
         {
             "key": 1,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\sponza_flagpole_ddn.png"
+            "value": "../samples/materials\\sponza_textures\\sponza_flagpole_ddn.png"
         },
         {
             "key": 2,

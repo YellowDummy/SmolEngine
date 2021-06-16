@@ -92,7 +92,7 @@ value24:
         value1:
           []
         value2:
-          - value0: 300
+          - value0: 200
             value1: Speed
           - value0: 6
             value1: Camera Speed
@@ -170,41 +170,41 @@ value42: 2
 value43: 1
 value44:
   value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\column.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\bricks.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\vase_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\vase_plant.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\lion.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\plant.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\green_curt.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\green_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\blue_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\red_curt_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\red_curt.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\vase_2.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\chain.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\arch.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\flag.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\roof.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\ceiling.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\vase_2.s_material
+    - value0: ../samples/materials\vase_plant.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\plant.s_material
+    - value0: ../samples/materials\green_curt.s_material
+    - value0: ../samples/materials\green_curt_2.s_material
+    - value0: ../samples/materials\blue_curt_2.s_material
+    - value0: ../samples/materials\blue_curt_2.s_material
+    - value0: ../samples/materials\red_curt_2.s_material
+    - value0: ../samples/materials\red_curt.s_material
+    - value0: ../samples/materials\vase_2.s_material
+    - value0: ../samples/materials\chain.s_material
+    - value0: ../samples/materials\arch.s_material
+    - value0: ../samples/materials\flag.s_material
+    - value0: ../samples/materials\roof.s_material
   value1: false
   value2: true
   value3: 2
-  value4: C:\Dev\SmolEngine\samples\models\sponza.gltf
+  value4: ../samples/models\sponza.gltf
   value5: 2
 value45: 2
 value46:
   value0:
-    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
-    - value0: C:\Dev\SmolEngine\samples\materials\ceiling.s_material
+    - value0: ../samples/materials\ceiling.s_material
+    - value0: ../samples/materials\ceiling.s_material
   value1: false
   value2: true
   value3: 2
@@ -217,9 +217,9 @@ value49:
   value1: 1
   value2: 1
   value3: 1
-  value4: 30
-  value5: 56
-  value6: 0
+  value4: 12
+  value5: 59
+  value6: 5
   value7: 0
   value8: 1
   value9: 1
@@ -236,12 +236,12 @@ value52: 0
 value53:
   value0: 0
   value1: 6
-  value2: C:\Dev\SmolEngine\samples\scenes\SponzaGameV2.s_scene
+  value2: D:\Engines\SmolEngine\samples\scenes\SponzaGameV2.s_scene
   value3: SponzaGameV2
   value4:
     value0: true
     value1: false
-    value2: true
+    value2: false
     value3: true
     value4: true
     value5: 1
@@ -291,7 +291,7 @@ value56:
     value16: 1
     value17: 1
     value18: 1
-    value19: C:\Dev\SmolEngine\samples\models\sponza_physics.gltf
+    value19: ../samples/models\sponza_physics.gltf
     value20: 1
     value21: 0
     value22: 0

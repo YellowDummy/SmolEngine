@@ -82,6 +82,8 @@ namespace SmolEngine
 		void                    CalculateRelativePositions();
 		void                    UpdateChildsPositions();
 		void                    SetChildPosition(Actor* actor);
+		void                    UpdateResorcesPaths();
+		void                    UpdatePath(std::string& path, const std::string& searchDir);
 
 		SceneStateComponent*    GetStateComponent();
 		void                    CleanRegistry();

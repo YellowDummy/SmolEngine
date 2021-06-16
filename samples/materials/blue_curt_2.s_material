@@ -5,15 +5,15 @@
     "value3": [
         {
             "key": 0,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Fabric_Blue_diffuse.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Fabric_Blue_diffuse.png"
         },
         {
             "key": 1,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Fabric_Blue_normal.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Fabric_Blue_normal.png"
         },
         {
             "key": 2,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Fabric_metallic.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Fabric_metallic.png"
         },
         {
             "key": 3,

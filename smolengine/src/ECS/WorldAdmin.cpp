@@ -143,9 +143,7 @@ namespace SmolEngine
 		m_State->m_MeshMap.clear();
 
 		// Updates renderer states
-		{
-			DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
-		}
+		DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
 
 		// Recrates actor's name & id sets
 		{
@@ -168,6 +166,7 @@ namespace SmolEngine
 
 		// Loads Assets
 		{
+			activeScene->UpdateResorcesPaths();
 			ReloadActors();
 			Reload2DTextures(registry);
 			ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
@@ -334,10 +333,12 @@ namespace SmolEngine
 			view.each([&](MeshComponent& component)
 			{
 				JobsSystem::Schedule([&component]()
-					{
-						component.Mesh = std::make_shared<Mesh>();
-						Mesh::Create(component.ModelPath, component.Mesh.get());
-					});
+				{
+					component.Mesh = std::make_shared<Mesh>();
+					Mesh::Create(component.ModelPath, component.Mesh.get());
+					if (component.Mesh->GetVertexCount() == 0) // not loaded
+						component.Mesh = nullptr;
+				});
 
 			});
 		}
@@ -358,7 +359,7 @@ namespace SmolEngine
 
 					if (path.empty() == false && std::filesystem::exists(path))
 					{
-						if (lib->Load(path, materialCI))
+						if (lib->Load(path, materialCI, "../samples/"))
 						{
 							uint32_t matID = lib->Add(&materialCI, path);
 							materialData.ID = matID;

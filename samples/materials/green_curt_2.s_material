@@ -5,19 +5,19 @@
     "value3": [
         {
             "key": 0,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Curtain_Green_diffuse.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Curtain_Green_diffuse.png"
         },
         {
             "key": 1,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Curtain_Green_normal.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Curtain_Green_normal.png"
         },
         {
             "key": 2,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Curtain_metallic.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Curtain_metallic.png"
         },
         {
             "key": 3,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\Sponza_Curtain_roughness.png"
+            "value": "../samples/materials\\sponza_textures\\Sponza_Curtain_roughness.png"
         },
         {
             "key": 4,

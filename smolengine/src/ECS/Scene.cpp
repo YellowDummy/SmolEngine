@@ -3,6 +3,7 @@
 #include "ECS/Actor.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Systems/ScriptingSystem.h"
+#include "ECS/Systems/JobsSystem.h"
 
 #include <cereal/archives/yaml.hpp>
 
@@ -56,6 +57,66 @@ namespace SmolEngine
 				}
 			}
 		}
+	}
+
+	void Scene::UpdatePath(std::string& path, const std::string& searchDir)
+	{
+		std::filesystem::path origPath(path);
+		std::string origName = origPath.filename().u8string();
+
+		for (auto& p : std::filesystem::recursive_directory_iterator(searchDir))
+		{
+			std::string name = p.path().filename().u8string();
+			if (name == origName)
+			{
+				path = p.path().u8string();
+				break;
+			}
+		}
+	}
+
+	void Scene::UpdateResorcesPaths()
+	{
+		JobsSystem::BeginSubmition();
+		{
+			const auto& mesh_view = m_SceneData.m_Registry.view<MeshComponent>();
+			const auto& tex_view = m_SceneData.m_Registry.view<Texture2DComponent>();
+			const auto& rb_view = m_SceneData.m_Registry.view<RigidbodyComponent>();
+
+			for (const auto& entity : mesh_view)
+			{
+				auto& mesh_comp = mesh_view.get<MeshComponent>(entity);
+				JobsSystem::Schedule([&mesh_comp, this]()
+				{
+					UpdatePath(mesh_comp.ModelPath, "../samples/");
+				});
+
+				JobsSystem::Schedule([&mesh_comp, this]()
+				{
+					for (auto& materials : mesh_comp.MaterialsData)
+						UpdatePath(materials.Path, "../samples/");
+				});
+			}
+
+			for (const auto& entity : rb_view)
+			{
+				auto& rbComp = rb_view.get<RigidbodyComponent>(entity);
+				JobsSystem::Schedule([&rbComp, this]()
+				{
+					UpdatePath(rbComp.CreateInfo.ConvexShapeInfo.FilePath, "../samples/");
+				});
+			}
+
+			for (const auto& entity : tex_view)
+			{
+				auto& textureComp = tex_view.get<Texture2DComponent>(entity);
+				JobsSystem::Schedule([&textureComp, this]()
+				{
+					UpdatePath(textureComp.TexturePath, "../samples/");
+				});
+			}
+		}
+		JobsSystem::EndSubmition();
 	}
 
 	Actor* Scene::CreateActor(const std::string& name, const std::string& tag)

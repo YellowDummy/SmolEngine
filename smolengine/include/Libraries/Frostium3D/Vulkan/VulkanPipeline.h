@@ -62,10 +62,10 @@ namespace Frostium
 		VkPipelineLayout                                m_PipelineLayout = VK_NULL_HANDLE;
 		VkRenderPass                                    m_TargetRenderPass = nullptr;
 		VkDevice                                        m_Device = nullptr;
-		VulkanShader* m_Shader = nullptr;
+		VulkanShader*                                   m_Shader = nullptr;
 
 		VkDescriptorPool                                m_DescriptorPool = nullptr;
-		GraphicsPipelineCreateInfo* m_PipelineSpecification = nullptr;
+		GraphicsPipelineCreateInfo*                     m_PipelineSpecification = nullptr;
 
 		std::vector<VulkanDescriptor>                   m_Descriptors;
 		std::vector<VkDescriptorSetLayout>              m_SetLayout;

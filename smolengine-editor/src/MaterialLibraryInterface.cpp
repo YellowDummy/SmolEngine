@@ -30,7 +30,7 @@ namespace SmolEngine
 	{
 		if (std::filesystem::exists(path))
 		{
-			MaterialLibrary::GetSinglenton()->Load(path, m_MaterialCI);
+			MaterialLibrary::GetSinglenton()->Load(path, m_MaterialCI, "../samples/");
 			m_CurrentFilePath = path;
 			RenderImage();
 		}

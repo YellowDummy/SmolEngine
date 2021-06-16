@@ -17,11 +17,11 @@ namespace Frostium
 
 	struct Instance
 	{
-		glm::vec3* Position = nullptr;
-		glm::vec3* Rotation = nullptr;
-		glm::vec3* Scale = nullptr;
-		glm::vec4* Color = nullptr;
-		uint32_t* Layer = nullptr;
+		glm::vec3*   Position = nullptr;
+		glm::vec3*   Rotation = nullptr;
+		glm::vec3*   Scale = nullptr;
+		glm::vec4*   Color = nullptr;
+		uint32_t*    Layer = nullptr;
 		uint32_t     TextureIndex = 0;
 	};
 
@@ -49,7 +49,7 @@ namespace Frostium
 	struct TextBuffer
 	{
 		glm::mat4    Model;
-		Text* Obj = nullptr;
+		Text*        Obj = nullptr;
 		uint32_t     TextureIndex = 0;
 	};
 
@@ -74,18 +74,14 @@ namespace Frostium
 		uint32_t                  TextIndex = 1;
 		uint32_t                  SampleIndex = 1; // 0 - white dummy texture
 		uint32_t                  FontSampleIndex = 0;
-		// Framebuffers
-		Framebuffer* MainFB = nullptr;
-		// Pipelines
+		Framebuffer*              MainFB = nullptr;
 		GraphicsPipeline          MainPipeline = {};
 		GraphicsPipeline          TextPipeline = {};
-		// Refs
-		Frustum* Frustum = nullptr;
-		Texture* WhiteTetxure = nullptr;
-		// Meshes
+		Frustum*                  Frustum = nullptr;
+		Texture*                  WhiteTetxure = nullptr;
 		Mesh                      PlaneMesh = {};
 		// UBO's and SSBO's
-		SceneData* SceneData = nullptr;
+		SceneData*                SceneData = nullptr;
 		ShaderInstance            ShaderInstances[MaxQuads];
 		TextBuffer                TextMessages[MaxTextMessages];
 		// Buffers

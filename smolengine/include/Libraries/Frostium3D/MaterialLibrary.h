@@ -49,24 +49,24 @@ namespace Frostium
 
 	struct MaterialCreateInfo
 	{
-		// Setters
+		MaterialCreateInfo();
+		~MaterialCreateInfo();
+
 		void SetMetalness(float value);
 		void SetRoughness(float value);
 		void SetAlbedro(float value);
 		void SetTexture(MaterialTexture type, const std::string& filePath);
-
-		// Getters
 		float* GetMetalness();
 		float* GetRoughness();
 		std::unordered_map<MaterialTexture, std::string>& GetTexturesInfo();
 
 	private:
 
-		std::unordered_map<MaterialTexture, std::string>  Textures;
-		float                                             Metallic = 1.0f;
-		float                                             Albedro = 1.0f;
-		float                                             Roughness = 1.0f;
-		bool                                              Used = false;
+		bool  Used = false;
+		float Metallic = 1.0f;
+		float Albedro = 1.0f;
+		float Roughness = 1.0f;
+		std::unordered_map<MaterialTexture, std::string> Textures = {};
 
 	private:
 
@@ -87,23 +87,21 @@ namespace Frostium
 		MaterialLibrary();
 		~MaterialLibrary();
 
-		uint32_t Add(MaterialCreateInfo* infoCI, const std::string& name);
-		bool Delete(const std::string& name);
-		void Reset();
-
-		// Serialization
-		bool Load(const std::string& filePath, MaterialCreateInfo& out_info);
-		bool Save(const std::string& filePath, MaterialCreateInfo& info);
+		uint32_t                  Add(MaterialCreateInfo* infoCI, const std::string& name);
+		bool                      Delete(const std::string& name);
+		void                      Reset();
+		bool                      Load(const std::string& filePath, MaterialCreateInfo& out_info, const std::string& searchPath = "");
+		bool                      Save(const std::string& filePath, MaterialCreateInfo& info);
 
 		// Getters
-		static MaterialLibrary* GetSinglenton();
-		PBRMaterial* GetMaterial(uint32_t ID);
-		PBRMaterial* GetMaterial(std::string& path);
-		int32_t GetMaterialID(std::string& path);
-		int32_t GetMaterialID(size_t& hashed_path);
+		static MaterialLibrary*   GetSinglenton();
+		PBRMaterial*              GetMaterial(uint32_t ID);
+		PBRMaterial*              GetMaterial(std::string& path);
+		int32_t                   GetMaterialID(std::string& path);
+		int32_t                   GetMaterialID(size_t& hashed_path);
 		std::vector<PBRMaterial>& GetMaterials();
-		void GetMaterialsPtr(void*& data, uint32_t& size);
-		void GetTextures(std::vector<Texture*>& out_textures) const;
+		void                      GetMaterialsPtr(void*& data, uint32_t& size);
+		void                      GetTextures(std::vector<Texture*>& out_textures) const;
 
 	private:
 

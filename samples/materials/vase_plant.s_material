@@ -5,7 +5,7 @@
     "value3": [
         {
             "key": 0,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\vase_plant.png"
+            "value": "../samples/materials\\sponza_textures\\vase_plant.png"
         },
         {
             "key": 1,

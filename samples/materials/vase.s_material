@@ -5,11 +5,11 @@
     "value3": [
         {
             "key": 0,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\vase_round.png"
+            "value": "../samples/materials\\sponza_textures\\vase_round.png"
         },
         {
             "key": 1,
-            "value": "C:\\Dev\\SmolEngine\\samples\\materials\\sponza_textures\\vase_round_ddn.png"
+            "value": "../samples/materials\\sponza_textures\\vase_round_ddn.png"
         },
         {
             "key": 2,
