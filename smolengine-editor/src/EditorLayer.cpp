@@ -40,50 +40,17 @@ namespace SmolEngine
 	static bool showRendererPanel = true;
 	static bool showMeshInspector = false;
 
-	void EditorLayer::LoadAssets()
-	{
-		const bool flip = true;
-		const bool imguiDescriptor = true;
-
-		Texture::Create("assets/buttons/play_button.png", &m_PlayButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/pause_button.png", &m_StopButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/move_button.png", &m_MoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/rotate_button.png", &m_RotateButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-		Texture::Create("assets/buttons/folder_button.png", &m_FolderButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-	}
-
 	void EditorLayer::OnAttach()
 	{
-		LoadAssets();
-
+		m_TexturesLoader = new TexturesLoader();
 		m_Console = new EditorConsole();
 		m_RendererPanel = new RendererPanel();
-		m_MaterialLibraryInterface = new MaterialLibraryInterface(this);
+		m_MaterialLibraryInterface = new MaterialLibraryInterface(m_TexturesLoader);
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
 
-		m_FileManager = new FileManager();
-		m_FileManager->Init();
-		m_FileManager->SetMaterialCreateCallback([this](const std::string& path, bool is_new)
-		{
-			m_SelectedActor = nullptr;
-			m_SelectionFlags = SelectionFlags::MaterialLib;
-
-			if (is_new)
-				m_MaterialLibraryInterface->OpenNew(path);
-			else
-				m_MaterialLibraryInterface->OpenExisting(path);
-		});
-
-		m_FileManager->SetFileDeleteCallback([this](const std::string& path)
-		{
-			m_MaterialLibraryInterface->Close();
-			m_SelectionFlags = SelectionFlags::None;
-		});
-
+		m_FileExplorer = new FileExplorer();
+		m_FileExplorer->Create("../samples/", m_TexturesLoader);
 
 		{
 			ImGui::GetStyle().FrameRounding = 4.0f;
@@ -227,7 +194,7 @@ namespace SmolEngine
 
 		m_RendererPanel->OnUpdate(showRendererPanel);
 		m_Console->Update(showConsole);
-		m_FileManager->Update();
+		m_FileExplorer->Update();
 
 		DrawHierarchy();
 		DrawInspector();
@@ -383,9 +350,6 @@ namespace SmolEngine
 				if (ImGui::MenuItem("Renderer Settings"))
 					showRendererPanel = true;
 
-				if (ImGui::MenuItem("Content Browser"))
-					m_FileManager->Open();
-
 				ImGui::EndMenu();
 			}
 
@@ -540,7 +504,7 @@ namespace SmolEngine
 	{
 		if (texture->Texture != nullptr)
 		{
-			ImGui::Extensions::ColorInput3("Color", texture->Color);
+			ImGui::Extensions::ColorInput4("Color", texture->Color);
 			ImGui::Extensions::InputInt("Layer", texture->LayerIndex, 130.0f, "TexturePanel");
 			ImGui::NewLine();
 			ImGui::Extensions::CheckBox("Enabled", texture->Enabled, 130.0f, "TexturePanel");
@@ -720,7 +684,7 @@ namespace SmolEngine
 		ImGui::Extensions::InputFloat2Base("Offset", light->Offset, 130.0f, "2DLightPanel");
 		ImGui::Extensions::InputFloat("Intensity", light->Intensity, 130.0f, "2DLightPanel");
 		ImGui::Extensions::InputFloat("Radius", light->Radius, 130.0f, "2DLightPanel");
-		ImGui::Extensions::ColorInput3("Color", light->Color, 130.0f, "2DLightPanel");
+		ImGui::Extensions::ColorInput4("Color", light->Color, 130.0f, "2DLightPanel");
 
 		ImGui::NewLine();
 
@@ -735,27 +699,27 @@ namespace SmolEngine
 			{
 				ImGui::NewLine();
 				ImGui::SetCursorPosX(10);
-				if (ImGui::ImageButton(m_MoveButton.GetImGuiTexture(), { 25, 25 }))
+				if (ImGui::ImageButton(m_TexturesLoader->m_MoveButton.GetImGuiTexture(), { 25, 25 }))
 				{
 					m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 				}
 
 				ImGui::SameLine();
-				if (ImGui::ImageButton(m_RotateButton.GetImGuiTexture(), { 25, 25 }))
+				if (ImGui::ImageButton(m_TexturesLoader->m_RotateButton.GetImGuiTexture(), { 25, 25 }))
 				{
 					m_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
 				}
 
 
 				ImGui::SameLine();
-				if (ImGui::ImageButton(m_ScaleButton.GetImGuiTexture(), { 25, 25 }))
+				if (ImGui::ImageButton(m_TexturesLoader->m_ScaleButton.GetImGuiTexture(), { 25, 25 }))
 				{
 					m_GizmoOperation = ImGuizmo::OPERATION::SCALE;
 				}
 
 				ImGui::SameLine();
 				ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.0f) - 25);
-				if (ImGui::ImageButton(m_PlayButton.GetImGuiTexture(), { 25, 25 }))
+				if (ImGui::ImageButton(m_TexturesLoader->m_PlayButton.GetImGuiTexture(), { 25, 25 }))
 				{
 					if (!m_World->IsInPlayMode())
 					{
@@ -769,7 +733,7 @@ namespace SmolEngine
 				}
 
 				ImGui::SameLine();
-				if (ImGui::ImageButton(m_StopButton.GetImGuiTexture(), { 25, 25 }))
+				if (ImGui::ImageButton(m_TexturesLoader->m_StopButton.GetImGuiTexture(), { 25, 25 }))
 				{
 					if (m_World->IsInPlayMode())
 					{
@@ -846,7 +810,7 @@ namespace SmolEngine
 		ImGui::Begin("Hierarchy");
 		{
 			ImGui::SetWindowFontScale(0.8f);
-			ImGui::Image(m_SearchButton.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image(m_TexturesLoader->m_SearchButton.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::SameLine();
 
 			float pos = ImGui::GetCursorPosY();
@@ -905,7 +869,7 @@ namespace SmolEngine
 						Actor* parent = target->GetParent();
 						if (parent != nullptr)
 							parent->RemoveChildAtIndex(m_IDBuffer);
-
+						
 						m_IDBuffer = 0;
 					}
 
@@ -1002,10 +966,18 @@ namespace SmolEngine
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 			{
-				std::string path;
 				std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-				if (FileExtensionCheck(p, ".gltf", path))
-					ComponentHandler::ValidateMeshComponent(comp, path);
+
+				if (p->extension().filename() == ".gltf")
+				{
+					std::string cPath = std::filesystem::current_path().u8string();
+
+					std::string path = p->relative_path().parent_path().u8string();
+					NATIVE_ERROR(path);
+					NATIVE_ERROR(cPath);
+
+					//ComponentHandler::ValidateMeshComponent(comp, path);
+				}
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -1024,7 +996,7 @@ namespace SmolEngine
 
 		ImGui::Extensions::InputFloat("Intensity", comp->Light.Intensity);
 		ImGui::Extensions::DragFloat3Base("Direction", *dir);
-		ImGui::Extensions::ColorInput3("Color", comp->Light.Color);
+		ImGui::Extensions::ColorInput4("Color", comp->Light.Color);
 	}
 
 	void EditorLayer::DrawMeshInspector(bool& show)
@@ -1102,7 +1074,7 @@ namespace SmolEngine
 		ImGui::Extensions::CheckBox("Enabled", *is_active);
 		ImGui::Extensions::InputFloat("Exposure", comp->Light.Intensity);
 		ImGui::Extensions::InputFloat("Radius", comp->Light.Raduis);
-		ImGui::Extensions::ColorInput3("Color", comp->Light.Color);
+		ImGui::Extensions::ColorInput4("Color", comp->Light.Color);
 	}
 
 	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)

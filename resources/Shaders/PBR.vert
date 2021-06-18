@@ -9,12 +9,17 @@ layout(location = 5) in vec4 a_Weight;
 
 struct MaterialData
 {
-	vec4 PBR;
+	vec4 AlbedroColor;
 
+	float Metalness;
+	float Roughness;
 	uint UseAlbedroTex;
 	uint UseNormalTex;
+
 	uint UseMetallicTex;
 	uint UseRoughnessTex;
+	uint UseEmissiveTex;
+	uint UseHeightTex;
 
 	uint UseAOTex;
 	uint AlbedroTexIndex;
@@ -23,6 +28,8 @@ struct MaterialData
 
 	uint RoughnessTexIndex;
 	uint AOTexIndex;
+	uint EmissiveTexIndex;
+	uint HeightTexIndex;
 };
 
 struct InstanceData
@@ -50,7 +57,6 @@ layout (std140, binding = 27) uniform SceneBuffer
     float farClip;
     float exoposure;
     float pad;
-
 
 	mat4 projection;
 	mat4 view;
@@ -82,31 +88,14 @@ layout (location = 0)  out vec3 v_FragPos;
 layout (location = 1)  out vec3 v_Normal;
 layout (location = 2)  out vec3 v_CameraPos;
 layout (location = 3)  out vec2 v_UV;
-
-layout (location = 4)  out uint v_UseAlbedroMap;
-layout (location = 5)  out uint v_UseNormalMap;
-layout (location = 6)  out uint v_UseMetallicMap;
-layout (location = 7)  out uint v_UseRoughnessMap;
-layout (location = 8)  out uint v_UseAOMap;
-
-layout (location = 9)  out uint v_AlbedroMapIndex;
-layout (location = 10) out uint v_NormalMapIndex;
-layout (location = 11) out uint v_MetallicMapIndex;
-layout (location = 12) out uint v_RoughnessMapIndex;
-layout (location = 13) out uint v_AOMapIndex;
-
-layout (location = 14) out float v_Metallic;
-layout (location = 15) out float v_Roughness;
-
-layout (location = 16) out vec4 v_Color;
-layout (location = 17) out vec4 v_ShadowCoord;
-layout (location = 18) out vec4 v_WorldPos;
-layout (location = 19) out mat3 v_TBN;
+layout (location = 4)  out vec4 v_ShadowCoord;
+layout (location = 5)  out vec4 v_WorldPos;
+layout (location = 6)  out MaterialData v_Material;
+layout (location = 23) out mat3 v_TBN;
 
 void main()
 {
 	const uint instanceID = dataOffset + gl_InstanceIndex;
-
 	const mat4 model = instances[instanceID].model;
 	const uint materialIndex = instances[instanceID].matID;
 	const uint animOffset = instances[instanceID].animOffset;
@@ -130,31 +119,14 @@ void main()
 	v_WorldPos = vec4(a_Position, 1.0);
 	v_UV = a_UV;
 
+	// Materials
+	v_Material =  materials[materialIndex];
+
 	// TBN matrix
 	vec3 T = normalize(vec3(modelSkin * vec4(a_Tangent, 0.0)));
 	vec3 N = normalize(vec3(modelSkin * vec4(a_Normal, 0.0)));
 	vec3 B = normalize(vec3(modelSkin * vec4(cross(N, T), 0.0)));
 	v_TBN = mat3(T, B, N);
-
-	// PBR Params
-	v_Metallic = materials[materialIndex].PBR.x;
-	v_Roughness = materials[materialIndex].PBR.y;
-	float c =  materials[materialIndex].PBR.z;
-	v_Color = vec4(c, c, c, 1);
-
-	// states
-	v_UseAlbedroMap = materials[materialIndex].UseAlbedroTex;
-	v_UseNormalMap = materials[materialIndex].UseNormalTex;
-	v_UseMetallicMap = materials[materialIndex].UseMetallicTex;
-	v_UseRoughnessMap = materials[materialIndex].UseRoughnessTex;
-	v_UseAOMap = materials[materialIndex].UseAOTex;
-
-	// index
-	v_AlbedroMapIndex = materials[materialIndex].AlbedroTexIndex;
-	v_NormalMapIndex = materials[materialIndex].NormalTexIndex;
-	v_MetallicMapIndex = materials[materialIndex].MetallicTexIndex;
-	v_RoughnessMapIndex = materials[materialIndex].RoughnessTexIndex;
-	v_AOMapIndex = materials[materialIndex].AOTexIndex;
 
 	gl_Position =  sceneData.projection * sceneData.view * model * skinMat * vec4(a_Position, 1.0);
 }

@@ -14,8 +14,8 @@ layout (binding = 5) uniform sampler2D albedroMap;
 layout (binding = 6) uniform sampler2D positionsMap;
 layout (binding = 7) uniform sampler2D normalsMap;
 layout (binding = 8) uniform sampler2D materialsMap;
-layout (binding = 9) uniform sampler2D shadowCoordMap;
-
+layout (binding = 9) uniform sampler2D emissionMap;
+layout (binding = 10) uniform sampler2D shadowCoordMap;
 
 // Buffers
 // -----------------------------------------------------------------------------------------------------------------------
@@ -95,6 +95,23 @@ layout(std140, binding = 33) uniform SceneState
 	uint numSpotLights;
 
 } sceneState;
+
+#define MANUAL_SRGB 1
+
+vec4 SRGBtoLINEAR(vec4 srgbIn)
+{
+	#ifdef MANUAL_SRGB
+	#ifdef SRGB_FAST_APPROXIMATION
+	vec3 linOut = pow(srgbIn.xyz,vec3(2.2));
+	#else //SRGB_FAST_APPROXIMATION
+	vec3 bLess = step(vec3(0.04045),srgbIn.xyz);
+	vec3 linOut = mix( srgbIn.xyz/vec3(12.92), pow((srgbIn.xyz+vec3(0.055))/vec3(1.055),vec3(2.4)), bLess );
+	#endif //SRGB_FAST_APPROXIMATION
+	return vec4(linOut,srgbIn.w);;
+	#else //MANUAL_SRGB
+	return srgbIn;
+	#endif //MANUAL_SRGB
+}
 
 // PBR functions
 // -----------------------------------------------------------------------------------------------------------------------
@@ -203,7 +220,6 @@ vec3 CalcIBL(vec3 N, vec3 V, vec3 F0, vec3 ao, vec3 albedo_color, float metallic
 	int specularTextureLevels = textureQueryLevels(prefilteredMap);
 	vec3 specularIrradiance =  textureLod(prefilteredMap, -ReflDirectionWS, roughness_color * specularTextureLevels).rgb;
     vec3 specularIBL = specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
-	specularIBL = specularIBL / 2.5;
     
 	return (diffuseIBL + specularIBL) * ao;
 }
@@ -301,15 +317,19 @@ void main()
     }
     
     vec3 albedro = texColor.rgb;
-    vec3 position = texture(positionsMap, inUV).xyz;
-    vec3 normals = texture(normalsMap, inUV).xyz;
-    vec3 pbrValues = texture(materialsMap, inUV).xyz;
+	vec4 emission = texture(emissionMap, inUV);
+    vec4 position = texture(positionsMap, inUV);
+    vec4 normals = texture(normalsMap, inUV);
+    vec4 pbrValues = texture(materialsMap, inUV);
     vec4 shadowCoord = texture(shadowCoordMap, inUV);
-    
+    vec3 ao = vec3(pbrValues.z);
+	
     float metallic = pbrValues.x;
     float roughness = pbrValues.y;
-    vec3 ao = vec3(pbrValues.z);
+	float applyEmission = emission.w;
+    float applyAO = normals.w;
 
+	albedro = pow(albedro, vec3(2.2));
     vec3 V = normalize(sceneData.camPos.xyz - position.xyz);
 
     // Ambient Lighting (IBL)
@@ -318,7 +338,7 @@ void main()
     vec3 ambient = vec3(0.0);
 	if(sceneState.use_ibl == 1)
 	{
-		ambient = CalcIBL(normals, V, F0, ao, albedro, metallic, roughness);
+		ambient = CalcIBL(normals.xyz, V, F0, ao, albedro, metallic, roughness);
 	}
 
     vec3 Lo = vec3(0.0);
@@ -326,7 +346,7 @@ void main()
 	//--------------------------------------------
 	 if(dirLight.is_active == 1)
 	 {
-		 Lo += CalcDirLight(V, normals, F0, albedro, metallic, roughness, position);
+		 Lo += CalcDirLight(V, normals.xyz, F0, albedro, metallic, roughness, position.xyz);
 	 }
 
     // Point Lighting
@@ -335,7 +355,7 @@ void main()
 	{
 		if(pointLights[i].is_active == 1)
 		{
-			Lo += CalcPointLight(pointLights[i], V, normals, F0, albedro, metallic, roughness, position);
+			Lo += CalcPointLight(pointLights[i], V, normals.xyz, F0, albedro, metallic, roughness, position.xyz);
 		}
 	}
 
@@ -345,7 +365,7 @@ void main()
 	{
 		if(spotLights[i].is_active == 1)
 		{
-			Lo += CalcSpotLight(spotLights[i], V, normals, F0, albedro, metallic, roughness, position);
+			Lo += CalcSpotLight(spotLights[i], V, normals.xyz, F0, albedro, metallic, roughness, position.xyz);
 		}
 	}
 
@@ -353,6 +373,13 @@ void main()
 	//--------------------------------------------
 	vec3 color = ambient + Lo;
 
+	// Emission
+	//--------------------------------------------
+	if(applyEmission == 1.0)
+	{
+		color += emission.rgb;
+	}
+	
     // Shadow Mapping
 	//--------------------------------------------
 	float shadow = 0.0;
@@ -370,19 +397,6 @@ void main()
 
 		color *= shadow;
     }
-
-	// Emission
-	//--------------------------------------------
-
-	//if (use_emission)
-	//{
-		// emission
-	//	vec3 emi = emission * emission_power;
-	//	if(use_tex_emission){
-	//		emi *= texture(tex_emission, TexCoords).r;
-	//	}
-	//	color += emi;
-	//}
 
 	// HDR
 	//--------------------------------------------

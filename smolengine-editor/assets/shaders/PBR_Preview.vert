@@ -15,23 +15,14 @@ layout(push_constant) uniform ConstantData
 layout (location = 0)  out vec3 v_FragPos;
 layout (location = 1)  out vec3 v_Normal;
 layout (location = 2)  out vec2 v_UV;
-layout (location = 3)  out vec4 v_Color;
-layout (location = 4)  out vec4 v_WorldPos;
-layout (location = 5)  out mat3 v_TBN;
+layout (location = 3)  out vec3 v_Tangent;
 
 void main()
 {
-	v_FragPos = vec3(vec4(a_Position, 1.0));
+	v_FragPos = a_Position;
 	v_Normal =  a_Normal;
-	v_WorldPos = vec4(a_Position, 1.0);
 	v_UV = a_UV;
-	v_Color = vec4(1);
-
-	// TBN matrix
-	vec3 T = normalize(a_Tangent);
-	vec3 N = normalize(a_Normal);
-	vec3 B = normalize(cross(N, T));
-	v_TBN = mat3(T, B, N);
+	v_Tangent = a_Tangent;
 
 	gl_Position =  viewProj * vec4(a_Position, 1.0);
 }

@@ -99,6 +99,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Core\CommandUtils.h" />
     <ClInclude Include="include\Audio\AudioClip.h" />
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Core\Core.h" />
@@ -547,6 +548,7 @@
     <ClInclude Include="include\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\CommandUtils.cpp" />
     <ClCompile Include="src\Audio\AudioClip.cpp" />
     <ClCompile Include="src\Audio\AudioEngine.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />

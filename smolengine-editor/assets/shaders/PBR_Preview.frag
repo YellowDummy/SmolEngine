@@ -1,30 +1,45 @@
 #version 460 core
+
 layout (location = 0)  in vec3 v_FragPos;
 layout (location = 1)  in vec3 v_Normal;
 layout (location = 2)  in vec2 v_UV;
-layout (location = 3)  in vec4 v_Color;
-layout (location = 4)  in vec4 v_WorldPos;
-layout (location = 5)  in mat3 v_TBN;
+layout (location = 3)  in vec3 v_Tangent;
 
 layout (binding = 2) uniform samplerCube samplerIrradiance;
 layout (binding = 3) uniform sampler2D samplerBRDFLUT;
 layout (binding = 4) uniform samplerCube prefilteredMap;
 
-layout (binding = 5) uniform sampler2D albedroMap;
-layout (binding = 6) uniform sampler2D normalMap;
-layout (binding = 7) uniform sampler2D metallicMap;
-layout (binding = 8) uniform sampler2D roughnessMap;
-layout (binding = 9) uniform sampler2D aoMap;
+layout (binding = 5) uniform sampler2D textures[6];
+
+struct MaterialData
+{
+	vec4 AlbedroColor;
+
+	float Metalness;
+	float Roughness;
+	uint UseAlbedroTex;
+	uint UseNormalTex;
+
+	uint UseMetallicTex;
+	uint UseRoughnessTex;
+    uint UseAOTex;
+	uint UseEmissiveTex;
+
+	uint UseHeightTex;
+	uint AlbedroTexIndex;
+	uint NormalTexIndex;
+	uint MetallicTexIndex;
+
+	uint RoughnessTexIndex;
+	uint AOTexIndex;
+	uint EmissiveTexIndex;
+	uint HeightTexIndex;
+};
 
 layout (std140, binding = 277) uniform SceneBuffer
 {
-	uint useAlbedro;
-	uint useNormal;
-	uint useRoughness;
-	uint useMetallic;
-
-	uint useAO;
-	vec3 camPos;
+	MaterialData material;
+	vec4 camPos;
 };
 
 layout (location = 0) out vec4 outColor;
@@ -111,10 +126,15 @@ vec3 CalcIBL(vec3 N, vec3 V, vec3 F0, vec3 ao, vec3 albedo_color, float metallic
 
 vec3 getNormal()
 {
-	if(useNormal == 1)
+	if(material.UseNormalTex == 1)
 	{
-		vec3 tangentNormal = texture(normalMap, v_UV).xyz * 2.0 - 1.0;
-	    return normalize(v_TBN * tangentNormal);
+		vec3 tangentNormal = texture(textures[material.NormalTexIndex], v_UV).xyz * 2.0 - 1.0;
+		// TBN matrix
+	    vec3 T = normalize(v_Tangent);
+	    vec3 N = normalize(v_Normal);
+	    vec3 B = normalize(cross(N, T));
+	    mat3 TBN = mat3(T, B, N);
+	    return normalize(TBN * tangentNormal);
 	}
 	
 	return normalize(v_Normal);
@@ -124,18 +144,19 @@ void main()
 {
 	// Getting Values 
 	vec3 N = getNormal();
-	vec3 ao = useAO == 1 ? texture(aoMap, v_UV).rrr : vec3(1, 1, 1);
-	vec3 albedro = useAlbedro == 1 ? texture(albedroMap, v_UV).rgb : vec3(1.0, 1.0, 1.0);
-	float metallic = useMetallic == 1 ? texture(metallicMap, v_UV).r : 0.2;
-	float roughness = useRoughness == 1 ? texture(roughnessMap, v_UV).r: 1.0;
-
+	vec3 albedro = material.UseAlbedroTex == 1 ? texture(textures[material.AlbedroTexIndex], v_UV).rgb : material.AlbedroColor.rgb;
+	float metallic = material.UseMetallicTex == 1 ? texture(textures[material.MetallicTexIndex], v_UV).r : material.Metalness;
+	float roughness = material.UseRoughnessTex == 1 ? texture(textures[material.RoughnessTexIndex], v_UV).r: material.Roughness;
+	vec3 ao = material.UseAOTex == 1 ? texture(textures[material.AOTexIndex], v_UV).rrr : vec3(1);
+	vec3 emissive = material.UseEmissiveTex == 1 ? texture(textures[material.EmissiveTexIndex], v_UV).rgb : vec3(0);
 	albedro = pow(albedro, vec3(2.2));
+	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
+	vec3 V = normalize(camPos.xyz - v_FragPos); 
 
     // Ambient Lighting (IBL)
 	//--------------------------------------------
-	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
-	vec3 V = normalize(camPos - v_FragPos); 
     vec3 ambient = CalcIBL(N, V, F0, ao, albedro, metallic, roughness);
+	ambient += emissive;
 
     // Tone mapping
 	ambient = Uncharted2Tonemap(ambient * 4.0);

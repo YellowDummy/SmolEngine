@@ -14,14 +14,16 @@ namespace SmolEngine
 	enum class LogLevel: int
 	{
 		None = 0, 
-		Info, Error, Warn
+		Info, 
+		Error,
+		Warn
 	};
 
 	struct Message
 	{
-		ImVec4 Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		std::string Text = std::string("");
-		LogLevel Type = LogLevel::Info;
+		ImVec4        Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+		std::string   Text = std::string("");
+		LogLevel      Type = LogLevel::Info;
 	};
 
 	class EditorConsole

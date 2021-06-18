@@ -1,64 +1,76 @@
-#version 450
+#version 460
 
 layout (location = 0) in vec2 inUV;
-layout (binding = 0) uniform sampler2D debugView;
+
+layout (binding = 1) uniform sampler2D shadowMap;
+layout (binding = 5) uniform sampler2D albedroMap;
+layout (binding = 6) uniform sampler2D positionsMap;
+layout (binding = 7) uniform sampler2D normalsMap;
+layout (binding = 8) uniform sampler2D materialsMap;
+layout (binding = 9) uniform sampler2D emissionMap;
+layout (binding = 10) uniform sampler2D shadowCoordMap;
 
 layout (location = 0) out vec4 outFragColor;
-
-vec2 fade(vec2 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
-vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-
-float cnoise(vec2 P){
-  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
-  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
-  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
-  vec4 ix = Pi.xzxz;
-  vec4 iy = Pi.yyww;
-  vec4 fx = Pf.xzxz;
-  vec4 fy = Pf.yyww;
-  vec4 i = permute(permute(ix) + iy);
-  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
-  vec4 gy = abs(gx) - 0.5;
-  vec4 tx = floor(gx + 0.5);
-  gx = gx - tx;
-  vec2 g00 = vec2(gx.x,gy.x);
-  vec2 g10 = vec2(gx.y,gy.y);
-  vec2 g01 = vec2(gx.z,gy.z);
-  vec2 g11 = vec2(gx.w,gy.w);
-  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
-    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
-  g00 *= norm.x;
-  g01 *= norm.y;
-  g10 *= norm.z;
-  g11 *= norm.w;
-  float n00 = dot(g00, vec2(fx.x, fy.x));
-  float n10 = dot(g10, vec2(fx.y, fy.y));
-  float n01 = dot(g01, vec2(fx.z, fy.z));
-  float n11 = dot(g11, vec2(fx.w, fy.w));
-  vec2 fade_xy = fade(Pf.xy);
-  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
-  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
-  return 2.3 * n_xy;
-}
-
 layout(push_constant) uniform ConstantData
 {
-    vec3 seed;
+  uint state;
 };
 
 void main() 
 {
-    vec2 inputs_x = (gl_FragCoord.xy / 50.0) * seed.x;
-    vec2 inputs_y = (gl_FragCoord.xy / 71.0) + seed.yy;
-    vec2 inputs_z = (gl_FragCoord.xy / 103.0) + seed.xx;
-    
-    float result_x = cnoise(inputs_x);
-    float result_y = cnoise(inputs_y);
-    float result_z = cnoise(inputs_z);
+  vec4 color = vec4(0.2, 0.2, 0.2, 1.0);
+  switch(state)
+  {
+    case 1:
+    {
+      color = vec4(texture(albedroMap, inUV).rgb, 1.0);
+      break;
+    }
 
-    vec3 color = vec3(result_x, result_y, result_z);
+    case 2:
+    {
+      color = vec4(texture(positionsMap, inUV).rgb, 1.0);
+      break;
+    }
 
-	outFragColor = texture(debugView, inUV);
-    outFragColor.rgb *= color;
+    case 3:
+    {
+      color = vec4(texture(normalsMap, inUV).rgb, 1.0);
+      break;
+    }
 
+    case 4:
+    {
+      vec2 metalnessRoughness = texture(materialsMap, inUV).xy;
+      color = vec4(metalnessRoughness, 1.0, 1.0);
+      break;
+    }
+
+    case 5:
+    {
+      color = vec4(texture(emissionMap, inUV).rgb, 1.0);
+      break;
+    }
+
+    case 6:
+    {
+      color = vec4(texture(shadowMap, inUV).rgb, 1.0);
+      break;
+    }
+
+    case 7:
+    {
+      color = vec4(texture(shadowCoordMap, inUV).rgb, 1.0);
+      break;
+    }
+
+    case 8:
+    {
+      vec3 ao = vec3(texture(materialsMap, inUV).z);
+      color = vec4(ao, 1.0);
+      break;
+    }
+  }
+
+  outFragColor = color;
 }

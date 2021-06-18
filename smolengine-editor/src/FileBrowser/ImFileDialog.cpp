@@ -1305,6 +1305,8 @@ namespace ifd {
 						m_MatCreateSelectCallback(std::forward<std::string>(str), true);
 				}
 
+				NATIVE_ERROR(m_currentDirectory);
+
 				m_setDirectory(m_currentDirectory, false); // refresh
 				m_newEntryBuffer[0] = 0;
 				ImGui::CloseCurrentPopup();

@@ -166,7 +166,6 @@ namespace SmolEngine
 
 		// Loads Assets
 		{
-			activeScene->UpdateResorcesPaths();
 			ReloadActors();
 			Reload2DTextures(registry);
 			ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
@@ -359,7 +358,7 @@ namespace SmolEngine
 
 					if (path.empty() == false && std::filesystem::exists(path))
 					{
-						if (lib->Load(path, materialCI, "../samples/"))
+						if (lib->Load(path, materialCI))
 						{
 							uint32_t matID = lib->Add(&materialCI, path);
 							materialData.ID = matID;

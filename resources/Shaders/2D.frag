@@ -13,5 +13,5 @@ layout (binding = 0) uniform sampler2D texturesMap[4096];
 void main()
 {
 	vec4 texColor = texture(texturesMap[v_texIndex], v_uv);
-	color = texColor * v_color;
+	color = texColor * vec4(v_color.rgb, texColor.a);
 }

@@ -19,7 +19,10 @@ namespace SmolEngine
 {
 	struct ScenePipelineState
 	{
-		int            ImguiSelectable = 0; // internal use
+		// internal use
+		int            PostProcessingFlag = 0;
+		int            DebugViewFlag = 0; 
+
 		RendererState  State;
 
 	private:
@@ -28,7 +31,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bHDR, State.eExposureType,
+			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bHDR, State.ePostProcessing,
 				State.SceneState.HDRExposure, State.SceneState.UseIBL);
 		}
 	};

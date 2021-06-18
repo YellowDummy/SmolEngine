@@ -117,8 +117,8 @@ struct ImGui_ImplVulkanH_Window
     uint32_t            FrameIndex;             // Current frame being rendered to (0 <= FrameIndex < FrameInFlightCount)
     uint32_t            ImageCount;             // Number of simultaneous in-flight frames (returned by vkGetSwapchainImagesKHR, usually derived from min_image_count)
     uint32_t            SemaphoreIndex;         // Current set of swapchain wait semaphores we're using (needs to be distinct from per frame data)
-    ImGui_ImplVulkanH_Frame*            Frames;
-    ImGui_ImplVulkanH_FrameSemaphores*  FrameSemaphores;
+    ImGui_ImplVulkanH_Frame* Frames;
+    ImGui_ImplVulkanH_FrameSemaphores* FrameSemaphores;
 
     ImGui_ImplVulkanH_Window()
     {
@@ -127,4 +127,3 @@ struct ImGui_ImplVulkanH_Window
         ClearEnable = true;
     }
 };
-

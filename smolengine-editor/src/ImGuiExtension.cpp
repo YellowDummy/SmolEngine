@@ -1,3 +1,4 @@
+#include "..\..\smolengine\include\Libraries\Frostium3D\ImGUI\ImGuiExtension.h"
 #include "stdafx.h"
 #include "ImGUI/ImGuiExtension.h"
 
@@ -55,7 +56,7 @@ namespace ImGui
 					ImGui::SameLine();
 				}
 
-				ImGui::InputFloat("##X", &vec3.x);
+				ImGui::InputFloat(std::string("##C" + label).c_str(), &vec3.x);
 				ImGui::PopItemWidth();
 				ImGui::SameLine();
 			}
@@ -127,7 +128,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::DragFloat2("##F", glm::value_ptr(vec2));
+		ImGui::DragFloat2(std::string("##C" + label).c_str(), glm::value_ptr(vec2));
 
 		ImGui::PopID();
 	}
@@ -140,7 +141,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::DragFloat3("##F", glm::value_ptr(vec3));
+		ImGui::DragFloat3(std::string("##C" + label).c_str(), glm::value_ptr(vec3));
 
 		ImGui::PopID();
 	}
@@ -153,7 +154,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::InputFloat2("##F", glm::value_ptr(vec2));
+		ImGui::InputFloat2(std::string("##C" + label).c_str(), glm::value_ptr(vec2));
 
 		ImGui::PopID();
 	}
@@ -166,7 +167,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::InputFloat3("##F", glm::value_ptr(vec3));
+		ImGui::InputFloat3(std::string("##C" + label).c_str(), glm::value_ptr(vec3));
 
 		ImGui::PopID();
 	}
@@ -179,7 +180,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::InputInt("##I", &value);
+		ImGui::InputInt(std::string("##C" + label).c_str(), &value);
 
 		ImGui::PopID();
 	}
@@ -206,7 +207,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		use = ImGui::InputFloat("##F", &value);
+		use = ImGui::InputFloat(std::string("##C" + label).c_str(), &value);
 
 		ImGui::PopID();
 		return use;
@@ -299,7 +300,7 @@ namespace ImGui
 		ImGui::SetCursorPosX(pos);
 
 
-		if (ImGui::InputTextWithHint("##N", hint.c_str(), &dummyStr, ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputTextWithHint(std::string("##C" + label).c_str(), hint.c_str(), &dummyStr, ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			output = dummyStr;
 		}
@@ -321,17 +322,32 @@ namespace ImGui
 		return ImGui::InputTextWithHint("##N", hint.c_str(), &string);
 	}
 
-	void Extensions::ColorInput3(const std::string& label, glm::vec4& color, float pos, const std::string& additionalID)
+	bool Extensions::ColorInput3(const std::string& label, glm::vec3& color, float pos, const std::string& additionalID)
 	{
+		bool use = false;
 		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(6);
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::ColorEdit3("##C", glm::value_ptr(color));
-
+		use = ImGui::ColorEdit3(std::string("##C" + label).c_str(), glm::value_ptr(color));
 		ImGui::PopID();
+		return use;
+	}
+
+	bool Extensions::ColorInput4(const std::string& label, glm::vec4& color, float pos, const std::string& additionalID)
+	{
+		bool use = false;
+		ImGui::PushID(std::string(label + additionalID).c_str());
+
+		ImGui::SetCursorPosX(6);
+		ImGui::TextUnformatted(label.c_str());
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(pos);
+		use = ImGui::ColorEdit4(std::string("##C" + label).c_str(), glm::value_ptr(color));
+		ImGui::PopID();
+		return use;
 	}
 
 	void Extensions::Texture(const std::string& label, void* textureID, float pos, const std::string& additionalID)
@@ -355,7 +371,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		bool result = ImGui::Checkbox("##C", &value);
+		bool result = ImGui::Checkbox(std::string("##C" + label).c_str(), &value);
 		ImGui::PopID();
 
 		return result;
@@ -370,7 +386,7 @@ namespace ImGui
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		use = ImGui::Combo("##C", &value, comboText);
+		use = ImGui::Combo(std::string("##C" + label).c_str(), &value, comboText);
 
 		ImGui::PopID();
 		return use;

@@ -1635,6 +1635,9 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\CommandUtils.h">
+      <Filter>include\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1741,6 +1744,9 @@
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\CommandUtils.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

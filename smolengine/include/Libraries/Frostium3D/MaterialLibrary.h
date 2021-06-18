@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <vector>
 #include <cereal/cereal.hpp>
-#include <cereal/types/unordered_map.hpp>
 #include <cereal/types/vector.hpp>
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL
@@ -24,49 +23,59 @@ namespace Frostium
 		Normal,
 		Metallic,
 		Roughness,
-		AO
+		AO,
+		Emissive,
+		Height
 	};
 
 	struct PBRMaterial
 	{
-		alignas(16) glm::vec4 PBRValues; // x - Metallic, y - Roughness, z - Albedro
+		alignas(16) glm::vec4 Albedro;
 
+		alignas(4) float    Metalness;
+		alignas(4) float    Roughness;
 		alignas(4) uint32_t UseAlbedroTex;
 		alignas(4) uint32_t UseNormalTex;
+
 		alignas(4) uint32_t UseMetallicTex;
 		alignas(4) uint32_t UseRoughnessTex;
 		alignas(4) uint32_t UseAOTex;
+		alignas(4) uint32_t UseEmissiveTex;
 
+		alignas(4) uint32_t UseHeightTex;
 		alignas(4) uint32_t AlbedroTexIndex;
 		alignas(4) uint32_t NormalTexIndex;
 		alignas(4) uint32_t MetallicTexIndex;
+
 		alignas(4) uint32_t RoughnessTexIndex;
 		alignas(4) uint32_t AOTexIndex;
+		alignas(4) uint32_t EmissiveTexIndex;
+		alignas(4) uint32_t HeightTexIndex;
 
-		alignas(4) uint32_t pad1;
-		alignas(4) uint32_t pad2;
 	};
 
 	struct MaterialCreateInfo
 	{
-		MaterialCreateInfo();
-		~MaterialCreateInfo();
+		void         SetMetalness(float value);
+		void         SetRoughness(float value);
+		void         SetAlbedro(const glm::vec3& color);
+		void         SetTexture(MaterialTexture type, const std::string& filePath);
+		void         GetTextures(std::unordered_map<MaterialTexture, std::string*>& out_hashmap);
 
-		void SetMetalness(float value);
-		void SetRoughness(float value);
-		void SetAlbedro(float value);
-		void SetTexture(MaterialTexture type, const std::string& filePath);
-		float* GetMetalness();
-		float* GetRoughness();
-		std::unordered_map<MaterialTexture, std::string>& GetTexturesInfo();
-
+	public:
+		bool         Used = false;
+		float        Metallness = 0.2f;
+		float        Roughness = 1.0f;
+		std::string  AlbedroPath;
+		std::string  NormalPath;
+		std::string  MetallnessPath;
+		std::string  RoughnessPath;
+		std::string  AOPath;
+		std::string  EmissivePath;
+		std::string  HeightPath;
+		glm::vec3    AlbedroColor = glm::vec3(1.0f);
 	private:
-
-		bool  Used = false;
-		float Metallic = 1.0f;
-		float Albedro = 1.0f;
-		float Roughness = 1.0f;
-		std::unordered_map<MaterialTexture, std::string> Textures = {};
+		friend class MaterialLibrary;
 
 	private:
 
@@ -76,7 +85,8 @@ namespace Frostium
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Metallic, Albedro, Roughness, Textures);
+			archive(Metallness, Roughness, AlbedroPath, NormalPath, MetallnessPath, RoughnessPath, AOPath,
+				EmissivePath, HeightPath, AlbedroColor.r, AlbedroColor.g, AlbedroColor.b);
 		}
 	};
 
@@ -90,7 +100,7 @@ namespace Frostium
 		uint32_t                  Add(MaterialCreateInfo* infoCI, const std::string& name);
 		bool                      Delete(const std::string& name);
 		void                      Reset();
-		bool                      Load(const std::string& filePath, MaterialCreateInfo& out_info, const std::string& searchPath = "");
+		bool                      Load(const std::string& filePath, MaterialCreateInfo& out_info);
 		bool                      Save(const std::string& filePath, MaterialCreateInfo& info);
 
 		// Getters

@@ -17,6 +17,11 @@ namespace SmolEngine
 		glm::vec2 GravityDir = glm::vec2(0.0f, -9.81f);
 	};
 
+	struct EngineContextCreateInfo
+	{
+		std::string AssetsFolder = "../samples/";
+	};
+
 	struct WorldAdminStateSComponent;
 	class WorldAdmin;
 	class Scene;
@@ -31,12 +36,13 @@ namespace SmolEngine
 		void                         Shutdown();
 									 
 		// Methods to implement		 
-		virtual void                 SetGraphicsContext(GraphicsContextInitInfo* info) {};
-		virtual void                 SetPhysics2DContext(Physics2DContextCreateInfo* info) {};
-		virtual void                 SetLayers(LayerManager* layerManager) {};
-		virtual void                 SetScripts(ScriptingSystem* scriptingSytem) {};
-		virtual void                 SetWorldAdminState(WorldAdminStateSComponent* state) {};
-		virtual void                 OnInitializationComplete(WorldAdmin* admin) {};
+		virtual void                 SetEngineContext(EngineContextCreateInfo* info) {}
+		virtual void                 SetGraphicsContext(GraphicsContextInitInfo* info) {}
+		virtual void                 SetPhysics2DContext(Physics2DContextCreateInfo* info) {}
+		virtual void                 SetLayers(LayerManager* layerManager) {}
+		virtual void                 SetScripts(ScriptingSystem* scriptingSytem) {}
+		virtual void                 SetWorldAdminState(WorldAdminStateSComponent* state) {}
+		virtual void                 OnInitializationComplete(WorldAdmin* admin) {}
 									 
 		// Getters					 
 		inline static Engine*        GetEngine() { return s_Instance; }
@@ -64,7 +70,7 @@ namespace SmolEngine
 		WorldAdmin*                  m_World = nullptr;
 		LayerManager*                m_LayerHandler = nullptr;
 		ScriptingSystem*             m_ScriptingSystem = nullptr;
-
+		std::string                  m_AssetsFolder;
 		std::function<void(Scene*)>  m_SceneLoadCl = nullptr;
 		std::function<void(Scene*)>  m_SceneUnLoadCl = nullptr;
 	};

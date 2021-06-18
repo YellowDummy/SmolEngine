@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Core/CommandUtils.h"
 #include "ECS/ComponentHandler.h"
 #include "ECS/ComponentsCore.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
@@ -91,6 +92,7 @@ namespace SmolEngine
 
 			MaterialLibrary* lib = MaterialLibrary::GetSinglenton();
 			MaterialCreateInfo matInfo = {};
+
 			if (lib->Load(material_path, matInfo))
 			{
 				uint32_t id = lib->Add(&matInfo, material_path);

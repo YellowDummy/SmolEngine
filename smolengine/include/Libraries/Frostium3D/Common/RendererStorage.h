@@ -110,6 +110,19 @@ namespace Frostium
 		Blur
 	};
 
+	enum class DebugViewFlags : uint32_t
+	{
+		None = 0,
+		Albedro,
+		Position,
+		Normals,
+		Materials,
+		Emission,
+		ShadowMap,
+		ShadowMapCood,
+		AO
+	};
+
 	struct RendererState
 	{
 		bool                   bDrawSkyBox = true;
@@ -117,7 +130,8 @@ namespace Frostium
 		bool                   bHDR = true;
 		bool                   bFXAA = true;
 		bool                   bSSAO = false;
-		PostProcessingFlags    eExposureType = PostProcessingFlags::Bloom;
+		PostProcessingFlags    ePostProcessing = PostProcessingFlags::Bloom;
+		DebugViewFlags         eDebugView = DebugViewFlags::None;
 		SceneState             SceneState = {};
 	};
 

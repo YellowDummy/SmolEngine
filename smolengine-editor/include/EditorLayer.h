@@ -1,8 +1,9 @@
 #pragma once
 
 #include "SmolEngineCore.h"
-#include "FileManager.h"
 #include "RendererPanel.h"
+#include "TexturesLoader.h"
+#include "FileExplorer.h"
 #include "Core/Layer.h"
 #include "Core/EditorConsole.h"
 #include "MaterialLibraryInterface.h"
@@ -52,8 +53,6 @@ namespace SmolEngine
 			:m_Camera(camera), Layer("EditorLayer") {}
 
 		~EditorLayer() = default;
-
-		void LoadAssets();
 
 		// Override
 		void OnAttach() override;
@@ -119,7 +118,8 @@ namespace SmolEngine
 		bool                                        m_GizmoEnabled = true;
 		bool                                        m_SnapEnabled = false;
 		bool                                        m_GameCameraEnabled = false;
-		FileManager*                                m_FileManager = nullptr;
+		TexturesLoader*                             m_TexturesLoader = nullptr;
+		FileExplorer*                               m_FileExplorer = nullptr;
 		WorldAdmin*                                 m_World = nullptr;
 		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
@@ -133,15 +133,8 @@ namespace SmolEngine
 		uint32_t                                    m_IDBuffer = 0;
 		std::vector<Actor*>                         m_DisplayedActors;
 
-		// UI
-		Texture                                     m_PlayButton{};
-		Texture                                     m_StopButton{};
-		Texture                                     m_MoveButton{};
-		Texture                                     m_ScaleButton{};
-		Texture                                     m_RotateButton{};
-		Texture                                     m_SearchButton{};
-		Texture                                     m_RemoveButton{};
-		Texture                                     m_FolderButton{};
+
+
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";

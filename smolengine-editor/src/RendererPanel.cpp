@@ -32,17 +32,30 @@ namespace SmolEngine
 						ImGui::NewLine();
 
 						if (ImGui::Extensions::CheckBox("FXAA", state->PipelineState.State.bFXAA, padding, "DebugDraw", 12.0f))
+						{
 							UpdateStates();
+						}
 
 						if (ImGui::Extensions::CheckBox("HDR", state->PipelineState.State.bHDR, padding, "DebugDraw", 12.0f))
+						{
 							UpdateStates();
+						}
 
 						if (ImGui::Extensions::CheckBox("SSAO", state->PipelineState.State.bSSAO, padding, "DebugDraw", 12.0f))
-							UpdateStates();
-
-						if (ImGui::Extensions::Combo("Path", "Bloom\0Blur\0", state->PipelineState.ImguiSelectable, 130.f, "DebugDraw"))
 						{
-							state->PipelineState.State.eExposureType = (PostProcessingFlags)state->PipelineState.ImguiSelectable;
+							UpdateStates();
+						}
+
+						if (ImGui::Extensions::Combo("PP", "Bloom\0Blur\0", state->PipelineState.PostProcessingFlag, padding, "DebugDraw", 12.0f))
+						{
+							state->PipelineState.State.ePostProcessing = (PostProcessingFlags)state->PipelineState.PostProcessingFlag;
+							UpdateStates();
+						}
+
+						if (ImGui::Extensions::Combo("DebugView", "None\0Albedro\0Position\0Normals\0Materials\0Emission\0ShadowMap\0ShadowMapCood\0AO\0", 
+							state->PipelineState.DebugViewFlag, padding, "DebugDraw", 12.0f))
+						{
+							state->PipelineState.State.eDebugView = (DebugViewFlags)state->PipelineState.DebugViewFlag;
 							UpdateStates();
 						}
 

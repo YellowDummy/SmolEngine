@@ -1,44 +1,33 @@
 #version 460
 
-// In
-layout (location = 0)  in vec3 v_FragPos;
-layout (location = 1)  in vec3 v_Normal;
-layout (location = 2)  in vec3 v_CameraPos;
-layout (location = 3)  in vec2 v_UV;
-
-layout (location = 4)  flat in uint v_UseAlbedroMap;
-layout (location = 5)  flat in uint v_UseNormalMap;
-layout (location = 6)  flat in uint v_UseMetallicMap;
-layout (location = 7)  flat in uint v_UseRoughnessMap;
-layout (location = 8)  flat in uint v_UseAOMap;
-
-layout (location = 9)  flat in uint v_AlbedroMapIndex;
-layout (location = 10) flat in uint v_NormalMapIndex;
-layout (location = 11) flat in uint v_MetallicMapIndex;
-layout (location = 12) flat in uint v_RoughnessMapIndex;
-layout (location = 13) flat in uint v_AOMapIndex;
-
-layout (location = 14) in float v_Metallic;
-layout (location = 15) in float v_Roughness;
-
-layout (location = 16) in vec4 v_Color;
-layout (location = 17) in vec4 v_ShadowCoord;
-layout (location = 18) in vec4 v_WorldPos;
-layout (location = 19) in mat3 v_TBN;
-
-// Out
-layout (location = 0) out vec4 outColor0;
-layout (location = 1) out vec4 outColor1;
-
-// Samplers
-layout (binding = 1) uniform sampler2D shadowMap;
-layout (binding = 2) uniform samplerCube samplerIrradiance;
-layout (binding = 3) uniform sampler2D samplerBRDFLUT;
-layout (binding = 4) uniform samplerCube prefilteredMap;
-layout (binding = 24) uniform sampler2D texturesMap[4096];
-
 // Buffers
 // -----------------------------------------------------------------------------------------------------------------------
+
+struct MaterialData
+{
+	vec4 AlbedroColor;
+
+	float Metalness;
+	float Roughness;
+	uint UseAlbedroTex;
+	uint UseNormalTex;
+
+	uint UseMetallicTex;
+	uint UseRoughnessTex;
+	uint UseEmissiveTex;
+	uint UseHeightTex;
+
+	uint UseAOTex;
+	uint AlbedroTexIndex;
+	uint NormalTexIndex;
+	uint MetallicTexIndex;
+
+	uint RoughnessTexIndex;
+	uint AOTexIndex;
+	uint EmissiveTexIndex;
+	uint HeightTexIndex;
+};
+
 struct SpotLight 
 {
     vec4 position;
@@ -99,6 +88,27 @@ layout(std140, binding = 33) uniform SceneState
 	uint numSpotLights;
 
 } sceneState;
+
+// In
+layout (location = 0)  in vec3 v_FragPos;
+layout (location = 1)  in vec3 v_Normal;
+layout (location = 2)  in vec3 v_CameraPos;
+layout (location = 3)  in vec2 v_UV;
+layout (location = 4)  in vec4 v_ShadowCoord;
+layout (location = 5)  in vec4 v_WorldPos;
+layout (location = 6)  flat in MaterialData v_Material;
+layout (location = 23) in mat3 v_TBN;
+
+// Out
+layout (location = 0) out vec4 outColor0;
+layout (location = 1) out vec4 outColor1;
+
+// Samplers
+layout (binding = 1) uniform sampler2D shadowMap;
+layout (binding = 2) uniform samplerCube samplerIrradiance;
+layout (binding = 3) uniform sampler2D samplerBRDFLUT;
+layout (binding = 4) uniform samplerCube prefilteredMap;
+layout (binding = 24) uniform sampler2D texturesMap[4096];
 
 // PBR functions
 // -----------------------------------------------------------------------------------------------------------------------
@@ -297,9 +307,9 @@ vec3 CalcSpotLight(SpotLight light, vec3 V, vec3 N, vec3 F0, vec3 albedo_color, 
 
 vec3 getNormal()
 {
-	if(v_UseNormalMap == 1)
+	if(v_Material.UseNormalTex == 1)
 	{
-		 vec3 tangentNormal = texture(texturesMap[v_NormalMapIndex], v_UV).xyz * 2.0 - 1.0;
+		vec3 tangentNormal = texture(texturesMap[v_Material.NormalTexIndex], v_UV).xyz * 2.0 - 1.0;
 	    return normalize(v_TBN * tangentNormal);
 	}
 	
@@ -312,15 +322,16 @@ void main()
 	//--------------------------------------------
 	vec3 N = getNormal(); 						
 	vec3 V = normalize(v_CameraPos - v_FragPos); 
-	vec3 ao = v_UseAOMap == 1 ? texture(texturesMap[v_AOMapIndex], v_UV).rrr : vec3(1, 1, 1);
-	vec3 albedro = v_UseAlbedroMap == 1 ? texture(texturesMap[v_AlbedroMapIndex], v_UV).rgb : v_Color.rgb;
-	float metallic = v_UseMetallicMap == 1 ? texture(texturesMap[v_MetallicMapIndex], v_UV).r : v_Metallic;
-	float roughness = v_UseRoughnessMap == 1 ? texture(texturesMap[v_RoughnessMapIndex], v_UV).r: v_Roughness;
+	vec3 albedro = v_Material.UseAlbedroTex == 1 ? texture(texturesMap[v_Material.AlbedroTexIndex], v_UV).rgb : v_Material.AlbedroColor.rgb;
+	float metallic = v_Material.UseMetallicTex == 1 ? texture(texturesMap[v_Material.MetallicTexIndex], v_UV).r : v_Material.Metalness;
+	float roughness = v_Material.UseRoughnessTex == 1 ? texture(texturesMap[v_Material.RoughnessTexIndex], v_UV).r: v_Material.Roughness;
+	vec3 ao = v_Material.UseAOTex == 1 ? texture(texturesMap[v_Material.AOTexIndex], v_UV).rrr : vec3(1, 1, 1);
+
 	albedro = pow(albedro, vec3(2.2));
+	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
 
 	// Ambient Lighting (IBL)
 	//--------------------------------------------
-	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
     vec3 ambient = vec3(0.0);
 	if(sceneState.use_ibl == 1)
 	{

@@ -46,8 +46,17 @@ project "ImGui"
 
 	filter "configurations:Release (Vulkan)"
 	buildoptions "/MD"
-	optimize "on"
+	optimize "full"
 
 	filter "configurations:Release (OpenGL)"
 	buildoptions "/MD"
-	optimize "on"
+	optimize "full"
+
+	
+	filter "configurations:SmolEngine_R"
+	buildoptions "/MD"
+	optimize "full"
+
+	filter "configurations:SmolEngine_D"
+	buildoptions "/MDd"
+	symbols "on"

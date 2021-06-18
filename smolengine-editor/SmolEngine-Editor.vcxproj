@@ -97,16 +97,19 @@
   <ItemGroup>
     <ClInclude Include="include\Editor.h" />
     <ClInclude Include="include\EditorLayer.h" />
+    <ClInclude Include="include\FileExplorer.h" />
     <ClInclude Include="include\FileBrowser\ImFileDialog.h" />
     <ClInclude Include="include\FileManager.h" />
     <ClInclude Include="include\ImGuiExtension.h" />
     <ClInclude Include="include\MaterialLibraryInterface.h" />
     <ClInclude Include="include\RendererPanel.h" />
     <ClInclude Include="include\Scripts\BasePlayerScript.h" />
+    <ClInclude Include="include\TexturesLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\EditorLayer.cpp" />
+    <ClCompile Include="src\FileExplorer.cpp" />
     <ClCompile Include="src\FileBrowser\ImFileDialog.cpp" />
     <ClCompile Include="src\FileManager.cpp" />
     <ClCompile Include="src\ImGuiExtension.cpp" />

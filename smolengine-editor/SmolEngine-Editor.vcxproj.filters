@@ -45,6 +45,8 @@
     <ClInclude Include="include\Scripts\BasePlayerScript.h">
       <Filter>include\Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="include\FileExplorer.h" />
+    <ClInclude Include="include\TexturesLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">
@@ -71,5 +73,6 @@
     <ClCompile Include="src\Scripts\BasePlayerScript.cpp">
       <Filter>src\Scripts</Filter>
     </ClCompile>
+    <ClCompile Include="src\FileExplorer.cpp" />
   </ItemGroup>
 </Project>

@@ -49,6 +49,7 @@ namespace SmolEngine
 		graphicsContextCI.ResourcesFolderPath = "../resources/";
 		graphicsContextCI.Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
 
+		EngineContextCreateInfo engineContextCI = {};
 		Physics2DContextCreateInfo physicsContextCI = {};
 
 		// User Side
@@ -62,6 +63,9 @@ namespace SmolEngine
 		// Graphics engine and game engine use the same jobs system,
 		// but different queues in use
 		JobsSystemStateSComponent::GetSingleton()->Executor = m_GraphicsContext->GetJobsSystemInstance()->GetExecutor();
+
+		SetEngineContext(&engineContextCI);
+		m_AssetsFolder = engineContextCI.AssetsFolder;
 
 		SetPhysics2DContext(&physicsContextCI);
 		SetLayers(m_LayerHandler);
