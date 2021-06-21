@@ -22,21 +22,26 @@ namespace SmolEngine
 
 	private:
 
+		struct Directory
+		{
+			std::unordered_map<std::string, Ref<Texture>> m_IconsMap = {};
+		};
+
 		void DrawHierarchy();
 		void DrawDirectory(const std::filesystem::path& path);
-		void DrawNode(const std::filesystem::path& path);
-
+		void DrawNode(const std::filesystem::path& path, Directory& owner);
+		void DrawIcon(Texture* icon, bool flip = false);
+		void DrawPopUp();
 	private:
 
 		int                                           m_SelectionIndex = 0;
 		TexturesLoader*                               m_TextureLoader = nullptr;
 		glm::vec2                                     m_ButtonSize = glm::vec2(20.0f);
-		std::string                                   m_RootFodler;
+		std::string                                   m_DirPopUpPath;
+		std::string                                   m_NodePopUpPath;
 		std::string                                   m_CurrentDir;
 		std::string                                   m_SelectedNode;
-		std::string                                   m_BufferString;
-		std::future<void>                             m_LoadIconResult{};
-		std::unordered_map<std::string, Ref<Texture>> m_IconsMap = {};
+		std::unordered_map<std::string, Directory>    m_OpenDirectories = {};
 		std::vector<const char*>                      m_FileExtensions = { ".png", ".jpg", ".s_scene", ".s_material", ".gltf" };
 	};
 }

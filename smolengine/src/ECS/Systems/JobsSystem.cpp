@@ -29,6 +29,8 @@ namespace SmolEngine
 
 		executor->run(*queue);
 		if (wait)
+		{
 			executor->wait_for_all();
+		}
 	}
 }

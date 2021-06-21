@@ -19,7 +19,10 @@ namespace SmolEngine
 			Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 			Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 			Texture::Create("assets/buttons/folder_button.png", &m_FolderButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/documents_button.png", &m_DocumentsButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/documents_button.png", &m_DocumentsIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/scene_button.png", &m_SceneIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/material_button.png", &m_MaterialIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/glTF_button.png", &m_glTFIcon, TextureFormat::R8G8B8A8_UNORM, false, imguiDescriptor);
 		}
 
 		Texture  m_PlayButton{};
@@ -30,6 +33,9 @@ namespace SmolEngine
 		Texture  m_SearchButton{};
 		Texture  m_RemoveButton{};
 		Texture  m_FolderButton{};
-		Texture  m_DocumentsButton{};
+		Texture  m_DocumentsIcon{};
+		Texture  m_SceneIcon{};
+		Texture  m_MaterialIcon{};
+		Texture  m_glTFIcon{};
 	};
 }

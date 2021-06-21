@@ -3,6 +3,7 @@
 
 #include <Frostium3D/Common/Texture.h>
 #include <imgui/imgui.h>
+#include <ECS/Systems/JobsSystem.h>
 
 namespace SmolEngine
 {
@@ -16,45 +17,55 @@ namespace SmolEngine
 	{
 		ImGui::Begin("File Explorer", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
 		{
-			DrawHierarchy();
+			JobsSystem::BeginSubmition();
+			{
+				DrawHierarchy();
+			}
+			JobsSystem::EndSubmition();
 		}
 		ImGui::End();
 	}
 
-	void FileExplorer::DrawDirectory(const std::filesystem::path& path)
+	void FileExplorer::DrawDirectory(const std::filesystem::path& orig_path)
 	{
-		for (auto& file_path : std::filesystem::directory_iterator(path))
+		// Folder icon
+		DrawIcon(&m_TextureLoader->m_FolderButton);
+
+		std::string fileName = orig_path.filename().u8string();
+		auto& it = m_OpenDirectories.find(fileName);
+		bool found = it != m_OpenDirectories.end();
+		bool open = ImGui::TreeNodeEx(fileName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
-			if (std::filesystem::is_directory(file_path))
+			m_DirPopUpPath = orig_path.u8string();
+		}
+
+		if (open)
+		{
+			if (found == false) { m_OpenDirectories[fileName] = Directory(); }
+			for (auto& child_file_path : std::filesystem::directory_iterator(orig_path))
 			{
-				std::string fileName = file_path.path().filename().u8string();
-				// Folder icon
-				ImGui::Image(m_TextureLoader->m_FolderButton.GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
-				ImGui::SameLine();
-
-				bool open = ImGui::TreeNodeEx(fileName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
-				if (open)
+				auto p = child_file_path.path();
+				if (std::filesystem::is_directory(p))
 				{
-					for (auto& child_file_path : std::filesystem::directory_iterator(file_path))
-					{
-						auto p = child_file_path.path();
-						if (std::filesystem::is_directory(p))
-						{
-							DrawDirectory(p);
-						}
-						else
-						{
-							DrawNode(p);
-						}
-					}
-
-					ImGui::TreePop();
+					DrawDirectory(p);
+				}
+				else
+				{
+					DrawNode(p, m_OpenDirectories[fileName]);
 				}
 			}
+
+			ImGui::TreePop();
+		}
+		else
+		{
+			if (found)
+				m_OpenDirectories.erase(fileName);
 		}
 	}
 
-	void FileExplorer::DrawNode(const std::filesystem::path& path)
+	void FileExplorer::DrawNode(const std::filesystem::path& path, Directory& owner)
 	{
 		std::string ext = path.extension().u8string();
 		bool extSupported = std::find(m_FileExtensions.begin(), m_FileExtensions.end(), ext) != m_FileExtensions.end();
@@ -68,46 +79,52 @@ namespace SmolEngine
 			{
 				Ref<Texture> icon = nullptr;
 				std::string texPath = path.u8string();
-				auto& it = m_IconsMap.find(texPath);
-				if (it == m_IconsMap.end())
+				auto& it = owner.m_IconsMap.find(texPath);
+				if (it == owner.m_IconsMap.end())
 				{
 					icon = std::make_shared<Texture>();
-					Texture::Create(texPath, icon.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
-					m_IconsMap[texPath] = icon;
-				}
-				else
-				{
-					icon = it->second;
-				}
+					owner.m_IconsMap[texPath] = icon;
 
+					JobsSystem::Schedule([&owner, texPath]()
+					{
+						auto tex = owner.m_IconsMap[texPath];
+						Texture::Create(texPath, tex.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
+					});
+				}
+				else { icon = it->second; }
 				if (icon != nullptr)
 				{
-					ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+					if (icon->GetWidth() > 0)
+						DrawIcon(icon.get());
 				}
+
 			}
 			else if (ext == ".s_scene")
 			{
-				ImGui::Image(m_TextureLoader->m_DocumentsButton.GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+				DrawIcon(&m_TextureLoader->m_SceneIcon);
 			}
 			else if (ext == ".s_material")
 			{
-				ImGui::Image(m_TextureLoader->m_DocumentsButton.GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+				DrawIcon(&m_TextureLoader->m_MaterialIcon);
 			}
 			else if (ext == ".gltf")
 			{
-				ImGui::Image(m_TextureLoader->m_DocumentsButton.GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+				DrawIcon(&m_TextureLoader->m_glTFIcon);
 			}
 			else
 			{
-				ImGui::Image(m_TextureLoader->m_DocumentsButton.GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+				DrawIcon(&m_TextureLoader->m_DocumentsIcon);
 			}
 
-			ImGui::SameLine();
 			bool open = ImGui::TreeNodeEx(name.c_str(),
 				selected ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Bullet);
 
 			if (selected) { ImGui::PopStyleColor(); }
-			if (ImGui::IsItemClicked())
+			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+			{
+				m_NodePopUpPath = path.u8string();
+			}
+			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 			{
 				m_SelectedNode = name;
 				if (ImGui::IsMouseDoubleClicked(0))
@@ -128,6 +145,51 @@ namespace SmolEngine
 		
 	}
 
+	void FileExplorer::DrawIcon(Texture* icon, bool flip)
+	{
+		if(flip)
+			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y });
+		else
+			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+
+		ImGui::SameLine();
+	}
+
+	void FileExplorer::DrawPopUp()
+	{
+		if(m_DirPopUpPath.empty() == false)
+			ImGui::OpenPopup("FileExplorerActions");
+
+		if(m_NodePopUpPath.empty() == false)
+			ImGui::OpenPopup("FileExplorerNodeActions");
+
+		if (ImGui::BeginPopup("FileExplorerActions"))
+		{
+			m_DirPopUpPath = "";
+			ImGui::MenuItem("Actions", NULL, false, false);
+			ImGui::Separator();
+			if (ImGui::MenuItem("New Material"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopup("FileExplorerNodeActions"))
+		{
+			m_NodePopUpPath = "";
+			if (ImGui::MenuItem("delete"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			if (ImGui::MenuItem("rename"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+
 	void FileExplorer::DrawHierarchy()
 	{
 		if (ImGui::TreeNodeEx("Root", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_Leaf))
@@ -139,12 +201,9 @@ namespace SmolEngine
 				{
 					DrawDirectory(p);
 				}
-				else
-				{
-					DrawNode(p);
-				}
 			}
 
+			DrawPopUp();
 			ImGui::TreePop();
 		}
 	}
