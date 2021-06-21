@@ -92,7 +92,7 @@ namespace SmolEngine
 
 	private:
 
-		static bool FileExtensionCheck(std::filesystem::path* path, const std::string& name, std::string& strPath);
+		static bool FileExtensionCheck(std::string& path, const std::string& ext);
 
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
@@ -132,9 +132,6 @@ namespace SmolEngine
 		std::string                                 m_FileName = "";
 		uint32_t                                    m_IDBuffer = 0;
 		std::vector<Actor*>                         m_DisplayedActors;
-
-
-
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";

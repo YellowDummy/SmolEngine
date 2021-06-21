@@ -384,16 +384,8 @@ namespace SmolEngine
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 			{
-				std::string path;
-				std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-
-				if (EditorLayer::FileExtensionCheck(p, ".png", path))
-				{
-					outString = path;
-					used = true;
-				}
-
-				if (EditorLayer::FileExtensionCheck(p, ".jpg", path))
+				std::string& path = *(std::string*)payload->Data;
+				if (EditorLayer::FileExtensionCheck(path, ".png") || EditorLayer::FileExtensionCheck(path, ".jpg"))
 				{
 					outString = path;
 					used = true;

@@ -20,4 +20,19 @@ namespace SmolEngine
 			}
 		}
 	}
+
+	uint32_t CommandUtils::GetNumFilenameDublicates(const std::string& fileName, const std::string& directory)
+	{
+		uint32_t count = 0;
+		for (auto& p : std::filesystem::directory_iterator(directory))
+		{
+			std::string it_fileName = p.path().filename().u8string();
+			if (it_fileName.find(fileName) != std::string::npos)
+			{
+				count++;
+			}
+		}
+
+		return count;
+	}
 }

@@ -364,12 +364,10 @@ namespace SmolEngine
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
 		ImGui::BeginChild("TetxureScene");
 		{
-
 			if (ImGui::IsWindowHovered()) { m_IsSceneViewFocused = true; }
 			else { m_IsSceneViewFocused = false; }
 
 			Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
-
 			ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
 			if (ViewPortSize.x != m_SceneViewPort.x || ViewPortSize.y != m_SceneViewPort.y)
 			{
@@ -378,20 +376,19 @@ namespace SmolEngine
 			}
 
 			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_SceneViewPort.x, m_SceneViewPort.y });
-
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 				{
-					std::string path;
-					std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-					if (FileExtensionCheck(p, ".s_scene", path))
+					std::string path = *(std::string*)payload->Data;
+
+					if (FileExtensionCheck(path, ".s_scene"))
 					{
 						m_World->LoadScene(path);
 						m_SelectedActor = nullptr;
 					}
 
-					if (FileExtensionCheck(p, ".gltf", path))
+					if (FileExtensionCheck(path, ".gltf"))
 					{
 						std::string name = "DefaultActor" + std::to_string(m_World->GetActiveScene()->GetSceneState()->Actors.size());
 						Actor* actor = m_World->GetActiveScene()->CreateActor(name);
@@ -523,14 +520,11 @@ namespace SmolEngine
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 			{
-				std::string path;
-				std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-
-				if (FileExtensionCheck(p, ".png", path))
+				std::string& path = *(std::string*)payload->Data;
+				if (EditorLayer::FileExtensionCheck(path, ".png") || EditorLayer::FileExtensionCheck(path, ".jpg"))
+				{
 					ComponentHandler::ValidateTexture2DComponent(texture, path);
-
-				if (FileExtensionCheck(p, ".jpg", path))
-					ComponentHandler::ValidateTexture2DComponent(texture, path);
+				}
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -966,18 +960,12 @@ namespace SmolEngine
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 			{
-				std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-
-				if (p->extension().filename() == ".gltf")
+				std::string& path = *(std::string*)payload->Data;
+				if (FileExtensionCheck(path, ".gltf"))
 				{
-					std::string cPath = std::filesystem::current_path().u8string();
-
-					std::string path = p->relative_path().parent_path().u8string();
-					NATIVE_ERROR(path);
-					NATIVE_ERROR(cPath);
-
-					//ComponentHandler::ValidateMeshComponent(comp, path);
+					ComponentHandler::ValidateMeshComponent(comp, path);
 				}
+
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -1049,10 +1037,11 @@ namespace SmolEngine
 							{
 								if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 								{
-									std::string path;
-									std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-									if (FileExtensionCheck(p, ".s_material", path))
+									std::string& path = *(std::string*)payload->Data;
+									if (FileExtensionCheck(path, ".s_material"))
+									{
 										ComponentHandler::SetMeshMaterial(comp, mesh, path);
+									}
 								}
 								ImGui::EndDragDropTarget();
 							}
@@ -1128,10 +1117,11 @@ namespace SmolEngine
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 				{
-					std::string path;
-					std::filesystem::path* p = (std::filesystem::path*)payload->Data;
-					if (FileExtensionCheck(p, ".gltf", path))
+					std::string& path = *(std::string*)payload->Data;
+					if (FileExtensionCheck(path, ".gltf"))
+					{
 						component->CreateInfo.ConvexShapeInfo.FilePath = path;
+					}
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -1396,11 +1386,11 @@ namespace SmolEngine
 		}
 	}
 
-	bool EditorLayer::FileExtensionCheck(std::filesystem::path* path, const std::string& name, std::string& strPath)
+	bool EditorLayer::FileExtensionCheck(std::string& path, const std::string& ext)
 	{
-		if (path->extension().filename() == name)
+		std::filesystem::path p(path);
+		if (p.extension().filename() == ext)
 		{
-			strPath = path->u8string();
 			return true;
 		}
 
