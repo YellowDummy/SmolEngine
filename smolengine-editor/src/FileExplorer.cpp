@@ -15,9 +15,10 @@ namespace SmolEngine
 		m_CurrentDir = current_path;
 	}
 
-	void FileExplorer::SetNodeSelectedCallback(std::function<void(const std::string&, const std::string&)>& callback)
+	void FileExplorer::ClearSelection()
 	{
-		m_pOnNodeSelected = callback;
+		m_SelectedNode = "";
+		ClosePopUp();
 	}
 
 	void FileExplorer::Update()
@@ -31,6 +32,16 @@ namespace SmolEngine
 			JobsSystem::EndSubmition();
 		}
 		ImGui::End();
+	}
+
+	void FileExplorer::SetOnFileSelectedCallback(const std::function<void(const std::string&, const std::string&, int)>& callback)
+	{
+		m_pOnFileSelected = callback;
+	}
+
+	void FileExplorer::SetOnFileDeletedCallaback(const std::function<void(const std::string&, const std::string&)>& callback)
+	{
+		m_pOnFileDeleted = callback;
 	}
 
 	void FileExplorer::DrawDirectory(const std::filesystem::path& orig_path)
@@ -51,14 +62,21 @@ namespace SmolEngine
 		if (open)
 		{
 			if (found == false) { m_OpenDirectories[fileName] = Directory(); }
+
+			// first draw directories
 			for (auto& child_file_path : std::filesystem::directory_iterator(orig_path))
 			{
 				auto p = child_file_path.path();
-				if (std::filesystem::is_directory(p))
+				if (std::filesystem::is_directory(p) == true)
 				{
 					DrawDirectory(p);
 				}
-				else
+			}
+
+			for (auto& child_file_path : std::filesystem::directory_iterator(orig_path))
+			{
+				auto p = child_file_path.path();
+				if (std::filesystem::is_directory(p) == false)
 				{
 					DrawNode(p, m_OpenDirectories[fileName]);
 				}
@@ -75,15 +93,16 @@ namespace SmolEngine
 
 	void FileExplorer::DrawNode(const std::filesystem::path& fs_path, Directory& owner)
 	{
+		Ref<Texture> icon = nullptr;
 		std::string name = fs_path.filename().u8string();
 		std::string path = fs_path.u8string();
 		std::string ext = fs_path.extension().u8string();
+
 		bool extSupported = std::find(m_FileExtensions.begin(), m_FileExtensions.end(), ext) != m_FileExtensions.end();
 		if (extSupported)
 		{
 			if (ext == ".png" || ext == ".jpg")
 			{
-				Ref<Texture> icon = nullptr;
 				auto& it = owner.m_IconsMap.find(path);
 				if (it == owner.m_IconsMap.end())
 				{
@@ -103,21 +122,9 @@ namespace SmolEngine
 				}
 
 			}
-			else if (ext == ".s_scene")
+			else 
 			{
-				DrawIcon(&m_pTextureLoader->m_SceneIcon);
-			}
-			else if (ext == ".s_material")
-			{
-				DrawIcon(&m_pTextureLoader->m_MaterialIcon);
-			}
-			else if (ext == ".gltf")
-			{
-				DrawIcon(&m_pTextureLoader->m_glTFIcon);
-			}
-			else
-			{
-				DrawIcon(&m_pTextureLoader->m_DocumentsIcon);
+				DrawIcon(ext);
 			}
 
 			bool is_action_pending = false;
@@ -143,8 +150,12 @@ namespace SmolEngine
 					if (ImGui::IsMouseDoubleClicked(0))
 					{
 						m_SelectedNode = name;
-						if (m_pOnNodeSelected != nullptr)
-							m_pOnNodeSelected(path, ext);
+						if (m_pOnFileSelected != nullptr)
+						{
+							std::ifstream in(path, std::ifstream::ate | std::ifstream::binary);
+							size_t fSize = in.tellg();
+							m_pOnFileSelected(path, ext, static_cast<int>(fSize));
+						}
 					}
 				}
 
@@ -152,7 +163,17 @@ namespace SmolEngine
 				{
 					m_DragAndDropBuffer = path;
 					ImGui::SetDragDropPayload("FileBrowser", &m_DragAndDropBuffer, sizeof(std::string));
-					ImGui::Text(m_DragAndDropBuffer.c_str());
+					if (icon != nullptr)
+					{
+						if (icon->GetWidth() > 0)
+							DrawIcon(icon.get());
+					}
+					else
+					{
+						DrawIcon(ext);
+					}
+
+					ImGui::Text(name.c_str());
 					ImGui::EndDragDropSource();
 				}
 
@@ -192,6 +213,26 @@ namespace SmolEngine
 			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
 
 		ImGui::SameLine();
+	}
+
+	void FileExplorer::DrawIcon(const std::string& ext)
+	{
+		if (ext == ".s_scene")
+		{
+		   DrawIcon(&m_pTextureLoader->m_SceneIcon);
+		}
+		else if (ext == ".s_material")
+		{
+		   DrawIcon(&m_pTextureLoader->m_MaterialIcon);
+		}
+		else if (ext == ".gltf")
+		{
+		   DrawIcon(&m_pTextureLoader->m_glTFIcon);
+		}
+		else
+		{
+			DrawIcon(&m_pTextureLoader->m_DocumentsIcon);
+		}
 	}
 
 	void FileExplorer::DrawPopUp()
@@ -246,6 +287,9 @@ namespace SmolEngine
 				ImGui::SetCursorPosY(posY - 10);
 				if (ImGui::Button("confirm", { 70, 35 }))
 				{
+					if (m_pOnFileDeleted != nullptr)
+						m_pOnFileDeleted(m_PopUpBuffer, p.extension().u8string());
+
 					std::filesystem::remove(m_PopUpBuffer);
 					ClosePopUp();
 				}

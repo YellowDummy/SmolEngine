@@ -51,6 +51,7 @@ namespace SmolEngine
 		uint32_t                     GetWindowWidth() const;
 		float                        GetFPSCount() const;
 		glm::ivec2                   GetViewPortSize() const;
+		std::string                  GetAssetsFolder() const;
 									 
 		// Callbacks				 
 		void                         SetOnSceneLoadedCallback(const std::function<void(Scene*)>& callback);

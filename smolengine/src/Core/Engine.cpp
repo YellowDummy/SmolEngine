@@ -188,6 +188,11 @@ namespace SmolEngine
 		return glm::ivec2(spec.Width, spec.Height);
 	}
 
+	std::string Engine::GetAssetsFolder() const
+	{
+		return m_AssetsFolder;
+	}
+
 	uint32_t Engine::GetWindowWidth() const
 	{
 		return m_GraphicsContext->GetWindowData()->Width;

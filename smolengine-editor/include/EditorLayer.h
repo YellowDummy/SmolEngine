@@ -107,9 +107,14 @@ namespace SmolEngine
 			return false;
 		}
 
+		void ResetSelection();
 		void DrawScriptComponent(uint32_t index);
 		void CheckActor(Actor* actor);
 		void CheckGameCameraState();
+
+		// Callbacks
+		void OnFileSelected(const std::string& path, const std::string& ext, int fileSize);
+		void OnFileDeleted(const std::string& path, const std::string& ext);
 
 	private:
 

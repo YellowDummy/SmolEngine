@@ -4,6 +4,7 @@ layout (location = 0)  in vec3 v_FragPos;
 layout (location = 1)  in vec3 v_Normal;
 layout (location = 2)  in vec2 v_UV;
 layout (location = 3)  in vec3 v_Tangent;
+layout (location = 4)  in vec3 v_CamPos;
 
 layout (binding = 2) uniform samplerCube samplerIrradiance;
 layout (binding = 3) uniform sampler2D samplerBRDFLUT;
@@ -39,7 +40,6 @@ struct MaterialData
 layout (std140, binding = 277) uniform SceneBuffer
 {
 	MaterialData material;
-	vec4 camPos;
 };
 
 layout (location = 0) out vec4 outColor;
@@ -151,7 +151,7 @@ void main()
 	vec3 emissive = material.UseEmissiveTex == 1 ? texture(textures[material.EmissiveTexIndex], v_UV).rgb : vec3(0);
 	albedro = pow(albedro, vec3(2.2));
 	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
-	vec3 V = normalize(camPos.xyz - v_FragPos); 
+	vec3 V = normalize(v_CamPos - v_FragPos); 
 
     // Ambient Lighting (IBL)
 	//--------------------------------------------

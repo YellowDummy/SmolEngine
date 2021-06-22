@@ -33,19 +33,11 @@ namespace SmolEngine
 		void Close();
 		void Update();
 		void Save();
-
 		std::string GetCurrentPath() const;
-
 	private:
 
-		struct UniformBuffer
-		{
-			PBRMaterial material = {};
-			glm::vec3   camPos = glm::vec3(0);
-		};
-
 		void InitPreviewRenderer();
-		void LoadTexture(const std::string& filePath, MaterialTexture type, UniformBuffer& ubo, std::vector<Ref<Texture>>& textures);
+		void LoadTexture(const std::string& filePath, MaterialTexture type, std::vector<Texture*>& textures);
 		bool DrawTextureInfo(const char* header, std::string& outString, const std::string& title);
 		void RenderImage();
 		void ResetMaterial();
@@ -57,9 +49,10 @@ namespace SmolEngine
 		const uint32_t                       m_BindingPoint = 277;
 		std::future<void>                    m_DrawResult = {};
 		std::string                          m_CurrentFilePath = "";
+		std::string                          m_CurrentName = "";
+		PBRMaterial                          m_Material = {};
 		TexturesLoader*                      m_TexturesLoader = nullptr;
 		MaterialCreateInfo*                  m_MaterialCI = nullptr;
 		PreviewRenderingData*                m_Data = nullptr;
-		UniformBuffer*                       m_UBO = nullptr;
 	};
 }

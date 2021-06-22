@@ -50,7 +50,9 @@ namespace SmolEngine
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
 
 		m_FileExplorer = new FileExplorer();
-		m_FileExplorer->Create("../samples/", m_TexturesLoader);
+		m_FileExplorer->Create(Engine::GetEngine()->GetAssetsFolder(), m_TexturesLoader);
+		m_FileExplorer->SetOnFileSelectedCallback(std::bind_front(&EditorLayer::OnFileSelected, this));
+		m_FileExplorer->SetOnFileDeletedCallaback(std::bind_front(&EditorLayer::OnFileDeleted, this));
 
 		{
 			ImGui::GetStyle().FrameRounding = 4.0f;
@@ -215,26 +217,18 @@ namespace SmolEngine
 
 		if (ImGui::IsItemClicked(1))
 		{
+			ResetSelection();
 			m_SelectionFlags = SelectionFlags::Actions;
-
-			m_TempActorTag = "";
-			m_TempActorName = "";
-
-			m_SelectedActor = nullptr;
 			m_SelectedActor = actor;
 		}
 
 		if (ImGui::IsItemClicked())
 		{
-			m_SelectionFlags = SelectionFlags::Inspector;
 			if (m_SelectedActor != nullptr)
-			{
 				m_SelectedActor->GetInfo()->bShowComponentUI = false;
-				m_SelectedActor = nullptr;
-			}
 
-			m_TempActorTag = "";
-			m_TempActorName = "";
+			ResetSelection();
+			m_SelectionFlags = SelectionFlags::Inspector;
 			m_SelectedActor = actor;
 
 			if (ImGui::IsMouseDoubleClicked(0))
@@ -1397,6 +1391,15 @@ namespace SmolEngine
 		return false;
 	}
 
+	void EditorLayer::ResetSelection()
+	{
+		m_TempActorTag = "";
+		m_TempActorName = "";
+		m_SelectedActor = nullptr;
+		m_SelectionFlags = SelectionFlags::None;
+		m_FileExplorer->ClearSelection();
+	}
+
 	void EditorLayer::DrawScriptComponent(uint32_t index)
 	{
 		if (m_World->GetActiveScene()->HasComponent<BehaviourComponent>(m_SelectedActor))
@@ -1467,6 +1470,30 @@ namespace SmolEngine
 				m_GameCameraEnabled = true;
 				break;
 			}
+		}
+	}
+
+	// TODO: remove hard coded strings
+	void EditorLayer::OnFileSelected(const std::string& path, const std::string& ext, int fileSize)
+	{
+		if (ext == ".s_material")
+		{
+			m_SelectedActor = nullptr;
+			m_SelectionFlags = SelectionFlags::MaterialLib;
+
+			if (fileSize > 0)
+				m_MaterialLibraryInterface->OpenExisting(path);
+			else
+				m_MaterialLibraryInterface->OpenNew(path);
+		}
+	}
+
+	void EditorLayer::OnFileDeleted(const std::string& path, const std::string& ext)
+	{
+		if (ext == ".s_material")
+		{
+			m_MaterialLibraryInterface->Close();
+			m_SelectionFlags = SelectionFlags::None;
 		}
 	}
 }

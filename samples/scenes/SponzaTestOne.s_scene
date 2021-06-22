@@ -1,79 +1,42 @@
-value0: 4
+value0: 3
 value1: 0
 value2: 1
 value3: 2
-value4: 3
-value5: 1048575
-value6: 3
-value7: 1
-value8:
+value4: 1048575
+value5: 2
+value6: 1
+value7:
   value0: 1
-  value1: DefaultActor0
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    - 2
-  value6: 0
-  value7: 0
-  value8: 4
-value9: 2
-value10:
-  value0: 2
-  value1: DefaultActor1
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    - 3
-  value6: 1
-  value7: 0
-  value8: 3
-value11: 3
-value12:
-  value0: 3
-  value1: DefaultActor2
+  value1: Sponza
   value2: Default
   value3: true
   value4: false
   value5:
     []
-  value6: 2
+  value6: 0
   value7: 0
   value8: 3
+value8: 2
+value9:
+  value0: 2
+  value1: Light
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    []
+  value6: 0
+  value7: 0
+  value8: 3
+value10: 0
+value11: 0
+value12: 0
 value13: 0
 value14: 0
 value15: 0
-value16: 0
-value17: 0
-value18: 0
-value19: 3
-value20: 1
-value21:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 4.4863395690917969
-  value7: 5.6446504592895508
-  value8: -15.367430686950684
-  value9: 1
-value22: 2
-value23:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 28.990644454956055
-  value7: 11.424221038818359
-  value8: 0
-  value9: 1
-value24: 3
-value25:
+value16: 2
+value17: 1
+value18:
   value0: 0
   value1: 0
   value2: 0
@@ -84,46 +47,82 @@ value25:
   value7: 0
   value8: 0
   value9: 1
-value26: 0
-value27: 0
-value28: 3
-value29: 1
-value30:
-  value0:
-    - value0: ""
-  value1: false
-  value2: true
-  value3: 2
-  value4: C:\Dev\SmolEngine\resources\Models\box.gltf
-  value5: 2
-value31: 2
-value32:
-  value0:
-    - value0: ""
-    - value0: ""
-  value1: false
-  value2: true
-  value3: 2
-  value4: C:\Dev\SmolEngine\resources\Models\capsule.gltf
-  value5: 2
-value33: 3
-value34:
-  value0:
-    - value0: ""
-  value1: false
-  value2: true
-  value3: 2
-  value4: C:\Dev\SmolEngine\resources\Models\sphere.gltf
-  value5: 2
-value35: 0
-value36: 0
-value37: 1
-value38: 0
-value39:
+value19: 2
+value20:
   value0: 0
-  value1: 4
-  value2: C:\Dev\SmolEngine\samples\scenes\NewScene.s_scene
-  value3: NewScene
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value21: 0
+value22: 0
+value23: 1
+value24: 1
+value25:
+  value0:
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\floor.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ""
+    - value0: ../samples/materials\vase.s_material
+    - value0: ../samples/materials\flowers.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\thorn.s_material
+    - value0: ../samples/materials\curt_green2.s_material
+    - value0: ../samples/materials\curt_green.s_material
+    - value0: ../samples/materials\curt_blue2.s_material
+    - value0: ../samples/materials\curt_blue.s_material
+    - value0: ../samples/materials\curt_red2.s_material
+    - value0: ../samples/materials\curt_red.s_material
+    - value0: ../samples/materials\vase2.s_material
+    - value0: ../samples/materials\chain.s_material
+    - value0: ""
+    - value0: ../samples/materials\flagpole.s_material
+    - value0: ../samples/materials\roof.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\sponza.gltf
+  value5: 2
+value26: 1
+value27: 2
+value28:
+  value0: 1
+  value1: 0.9781373143196106
+  value2: 0.9781373143196106
+  value3: 1
+  value4: -9
+  value5: 33
+  value6: -2
+  value7: 0
+  value8: 0.10000000149011612
+  value9: 1
+  value10: 350
+  value11: 1
+  value12: 45
+  value13: 1
+  value14: 1
+  value15: 1
+  value16: 2
+value29: 0
+value30: 1
+value31: 0
+value32:
+  value0: 0
+  value1: 3
+  value2: ../samples/scenes\SponzaTestOne.s_scene
+  value3: SponzaTestOne
   value4:
     value0: true
     value1: false
@@ -142,34 +141,4 @@ value39:
         id: 2147483650
         data:
           value0: 2
-    - ptr_wrapper:
-        id: 2147483651
-        data:
-          value0: 3
-value40: 1
-value41: 1
-value42:
-  value0:
-    value0: 0
-    value1: 0
-    value2: 0
-    value3: 1
-    value4: 1
-    value5: 0.5
-    value6: 0.5
-    value7: 0
-    value8: 0
-    value9: 0
-    value10: 0.10000000149011612
-    value11: 0.10000000149011612
-    value12: 1
-    value13: 1
-    value14: 1
-    value15: 1
-    value16: 1
-    value17: 1
-    value18: ""
-    value19: 1
-    value20: 0
-    value21: 0
-  value1: 3
+value33: 0
