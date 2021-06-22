@@ -27,12 +27,6 @@
     <ClInclude Include="include\EditorLayer.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\FileBrowser\ImFileDialog.h">
-      <Filter>include\FileBrowser</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FileManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\ImGuiExtension.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -53,12 +47,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FileBrowser\ImFileDialog.cpp">
-      <Filter>src\FileBrowser</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FileManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGuiExtension.cpp">

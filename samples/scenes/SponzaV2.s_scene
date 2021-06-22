@@ -29,7 +29,7 @@ value13:
   value4: false
   value5:
     []
-  value6: 0
+  value6: 7
   value7: 0
   value8: 3
 value14: 3
@@ -41,7 +41,7 @@ value15:
   value4: false
   value5:
     []
-  value6: 0
+  value6: 7
   value7: 0
   value8: 3
 value16: 4
@@ -53,7 +53,7 @@ value17:
   value4: false
   value5:
     []
-  value6: 0
+  value6: 7
   value7: 0
   value8: 3
 value18: 5
@@ -65,7 +65,7 @@ value19:
   value4: false
   value5:
     []
-  value6: 0
+  value6: 7
   value7: 0
   value8: 3
 value20: 6
@@ -76,7 +76,10 @@ value21:
   value3: true
   value4: false
   value5:
-    []
+    - 3
+    - 4
+    - 5
+    - 6
   value6: 0
   value7: 0
   value8: 2
@@ -262,7 +265,7 @@ value57: 0
 value58:
   value0: 0
   value1: 8
-  value2: ../samples/scenes\SponzaTestOne.s_scene
+  value2: ../samples/scenes\SponzaV2.s_scene
   value3: SponzaV2
   value4:
     value0: true
