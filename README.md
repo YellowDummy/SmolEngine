@@ -1,14 +1,24 @@
 ## Level-Editor
 ![SmolEngine](https://i.imgur.com/usic3JV.png)
+![SmolEngine](https://i.imgur.com/dEXmEGZ.png)
+
+The engine is still at a very early stage and is not ready for production.
+
 ## Core Features
 
 - Custom [graphics engine](https://github.com/YellowDummy/Frostium3D)
 - Data-Oriented Entity Component System
-- Jobs System
+- Jobs System (Multithreading)
 - Level Editor
 - C++ Scripting
 - 2D and 3D physics engines (Box2D/Bullet3)
 - 3rd party audio engine (FMOD)
+
+## Short-term goals
+- Documentation (doxygen)
+- Tutorial for Beginners
+- Lua or C# scripting
+- Release a game on itch.io
 
 ## Building
 ### Windows
