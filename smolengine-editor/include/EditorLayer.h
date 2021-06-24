@@ -90,10 +90,9 @@ namespace SmolEngine
 		void DrawComponentPopUp();
 		void DrawScriptPopUp();
 
-	private:
-
 		static bool FileExtensionCheck(std::string& path, const std::string& ext);
 
+	private:
 		template<typename T>
 		bool IsCurrentComponent(uint32_t index)
 		{

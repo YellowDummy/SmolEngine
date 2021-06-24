@@ -18,22 +18,24 @@ struct MaterialData
 
 	float Metalness;
 	float Roughness;
+	float EmissionStrength;
 	uint UseAlbedroTex;
-	uint UseNormalTex;
 
+	uint UseNormalTex;
 	uint UseMetallicTex;
 	uint UseRoughnessTex;
     uint UseAOTex;
-	uint UseEmissiveTex;
 
+	uint UseEmissiveTex;
 	uint UseHeightTex;
 	uint AlbedroTexIndex;
 	uint NormalTexIndex;
-	uint MetallicTexIndex;
 
+	uint MetallicTexIndex;
 	uint RoughnessTexIndex;
 	uint AOTexIndex;
 	uint EmissiveTexIndex;
+	
 	uint HeightTexIndex;
 };
 

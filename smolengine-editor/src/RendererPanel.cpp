@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "RendererPanel.h"
+#include "TexturesLoader.h"
+#include "EditorLayer.h"
 #include "ECS/Components/SceneStateComponent.h"
 
 #include <Frostium3D/ImGUI/ImGuiExtension.h>
@@ -19,75 +21,134 @@ namespace SmolEngine
 
 		if (open)
 		{
-			ImGui::Begin("Renderer Settings", &open);
+			ImGui::Begin("Pipeline Settings", &open);
 			{
-				SceneStateComponent* state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
-				if (state)
+				SceneStateComponent* scene_state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
+				RendererState& state = scene_state->PipelineState.State;
+
+				if (scene_state)
 				{
 					ImGui::SetWindowFontScale(0.8f);
 
 					ImGui::NewLine();
-					if (ImGui::CollapsingHeader("Post-processing"))
+					if (ImGui::CollapsingHeader("Image-Based Lighting"))
 					{
 						ImGui::NewLine();
-
-						if (ImGui::Extensions::CheckBox("FXAA", state->PipelineState.State.bFXAA, padding, "DebugDraw", 12.0f))
-						{
-							UpdateStates();
-						}
-
-						if (ImGui::Extensions::CheckBox("HDR", state->PipelineState.State.bHDR, padding, "DebugDraw", 12.0f))
-						{
-							UpdateStates();
-						}
-
-						if (ImGui::Extensions::CheckBox("SSAO", state->PipelineState.State.bSSAO, padding, "DebugDraw", 12.0f))
-						{
-							UpdateStates();
-						}
-
-						if (ImGui::Extensions::Combo("PP", "Bloom\0Blur\0", state->PipelineState.PostProcessingFlag, padding, "DebugDraw", 12.0f))
-						{
-							state->PipelineState.State.ePostProcessing = (PostProcessingFlags)state->PipelineState.PostProcessingFlag;
-							UpdateStates();
-						}
-
-						if (ImGui::Extensions::Combo("DebugView", "None\0Albedro\0Position\0Normals\0Materials\0Emission\0ShadowMap\0ShadowMapCood\0AO\0", 
-							state->PipelineState.DebugViewFlag, padding, "DebugDraw", 12.0f))
-						{
-							state->PipelineState.State.eDebugView = (DebugViewFlags)state->PipelineState.DebugViewFlag;
-							UpdateStates();
-						}
-
-						ImGui::NewLine();
-					}
-
-					if (ImGui::CollapsingHeader("Graphics Pipeline"))
-					{
-						ImGui::NewLine();
-						bool* useIBl = (bool*)&state->PipelineState.State.SceneState.UseIBL;
-
-						if(ImGui::Extensions::CheckBox("Grid", state->PipelineState.State.bDrawGrid, padding, "DebugDraw", 12.0f))
+						bool* value = (bool*)(&state.Lighting.UseIBL);
+						if (ImGui::Extensions::CheckBox("Enabled", *value, padding, "IBL", 12.0f))
 							UpdateStates();
 
-						if(ImGui::Extensions::CheckBox("Skybox", state->PipelineState.State.bDrawSkyBox, padding, "DebugDraw", 12.0f))
+						if (ImGui::Extensions::CheckBox("Draw Skybox", state.bDrawSkyBox, padding, "IBL", 12.0f))
 							UpdateStates();
 
-						if(ImGui::Extensions::CheckBox("IBL", *useIBl, padding, "DebugDraw", 12.0f))
+						if (ImGui::Extensions::InputFloat("Strength", state.Lighting.IBLStrength, padding, "IBL", 12.0f))
 							UpdateStates();
 
-						if(ImGui::Extensions::InputFloat("HDR Exposure", state->PipelineState.State.SceneState.HDRExposure, padding, "DebugDraw", 12.0f))
+						if (ImGui::Extensions::ColorInput4("Ambient Color", state.Lighting.AmbientColor, padding, "IBL", 12.0f))
 							UpdateStates();
 
 						ImGui::NewLine();
 					}
 
-					if (ImGui::CollapsingHeader("Debugger"))
+					if (ImGui::CollapsingHeader("Bloom Settings"))
 					{
 						ImGui::NewLine();
-						ImGui::Extensions::CheckBox("Default", m_DebugDrawState.bDefaultDraw, padding, "DebugDraw", 12.0f);
-						ImGui::Extensions::CheckBox("Bullet3", m_DebugDrawState.bBullet3Draw, padding, "DebugDraw", 12.0f);
+						if (ImGui::Extensions::CheckBox("Enabled", state.bBloom, padding, "Bloom", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("Exposure", state.Bloom.Exposure, padding, "Bloom", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("Scale", state.Bloom.Scale, padding, "Bloom", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("Strength", state.Bloom.Strength, padding, "Bloom", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("Threshold", state.Bloom.Threshold, padding, "Bloom", 12.0f))
+							UpdateStates();
+
+						ImGui::NewLine();
+					}
+
+					if (ImGui::CollapsingHeader("FXAA Settings"))
+					{
+						ImGui::NewLine();
+						if (ImGui::Extensions::InputFloat("Threshold Max", state.FXAA.EdgeThresholdMax, padding, "FXAA", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("Threshold Min", state.FXAA.EdgeThresholdMin, padding, "FXAA", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("Iterations", state.FXAA.Iterations, padding, "FXAA", 12.0f))
+							UpdateStates();
+
+						if (ImGui::Extensions::InputFloat("SubPixelQuality", state.FXAA.SubPixelQuality, padding, "FXAA", 12.0f))
+							UpdateStates();
+
+						ImGui::NewLine();
+					}
+
+					if (ImGui::CollapsingHeader("Post Processing Volumes"))
+					{
+						ImGui::NewLine();
+						ImGui::SetCursorPosX(12.0f);
+						ImGui::TextUnformatted("Dirt Mask");
+						auto& dirt = scene_state->PipelineState.DirtMask;
+						if (dirt.bReset)
+						{
+							dirt = {};
+							DeferredRenderer::SetDirtMask(nullptr, 1.0f);
+						}
+
+						Texture* tex = dirt.Texture != nullptr ? dirt.Texture.get() : &TexturesLoader::Get()->m_BackgroundIcon;
+						ImGui::NewLine();
+						ImGui::SetCursorPosX(22.0f);
+						ImGui::Image(tex->GetImGuiTexture(), ImVec2{ 60, 60 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+						if (ImGui::BeginDragDropTarget())
+						{
+							if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
+							{
+								std::string& path = *(std::string*)payload->Data;
+								if (EditorLayer::FileExtensionCheck(path, ".png") || EditorLayer::FileExtensionCheck(path, ".jpg"))
+								{
+									dirt.Path = path;
+									dirt.Texture = std::make_shared<Texture>();
+									Texture::Create(path, dirt.Texture.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
+									DeferredRenderer::SetDirtMask(dirt.Texture.get(), dirt.Intensity);
+								}
+							}
+							ImGui::EndDragDropTarget();
+						}
+
+						ImGui::SameLine();
+						if (ImGui::Button("Reset")) { dirt.bReset = true; }
+						ImGui::NewLine();
+						if (ImGui::Extensions::InputFloat("Dirt Intensity", dirt.Intensity, padding, "Dirt", 12.0f))
+						{
+							DeferredRenderer::SetDirtMask(dirt.Texture.get(), dirt.Intensity);
+						}
+						ImGui::NewLine();
+					}
+
+					if (ImGui::CollapsingHeader("Debug Settings"))
+					{
+						ImGui::NewLine();
+
+						if (ImGui::Extensions::Combo("View", "None\0Albedro\0Position\0Normals\0Materials\0Emission\0ShadowMap\0ShadowMapCood\0AO\0",
+							scene_state->PipelineState.DebugViewFlag, padding, "DebugDraw", 12.0f))
+						{
+							scene_state->PipelineState.State.eDebugView = (DebugViewFlags)scene_state->PipelineState.DebugViewFlag;
+							UpdateStates();
+						}
+
+						ImGui::Extensions::CheckBox("Default Draw", m_DebugDrawState.bDefaultDraw, padding, "DebugDraw", 12.0f);
+						ImGui::Extensions::CheckBox("Bullet3 Draw", m_DebugDrawState.bBullet3Draw, padding, "DebugDraw", 12.0f);
 						ImGui::Extensions::CheckBox("Wireframes", m_DebugDrawState.bWireframes, padding, "DebugDraw", 12.0f);
+						if (ImGui::Extensions::CheckBox("Grid", state.bDrawGrid, padding, "DebugDraw", 12.0f))
+							UpdateStates();
+
+						ImGui::NewLine();
 					}
 				}
 			}

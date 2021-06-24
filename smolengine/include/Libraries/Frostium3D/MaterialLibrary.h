@@ -32,32 +32,39 @@ namespace Frostium
 	{
 		alignas(16) glm::vec4 Albedro;
 
-		alignas(4) float    Metalness;
-		alignas(4) float    Roughness;
-		alignas(4) uint32_t UseAlbedroTex;
-		alignas(4) uint32_t UseNormalTex;
+		float    Metalness;
+		float    Roughness;
+		float    EmissionStrength;
+		uint32_t UseAlbedroTex;
 
-		alignas(4) uint32_t UseMetallicTex;
-		alignas(4) uint32_t UseRoughnessTex;
-		alignas(4) uint32_t UseAOTex;
-		alignas(4) uint32_t UseEmissiveTex;
+		uint32_t UseNormalTex;
+		uint32_t UseMetallicTex;
+		uint32_t UseRoughnessTex;
+		uint32_t UseAOTex;
 
-		alignas(4) uint32_t UseHeightTex;
-		alignas(4) uint32_t AlbedroTexIndex;
-		alignas(4) uint32_t NormalTexIndex;
-		alignas(4) uint32_t MetallicTexIndex;
+		uint32_t UseEmissiveTex;
+		uint32_t UseHeightTex;
+		uint32_t AlbedroTexIndex;
+		uint32_t NormalTexIndex;
 
-		alignas(4) uint32_t RoughnessTexIndex;
-		alignas(4) uint32_t AOTexIndex;
-		alignas(4) uint32_t EmissiveTexIndex;
-		alignas(4) uint32_t HeightTexIndex;
+		uint32_t MetallicTexIndex;
+		uint32_t RoughnessTexIndex;
+		uint32_t AOTexIndex;
+		uint32_t EmissiveTexIndex;
 
+		uint32_t HeightTexIndex;
+	private:
+
+		uint32_t pad1;
+		uint32_t pad2;
+		uint32_t pad3;
 	};
 
 	struct MaterialCreateInfo
 	{
 		void         SetMetalness(float value);
 		void         SetRoughness(float value);
+		void         SetEmissionStrength(float value);
 		void         SetAlbedro(const glm::vec3& color);
 		void         SetTexture(MaterialTexture type, const std::string& filePath);
 		void         GetTextures(std::unordered_map<MaterialTexture, std::string*>& out_hashmap);
@@ -66,6 +73,7 @@ namespace Frostium
 		bool         Used = false;
 		float        Metallness = 0.2f;
 		float        Roughness = 1.0f;
+		float        EmissionStrength = 1.0f;
 		std::string  AlbedroPath;
 		std::string  NormalPath;
 		std::string  MetallnessPath;
@@ -85,7 +93,7 @@ namespace Frostium
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Metallness, Roughness, AlbedroPath, NormalPath, MetallnessPath, RoughnessPath, AOPath,
+			archive(Metallness, Roughness, EmissionStrength, AlbedroPath, NormalPath, MetallnessPath, RoughnessPath, AOPath,
 				EmissivePath, HeightPath, AlbedroColor.r, AlbedroColor.g, AlbedroColor.b);
 		}
 	};

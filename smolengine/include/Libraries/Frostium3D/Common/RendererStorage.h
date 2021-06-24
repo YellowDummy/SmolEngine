@@ -22,6 +22,7 @@ namespace Frostium
 #pragma region Limits
 	static const uint32_t      max_animations = 100;
 	static const uint32_t      max_anim_joints = 1000;
+	static const uint32_t      max_materials = 1000;
 	static const uint32_t      max_lights = 1000;
 	static const uint32_t      max_objects = 15000;
 #pragma endregion
@@ -30,85 +31,104 @@ namespace Frostium
 
 	struct DirectionalLight
 	{
-		alignas(16) glm::vec4  Direction = glm::vec4(67, 56, 0, 0);
-		alignas(16) glm::vec4  Color = glm::vec4(1.0);
-
-		alignas(4) float       Intensity = 1.0f;
-		alignas(4) float       Bias = 1.0f;
-		alignas(4) float       zNear = 1.0f;
-		alignas(4) float       zFar = 350.0f;
-		alignas(4) float       lightFOV = 45.0f;
-		alignas(4) uint32_t    IsActive = false;
-		alignas(4) uint32_t    IsCastShadows = false;
-		alignas(4) uint32_t    IsUseSoftShadows = true;
+		glm::vec4  Direction = glm::vec4(67, 56, 0, 0);
+		glm::vec4  Color = glm::vec4(1.0);
+		float      Intensity = 1.0f;
+		float      Bias = 1.0f;
+		float      zNear = 1.0f;
+		float      zFar = 350.0f;
+		float      lightFOV = 45.0f;
+		uint32_t   IsActive = true;
+		uint32_t   IsCastShadows = false;
+		uint32_t   IsUseSoftShadows = true;
 	};
 
 	struct PointLight
 	{
-		alignas(16) glm::vec4  Position = glm::vec4(0);
-		alignas(16) glm::vec4  Color = glm::vec4(1.0);
-
-		alignas(4) float       Intensity = 1.0f;
-		alignas(4) float       Raduis = 10.0f;
-		alignas(4) float       Bias = 1.0f;
-		alignas(4) uint32_t    IsActive = true;
-		alignas(4) uint32_t    IsCastShadows = false;
-
+		glm::vec4  Position = glm::vec4(0);
+		glm::vec4  Color = glm::vec4(1.0);
+		float      Intensity = 1.0f;
+		float      Raduis = 10.0f;
+		float      Bias = 1.0f;
+		uint32_t   IsActive = true;
+		uint32_t   IsCastShadows = false;
 	private:
-		alignas(4) uint32_t    pad1 = 0;
-		alignas(4) uint32_t    pad2 = 0;
-		alignas(4) uint32_t    pad3 = 0;
+		uint32_t   pad1 = 0;
+		uint32_t   pad2 = 0;
+		uint32_t   pad3 = 0;
 	};
 
 	struct SpotLight
 	{
-		alignas(16) glm::vec4  Position = glm::vec4(0, 0, 0, 0);
-		alignas(16) glm::vec4  Direction = glm::vec4(0, 0, 40, 0);
-		alignas(16) glm::vec4  Color = glm::vec4(1.0);
-
-		alignas(4) float       Intensity = 10.0f;
-		alignas(4) float       CutOff = 40.0f;
-		alignas(4) float       OuterCutOff = 5.0f;
-		alignas(4) float       Raduis = 10.0f;
-		alignas(4) float       Bias = 0.005f;
-		alignas(4) uint32_t    IsActive = true;
-		alignas(4) uint32_t    IsCastShadows = false;
-
+		glm::vec4  Position = glm::vec4(0, 0, 0, 0);
+		glm::vec4  Direction = glm::vec4(0, 0, 40, 0);
+		glm::vec4  Color = glm::vec4(1.0);
+		float      Intensity = 10.0f;
+		float      CutOff = 40.0f;
+		float      OuterCutOff = 5.0f;
+		float      Raduis = 10.0f;
+		float      Bias = 0.005f;
+		uint32_t   IsActive = true;
+		uint32_t   IsCastShadows = false;
 	private:
-		alignas(4) uint32_t pad1 = 0;
+		uint32_t pad1 = 0;
 	};
 
 	struct InstanceData
 	{
-		alignas(4) uint32_t              MaterialID = 0;
-		alignas(4) uint32_t              IsAnimated = false;
-		alignas(4) uint32_t              AnimOffset = 0;
-		alignas(4) uint32_t              EntityID = 0;
-
-		alignas(16) glm::mat4            ModelView = glm::mat4(1.0f);
+		uint32_t       MaterialID = 0;
+		uint32_t       IsAnimated = false;
+		uint32_t       AnimOffset = 0;
+		uint32_t       EntityID = 0;
+		glm::mat4      ModelView = glm::mat4(1.0f);
 	};
 
-	struct SceneState
+	struct LightingProperties
 	{
-		alignas(4) float       HDRExposure = 1.0f;
-		alignas(4) uint32_t    UseIBL = true;
+		glm::vec4   AmbientColor = glm::vec4(1.0f);
+		float       IBLStrength = 1.0f;
+		uint32_t    UseIBL = true;
 	private:
-		alignas(4) uint32_t    NumPointsLights = 0;
-		alignas(4) uint32_t    NumSpotLights = 0;
+		uint32_t    pad1 = 1;
+		uint32_t    pad2 = 1;
 
 		friend class DeferredRenderer;
 	};
 
+	struct BloomProperties
+	{
+		float Exposure = 1.0f;
+		float Threshold = 0.10f;
+		float Scale = 1.0f;
+		float Strength = 0.5f;
+	};
+
+	struct FXAAProperties
+	{
+		float      EdgeThresholdMin = 0.0312f;
+		float      EdgeThresholdMax = 0.125f;
+		float      Iterations = 29.0f;
+		float      SubPixelQuality = 0.75f;
+		// don't use! for internal needs
+		glm::vec2  InverseScreenSize = glm::vec2(0.0f);
+	private:
+		float      Pad1 = 1.0f;
+		float      Pad2 = 1.0f;
+
+	};
+
 #pragma endregion
 
-#pragma region Starages 
+#pragma region Mask
 
-	enum class PostProcessingFlags : uint32_t
+	struct DirtMask
 	{
-		None,
-		Bloom,
-		Blur
+		Texture* Mask = nullptr;
+		float    Intensity = 1.0f;
 	};
+#pragma endregion
+
+#pragma region Srotage
 
 	enum class DebugViewFlags : uint32_t
 	{
@@ -125,14 +145,16 @@ namespace Frostium
 
 	struct RendererState
 	{
-		bool                   bDrawSkyBox = true;
+		bool                   bDrawSkyBox = false;
 		bool                   bDrawGrid = true;
-		bool                   bHDR = true;
 		bool                   bFXAA = true;
 		bool                   bSSAO = false;
-		PostProcessingFlags    ePostProcessing = PostProcessingFlags::Bloom;
+		bool                   bBloom = false;
+		bool                   bVerticalBloom = true;
 		DebugViewFlags         eDebugView = DebugViewFlags::None;
-		SceneState             SceneState = {};
+		LightingProperties     Lighting = {};
+		BloomProperties        Bloom = {};
+		FXAAProperties         FXAA = {};
 	};
 
 	struct CommandBuffer
@@ -172,7 +194,9 @@ namespace Frostium
 		const uint32_t                             m_PointLightBinding = 30;
 		const uint32_t                             m_SpotLightBinding = 31;
 		const uint32_t                             m_DirLightBinding = 32;
-		const uint32_t                             m_SceneStateBinding = 33;
+		const uint32_t                             m_LightingStateBinding = 33;
+		const uint32_t                             m_BloomStateBinding = 34;
+		const uint32_t                             m_FXAAStateBinding = 35;
 		// Instance Data				           
 		uint32_t                                   m_Objects = 0;
 		uint32_t                                   m_InstanceDataIndex = 0;
@@ -180,26 +204,27 @@ namespace Frostium
 		uint32_t                                   m_SpotLightIndex = 0;
 		uint32_t                                   m_LastAnimationOffset = 0;
 		// Pipelines					           
-		GraphicsPipeline                           m_GbufferPipeline = {};
-		GraphicsPipeline                           m_LightingPipeline = {};
-		GraphicsPipeline                           m_BloomPipeline = {};
-		GraphicsPipeline                           m_BlurPipeline = {};
-		GraphicsPipeline                           m_CombinationPipeline = {};
-		GraphicsPipeline                           m_SkyboxPipeline = {};
-		GraphicsPipeline                           m_OmniPipeline = {};
-		GraphicsPipeline                           m_DepthPassPipeline = {};
-		GraphicsPipeline                           m_GridPipeline = {};
-		GraphicsPipeline                           m_DebugPipeline = {};
-		GraphicsPipeline                           m_HDRPipeline = {};
+		GraphicsPipeline                           p_Gbuffer = {};
+		GraphicsPipeline                           p_Lighting = {};
+		GraphicsPipeline                           p_Bloom = {};
+		GraphicsPipeline                           p_Combination = {};
+		GraphicsPipeline                           p_Skybox = {};
+		GraphicsPipeline                           p_DepthPass = {};
+		GraphicsPipeline                           p_Grid = {};
+		GraphicsPipeline                           p_Debug = {};
+		GraphicsPipeline                           p_FXAA = {};
+		GraphicsPipeline                           p_Mask = {};
+		// Framebuffers	
+		Framebuffer*                               f_Main = nullptr;
+		Framebuffer                                f_GBuffer= {};
+		Framebuffer                                f_Lighting = {};
+		Framebuffer                                f_FXAA = {};
+		Framebuffer                                f_Bloom = {};
+		Framebuffer                                f_Depth = {};
+		// Masks
+		DirtMask                                   m_DirtMask = {};
 		//Meshes						           
 		Mesh                                       m_PlaneMesh = {};
-		// Framebuffers					           
-		Framebuffer*                               m_MainFramebuffer = nullptr;
-		Framebuffer                                m_GFramebuffer = {};
-		Framebuffer                                m_LightingFramebuffer = {};
-		Framebuffer                                m_HDRFramebuffer = {};
-		Framebuffer                                m_PostProcessingFramebuffer = {};
-		Framebuffer                                m_DepthFramebuffer = {};
 		// Buffers
 		RendererState                              m_State{};
 		DirectionalLight                           m_DirLight{};

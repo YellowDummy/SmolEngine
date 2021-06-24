@@ -17,13 +17,32 @@
 
 namespace SmolEngine
 {
+	struct Mask
+	{
+		Ref<Texture> Texture = nullptr;
+		std::string  Path = "";
+		float        Intensity = 0.5f;
+
+	private:
+		bool         bReset = false;
+
+		friend class cereal::access;
+		friend class RendererPanel;
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(Path, Intensity);
+		}
+	};
+
 	struct ScenePipelineState
 	{
 		// internal use
 		int            PostProcessingFlag = 0;
-		int            DebugViewFlag = 0; 
+		int            DebugViewFlag = 0;
 
-		RendererState  State;
+		RendererState  State = {};
+		Mask           DirtMask = {};
 
 	private:
 
@@ -31,8 +50,10 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bHDR, State.ePostProcessing,
-				State.SceneState.HDRExposure, State.SceneState.UseIBL);
+			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bBloom, State.bVerticalBloom,
+				State.Lighting.AmbientColor.r, State.Lighting.AmbientColor.g, State.Lighting.AmbientColor.b,
+				State.Lighting.IBLStrength, State.Lighting.UseIBL, State.Bloom.Exposure, State.Bloom.Scale, State.Bloom.Strength,
+				State.Bloom.Threshold, State.FXAA.EdgeThresholdMax, State.FXAA.EdgeThresholdMin, State.FXAA.Iterations, State.FXAA.SubPixelQuality, DirtMask);
 		}
 	};
 

@@ -18,7 +18,7 @@ namespace SmolEngine
 	{
 	public:
 
-		void Create(const std::string& current_path, TexturesLoader* loader);
+		void Create(const std::string& current_path);
 		void ClearSelection();
 		void Update();
 

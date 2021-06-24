@@ -1,16 +1,19 @@
 #version 450
 
-layout (binding = 0) uniform sampler2D HDRSampler;
+layout (binding = 0) uniform sampler2D colorSampler;
 
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outColor;
-layout(push_constant) uniform ConstantData
-{
-    uint dir;
-};
 
-void main(void)
-{
+layout(std140, binding = 34) uniform BloomProperties
+{   
+	float exposure;
+	float threshold;
+	float scale;
+	float strength;
+
+} bloomState;
+
 // From the OpenGL Super bible
 	const float weights[] = float[](0.0024499299678342,
 									0.0043538453346397,
@@ -38,25 +41,15 @@ void main(void)
 									0.0043538453346397,
 									0.0024499299678342);
 
-
-	const float blurScale = 0.00045;
-	const float blurStrength = 1.0;
-	vec4 color = vec4(0.0);
-
-	float ar = 1.0;
-	// Aspect ratio for vertical blur pass
-	if (dir == 1)
-	{
-		vec2 ts = 1.0 / textureSize(HDRSampler, 0);
-		ar = ts.y / ts.x;
-	}
-
-	vec2 P = inUV.xy - vec2(0, (weights.length() >> 1) * ar * blurScale);
+void main(void)
+{
+	vec2 tex_offset = 1.0 / textureSize(colorSampler, 0); // gets size of single texel
+    vec3 result = texture(colorSampler, inUV).rgb * weights[0] * bloomState.scale; // current fragment's contribution
 	for (int i = 0; i < weights.length(); i++)
 	{
-		vec2 dv = vec2(0.0, i * blurScale) * ar;
-		color += texture(HDRSampler, P + dv) * weights[i] * blurStrength;
+		result += (texture(colorSampler, inUV + vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * bloomState.strength;
+        result += (texture(colorSampler, inUV - vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * bloomState.strength;
 	}
 
-	outColor = color;
+	outColor = vec4(result, 1.0);
 }

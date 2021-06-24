@@ -92,8 +92,6 @@ namespace Frostium
 
 	struct GraphicsPipelineCreateInfo
 	{
-		Framebuffer*                         pTargetFramebuffer = nullptr;
-
 		BlendFactor                          eSrcColorBlendFactor = BlendFactor::NONE;
 		BlendFactor                          eDstColorBlendFactor = BlendFactor::NONE;
 		BlendFactor                          eSrcAlphaBlendFactor = BlendFactor::NONE;
@@ -115,6 +113,7 @@ namespace Frostium
 		GraphicsPipelineShaderCreateInfo     ShaderCreateInfo = {};
 		std::vector<DrawMode>                PipelineDrawModes = { DrawMode::Triangle };
 		std::vector<VertexInputInfo>         VertexInputInfos;
+		std::vector<Framebuffer*>            TargetFramebuffers;
 	};
 
 }

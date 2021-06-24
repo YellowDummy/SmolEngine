@@ -29,6 +29,7 @@ namespace Frostium
 		static void SubmitPointLight(PointLight* light);
 		static void SubmitSpotLight(SpotLight* light);
 		static void SetRendererState(RendererState* state);
+		static void SetDirtMask(Texture* mask, float intensity);
 
 		static Framebuffer* GetFramebuffer();
 		static uint32_t GetNumObjects();

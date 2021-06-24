@@ -36,8 +36,8 @@ namespace ImGui
 			const std::string& hint = "Name", float pos = 130.0f, bool enterReturnsTrue = true, const std::string& additionalID = "None");
 
 		// Color
-		static bool ColorInput3(const std::string& label, glm::vec3& color, float pos = 130.0f, const std::string& additionalID = "None");
-		static bool ColorInput4(const std::string& label, glm::vec4& color, float pos = 130.0f, const std::string& additionalID = "None");
+		static bool ColorInput3(const std::string& label, glm::vec3& color, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
+		static bool ColorInput4(const std::string& label, glm::vec4& color, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// Texture
 		static void Texture(const std::string& label, void* textureID, float pos = 130.0f, const std::string& additionalID = "None");

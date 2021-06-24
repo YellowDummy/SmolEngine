@@ -323,12 +323,12 @@ namespace ImGui
 		return ImGui::InputTextWithHint("##N", hint.c_str(), &string);
 	}
 
-	bool Extensions::ColorInput3(const std::string& label, glm::vec3& color, float pos, const std::string& additionalID)
+	bool Extensions::ColorInput3(const std::string& label, glm::vec3& color, float pos, const std::string& additionalID, float text_pos)
 	{
 		bool use = false;
 		ImGui::PushID(std::string(label + additionalID).c_str());
 
-		ImGui::SetCursorPosX(6);
+		ImGui::SetCursorPosX(text_pos);
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
@@ -337,12 +337,12 @@ namespace ImGui
 		return use;
 	}
 
-	bool Extensions::ColorInput4(const std::string& label, glm::vec4& color, float pos, const std::string& additionalID)
+	bool Extensions::ColorInput4(const std::string& label, glm::vec4& color, float pos,  const std::string& additionalID, float text_pos)
 	{
 		bool use = false;
 		ImGui::PushID(std::string(label + additionalID).c_str());
 
-		ImGui::SetCursorPosX(6);
+		ImGui::SetCursorPosX(text_pos);
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);

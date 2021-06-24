@@ -67,16 +67,16 @@ namespace Frostium
 
 	struct SceneData
 	{
-		alignas(4) float                   NearClip = 0.0f;
-		alignas(4) float                   FarClip = 0.0f;
-		alignas(4) float                   Exoposure = 1.0f;
-		alignas(4) float                   Pad1 = 0.0f;
+		float                   NearClip = 0.0f;
+		float                   FarClip = 0.0f;
+		float                   Exoposure = 1.0f;
+		float                   Pad1 = 0.0f;
 
-		alignas(16) glm::mat4              Projection = glm::mat4(1.0f);
-		alignas(16) glm::mat4              View = glm::mat4(1.0f);
-		alignas(16) glm::mat4              SkyBoxMatrix = glm::mat4(1.0f);
-		alignas(16) glm::vec4              CamPos = glm::vec4(1.0f);
-		alignas(16) glm::vec4              AmbientColor = glm::vec4(1.0f);
+		glm::mat4              Projection = glm::mat4(1.0f);
+		glm::mat4              View = glm::mat4(1.0f);
+		glm::mat4              SkyBoxMatrix = glm::mat4(1.0f);
+		glm::vec4              CamPos = glm::vec4(1.0f);
+		glm::vec4              AmbientColor = glm::vec4(1.0f);
 	};
 
 	struct FullscreenVertex

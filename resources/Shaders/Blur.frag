@@ -39,5 +39,6 @@ void main()
 		result += texture(HDRSampler, inUV - vec2(0.0, tex_offset.y * i)).rgb * weight[i] * blurStrength;
 	}
 	}
+	
 	outFragColor = vec4(result, 1.0);
 }

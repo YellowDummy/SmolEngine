@@ -9,9 +9,9 @@
 
 namespace SmolEngine
 {
-	void FileExplorer::Create(const std::string& current_path, TexturesLoader* loader)
+	void FileExplorer::Create(const std::string& current_path)
 	{
-		m_pTextureLoader = loader;
+		m_pTextureLoader = TexturesLoader::Get();
 		m_CurrentDir = current_path;
 	}
 

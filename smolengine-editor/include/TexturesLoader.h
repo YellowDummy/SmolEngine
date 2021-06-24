@@ -10,6 +10,7 @@ namespace SmolEngine
 		{
 			const bool flip = true;
 			const bool imguiDescriptor = true;
+			s_Instance = this;
 
 			Texture::Create("assets/buttons/play_button.png", &m_PlayButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 			Texture::Create("assets/buttons/pause_button.png", &m_StopButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
@@ -23,7 +24,10 @@ namespace SmolEngine
 			Texture::Create("assets/buttons/scene_button.png", &m_SceneIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 			Texture::Create("assets/buttons/material_button.png", &m_MaterialIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 			Texture::Create("assets/buttons/glTF_button.png", &m_glTFIcon, TextureFormat::R8G8B8A8_UNORM, false, imguiDescriptor);
+			Texture::Create("assets/buttons/default_background.jpg", &m_BackgroundIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 		}
+
+		static TexturesLoader* Get() { return s_Instance; }
 
 		Texture  m_PlayButton{};
 		Texture  m_StopButton{};
@@ -37,5 +41,9 @@ namespace SmolEngine
 		Texture  m_SceneIcon{};
 		Texture  m_MaterialIcon{};
 		Texture  m_glTFIcon{};
+		Texture  m_BackgroundIcon{};
+	private:
+
+		inline static TexturesLoader* s_Instance = nullptr;
 	};
 }

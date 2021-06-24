@@ -3,7 +3,8 @@
 layout (location = 0) in vec2 inUV;
 
 // Out
-layout (location = 0) out vec4 outColor;
+layout (location = 0) out vec4 outColor0;
+layout (location = 1) out vec4 outColor1;
 
 // Samplers
 layout (binding = 1) uniform sampler2D shadowMap;
@@ -54,7 +55,6 @@ layout (std140, binding = 27) uniform SceneBuffer
     float exoposure;
     float pad;
 
-
 	mat4 projection;
 	mat4 view;
 	mat4 skyBoxMatrix;
@@ -87,14 +87,28 @@ layout(std140, binding = 32) uniform DirLightBuffer
 	uint soft_shadows;
 } dirLight;
 
-layout(std140, binding = 33) uniform SceneState
+layout(std140, binding = 33) uniform LightingProperties
 {   
-	float hdrExposure;
+	vec4 ambientColor;
+	float iblScale;
 	uint use_ibl;
-	uint numPointsLights;
-	uint numSpotLights;
 
 } sceneState;
+
+layout(std140, binding = 34) uniform BloomProperties
+{   
+	float exposure;
+	float threshold;
+	float scale;
+	float strength;
+
+} bloomState;
+
+layout(push_constant) uniform ConstantData
+{
+    uint numPointsLights;
+    uint numSpotLights; 
+};
 
 #define MANUAL_SRGB 1
 
@@ -221,7 +235,7 @@ vec3 CalcIBL(vec3 N, vec3 V, vec3 F0, vec3 ao, vec3 albedo_color, float metallic
 	vec3 specularIrradiance =  textureLod(prefilteredMap, -ReflDirectionWS, roughness_color * specularTextureLevels).rgb;
     vec3 specularIBL = specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
     
-	return (diffuseIBL + specularIBL) * ao;
+	return (diffuseIBL + specularIBL) * ao * sceneState.ambientColor.rgb;
 }
 
 vec3 CalcDirLight(vec3 V, vec3 N, vec3 F0, vec3 albedo_color, float metallic_color, float roughness_color, vec3 modelPos)
@@ -312,7 +326,8 @@ void main()
     vec4 texColor = texture(albedroMap, inUV); // if w is zero, no lighting calculation is required (background)
     if(texColor.w == 0.0)
     {
-        outColor = vec4(texColor.rgb, 1);
+	    outColor0.rgb = texColor.rgb;
+		outColor1 = vec4(0, 0, 0, 1);
         return;
     }
     
@@ -320,13 +335,14 @@ void main()
 	vec4 emission = texture(emissionMap, inUV);
     vec4 position = texture(positionsMap, inUV);
     vec4 normals = texture(normalsMap, inUV);
-    vec4 pbrValues = texture(materialsMap, inUV);
+    vec4 materials = texture(materialsMap, inUV);
     vec4 shadowCoord = texture(shadowCoordMap, inUV);
-    vec3 ao = vec3(pbrValues.z);
+    vec3 ao = vec3(materials.z);
 	
-    float metallic = pbrValues.x;
-    float roughness = pbrValues.y;
+    float metallic = materials.x;
+    float roughness = materials.y;
 	float applyEmission = emission.w;
+	float emissionStrength = materials.w;
     float applyAO = normals.w;
 
 	albedro = pow(albedro, vec3(2.2));
@@ -339,6 +355,7 @@ void main()
 	if(sceneState.use_ibl == 1)
 	{
 		ambient = CalcIBL(normals.xyz, V, F0, ao, albedro, metallic, roughness);
+		ambient *= sceneState.iblScale;
 	}
 
     vec3 Lo = vec3(0.0);
@@ -351,7 +368,7 @@ void main()
 
     // Point Lighting
 	//--------------------------------------------
-	for(int i = 0; i < sceneState.numPointsLights; i++)
+	for(int i = 0; i < numPointsLights; i++)
 	{
 		if(pointLights[i].is_active == 1)
 		{
@@ -361,7 +378,7 @@ void main()
 
     // Spot Lighting
 	//--------------------------------------------
-	for(int i = 0; i < sceneState.numSpotLights; i++)
+	for(int i = 0; i < numSpotLights; i++)
 	{
 		if(spotLights[i].is_active == 1)
 		{
@@ -379,7 +396,12 @@ void main()
 	{
 		color += emission.rgb;
 	}
-	
+
+	if(emissionStrength > 0)
+	{
+		color *= exp(color.rgb * emissionStrength);
+	}
+
     // Shadow Mapping
 	//--------------------------------------------
 	float shadow = 0.0;
@@ -401,6 +423,10 @@ void main()
 	// HDR
 	//--------------------------------------------
 	// Color with manual exposure into attachment 0
-
-	outColor = vec4(color, 1.0);
+	outColor0.rgb = vec3(1.0) - exp(-color.rgb * (bloomState.exposure));
+	// Bright parts for bloom into attachment 1
+	float l = dot(outColor0.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float threshold = bloomState.threshold;
+	outColor1.rgb = (l > threshold) ? outColor0.rgb : vec3(0.0);
+	outColor1.a = 1.0;
 }

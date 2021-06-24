@@ -9,22 +9,24 @@ struct MaterialData
 
 	float Metalness;
 	float Roughness;
+	float EmissionStrength;
 	uint UseAlbedroTex;
-	uint UseNormalTex;
 
+	uint UseNormalTex;
 	uint UseMetallicTex;
 	uint UseRoughnessTex;
     uint UseAOTex;
-	uint UseEmissiveTex;
 
+	uint UseEmissiveTex;
 	uint UseHeightTex;
 	uint AlbedroTexIndex;
 	uint NormalTexIndex;
-	uint MetallicTexIndex;
 
+	uint MetallicTexIndex;
 	uint RoughnessTexIndex;
 	uint AOTexIndex;
 	uint EmissiveTexIndex;
+	
 	uint HeightTexIndex;
 };
 
@@ -82,7 +84,7 @@ void main()
     out_color = albedro;
     out_positions = vec4(v_FragPos, applyEmission);
     out_normals = vec4(N, applyAO);
-    out_materials = vec4(metallic, roughness, ao, 1.0);
+    out_materials = vec4(metallic, roughness, ao, v_Material.EmissionStrength <= 1.0 ? 0: v_Material.EmissionStrength);
     out_shadowCoord = v_ShadowCoord;
 	out_emission = vec4(emissive.rgb, applyEmission);
 }

@@ -33,14 +33,14 @@ namespace Frostium
 		PipelineCreateResult Reload();
 
 		void ClearColors(const glm::vec4& clearColors = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		void BeginRenderPass(uint32_t framebufferIndex = 0, bool flip = false);
+		void BeginRenderPass(bool flip = false);
 		void EndRenderPass();
 		void BeginCommandBuffer(bool isMainCmdBufferInUse = false);
 		void EndCommandBuffer();
 		void ResetStates();
 		void Destroy();
 
-		void DrawIndexed(uint32_t vertexBufferIndex = 0,  uint32_t indexBufferIndex = 0);
+		void DrawIndexed(uint32_t vbIndex = 0, uint32_t ibIndex = 0);
 		void DrawIndexed(VertexBuffer* vb, IndexBuffer* ib);
 		void Draw(VertexBuffer* vb, uint32_t vertextCount);
 		void Draw(uint32_t vertextCount, uint32_t vertexBufferIndex = 0);
@@ -64,6 +64,8 @@ namespace Frostium
 
 		void SetDescriptorIndex(uint32_t value);
 		void SetDrawMode(DrawMode mode);
+		void SetFramebufferIndex(uint32_t index);
+		void SetFramebufferAttachmentIndex(uint32_t index);
 
 #ifndef FROSTIUM_OPENGL_IMPL
 		const VkPipeline& GetVkPipeline(DrawMode mode);
@@ -89,6 +91,8 @@ namespace Frostium
 		GraphicsContext*                  m_GraphicsContext = nullptr;
 		DrawMode                          m_DrawMode = DrawMode::Triangle;
 		uint32_t                          m_DescriptorIndex = 0;
+		uint32_t                          m_FBIndex = 0;
+		uint32_t                          m_FBattachmentIndex = 0;
 		GraphicsPipelineCreateInfo        m_PiplineCreateInfo;
 		std::vector<Ref<VertexBuffer>>    m_VertexBuffers;
 		std::vector<Ref<IndexBuffer>>     m_IndexBuffers;

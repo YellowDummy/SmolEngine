@@ -25,7 +25,7 @@ namespace SmolEngine
 	{
 	public:
 
-		MaterialLibraryInterface(TexturesLoader* loader);
+		MaterialLibraryInterface();
 		~MaterialLibraryInterface();
 
 		void OpenExisting(const std::string& path);
@@ -38,21 +38,22 @@ namespace SmolEngine
 
 		void InitPreviewRenderer();
 		void LoadTexture(const std::string& filePath, MaterialTexture type, std::vector<Texture*>& textures);
-		bool DrawTextureInfo(const char* header, std::string& outString, const std::string& title);
+		bool DrawTextureInfo(std::string& path, const std::string& title);
 		void RenderImage();
 		void ResetMaterial();
 		void ApplyChanges();
 
 	private:
-		bool                                 m_bShowPreview = false;
-		int                                  m_GeometryType = 1;
-		const uint32_t                       m_BindingPoint = 277;
-		std::future<void>                    m_DrawResult = {};
-		std::string                          m_CurrentFilePath = "";
-		std::string                          m_CurrentName = "";
-		PBRMaterial                          m_Material = {};
-		TexturesLoader*                      m_TexturesLoader = nullptr;
-		MaterialCreateInfo*                  m_MaterialCI = nullptr;
-		PreviewRenderingData*                m_Data = nullptr;
+		bool                                          m_bShowPreview = false;
+		int                                           m_GeometryType = 1;
+		const uint32_t                                m_BindingPoint = 277;
+		std::future<void>                             m_DrawResult = {};
+		std::string                                   m_CurrentFilePath = "";
+		std::string                                   m_CurrentName = "";
+		PBRMaterial                                   m_Material = {};
+		TexturesLoader*                               m_TexturesLoader = nullptr;
+		MaterialCreateInfo*                           m_MaterialCI = nullptr;
+		PreviewRenderingData*                         m_Data = nullptr;
+		std::unordered_map<std::string, Ref<Texture>> m_Textures;
 	};
 }

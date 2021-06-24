@@ -45,12 +45,12 @@ namespace SmolEngine
 		m_TexturesLoader = new TexturesLoader();
 		m_Console = new EditorConsole();
 		m_RendererPanel = new RendererPanel();
-		m_MaterialLibraryInterface = new MaterialLibraryInterface(m_TexturesLoader);
+		m_MaterialLibraryInterface = new MaterialLibraryInterface();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
 
 		m_FileExplorer = new FileExplorer();
-		m_FileExplorer->Create(Engine::GetEngine()->GetAssetsFolder(), m_TexturesLoader);
+		m_FileExplorer->Create(Engine::GetEngine()->GetAssetsFolder());
 		m_FileExplorer->SetOnFileSelectedCallback(std::bind_front(&EditorLayer::OnFileSelected, this));
 		m_FileExplorer->SetOnFileDeletedCallaback(std::bind_front(&EditorLayer::OnFileDeleted, this));
 
