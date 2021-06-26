@@ -326,8 +326,8 @@ void main()
     vec4 texColor = texture(albedroMap, inUV); // if w is zero, no lighting calculation is required (background)
     if(texColor.w == 0.0)
     {
-	    outColor0.rgb = texColor.rgb;
-		outColor1 = vec4(0, 0, 0, 1);
+	    outColor0 = vec4(texColor.rgb, 1.0);
+	    outColor1 = vec4(texColor.rgb, 1.0);
         return;
     }
     

@@ -21,10 +21,10 @@ namespace ImGui
 			float width = 130.0f, bool enableButtons = true, const std::string& additionalID = "None");
 
 		static void DragFloat2Base(const std::string& label, glm::vec2& vec2, float pos = 130.0f, const std::string& additionalID = "None");
-		static void DragFloat3Base(const std::string& label, glm::vec3& vec3, float pos = 130.0f, const std::string& additionalID = "None");
+		static void DragFloat3Base(const std::string& label, glm::vec3& vec3, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		static void InputFloat2Base(const std::string& label, glm::vec2& vec2, float pos = 130.0f, const std::string& additionalID = "None");
-		static void InputFloat3Base(const std::string& label, glm::vec3& vec3, float pos = 130.0f, const std::string& additionalID = "None");
+		static void InputFloat3Base(const std::string& label, glm::vec3& vec3, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// Int
 		static void InputInt(const std::string& label, int& value, float pos = 130.0f, const std::string& additionalID = "None");

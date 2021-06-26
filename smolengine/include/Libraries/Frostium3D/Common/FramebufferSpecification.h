@@ -61,6 +61,7 @@ namespace Frostium
 		None,
 		Raytracing,
 		ShadowMap,
+		CopyBuffer
 	};
 
 	enum class MSAASamples : uint16_t

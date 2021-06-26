@@ -18,7 +18,7 @@ namespace Frostium
 #endif
 {
 	class Framebuffer;
-	class CubeTexture;
+	class CubeMap;
 	class Mesh;
 	class Shader;
 	class Texture;

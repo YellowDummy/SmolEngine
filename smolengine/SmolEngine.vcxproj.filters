@@ -303,6 +303,9 @@
     <ClInclude Include="include\Audio\AudioEngine.h">
       <Filter>include\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\CommandUtils.h">
+      <Filter>include\Core</Filter>
+    </ClInclude>
     <ClInclude Include="include\Core\Core.h">
       <Filter>include\Core</Filter>
     </ClInclude>
@@ -1635,9 +1638,6 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Core\CommandUtils.h">
-      <Filter>include\Core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1645,6 +1645,9 @@
     </ClCompile>
     <ClCompile Include="src\Audio\AudioEngine.cpp">
       <Filter>src\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\CommandUtils.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Engine.cpp">
       <Filter>src\Core</Filter>
@@ -1744,9 +1747,6 @@
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\CommandUtils.cpp">
-      <Filter>src\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

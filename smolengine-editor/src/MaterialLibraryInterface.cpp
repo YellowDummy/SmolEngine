@@ -155,6 +155,9 @@ namespace SmolEngine
 	{
 		Texture* whiteTex = GraphicsContext::GetSingleton()->GetWhiteTexture();
 		m_Data->Pipeline->UpdateSamplers({ whiteTex }, 5);
+		m_Data->Pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetSingleton()->GetIrradianceImageInfo());
+		m_Data->Pipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetSingleton()->GetBRDFLUTImageInfo());
+		m_Data->Pipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetSingleton()->GetPrefilteredCubeImageInfo());
 
 		std::unordered_map<MaterialTexture, std::string*> texture_infos;
 		std::vector<Texture*> textures;
@@ -264,11 +267,6 @@ namespace SmolEngine
 
 			auto result = pipeline->Create(&DynamicPipelineCI);
 			assert(result == PipelineCreateResult::SUCCESS);
-
-			pipeline->UpdateVulkanImageDescriptor(2, VulkanPBR::GetIrradianceImageInfo());
-			pipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetBRDFLUTImageInfo());
-			pipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetPrefilteredCubeImageInfo());
-
 			m_Data->Pipeline = pipeline;
 		}
 	}
@@ -406,7 +404,12 @@ namespace SmolEngine
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Button("Reset")) { used = true; }
+		if (ImGui::Button("Reset"))
+		{
+			texture_path = "";
+			m_Textures.erase(texture_path);
+			used = true; 
+		}
 
 		ImGui::SameLine();
 		if (texture_path.empty())

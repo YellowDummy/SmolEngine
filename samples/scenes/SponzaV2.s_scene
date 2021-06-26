@@ -1,7 +1,7 @@
 value0: 7
 value1: 0
 value2: 1
-value3: 1048578
+value3: 2
 value4: 3
 value5: 4
 value6: 5
@@ -11,7 +11,7 @@ value9: 6
 value10: 1
 value11:
   value0: 1
-  value1: Sponza
+  value1: Actor
   value2: Default
   value3: true
   value4: false
@@ -20,69 +20,66 @@ value11:
   value6: 0
   value7: 0
   value8: 3
-value12: 1048578
+value12: 2
 value13:
-  value0: 3
-  value1: Light_1
-  value2: Default
+  value0: 2
+  value1: Actor2
+  value2: ""
   value3: true
   value4: false
   value5:
     []
-  value6: 7
+  value6: 0
   value7: 0
   value8: 3
 value14: 3
 value15:
-  value0: 4
-  value1: Light_2
-  value2: Default
+  value0: 3
+  value1: Actor3
+  value2: ""
   value3: true
   value4: false
   value5:
     []
-  value6: 7
+  value6: 0
   value7: 0
   value8: 3
 value16: 4
 value17:
-  value0: 5
-  value1: Light_3
-  value2: Default
+  value0: 4
+  value1: Actor4
+  value2: ""
   value3: true
   value4: false
   value5:
     []
-  value6: 7
+  value6: 0
   value7: 0
   value8: 3
 value18: 5
 value19:
-  value0: 6
-  value1: Light_4
+  value0: 5
+  value1: DefaultActor4
   value2: Default
   value3: true
   value4: false
   value5:
     []
-  value6: 7
+  value6: 0
   value7: 0
   value8: 3
 value20: 6
 value21:
-  value0: 7
-  value1: Lights
+  value0: 6
+  value1: DefaultActor5
   value2: Default
   value3: true
   value4: false
   value5:
-    - 3
-    - 4
-    - 5
-    - 6
+    []
   value6: 0
   value7: 0
-  value8: 2
+  value8: 3
 value22: 0
 value23: 0
 value24: 0
@@ -93,62 +90,62 @@ value28: 6
 value29: 1
 value30:
   value0: 0
-  value1: 0
+  value1: -0
   value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
+  value3: 2
+  value4: 2
+  value5: 2
   value6: 0
-  value7: 0
+  value7: 5
   value8: 0
   value9: 1
-value31: 1048578
+value31: 2
 value32:
   value0: 0
   value1: -0
   value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: -0.65732479095458984
-  value7: 4.6986174583435059
-  value8: 0.27242535352706909
+  value3: 2
+  value4: 2
+  value5: 2
+  value6: 0
+  value7: 5
+  value8: 5
   value9: 1
 value33: 3
 value34:
   value0: 0
   value1: -0
   value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 2.9525241851806641
-  value7: 4.4458503723144531
-  value8: 0.070589900016784668
+  value3: 2
+  value4: 2
+  value5: 2
+  value6: 0
+  value7: 5
+  value8: 10
   value9: 1
 value35: 4
 value36:
   value0: 0
   value1: -0
   value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: -5.5445318222045898
-  value7: 4.2977123260498047
-  value8: 0
+  value3: 2
+  value4: 2
+  value5: 2
+  value6: 0
+  value7: 5
+  value8: -5
   value9: 1
 value37: 5
 value38:
   value0: 0
   value1: -0
   value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: -1.8228514194488525
-  value7: 3.5634021759033203
-  value8: 0
+  value3: 15
+  value4: 0.20000000298023224
+  value5: 15
+  value6: 0
+  value7: 0.87340688705444336
+  value8: 2.3773140907287598
   value9: 1
 value39: 6
 value40:
@@ -164,118 +161,124 @@ value40:
   value9: 1
 value41: 0
 value42: 0
-value43: 1
+value43: 5
 value44: 1
 value45:
   value0:
-    - value0: ../samples/materials\bricks.s_material
-    - value0: ../samples/materials\bricks.s_material
-    - value0: ../samples/materials\bricks.s_material
-    - value0: ../samples/materials\bricks.s_material
-    - value0: ../samples/materials\floor.s_material
-    - value0: ../samples/materials\column.s_material
-    - value0: ../samples/materials\column.s_material
-    - value0: ../samples/materials\bricks.s_material
-    - value0: ""
-    - value0: ../samples/materials\vase.s_material
-    - value0: ../samples/materials\flowers.s_material
-    - value0: ../samples/materials\lion.s_material
-    - value0: ../samples/materials\lion.s_material
-    - value0: ../samples/materials\thorn.s_material
-    - value0: ../samples/materials\curt_green2.s_material
-    - value0: ../samples/materials\curt_green.s_material
-    - value0: ../samples/materials\curt_blue2.s_material
-    - value0: ../samples/materials\curt_blue.s_material
-    - value0: ../samples/materials\curt_red2.s_material
-    - value0: ../samples/materials\curt_red.s_material
-    - value0: ../samples/materials\vase2.s_material
-    - value0: ../samples/materials\chain.s_material
-    - value0: ""
-    - value0: ../samples/materials\flagpole.s_material
-    - value0: ../samples/materials\roof.s_material
+    - value0: ../samples/materials\metal4.s_material
   value1: false
   value2: true
   value3: 2
-  value4: ../samples/models\sponza.gltf
+  value4: ../samples/models\sphere.gltf
   value5: 2
-value46: 0
-value47: 4
+value46: 2
+value47:
+  value0:
+    - value0: ../samples/materials\metal.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\sphere.gltf
+  value5: 2
 value48: 3
 value49:
-  value0: 0.50334179401397705
-  value1: 0.096195720136165619
-  value2: 0.8906865119934082
-  value3: 1
-  value4: 2.9525241851806641
-  value5: 4.4458503723144531
-  value6: 0.070589900016784668
-  value7: 1
-  value8: 1
-  value9: 1.5
-  value10: 1
-  value11: 0
-  value12: 2
-value50: 1048578
+  value0:
+    - value0: ../samples/materials\metal2.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\sphere.gltf
+  value5: 2
+value50: 4
 value51:
-  value0: 0
-  value1: 0.25026178359985352
-  value2: 1
-  value3: 1
-  value4: -0.65732479095458984
-  value5: 4.6986174583435059
-  value6: 0.27242535352706909
-  value7: 1
-  value8: 1
-  value9: 2
-  value10: 1
-  value11: 0
-  value12: 2
-value52: 4
+  value0:
+    - value0: ../samples/materials\metal3.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\sphere.gltf
+  value5: 2
+value52: 5
 value53:
-  value0: 0.49497222900390625
-  value1: 0.32662874460220337
+  value0:
+    - value0: ../samples/materials\metal.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\box.gltf
+  value5: 2
+value54: 1
+value55: 6
+value56:
+  value0: 1
+  value1: 1
   value2: 1
   value3: 1
-  value4: -5.5445318222045898
-  value5: 4.2977123260498047
-  value6: 0
-  value7: 1
+  value4: 85
+  value5: 158
+  value6: -79
+  value7: 0
   value8: 1
-  value9: 1.5
-  value10: 1
-  value11: 0
-  value12: 2
-value54: 5
-value55:
-  value0: 0.65311604738235474
-  value1: 0.22035332024097443
-  value2: 0.92129427194595337
-  value3: 1
-  value4: -1.8228514194488525
-  value5: 3.5634021759033203
-  value6: 0
-  value7: 1
-  value8: 1
-  value9: 1.2000000476837158
-  value10: 1
-  value11: 0
-  value12: 2
-value56: 1
+  value9: 1
+  value10: 350
+  value11: 1
+  value12: 45
+  value13: 1
+  value14: 1
+  value15: 1
+  value16: 2
 value57: 0
-value58:
+value58: 1
+value59: 0
+value60:
   value0: 0
-  value1: 8
-  value2: ../samples/scenes\SponzaV2.s_scene
+  value1: 7
+  value2: C:\Dev\SmolEngine\samples\scenes\SponzaV2.s_scene
   value3: SponzaV2
   value4:
-    value0: true
+    value0: false
     value1: false
     value2: true
     value3: true
     value4: true
-    value5: 1
+    value5: true
     value6: 1
-    value7: 0
+    value7: 0.99998998641967773
+    value8: 0.99998998641967773
+    value9: 1
+    value10: 1
+    value11: 1
+    value12: 1
+    value13: 0.20000000298023224
+    value14: 0
+    value15: 0.125
+    value16: 0.031199999153614044
+    value17: 29
+    value18: 0.75
+    value19:
+      value0: ""
+      value1: 2
+      value2: true
+      value3: 6471000
+      value4: 1200
+      value5: 2.0999999833293259e-05
+      value6: 0.75800001621246338
+      value7: 6371000
+      value8: 8000
+      value9: 5.5000000429572538e-06
+      value10: 1.2999999853491317e-05
+      value11: 2.2399999579647556e-05
+      value12: 0
+      value13: 6372000
+      value14: 0
+      value15: 22
+      value16: 10
+      value17: 10
+      value18: 10
+    value20:
+      value0: ""
+      value1: 1
+      value2: 0.10000000149011612
   value5:
     - ptr_wrapper:
         id: 2147483649
@@ -284,7 +287,7 @@ value58:
     - ptr_wrapper:
         id: 2147483650
         data:
-          value0: 1048578
+          value0: 2
     - ptr_wrapper:
         id: 2147483651
         data:
@@ -301,4 +304,4 @@ value58:
         id: 2147483654
         data:
           value0: 6
-value59: 0
+value61: 0

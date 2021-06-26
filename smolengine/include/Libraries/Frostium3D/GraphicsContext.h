@@ -12,6 +12,7 @@
 #include "Common/Core.h"
 #include "Common/Window.h"
 #include "Common/Mesh.h"
+#include "Common/CubeMap.h"
 #include "Common/Framebuffer.h"
 #include "Common/Events.h"
 #include "Common/Texture.h"
@@ -34,6 +35,7 @@ namespace Frostium
 	struct GraphicsContextState;
 	struct Renderer2DStorage;
 	struct RendererStorage;
+	class CubeMap;
 	class Framebuffer;
 	class MaterialLibrary;
 	class JobsSystemInstance;
@@ -81,6 +83,7 @@ namespace Frostium
 		float                         GetGltfTime() const;
 		float                         GetDeltaTime() const;
 		float                         GetLastFrameTime() const;
+		std::string                   GetResourcesPath() const;
 #ifdef  FROSTIUM_OPENGL_IMPL	      
 		static OpenglRendererAPI*     GetOpenglRendererAPI();
 #else							      
@@ -107,6 +110,7 @@ namespace Frostium
 
 		static GraphicsContext*       s_Instance;
 		Texture*                      m_DummyTexure = nullptr;
+		CubeMap*                      m_DummyCubeMap = nullptr;
 		Camera*                       m_DefaultCamera = nullptr;
 		MaterialLibrary*              m_MaterialLibrary = nullptr;
 		GraphicsContextState*         m_State = nullptr;
@@ -148,5 +152,6 @@ namespace Frostium
 		friend class VulkanPBR;
 		friend class VulkanDescriptor;
 		friend class Window;
+		friend class EnvironmentMap;
 	};
 }

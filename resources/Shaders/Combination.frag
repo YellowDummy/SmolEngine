@@ -13,7 +13,8 @@ layout(push_constant) uniform ConstantData
     uint ppState;
     uint is_vertical_blur; 
     uint is_dirt_mask;
-    float dirt_mask_intensity;
+    float mask_intensity;
+    float mask_normal_intensity;
 };
 
 layout(std140, binding = 34) uniform BloomProperties
@@ -81,11 +82,11 @@ void main()
             {
                 if(bloom.r > 0.2 && bloom.g > 0.2 && bloom.b > 0.2)
                 {
-                    dirtColor = texture(DirtSampler, inUV) * bloom * dirt_mask_intensity;
+                    dirtColor = texture(DirtSampler, inUV) * bloom * mask_intensity;
                 }
                 else
                 {
-                    dirtColor = texture(DirtSampler, inUV) * 0.1;
+                    dirtColor = texture(DirtSampler, inUV) * mask_normal_intensity;
                 }
             }
             

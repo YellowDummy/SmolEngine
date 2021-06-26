@@ -29,6 +29,7 @@ namespace Frostium
 
 		void Bind(uint32_t slot = 0) const;
 		void UnBind() const;
+
 		bool IsInitialized() const;
 
 		// Getters

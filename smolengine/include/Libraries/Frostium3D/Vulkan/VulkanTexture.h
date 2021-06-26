@@ -22,6 +22,7 @@ namespace Frostium
 		void LoadCubeMap(const std::string& filePath, TextureFormat format);
 		void GenTexture(const void* data, uint32_t size, uint32_t width, uint32_t height, TextureFormat format);
 		void GenWhiteTetxure(uint32_t width, uint32_t height);
+		void GenCubeMap(uint32_t width, uint32_t height, TextureFormat format);
 		void CreateTexture(uint32_t width, uint32_t height, uint32_t mipMaps, const void* data, VkFormat format, bool imgui_handler);
 
 		// Getters
@@ -29,6 +30,7 @@ namespace Frostium
 		void* GetImGuiTextureID() const;
 		uint32_t GetHeight() const;
 		uint32_t GetWidth() const;
+		VkImage GetVkImage() const;
 		bool IsActive() const;
 
 		static VkImage CreateVkImage(uint32_t width, uint32_t height, int32_t mipLevels,

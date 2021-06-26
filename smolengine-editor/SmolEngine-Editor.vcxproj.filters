@@ -4,17 +4,11 @@
     <Filter Include="include">
       <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\FileBrowser">
-      <UniqueIdentifier>{7CC2F271-E823-D07F-7191-1632DDF1063F}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Scripts">
       <UniqueIdentifier>{C00F7F20-2C9B-ECE4-35AC-6FD9A1B648E5}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\FileBrowser">
-      <UniqueIdentifier>{2054F767-8CDF-642C-95F0-E72001FBC02C}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scripts">
       <UniqueIdentifier>{646F54F1-D024-CDE6-5919-C7BDC5CDC3EA}</UniqueIdentifier>
@@ -25,6 +19,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\EditorLayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileExplorer.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\ImGuiExtension.h">
@@ -39,14 +36,18 @@
     <ClInclude Include="include\Scripts\BasePlayerScript.h">
       <Filter>include\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="include\FileExplorer.h" />
-    <ClInclude Include="include\TexturesLoader.h" />
+    <ClInclude Include="include\TexturesLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileExplorer.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGuiExtension.cpp">
@@ -61,6 +62,5 @@
     <ClCompile Include="src\Scripts\BasePlayerScript.cpp">
       <Filter>src\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="src\FileExplorer.cpp" />
   </ItemGroup>
 </Project>

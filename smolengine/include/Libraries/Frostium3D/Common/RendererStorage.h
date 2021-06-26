@@ -5,6 +5,7 @@
 #include "Common/Framebuffer.h"
 #include "Common/Texture.h"
 #include "Common/Mesh.h"
+#include "Common/EnvironmentMap.h"
 #include "Common/RendererShared.h"
 #include "Common/Animation.h"
 
@@ -12,6 +13,8 @@
 #include "Utils/GLM.h"
 
 #include <mutex>
+
+class VulkanPBR;
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 namespace SmolEngine
@@ -125,6 +128,7 @@ namespace Frostium
 	{
 		Texture* Mask = nullptr;
 		float    Intensity = 1.0f;
+		float    BaseIntensity = 0.1f;
 	};
 #pragma endregion
 
@@ -145,7 +149,7 @@ namespace Frostium
 
 	struct RendererState
 	{
-		bool                   bDrawSkyBox = false;
+		bool                   bDrawSkyBox = true;
 		bool                   bDrawGrid = true;
 		bool                   bFXAA = true;
 		bool                   bSSAO = false;
@@ -197,6 +201,7 @@ namespace Frostium
 		const uint32_t                             m_LightingStateBinding = 33;
 		const uint32_t                             m_BloomStateBinding = 34;
 		const uint32_t                             m_FXAAStateBinding = 35;
+		const uint32_t                             m_DynamicSkyBinding = 36;
 		// Instance Data				           
 		uint32_t                                   m_Objects = 0;
 		uint32_t                                   m_InstanceDataIndex = 0;
@@ -250,7 +255,9 @@ namespace Frostium
 		glm::mat4                                  m_GridModel{};
 		Frustum*                                   m_Frustum = nullptr;
 		SceneData*                                 m_SceneData = nullptr;
+		VulkanPBR*                                 m_VulkanPBR = nullptr;
 		PushConstant                               m_MainPushConstant = {};
+		Ref<EnvironmentMap>                        m_EnvironmentMap = nullptr;
 		// Sizes						           
 		const size_t                               m_PushConstantSize = sizeof(PushConstant);
 	};
