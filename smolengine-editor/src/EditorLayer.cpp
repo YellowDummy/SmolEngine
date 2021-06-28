@@ -234,6 +234,7 @@ namespace SmolEngine
 			if (ImGui::IsMouseDoubleClicked(0))
 			{
 				glm::vec3 pos = m_SelectedActor->GetComponent<TransformComponent>()->WorldPos;
+				m_Camera->SetDistance(6.0f);
 				m_Camera->SetPosition(pos);
 			}
 		}
@@ -392,7 +393,7 @@ namespace SmolEngine
 						{
 							float rayDistance = 20.0f;
 							float x =  ImGui::GetMousePos().x;
-							float y = ImGui::GetMousePos().y  - (m_SceneViewPort.y / 2.7f);
+							float y = ImGui::GetMousePos().y  - (m_SceneViewPort.y / 2.0f);
 
 							glm::vec3 startPos = m_Camera->GetPosition();
 							glm::mat4 viewProj = m_Camera->GetViewProjection();

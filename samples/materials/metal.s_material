@@ -8,8 +8,7 @@
     "value6": "../samples/materials\\metal\\streaky-metal1_roughness.png",
     "value7": "../samples/materials\\metal\\streaky-metal1_ao.png",
     "value8": "",
-    "value9": "",
+    "value9": 1.0,
     "value10": 1.0,
-    "value11": 1.0,
-    "value12": 1.0
+    "value11": 1.0
 }

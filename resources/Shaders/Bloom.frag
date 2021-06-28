@@ -1,6 +1,7 @@
 #version 450
 
 layout (binding = 0) uniform sampler2D colorSampler;
+layout (binding = 2) uniform sampler2D materialsMap;
 
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outColor;
@@ -43,13 +44,23 @@ layout(std140, binding = 34) uniform BloomProperties
 
 void main(void)
 {
-	vec2 tex_offset = 1.0 / textureSize(colorSampler, 0); // gets size of single texel
-    vec3 result = texture(colorSampler, inUV).rgb * weights[0] * bloomState.scale; // current fragment's contribution
-	for (int i = 0; i < weights.length(); i++)
+	float alpha = 1.0;
+	float strength = texture(materialsMap, inUV).w;
+	vec4 color =  texture(colorSampler, inUV);
+	if(color.a == 0.0) // background
 	{
-		result += (texture(colorSampler, inUV + vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * bloomState.strength;
-        result += (texture(colorSampler, inUV - vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * bloomState.strength;
+		strength = 1.0;
+		alpha = 0.0;
 	}
 
-	outColor = vec4(result, 1.0);
+	strength = bloomState.strength * strength;
+	vec2 tex_offset = 1.0 / textureSize(colorSampler, 0); // gets size of single texel
+    vec3 result = color.rgb * weights[0]; // current fragment's contribution
+	for (int i = 0; i < weights.length(); i++)
+	{
+		result += (texture(colorSampler, inUV + vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * strength;
+        result += (texture(colorSampler, inUV - vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * strength;
+	}
+
+	outColor = vec4(result.rgb * bloomState.scale, alpha);
 }

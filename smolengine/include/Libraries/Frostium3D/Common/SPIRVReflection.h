@@ -46,7 +46,6 @@ namespace Frostium
 		std::string                      Name = "";
 		std::string                      ObjectName = "";
 		size_t                           Size = 0;
-		size_t                           Index = 0;
 		std::vector<Uniform>             Uniforms;
 
 	};
@@ -57,7 +56,6 @@ namespace Frostium
 		uint32_t                         Location = 0;
 		uint32_t                         BindingPoint = 0;
 		uint32_t                         Dimension = 0;
-		uint32_t                         Sampler = 0;
 		uint32_t                         ArraySize = 0;
 	};
 

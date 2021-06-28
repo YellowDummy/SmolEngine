@@ -1,0 +1,198 @@
+value0: 3
+value1: 0
+value2: 1
+value3: 2
+value4: 1048575
+value5: 2
+value6: 1
+value7:
+  value0: 1
+  value1: Box1
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    []
+  value6: 0
+  value7: 0
+  value8: 4
+value8: 2
+value9:
+  value0: 2
+  value1: Box2
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    []
+  value6: 0
+  value7: 0
+  value8: 4
+value10: 0
+value11: 0
+value12: 0
+value13: 0
+value14: 0
+value15: 0
+value16: 2
+value17: 1
+value18:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 10
+  value4: 1
+  value5: 5
+  value6: 0
+  value7: 6.7359304428100586
+  value8: 0
+  value9: 1
+value19: 2
+value20:
+  value0: 0.53006583452224731
+  value1: -5.9604644775390625e-08
+  value2: -0.91806042194366455
+  value3: 1.9999997615814209
+  value4: 0.9999995231628418
+  value5: 0.9999997615814209
+  value6: 2.859032154083252
+  value7: 21.358554840087891
+  value8: 0.1344338059425354
+  value9: 1
+value21: 0
+value22: 0
+value23: 2
+value24: 1
+value25:
+  value0:
+    - value0: ../samples/materials\metal.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\box.gltf
+  value5: 2
+value26: 2
+value27:
+  value0:
+    - value0: ../samples/materials\metal.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\box.gltf
+  value5: 2
+value28: 0
+value29: 0
+value30: 1
+value31: 0
+value32:
+  value0: 0
+  value1: 3
+  value2: D:\Engines\SmolEngine\samples\scenes\test.s_scene
+  value3: test
+  value4:
+    value0: false
+    value1: false
+    value2: true
+    value3: true
+    value4: true
+    value5: 1
+    value6: 1
+    value7: 1
+    value8: 2
+    value9: 1
+    value10: 1
+    value11: 1
+    value12: 0.5
+    value13: 0.10000000149011612
+    value14: 0.125
+    value15: 0.031199999153614044
+    value16: 29
+    value17: 0.75
+    value18:
+      value0: ""
+      value1: 2
+      value2: true
+      value3: 6471000
+      value4: 1200
+      value5: 2.0999999833293259e-05
+      value6: 0.75800001621246338
+      value7: 6371000
+      value8: 8000
+      value9: 5.5000000429572538e-06
+      value10: 1.2999999853491317e-05
+      value11: 2.2399999579647556e-05
+      value12: 0
+      value13: 6372000
+      value14: 0
+      value15: 22
+      value16: 100
+      value17: 100
+      value18: 22
+    value19:
+      value0: ""
+      value1: 1
+      value2: 0.10000000149011612
+  value5:
+    - ptr_wrapper:
+        id: 2147483649
+        data:
+          value0: 1
+    - ptr_wrapper:
+        id: 2147483650
+        data:
+          value0: 2
+value33: 2
+value34: 1
+value35:
+  value0:
+    value0: 0
+    value1: 1
+    value2: 1
+    value3: 0
+    value4: 1
+    value5: 1
+    value6: 0.5
+    value7: 0.5
+    value8: 0
+    value9: 0
+    value10: 0
+    value11: 0.10000000149011612
+    value12: 0.10000000149011612
+    value13: 1
+    value14: 10
+    value15: 1
+    value16: 5
+    value17: 1
+    value18: 1
+    value19: ""
+    value20: 1
+    value21: 0
+    value22: 0
+  value1: 3
+value36: 2
+value37:
+  value0:
+    value0: 0
+    value1: 0
+    value2: 0
+    value3: 0
+    value4: 2
+    value5: 5
+    value6: 0.5
+    value7: 0.5
+    value8: 0
+    value9: 0
+    value10: 0
+    value11: 0.10000000149011612
+    value12: 0.10000000149011612
+    value13: 1
+    value14: 2
+    value15: 1
+    value16: 1
+    value17: 1
+    value18: 1
+    value19: ""
+    value20: 1
+    value21: 0
+    value22: 0
+  value1: 3

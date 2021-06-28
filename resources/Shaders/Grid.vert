@@ -22,16 +22,21 @@ layout (std140, binding = 27) uniform SceneBuffer
 
 } sceneData;
 
+
+layout (location = 0) out vec2 v_UV;
+layout (location = 1) out vec3 v_Pos;
+
 layout(push_constant) uniform ConstantData
 {
 	mat4 model;
 };
 
-layout (location = 0) out vec2 v_UV;
-
 void main() 
 {
+   vec4 pos = model * vec4(a_Position, 1.0);
+   v_Pos = pos.xyz;
    v_UV = a_UV;
-   gl_Position =  sceneData.projection * sceneData.view * model * vec4(a_Position, 1.0);   
+
+   gl_Position =  sceneData.projection * sceneData.view * pos;   
 
 }

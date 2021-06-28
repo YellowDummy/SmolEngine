@@ -15,8 +15,7 @@ layout (binding = 5) uniform sampler2D albedroMap;
 layout (binding = 6) uniform sampler2D positionsMap;
 layout (binding = 7) uniform sampler2D normalsMap;
 layout (binding = 8) uniform sampler2D materialsMap;
-layout (binding = 9) uniform sampler2D emissionMap;
-layout (binding = 10) uniform sampler2D shadowCoordMap;
+layout (binding = 9) uniform sampler2D shadowCoordMap;
 
 // Buffers
 // -----------------------------------------------------------------------------------------------------------------------
@@ -327,12 +326,11 @@ void main()
     if(texColor.w == 0.0)
     {
 	    outColor0 = vec4(texColor.rgb, 1.0);
-	    outColor1 = vec4(texColor.rgb, 1.0);
+	    outColor1 = vec4(texColor.rgb, 0.0);
         return;
     }
     
     vec3 albedro = texColor.rgb;
-	vec4 emission = texture(emissionMap, inUV);
     vec4 position = texture(positionsMap, inUV);
     vec4 normals = texture(normalsMap, inUV);
     vec4 materials = texture(materialsMap, inUV);
@@ -341,7 +339,6 @@ void main()
 	
     float metallic = materials.x;
     float roughness = materials.y;
-	float applyEmission = emission.w;
 	float emissionStrength = materials.w;
     float applyAO = normals.w;
 
@@ -390,18 +387,6 @@ void main()
 	//--------------------------------------------
 	vec3 color = ambient + Lo;
 
-	// Emission
-	//--------------------------------------------
-	if(applyEmission == 1.0)
-	{
-		color += emission.rgb;
-	}
-
-	if(emissionStrength > 0)
-	{
-		color *= exp(color.rgb * emissionStrength);
-	}
-
     // Shadow Mapping
 	//--------------------------------------------
 	float shadow = 0.0;
@@ -424,9 +409,10 @@ void main()
 	//--------------------------------------------
 	// Color with manual exposure into attachment 0
 	outColor0.rgb = vec3(1.0) - exp(-color.rgb * (bloomState.exposure));
+
 	// Bright parts for bloom into attachment 1
-	float l = dot(outColor0.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float l = dot(Lo, vec3(0.2126, 0.7152, 0.0722));
 	float threshold = bloomState.threshold;
-	outColor1.rgb = (l > threshold) ? outColor0.rgb : vec3(0.0);
+	outColor1.rgb = (l > threshold) ? Lo : vec3(0.0);
 	outColor1.a = 1.0;
 }

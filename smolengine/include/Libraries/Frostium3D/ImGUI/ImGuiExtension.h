@@ -27,7 +27,7 @@ namespace ImGui
 		static void InputFloat3Base(const std::string& label, glm::vec3& vec3, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// Int
-		static void InputInt(const std::string& label, int& value, float pos = 130.0f, const std::string& additionalID = "None");
+		static void InputInt(const std::string& label, int& value, float pos = 130.0f, const std::string& additionalID = "None", float text_pos = 6.0f);
 
 		// String
 		static void InputString(const std::string& label, std::string& output, std::string& dummyStr,

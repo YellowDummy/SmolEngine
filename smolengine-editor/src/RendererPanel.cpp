@@ -52,6 +52,13 @@ namespace SmolEngine
 							ImGui::Extensions::InputFloat("Planet Radius", environment.SkyProperties.PlanetRadius, padding, "IBL", 12.0f);
 							ImGui::Extensions::InputFloat("Atm Radius", environment.SkyProperties.AtmosphereRadius, padding, "IBL", 12.0f);
 							ImGui::Extensions::InputFloat("Mie Direction", environment.SkyProperties.MieScatteringDirection, padding, "IBL", 12.0f);
+
+
+							int* numCirrus = (int*)(&environment.SkyProperties.NumCirrusCloudsIterations);
+							int* numCumulus = (int*)(&environment.SkyProperties.NumCumulusCloudsIterations);
+							ImGui::Extensions::InputInt("Cirrus Clouds", *numCirrus, padding, "IBL", 12.0f);
+							ImGui::Extensions::InputInt("Cumulus Clouds", *numCumulus, padding, "IBL", 12.0f);
+
 							ImGui::Extensions::CheckBox("Update PBR Maps", environment.bGeneratePBRMaps, padding, "IBL", 12.0f);
 
 							ImGui::SetCursorPosX(12.0f);

@@ -54,7 +54,8 @@ namespace SmolEngine
 		{
 			archive(CubeMapPath, eFormat, bGeneratePBRMaps, SkyProperties.AtmosphereRadius, SkyProperties.MieScale, SkyProperties.MieScatteringCoeff, SkyProperties.MieScatteringDirection,
 				SkyProperties.PlanetRadius, SkyProperties.RayleighScale, SkyProperties.RayleighScatteringCoeff.x, SkyProperties.RayleighScatteringCoeff.y, SkyProperties.RayleighScatteringCoeff.z,
-				SkyProperties.RayOrigin.x, SkyProperties.RayOrigin.y, SkyProperties.RayOrigin.z, SkyProperties.SunIntensity, SkyProperties.SunPosition.x, SkyProperties.SunPosition.y, SkyProperties.SunPosition.z);
+				SkyProperties.RayOrigin.x, SkyProperties.RayOrigin.y, SkyProperties.RayOrigin.z, SkyProperties.SunIntensity, SkyProperties.SunPosition.x, SkyProperties.SunPosition.y, SkyProperties.SunPosition.z,
+				SkyProperties.NumCirrusCloudsIterations, SkyProperties.NumCumulusCloudsIterations);
 		}
 	};
 
@@ -76,7 +77,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bBloom, State.bVerticalBloom,
+			archive(State.bDrawGrid, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bBloom,
 				State.Lighting.AmbientColor.r, State.Lighting.AmbientColor.g, State.Lighting.AmbientColor.b,
 				State.Lighting.IBLStrength, State.Lighting.UseIBL, State.Bloom.Exposure, State.Bloom.Scale, State.Bloom.Strength,
 				State.Bloom.Threshold, State.FXAA.EdgeThresholdMax, State.FXAA.EdgeThresholdMin, State.FXAA.Iterations, State.FXAA.SubPixelQuality, 

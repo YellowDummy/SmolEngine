@@ -27,16 +27,13 @@ struct MaterialData
     uint UseAOTex;
 
 	uint UseEmissiveTex;
-	uint UseHeightTex;
 	uint AlbedroTexIndex;
 	uint NormalTexIndex;
-
 	uint MetallicTexIndex;
+
 	uint RoughnessTexIndex;
 	uint AOTexIndex;
 	uint EmissiveTexIndex;
-	
-	uint HeightTexIndex;
 };
 
 layout (std140, binding = 277) uniform SceneBuffer
@@ -150,7 +147,6 @@ void main()
 	float metallic = material.UseMetallicTex == 1 ? texture(textures[material.MetallicTexIndex], v_UV).r : material.Metalness;
 	float roughness = material.UseRoughnessTex == 1 ? texture(textures[material.RoughnessTexIndex], v_UV).r: material.Roughness;
 	vec3 ao = material.UseAOTex == 1 ? texture(textures[material.AOTexIndex], v_UV).rrr : vec3(1);
-	vec3 emissive = material.UseEmissiveTex == 1 ? texture(textures[material.EmissiveTexIndex], v_UV).rgb : vec3(0);
 	albedro = pow(albedro, vec3(2.2));
 	vec3 F0 = mix(vec3(0.04), albedro, metallic); 
 	vec3 V = normalize(v_CamPos - v_FragPos); 
@@ -158,13 +154,10 @@ void main()
     // Ambient Lighting (IBL)
 	//--------------------------------------------
     vec3 ambient = CalcIBL(N, V, F0, ao, albedro, metallic, roughness);
-	ambient += emissive;
+	vec3 color = vec3(1.0) - exp(-ambient.rgb * 1.0);
 
-    // Tone mapping
-	ambient = Uncharted2Tonemap(ambient * 4.0);
-	ambient = ambient * (1.0f / Uncharted2Tonemap(vec3(11.2f)));	
 	// Gamma correction
-	ambient = pow(ambient, vec3(1.0f / 2.5));
+	color = pow(color, vec3(1.0f / 2.5));
 
-	outColor = vec4(ambient, 1.0);
+	outColor = vec4(color, 1.0);
 }

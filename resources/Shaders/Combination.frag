@@ -5,13 +5,13 @@ layout (location = 0) in vec2 inUV;
 layout (binding = 0) uniform sampler2D colorSampler;
 layout (binding = 1) uniform sampler2D bloomSampler;
 layout (binding = 2) uniform sampler2D DirtSampler;
+layout (binding = 3) uniform sampler2D materialsMap;
 
 layout (location = 0) out vec4 outFragColor;
 
 layout(push_constant) uniform ConstantData
 {
     uint ppState;
-    uint is_vertical_blur; 
     uint is_dirt_mask;
     float mask_intensity;
     float mask_normal_intensity;
@@ -60,27 +60,27 @@ void main()
         case 1:
         {
             vec4 bloom = vec4(0.0);
+            float strength = texture(materialsMap, inUV).w;
+            vec4 bloomColor = texture(bloomSampler, inUV);
+            if(bloomColor.a == 0.0)
+            {
+                strength = 1.0;
+            }
+
+            strength = bloomState.strength * strength;
+	        vec2 tex_offset = 1.0 / textureSize(bloomSampler, 0); 
+            vec3 result = bloomColor.rgb * weights[0];
+            for (int i = 0; i < weights.length(); i++)
+	        {
+		         result += texture(bloomSampler, inUV + vec2(0.0, tex_offset.y * i)).rgb * weights[i] * strength;
+                result += texture(bloomSampler, inUV - vec2(0.0, tex_offset.y * i)).rgb * weights[i] * strength;
+            }
+
+            bloom = vec4(result * bloomState.scale, 1.0);
             vec4 dirtColor = vec4(0.0);
-            if(is_vertical_blur == 1)
-            {
-	            vec2 tex_offset = 1.0 / textureSize(bloomSampler, 0); 
-                vec3 result = texture(bloomSampler, inUV).rgb * weights[0] * bloomState.scale;
-                for (int i = 0; i < weights.length(); i++)
-	            {
-		          result += texture(bloomSampler, inUV + vec2(0.0, tex_offset.y * i)).rgb * weights[i] * bloomState.strength;
-                  result += texture(bloomSampler, inUV - vec2(0.0, tex_offset.y * i)).rgb * weights[i] * bloomState.strength;
-                }
-
-                bloom = vec4(result, 1.0);
-            }
-            else
-            {
-                bloom = texture(bloomSampler, inUV);
-            }
-
             if(is_dirt_mask == 1)
             {
-                if(bloom.r > 0.2 && bloom.g > 0.2 && bloom.b > 0.2)
+                if(bloom.r > 0.1 && bloom.g > 0.1 && bloom.b > 0.1)
                 {
                     dirtColor = texture(DirtSampler, inUV) * bloom * mask_intensity;
                 }
@@ -95,6 +95,6 @@ void main()
             break;
         }
     }
-
+    
     outFragColor = color;
 }

@@ -25,7 +25,6 @@ namespace Frostium
 		Roughness,
 		AO,
 		Emissive,
-		Height
 	};
 
 	struct PBRMaterial
@@ -43,21 +42,16 @@ namespace Frostium
 		uint32_t UseAOTex;
 
 		uint32_t UseEmissiveTex;
-		uint32_t UseHeightTex;
 		uint32_t AlbedroTexIndex;
 		uint32_t NormalTexIndex;
-
 		uint32_t MetallicTexIndex;
+
 		uint32_t RoughnessTexIndex;
 		uint32_t AOTexIndex;
 		uint32_t EmissiveTexIndex;
-
-		uint32_t HeightTexIndex;
 	private:
 
 		uint32_t pad1;
-		uint32_t pad2;
-		uint32_t pad3;
 	};
 
 	struct MaterialCreateInfo
@@ -80,7 +74,6 @@ namespace Frostium
 		std::string  RoughnessPath;
 		std::string  AOPath;
 		std::string  EmissivePath;
-		std::string  HeightPath;
 		glm::vec3    AlbedroColor = glm::vec3(1.0f);
 	private:
 		friend class MaterialLibrary;
@@ -94,7 +87,7 @@ namespace Frostium
 		void serialize(Archive& archive)
 		{
 			archive(Metallness, Roughness, EmissionStrength, AlbedroPath, NormalPath, MetallnessPath, RoughnessPath, AOPath,
-				EmissivePath, HeightPath, AlbedroColor.r, AlbedroColor.g, AlbedroColor.b);
+				EmissivePath, AlbedroColor.r, AlbedroColor.g, AlbedroColor.b);
 		}
 	};
 

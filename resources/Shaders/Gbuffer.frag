@@ -18,16 +18,13 @@ struct MaterialData
     uint UseAOTex;
 
 	uint UseEmissiveTex;
-	uint UseHeightTex;
 	uint AlbedroTexIndex;
 	uint NormalTexIndex;
-
 	uint MetallicTexIndex;
+
 	uint RoughnessTexIndex;
 	uint AOTexIndex;
 	uint EmissiveTexIndex;
-	
-	uint HeightTexIndex;
 };
 
 // In
@@ -45,8 +42,7 @@ layout (location = 0) out vec4 out_color;
 layout (location = 1) out vec4 out_positions;
 layout (location = 2) out vec4 out_normals;
 layout (location = 3) out vec4 out_materials;
-layout (location = 4) out vec4 out_emission;
-layout (location = 5) out vec4 out_shadowCoord;
+layout (location = 4) out vec4 out_shadowCoord;
 
 layout (binding = 24) uniform sampler2D texturesMap[4096];
 
@@ -78,13 +74,12 @@ void main()
 
     vec3 N = getNormal(); 						
 	vec3 V = normalize(v_CameraPos - v_FragPos);
-    float applyEmission = float(v_Material.UseEmissiveTex);
+    float emissionStrength =  v_Material.UseEmissiveTex == 1 ? texture(texturesMap[v_Material.EmissiveTexIndex], v_UV).r :float(v_Material.EmissionStrength);
     float applyAO = float(v_Material.UseAOTex);
 
     out_color = albedro;
-    out_positions = vec4(v_FragPos, applyEmission);
+    out_positions = vec4(v_FragPos, 1.0);
     out_normals = vec4(N, applyAO);
-    out_materials = vec4(metallic, roughness, ao, v_Material.EmissionStrength <= 1.0 ? 0: v_Material.EmissionStrength);
+    out_materials = vec4(metallic, roughness, ao, emissionStrength);
     out_shadowCoord = v_ShadowCoord;
-	out_emission = vec4(emissive.rgb, applyEmission);
 }

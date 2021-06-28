@@ -15,7 +15,7 @@ namespace Frostium
 	struct DynamicSkyProperties
 	{
 		glm::vec4 RayOrigin = glm::vec4(0, 6372e3f, 0, 0);
-		glm::vec4 SunPosition = glm::vec4(100.0f, 100.0f, 22, 0);
+		glm::vec4 SunPosition = glm::vec4(1.0f, 1.0f, 0, 0);
 		glm::vec4 RayleighScatteringCoeff = glm::vec4(5.5e-6, 13.0e-6, 22.4e-6, 0);
 
 		float SunIntensity = 22.0f;
@@ -31,10 +31,13 @@ namespace Frostium
 		float MieScale = 1.2e3f;
 		//Mie preferred scattering direction
 		float MieScatteringDirection = 0.758f;
+		uint32_t  NumCirrusCloudsIterations = 2;
 
+		uint32_t  NumCumulusCloudsIterations = 0;
 	private:
-
 		float pad1 = 1.0f;
+		float pad2 = 1.0f;
+		float pad3 = 1.0f;
 	};
 
 	class EnvironmentMap

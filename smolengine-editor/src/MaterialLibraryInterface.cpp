@@ -78,13 +78,10 @@ namespace SmolEngine
 			if (DrawTextureInfo(m_MaterialCI->RoughnessPath, "Roughness"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->EmissivePath, "Emissive"))
-				ApplyChanges();
-
 			if (DrawTextureInfo(m_MaterialCI->AOPath, "AO"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->HeightPath, "Height"))
+			if (DrawTextureInfo(m_MaterialCI->EmissivePath, "Emissive"))
 				ApplyChanges();
 
 			ImGui::NewLine();
@@ -141,7 +138,6 @@ namespace SmolEngine
 		m_Material.UseMetallicTex = 0;
 		m_Material.UseRoughnessTex = 0;
 		m_Material.UseEmissiveTex = 0;
-		m_Material.UseHeightTex = 0;
 		m_Material.UseAOTex = 0;
 	}
 
@@ -171,7 +167,6 @@ namespace SmolEngine
 		m_Material.UseMetallicTex = false;
 		m_Material.UseRoughnessTex = false;
 		m_Material.UseEmissiveTex = false;
-		m_Material.UseHeightTex = false;
 		m_Material.UseAOTex = false;
 
 		m_MaterialCI->GetTextures(texture_infos);
@@ -349,17 +344,6 @@ namespace SmolEngine
 			{
 				m_Material.UseEmissiveTex = true;
 				m_Material.EmissiveTexIndex= index;
-				textures.emplace_back(tex);
-			}
-
-			break;
-		}
-		case MaterialTexture::Height:
-		{
-			if (!filePath.empty())
-			{
-				m_Material.UseHeightTex = true;
-				m_Material.HeightTexIndex = index;
 				textures.emplace_back(tex);
 			}
 

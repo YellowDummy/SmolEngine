@@ -7,8 +7,7 @@ layout (binding = 5) uniform sampler2D albedroMap;
 layout (binding = 6) uniform sampler2D positionsMap;
 layout (binding = 7) uniform sampler2D normalsMap;
 layout (binding = 8) uniform sampler2D materialsMap;
-layout (binding = 9) uniform sampler2D emissionMap;
-layout (binding = 10) uniform sampler2D shadowCoordMap;
+layout (binding = 9) uniform sampler2D shadowCoordMap;
 
 layout (location = 0) out vec4 outFragColor;
 layout(push_constant) uniform ConstantData
@@ -48,13 +47,13 @@ void main()
 
     case 5:
     {
-      color = vec4(texture(emissionMap, inUV).rgb, 1.0);
+      color = vec4(vec3(texture(materialsMap, inUV).w), 1.0);
       break;
     }
 
     case 6:
     {
-      color = vec4(texture(shadowMap, inUV).rgb, 1.0);
+      color = vec4(vec3(texture(shadowMap, inUV).r), 1.0);
       break;
     }
 

@@ -64,17 +64,26 @@ namespace Frostium
 		void CalculateAABB(const glm::mat4& m);
 	};
 
-	enum class ShaderType : uint32_t
+	enum class ShaderType : int
 	{
-		Vertex,
-		Fragment,
-		Compute,
-		Geometry,
+		Vertex    = 1,
+		Fragment  = 2,
+		Compute   = 4,
+		Geometry  = 8,
 
-		RayGen,
-		RayMiss,
-		RayHit
+		RayGen    = 10,
+		RayMiss   = 20,
+		RayHit    = 40,
 	};
+
+	inline ShaderType operator~ (ShaderType a) { return (ShaderType)~(int)a; }
+	inline ShaderType operator| (ShaderType a, ShaderType b) { return (ShaderType)((int)a | (int)b); }
+	inline ShaderType operator& (ShaderType a, ShaderType b) { return (ShaderType)((int)a & (int)b); }
+	inline ShaderType operator^ (ShaderType a, ShaderType b) { return (ShaderType)((int)a ^ (int)b); }
+	inline ShaderType& operator|= (ShaderType& a, ShaderType b) { return (ShaderType&)((int&)a |= (int)b); }
+	inline ShaderType& operator&= (ShaderType& a, ShaderType b) { return (ShaderType&)((int&)a &= (int)b); }
+	inline ShaderType& operator^= (ShaderType& a, ShaderType b) { return (ShaderType&)((int&)a ^= (int)b); }
+
 
 	enum class TextureFormat
 	{
