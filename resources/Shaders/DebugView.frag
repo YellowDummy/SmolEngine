@@ -8,6 +8,7 @@ layout (binding = 6) uniform sampler2D positionsMap;
 layout (binding = 7) uniform sampler2D normalsMap;
 layout (binding = 8) uniform sampler2D materialsMap;
 layout (binding = 9) uniform sampler2D shadowCoordMap;
+layout (binding = 10) uniform sampler2D SSAOMap;
 
 layout (location = 0) out vec4 outFragColor;
 layout(push_constant) uniform ConstantData
@@ -65,8 +66,18 @@ void main()
 
     case 8:
     {
-      vec3 ao = vec3(texture(materialsMap, inUV).z);
-      color = vec4(ao, 1.0);
+      float ao = 0.0;
+      if(texture(normalsMap, inUV).w == 1.0)
+      {
+        ao = texture(materialsMap, inUV).z;
+      }
+      else
+      {
+        ao = texture(SSAOMap, inUV).r;
+      }
+
+      color = vec4(vec3(ao), 1);
+
       break;
     }
   }

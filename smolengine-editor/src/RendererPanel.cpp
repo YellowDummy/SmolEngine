@@ -109,12 +109,11 @@ namespace SmolEngine
 							ImGui::NewLine();
 						}
 
-						bool* value = (bool*)(&render_state.Lighting.UseIBL);
-						if (ImGui::Extensions::CheckBox("Enabled", *value, padding, "IBL", 12.0f))
-						{
-							render_state.bDrawSkyBox = *value;
+						if (ImGui::Extensions::CheckBox("Enabled", render_state.bIBL, padding, "IBL", 12.0f))
 							UpdateStates();
-						}
+
+						if (ImGui::Extensions::CheckBox("SSAO", render_state.bSSAO, padding, "IBL", 12.0f))
+							UpdateStates();
 
 						if (ImGui::Extensions::CheckBox("Show", render_state.bDrawSkyBox, padding, "IBL", 12.0f))
 							UpdateStates();

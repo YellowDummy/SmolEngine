@@ -90,9 +90,9 @@ namespace Frostium
 	{
 		glm::vec4   AmbientColor = glm::vec4(1.0f);
 		float       IBLStrength = 1.0f;
-		uint32_t    UseIBL = true;
 	private:
-		uint32_t    pad1 = 1;
+		uint32_t    UseIBL = 1;
+		uint32_t    UseSSAO = 1;
 		uint32_t    pad2 = 1;
 
 		friend class DeferredRenderer;
@@ -152,8 +152,9 @@ namespace Frostium
 		bool                   bDrawSkyBox = true;
 		bool                   bDrawGrid = true;
 		bool                   bFXAA = true;
-		bool                   bSSAO = false;
+		bool                   bSSAO = true;
 		bool                   bBloom = false;
+		bool                   bIBL = true;
 		DebugViewFlags         eDebugView = DebugViewFlags::None;
 		LightingProperties     Lighting = {};
 		BloomProperties        Bloom = {};
@@ -218,10 +219,12 @@ namespace Frostium
 		GraphicsPipeline                           p_Debug = {};
 		GraphicsPipeline                           p_FXAA = {};
 		GraphicsPipeline                           p_Mask = {};
+		GraphicsPipeline                           p_SSAO = {};
 		// Framebuffers	
 		Framebuffer*                               f_Main = nullptr;
 		Framebuffer                                f_GBuffer= {};
 		Framebuffer                                f_Lighting = {};
+		Framebuffer                                f_SSAO = {};
 		Framebuffer                                f_FXAA = {};
 		Framebuffer                                f_Bloom = {};
 		Framebuffer                                f_Depth = {};
@@ -245,17 +248,24 @@ namespace Frostium
 		{								           
 			glm::mat4                              DepthMVP = glm::mat4(1.0f);			                   
 			uint32_t                               DataOffset = 0;
-		};								           							                   
+		};
+
+		struct SSAOData
+		{
+			Ref<Texture>                           NoiseTexture = nullptr;
+			std::array<glm::vec4, 32>              Kernel;
+		};
 										           
 		std::string                                m_Path = "";
 		float                                      m_NearClip = 1.0f;
 		float                                      m_FarClip = 1000.0f;
 		glm::vec3                                  m_ShadowLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::mat4                                  m_GridModel{};
+		PushConstant                               m_MainPushConstant = {};
+		SSAOData                                   m_SSAOData = {};
 		Frustum*                                   m_Frustum = nullptr;
 		SceneData*                                 m_SceneData = nullptr;
 		VulkanPBR*                                 m_VulkanPBR = nullptr;
-		PushConstant                               m_MainPushConstant = {};
 		Ref<EnvironmentMap>                        m_EnvironmentMap = nullptr;
 		// Sizes						           
 		const size_t                               m_PushConstantSize = sizeof(PushConstant);

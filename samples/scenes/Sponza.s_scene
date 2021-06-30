@@ -1,0 +1,255 @@
+value0: 6
+value1: 0
+value2: 1
+value3: 2
+value4: 3
+value5: 4
+value6: 2097151
+value7: 5
+value8: 4
+value9: 1
+value10:
+  value0: 1
+  value1: Sponza
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    []
+  value6: 0
+  value7: 0
+  value8: 3
+value11: 2
+value12:
+  value0: 2
+  value1: Dir
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    []
+  value6: 3
+  value7: 0
+  value8: 3
+value13: 3
+value14:
+  value0: 3
+  value1: Lights
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    - 2
+    - 4
+  value6: 0
+  value7: 0
+  value8: 2
+value15: 4
+value16:
+  value0: 4
+  value1: Point
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    []
+  value6: 3
+  value7: 0
+  value8: 3
+value17: 0
+value18: 0
+value19: 0
+value20: 0
+value21: 0
+value22: 0
+value23: 4
+value24: 1
+value25:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value26: 2
+value27:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value28: 3
+value29:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value30: 4
+value31:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: -3.9528448581695557
+  value7: 2.3734259605407715
+  value8: 0.32684355974197388
+  value9: 1
+value32: 0
+value33: 0
+value34: 1
+value35: 1
+value36:
+  value0:
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\floor.s_material
+    - value0: ../samples/materials\column.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\vase.s_material
+    - value0: ../samples/materials\plant.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\lion.s_material
+    - value0: ../samples/materials\shrub.s_material
+    - value0: ../samples/materials\curt_green.s_material
+    - value0: ../samples/materials\curt_green.s_material
+    - value0: ../samples/materials\curt_blue.s_material
+    - value0: ../samples/materials\curt_blue.s_material
+    - value0: ../samples/materials\curt_red2.s_material
+    - value0: ../samples/materials\curt_red2.s_material
+    - value0: ../samples/materials\vase_metal.s_material
+    - value0: ../samples/materials\chain.s_material
+    - value0: ../samples/materials\bricks.s_material
+    - value0: ../samples/materials\flagpole.s_material
+    - value0: ../samples/materials\roof.s_material
+  value1: false
+  value2: true
+  value3: 2
+  value4: ../samples/models\sponza.gltf
+  value5: 2
+value37: 1
+value38: 2
+value39:
+  value0: 1
+  value1: 1
+  value2: 1
+  value3: 1
+  value4: -4
+  value5: 56
+  value6: -13
+  value7: 0
+  value8: 1
+  value9: 1
+  value10: 350
+  value11: 1
+  value12: 45
+  value13: 1
+  value14: 1
+  value15: 1
+  value16: 2
+value40: 1
+value41: 4
+value42:
+  value0: 1
+  value1: 1
+  value2: 1
+  value3: 1
+  value4: -3.9528448581695557
+  value5: 2.3734259605407715
+  value6: 0.32684355974197388
+  value7: 1
+  value8: 1
+  value9: 5
+  value10: 1
+  value11: 0
+  value12: 2
+value43: 1
+value44: 0
+value45:
+  value0: 0
+  value1: 6
+  value2: D:\Engines\SmolEngine\samples\scenes\SponzaSceneMain.s_scene
+  value3: Sponza
+  value4:
+    value0: true
+    value1: true
+    value2: true
+    value3: true
+    value4: true
+    value5: true
+    value6: 1
+    value7: 1
+    value8: 1
+    value9: 1
+    value10: 1
+    value11: 1
+    value12: 0.25
+    value13: 0
+    value14: 0.125
+    value15: 0.031199999153614044
+    value16: 29
+    value17: 0.75
+    value18:
+      value0: ""
+      value1: 2
+      value2: true
+      value3: 6471000
+      value4: 1200
+      value5: 2.0999999833293259e-05
+      value6: 0.75800001621246338
+      value7: 6371000
+      value8: 8000
+      value9: 5.5000000429572538e-06
+      value10: 1.2999999853491317e-05
+      value11: 2.2399999579647556e-05
+      value12: 0
+      value13: 6372000
+      value14: 0
+      value15: 22
+      value16: 1
+      value17: 1
+      value18: 0
+      value19: 2
+      value20: 2
+    value19:
+      value0: ""
+      value1: 1
+      value2: 0.10000000149011612
+  value5:
+    - ptr_wrapper:
+        id: 2147483649
+        data:
+          value0: 1
+    - ptr_wrapper:
+        id: 2147483650
+        data:
+          value0: 2
+    - ptr_wrapper:
+        id: 2147483651
+        data:
+          value0: 3
+    - ptr_wrapper:
+        id: 2147483652
+        data:
+          value0: 4
+value46: 0
