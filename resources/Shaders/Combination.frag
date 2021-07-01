@@ -1,21 +1,14 @@
-#version 460
+#version 460 core
 
 layout (location = 0) in vec2 inUV;
 
 layout (binding = 0) uniform sampler2D colorSampler;
 layout (binding = 1) uniform sampler2D bloomSampler;
-layout (binding = 2) uniform sampler2D DirtSampler;
-layout (binding = 3) uniform sampler2D materialsMap;
+layout (binding = 2) uniform sampler2D materialsMap;
+layout (binding = 3) uniform sampler2D occlusionMap;
+layout (binding = 4) uniform sampler2D DirtSampler;
 
 layout (location = 0) out vec4 outFragColor;
-
-layout(push_constant) uniform ConstantData
-{
-    uint ppState;
-    uint is_dirt_mask;
-    float mask_intensity;
-    float mask_normal_intensity;
-};
 
 layout(std140, binding = 34) uniform BloomProperties
 {   
@@ -24,6 +17,14 @@ layout(std140, binding = 34) uniform BloomProperties
 	float scale;
 	float strength;
 } bloomState;
+
+layout(push_constant) uniform ConstantData
+{
+    uint ppState;
+    uint is_dirt_mask;
+    float mask_intensity;
+    float mask_normal_intensity;
+};
 
 // From the OpenGL Super bible
 	const float weights[] = float[](0.0024499299678342,
@@ -71,6 +72,34 @@ vec3 applyBloom(vec4 color)
     }
 
     return vec3(result * bloomState.scale);
+}
+
+vec4 applyVolumetricLight(vec3 screen)
+{
+    vec2 lightPositionOnScreen = vec2(300, 300);
+    vec4 color = vec4(0);
+    const float exposure = 1.0;
+    const float decay = 1.0;
+    const float density = 1.0;
+    const float weight = 0.01;
+    const int NUM_SAMPLES = 100;
+
+    vec2 texCoord = inUV;
+    vec2 deltaTextCoord = vec2( texCoord - lightPositionOnScreen.xy );
+    deltaTextCoord *= 1.0 / float(NUM_SAMPLES) * density;
+    float illuminationDecay = 1.0;
+    
+    for(int i=0; i < 100; i++)
+    {
+		texCoord -= deltaTextCoord;
+		vec3 samp = texture(colorSampler, texCoord).rgb;
+		samp *= illuminationDecay * weight;
+		color.rgb += samp;
+		illuminationDecay *= decay;
+    }
+
+	color *= exposure;
+    return color;
 }
 
 vec3 applyMask(vec3 bloom)

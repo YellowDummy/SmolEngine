@@ -3,8 +3,9 @@
 layout (location = 0) in vec2 inUV;
 
 // Out
-layout (location = 0) out vec4 outColor0;
-layout (location = 1) out vec4 outColor1;
+layout (location = 0) out vec4 outColor;
+layout (location = 1) out vec4 outBrightness;
+layout (location = 2) out vec4 outOcclusion;
 
 // Samplers
 layout (binding = 1) uniform sampler2D shadowMap;
@@ -325,8 +326,9 @@ void main()
     vec4 texColor = texture(albedroMap, inUV); // if w is zero, no lighting calculation is required (background)
     if(texColor.w == 0.0)
     {
-	    outColor0 = vec4(texColor.rgb, 1.0);
-	    outColor1 = vec4(texColor.rgb, 0.0);
+	    outColor = vec4(texColor.rgb, 1.0);
+	    outBrightness = outColor;
+		outOcclusion = vec4(0);
         return;
     }
     
@@ -388,9 +390,9 @@ void main()
 
     // Shadow Mapping
 	//--------------------------------------------
-	float shadow = 0.0;
 	if(dirLight.cast_shadows == 1)
 	{
+		float shadow = 0.0;
 		if(dirLight.soft_shadows == 1)
 		{
 			shadow = filterPCF(shadowCoord / shadowCoord.w);
@@ -407,11 +409,12 @@ void main()
 	// HDR
 	//--------------------------------------------
 	// Color with manual exposure into attachment 0
-	outColor0.rgb = vec3(1.0) - exp(-color.rgb * (bloomState.exposure));
+	outColor.rgb = vec3(1.0) - exp(-color.rgb * (bloomState.exposure));
+	outOcclusion = vec4(Lo, 1);
 
 	// Bright parts for bloom into attachment 1
-	float l = dot(outColor0.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float l = dot(color, vec3(0.2126, 0.7152, 0.0722));
 	float threshold = bloomState.threshold;
-	outColor1.rgb = (l > threshold) ? outColor0.rgb : vec3(0.0);
-	outColor1.a = 1.0;
+	outBrightness.rgb = (l > threshold) ? color : vec3(0.0);
+	outBrightness.a = 1.0;
 }

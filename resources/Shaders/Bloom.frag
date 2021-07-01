@@ -1,7 +1,6 @@
 #version 450
 
 layout (binding = 0) uniform sampler2D colorSampler;
-layout (binding = 2) uniform sampler2D materialsMap;
 
 layout (location = 0) in vec2 inUV;
 layout (location = 0) out vec4 outColor;

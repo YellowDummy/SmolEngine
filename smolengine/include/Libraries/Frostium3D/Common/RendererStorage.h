@@ -41,7 +41,7 @@ namespace Frostium
 		float      zNear = 1.0f;
 		float      zFar = 350.0f;
 		float      lightFOV = 45.0f;
-		uint32_t   IsActive = true;
+		uint32_t   IsActive = false;
 		uint32_t   IsCastShadows = false;
 		uint32_t   IsUseSoftShadows = true;
 	};
