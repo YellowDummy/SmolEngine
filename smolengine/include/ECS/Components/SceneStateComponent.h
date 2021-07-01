@@ -77,7 +77,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(State.bDrawGrid, State.bIBL, State.bSSAO, State.bDrawSkyBox, State.bFXAA, State.bBloom,
+			archive(State.bDrawGrid, State.bIBL,State.bDrawSkyBox, State.bFXAA, State.bBloom,
 				State.Lighting.AmbientColor.r, State.Lighting.AmbientColor.g, State.Lighting.AmbientColor.b,
 				State.Lighting.IBLStrength, State.Bloom.Exposure, State.Bloom.Scale, State.Bloom.Strength,
 				State.Bloom.Threshold, State.FXAA.EdgeThresholdMax, State.FXAA.EdgeThresholdMin, State.FXAA.Iterations, State.FXAA.SubPixelQuality, 

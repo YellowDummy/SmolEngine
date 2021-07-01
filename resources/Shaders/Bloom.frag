@@ -44,23 +44,14 @@ layout(std140, binding = 34) uniform BloomProperties
 
 void main(void)
 {
-	float alpha = 1.0;
-	float strength = texture(materialsMap, inUV).w;
-	vec4 color =  texture(colorSampler, inUV);
-	if(color.a == 0.0) // background
-	{
-		strength = 1.0;
-		alpha = 0.0;
-	}
-
-	strength = bloomState.strength * strength;
+	vec3 texColor =  texture(colorSampler, inUV).rgb;
 	vec2 tex_offset = 1.0 / textureSize(colorSampler, 0); // gets size of single texel
-    vec3 result = color.rgb * weights[0]; // current fragment's contribution
+    vec3 result = texColor * weights[0]; // current fragment's contribution
 	for (int i = 0; i < weights.length(); i++)
 	{
-		result += (texture(colorSampler, inUV + vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * strength;
-        result += (texture(colorSampler, inUV - vec2(tex_offset.x * i, 0.0)).rgb * weights[i]) * strength;
+		result += (texture(colorSampler, inUV + vec2(tex_offset.x * i, 0.0)).rgb * weights[i]);
+        result += (texture(colorSampler, inUV - vec2(tex_offset.x * i, 0.0)).rgb * weights[i]);
 	}
 
-	outColor = vec4(result.rgb * bloomState.scale, alpha);
+	outColor = vec4(result, 1.0);
 }

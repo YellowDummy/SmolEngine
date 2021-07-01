@@ -65,13 +65,6 @@ layout (std140, binding = 27) uniform SceneBuffer
 
 } sceneData;
 
-float linearDepth()
-{
-	float z = 0 * 2.0 - 1.0; 
-	return (2.0 * sceneData.nearClip * sceneData.farClip) / (sceneData.farClip + sceneData.nearClip - z *
-	 (sceneData.farClip - sceneData.nearClip));
-}
-
 layout(std430, binding = 28) readonly buffer JointMatrices
 {
 	mat4 joints[];
@@ -97,8 +90,7 @@ layout (location = 3)  out vec2 v_UV;
 layout (location = 4)  out vec4 v_ShadowCoord;
 layout (location = 5)  out vec4 v_WorldPos;
 layout (location = 6)  out vec3 v_Tangent;
-layout (location = 7)  out float v_Depth;
-layout (location = 8)  out MaterialData v_Material;
+layout (location = 7)  out MaterialData v_Material;
 
 void main()
 {
@@ -123,7 +115,6 @@ void main()
 	v_CameraPos = sceneData.camPos.xyz;
 	v_WorldPos = vec4(a_Position, 1.0);
 	v_UV = a_UV;
-	v_Depth = linearDepth();
 
 	v_Material =  materials[materialIndex];
 	v_Normal =  mat3(transpose(inverse(modelSkin))) * a_Normal;

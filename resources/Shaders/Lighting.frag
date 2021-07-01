@@ -16,7 +16,6 @@ layout (binding = 6) uniform sampler2D positionsMap;
 layout (binding = 7) uniform sampler2D normalsMap;
 layout (binding = 8) uniform sampler2D materialsMap;
 layout (binding = 9) uniform sampler2D shadowCoordMap;
-layout (binding = 10) uniform sampler2D SSAOMap;
 
 // Buffers
 // -----------------------------------------------------------------------------------------------------------------------
@@ -92,7 +91,6 @@ layout(std140, binding = 33) uniform LightingProperties
 	vec4 ambientColor;
 	float iblScale;
 	uint use_ibl;
-	uint use_ssao;
 
 } sceneState;
 
@@ -322,26 +320,6 @@ vec3 CalcSpotLight(SpotLight light, vec3 V, vec3 N, vec3 F0, vec3 albedo_color, 
 	return (albedo_color / PI + diffuseBRDF + specularBRDF) * radiance * NdotL * light.color.rgb;
 }
 
-vec3 SSAOBlur()
-{
-	const int blurRange = 2;
-	vec2 flippedUV = vec2(inUV.s, 1.0 - inUV.t);
-	int n = 0;
-	vec2 texelSize = 1.0 / vec2(textureSize(SSAOMap, 0));
-	float result = 0.0;
-	for (int x = -blurRange; x < blurRange; x++) 
-	{
-		for (int y = -blurRange; y < blurRange; y++) 
-		{
-			vec2 offset = vec2(float(y), float(x)) * texelSize;
-			result += texture(SSAOMap, flippedUV + offset).r;
-			n++;
-		}
-	}
-
-	return vec3(result);
-};
-
 void main()
 {
     vec4 texColor = texture(albedroMap, inUV); // if w is zero, no lighting calculation is required (background)
@@ -357,17 +335,10 @@ void main()
     vec4 normals = texture(normalsMap, inUV);
     vec4 materials = texture(materialsMap, inUV);
     vec4 shadowCoord = texture(shadowCoordMap, inUV);
-
-    vec3 ao = vec3(1.0);
-	float applyAO = normals.w;
-	if(applyAO == 0.0 && sceneState.use_ssao == 1)
-	{
-		ao = SSAOBlur();
-	}
+    vec3 ao = vec3(materials.z);
 
     float metallic = materials.x;
     float roughness = materials.y;
-	float emissionStrength = materials.w;
 
 	albedro = pow(albedro, vec3(2.2));
     vec3 V = normalize(sceneData.camPos.xyz - position.xyz);

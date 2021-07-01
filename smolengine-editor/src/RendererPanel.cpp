@@ -112,9 +112,6 @@ namespace SmolEngine
 						if (ImGui::Extensions::CheckBox("Enabled", render_state.bIBL, padding, "IBL", 12.0f))
 							UpdateStates();
 
-						if (ImGui::Extensions::CheckBox("SSAO", render_state.bSSAO, padding, "IBL", 12.0f))
-							UpdateStates();
-
 						if (ImGui::Extensions::CheckBox("Show", render_state.bDrawSkyBox, padding, "IBL", 12.0f))
 							UpdateStates();
 

@@ -1,16 +1,15 @@
-value0: 6
+value0: 5
 value1: 0
 value2: 1
 value3: 2
 value4: 3
 value5: 4
-value6: 2097151
-value7: 5
-value8: 4
-value9: 1
-value10:
+value6: 1048575
+value7: 4
+value8: 1
+value9:
   value0: 1
-  value1: Sponza
+  value1: DefaultActor0
   value2: Default
   value3: true
   value4: false
@@ -19,8 +18,8 @@ value10:
   value6: 0
   value7: 0
   value8: 3
-value11: 2
-value12:
+value10: 2
+value11:
   value0: 2
   value1: Dir
   value2: Default
@@ -28,43 +27,43 @@ value12:
   value4: false
   value5:
     []
-  value6: 3
+  value6: 4
   value7: 0
   value8: 3
-value13: 3
-value14:
+value12: 3
+value13:
   value0: 3
-  value1: Lights
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    - 2
-    - 4
-  value6: 0
-  value7: 0
-  value8: 2
-value15: 4
-value16:
-  value0: 4
   value1: Point
   value2: Default
   value3: true
   value4: false
   value5:
     []
-  value6: 3
+  value6: 4
   value7: 0
   value8: 3
+value14: 4
+value15:
+  value0: 4
+  value1: Lights
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    - 3
+    - 2
+  value6: 0
+  value7: 0
+  value8: 2
+value16: 0
 value17: 0
 value18: 0
 value19: 0
 value20: 0
 value21: 0
-value22: 0
-value23: 4
-value24: 1
-value25:
+value22: 4
+value23: 1
+value24:
   value0: 0
   value1: 0
   value2: 0
@@ -75,8 +74,8 @@ value25:
   value7: 0
   value8: 0
   value9: 1
-value26: 2
-value27:
+value25: 2
+value26:
   value0: 0
   value1: 0
   value2: 0
@@ -87,41 +86,41 @@ value27:
   value7: 0
   value8: 0
   value9: 1
-value28: 3
-value29:
-  value0: 0
-  value1: 0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 0
-  value7: 0
-  value8: 0
-  value9: 1
-value30: 4
-value31:
+value27: 3
+value28:
   value0: 0
   value1: -0
   value2: 0
   value3: 1
   value4: 1
   value5: 1
-  value6: -3.9528448581695557
-  value7: 2.3734259605407715
-  value8: 0.32684355974197388
+  value6: 2.444922924041748
+  value7: 3.8292911052703857
+  value8: -0.71631860733032227
   value9: 1
+value29: 4
+value30:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value31: 0
 value32: 0
-value33: 0
+value33: 1
 value34: 1
-value35: 1
-value36:
+value35:
   value0:
     - value0: ../samples/materials\bricks.s_material
     - value0: ../samples/materials\bricks.s_material
     - value0: ../samples/materials\bricks.s_material
     - value0: ../samples/materials\bricks.s_material
-    - value0: ../samples/materials\floor.s_material
+    - value0: ../samples/materials\tiles.s_material
     - value0: ../samples/materials\column.s_material
     - value0: ../samples/materials\bricks.s_material
     - value0: ../samples/materials\bricks.s_material
@@ -147,16 +146,16 @@ value36:
   value3: 2
   value4: ../samples/models\sponza.gltf
   value5: 2
-value37: 1
-value38: 2
-value39:
+value36: 1
+value37: 2
+value38:
   value0: 1
   value1: 1
   value2: 1
   value3: 1
-  value4: -4
+  value4: 16
   value5: 56
-  value6: -13
+  value6: 12
   value7: 0
   value8: 1
   value9: 1
@@ -167,28 +166,28 @@ value39:
   value14: 1
   value15: 1
   value16: 2
-value40: 1
-value41: 4
-value42:
+value39: 1
+value40: 3
+value41:
   value0: 1
   value1: 1
   value2: 1
   value3: 1
-  value4: -3.9528448581695557
-  value5: 2.3734259605407715
-  value6: 0.32684355974197388
+  value4: 2.444922924041748
+  value5: 3.8292911052703857
+  value6: -0.71631860733032227
   value7: 1
   value8: 1
   value9: 5
   value10: 1
   value11: 0
   value12: 2
-value43: 1
-value44: 0
-value45:
+value42: 1
+value43: 0
+value44:
   value0: 0
-  value1: 6
-  value2: D:\Engines\SmolEngine\samples\scenes\SponzaSceneMain.s_scene
+  value1: 5
+  value2: ../samples/scenes\Sponza.s_scene
   value3: Sponza
   value4:
     value0: true
@@ -196,20 +195,19 @@ value45:
     value2: true
     value3: true
     value4: true
-    value5: true
+    value5: 1
     value6: 1
     value7: 1
     value8: 1
     value9: 1
-    value10: 1
-    value11: 1
-    value12: 0.25
-    value13: 0
-    value14: 0.125
-    value15: 0.031199999153614044
-    value16: 29
-    value17: 0.75
-    value18:
+    value10: 0.5
+    value11: 0.14000000059604645
+    value12: 0
+    value13: 0.125
+    value14: 0.031199999153614044
+    value15: 29
+    value16: 0.75
+    value17:
       value0: ""
       value1: 2
       value2: true
@@ -230,8 +228,8 @@ value45:
       value17: 1
       value18: 0
       value19: 2
-      value20: 2
-    value19:
+      value20: 0
+    value18:
       value0: ""
       value1: 1
       value2: 0.10000000149011612
@@ -252,4 +250,4 @@ value45:
         id: 2147483652
         data:
           value0: 4
-value46: 0
+value45: 0

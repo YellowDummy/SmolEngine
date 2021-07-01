@@ -1,5 +1,5 @@
 ## Level-Editor
-![SmolEngine](https://i.imgur.com/usic3JV.png)
+![SmolEngine](https://i.imgur.com/f09k9sF.png)
 ![SmolEngine](https://i.imgur.com/dEXmEGZ.png)
 
 The engine is still at a very early stage and is not ready for production.

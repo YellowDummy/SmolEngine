@@ -52,6 +52,45 @@ layout(std140, binding = 34) uniform BloomProperties
 									0.0043538453346397,
 									0.0024499299678342);
 
+
+vec3 applyBloom(vec4 color)
+{
+    float emission = texture(materialsMap, inUV).w;
+    float strength = emission * bloomState.strength;
+    if(color.a == 0.0) // background
+    {
+        strength = 1.0;
+    }
+
+	vec2 tex_offset = 1.0 / textureSize(bloomSampler, 0); 
+    vec3 result = texture(bloomSampler, inUV).rgb * weights[0];
+    for (int i = 0; i < weights.length(); i++)
+	{
+	     result += texture(bloomSampler, inUV + vec2(0.0, tex_offset.y * i)).rgb * weights[i] * strength;
+        result += texture(bloomSampler, inUV - vec2(0.0, tex_offset.y * i)).rgb * weights[i] * strength;
+    }
+
+    return vec3(result * bloomState.scale);
+}
+
+vec3 applyMask(vec3 bloom)
+{
+    vec4 maskColor = vec4(0.0);
+    if(is_dirt_mask == 1)
+    {
+        if(bloom.r > 0.1 && bloom.g > 0.1 && bloom.b > 0.1)
+        {
+            maskColor = texture(DirtSampler, inUV) * vec4(bloom, 1) * mask_intensity;
+        }
+        else
+        {
+            maskColor = texture(DirtSampler, inUV) * mask_normal_intensity;
+        }
+    }
+
+    return maskColor.rgb;
+}
+
 void main() 
 {
     vec4 color = texture(colorSampler, inUV);
@@ -59,39 +98,11 @@ void main()
     {
         case 1:
         {
-            vec4 bloom = vec4(0.0);
-            float strength = texture(materialsMap, inUV).w;
-            vec4 bloomColor = texture(bloomSampler, inUV);
-            if(bloomColor.a == 0.0)
-            {
-                strength = 1.0;
-            }
-
-            strength = bloomState.strength * strength;
-	        vec2 tex_offset = 1.0 / textureSize(bloomSampler, 0); 
-            vec3 result = bloomColor.rgb * weights[0];
-            for (int i = 0; i < weights.length(); i++)
-	        {
-		         result += texture(bloomSampler, inUV + vec2(0.0, tex_offset.y * i)).rgb * weights[i] * strength;
-                result += texture(bloomSampler, inUV - vec2(0.0, tex_offset.y * i)).rgb * weights[i] * strength;
-            }
-
-            bloom = vec4(result * bloomState.scale, 1.0);
-            vec4 dirtColor = vec4(0.0);
-            if(is_dirt_mask == 1)
-            {
-                if(bloom.r > 0.1 && bloom.g > 0.1 && bloom.b > 0.1)
-                {
-                    dirtColor = texture(DirtSampler, inUV) * bloom * mask_intensity;
-                }
-                else
-                {
-                    dirtColor = texture(DirtSampler, inUV) * mask_normal_intensity;
-                }
-            }
+            vec3 bloom = applyBloom(color);
+            vec3 dirtColor = applyMask(bloom);
             
             bloom += dirtColor;
-            color = vec4(color.rgb + bloom.rgb, 1.0);
+            color = vec4(color.rgb + bloom, 1.0);
             break;
         }
     }

@@ -35,8 +35,7 @@ layout (location = 3)  in vec2 v_UV;
 layout (location = 4)  in vec4 v_ShadowCoord;
 layout (location = 5)  in vec4 v_WorldPos;
 layout (location = 6)  in vec3 v_Tangent;
-layout (location = 7)  in float v_Depth;
-layout (location = 8)  flat in MaterialData v_Material;
+layout (location = 7)  flat in MaterialData v_Material;
 
 // Out
 layout (location = 0) out vec4 out_color;
@@ -109,8 +108,8 @@ void main()
     float ao = v_Material.UseAOTex == 1 ? fetchAOMap() : 1.0;				
 
     out_color = albedro;
-    out_positions = vec4(v_FragPos, v_Depth);
-    out_normals = vec4(N, float(v_Material.UseAOTex));
+    out_positions = vec4(v_FragPos, 1.0);
+    out_normals = vec4(N, 1.0);
     out_materials = vec4(metallic, roughness, ao, emissive);
     out_shadowCoord = v_ShadowCoord;
 }
