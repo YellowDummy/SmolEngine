@@ -1,7 +1,5 @@
-#include "..\..\smolengine\include\Libraries\Frostium3D\ImGUI\ImGuiExtension.h"
-#include "..\..\smolengine\include\Libraries\Frostium3D\ImGUI\ImGuiExtension.h"
+#include "ImGuiExtension.h"
 #include "stdafx.h"
-#include "ImGUI/ImGuiExtension.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

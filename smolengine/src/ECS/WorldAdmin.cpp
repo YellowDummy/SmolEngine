@@ -24,8 +24,6 @@
 #include <Frostium3D/Renderer2D.h>
 #include <Frostium3D/MaterialLibrary.h>
 #include <Frostium3D/Utils/Utils.h>
-#include <Frostium3D/Common/Mesh.h>
-#include <Frostium3D/Common/Texture.h>
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>

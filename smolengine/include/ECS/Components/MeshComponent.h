@@ -5,7 +5,7 @@
 #ifndef FROSTIUM_SMOLENGINE_IMPL
 #define FROSTIUM_SMOLENGINE_IMPL
 #endif
-#include <Frostium3D/Common/Mesh.h>
+#include <Frostium3D/Primitives/Mesh.h>
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>

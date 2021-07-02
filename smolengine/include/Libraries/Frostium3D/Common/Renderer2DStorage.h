@@ -2,9 +2,10 @@
 
 #include "GraphicsPipeline.h"
 
-#include "Common/Framebuffer.h"
+#include "Primitives/Framebuffer.h"
+#include "Primitives/Mesh.h"
+
 #include "Common/Text.h"
-#include "Common/Mesh.h"
 #include "Common/RendererShared.h"
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL

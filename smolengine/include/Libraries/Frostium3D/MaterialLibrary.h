@@ -1,6 +1,6 @@
 #pragma once
 #include "Common/Core.h"
-#include "Common/Texture.h"
+#include "Primitives/Texture.h"
 
 #include "Utils/GLM.h"
 

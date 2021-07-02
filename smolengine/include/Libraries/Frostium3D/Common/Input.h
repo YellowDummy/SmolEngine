@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common/Events.h"
-#include "InputCodes.h"
+#include "Common/InputCodes.h"
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 namespace SmolEngine

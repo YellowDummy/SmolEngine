@@ -6,10 +6,10 @@
 #endif
 
 #include "Common/GraphicsPipelineInfos.h"
-#include "Common/VertexArray.h"
-#include "Common/VertexBuffer.h"
-#include "Common/IndexBuffer.h"
 #include "Common/Common.h"
+#include "Primitives/VertexArray.h"
+#include "Primitives/VertexBuffer.h"
+#include "Primitives/IndexBuffer.h"
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 namespace SmolEngine

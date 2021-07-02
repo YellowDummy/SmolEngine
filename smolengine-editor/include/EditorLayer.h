@@ -14,7 +14,7 @@
 #include <Frostium3D/Libraries/imgizmo/src/ImGuizmo.h>
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
 #include <Frostium3D/EditorCamera.h>
-#include <Frostium3D/Common/Texture.h>
+#include <Frostium3D/Primitives/Texture.h>
 
 namespace SmolEngine
 {

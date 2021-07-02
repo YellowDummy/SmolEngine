@@ -3,7 +3,8 @@
 
 #include <ECS/Systems/JobsSystem.h>
 #include <Core/CommandUtils.h>
-#include <Frostium3D/Common/Texture.h>
+#include <Frostium3D/Primitives/Texture.h>
+
 #include <imgui/imgui.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 

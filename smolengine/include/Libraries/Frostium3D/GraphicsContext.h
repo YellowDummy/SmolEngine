@@ -11,16 +11,17 @@
 #include "Common/RendererShared.h"
 #include "Common/Core.h"
 #include "Common/Window.h"
-#include "Common/Mesh.h"
-#include "Common/CubeMap.h"
-#include "Common/Framebuffer.h"
 #include "Common/Events.h"
-#include "Common/Texture.h"
 #include "Common/Flags.h"
 #include "Common/Camera.h"
 
+#include "Primitives/Mesh.h"
+#include "Primitives/CubeMap.h"
+#include "Primitives/Framebuffer.h"
+#include "Primitives/Texture.h"
+
 #include "Utils/Frustum.h"
-#include "ImGUI/ImGuiContext.h"
+#include "Extensions/ImGuiContext.h"
 
 #include <functional>
 

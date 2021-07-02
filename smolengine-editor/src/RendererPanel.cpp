@@ -4,7 +4,7 @@
 #include "EditorLayer.h"
 #include "ECS/Components/SceneStateComponent.h"
 
-#include <Frostium3D/ImGUI/ImGuiExtension.h>
+#include "ImGuiExtension.h"
 
 namespace SmolEngine
 {

@@ -8,6 +8,11 @@
 #include <string>
 #include <limits>
 
+namespace tinygltf
+{
+	class Model;
+}
+
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 namespace SmolEngine
 #else
@@ -91,6 +96,10 @@ namespace Frostium
 	public:
 
 		static bool Import(const std::string& filePath, ImportedDataGlTF* out_data);
+		static bool ImportFromString(const std::string& src, ImportedDataGlTF* out_data);
 
+	private:
+		
+		static void Import(tinygltf::Model* model, ImportedDataGlTF* out_data);
 	};
 }

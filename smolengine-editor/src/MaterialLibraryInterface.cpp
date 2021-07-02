@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "MaterialLibraryInterface.h"
 #include "EditorLayer.h"
+#include "ImGuiExtension.h"
 
 #include "ECS/Systems/JobsSystem.h"
 
 #include <imgui/imgui.h>
-#include <Frostium3D/ImGUI/ImGuiExtension.h>
 #include <Frostium3D/Utils/Utils.h>
 #include <Frostium3D/GraphicsPipeline.h>
 #include <Frostium3D/GraphicsContext.h>

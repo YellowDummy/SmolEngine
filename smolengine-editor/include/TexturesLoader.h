@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Core.h>
-#include <Frostium3D/Common/Texture.h>
+
+#include <Frostium3D/Primitives/Texture.h>
 
 namespace SmolEngine
 {

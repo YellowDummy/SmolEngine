@@ -2,9 +2,10 @@
 
 #include "GraphicsPipeline.h"
 
-#include "Common/Framebuffer.h"
-#include "Common/Texture.h"
-#include "Common/Mesh.h"
+#include "Primitives/Framebuffer.h"
+#include "Primitives/Texture.h"
+#include "Primitives/Mesh.h"
+
 #include "Common/EnvironmentMap.h"
 #include "Common/RendererShared.h"
 #include "Common/Animation.h"

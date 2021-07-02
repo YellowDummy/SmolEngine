@@ -7,7 +7,7 @@
 #ifndef FROSTIUM_SMOLENGINE_IMPL
 #define FROSTIUM_SMOLENGINE_IMPL
 #endif
-#include <Frostium3D/Common/Texture.h>
+#include <Frostium3D/Primitives/Texture.h>
 
 namespace SmolEngine
 {

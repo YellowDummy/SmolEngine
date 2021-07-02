@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "EditorLayer.h"
+#include "ImGuiExtension.h"
+
 #include "Audio/AudioClip.h"
 
 #include "ECS/WorldAdmin.h"
@@ -23,7 +25,6 @@
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtc/matrix_transform.hpp>
 #include <Frostium3D/Utils/Utils.h>
-#include <Frostium3D/ImGUI/ImGuiExtension.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <Frostium3D/Libraries/glm/glm/gtx/quaternion.hpp>
 #include <Frostium3D/Libraries/glm/glm/gtx/matrix_decompose.hpp>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common/Framebuffer.h"
-#include "Common/CubeMap.h"
+#include "Primitives/Framebuffer.h"
+#include "Primitives/CubeMap.h"
 
 #include "GraphicsPipeline.h"
 #include <glm/glm.hpp>

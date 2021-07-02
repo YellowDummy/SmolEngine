@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Common/Core.h"
-#include "Common/Texture.h"
 #include "Common/SubTexture.h"
 #include "Common/BufferLayout.h"
+
+#include "Primitives/Texture.h"
 
 #include "EditorCamera.h"
 #include "Utils/GLM.h"

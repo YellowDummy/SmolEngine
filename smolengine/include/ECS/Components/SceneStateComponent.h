@@ -14,7 +14,7 @@
 #define FROSTIUM_SMOLENGINE_IMPL
 #endif
 #include <Frostium3D/DeferredRenderer.h>
-#include <Frostium3D/Common/CubeMap.h>
+#include <Frostium3D/Primitives/CubeMap.h>
 
 namespace SmolEngine
 {
