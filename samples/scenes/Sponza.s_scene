@@ -9,7 +9,7 @@ value7: 4
 value8: 1
 value9:
   value0: 1
-  value1: DefaultActor0
+  value1: Sponza
   value2: Default
   value3: true
   value4: false
@@ -201,7 +201,7 @@ value44:
     value8: 1
     value9: 1
     value10: 0.5
-    value11: 0.14000000059604645
+    value11: 0.5
     value12: 0
     value13: 0.125
     value14: 0.031199999153614044

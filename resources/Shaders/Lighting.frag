@@ -5,7 +5,6 @@ layout (location = 0) in vec2 inUV;
 // Out
 layout (location = 0) out vec4 outColor;
 layout (location = 1) out vec4 outBrightness;
-layout (location = 2) out vec4 outOcclusion;
 
 // Samplers
 layout (binding = 1) uniform sampler2D shadowMap;
@@ -327,8 +326,7 @@ void main()
     if(texColor.w == 0.0)
     {
 	    outColor = vec4(texColor.rgb, 1.0);
-	    outBrightness = outColor;
-		outOcclusion = vec4(0);
+	    outBrightness = vec4(outColor.rgb, 0.5 * bloomState.strength);
         return;
     }
     
@@ -341,6 +339,7 @@ void main()
 
     float metallic = materials.x;
     float roughness = materials.y;
+	float emission = materials.a;
 
 	albedro = pow(albedro, vec3(2.2));
     vec3 V = normalize(sceneData.camPos.xyz - position.xyz);
@@ -410,11 +409,11 @@ void main()
 	//--------------------------------------------
 	// Color with manual exposure into attachment 0
 	outColor.rgb = vec3(1.0) - exp(-color.rgb * (bloomState.exposure));
-	outOcclusion = vec4(Lo, 1);
 
 	// Bright parts for bloom into attachment 1
-	float l = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	float l = dot(outColor.rgb, vec3(0.2126, 0.7152, 0.0722));
 	float threshold = bloomState.threshold;
-	outBrightness.rgb = (l > threshold) ? color : vec3(0.0);
-	outBrightness.a = 1.0;
+	outBrightness.rgb = (l > threshold) ? outColor.rgb : vec3(0.0);
+
+	outBrightness.a = emission * bloomState.strength;
 }

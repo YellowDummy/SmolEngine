@@ -493,6 +493,7 @@ namespace SmolEngine
 		auto& it = state->ActorNameSet.find(name);
 		if (it == state->ActorNameSet.end())
 		{
+			state->ActorNameSet.erase(oldName);
 			state->ActorNameSet[name] = actor;
 			actor->GetInfo()->Name = name;
 			return true;

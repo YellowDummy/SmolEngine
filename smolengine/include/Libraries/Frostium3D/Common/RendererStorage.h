@@ -102,7 +102,7 @@ namespace Frostium
 	{
 		float Exposure = 1.0f;
 		float Threshold = 0.10f;
-		float Scale = 1.0f;
+		float Scale = 0.5f;
 		float Strength = 0.5f;
 	};
 
@@ -216,13 +216,11 @@ namespace Frostium
 		GraphicsPipeline                           p_DepthPass = {};
 		GraphicsPipeline                           p_Grid = {};
 		GraphicsPipeline                           p_Debug = {};
-		GraphicsPipeline                           p_FXAA = {};
 		GraphicsPipeline                           p_Mask = {};
 		// Framebuffers	
 		Framebuffer*                               f_Main = nullptr;
 		Framebuffer                                f_GBuffer= {};
 		Framebuffer                                f_Lighting = {};
-		Framebuffer                                f_FXAA = {};
 		Framebuffer                                f_Bloom = {};
 		Framebuffer                                f_Depth = {};
 		// Masks

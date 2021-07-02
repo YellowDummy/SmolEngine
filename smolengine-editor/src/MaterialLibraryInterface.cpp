@@ -375,12 +375,21 @@ namespace SmolEngine
 				std::string& path = *(std::string*)payload->Data;
 				if (EditorLayer::FileExtensionCheck(path, ".png") || EditorLayer::FileExtensionCheck(path, ".jpg"))
 				{
-					texture_path = path;
-					used = true;
+					auto& it = m_Textures.find(path);
+					if (it == m_Textures.end())
+					{
+						texture_path = path;
+						used = true;
 
-					Ref<Texture> tex = std::make_shared<Texture>();
-					Texture::Create(path, tex.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
-					m_Textures[path] = tex;
+						Ref<Texture> tex = std::make_shared<Texture>();
+						Texture::Create(path, tex.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
+						m_Textures[path] = tex;
+					}
+					else
+					{
+						texture_path = path;
+						used = true;
+					}
 				}
 			}
 
