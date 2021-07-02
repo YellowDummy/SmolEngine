@@ -39,7 +39,7 @@ namespace SmolEngine
 		bool                         LoadSceneRuntime(const std::string& path);
 		bool                         CreateScene(const std::string& filePath);
 		bool                         SaveScene(const std::string& filePath);
-		bool                         LoadScene(const std::string& filePath);
+		bool                         LoadScene(const std::string& filePath, bool reload = false);
 		bool                         SwapScene(uint32_t index);
 								     
 		void                         SetBeginSceneInfo(BeginSceneInfo* info);

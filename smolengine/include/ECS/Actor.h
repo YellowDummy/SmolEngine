@@ -43,7 +43,6 @@ namespace SmolEngine
 		Actor*                       FindActorByID(uint32_t id);
 
 		// Setters
-		bool                         SetParent(Actor* parent);
 		bool                         SetChild(Actor* child);
 		bool                         SetName(const std::string& name);
 		bool                         RemoveChildAtIndex(uint32_t index);

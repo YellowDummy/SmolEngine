@@ -31,6 +31,7 @@ namespace SmolEngine
 	struct MeshComponent;
 	struct DirectionalLightComponent;
 	struct PointLightComponent;
+	struct SpotLightComponent;
 	struct RigidbodyComponent;
 	struct StaticbodyComponent;
 
@@ -81,9 +82,9 @@ namespace SmolEngine
 		void DrawInspector();
 		void DrawHierarchy();
 		void DrawMeshComponent(MeshComponent* meshComponent);
-		void DrawDirectionalLightComponent(DirectionalLightComponent* light);
 		void DrawMeshInspector(bool& show);
 		void DrawPointLightComponent(PointLightComponent* light);
+		void DrawSpotLightComponent(SpotLightComponent* light);
 		void DrawRigidBodyComponent(RigidbodyComponent* component);
 
 		void DrawComponents();

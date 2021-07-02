@@ -117,7 +117,6 @@
     <ClInclude Include="include\ECS\Components\BehaviourComponent.h" />
     <ClInclude Include="include\ECS\Components\CameraComponent.h" />
     <ClInclude Include="include\ECS\Components\CanvasComponent.h" />
-    <ClInclude Include="include\ECS\Components\DirectionalLightComponent.h" />
     <ClInclude Include="include\ECS\Components\HeadComponent.h" />
     <ClInclude Include="include\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\MeshComponent.h" />
@@ -133,6 +132,7 @@
     <ClInclude Include="include\ECS\Components\Singletons\ProjectConfigSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\ScriptingSystemStateSComponent.h" />
     <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h" />
+    <ClInclude Include="include\ECS\Components\SpotLightComponent.h" />
     <ClInclude Include="include\ECS\Components\Texture2DComponent.h" />
     <ClInclude Include="include\ECS\Components\TransformComponent.h" />
     <ClInclude Include="include\ECS\ComponentsCore.h" />

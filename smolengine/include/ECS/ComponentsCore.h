@@ -11,7 +11,7 @@
 #include "ECS/Components/Texture2DComponent.h"
 #include "ECS/Components/TransformComponent.h"
 #include "ECS/Components/MeshComponent.h"
-#include "ECS/Components/DirectionalLightComponent.h"
+#include "ECS/Components/SpotLightComponent.h"
 #include "ECS/Components/PointLightComponent.h"
 #include "ECS/Components/SceneStateComponent.h"
 #include "ECS/Components/RigidbodyComponent.h"

@@ -79,26 +79,44 @@ namespace SmolEngine
 			{
 				const auto& [transform, comp] = pGroup.get<TransformComponent, PointLightComponent>(entity);
 
-				if (comp.Light.IsActive)
+				if (comp.IsActive == 1)
 				{
-					comp.Light.Position = glm::vec4(transform.WorldPos, 1.0);
-					DeferredRenderer::SubmitPointLight(&comp.Light);
+					comp.Position = glm::vec4(transform.WorldPos, 1.0);
+					DeferredRenderer::SubmitPointLight(dynamic_cast<PointLight*>(&comp));
 				}
 			}
 		}
 
-		// Directional Lights
+		// Point Lights
 		{
-			bool shadows_casted = false;
-			const auto& dView = reg->view<DirectionalLightComponent>();
-			for (const auto& entity : dView)
+			const auto& pGroup = reg->view<TransformComponent, SpotLightComponent>();
+			for (const auto& entity : pGroup)
 			{
-				auto& component = dView.get<DirectionalLightComponent>(entity);
-				DeferredRenderer::SubmitDirLight(&component.Light);
+				const auto& [transform, comp] = pGroup.get<TransformComponent, SpotLightComponent>(entity);
+
+				if (comp.IsActive == 1)
+				{
+					comp.Position = glm::vec4(transform.WorldPos, 1.0);
+					DeferredRenderer::SubmitSpotLight(dynamic_cast<SpotLight*>(&comp));
+				}
+			}
+		}
+
+		// 2D Lights
+		{
+			const auto& group = reg->view<TransformComponent, Light2DSourceComponent>();
+			for (const auto& entity : group)
+			{
+				const auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
+				if (light2D.IsEnabled)
+				{
+					transform.WorldPos = +glm::vec3(light2D.Offset, 0);
+					Renderer2D::SubmitLight2D(transform.WorldPos, light2D.Color, light2D.Radius, light2D.Intensity);
+				}
 			}
 		}
 		
-		// 2D Textures
+		// Sprites
 		{
 			const auto& group = reg->view<TransformComponent, Texture2DComponent>();
 			for (const auto& entity : group)
@@ -110,20 +128,6 @@ namespace SmolEngine
 				{
 					Renderer2D::SubmitSprite(transform.WorldPos,
 						transform.Scale, transform.Rotation, texture2D.LayerIndex, texture2D.Texture.get(), texture2D.Color);
-				}
-			}
-		}
-
-		// 2D Point Light
-		{
-			const auto& group = reg->view<TransformComponent, Light2DSourceComponent>();
-			for (const auto& entity : group)
-			{
-				const auto& [transform, light2D] = group.get<TransformComponent, Light2DSourceComponent>(entity);
-				if (light2D.IsEnabled)
-				{
-					transform.WorldPos = +glm::vec3(light2D.Offset, 0);
-					Renderer2D::SubmitLight2D(transform.WorldPos, light2D.Color, light2D.Radius, light2D.Intensity);
 				}
 			}
 		}

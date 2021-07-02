@@ -12,13 +12,11 @@
 
 namespace SmolEngine
 {
-	struct PointLightComponent: public BaseComponent
+	struct PointLightComponent: public BaseComponent, PointLight
 	{
 		PointLightComponent() = default;
 		PointLightComponent(uint32_t id)
-			:BaseComponent(id) {}
-
-		PointLight Light{};
+			:BaseComponent(id), PointLight() {}
 				      
 	private:
 
@@ -27,12 +25,12 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Light.Color.r, Light.Color.g, Light.Color.b, Light.Color.a,
-				Light.Position.x, Light.Position.y, Light.Position.z, Light.Position.w,
-				Light.Bias,
-				Light.Intensity, 
-				Light.IsActive,
-				Light.IsCastShadows,
+			archive(Color.r, Color.g, Color.b, Color.a,
+				Position.x, Position.y, Position.z, Position.w,
+				Raduis,
+				Bias,
+				Intensity, 
+				IsActive,
 				ComponentID);
 		}
 	};

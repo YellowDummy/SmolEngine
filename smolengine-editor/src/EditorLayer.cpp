@@ -379,7 +379,8 @@ namespace SmolEngine
 
 					if (FileExtensionCheck(path, ".s_scene"))
 					{
-						m_World->LoadScene(path);
+						bool reload = m_World->GetActiveScene()->m_State->FilePath == path;
+						m_World->LoadScene(path, reload);
 						m_SelectedActor = nullptr;
 					}
 
@@ -968,20 +969,6 @@ namespace SmolEngine
 		ImGui::NewLine();
 	}
 
-	void EditorLayer::DrawDirectionalLightComponent(DirectionalLightComponent* comp)
-	{
-		glm::vec3* dir = (glm::vec3*)&comp->Light.Direction;
-		bool* cast_shadow = (bool*)&comp->Light.IsCastShadows;
-		bool* is_active = (bool*)&comp->Light.IsActive;
-
-		ImGui::Extensions::CheckBox("Use", *is_active);
-		ImGui::Extensions::CheckBox("Cast Shadows", *cast_shadow);
-
-		ImGui::Extensions::InputFloat("Intensity", comp->Light.Intensity);
-		ImGui::Extensions::DragFloat3Base("Direction", *dir);
-		ImGui::Extensions::ColorInput4("Color", comp->Light.Color);
-	}
-
 	void EditorLayer::DrawMeshInspector(bool& show)
 	{
 		auto* comp = m_World->GetActiveScene()->GetComponent<MeshComponent>(m_SelectedActor);
@@ -1052,13 +1039,27 @@ namespace SmolEngine
 
 	void EditorLayer::DrawPointLightComponent(PointLightComponent* comp)
 	{
-		bool* cast_shadow = (bool*)&comp->Light.IsCastShadows;
-		bool* is_active = (bool*)&comp->Light.IsActive;
+		bool* is_active = (bool*)&comp->IsActive;
 
 		ImGui::Extensions::CheckBox("Enabled", *is_active);
-		ImGui::Extensions::InputFloat("Exposure", comp->Light.Intensity);
-		ImGui::Extensions::InputFloat("Radius", comp->Light.Raduis);
-		ImGui::Extensions::ColorInput4("Color", comp->Light.Color);
+		ImGui::Extensions::InputFloat("Exposure", comp->Intensity);
+		ImGui::Extensions::InputFloat("Radius", comp->Raduis);
+		ImGui::Extensions::ColorInput4("Color", comp->Color);
+	}
+
+	void EditorLayer::DrawSpotLightComponent(SpotLightComponent* light)
+	{
+		bool* is_active = (bool*)&light->IsActive;
+		glm::vec3* dir = (glm::vec3*)&light->Direction;
+
+		ImGui::Extensions::CheckBox("Enabled", *is_active);
+		ImGui::Extensions::InputFloat3Base("Direction", *dir);
+		ImGui::Extensions::InputFloat("Exposure", light->Intensity);
+		ImGui::Extensions::InputFloat("CutOff", light->CutOff);
+		ImGui::Extensions::InputFloat("Outer CutOff", light->OuterCutOff);
+		ImGui::Extensions::InputFloat("Bias", light->Bias);
+		ImGui::Extensions::InputFloat("Radius", light->Raduis);
+		ImGui::Extensions::ColorInput4("Color", light->Color);
 	}
 
 	void EditorLayer::DrawRigidBodyComponent(RigidbodyComponent* component)
@@ -1228,16 +1229,6 @@ namespace SmolEngine
 				}
 			}
 
-			if (IsCurrentComponent<DirectionalLightComponent>(i))
-			{
-				if (ImGui::CollapsingHeader("Directional Light"))
-				{
-					ImGui::NewLine();
-					auto component = m_World->GetActiveScene()->GetComponent<DirectionalLightComponent>(m_SelectedActor);
-					DrawDirectionalLightComponent(component);
-				}
-			}
-
 			if (IsCurrentComponent<PointLightComponent>(i))
 			{
 				if (ImGui::CollapsingHeader("Point Light"))
@@ -1245,6 +1236,16 @@ namespace SmolEngine
 					ImGui::NewLine();
 					auto component = m_World->GetActiveScene()->GetComponent<PointLightComponent>(m_SelectedActor);
 					DrawPointLightComponent(component);
+				}
+			}
+
+			if (IsCurrentComponent<SpotLightComponent>(i))
+			{
+				if (ImGui::CollapsingHeader("Spot Light"))
+				{
+					ImGui::NewLine();
+					auto component = m_World->GetActiveScene()->GetComponent<SpotLightComponent>(m_SelectedActor);
+					DrawSpotLightComponent(component);
 				}
 			}
 
@@ -1318,21 +1319,21 @@ namespace SmolEngine
 			{
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("PointLight"))
+				if (ImGui::MenuItem("Spot Light"))
+				{
+					m_World->GetActiveScene()->AddComponent<SpotLightComponent>(m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Point Light"))
 				{
 					m_World->GetActiveScene()->AddComponent<PointLightComponent>(m_SelectedActor);
 					ImGui::CloseCurrentPopup();
 				}
 
-				if (ImGui::MenuItem("PointLight 2D"))
+				if (ImGui::MenuItem("2D Light"))
 				{
 					m_World->GetActiveScene()->AddComponent<Light2DSourceComponent>(m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Directional Light"))
-				{
-					m_World->GetActiveScene()->AddComponent<DirectionalLightComponent>(m_SelectedActor);
 					ImGui::CloseCurrentPopup();
 				}
 			}

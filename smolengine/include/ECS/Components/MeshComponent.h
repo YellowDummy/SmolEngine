@@ -23,6 +23,7 @@ namespace SmolEngine
 		int                                  ShadowType = 2;	                 
 		Ref<Mesh>                            Mesh = nullptr;
 		std::string                          ModelPath = "";
+
 		struct MaterialData
 		{
 			std::string                      Path = "";
@@ -35,7 +36,6 @@ namespace SmolEngine
 			}
 
 		};				                     
-
 		std::vector<MaterialData>            MaterialsData;
 
 	private:

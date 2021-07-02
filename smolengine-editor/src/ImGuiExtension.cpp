@@ -134,17 +134,19 @@ namespace ImGui
 		ImGui::PopID();
 	}
 
-	void Extensions::DragFloat3Base(const std::string& label, glm::vec3& vec3, float pos, const std::string& additionalID, float text_pos)
+	bool Extensions::DragFloat3Base(const std::string& label, glm::vec3& vec3, float pos, const std::string& additionalID, float text_pos)
 	{
+		bool use = false;
 		ImGui::PushID(std::string(label + additionalID).c_str());
 
 		ImGui::SetCursorPosX(text_pos);
 		ImGui::TextUnformatted(label.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(pos);
-		ImGui::DragFloat3(std::string("##C" + label).c_str(), glm::value_ptr(vec3));
+		use = ImGui::DragFloat3(std::string("##C" + label).c_str(), glm::value_ptr(vec3));
 
 		ImGui::PopID();
+		return use;
 	}
 
 	void Extensions::InputFloat2Base(const std::string& label, glm::vec2& vec2, float pos, const std::string& additionalID)

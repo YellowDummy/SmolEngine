@@ -198,8 +198,8 @@ namespace SmolEngine
 				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Rigidbody2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent, RigidbodyComponent>(output);
+				CanvasComponent, Rigidbody2DComponent, MeshComponent,
+				PointLightComponent, SpotLightComponent, SceneStateComponent, RigidbodyComponent>(output);
 		}
 
 		// Writing result to a file
@@ -239,8 +239,8 @@ namespace SmolEngine
 				HeadComponent, CameraComponent,
 				BehaviourComponent, Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
-				CanvasComponent, Rigidbody2DComponent, MeshComponent, DirectionalLightComponent,
-				PointLightComponent, SceneStateComponent, RigidbodyComponent>(regisrtyInput);
+				CanvasComponent, Rigidbody2DComponent, MeshComponent,
+				PointLightComponent, SpotLightComponent, SceneStateComponent, RigidbodyComponent>(regisrtyInput);
 		}
 
 		// Updates sets

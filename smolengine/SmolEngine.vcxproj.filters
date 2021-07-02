@@ -351,9 +351,6 @@
     <ClInclude Include="include\ECS\Components\CanvasComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\Components\DirectionalLightComponent.h">
-      <Filter>include\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="include\ECS\Components\HeadComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
@@ -1638,6 +1635,7 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Components\SpotLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">

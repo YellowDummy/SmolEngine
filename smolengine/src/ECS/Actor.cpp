@@ -60,54 +60,33 @@ namespace SmolEngine
 		return GetHead()->ComponentsCount;
 	}
 
-	bool Actor::SetParent(Actor* parent) // Note: 
-	{
-		if (parent != nullptr)
-		{
-			// Child
-			{
-				HeadComponent* info = GetInfo();
-				uint32_t pID = parent->GetID();
-				Actor* pNode = FindActorByID(pID);
-
-				info->Parent = pNode;
-				info->ParentID = pID;
-			}
-
-			// Parent
-			{
-				HeadComponent* info = parent->GetInfo();
-				uint32_t childID = GetID();
-				Actor* childNode = this;
-
-				info->ChildsIDs.emplace_back(childID);
-				info->Childs.emplace_back(childNode);
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
 	bool Actor::SetChild(Actor* child)
 	{
 		if (child != nullptr)
 		{
 			HeadComponent* p_info = GetInfo();
+			uint32_t childID = child->GetID();
+			Actor* childNode = FindActorByID(childID);
+			bool found = std::find(p_info->Childs.begin(), p_info->Childs.end(), childNode) != p_info->Childs.end();
+			if (found == false)
 			{
-				uint32_t childID = child->GetID();
-				Actor* childNode = FindActorByID(childID);
-
+				HeadComponent* c_info = child->GetInfo();
+				// Removes old parent
+				if (c_info->Parent != nullptr)
+				{
+					HeadComponent* old_parent_info = c_info->Parent->GetInfo();
+					auto& parent_childs = old_parent_info->Childs;
+					parent_childs.erase(std::remove(parent_childs.begin(), parent_childs.end(), childNode));
+					c_info->Parent = nullptr;
+				}
+				// Adds new parent
+				c_info->ParentID = GetID();
+				c_info->Parent = this;
+				// Adds new child
 				p_info->ChildsIDs.emplace_back(childID);
 				p_info->Childs.emplace_back(childNode);
+				return true;
 			}
-
-			HeadComponent* c_info = child->GetInfo();
-			c_info->ParentID = GetID();
-			c_info->Parent = this;
-
-			return true;
 		}
 
 		return false;

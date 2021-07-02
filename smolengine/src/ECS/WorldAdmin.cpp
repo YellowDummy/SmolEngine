@@ -177,7 +177,7 @@ namespace SmolEngine
 		}
 	}
 
-	bool WorldAdmin::LoadScene(const std::string& filePath)
+	bool WorldAdmin::LoadScene(const std::string& filePath, bool is_reload)
 	{
 		std::string path = filePath;
 		std::ifstream file(path);
@@ -188,6 +188,7 @@ namespace SmolEngine
 		}
 
 		// Add default materials and reset renderer
+		if(is_reload == false)
 		{
 			MaterialLibrary::GetSinglenton()->Reset();
 			DeferredRenderer::ResetStates();
@@ -238,7 +239,7 @@ namespace SmolEngine
 	bool WorldAdmin::LoadLastSceneState()
 	{
 		SceneStateComponent* sceneState = GetActiveScene()->GetSceneState();
-		return LoadScene(sceneState->FilePath);
+		return LoadScene(sceneState->FilePath, true);
 	}
 
 	bool WorldAdmin::LoadSceneRuntime(const std::string& path)

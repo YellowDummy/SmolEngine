@@ -151,8 +151,9 @@ namespace SmolEngine
 		if (ValidateRigidBodyComponent(comp, actor))
 		{
 			TransformComponent* transform = actor->GetComponent<TransformComponent>();
-			comp->Body.Create(&comp->CreateInfo, transform->WorldPos, transform->Rotation);
-			PhysicsSystem::AttachBodyToActiveScene(&comp->Body);
+			comp->Create(&comp->CreateInfo, transform->WorldPos, transform->Rotation);
+
+			PhysicsSystem::AttachBodyToActiveScene(dynamic_cast<RigidActor*>(comp));
 			return true;
 		}
 

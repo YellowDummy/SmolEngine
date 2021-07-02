@@ -16,35 +16,35 @@ namespace SmolEngine
 {
 	void PhysicsSystem::SetLinearVelocity(RigidbodyComponent* component, const glm::vec3& dir)
 	{
-		btRigidBody* rb = component->Body.m_Body;
+		btRigidBody* rb = component->m_Body;
 		rb->activate(true);
 		rb->setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
 	}
 
 	void PhysicsSystem::SetAngularFactor(RigidbodyComponent* component, const glm::vec3& axis)
 	{
-		btRigidBody* rb = component->Body.m_Body;
+		btRigidBody* rb = component->m_Body;
 		rb->activate(true);
 		rb->setAngularFactor(btVector3(axis.x, axis.y, axis.z));
 	}
 
 	void PhysicsSystem::AddForce(RigidbodyComponent* component, const glm::vec3& dir)
 	{
-		btRigidBody* rb = component->Body.m_Body;
+		btRigidBody* rb = component->m_Body;
 		rb->activate(true);
 		rb->applyCentralForce(btVector3(dir.x, dir.y, dir.z));
 	}
 
 	void PhysicsSystem::AddImpulse(RigidbodyComponent* component, const glm::vec3& dir)
 	{
-		btRigidBody* rb = component->Body.m_Body;
+		btRigidBody* rb = component->m_Body;
 		rb->activate(true);
 		rb->applyCentralImpulse(btVector3(dir.x, dir.y, dir.z));
 	}
 
 	void PhysicsSystem::AddTorque(RigidbodyComponent* component, const glm::vec3& torque)
 	{
-		btRigidBody* rb = component->Body.m_Body;
+		btRigidBody* rb = component->m_Body;
 		rb->activate(true);
 		rb->applyTorque(btVector3(torque.x, torque.y, torque.z));
 	}
@@ -57,9 +57,9 @@ namespace SmolEngine
 		for (const auto& entity : dynamic_group)
 		{
 			const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, RigidbodyComponent>(entity);
-			auto body = &rigidbodyComponent.Body;
-			body->Create(&rigidbodyComponent.CreateInfo, transform.WorldPos, transform.Rotation);
-			AttachBodyToActiveScene(body);
+			rigidbodyComponent.Create(&rigidbodyComponent.CreateInfo, transform.WorldPos, transform.Rotation);
+
+			AttachBodyToActiveScene(dynamic_cast<RigidActor*>(&rigidbodyComponent));
 		}
 	}
 
@@ -89,7 +89,7 @@ namespace SmolEngine
 		const auto& dynamic_group = reg->view<RigidbodyComponent>();
 		for (const auto& entity : dynamic_group)
 		{
-			auto& body = dynamic_group.get<RigidbodyComponent>(entity).Body;
+			auto& body = dynamic_group.get<RigidbodyComponent>(entity);
 
 			btCollisionShape* shape = body.m_Shape;
 			delete shape;
@@ -115,7 +115,7 @@ namespace SmolEngine
 
 			JobsSystem::Schedule([&transform, &rigidbodyComponent]()
 			{
-				btRigidBody* body = rigidbodyComponent.Body.m_Body;
+				btRigidBody* body = rigidbodyComponent.m_Body;
 				btTransform btTransf;
 				body->getMotionState()->getWorldTransform(btTransf);
 

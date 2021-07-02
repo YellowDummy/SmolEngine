@@ -9,14 +9,13 @@ namespace SmolEngine
 {
 	class Actor;
 
-	struct RigidbodyComponent : public BaseComponent
+	struct RigidbodyComponent : public BaseComponent, RigidBody
 	{
 		RigidbodyComponent() = default;
 		RigidbodyComponent(uint32_t id)
-			:BaseComponent(id) {}
+			:BaseComponent(id), RigidBody() {}
 
 		BodyCreateInfo  CreateInfo{};
-		RigidBody       Body{};
 
 	private:
 

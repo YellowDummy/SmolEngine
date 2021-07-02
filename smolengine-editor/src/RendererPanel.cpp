@@ -59,16 +59,17 @@ namespace SmolEngine
 							ImGui::Extensions::InputInt("Cirrus Clouds", *numCirrus, padding, "IBL", 12.0f);
 							ImGui::Extensions::InputInt("Cumulus Clouds", *numCumulus, padding, "IBL", 12.0f);
 
-							ImGui::Extensions::CheckBox("Update PBR Maps", environment.bGeneratePBRMaps, padding, "IBL", 12.0f);
+							ImGui::Extensions::CheckBox("Environment Map", environment.bGeneratePBRMaps, padding, "IBL", 12.0f);
 
+							ImGui::NewLine();
 							ImGui::SetCursorPosX(12.0f);
-							if (ImGui::Button("Update"))
+							if (ImGui::Button("Update", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 							{
 								DeferredRenderer::SetDynamicSkyboxProperties(environment.SkyProperties, environment.bGeneratePBRMaps);
 							}
 
-							ImGui::SameLine();
-							if (ImGui::Button("Reset"))
+							ImGui::SetCursorPosX(12.0f);
+							if (ImGui::Button("Reset", { ImGui::GetWindowWidth() - 20.0f, 30.0f }))
 							{
 								environment.SkyProperties = {};
 								DeferredRenderer::SetDynamicSkyboxProperties(environment.SkyProperties, true);
@@ -109,18 +110,54 @@ namespace SmolEngine
 							ImGui::NewLine();
 						}
 
-						if (ImGui::Extensions::CheckBox("Enabled", render_state.bIBL, padding, "IBL", 12.0f))
+						if (ImGui::Extensions::CheckBox("IBL", render_state.bIBL, padding, "IBL", 12.0f))
 							UpdateStates();
 
-						if (ImGui::Extensions::CheckBox("Show", render_state.bDrawSkyBox, padding, "IBL", 12.0f))
+						if (ImGui::Extensions::CheckBox("Skybox", render_state.bDrawSkyBox, padding, "IBL", 12.0f))
 							UpdateStates();
 
 						if (ImGui::Extensions::InputFloat("Strength", render_state.Lighting.IBLStrength, padding, "IBL", 12.0f))
 							UpdateStates();
 
-						if (ImGui::Extensions::ColorInput4("Ambient Color", render_state.Lighting.AmbientColor, padding, "IBL", 12.0f))
+						if (ImGui::Extensions::ColorInput4("Ambient", render_state.Lighting.AmbientColor, padding, "IBL", 12.0f))
 							UpdateStates();
 
+						ImGui::NewLine();
+						ImGui::Separator();
+						ImGui::NewLine();
+
+						{
+							glm::vec3* dir = (glm::vec3*) & pipline_state.DirLight.Direction;
+							bool* is_active = (bool*)&pipline_state.DirLight.IsActive;
+
+							if(ImGui::Extensions::CheckBox("Directional Light", *is_active, padding, "IBL", 12.0f))
+								UpdateStates();
+
+							if (ImGui::Extensions::Combo("Shadows", "None\0Hard\0Soft\0", pipline_state.ShadowsFlags, padding, "IBL", 12.0f))
+							{
+								ScenePipelineState::ShadowType type = (ScenePipelineState::ShadowType)pipline_state.ShadowsFlags;
+								switch (type)
+								{
+								case ScenePipelineState::ShadowType::None: pipline_state.DirLight.IsCastShadows = false; break;
+								case ScenePipelineState::ShadowType::Hard: pipline_state.DirLight.IsCastShadows = true; pipline_state.DirLight.IsUseSoftShadows = false; break;
+								case ScenePipelineState::ShadowType::Soft: pipline_state.DirLight.IsCastShadows = true; pipline_state.DirLight.IsUseSoftShadows = true; break;
+								}
+
+								UpdateStates();
+							}
+
+							if(ImGui::Extensions::InputFloat("Intensity", pipline_state.DirLight.Intensity, padding, "IBL", 12.0f))
+								UpdateStates();
+
+							if(ImGui::Extensions::DragFloat3Base("Direction", *dir, padding, "IBL", 12.0f))
+								UpdateStates();
+
+							if(ImGui::Extensions::ColorInput4("Color", pipline_state.DirLight.Color, padding, "IBL", 12.0f))
+								UpdateStates();
+						}
+
+						ImGui::NewLine();
+						ImGui::Separator();
 						ImGui::NewLine();
 					}
 
@@ -248,6 +285,8 @@ namespace SmolEngine
 	void RendererPanel::UpdateStates()
 	{
 		SceneStateComponent* state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
+
 		DeferredRenderer::SetRendererState(&state->PipelineState.State);
+		DeferredRenderer::SubmitDirLight(&state->PipelineState.DirLight);
 	}
 }

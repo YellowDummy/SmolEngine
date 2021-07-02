@@ -49,39 +49,85 @@ namespace SmolEngine
 
 	private:
 		friend class cereal::access;
+
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(CubeMapPath, eFormat, bGeneratePBRMaps, SkyProperties.AtmosphereRadius, SkyProperties.MieScale, SkyProperties.MieScatteringCoeff, SkyProperties.MieScatteringDirection,
-				SkyProperties.PlanetRadius, SkyProperties.RayleighScale, SkyProperties.RayleighScatteringCoeff.x, SkyProperties.RayleighScatteringCoeff.y, SkyProperties.RayleighScatteringCoeff.z,
-				SkyProperties.RayOrigin.x, SkyProperties.RayOrigin.y, SkyProperties.RayOrigin.z, SkyProperties.SunIntensity, SkyProperties.SunPosition.x, SkyProperties.SunPosition.y, SkyProperties.SunPosition.z,
-				SkyProperties.NumCirrusCloudsIterations, SkyProperties.NumCumulusCloudsIterations);
+			archive(CubeMapPath, eFormat, bGeneratePBRMaps, 
+				
+				SkyProperties.AtmosphereRadius,
+				SkyProperties.MieScale, 
+				SkyProperties.MieScatteringCoeff, 
+				SkyProperties.MieScatteringDirection,
+				SkyProperties.PlanetRadius, 
+				SkyProperties.RayleighScale, 
+				SkyProperties.RayleighScatteringCoeff.x, 
+				SkyProperties.RayleighScatteringCoeff.y,
+				SkyProperties.RayleighScatteringCoeff.z,
+				SkyProperties.RayOrigin.x, 
+				SkyProperties.RayOrigin.y,
+				SkyProperties.RayOrigin.z, 
+				SkyProperties.SunIntensity,
+				SkyProperties.SunPosition.x,
+				SkyProperties.SunPosition.y, 
+				SkyProperties.SunPosition.z,
+				SkyProperties.NumCirrusCloudsIterations, 
+				SkyProperties.NumCumulusCloudsIterations);
 		}
 	};
 
 	struct ScenePipelineState
 	{
-		// internal use
-		int                  PostProcessingFlag = 0;
-		int                  DebugViewFlag = 0;
-		int                  EnvironmentFlags = 0;
-		int                  FormatFlags = 0;
-	   
+		enum class ShadowType : int
+		{
+			None,
+			Hard,
+			Soft
+		};
+
+		ShadowType           eShadowType = ShadowType::None;
 		RendererState        State = {};
+		DirectionalLight     DirLight = {};
 		EnvironmentData      Environment = {};
 		Mask                 DirtMask = {};
 
 	private:
 
+		// internal use
+		int                  PostProcessingFlag = 0;
+		int                  DebugViewFlag = 0;
+		int                  EnvironmentFlags = 0;
+		int                  FormatFlags = 0;
+		int                  ShadowsFlags = 0;
+
 		friend class cereal::access;
+		friend class RendererPanel;
+
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(State.bDrawGrid, State.bIBL,State.bDrawSkyBox, State.bFXAA, State.bBloom,
+			archive(eShadowType, 
+				
+				State.bDrawGrid, State.bIBL, State.bDrawSkyBox, State.bFXAA, State.bBloom,
+
 				State.Lighting.AmbientColor.r, State.Lighting.AmbientColor.g, State.Lighting.AmbientColor.b,
-				State.Lighting.IBLStrength, State.Bloom.Exposure, State.Bloom.Scale, State.Bloom.Strength,
-				State.Bloom.Threshold, State.FXAA.EdgeThresholdMax, State.FXAA.EdgeThresholdMin, State.FXAA.Iterations, State.FXAA.SubPixelQuality, 
-				Environment, DirtMask);
+				State.Lighting.IBLStrength, 
+
+				Environment, DirtMask,
+
+				State.Bloom.Exposure, State.Bloom.Scale, State.Bloom.Strength, State.Bloom.Threshold, 
+				State.FXAA.EdgeThresholdMax, State.FXAA.EdgeThresholdMin, State.FXAA.Iterations, State.FXAA.SubPixelQuality,
+
+				DirLight.Color.r, DirLight.Color.g, DirLight.Color.b, DirLight.Color.a,
+				DirLight.Direction.x, DirLight.Direction.y, DirLight.Direction.z, DirLight.Direction.w,
+				DirLight.Intensity,
+				DirLight.Bias,
+				DirLight.zFar,
+				DirLight.zNear,
+				DirLight.lightFOV,
+				DirLight.IsActive,
+				DirLight.IsCastShadows,
+				DirLight.IsUseSoftShadows);
 		}
 	};
 
