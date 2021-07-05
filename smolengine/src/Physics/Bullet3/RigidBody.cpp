@@ -25,10 +25,10 @@ namespace SmolEngine
         if (info->eType == RigidBodyType::Kinematic)
         {
             m_Body->setCollisionFlags(m_Body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-            m_Body->setActivationState(DISABLE_DEACTIVATION);
         }
 
-        m_Body->setUserPointer(info->pActor);
+        m_Body->setActivationState(DISABLE_DEACTIVATION);
+        m_Body->setUserPointer(info->pActor.get());
         SetActive(true);
     }
 }

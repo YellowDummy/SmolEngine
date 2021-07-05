@@ -20,27 +20,27 @@ namespace SmolEngine
 		return m_Actor->GetID();
 	}
 
-	Actor* BehaviourPrimitive::FindActorByName(const std::string& name)
+	Ref<Actor> BehaviourPrimitive::FindActorByName(const std::string& name)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByName(name);
 	}
 
-	Actor* BehaviourPrimitive::FindActorByTag(const std::string& tag)
+	Ref<Actor> BehaviourPrimitive::FindActorByTag(const std::string& tag)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByTag(tag);
 	}
 
-	Actor* BehaviourPrimitive::FindActorByID(uint32_t id)
+	Ref<Actor> BehaviourPrimitive::FindActorByID(uint32_t id)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(id);
 	}
 
-	void BehaviourPrimitive::GetActors(std::vector<Actor*>& outList)
+	void BehaviourPrimitive::GetActors(std::vector<Ref<Actor>>& outList)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActors(outList);
 	}
 
-	void BehaviourPrimitive::GetActorsWithTag(const std::string& tag, std::vector<Actor*>& outList)
+	void BehaviourPrimitive::GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->GetActorsByTag(tag, outList);
 	}
@@ -50,28 +50,23 @@ namespace SmolEngine
 		return m_Actor->GetChildsCount();
 	}
 
-	Actor* BehaviourPrimitive::GetChildByName(const std::string& name)
+	Ref<Actor> BehaviourPrimitive::GetChildByName(const std::string& name)
 	{
 		return m_Actor->GetChildByName(name);
 	}
 
-	Actor* BehaviourPrimitive::GetChildByIndex(uint32_t index)
+	Ref<Actor> BehaviourPrimitive::GetChildByIndex(uint32_t index)
 	{
 		return m_Actor->GetChildByIndex(index);
 	}
 
-	std::vector<Actor*>& BehaviourPrimitive::GetChilds()
+	std::vector<Ref<Actor>>& BehaviourPrimitive::GetChilds()
 	{
 		return m_Actor->GetChilds();
 	}
 
-	Actor* BehaviourPrimitive::GetParent() const
+	Ref<Actor> BehaviourPrimitive::GetParent() const
 	{
 		return m_Actor->GetParent();
-	}
-
-	Actor* BehaviourPrimitive::GetRootActor()
-	{
-		return m_Actor->GetRootActor();
 	}
 }

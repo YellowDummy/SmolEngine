@@ -138,8 +138,8 @@ namespace SmolEngine
 		std::string                                    FilePath = "";
 		std::string                                    Name = "";
 		ScenePipelineState                             PipelineState = {};
-		std::unordered_map<std::string, Actor*>        ActorNameSet;
-		std::unordered_map<uint32_t, Actor*>           ActorIDSet;
+		std::unordered_map<std::string, Ref<Actor>>    ActorNameSet;
+		std::unordered_map<uint32_t, Ref<Actor>>       ActorIDSet;
 		std::vector<Ref<Actor>>                        Actors;
 
 	public:
@@ -152,7 +152,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(SceneID, LastActorID, FilePath, Name, PipelineState, Actors);
+			archive(SceneID, LastActorID, FilePath, Name, PipelineState, ActorNameSet, ActorIDSet, Actors);
 		}
 	};
 }

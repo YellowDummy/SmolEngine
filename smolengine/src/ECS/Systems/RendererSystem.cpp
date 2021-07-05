@@ -56,17 +56,24 @@ namespace SmolEngine
 			for (const auto& entity : group)
 			{
 				const auto& [transform, mesh_component] = group.get<TransformComponent, MeshComponent>(entity);
-				if (mesh_component.bShow && mesh_component.Mesh)
+				if (mesh_component.bShow)
 				{
-					Mesh* mesh = mesh_component.Mesh.get();
-					std::vector<Mesh>& childs = mesh->GetChilds();
-					uint32_t childCount = mesh->GetChildCount();
+					Mesh* mesh = nullptr;
+					if (mesh_component.eDefaultType == MeshComponent::DefaultMeshType::None)
+						mesh = mesh_component.MeshPtr.get();
+					else
+						mesh = mesh_component.DefaulPtr;
 
-					DeferredRenderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[0].ID);
-					for (uint32_t i = 0; i < childCount; i++)
+					if (mesh != nullptr)
 					{
-						mesh = &childs[i];
-						DeferredRenderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[i + 1].ID);
+						std::vector<Mesh>& childs = mesh->GetChilds();
+						uint32_t childCount = mesh->GetChildCount();
+						DeferredRenderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[0].ID);
+						for (uint32_t i = 0; i < childCount; i++)
+						{
+							mesh = &childs[i];
+							DeferredRenderer::SubmitMeshEx(transform.WorldPos, transform.Rotation, transform.Scale, mesh, mesh_component.MaterialsData[i + 1].ID);
+						}
 					}
 				}
 			}
@@ -185,8 +192,17 @@ namespace SmolEngine
 				for (const auto& entity : group)
 				{
 					const auto& [transform, mesh_component] = group.get<TransformComponent, MeshComponent>(entity);
-					if (mesh_component.bShow && mesh_component.Mesh)
-						DebugRenderer::DrawWireframes(transform.WorldPos, transform.Rotation, transform.Scale, mesh_component.Mesh.get());
+					if (mesh_component.bShow)
+					{
+						Mesh* mesh = nullptr;
+						if (mesh_component.eDefaultType == MeshComponent::DefaultMeshType::None)
+							mesh = mesh_component.MeshPtr.get();
+						else
+							mesh = mesh_component.DefaulPtr;
+
+						if(mesh != nullptr)
+							DebugRenderer::DrawWireframes(transform.WorldPos, transform.Rotation, transform.Scale, mesh);
+					}
 				}
 			}
 

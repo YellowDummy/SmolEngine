@@ -19,22 +19,21 @@ namespace SmolEngine
 		virtual ~BehaviourPrimitive() = default;
 
 		// Getters
-		const std::string&      GetName();
-		const std::string&      GetTag();
-		const size_t            GetID();
-		void                    GetActors(std::vector<Actor*>& outList);
-		void                    GetActorsWithTag(const std::string& tag, std::vector<Actor*>& outList);
-		uint32_t                GetChildsCount() const;
-		Actor*                  GetChildByName(const std::string& name);
-		Actor*                  GetChildByIndex(uint32_t index);
-		std::vector<Actor*>&    GetChilds();
-		Actor*                  GetParent() const;
-		Actor*                  GetRootActor();
+		const std::string&       GetName();
+		const std::string&       GetTag();
+		const size_t             GetID();
+		void                     GetActors(std::vector<Ref<Actor>>& outList);
+		void                     GetActorsWithTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
+		uint32_t                 GetChildsCount() const;
+		Ref<Actor>               GetChildByName(const std::string& name);
+		Ref<Actor>               GetChildByIndex(uint32_t index);
+		std::vector<Ref<Actor>>& GetChilds();
+		Ref<Actor>               GetParent() const;
 
 		// Search
-		Actor*                  FindActorByName(const std::string& name);
-		Actor*                  FindActorByTag(const std::string& tag);
-		Actor*                  FindActorByID(uint32_t id);
+		Ref<Actor>              FindActorByName(const std::string& name);
+		Ref<Actor>              FindActorByTag(const std::string& tag);
+		Ref<Actor>              FindActorByID(uint32_t id);
 
 
 		template<typename T>
@@ -75,10 +74,10 @@ namespace SmolEngine
 		}
 
 		template<typename T>
-		T* GetComponent() { return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<T>(m_Actor); }
+		T* GetComponent() { return m_Actor->GetComponent<T>(); }
 
 		template<typename T>
-		bool HasComponent() { return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Actor); }
+		bool HasComponent() { return m_Actor->HasComponent<T>(); }
 
 	private:
 

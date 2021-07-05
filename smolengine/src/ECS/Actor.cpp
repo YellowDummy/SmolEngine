@@ -28,7 +28,7 @@ namespace SmolEngine
 		return static_cast<uint32_t>(info->Childs.size());
 	}
 
-	Actor* Actor::GetChildByName(const std::string& name)
+	Ref<Actor> Actor::GetChildByName(const std::string& name)
 	{
 		HeadComponent* info = GetInfo();
 		for (auto& actor : info->Childs)
@@ -40,7 +40,7 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	Actor* Actor::GetChildByIndex(uint32_t index)
+	Ref<Actor> Actor::GetChildByIndex(uint32_t index)
 	{
 		HeadComponent* info = GetInfo();
 		if (index < info->Childs.size())
@@ -49,7 +49,7 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	std::vector<Actor*>& Actor::GetChilds()
+	std::vector<Ref<Actor>>& Actor::GetChilds()
 	{
 		HeadComponent* info = GetInfo();
 		return info->Childs;
@@ -60,14 +60,12 @@ namespace SmolEngine
 		return GetHead()->ComponentsCount;
 	}
 
-	bool Actor::SetChild(Actor* child)
+	bool Actor::SetChild(Ref<Actor>& child)
 	{
 		if (child != nullptr)
 		{
 			HeadComponent* p_info = GetInfo();
-			uint32_t childID = child->GetID();
-			Actor* childNode = FindActorByID(childID);
-			bool found = std::find(p_info->Childs.begin(), p_info->Childs.end(), childNode) != p_info->Childs.end();
+			bool found = std::find(p_info->Childs.begin(), p_info->Childs.end(), child) != p_info->Childs.end();
 			if (found == false)
 			{
 				HeadComponent* c_info = child->GetInfo();
@@ -76,15 +74,14 @@ namespace SmolEngine
 				{
 					HeadComponent* old_parent_info = c_info->Parent->GetInfo();
 					auto& parent_childs = old_parent_info->Childs;
-					parent_childs.erase(std::remove(parent_childs.begin(), parent_childs.end(), childNode));
+					parent_childs.erase(std::remove(parent_childs.begin(), parent_childs.end(), child));
 					c_info->Parent = nullptr;
 				}
 				// Adds new parent
-				c_info->ParentID = GetID();
-				c_info->Parent = this;
+				Ref<Actor> myHandle = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(GetID());
+				c_info->Parent = myHandle;
 				// Adds new child
-				p_info->ChildsIDs.emplace_back(childID);
-				p_info->Childs.emplace_back(childNode);
+				p_info->Childs.emplace_back(child);
 				return true;
 			}
 		}
@@ -94,7 +91,9 @@ namespace SmolEngine
 
 	bool Actor::SetName(const std::string& name)
 	{
-		return WorldAdmin::GetSingleton()->ChangeActorName(this, name);
+		uint32_t myID = GetID();
+		Ref<Actor> myActor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(myID);
+		return WorldAdmin::GetSingleton()->ChangeActorName(myActor, name);
 	}
 
 	bool Actor::RemoveChildAtIndex(uint32_t index)
@@ -103,10 +102,9 @@ namespace SmolEngine
 
 		if (index < info->Childs.size())
 		{
-			Actor* child = info->Childs[index];
+			auto child = info->Childs[index];
 
 			info->Childs.erase(info->Childs.begin() + index);
-			info->ChildsIDs.erase(info->ChildsIDs.begin() + index);
 			child->GetComponent<TransformComponent>()->RelativePos = glm::vec3(0.0f);
 			return true;
 		}
@@ -119,29 +117,12 @@ namespace SmolEngine
 		return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<HeadComponent>(m_Entity);
 	}
 
-	Actor* Actor::FindRootActor(Actor* actor)
-	{
-		HeadComponent* info = GetInfo();
-		if (info->Parent != nullptr)
-		{
-			Actor* root = info->Parent;
-			return FindRootActor(root);
-		}
-
-		return actor;
-	}
-
-	Actor* Actor::GetParent() const
+	Ref<Actor> Actor::GetParent() const
 	{
 		return GetHead()->Parent;
 	}
 
-	Actor* Actor::GetRootActor()
-	{
-		return FindRootActor(nullptr);
-	}
-
-	Actor* Actor::FindActorByID(uint32_t id)
+	Ref<Actor> Actor::FindActorByID(uint32_t id)
 	{
 		return WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(id);
 	}

@@ -26,6 +26,12 @@ namespace SmolEngine
 			Texture::Create("assets/buttons/material_button.png", &m_MaterialIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
 			Texture::Create("assets/buttons/glTF_button.png", &m_glTFIcon, TextureFormat::R8G8B8A8_UNORM, false, imguiDescriptor);
 			Texture::Create("assets/buttons/default_background.jpg", &m_BackgroundIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+
+			Texture::Create("assets/buttons/cube_icon.png", &m_CubeIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/sphere_icon.png", &m_SphereIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/capsule_icon.png", &m_CapsuleIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+			Texture::Create("assets/buttons/torus_icon.png", &m_TorusIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
+
 		}
 
 		static TexturesLoader* Get() { return s_Instance; }
@@ -43,6 +49,10 @@ namespace SmolEngine
 		Texture  m_MaterialIcon{};
 		Texture  m_glTFIcon{};
 		Texture  m_BackgroundIcon{};
+		Texture  m_CubeIcon{};
+		Texture  m_SphereIcon{};
+		Texture  m_CapsuleIcon{};
+		Texture  m_TorusIcon{};
 	private:
 
 		inline static TexturesLoader* s_Instance = nullptr;

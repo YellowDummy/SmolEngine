@@ -15,10 +15,9 @@ namespace SmolEngine
 		Rigidbody2DComponent(uint32 id)
 			:BaseComponent(id) {}
 
-		Actor*           Actor = nullptr;
-		Body2D           Body;
-		uint32_t         ActorID = 0;
 		bool             ShowShape = true;
+		Ref<Actor>       Actor = nullptr;
+		Body2D           Body = {};
 
 	private:
 
@@ -29,7 +28,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(Body, ActorID, ShowShape, ComponentID);
+			archive(Body, Actor, ShowShape, ComponentID);
 		}
 	};
 }

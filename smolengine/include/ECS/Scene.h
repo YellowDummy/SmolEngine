@@ -20,20 +20,38 @@ namespace SmolEngine
 		void                    OnUpdate(DeltaTime delta);
 		bool                    Save(const std::string& filePath);
 		bool                    Load(const std::string& filePath);
-		void                    DuplicateActor(Actor* actor);
-		void                    DeleteActor(Actor* actor);
-		Actor*                  CreateActor(const std::string& name, const std::string& tag = std::string("Default"));
-		Actor*                  FindActorByName(const std::string& name);
-		Actor*                  FindActorByTag(const std::string& tag);
-		Actor*                  FindActorByID(uint32_t id);
+		void                    DuplicateActor(Ref<Actor>& actor);
+		void                    DeleteActor(Ref<Actor>& actor);
+		Ref<Actor>              CreateActor(const std::string& name, const std::string& tag = std::string("Default"));
+		Ref<Actor>              FindActorByName(const std::string& name);
+		Ref<Actor>              FindActorByTag(const std::string& tag);
+		Ref<Actor>              FindActorByID(uint32_t id);
 
-		void                    GetActors(std::vector<Actor*>& outList);
-		void                    GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList);
+		void                    GetActors(std::vector<Ref<Actor>>& outList);
+		void                    GetActorsByTag(const std::string& tag, std::vector<Ref<Actor>>& outList);
 		SceneStateComponent*    GetSceneState();
 		entt::registry&         GetRegistry();
 
 		template<typename T, typename... Args>
-		T* AddComponent(Actor* actor, Args&&... args)
+		T* AddComponentEX(Actor* actor, Args&&... args)
+		{
+			entt::entity ent = actor->m_Entity;
+			HeadComponent* head = actor->GetInfo();
+
+			if (HasComponent<T>(ent))
+			{
+				NATIVE_ERROR("Actor already have component!");
+				return nullptr;
+			}
+
+			auto& component = m_SceneData.m_Registry.emplace<T>(ent, std::forward<Args>(args)...);
+			component.ComponentID = head->ComponentsCount;
+			head->ComponentsCount++;
+			return &component;
+		}
+
+		template<typename T, typename... Args>
+		T* AddComponent(Ref<Actor>& actor, Args&&... args)
 		{
 			if (HasComponent<T>(actor))
 			{
@@ -42,16 +60,18 @@ namespace SmolEngine
 			}
 
 			HeadComponent* head = actor->GetInfo();
-			auto& component = m_SceneData.m_Registry.emplace<T>(*actor, std::forward<Args>(args)...);
+			entt::entity ent = actor->m_Entity;
+			auto& component = m_SceneData.m_Registry.emplace<T>(ent, std::forward<Args>(args)...);
 			component.ComponentID = head->ComponentsCount;
 			head->ComponentsCount++;
 			return &component;
 		}
 
 		template<typename T>
-		bool HasComponent(Actor* actor)
+		bool HasComponent(Ref<Actor>& actor)
 		{
-			return m_SceneData.m_Registry.try_get<T>(*actor) != nullptr;
+			entt::entity ent = actor->m_Entity;
+			return m_SceneData.m_Registry.try_get<T>(ent) != nullptr;
 		}
 
 		template<typename T>
@@ -67,13 +87,20 @@ namespace SmolEngine
 		}
 
 		template<typename T>
-		T* GetComponent(Actor* actor)
+		T* GetComponent(Ref<Actor>& actor)
 		{
 			entt::entity ent = actor->m_Entity;
 			return m_SceneData.m_Registry.try_get<T>(ent);
 		}
 
-		bool AddScript(Actor* actor, const std::string& script_name);
+		template<typename T>
+		T* GetComponentEX(Actor* actor)
+		{
+			entt::entity ent = actor->m_Entity;
+			return m_SceneData.m_Registry.try_get<T>(ent);
+		}
+
+		bool AddScript(Ref<Actor>& actor, const std::string& script_name);
 
 	private:
 

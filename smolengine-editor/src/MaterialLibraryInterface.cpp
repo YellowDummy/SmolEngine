@@ -183,9 +183,9 @@ namespace SmolEngine
 			Mesh* mesh = nullptr;
 			switch (m_GeometryType)
 			{
-			case 0: mesh = GraphicsContext::GetSingleton()->GetBoxMesh(); break;
-			case 1: mesh = GraphicsContext::GetSingleton()->GetSphereMesh(); break;
-			case 2: mesh = GraphicsContext::GetSingleton()->GetCapsuleMesh(); break;
+			case 0: mesh = GraphicsContext::GetSingleton()->GetDefaultMeshes()->Cube; break;
+			case 1: mesh = GraphicsContext::GetSingleton()->GetDefaultMeshes()->Sphere; break;
+			case 2: mesh = GraphicsContext::GetSingleton()->GetDefaultMeshes()->Torus; break;
 			}
 
 			struct pc

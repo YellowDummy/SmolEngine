@@ -453,8 +453,10 @@ namespace SmolEngine
 		for (const auto& entity : dynamic_group)
 		{
 			const auto& [transform, rigidbodyComponent] = dynamic_group.get<TransformComponent, Rigidbody2DComponent>(entity);
-			Actor* actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(rigidbodyComponent.ActorID);
-			CreateBody(&rigidbodyComponent, &transform, actor);
+			if (rigidbodyComponent.Actor != nullptr)
+			{
+				CreateBody(&rigidbodyComponent, &transform, rigidbodyComponent.Actor.get());
+			}
 		}
 	}
 

@@ -135,69 +135,16 @@ namespace SmolEngine
 	{
 		Scene* activeScene = GetActiveScene();
 		SceneStateComponent* sceneState = activeScene->GetSceneState();
-		m_State->m_MeshMap.clear();
-
-		// Set Renderer State
-		{
-			{
-				auto& cube_path = sceneState->PipelineState.Environment.CubeMapPath;
-				auto cubeMap = sceneState->PipelineState.Environment.CubeMap;
-
-				if (cube_path.empty() == false)
-				{
-					cubeMap = new CubeMap();
-					CubeMap::Create(cubeMap, cube_path);
-					DeferredRenderer::SetEnvironmentCube(cubeMap);
-				}
-				else
-					DeferredRenderer::SetDynamicSkyboxProperties(sceneState->PipelineState.Environment.SkyProperties);
-			}
-
-			{
-				Mask& mask = sceneState->PipelineState.DirtMask;
-				if (mask.Path.empty() == false)
-				{
-					Texture*  dirt_mask = new Texture();
-					Texture::Create(mask.Path, dirt_mask, TextureFormat::B8G8R8A8_UNORM, true, true);
-					DeferredRenderer::SetDirtMask(dirt_mask, mask.Intensity, mask.IntensityBase);
-				}
-			}
-
-			DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
-			DeferredRenderer::SubmitDirLight(&sceneState->PipelineState.DirLight);
-
-		}
-
-		// Recrates actor's name & id sets
-		{
-			activeScene->m_State->ActorIDSet.clear();
-			activeScene->m_State->ActorNameSet.clear();
-
-			auto& actors = activeScene->m_State->Actors;
-			uint32_t actorCount = static_cast<uint32_t>(actors.size());
-
-			for (uint32_t i = 0; i < actorCount; ++i)
-			{
-				auto actor = actors[i];
-				uint32_t actorID = actor->GetID();
-				std::string name = actor->GetName();
-
-				activeScene->m_State->ActorIDSet[actorID] = actor.get();
-				activeScene->m_State->ActorNameSet[name] = actor.get();
-			}
-		}
 
 		// Loads Assets
 		{
 			entt::registry& registry = activeScene->m_SceneData.m_Registry;
 
-			ReloadActors();
 			Reload2DTextures(registry);
 			ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
 			Reload2DAnimations(registry);
 			ReloadCanvases(registry);
 			ReloadMeshes(registry);
-			ReloadRigidBodies(registry);
 			ReloadScripts(registry);
 		}
 	}
@@ -225,13 +172,46 @@ namespace SmolEngine
 			DeferredRenderer::UpdateMaterials();
 		}
 
-		Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
-		current_scene->Free();
-
+		m_State->m_Scenes[m_State->m_ActiveSceneID].Free();
 		if (GetActiveScene()->Load(path))
 		{
-			ReloadActiveScene();
+			Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
 			m_State->m_CurrentRegistry = &current_scene->m_SceneData.m_Registry;
+
+			if (is_reload == false)
+			{
+				m_State->m_MeshMap.clear();
+				SceneStateComponent* sceneState = current_scene->GetSceneState();
+
+				{
+					auto& cube_path = sceneState->PipelineState.Environment.CubeMapPath;
+					auto cubeMap = sceneState->PipelineState.Environment.CubeMap;
+
+					if (cube_path.empty() == false)
+					{
+						cubeMap = new CubeMap();
+						CubeMap::Create(cubeMap, cube_path);
+						DeferredRenderer::SetEnvironmentCube(cubeMap);
+					}
+					else
+						DeferredRenderer::SetDynamicSkyboxProperties(sceneState->PipelineState.Environment.SkyProperties);
+				}
+
+				{
+					Mask& mask = sceneState->PipelineState.DirtMask;
+					if (mask.Path.empty() == false)
+					{
+						Texture* dirt_mask = new Texture();
+						Texture::Create(mask.Path, dirt_mask, TextureFormat::B8G8R8A8_UNORM, true, true);
+						DeferredRenderer::SetDirtMask(dirt_mask, mask.Intensity, mask.IntensityBase);
+					}
+				}
+
+				DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
+				DeferredRenderer::SubmitDirLight(&sceneState->PipelineState.DirLight);
+			}
+
+			ReloadActiveScene();
 			NATIVE_WARN(std::string("Scene loaded successfully"));
 			return true;
 		}
@@ -359,10 +339,24 @@ namespace SmolEngine
 			{
 				JobsSystem::Schedule([&component]()
 				{
-					component.Mesh = std::make_shared<Mesh>();
-					Mesh::Create(component.ModelPath, component.Mesh.get());
-					if (component.Mesh->GetVertexCount() == 0) // not loaded
-						component.Mesh = nullptr;
+					if (component.ModelPath.empty())
+					{
+						auto defaultMeshes = GraphicsContext::GetSingleton()->GetDefaultMeshes();
+						switch (component.eDefaultType)
+						{
+						case MeshComponent::DefaultMeshType::Cube: component.DefaulPtr = defaultMeshes->Cube; break;
+						case MeshComponent::DefaultMeshType::Sphere: component.DefaulPtr = defaultMeshes->Sphere; break;
+						case MeshComponent::DefaultMeshType::Capsule: component.DefaulPtr = defaultMeshes->Capsule; break;
+						case MeshComponent::DefaultMeshType::Torus: component.DefaulPtr = defaultMeshes->Torus; break;
+						}
+					}
+					else
+					{
+						component.MeshPtr = std::make_shared<Mesh>();
+						Mesh::Create(component.ModelPath, component.MeshPtr.get());
+						if (component.MeshPtr->IsReady() == false) // not loaded
+							component.MeshPtr = nullptr;
+					}
 				});
 
 			});
@@ -397,26 +391,6 @@ namespace SmolEngine
 		DeferredRenderer::UpdateMaterials();
 	}
 
-	void WorldAdmin::ReloadRigidBodies(entt::registry& registry)
-	{
-		const auto& rigid_view = registry.view<RigidbodyComponent>();
-		Scene* activeScene = GetActiveScene();
-
-		JobsSystem::BeginSubmition();
-		{
-			rigid_view.each([&activeScene](RigidbodyComponent& component)
-			{
-				JobsSystem::Schedule([&component, &activeScene]()
-				{
-					component.CreateInfo.pActor = activeScene->FindActorByID(component.CreateInfo.ActorID);
-				});
-
-			});;
-		}
-		JobsSystem::EndSubmition();
-
-	}
-
 	void WorldAdmin::ReloadScripts(entt::registry& reg)
 	{
 		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
@@ -425,14 +399,12 @@ namespace SmolEngine
 		for (const auto& entity : view)
 		{
 			auto& behaviour = view.get<BehaviourComponent>(entity);
-			Actor* actor = WorldAdmin::GetSingleton()->GetActiveScene()->FindActorByID(behaviour.ActorID);
-			if (!actor)
+			if (!behaviour.Actor)
 			{
 				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
 				continue;
 			}
 
-			behaviour.Actor = actor;
 			for (auto& script : behaviour.Scripts)
 			{
 				auto& it = instance->MetaMap.find(script.KeyName);
@@ -444,7 +416,7 @@ namespace SmolEngine
 
 				script.Script = it->second.ClassInstance;
 				auto& primitive = script.Script.cast<BehaviourPrimitive>();
-				primitive.m_Actor = actor;
+				primitive.m_Actor = behaviour.Actor.get();
 
 				auto& s_it = behaviour.OutValues.find(script.KeyName);
 				if (s_it == behaviour.OutValues.end())
@@ -512,7 +484,7 @@ namespace SmolEngine
 		return true;
 	}
 
-	bool WorldAdmin::ChangeActorName(Actor* actor, const std::string& name)
+	bool WorldAdmin::ChangeActorName(Ref<Actor>& actor, const std::string& name)
 	{
 		SceneStateComponent* state = GetActiveScene()->GetSceneState();
 		std::string oldName = actor->GetName();
@@ -526,24 +498,5 @@ namespace SmolEngine
 		}
 
 		return false;
-	}
-
-	void WorldAdmin::ReloadActors()
-	{
-		Scene* scene = GetActiveScene();
-		for (auto& actor : scene->m_State->Actors)
-		{
-			HeadComponent* info = actor->GetInfo();
-
-			if (info->ParentID > 0)
-				info->Parent = scene->FindActorByID(info->ParentID);
-
-			info->Childs.clear();
-			for (auto& id : info->ChildsIDs)
-			{
-				if (id > 0)
-					info->Childs.emplace_back( scene->FindActorByID(id));
-			}
-		}
 	}
 }

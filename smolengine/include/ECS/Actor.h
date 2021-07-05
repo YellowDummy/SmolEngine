@@ -35,15 +35,15 @@ namespace SmolEngine
 		const HeadComponent*         GetHead() const;
 		uint32_t                     GetID() const;
 		uint32_t                     GetChildsCount() const;
-		Actor*                       GetChildByName(const std::string& name);
-		Actor*                       GetChildByIndex(uint32_t index);
-		std::vector<Actor*>&         GetChilds();
-		Actor*                       GetParent() const;
-		Actor*                       GetRootActor();
-		Actor*                       FindActorByID(uint32_t id);
+		Ref<Actor>                   GetChildByName(const std::string& name);
+		Ref<Actor>                   GetChildByIndex(uint32_t index);
+		std::vector<Ref<Actor>>&     GetChilds();
+		Ref<Actor>                   GetParent() const;
+		Ref<Actor>                   GetRootActor();
+		Ref<Actor>                   FindActorByID(uint32_t id);
 
 		// Setters
-		bool                         SetChild(Actor* child);
+		bool                         SetChild(Ref<Actor>& child);
 		bool                         SetName(const std::string& name);
 		bool                         RemoveChildAtIndex(uint32_t index);
 
@@ -52,12 +52,11 @@ namespace SmolEngine
 		template<typename T>
 		bool HasComponent()          { return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Entity); }
 		template<typename T, typename... Args>
-		T* AddComponent(Args&&... args) { return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<T>(this, args...); }
+		T* AddComponent(Args&&... args) { return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponentEX<T>(this, args...); }
 
 	private:
 
 		HeadComponent*               GetInfo();
-		Actor*                       FindRootActor(Actor* actor);
 		entt::entity                 m_Entity{};
 
 	private:

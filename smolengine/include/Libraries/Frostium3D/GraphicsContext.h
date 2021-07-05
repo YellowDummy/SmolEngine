@@ -8,6 +8,7 @@
 #include "Vulkan/VulkanContext.h"
 #endif
 
+#include "Common/DefaultMeshes.h"
 #include "Common/RendererShared.h"
 #include "Common/Core.h"
 #include "Common/Window.h"
@@ -77,9 +78,7 @@ namespace Frostium
 		Window*                       GetWindow() const;
 	    WindowData*                   GetWindowData();
 		Frustum*                      GetFrustum() const;
-		Mesh*                         GetBoxMesh() const;
-		Mesh*                         GetCapsuleMesh() const;
-		Mesh*                         GetSphereMesh() const;
+		DefaultMeshes*                GetDefaultMeshes() const;
 		Texture*                      GetWhiteTexture() const;
 		float                         GetGltfTime() const;
 		float                         GetDeltaTime() const;
@@ -103,7 +102,6 @@ namespace Frostium
 
 	private:					      
 		void                          OnEvent(Event& event);
-		bool                          LoadMeshes();
 		bool                          InitRenderer2DStorage(Renderer2DStorage* storage);
 		bool                          InitRendererStorage(RendererStorage* storage, ShadowMapSize shadow_map_size);
 
@@ -120,10 +118,8 @@ namespace Frostium
 		Frustum*                      m_Frustum = nullptr;
 		Framebuffer*                  m_Framebuffer = nullptr;
 		Window*                       m_Window = nullptr;
+		DefaultMeshes*                m_DefaultMeshes = nullptr;
 		ImGuiContext*                 m_ImGuiContext = nullptr;
-		Mesh*                         m_BoxMesh = nullptr;
-		Mesh*                         m_SphereMesh = nullptr;
-		Mesh*                         m_CapsuleMesh = nullptr;
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 		JobsSystemInstance*           m_JobsSystem = nullptr;

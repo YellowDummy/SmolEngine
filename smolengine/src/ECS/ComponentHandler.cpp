@@ -33,7 +33,7 @@ namespace SmolEngine
 							mesh = it->second;
 							uint32_t size = static_cast<uint32_t>(mesh->GetChilds().size()) + 1;
 							comp->MaterialsData.resize(size);
-							comp->Mesh = mesh;
+							comp->MeshPtr = mesh;
 							comp->ModelPath = filePath;
 
 							return true;
@@ -41,7 +41,6 @@ namespace SmolEngine
 						else
 						{
 							mesh = std::make_shared<Mesh>();
-
 							{
 								while (flag->exchange(true, std::memory_order_relaxed));
 								std::atomic_thread_fence(std::memory_order_acquire);
@@ -65,9 +64,9 @@ namespace SmolEngine
 			{
 				uint32_t size = static_cast<uint32_t>(mesh->GetChilds().size()) + 1;
 				comp->MaterialsData.resize(size);
-				comp->Mesh = mesh;
+				comp->MeshPtr = mesh;
 				comp->ModelPath = filePath;
-
+				comp->eDefaultType = MeshComponent::DefaultMeshType::None;
 				return true;
 			}
 		}
@@ -82,7 +81,7 @@ namespace SmolEngine
 			uint32_t index = 0;
 			if (!mesh->IsRootNode())
 			{
-				for (auto& child : comp->Mesh->GetChilds())
+				for (auto& child : comp->MeshPtr->GetChilds())
 				{
 					index++;
 					if (&child == mesh)
@@ -122,31 +121,29 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool ComponentHandler::ValidateBody2DComponent(Rigidbody2DComponent* comp, Actor* actor)
+	bool ComponentHandler::ValidateBody2DComponent(Rigidbody2DComponent* comp, Ref<Actor>& actor)
 	{
 		if (comp && actor)
 		{
 			comp->Actor = actor;
-			comp->ActorID = actor->GetID();
 			return true;
 		}
 
 		return false;
 	}
 
-	bool ComponentHandler::ValidateRigidBodyComponent(RigidbodyComponent* comp, Actor* actor)
+	bool ComponentHandler::ValidateRigidBodyComponent(RigidbodyComponent* comp, Ref<Actor>& actor)
 	{
 		if (comp && actor)
 		{
 			comp->CreateInfo.pActor = actor;
-			comp->CreateInfo.ActorID = actor->GetID();
 			return true;
 		}
 
 		return false;
 	}
 
-	bool ComponentHandler::ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Actor* actor)
+	bool ComponentHandler::ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Ref<Actor>& actor)
 	{
 		if (ValidateRigidBodyComponent(comp, actor))
 		{

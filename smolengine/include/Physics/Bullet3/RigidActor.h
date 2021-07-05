@@ -54,10 +54,9 @@ namespace SmolEngine
 
 	struct BodyCreateInfo
 	{
-		Actor*                     pActor = nullptr;
-		uint32_t                   ActorID = 0;
+		Ref<Actor>                 pActor = nullptr;
 		int                        ShapeIndex = 0;
-		int                        StateIndex = 0;
+		int                        StateIndex = 1;
 		float                      Mass = 1.0f;
 		float                      Density = 0.5f;
 		float                      Friction = 0.5f;
@@ -81,7 +80,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(eShape, eType, StateIndex, ShapeIndex, ActorID, Mass, Density,
+			archive(pActor, eShape, eType, StateIndex, ShapeIndex, Mass, Density,
 				Friction, Restitution, LinearDamping, AngularDamping,
 				RollingFriction, SpinningFriction,
 				SphereShape.Radius,

@@ -25,8 +25,8 @@ namespace SmolEngine
 		static bool ValidateTexture2DComponent(Texture2DComponent* comp, const std::string& filePath);
 
 		//Physics
-		static bool ValidateBody2DComponent(Rigidbody2DComponent* comp, Actor* actor);
-		static bool ValidateRigidBodyComponent(RigidbodyComponent* comp, Actor* actor);
-		static bool ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Actor* actor);
+		static bool ValidateBody2DComponent(Rigidbody2DComponent* comp, Ref<Actor>& actor);
+		static bool ValidateRigidBodyComponent(RigidbodyComponent* comp, Ref<Actor>& actor);
+		static bool ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Ref<Actor>& actor);
 	};
 }

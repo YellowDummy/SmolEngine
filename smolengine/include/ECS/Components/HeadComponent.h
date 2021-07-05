@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "ECS/Actor.h"
 #include "ECS/Components/BaseComponent.h"
 
 #include <string>
@@ -18,16 +19,14 @@ namespace SmolEngine
 			:Name(name), Tag(tag), ActorID(id) {}
 
 
-		Actor*                Parent = nullptr;
-		bool                  bEnabled = true;
-		bool                  bShowComponentUI = false;
-		uint32_t              ActorID = 0;
-		uint32_t              ParentID = 0;
-		uint32_t              ComponentsCount = 0;
-		std::string           Name = "";
-		std::string           Tag = "";
-		std::vector<uint32_t> ChildsIDs;
-		std::vector<Actor*>   Childs;
+		bool                    bEnabled = true;
+		bool                    bShowComponentUI = false;
+		uint32_t                ActorID = 0;
+		uint32_t                ComponentsCount = 0;
+		std::string             Name = "";
+		std::string             Tag = "";
+		Ref<Actor>              Parent = nullptr;
+		std::vector<Ref<Actor>> Childs;
 
 	private:
 
@@ -38,7 +37,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ActorID, Name, Tag, bEnabled, bShowComponentUI, ChildsIDs, ParentID, ComponentID, ComponentsCount);
+			archive(ActorID, Name, Tag, bEnabled, bShowComponentUI, Parent, Childs, ComponentID, ComponentsCount);
 		}
 	};
 }

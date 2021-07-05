@@ -18,12 +18,6 @@ namespace SmolEngine
 		MeshComponent(uint32_t id)
 			:BaseComponent(id) {}
 
-		bool                                 bIsStatic = false;
-		bool                                 bShow = true;			             
-		int                                  ShadowType = 2;	                 
-		Ref<Mesh>                            Mesh = nullptr;
-		std::string                          ModelPath = "";
-
 		struct MaterialData
 		{
 			std::string                      Path = "";
@@ -35,7 +29,23 @@ namespace SmolEngine
 				archive(Path);
 			}
 
-		};				                     
+		};
+
+		enum class DefaultMeshType : uint32_t
+		{
+			None,
+			Cube,
+			Sphere,
+			Capsule,
+			Torus
+		};
+
+		bool                                 bIsStatic = false;
+		bool                                 bShow = true;			                              
+		Ref<Mesh>                            MeshPtr = nullptr;
+		Mesh*                                DefaulPtr = nullptr;
+		DefaultMeshType                      eDefaultType = DefaultMeshType::None;
+		std::string                          ModelPath = "";			
 		std::vector<MaterialData>            MaterialsData;
 
 	private:
@@ -45,7 +55,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(MaterialsData, bIsStatic, bShow,  ShadowType, ModelPath, ComponentID);
+			archive(MaterialsData, eDefaultType, bIsStatic, bShow, ModelPath, ComponentID);
 		}
 	};
 }

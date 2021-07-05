@@ -9,7 +9,7 @@
 
 namespace SmolEngine
 {
-	bool ScriptingSystem::AttachNativeScript(Actor* actor, const std::string& scriptName)
+	bool ScriptingSystem::AttachNativeScript(Ref<Actor>& actor, const std::string& scriptName)
 	{
 		ScriptingSystemStateSComponent* instance = m_State;
 		if (instance == nullptr)
@@ -24,7 +24,6 @@ namespace SmolEngine
 		{
 			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<BehaviourComponent>(actor);
 			component->Actor = actor;
-			component->ActorID = actor->GetID();
 		}
 		else
 			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(actor);
@@ -79,7 +78,7 @@ namespace SmolEngine
 			}
 		}
 
-		primitive.m_Actor = actor;
+		primitive.m_Actor = actor.get();
 		component->Scripts.emplace_back(scriptInstance);
 		return true;
 	}
@@ -130,7 +129,7 @@ namespace SmolEngine
 	{
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(actor);
+		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponentEX<BehaviourComponent>(actor);
 		if (behaviour && instance)
 		{
 			for (auto& script : behaviour->Scripts)

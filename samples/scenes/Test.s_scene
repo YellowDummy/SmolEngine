@@ -1,0 +1,296 @@
+value0: 4
+value1: 0
+value2: 1
+value3: 2
+value4: 3
+value5: 1048575
+value6: 3
+value7: 1
+value8:
+  value0: 1
+  value1: DefaultActor0
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    ptr_wrapper:
+      id: 0
+  value6:
+    []
+  value7: 0
+  value8: 4
+value9: 2
+value10:
+  value0: 2
+  value1: DefaultActor1
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    ptr_wrapper:
+      id: 0
+  value6:
+    []
+  value7: 0
+  value8: 3
+value11: 3
+value12:
+  value0: 3
+  value1: DefaultActor2
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    ptr_wrapper:
+      id: 0
+  value6:
+    []
+  value7: 0
+  value8: 4
+value13: 0
+value14: 0
+value15: 0
+value16: 0
+value17: 0
+value18: 0
+value19: 3
+value20: 1
+value21:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: -0.51767563819885254
+  value7: 8.768061637878418
+  value8: 0
+  value9: 1
+value22: 2
+value23:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 4.4188232421875
+  value8: 3.0956301689147949
+  value9: 1
+value24: 3
+value25:
+  value0: -1.3040376901626587
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: -0.96315336227416992
+  value7: 14.949382781982422
+  value8: 1.2169997692108154
+  value9: 1
+value26: 0
+value27: 0
+value28: 3
+value29: 1
+value30:
+  value0:
+    - value0: ""
+  value1: 4
+  value2: false
+  value3: true
+  value4: ""
+  value5: 2
+value31: 2
+value32:
+  value0:
+    - value0: ""
+    - value0: ""
+    - value0: ""
+    - value0: ""
+    - value0: ""
+    - value0: ""
+    - value0: ""
+  value1: 0
+  value2: false
+  value3: true
+  value4: ../samples/models\tank.gltf
+  value5: 2
+value33: 3
+value34:
+  value0:
+    - value0: ""
+  value1: 3
+  value2: false
+  value3: true
+  value4: ""
+  value5: 2
+value35: 0
+value36: 0
+value37: 1
+value38: 0
+value39:
+  value0: 0
+  value1: 4
+  value2: ../samples/scenes\Test.s_scene
+  value3: Test
+  value4:
+    value0: 0
+    value1: true
+    value2: true
+    value3: true
+    value4: true
+    value5: false
+    value6: 1
+    value7: 1
+    value8: 1
+    value9: 5
+    value10:
+      value0: ""
+      value1: 2
+      value2: true
+      value3: 6471000
+      value4: 1200
+      value5: 2.0999999833293259e-05
+      value6: 0.75800001621246338
+      value7: 6371000
+      value8: 8000
+      value9: 5.5000000429572538e-06
+      value10: 1.2999999853491317e-05
+      value11: 2.2399999579647556e-05
+      value12: 0
+      value13: 6372000
+      value14: 0
+      value15: 22
+      value16: 1
+      value17: 1
+      value18: 0
+      value19: 2
+      value20: 0
+    value11:
+      value0: ""
+      value1: 1
+      value2: 0.10000000149011612
+    value12: 1
+    value13: 0.5
+    value14: 0.5
+    value15: 0.10000000149011612
+    value16: 0.125
+    value17: 0.031199999153614044
+    value18: 29
+    value19: 0.75
+    value20: 1
+    value21: 1
+    value22: 1
+    value23: 1
+    value24: 67
+    value25: 56
+    value26: 0
+    value27: 0
+    value28: 1
+    value29: 1
+    value30: 350
+    value31: 1
+    value32: 45
+    value33: 0
+    value34: 0
+    value35: 1
+  value5:
+    - key: DefaultActor0
+      value:
+        ptr_wrapper:
+          id: 2147483649
+          data:
+            value0: 1
+    - key: DefaultActor1
+      value:
+        ptr_wrapper:
+          id: 2147483650
+          data:
+            value0: 2
+    - key: DefaultActor2
+      value:
+        ptr_wrapper:
+          id: 2147483651
+          data:
+            value0: 3
+  value6:
+    - key: 1
+      value:
+        ptr_wrapper:
+          id: 1
+    - key: 2
+      value:
+        ptr_wrapper:
+          id: 2
+    - key: 3
+      value:
+        ptr_wrapper:
+          id: 3
+  value7:
+    - ptr_wrapper:
+        id: 1
+    - ptr_wrapper:
+        id: 2
+    - ptr_wrapper:
+        id: 3
+value40: 2
+value41: 1
+value42:
+  value0:
+    value0:
+      ptr_wrapper:
+        id: 1
+    value1: 0
+    value2: 1
+    value3: 1
+    value4: 0
+    value5: 1
+    value6: 0.5
+    value7: 0.5
+    value8: 0
+    value9: 0
+    value10: 0
+    value11: 0.10000000149011612
+    value12: 0.10000000149011612
+    value13: 1
+    value14: 1
+    value15: 0.20000000298023224
+    value16: 1
+    value17: 1
+    value18: 1
+    value19: ""
+    value20: 1
+    value21: 0
+    value22: 0
+  value1: 3
+value43: 3
+value44:
+  value0:
+    value0:
+      ptr_wrapper:
+        id: 3
+    value1: 2
+    value2: 0
+    value3: 0
+    value4: 2
+    value5: 1
+    value6: 0.5
+    value7: 0.5
+    value8: 0
+    value9: 0
+    value10: 0
+    value11: 0.10000000149011612
+    value12: 0.10000000149011612
+    value13: 1
+    value14: 1
+    value15: 1
+    value16: 1
+    value17: 2.5
+    value18: 1
+    value19: ""
+    value20: 1
+    value21: 0
+    value22: 0
+  value1: 3

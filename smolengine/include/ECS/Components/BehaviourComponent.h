@@ -82,8 +82,7 @@ namespace SmolEngine
 			}
 		};		
 
-		uint32_t                                   ActorID = 0;
-		Actor*                                     Actor = nullptr;
+		Ref<Actor>                                 Actor = nullptr;
 		std::vector<ScriptInstance>                Scripts;
 		std::unordered_map<std::string, OutData>   OutValues;			   
 
@@ -96,7 +95,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ActorID, Scripts, OutValues, ComponentID);
+			archive(Actor, Scripts, OutValues, ComponentID);
 		}
 	};
 }

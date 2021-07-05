@@ -123,6 +123,25 @@ vec3 CalcIBL(vec3 N, vec3 V, vec3 F0, vec3 ao, vec3 albedo_color, float metallic
 	return (diffuseIBL + specularIBL) * ao;
 }
 
+vec3 CalcDirLight(vec3 V, vec3 N, vec3 F0, vec3 albedo_color, float metallic_color, float roughness_color, vec3 modelPos)
+{
+	vec3 direction = vec3(30, 56, 0);
+	vec3 L = normalize(direction.xyz - modelPos);
+    vec3 H = normalize(V + L);
+	float NdotL = max(dot(N, L), 0.0);       
+	
+    // Cook-Torrance BRDF
+    float NDF = DistributionGGX(N, H, roughness_color);   
+    float G   = GeometrySmith(N, V, L, roughness_color);      
+    vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	
+    vec3 kd = mix(vec3(1.0) - F, vec3(0.0), metallic_color);
+	vec3 diffuseBRDF = kd * albedo_color;
+	vec3 specularBRDF = (F * NDF * G) / max(Epsilon, 4.0 * NdotL * 0.8);
+	
+	return ((albedo_color / PI + diffuseBRDF + specularBRDF) * vec3(1.0) * NdotL)  * 5.0;
+}
+
 vec3 getNormal()
 {
 	if(material.UseNormalTex == 1)
@@ -154,10 +173,9 @@ void main()
     // Ambient Lighting (IBL)
 	//--------------------------------------------
     vec3 ambient = CalcIBL(N, V, F0, ao, albedro, metallic, roughness);
+	ambient *= 5;
+	ambient += CalcDirLight(V, N, F0, albedro, metallic, roughness, v_FragPos);
+
 	vec3 color = vec3(1.0) - exp(-ambient.rgb * 1.0);
-
-	// Gamma correction
-	color = pow(color, vec3(1.0f / 2.5));
-
 	outColor = vec4(color, 1.0);
 }

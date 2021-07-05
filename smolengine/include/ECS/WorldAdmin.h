@@ -61,15 +61,13 @@ namespace SmolEngine
 			                         
 		bool                         IsInPlayMode();
 		bool                         LoadStaticComponents();
-		bool                         ChangeActorName(Actor* actor, const std::string& name);
+		bool                         ChangeActorName(Ref<Actor>& actor, const std::string& name);
 			                         
-		void                         ReloadActors();
 		void                         Reload2DTextures(entt::registry& registry);
 		void                         Reload2DAnimations(entt::registry& registry);
 		void                         ReloadAudioClips(entt::registry& registry, AudioEngine* engine);
 		void                         ReloadCanvases(entt::registry& registry);
 		void                         ReloadMeshes(entt::registry& registry);
-		void                         ReloadRigidBodies(entt::registry& registry);
 		void                         ReloadScripts(entt::registry& registry);
 
 	private:

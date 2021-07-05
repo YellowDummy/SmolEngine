@@ -206,7 +206,7 @@ namespace SmolEngine
 
 	}
 
-	void EditorLayer::DrawActor(Actor* actor, uint32_t index)
+	void EditorLayer::DrawActor(Ref<Actor>& actor, uint32_t index)
 	{
 		if (m_SelectedActor == actor)
 			ImGui::PushStyleColor(ImGuiCol_Text, { 0.1f, 0.3f, 1.0f, 1.0f });
@@ -242,7 +242,8 @@ namespace SmolEngine
 
 		if (ImGui::BeginDragDropSource())
 		{
-			ImGui::SetDragDropPayload("ActorDragAndDrop", actor, sizeof(Actor));
+			m_IDBuffer = actor->GetID();
+			ImGui::SetDragDropPayload("ActorDragAndDrop", &m_IDBuffer, sizeof(Actor));
 			ImGui::Text(actor->GetName().c_str());
 			ImGui::EndDragDropSource();
 			m_IDBuffer = index;
@@ -252,7 +253,8 @@ namespace SmolEngine
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ActorDragAndDrop"))
 			{
-				Actor* target = static_cast<Actor*>(payload->Data);
+				uint32_t id = *static_cast<uint32_t*>(payload->Data);
+				Ref<Actor> target = m_World->GetActiveScene()->FindActorByID(id);
 				if (target != actor)
 				{
 					actor->SetChild(target);
@@ -374,6 +376,30 @@ namespace SmolEngine
 			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_SceneViewPort.x, m_SceneViewPort.y });
 			if (ImGui::BeginDragDropTarget())
 			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MeshPanel"))
+				{
+					std::string name = "DefaultActor" + std::to_string(m_World->GetActiveScene()->GetSceneState()->Actors.size());
+					auto actor = m_World->GetActiveScene()->CreateActor(name);
+					MeshComponent* meshComp = actor->AddComponent<MeshComponent>();
+
+					uint32_t meshIndex = *(uint32_t*)payload->Data;
+					meshComp->eDefaultType = (MeshComponent::DefaultMeshType)meshIndex;
+					auto defaultMeshes = GraphicsContext::GetSingleton()->GetDefaultMeshes();
+
+					switch (meshComp->eDefaultType)
+					{
+					case MeshComponent::DefaultMeshType::Cube: meshComp->DefaulPtr = defaultMeshes->Cube; break;
+					case MeshComponent::DefaultMeshType::Sphere: meshComp->DefaulPtr = defaultMeshes->Sphere; break;
+					case MeshComponent::DefaultMeshType::Capsule: meshComp->DefaulPtr = defaultMeshes->Capsule; break;
+					case MeshComponent::DefaultMeshType::Torus: meshComp->DefaulPtr = defaultMeshes->Torus; break;
+					}
+
+					uint32_t size = static_cast<uint32_t>(meshComp->DefaulPtr->GetChilds().size()) + 1;
+					meshComp->MaterialsData.resize(size);
+					m_SelectedActor = actor;
+					m_SelectionFlags = SelectionFlags::Inspector;
+				}
+
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 				{
 					std::string path = *(std::string*)payload->Data;
@@ -388,7 +414,7 @@ namespace SmolEngine
 					if (FileExtensionCheck(path, ".gltf"))
 					{
 						std::string name = "DefaultActor" + std::to_string(m_World->GetActiveScene()->GetSceneState()->Actors.size());
-						Actor* actor = m_World->GetActiveScene()->CreateActor(name);
+						auto actor = m_World->GetActiveScene()->CreateActor(name);
 						MeshComponent* mesh = actor->AddComponent<MeshComponent>();
 						TransformComponent* transform = actor->GetComponent<TransformComponent>();
 
@@ -475,6 +501,19 @@ namespace SmolEngine
 		}
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
+	}
+
+	void EditorLayer::DrawMeshPanel()
+	{
+		if (ImGui::CollapsingHeader("Primitives"))
+		{
+			ImGui::NewLine();
+			DrawMeshPrimitive((uint32_t)MeshComponent::DefaultMeshType::Cube, "Cube", &m_TexturesLoader->m_CubeIcon);
+			DrawMeshPrimitive((uint32_t)MeshComponent::DefaultMeshType::Sphere, "Sphere", &m_TexturesLoader->m_SphereIcon);
+			DrawMeshPrimitive((uint32_t)MeshComponent::DefaultMeshType::Capsule, "Capsule", &m_TexturesLoader->m_CapsuleIcon);
+			DrawMeshPrimitive((uint32_t)MeshComponent::DefaultMeshType::Torus, "Torus", &m_TexturesLoader->m_TorusIcon);
+			ImGui::NewLine();
+		}
 	}
 
 	void EditorLayer::DrawInfo(HeadComponent* head)
@@ -766,7 +805,7 @@ namespace SmolEngine
 					}
 					else
 					{
-						ImGui::Text("No Actor selected");
+						DrawMeshPanel();
 					}
 
 					ImGui::EndChild();
@@ -856,8 +895,8 @@ namespace SmolEngine
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ActorDragAndDrop"))
 					{
-						Actor* target = static_cast<Actor*>(payload->Data);
-						Actor* parent = target->GetParent();
+						uint32_t id = *static_cast<uint32_t*>(payload->Data);
+						Ref<Actor> parent = m_World->GetActiveScene()->FindActorByID(id);
 						if (parent != nullptr)
 							parent->RemoveChildAtIndex(m_IDBuffer);
 						
@@ -875,7 +914,7 @@ namespace SmolEngine
 					for (auto obj : m_DisplayedActors)
 						CheckActor(obj);
 
-					for (const auto& actor : m_DisplayedActors)
+					for (auto& actor : m_DisplayedActors)
 					{
 						auto result = actor->GetName().find(name);
 						if (result == std::string::npos)
@@ -925,7 +964,7 @@ namespace SmolEngine
 
 	void EditorLayer::DrawMeshComponent(MeshComponent* comp)
 	{
-		if (comp->Mesh)
+		if (comp->MeshPtr || comp->DefaulPtr)
 		{
 			ImGui::Extensions::CheckBox("Show", comp->bShow);
 			ImGui::Extensions::CheckBox("Static", comp->bIsStatic);
@@ -978,17 +1017,24 @@ namespace SmolEngine
 
 		if (show)
 		{
-			uint32_t count = static_cast<uint32_t>(comp->Mesh->GetChildCount());
+			Mesh* mesh = nullptr;
+			if (comp->eDefaultType == MeshComponent::DefaultMeshType::None)
+				mesh = comp->MeshPtr.get();
+			else
+				mesh = comp->DefaulPtr;
+
+
+			uint32_t count = static_cast<uint32_t>(mesh->GetChildCount());
 			std::vector<Mesh*> meshes(count + 1);
 			for (uint32_t i = 0; i < count + 1; ++i)
 			{
 				if (i == 0)
 				{
-					meshes[0] = comp->Mesh.get();
+					meshes[0] = mesh;
 					continue;
 				}
 
-				Mesh* mesh = &comp->Mesh->GetChilds()[i - 1];
+				Mesh* mesh = &mesh->GetChilds()[i - 1];
 				meshes[i] = mesh;
 			}
 
@@ -1343,17 +1389,17 @@ namespace SmolEngine
 			{
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("RigidBody (2D)"))
-				{
-					auto comp = m_World->GetActiveScene()->AddComponent<Rigidbody2DComponent>(m_SelectedActor);
-					ComponentHandler::ValidateBody2DComponent(comp, m_SelectedActor);
-					ImGui::CloseCurrentPopup();
-				}
-
 				if (ImGui::MenuItem("RigidBody"))
 				{
 					auto comp = m_World->GetActiveScene()->AddComponent<RigidbodyComponent>(m_SelectedActor);
 					ComponentHandler::ValidateRigidBodyComponent(comp, m_SelectedActor);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("2D RigidBody"))
+				{
+					auto comp = m_World->GetActiveScene()->AddComponent<Rigidbody2DComponent>(m_SelectedActor);
+					ComponentHandler::ValidateBody2DComponent(comp, m_SelectedActor);
 					ImGui::CloseCurrentPopup();
 				}
 			}
@@ -1444,14 +1490,30 @@ namespace SmolEngine
 		}
 	}
 
-	void EditorLayer::CheckActor(Actor* actor)
+	void EditorLayer::DrawMeshPrimitive(uint32_t type, const std::string& title, Texture* icon)
+	{
+		ImGui::Image(icon->GetImGuiTexture(), { 60, 60 }, ImVec2(0, 1), ImVec2(1, 0));
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+		{
+			m_IDBuffer = type;
+			ImGui::SetDragDropPayload("MeshPanel", &m_IDBuffer, sizeof(uint32_t));
+
+			ImGui::Image(icon->GetImGuiTexture(), { 40, 40}, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::EndDragDropSource();
+		}
+
+		ImGui::SameLine();
+		ImGui::TextUnformatted(title.c_str());
+	}
+
+	void EditorLayer::CheckActor(Ref<Actor>& actor)
 	{
 		HeadComponent* head = actor->GetInfo();
 		for (auto child : head->Childs)
 		{
 			if (std::find(m_DisplayedActors.begin(), m_DisplayedActors.end(), child) != m_DisplayedActors.end())
 			{
-				std::vector<Actor*> tmp = m_DisplayedActors;
+				std::vector<Ref<Actor>> tmp = m_DisplayedActors;
 				tmp.erase(std::remove(tmp.begin(), tmp.end(), child), tmp.end());
 				m_DisplayedActors = tmp;
 

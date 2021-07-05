@@ -59,7 +59,7 @@ namespace SmolEngine
 		}
 	}
 
-	Actor* Scene::CreateActor(const std::string& name, const std::string& tag)
+	Ref<Actor> Scene::CreateActor(const std::string& name, const std::string& tag)
 	{
 		const auto searchNameResult = m_State->ActorNameSet.find(name);
 		if (searchNameResult != m_State->ActorNameSet.end())
@@ -81,15 +81,15 @@ namespace SmolEngine
 		head.Tag = tag;
 
 		// Add Transform
-		AddComponent<TransformComponent>(actor.get());
-		m_State->ActorNameSet[name] = actor.get();
-		m_State->ActorIDSet[id] = actor.get();
+		AddComponent<TransformComponent>(actor);
+		m_State->ActorNameSet[name] = actor;
+		m_State->ActorIDSet[id] = actor;
 		m_State->LastActorID++;
 		m_State->Actors.emplace_back(actor);
-		return actor.get();
+		return actor;
 	}
 
-	Actor* Scene::FindActorByName(const std::string& name)
+	Ref<Actor> Scene::FindActorByName(const std::string& name)
 	{
 		const auto& it = m_State->ActorNameSet.find(name);
 		if (it != m_State->ActorNameSet.end())
@@ -98,16 +98,16 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	Actor* Scene::FindActorByTag(const std::string& tag)
+	Ref<Actor> Scene::FindActorByTag(const std::string& tag)
 	{
 		for (auto& actor : m_State->Actors)
 			if (tag == actor->GetTag())
-				return actor.get();
+				return actor;
 
 		return nullptr;
 	}
 
-	Actor* Scene::FindActorByID(uint32_t id)
+	Ref<Actor> Scene::FindActorByID(uint32_t id)
 	{
 		auto& it = m_State->ActorIDSet.find(id);
 		if (it != m_State->ActorIDSet.end())
@@ -116,27 +116,27 @@ namespace SmolEngine
 		return nullptr;
 	}
 
-	void Scene::GetActors(std::vector<Actor*>& outList)
+	void Scene::GetActors(std::vector<Ref<Actor>>& outList)
 	{
 		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
 
 		outList.resize(count);
 		for(uint32_t i = 0; i < count; ++i)
-			outList[i] = m_State->Actors[i].get();
+			outList[i] = m_State->Actors[i];
 	}
 
-	void Scene::GetActorsByTag(const std::string& tag, std::vector<Actor*>& outList)
+	void Scene::GetActorsByTag(const std::string& tag, std::vector<Ref<Actor>>& outList)
 	{
 		uint32_t count = static_cast<uint32_t>(m_State->Actors.size());
 		for (uint32_t i = 0; i < count; ++i)
 		{
-			Actor* actor = m_State->Actors[i].get();
+			auto actor = m_State->Actors[i];
 			if (tag == actor->GetTag())
 				outList.push_back(actor);
 		}
 	}
 
-	void Scene::DuplicateActor(Actor* actor)
+	void Scene::DuplicateActor(Ref<Actor>& actor)
 	{
 		auto newObj = CreateActor(actor->GetName() + "_D", actor->GetTag());
 		auto newT = newObj->GetComponent<TransformComponent>();
@@ -154,8 +154,7 @@ namespace SmolEngine
 			meshNew->bShow = meshOld->bShow;
 			meshNew->ModelPath = meshOld->ModelPath;
 			meshNew->MaterialsData= meshOld->MaterialsData;
-			meshNew->ShadowType = meshOld->ShadowType;
-			meshNew->Mesh = meshOld->Mesh;
+			meshNew->MeshPtr = meshOld->MeshPtr;
 		}
 
 		if (actor->HasComponent<BehaviourComponent>())
@@ -167,7 +166,7 @@ namespace SmolEngine
 
 	}
 
-	void Scene::DeleteActor(Actor* actor)
+	void Scene::DeleteActor(Ref<Actor>& actor)
 	{
 		if (actor != nullptr)
 		{
@@ -177,7 +176,7 @@ namespace SmolEngine
 			auto& list = m_State->Actors;
 			std::vector<Ref<Actor>> tempList = list;
 
-			tempList.erase(std::remove_if(tempList.begin(), tempList.end(), [&](Ref<Actor>& elem) { return elem.get() == actor; }), tempList.end());
+			tempList.erase(std::remove_if(tempList.begin(), tempList.end(), [&](Ref<Actor>& elem) { return elem == actor; }), tempList.end());
 			list = tempList;
 			actor = nullptr;
 		}
@@ -272,7 +271,7 @@ namespace SmolEngine
 		return m_SceneData.m_Registry;
 	}
 
-	bool Scene::AddScript(Actor* actor, const std::string& name)
+	bool Scene::AddScript(Ref<Actor>& actor, const std::string& name)
 	{
 		return ScriptingSystem::AttachNativeScript(actor, name);
 	}

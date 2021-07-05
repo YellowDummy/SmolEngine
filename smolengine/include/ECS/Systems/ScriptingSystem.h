@@ -63,7 +63,7 @@ namespace SmolEngine
 
 	private:
 
-		static bool AttachNativeScript(Actor* actor, const std::string& scriptName);
+		static bool AttachNativeScript(Ref<Actor>& actor, const std::string& scriptName);
 
 		static void OnBeginWorld();
 		static void OnEndWorld();

@@ -65,9 +65,10 @@ namespace SmolEngine
 		void OnImGuiRender() override;
 
 		// Draw
-		void DrawActor(Actor* actor, uint32_t index = 0);
+		void DrawActor(Ref<Actor>& actor, uint32_t index = 0);
 		void DrawToolsBar();
 		void DrawSceneTetxure();
+		void DrawMeshPanel();
 		void DrawInfo(HeadComponent* head);
 		void DrawTransform(TransformComponent* transform);
 		void DrawTexture(Texture2DComponent* texture);
@@ -109,7 +110,8 @@ namespace SmolEngine
 
 		void ResetSelection();
 		void DrawScriptComponent(uint32_t index);
-		void CheckActor(Actor* actor);
+		void DrawMeshPrimitive(uint32_t type, const std::string& title, Texture* icon);
+		void CheckActor(Ref<Actor>& actor);
 		void CheckGameCameraState();
 
 		// Callbacks
@@ -129,14 +131,14 @@ namespace SmolEngine
 		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
 		RendererPanel*                              m_RendererPanel = nullptr;
-		Actor*                                      m_SelectedActor = nullptr;
+		Ref<Actor>                                  m_SelectedActor = nullptr;
 		MaterialLibraryInterface*                   m_MaterialLibraryInterface = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;
 		glm::vec2                                   m_SceneViewPort = { 0.0f, 0.0f };
 		std::string                                 m_FilePath = "";
 		std::string                                 m_FileName = "";
 		uint32_t                                    m_IDBuffer = 0;
-		std::vector<Actor*>                         m_DisplayedActors;
+		std::vector<Ref<Actor>>                     m_DisplayedActors;
 
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";

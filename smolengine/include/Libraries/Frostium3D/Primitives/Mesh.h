@@ -49,6 +49,7 @@ namespace Frostium
 		//Helpers
 		bool IsAnimated() const;
 		bool IsRootNode() const;
+		bool IsReady() const;
 		void ResetAnimation(uint32_t index);
 		static void Create(const std::string& filePath, Mesh* mesh);
 
@@ -62,7 +63,7 @@ namespace Frostium
 		Mesh*                                       m_Root = nullptr;
 		Ref<VertexBuffer>                           m_VertexBuffer = nullptr;
 		Ref<IndexBuffer>                            m_IndexBuffer = nullptr;
-		ImportedDataGlTF*                           m_ImportedData = nullptr;
+		Ref<ImportedDataGlTF>                       m_ImportedData = nullptr;
 		bool                                        m_Initialized = false;
 		uint32_t                                    m_MaterialID = 0;
 		uint32_t                                    m_VertexCount = 0;
