@@ -135,13 +135,38 @@ namespace SmolEngine
 	{
 		Scene* activeScene = GetActiveScene();
 		SceneStateComponent* sceneState = activeScene->GetSceneState();
-		entt::registry& registry = activeScene->m_SceneData.m_Registry;
-
-		// Clear mesh map
 		m_State->m_MeshMap.clear();
 
-		// Updates renderer states
-		DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
+		// Set Renderer State
+		{
+			{
+				auto& cube_path = sceneState->PipelineState.Environment.CubeMapPath;
+				auto cubeMap = sceneState->PipelineState.Environment.CubeMap;
+
+				if (cube_path.empty() == false)
+				{
+					cubeMap = new CubeMap();
+					CubeMap::Create(cubeMap, cube_path);
+					DeferredRenderer::SetEnvironmentCube(cubeMap);
+				}
+				else
+					DeferredRenderer::SetDynamicSkyboxProperties(sceneState->PipelineState.Environment.SkyProperties);
+			}
+
+			{
+				Mask& mask = sceneState->PipelineState.DirtMask;
+				if (mask.Path.empty() == false)
+				{
+					Texture*  dirt_mask = new Texture();
+					Texture::Create(mask.Path, dirt_mask, TextureFormat::B8G8R8A8_UNORM, true, true);
+					DeferredRenderer::SetDirtMask(dirt_mask, mask.Intensity, mask.IntensityBase);
+				}
+			}
+
+			DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
+			DeferredRenderer::SubmitDirLight(&sceneState->PipelineState.DirLight);
+
+		}
 
 		// Recrates actor's name & id sets
 		{
@@ -164,6 +189,8 @@ namespace SmolEngine
 
 		// Loads Assets
 		{
+			entt::registry& registry = activeScene->m_SceneData.m_Registry;
+
 			ReloadActors();
 			Reload2DTextures(registry);
 			ReloadAudioClips(registry, &AudioEngineSComponent::Get()->Engine);
