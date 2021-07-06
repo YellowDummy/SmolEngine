@@ -21,9 +21,9 @@ namespace SmolEngine
 		info->pWindowCI->Width = 1920;
 		info->Flags |= Features_Renderer_Debug_Flags;
 #ifdef EDITOR_DEBUG
-		info->pWindowCI->Title = "SmolEngine Editor x64 - Vulkan - Debug";
+		info->pWindowCI->Title = "SmolEngine Editor - Debug (Vulkan x64)";
 #else
-		info->pWindowCI->Title = "SmolEngine Editor x64 - Vulkan - Release";
+		info->pWindowCI->Title = "SmolEngine Editor - Release (Vulkan x64)";
 #endif
 		info->bAutoResize = false;
 		info->bTargetsSwapchain = false; // render imgui to the swap chain and later on render whole scene as imgui texture

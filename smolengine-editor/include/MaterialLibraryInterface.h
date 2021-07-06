@@ -37,7 +37,7 @@ namespace SmolEngine
 	private:
 
 		void InitPreviewRenderer();
-		void LoadTexture(const std::string& filePath, MaterialTexture type, std::vector<Texture*>& textures);
+		void LoadTexture(TextureCreateInfo* info, MaterialTexture type, std::vector<Texture*>& textures);
 		bool DrawTextureInfo(std::string& path, const std::string& title);
 		void RenderImage();
 		void ResetMaterial();

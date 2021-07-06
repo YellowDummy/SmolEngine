@@ -24,7 +24,7 @@ namespace Frostium
 
 	private:
 		
-		static SLog* s_Instance;
+		static SLog*                    s_Instance;
 		std::shared_ptr<spdlog::logger> m_NativeLogger = nullptr;
 	};
 }

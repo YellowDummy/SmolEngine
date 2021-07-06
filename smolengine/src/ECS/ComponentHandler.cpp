@@ -89,11 +89,10 @@ namespace SmolEngine
 				}
 			}
 
-			MaterialLibrary* lib = MaterialLibrary::GetSinglenton();
 			MaterialCreateInfo matInfo = {};
-
-			if (lib->Load(material_path, matInfo))
+			if(matInfo.Load(material_path) == true)
 			{
+				MaterialLibrary* lib = MaterialLibrary::GetSinglenton();
 				uint32_t id = lib->Add(&matInfo, material_path);
 				DeferredRenderer::UpdateMaterials();
 
@@ -108,10 +107,11 @@ namespace SmolEngine
 
 	bool ComponentHandler::ValidateTexture2DComponent(Texture2DComponent* comp, const std::string& filePath)
 	{
-		if (comp)
+		TextureCreateInfo textureCI = {};
+		if (textureCI.Load(filePath) == true)
 		{
 			Ref<Texture> tex = std::make_shared<Texture>();
-			Texture::Create(filePath, tex.get());
+			Texture::Create(&textureCI, tex.get());
 
 			comp->TexturePath = filePath;
 			comp->Texture = tex;

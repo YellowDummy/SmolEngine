@@ -33,7 +33,7 @@ namespace SmolEngine
 		m_CurrentFilePath = path;
 
 		ResetMaterial();
-		MaterialLibrary::GetSinglenton()->Load(path, *m_MaterialCI);
+		m_MaterialCI->Load(path);
 		RenderImage();
 	}
 
@@ -66,22 +66,22 @@ namespace SmolEngine
 		{
 			ImGui::NewLine();
 
-			if (DrawTextureInfo(m_MaterialCI->AlbedroPath, "Albedro"))
+			if (DrawTextureInfo(m_MaterialCI->AlbedroTex.FilePath, "Albedro"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->NormalPath, "Normal"))
+			if (DrawTextureInfo(m_MaterialCI->NormalTex.FilePath, "Normal"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->MetallnessPath, "Metalness"))
+			if (DrawTextureInfo(m_MaterialCI->MetallnessTex.FilePath, "Metalness"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->RoughnessPath, "Roughness"))
+			if (DrawTextureInfo(m_MaterialCI->RoughnessTex.FilePath, "Roughness"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->AOPath, "AO"))
+			if (DrawTextureInfo(m_MaterialCI->AOTex.FilePath, "AO"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->EmissivePath, "Emissive"))
+			if (DrawTextureInfo(m_MaterialCI->EmissiveTex.FilePath, "Emissive"))
 				ApplyChanges();
 
 			ImGui::NewLine();
@@ -115,7 +115,7 @@ namespace SmolEngine
 		if (!m_CurrentFilePath.empty())
 		{
 			std::string path = m_CurrentFilePath;
-			MaterialLibrary::GetSinglenton()->Save(path, *m_MaterialCI);
+			m_MaterialCI->Save(path);
 		}
 	}
 
@@ -155,7 +155,7 @@ namespace SmolEngine
 		m_Data->Pipeline->UpdateVulkanImageDescriptor(3, VulkanPBR::GetSingleton()->GetBRDFLUTImageInfo());
 		m_Data->Pipeline->UpdateVulkanImageDescriptor(4, VulkanPBR::GetSingleton()->GetPrefilteredCubeImageInfo());
 
-		std::unordered_map<MaterialTexture, std::string*> texture_infos;
+		std::unordered_map<MaterialTexture, TextureCreateInfo*> texture_infos;
 		std::vector<Texture*> textures;
 
 		m_Material.Metalness = m_MaterialCI->Metallness;
@@ -170,9 +170,9 @@ namespace SmolEngine
 		m_Material.UseAOTex = false;
 
 		m_MaterialCI->GetTextures(texture_infos);
-		for (const auto& [type, path] : texture_infos)
+		for (const auto& [type, info] : texture_infos)
 		{
-			LoadTexture(*path, type, textures);
+			LoadTexture(info, type, textures);
 		}
 
 		m_Data->Pipeline->UpdateSamplers(textures, 5);
@@ -222,7 +222,7 @@ namespace SmolEngine
 			framebufferCI.Height = 200;
 			framebufferCI.bResizable = false;
 			framebufferCI.bUsedByImGui = true;
-			framebufferCI.NumSubpassDependencies = 0;
+			framebufferCI.bAutoSync = false;
 			framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
 			framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
 
@@ -266,16 +266,19 @@ namespace SmolEngine
 		}
 	}
 
-	void MaterialLibraryInterface::LoadTexture(const std::string& filePath, MaterialTexture type, std::vector<Texture*>& textures)
+	void MaterialLibraryInterface::LoadTexture(TextureCreateInfo* info, MaterialTexture type, std::vector<Texture*>& textures)
 	{
 		uint32_t index = static_cast<uint32_t>(textures.size());
+		std::string filePath = info->FilePath;
 		Texture* tex = nullptr;
 
 		auto& it = m_Textures.find(filePath);
 		if (it == m_Textures.end())
 		{
+			
 			Ref<Texture> tex_ = std::make_shared<Texture>();
-			Texture::Create(filePath, tex_.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
+			info->bImGUIHandle = true;
+			Texture::Create(info, tex_.get());
 			m_Textures[filePath] = tex_;
 			tex = tex_.get();
 		}
@@ -373,17 +376,22 @@ namespace SmolEngine
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
 			{
 				std::string& path = *(std::string*)payload->Data;
-				if (EditorLayer::FileExtensionCheck(path, ".png") || EditorLayer::FileExtensionCheck(path, ".jpg"))
+				if (EditorLayer::FileExtensionCheck(path, ".s_image"))
 				{
 					auto& it = m_Textures.find(path);
 					if (it == m_Textures.end())
 					{
-						texture_path = path;
-						used = true;
+						TextureCreateInfo texCI = {};
+						if (texCI.Load(path) == true)
+						{
+							texture_path = path;
+							used = true;
+							texCI.bImGUIHandle = true;
 
-						Ref<Texture> tex = std::make_shared<Texture>();
-						Texture::Create(path, tex.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
-						m_Textures[path] = tex;
+							Ref<Texture> tex = std::make_shared<Texture>();
+							Texture::Create(&texCI, tex.get());
+							m_Textures[path] = tex;
+						}
 					}
 					else
 					{

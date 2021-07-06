@@ -9,29 +9,62 @@ namespace SmolEngine
 	{
 		TexturesLoader()
 		{
-			const bool flip = true;
-			const bool imguiDescriptor = true;
+			TextureCreateInfo texCI = {};
+			texCI.bImGUIHandle = true;
+
+			texCI.FilePath = "assets/buttons/play_button.png";
+			Texture::Create(&texCI, &m_PlayButton);
+
+			texCI.FilePath = "assets/buttons/pause_button.png";
+			Texture::Create(&texCI, &m_StopButton);
+
+			texCI.FilePath = "assets/buttons/move_button.png";
+			Texture::Create(&texCI, &m_MoveButton);
+
+			texCI.FilePath = "assets/buttons/rotate_button.png";
+			Texture::Create(&texCI, &m_RotateButton);
+
+			texCI.FilePath = "assets/buttons/scale_button.png";
+			Texture::Create(&texCI, &m_ScaleButton);
+
+			texCI.FilePath = "assets/buttons/search_button.png";
+			Texture::Create(&texCI, &m_SearchButton);
+
+			texCI.FilePath = "assets/buttons/remove_button.png";
+			Texture::Create(&texCI, &m_RemoveButton);
+
+			texCI.FilePath = "assets/buttons/folder_button.png";
+			Texture::Create(&texCI, &m_FolderButton);
+
+			texCI.FilePath = "assets/buttons/documents_button.png";
+			Texture::Create(&texCI, &m_DocumentsIcon);
+
+			texCI.FilePath = "assets/buttons/scene_button.png";
+			Texture::Create(&texCI, &m_SceneIcon);
+
+			texCI.FilePath = "assets/buttons/material_button.png";
+			Texture::Create(&texCI, &m_MaterialIcon);
+
+			texCI.FilePath = "assets/buttons/default_background.jpg";
+			Texture::Create(&texCI, &m_BackgroundIcon);
+
+			texCI.FilePath = "assets/buttons/cube_icon.png";
+			Texture::Create(&texCI, &m_CubeIcon);
+
+			texCI.FilePath = "assets/buttons/sphere_icon.png";
+			Texture::Create(&texCI, &m_SphereIcon);
+
+			texCI.FilePath = "assets/buttons/capsule_icon.png";
+			Texture::Create(&texCI, &m_CapsuleIcon);
+
+			texCI.FilePath = "assets/buttons/torus_icon.png";
+			Texture::Create(&texCI, &m_TorusIcon);
+
+			texCI.FilePath = "assets/buttons/glTF_button.png";
+			texCI.bVerticalFlip = false;
+			Texture::Create(&texCI, &m_glTFIcon);
+
 			s_Instance = this;
-
-			Texture::Create("assets/buttons/play_button.png", &m_PlayButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/pause_button.png", &m_StopButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/move_button.png", &m_MoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/rotate_button.png", &m_RotateButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/scale_button.png", &m_ScaleButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/search_button.png", &m_SearchButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/remove_button.png", &m_RemoveButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/folder_button.png", &m_FolderButton, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/documents_button.png", &m_DocumentsIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/scene_button.png", &m_SceneIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/material_button.png", &m_MaterialIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/glTF_button.png", &m_glTFIcon, TextureFormat::R8G8B8A8_UNORM, false, imguiDescriptor);
-			Texture::Create("assets/buttons/default_background.jpg", &m_BackgroundIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-
-			Texture::Create("assets/buttons/cube_icon.png", &m_CubeIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/sphere_icon.png", &m_SphereIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/capsule_icon.png", &m_CapsuleIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-			Texture::Create("assets/buttons/torus_icon.png", &m_TorusIcon, TextureFormat::R8G8B8A8_UNORM, flip, imguiDescriptor);
-
 		}
 
 		static TexturesLoader* Get() { return s_Instance; }

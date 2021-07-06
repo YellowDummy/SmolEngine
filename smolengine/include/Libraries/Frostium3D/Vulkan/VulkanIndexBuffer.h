@@ -11,18 +11,15 @@ namespace Frostium
 	class VulkanIndexBuffer : public VulkanBuffer
 	{
 	public:
-
 		VulkanIndexBuffer() = default;
 		~VulkanIndexBuffer() = default;
 
-		void Create(const uint32_t* data, uint64_t count, bool is_static);
-		void Create(uint64_t size);
-		uint32_t GetCount() const;
+		void         Init(const uint32_t* data, uint64_t count, bool is_static);
+		void         Init(uint64_t size);
+		uint32_t     GetElementsCount() const;
 
 	private:
-
-		uint32_t m_ElementsCount = 0;
-
+		uint32_t     m_ElementsCount = 0;
 	};
 }
 #endif

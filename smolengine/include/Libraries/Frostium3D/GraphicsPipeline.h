@@ -52,8 +52,6 @@ namespace Frostium
 		void SetVertexBuffers(const std::vector<Ref<VertexBuffer>>& buffer);
 		void SetIndexBuffers(const std::vector<Ref<IndexBuffer>>& buffer);
 #ifndef FROSTIUM_OPENGL_IMPL
-		void CmdUpdateVertextBuffer(const void* data, size_t size, uint32_t bufferIndex = 0, uint32_t offset = 0);
-		void CmdUpdateIndexBuffer(uint32_t* indices, size_t count, uint32_t bufferIndex = 0, uint32_t offset = 0);
 		bool UpdateVulkanImageDescriptor(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo);
 #endif
 		bool UpdateSamplers(const std::vector<Texture*>& textures, uint32_t bindingPoint);

@@ -10,6 +10,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <cereal/cereal.hpp>
 
 #ifdef FROSTIUM_SMOLENGINE_IMPL
 namespace SmolEngine
@@ -17,41 +18,93 @@ namespace SmolEngine
 namespace Frostium
 #endif
 {
-	struct TextureLoadedData;
-
-	class Texture
+	enum class TextureFormat : int
 	{
+		R8_UNORM,
+		R8G8B8A8_UNORM,
+		B8G8R8A8_UNORM,
+		// HDR
+		R16G16B16A16_SFLOAT,
+		R32G32B32A32_SFLOAT
+	};
+
+	enum class AddressMode: int
+	{
+		REPEAT,
+		MIRRORED_REPEAT,
+		CLAMP_TO_EDGE,
+		CLAMP_TO_BORDER,
+		MIRROR_CLAMP_TO_EDGE,
+	};
+
+	enum class BorderColor : int
+	{
+		FLOAT_TRANSPARENT_BLACK,
+		INT_TRANSPARENT_BLACK,
+		FLOAT_OPAQUE_BLACK,
+		INT_OPAQUE_BLACK,
+		FLOAT_OPAQUE_WHITE,
+		INT_OPAQUE_WHITE
+	};
+
+	struct TextureCreateInfo
+	{
+		bool           bVerticalFlip = true;
+		bool           bAnisotropyEnable = true;
+		bool           bImGUIHandle = false;
+		TextureFormat  eFormat = TextureFormat::R8G8B8A8_UNORM;
+		AddressMode    eAddressMode = AddressMode::REPEAT;
+		ImageFilter    eFilter = ImageFilter::LINEAR;
+		BorderColor    eBorderColor = BorderColor::FLOAT_OPAQUE_WHITE;
+		std::string    FilePath = "";
+
 	public:
-
-		Texture() = default;
-		~Texture() = default;
-		bool operator==(const Texture& other) const;
-
-		void Bind(uint32_t slot = 0) const;
-		void UnBind() const;
-
-		bool IsInitialized() const;
-
-		// Getters
-		uint32_t GetHeight() const;
-		uint32_t GetWidth() const;
-		const uint32_t GetID() const;
-		void* GetImGuiTexture() const;
-#ifndef  FROSTIUM_OPENGL_IMPL
-		VulkanTexture* GetVulkanTexture() { return &m_VulkanTexture; }
-#endif
-		// Factory
-		static void CreateWhiteTexture(Texture* out_texture);
-		static void Create(const std::string& filePath, Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM, bool flip = true, bool imgui_handler = false);
-		static void Create(const void* data, uint32_t size, const uint32_t width, const uint32_t height, Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
+		bool           Save(const std::string& filePath);
+		bool           Load(const std::string& filePath);
 
 	private:
+		friend class cereal::access;
 
-		uint32_t        m_ID = 0;
+		template<typename Archive>
+		void serialize(Archive& archive)
+		{
+			archive(bVerticalFlip, bAnisotropyEnable, bImGUIHandle, eFormat, eAddressMode, eFilter, eBorderColor, FilePath);
+		}
+	};
+
+	struct TextureInfo
+	{
+		uint32_t ID = 0;
+		uint32_t Width = 0;
+		uint32_t Height = 0;
+		void*    ImHandle = nullptr; // imgui texture id
+	};
+
 #ifdef  FROSTIUM_OPENGL_IMPL
-		OpenglTexture2D m_OpenglTexture2D = {};
+	class Texture: OpenglTexture2D
 #else
-		VulkanTexture   m_VulkanTexture = {};
+	class Texture: VulkanTexture
 #endif
+	{
+	public:
+		Texture();
+		~Texture() = default;
+
+		void                Bind(uint32_t slot = 0) const;
+		void                UnBind() const;
+		bool                IsReady() const; 
+		const TextureInfo&  GetInfo() const;
+		void*               GetImGuiTexture() const;
+#ifndef  FROSTIUM_OPENGL_IMPL
+		VulkanTexture*      GetVulkanTexture();
+#endif
+		// Factory
+		static void         CreateWhiteTexture(Texture* out_texture);
+		static void         Create(const TextureCreateInfo* ifno, Texture* out_texture);
+		static void         Create(const void* data, uint32_t size, uint32_t width, uint32_t height, 
+			                Texture* out_texture, TextureFormat format = TextureFormat::R8G8B8A8_UNORM);
+
+	private:
+		TextureInfo         m_Info = {};
 	};
 }

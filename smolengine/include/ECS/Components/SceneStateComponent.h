@@ -97,7 +97,6 @@ namespace SmolEngine
 		int                  PostProcessingFlag = 0;
 		int                  DebugViewFlag = 0;
 		int                  EnvironmentFlags = 0;
-		int                  FormatFlags = 0;
 		int                  ShadowsFlags = 0;
 
 		friend class cereal::access;

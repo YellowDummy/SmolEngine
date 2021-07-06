@@ -84,8 +84,6 @@ namespace SmolEngine
 							ImGui::Separator();
 							ImGui::NewLine();
 
-							ImGui::Extensions::Combo("Format", "R8G8B8A8\0R16G16B16A16\0", pipline_state.FormatFlags, padding, "IBL", 12.0f);
-							ImGui::NewLine();
 							ImGui::Image(TexturesLoader::Get()->m_BackgroundIcon.GetImGuiTexture(), ImVec2{ 60, 60 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 							if (ImGui::BeginDragDropTarget())
 							{
@@ -94,10 +92,13 @@ namespace SmolEngine
 									std::string& path = *(std::string*)payload->Data;
 									if (EditorLayer::FileExtensionCheck(path, ".ktx"))
 									{
-										TextureFormat format = pipline_state.FormatFlags == 0 ? TextureFormat::R8G8B8A8_UNORM : TextureFormat::R16G16B16A16_SFLOAT;
-										environment.CubeMap = new CubeMap();
-										CubeMap::Create(environment.CubeMap, path, format);
-										DeferredRenderer::SetEnvironmentCube(environment.CubeMap);
+										TextureCreateInfo texCI = {};
+										if (texCI.Load(path) == true)
+										{
+											environment.CubeMap = new CubeMap();
+											CubeMap::Create(&texCI, environment.CubeMap);
+											DeferredRenderer::SetEnvironmentCube(environment.CubeMap);
+										}
 									}
 								}
 								ImGui::EndDragDropTarget();
@@ -226,10 +227,16 @@ namespace SmolEngine
 								std::string& path = *(std::string*)payload->Data;
 								if (EditorLayer::FileExtensionCheck(path, ".png") || EditorLayer::FileExtensionCheck(path, ".jpg"))
 								{
-									dirt.Path = path;
-									dirt.Texture = std::make_shared<Texture>();
-									Texture::Create(path, dirt.Texture.get(), TextureFormat::R8G8B8A8_UNORM, true, true);
-									DeferredRenderer::SetDirtMask(dirt.Texture.get(), dirt.Intensity, dirt.IntensityBase);
+									TextureCreateInfo texCI = {};
+									if (texCI.Load(path) == true)
+									{
+										texCI.bImGUIHandle = true;
+										dirt.Path = path;
+										dirt.Texture = std::make_shared<Texture>();
+
+										Texture::Create(&texCI, dirt.Texture.get());
+										DeferredRenderer::SetDirtMask(dirt.Texture.get(), dirt.Intensity, dirt.IntensityBase);
+									}
 								}
 							}
 							ImGui::EndDragDropTarget();

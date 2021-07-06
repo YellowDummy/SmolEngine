@@ -20,36 +20,28 @@ namespace Frostium
 {
 	struct GraphicsPipelineShaderCreateInfo;
 
-	class Shader
+#ifdef  FROSTIUM_OPENGL_IMPL
+	class Shader : OpenglShader
+#else
+	class Shader: VulkanShader
+#endif
 	{
 	public:
-
-		// Factory
-		static void                         Create(GraphicsPipelineShaderCreateInfo* shaderCI, Shader* obj);
-							                
-		// Getters			                
-		uint32_t                            GetProgramID();
-		const std::string                   GetName();
-#ifdef FROSTIUM_OPENGL_IMPL	                
-#else						                
-		VulkanShader*                       GetVulkanShader() { return &m_VulkanShader; }
-#endif						                
-							                
 		void                                Bind() const;
 		void                                UnBind() const;
 		bool                                Realod();
-							                
+#ifndef FROSTIUM_OPENGL_IMPL	                				                
+		VulkanShader*                       GetVulkanShader() { return dynamic_cast<VulkanShader*>(this); }
+#endif
+		static void                         Create(GraphicsPipelineShaderCreateInfo* shaderCI, Shader* shader);
+
 	private:				                
 		void                                Reflect(const std::vector<uint32_t>& binaryData, ShaderType type);
 
 	private:
 		GraphicsPipelineShaderCreateInfo    m_CreateInfo{};
 		ReflectionData                      m_ReflectData{};
-#ifdef FROSTIUM_OPENGL_IMPL					
-		OpenglShader                        m_OpenglShader{};
-#else										
-		VulkanShader                        m_VulkanShader{};
-#endif 
+
 		friend class GraphicsPipeline;
 	};
 }

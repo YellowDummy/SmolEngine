@@ -189,9 +189,14 @@ namespace SmolEngine
 
 					if (cube_path.empty() == false)
 					{
-						cubeMap = new CubeMap();
-						CubeMap::Create(cubeMap, cube_path);
-						DeferredRenderer::SetEnvironmentCube(cubeMap);
+						TextureCreateInfo texCI = {};
+						if (texCI.Load(cube_path) == true)
+						{
+							cubeMap = new CubeMap();
+							CubeMap::Create(&texCI, cubeMap);
+							DeferredRenderer::SetEnvironmentCube(cubeMap);
+						}
+
 					}
 					else
 						DeferredRenderer::SetDynamicSkyboxProperties(sceneState->PipelineState.Environment.SkyProperties);
@@ -201,9 +206,14 @@ namespace SmolEngine
 					Mask& mask = sceneState->PipelineState.DirtMask;
 					if (mask.Path.empty() == false)
 					{
-						Texture* dirt_mask = new Texture();
-						Texture::Create(mask.Path, dirt_mask, TextureFormat::B8G8R8A8_UNORM, true, true);
-						DeferredRenderer::SetDirtMask(dirt_mask, mask.Intensity, mask.IntensityBase);
+						TextureCreateInfo texCI = {};
+						if (texCI.Load(mask.Path) == true)
+						{
+							texCI.bImGUIHandle = true;
+							Texture* dirt_mask = new Texture();
+							Texture::Create(&texCI, dirt_mask);
+							DeferredRenderer::SetDirtMask(dirt_mask, mask.Intensity, mask.IntensityBase);
+						}
 					}
 				}
 
@@ -295,8 +305,12 @@ namespace SmolEngine
 			{
 				JobsSystem::Schedule([&comp]() 
 				{
-					comp.Texture = std::make_shared<Texture>();
-					Texture::Create(comp.TexturePath, comp.Texture.get());
+					TextureCreateInfo texCI = {};
+					if (texCI.Load(comp.TexturePath) == true)
+					{
+						comp.Texture = std::make_shared<Texture>();
+						Texture::Create(&texCI, comp.Texture.get());
+					}
 				});
 			});
 		}
@@ -378,11 +392,12 @@ namespace SmolEngine
 
 					if (path.empty() == false && std::filesystem::exists(path))
 					{
-						if (lib->Load(path, materialCI))
+						if (materialCI.Load(path) == true)
 						{
 							uint32_t matID = lib->Add(&materialCI, path);
 							materialData.ID = matID;
 						}
+
 					}
 				}
 			});

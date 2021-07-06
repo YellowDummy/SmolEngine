@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Common/Core.h"
-#include "Common/SubTexture.h"
 #include "Common/BufferLayout.h"
-
 #include "Primitives/Texture.h"
-
 #include "EditorCamera.h"
 #include "Utils/GLM.h"
 
@@ -51,27 +48,27 @@ namespace Frostium
 
 	public:
 
-		float                              NearClip = 0.0f;
-		float                              FarClip = 0.0f;
-		float                              Exoposure = 0.0f;
-					                       
-		glm::vec3                          Pos = glm::vec3(0.0f);
-		glm::mat4                          Proj = glm::mat4(1.0f);
-		glm::mat4                          View = glm::mat4(1.0f);
+		float                 NearClip = 0.0f;
+		float                 FarClip = 0.0f;
+		float                 Exoposure = 0.0f;
+					          
+		glm::vec3             Pos = glm::vec3(0.0f);
+		glm::mat4             Proj = glm::mat4(1.0f);
+		glm::mat4             View = glm::mat4(1.0f);
 	};
 
 	struct ClearInfo
 	{
-		bool                               bClear = true;
-		glm::vec4                          color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+		bool                  bClear = true;
+		glm::vec4             color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 	};
 
 	struct SceneData
 	{
-		float                   NearClip = 0.0f;
-		float                   FarClip = 0.0f;
-		float                   Exoposure = 1.0f;
-		float                   Pad1 = 0.0f;
+		float                  NearClip = 0.0f;
+		float                  FarClip = 0.0f;
+		float                  Exoposure = 1.0f;
+		float                  Pad1 = 0.0f;
 
 		glm::mat4              Projection = glm::mat4(1.0f);
 		glm::mat4              View = glm::mat4(1.0f);

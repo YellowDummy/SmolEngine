@@ -64,6 +64,12 @@ namespace Frostium
 		void CalculateAABB(const glm::mat4& m);
 	};
 
+	enum class ImageFilter: int
+	{
+		NEAREST,
+		LINEAR,
+	};
+
 	enum class ShaderType : int
 	{
 		Vertex    = 1,
@@ -83,14 +89,4 @@ namespace Frostium
 	inline ShaderType& operator|= (ShaderType& a, ShaderType b) { return (ShaderType&)((int&)a |= (int)b); }
 	inline ShaderType& operator&= (ShaderType& a, ShaderType b) { return (ShaderType&)((int&)a &= (int)b); }
 	inline ShaderType& operator^= (ShaderType& a, ShaderType b) { return (ShaderType&)((int&)a ^= (int)b); }
-
-
-	enum class TextureFormat
-	{
-		R8_UNORM,
-		R8G8B8A8_UNORM,
-		B8G8R8A8_UNORM,
-		R32G32B32A32_SFLOAT,
-		R16G16B16A16_SFLOAT // HDR
-	};
 }

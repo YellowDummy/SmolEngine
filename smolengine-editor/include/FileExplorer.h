@@ -59,6 +59,7 @@ namespace SmolEngine
 		void DrawIcon(const std::string& ext = "");
 		void DrawPopUp();
 		void ClosePopUp();
+		void GenerateFile(const std::filesystem::path& path, const std::string& ext);
 		void Reset();
 	private:
 
@@ -74,6 +75,6 @@ namespace SmolEngine
 		std::string                                                       m_SelectedNode;
 		std::string                                                       m_DragAndDropBuffer;
 		std::unordered_map<std::string, Directory>                        m_OpenDirectories;
-		std::vector<const char*>                                          m_FileExtensions = { ".png", ".jpg", ".s_scene", ".s_material", ".gltf", ".ktx" };
+		std::vector<const char*>                                          m_FileExtensions = { ".s_image", ".s_scene", ".s_material", ".gltf" };
 	};													                  
 }

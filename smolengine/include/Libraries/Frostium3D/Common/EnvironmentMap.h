@@ -47,7 +47,7 @@ namespace Frostium
 		void                    GenerateStatic(CubeMap* cubeMap);
 		void                    GenerateDynamic(const glm::mat4& cameraProj = glm::mat4(0));
 		void                    UpdateDescriptors();
-			                    
+		void                    SetDimension(uint32_t dim);
 		bool                    IsReady() const;
 		bool                    IsDynamic() const;
 		CubeMap*                GetCubeMap() const;
@@ -57,6 +57,7 @@ namespace Frostium
 	private:
 		bool                    m_IsDynamic = false;
 		CubeMap*                m_CubeMap = nullptr;
+		uint32_t                m_Dimension = 1024;
 		GraphicsPipeline        m_GraphicsPipeline = {};
 		Framebuffer             m_Framebuffer = {};
 		DynamicSkyProperties    m_UBO = {};

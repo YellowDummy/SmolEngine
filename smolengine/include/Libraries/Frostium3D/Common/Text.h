@@ -52,7 +52,6 @@ namespace Frostium
 			uint32_t page;
 		};
 
-		bool                    m_Initialized = false;
 		uint32_t                m_IndexCount = 0;
 		float                   m_Size = 36.0f;
 		glm::vec4               m_Color = glm::vec4(1.0f);

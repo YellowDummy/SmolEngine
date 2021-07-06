@@ -14,45 +14,23 @@ namespace SmolEngine
 namespace Frostium
 #endif
 {
-	class VertexBuffer
+#ifdef  FROSTIUM_OPENGL_IMPL
+	class VertexBuffer: OpenglVertexBuffer
+#else
+	class VertexBuffer: VulkanVertexBuffer
+#endif
 	{
 	public:
-
-		VertexBuffer() = default;
-		~VertexBuffer() = default;
-
-		void Bind() const;
-		void UnBind() const;
-		void Clear();
-		bool IsInitialized() const;
-
-		// Upload
-		void UploadData(const void* data, const uint32_t size, const uint32_t offset = 0);
+		void                  Bind() const;
+		void                  UnBind() const;
+		void                  Clear();
+		bool                  IsReady() const;
+		void                  UploadData(const void* data, const uint32_t size, const uint32_t offset = 0);
 #ifndef FROSTIUM_OPENGL_IMPL
-		void CmdUpdateData(VkCommandBuffer cmdBuffer, const void* data, size_t size, uint32_t offset = 0)
-		{
-			m_VulkanVertexBuffer.CmdUpdateData(cmdBuffer, data, size, offset);
-		}
+		VulkanVertexBuffer&   GetVulkanVertexBuffer() { return *dynamic_cast<VulkanVertexBuffer*>(this); }
 #endif
-		// Getters
-		BufferLayout* GetLayout();
-#ifndef FROSTIUM_OPENGL_IMPL
-		VulkanVertexBuffer& GetVulkanVertexBuffer() { return m_VulkanVertexBuffer; }
-#endif
-
-		// Setters
-		void SetLayout(const BufferLayout& layout);
-
 		// Factory
-		static void Create(VertexBuffer* ot_vb, uint32_t size);
-		static void Create (VertexBuffer* ot_vb, void* vertices, uint32_t size, bool is_static = false);
-
-	private:
-
-#ifdef FROSTIUM_OPENGL_IMPL
-		OpenglVertexBuffer m_OpenglVertexBuffer = {};
-#else
-		VulkanVertexBuffer m_VulkanVertexBuffer = {};
-#endif
+		static void           Create(VertexBuffer* ot_vb, uint32_t size);
+		static void           Create (VertexBuffer* ot_vb, void* vertices, uint32_t size, bool is_static = false);
 	};
 }
