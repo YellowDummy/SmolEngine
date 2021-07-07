@@ -27,18 +27,20 @@
     <ClInclude Include="include\ImGuiExtension.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\MaterialLibraryInterface.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererPanel.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\Scripts\BasePlayerScript.h">
       <Filter>include\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="include\TexturesLoader.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\TextureInspector.h" />
+    <ClInclude Include="include\RendererInspector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MaterialInspector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scripts\BallSpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">
@@ -53,14 +55,15 @@
     <ClCompile Include="src\ImGuiExtension.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\MaterialLibraryInterface.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RendererPanel.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scripts\BasePlayerScript.cpp">
       <Filter>src\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureInspector.cpp" />
+    <ClCompile Include="src\RendererInspector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MaterialInspector.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

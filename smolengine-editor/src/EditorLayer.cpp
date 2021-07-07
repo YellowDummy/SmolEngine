@@ -45,8 +45,9 @@ namespace SmolEngine
 	{
 		m_TexturesLoader = new TexturesLoader();
 		m_Console = new EditorConsole();
-		m_RendererPanel = new RendererPanel();
-		m_MaterialLibraryInterface = new MaterialLibraryInterface();
+		m_RendererInspector = new RendererInspector();
+		m_TextureInspector = new TextureInspector();
+		m_MaterialInspector = new MaterialInspector();
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
 
@@ -137,7 +138,7 @@ namespace SmolEngine
 	{
 		if (!m_World->IsInPlayMode())
 		{
-			RendererSystem::DebugDraw(m_RendererPanel->GetDebugState());
+			RendererSystem::DebugDraw(m_RendererInspector->GetDebugState());
 		}
 	}
 
@@ -195,7 +196,7 @@ namespace SmolEngine
 		DrawToolsBar();
 		DrawSceneView(true);
 
-		m_RendererPanel->OnUpdate(showRendererPanel);
+		m_RendererInspector->OnUpdate(showRendererPanel);
 		m_Console->Update(showConsole);
 		m_FileExplorer->Update();
 
@@ -505,7 +506,7 @@ namespace SmolEngine
 
 	void EditorLayer::DrawMeshPanel()
 	{
-		if (ImGui::CollapsingHeader("Primitives"))
+		if (ImGui::CollapsingHeader("Primitives", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::NewLine();
 			DrawMeshPrimitive((uint32_t)MeshComponent::DefaultMeshType::Cube, "Cube", &m_TexturesLoader->m_CubeIcon);
@@ -799,9 +800,13 @@ namespace SmolEngine
 				ImGui::SetWindowFontScale(0.9f);
 				if (m_SelectionFlags != SelectionFlags::Inspector)
 				{
-					if (m_SelectionFlags == SelectionFlags::MaterialLib)
+					if (m_SelectionFlags == SelectionFlags::MaterialView)
 					{
-						m_MaterialLibraryInterface->Update();
+						m_MaterialInspector->Update();
+					}
+					else if (m_SelectionFlags == SelectionFlags::TextureView)
+					{
+						m_TextureInspector->Update();
 					}
 					else
 					{
@@ -1544,12 +1549,19 @@ namespace SmolEngine
 		if (ext == ".s_material")
 		{
 			m_SelectedActor = nullptr;
-			m_SelectionFlags = SelectionFlags::MaterialLib;
+			m_SelectionFlags = SelectionFlags::MaterialView;
 
 			if (fileSize > 0)
-				m_MaterialLibraryInterface->OpenExisting(path);
+				m_MaterialInspector->OpenExisting(path);
 			else
-				m_MaterialLibraryInterface->OpenNew(path);
+				m_MaterialInspector->OpenNew(path);
+		}
+
+		if (ext == ".s_image")
+		{
+			m_SelectedActor = nullptr;
+			m_SelectionFlags = SelectionFlags::TextureView;
+			m_TextureInspector->Open(path);
 		}
 	}
 
@@ -1557,8 +1569,9 @@ namespace SmolEngine
 	{
 		if (ext == ".s_material")
 		{
-			m_MaterialLibraryInterface->Close();
-			m_SelectionFlags = SelectionFlags::None;
+			m_MaterialInspector->Close();
 		}
+
+		m_SelectionFlags = SelectionFlags::None;
 	}
 }

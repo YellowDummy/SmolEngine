@@ -21,6 +21,7 @@ namespace SmolEngine
 		void Create(const std::string& current_path);
 		void ClearSelection();
 		void Update();
+		void Import();
 
 		void SetOnFileSelectedCallback(const std::function<void(const std::string&, const std::string&, int)>& callback);
 		void SetOnFileDeletedCallaback(const std::function<void(const std::string&, const std::string&)>& callback);
@@ -28,16 +29,16 @@ namespace SmolEngine
 	private:
 		enum class PendeingActionFlags
 		{
-			None   = 0,
-			Rename = 1,
-			Delete = 2,
+			None    = 0,
+			Rename  = 1,
+			NewFile = 2,
 		};
 
 		enum class PopUpFlags
 		{
-			None   = 0,
-			Node   = 1,
-			Folder = 2,
+			None    = 0,
+			Node    = 1,
+			Folder  = 2,
 		};
 
 		struct PendeingAction
@@ -57,9 +58,10 @@ namespace SmolEngine
 		void DrawNode(const std::filesystem::path& path, Directory& owner);
 		void DrawIcon(Texture* icon, bool flip = false);
 		void DrawIcon(const std::string& ext = "");
+		void DrawNodeIcon(const std::string& path, const std::string& ext, Directory& owner, Ref<Texture>& icon);
 		void DrawPopUp();
+		void AddPendingAction(const std::string& path, PendeingActionFlags action);
 		void ClosePopUp();
-		void GenerateFile(const std::filesystem::path& path, const std::string& ext);
 		void Reset();
 	private:
 
@@ -69,10 +71,12 @@ namespace SmolEngine
 		PendeingAction*                                                   m_pPendeingAction = nullptr;
 		PopUpFlags                                                        m_ePopUpFlags = PopUpFlags::None;
 		int                                                               m_SelectionIndex = 0;
-		glm::vec2                                                         m_ButtonSize = glm::vec2(20.0f);
+		glm::vec2                                                         m_ButtonSize = glm::vec2(23.0f);
 		std::string                                                       m_PopUpBuffer;
 		std::string                                                       m_CurrentDir;
+		std::string                                                       m_SelectedDir;
 		std::string                                                       m_SelectedNode;
+		std::string                                                       m_SearchBuffer;
 		std::string                                                       m_DragAndDropBuffer;
 		std::unordered_map<std::string, Directory>                        m_OpenDirectories;
 		std::vector<const char*>                                          m_FileExtensions = { ".s_image", ".s_scene", ".s_material", ".gltf" };

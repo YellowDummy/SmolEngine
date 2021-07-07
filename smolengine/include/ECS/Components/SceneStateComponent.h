@@ -29,7 +29,8 @@ namespace SmolEngine
 		bool         bReset = false;
 
 		friend class cereal::access;
-		friend class RendererPanel;
+		friend class RendererInspector;
+
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
@@ -100,7 +101,7 @@ namespace SmolEngine
 		int                  ShadowsFlags = 0;
 
 		friend class cereal::access;
-		friend class RendererPanel;
+		friend class RendererInspector;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

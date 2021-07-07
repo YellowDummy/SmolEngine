@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MaterialLibraryInterface.h"
+#include "MaterialInspector.h"
 #include "EditorLayer.h"
 #include "ImGuiExtension.h"
 
@@ -13,7 +13,7 @@
 
 namespace SmolEngine
 {
-	MaterialLibraryInterface::MaterialLibraryInterface()
+	MaterialInspector::MaterialInspector()
 	{
 		m_TexturesLoader = TexturesLoader::Get();
 		m_MaterialCI = new MaterialCreateInfo();
@@ -21,15 +21,15 @@ namespace SmolEngine
 		InitPreviewRenderer();
 	}
 
-	MaterialLibraryInterface::~MaterialLibraryInterface()
+	MaterialInspector::~MaterialInspector()
 	{
 
 	}
 
-	void MaterialLibraryInterface::OpenExisting(const std::string& path)
+	void MaterialInspector::OpenExisting(const std::string& path)
 	{
 		std::filesystem::path p(path);
-		m_CurrentName = "Material: " + p.filename().stem().u8string();
+		m_CurrentName = p.filename().stem().u8string();
 		m_CurrentFilePath = path;
 
 		ResetMaterial();
@@ -37,51 +37,56 @@ namespace SmolEngine
 		RenderImage();
 	}
 
-	void MaterialLibraryInterface::OpenNew(const std::string& path)
+	void MaterialInspector::OpenNew(const std::string& path)
 	{
 		std::filesystem::path p(path);
-		m_CurrentName = "Material: " + p.filename().stem().u8string();
+		m_CurrentName = p.filename().stem().u8string();
 		m_CurrentFilePath = path;
 		ResetMaterial();
 		RenderImage();
 		Save();
 	}
 
-	void MaterialLibraryInterface::Close()
+	void MaterialInspector::Close()
 	{
 		ResetMaterial();
 		m_CurrentFilePath = "";
 		m_Textures.clear();
 	}
 
-	void MaterialLibraryInterface::Update()
+	void MaterialInspector::Update()
 	{
 		ImGui::NewLine();
-		ImGui::Text(m_CurrentName.c_str());
-		ImGui::Separator();
-
-		ImGui::NewLine();
 		ImGui::BeginChild("MaterialViewerWIndow");
+
+		{
+			ImGui::SetCursorPosX(12);
+			ImGui::TextWrapped("Preview: %s", m_CurrentName.c_str());
+			ImGui::Separator();
+			ImGui::SetCursorPosX(12);
+			ImGui::Image(m_Data->Framebuffer->GetImGuiTextureID(), { 440, 280 });
+		}
+
 		if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::NewLine();
 
-			if (DrawTextureInfo(m_MaterialCI->AlbedroTex.FilePath, "Albedro"))
+			if (DrawTextureInfo(m_MaterialCI->AlbedroTex, "Albedro"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->NormalTex.FilePath, "Normal"))
+			if (DrawTextureInfo(m_MaterialCI->NormalTex, "Normal"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->MetallnessTex.FilePath, "Metalness"))
+			if (DrawTextureInfo(m_MaterialCI->MetallnessTex, "Metalness"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->RoughnessTex.FilePath, "Roughness"))
+			if (DrawTextureInfo(m_MaterialCI->RoughnessTex, "Roughness"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->AOTex.FilePath, "AO"))
+			if (DrawTextureInfo(m_MaterialCI->AOTex, "AO"))
 				ApplyChanges();
 
-			if (DrawTextureInfo(m_MaterialCI->EmissiveTex.FilePath, "Emissive"))
+			if (DrawTextureInfo(m_MaterialCI->EmissiveTex, "Emissive"))
 				ApplyChanges();
 
 			ImGui::NewLine();
@@ -103,14 +108,9 @@ namespace SmolEngine
 		}
 
 		ImGui::EndChild();
-		float posX = ImGui::GetCursorPosY();
-		ImGui::SetCursorPosY(posX - 200);
-		ImGui::Extensions::Text("Preview", "");
-		ImGui::Separator();
-		ImGui::Image(m_Data->Framebuffer->GetImGuiTextureID(), { 410, 280 });
 	}
 
-	void MaterialLibraryInterface::Save()
+	void MaterialInspector::Save()
 	{
 		if (!m_CurrentFilePath.empty())
 		{
@@ -119,12 +119,12 @@ namespace SmolEngine
 		}
 	}
 
-	std::string MaterialLibraryInterface::GetCurrentPath() const
+	std::string MaterialInspector::GetCurrentPath() const
 	{
 		return m_CurrentFilePath;
 	}
 
-	void MaterialLibraryInterface::ResetMaterial()
+	void MaterialInspector::ResetMaterial()
 	{
 		m_Textures.clear();
 
@@ -141,13 +141,13 @@ namespace SmolEngine
 		m_Material.UseAOTex = 0;
 	}
 
-	void MaterialLibraryInterface::ApplyChanges()
+	void MaterialInspector::ApplyChanges()
 	{
 		RenderImage();
 		Save();
 	}
 
-	void MaterialLibraryInterface::RenderImage()
+	void MaterialInspector::RenderImage()
 	{
 		Texture* whiteTex = GraphicsContext::GetSingleton()->GetWhiteTexture();
 		m_Data->Pipeline->UpdateSamplers({ whiteTex }, 5);
@@ -204,7 +204,7 @@ namespace SmolEngine
 		m_Data->Pipeline->EndCommandBuffer();
 	}
 
-	void MaterialLibraryInterface::InitPreviewRenderer()
+	void MaterialInspector::InitPreviewRenderer()
 	{
 		// Editor Camera
 		{
@@ -266,7 +266,7 @@ namespace SmolEngine
 		}
 	}
 
-	void MaterialLibraryInterface::LoadTexture(TextureCreateInfo* info, MaterialTexture type, std::vector<Texture*>& textures)
+	void MaterialInspector::LoadTexture(TextureCreateInfo* info, MaterialTexture type, std::vector<Texture*>& textures)
 	{
 		uint32_t index = static_cast<uint32_t>(textures.size());
 		std::string filePath = info->FilePath;
@@ -355,7 +355,7 @@ namespace SmolEngine
 		}
 	}
 
-	bool MaterialLibraryInterface::DrawTextureInfo(std::string& texture_path, const std::string& title)
+	bool MaterialInspector::DrawTextureInfo(TextureCreateInfo& texInfo, const std::string& title)
 	{
 		bool used = false;
 		std::string id = title + std::string("draw_info");
@@ -365,7 +365,7 @@ namespace SmolEngine
 		ImGui::SetCursorPosX(posX);
 
 		Texture* icon = nullptr;
-		auto& it = m_Textures.find(texture_path);
+		auto& it = m_Textures.find(texInfo.FilePath);
 		if (it != m_Textures.end())
 			icon = it->second.get();
 		else { icon = &m_TexturesLoader->m_BackgroundIcon; }
@@ -378,25 +378,16 @@ namespace SmolEngine
 				std::string& path = *(std::string*)payload->Data;
 				if (EditorLayer::FileExtensionCheck(path, ".s_image"))
 				{
+					texInfo.Load(path);
 					auto& it = m_Textures.find(path);
 					if (it == m_Textures.end())
 					{
-						TextureCreateInfo texCI = {};
-						if (texCI.Load(path) == true)
-						{
-							texture_path = path;
-							used = true;
-							texCI.bImGUIHandle = true;
-
-							Ref<Texture> tex = std::make_shared<Texture>();
-							Texture::Create(&texCI, tex.get());
-							m_Textures[path] = tex;
-						}
-					}
-					else
-					{
-						texture_path = path;
 						used = true;
+						texInfo.bImGUIHandle = true;
+
+						Ref<Texture> tex = std::make_shared<Texture>();
+						Texture::Create(&texInfo, tex.get());
+						m_Textures[path] = tex;
 					}
 				}
 			}
@@ -407,20 +398,20 @@ namespace SmolEngine
 		ImGui::SameLine();
 		if (ImGui::Button("Reset"))
 		{
-			texture_path = "";
-			m_Textures.erase(texture_path);
+			texInfo = {};
+			m_Textures.erase(texInfo.FilePath);
 			used = true; 
 		}
 
 		ImGui::SameLine();
-		if (texture_path.empty())
+		if (texInfo.FilePath.empty())
 		{
 			std::string name = title + ": None";
 			ImGui::TextUnformatted(name.c_str());
 		}
 		else
 		{
-			std::filesystem::path p(texture_path);
+			std::filesystem::path p(texInfo.FilePath);
 			std::string name = title + ": " + p.filename().filename().u8string();
 			ImGui::TextUnformatted(name.c_str());
 		}

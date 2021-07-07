@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "RendererPanel.h"
+#include "RendererInspector.h"
 #include "TexturesLoader.h"
 #include "EditorLayer.h"
 #include "ECS/Components/SceneStateComponent.h"
@@ -8,14 +8,14 @@
 
 namespace SmolEngine
 {
-	void RendererPanel::SetActiveDebugDraw(bool val)
+	void RendererInspector::SetActiveDebugDraw(bool val)
 	{
 		m_DebugDrawState.bDefaultDraw = val;
 		SceneStateComponent* state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
 		DeferredRenderer::SetRendererState(&state->PipelineState.State);
 	}
 
-	void RendererPanel::OnUpdate(bool& open)
+	void RendererInspector::OnUpdate(bool& open)
 	{
 		constexpr float padding = 140.0f;
 
@@ -284,12 +284,12 @@ namespace SmolEngine
 		}
 	}
 
-	DebugDrawState* RendererPanel::GetDebugState()
+	DebugDrawState* RendererInspector::GetDebugState()
 	{
 		return &m_DebugDrawState;
 	}
 
-	void RendererPanel::UpdateStates()
+	void RendererInspector::UpdateStates()
 	{
 		SceneStateComponent* state = WorldAdmin::GetSingleton()->GetActiveScene()->GetSceneState();
 

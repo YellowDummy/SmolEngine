@@ -4,7 +4,7 @@
 
 namespace SmolEngine
 {
-	class RendererPanel
+	class RendererInspector
 	{
 	public:
 

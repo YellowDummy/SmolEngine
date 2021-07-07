@@ -1,12 +1,13 @@
 #pragma once
 
 #include "SmolEngineCore.h"
-#include "RendererPanel.h"
+#include "RendererInspector.h"
+#include "TextureInspector.h"
 #include "TexturesLoader.h"
 #include "FileExplorer.h"
 #include "Core/Layer.h"
 #include "Core/EditorConsole.h"
-#include "MaterialLibraryInterface.h"
+#include "MaterialInspector.h"
 #include "ECS/Components/BaseComponent.h"
 
 #include <Frostium3D/EditorCamera.h>
@@ -43,7 +44,8 @@ namespace SmolEngine
 		None = 0,
 		Inspector,
 		Actions,
-		MaterialLib
+		MaterialView,
+		TextureView
 	};
 
 	class EditorLayer: public Layer
@@ -130,9 +132,10 @@ namespace SmolEngine
 		WorldAdmin*                                 m_World = nullptr;
 		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
-		RendererPanel*                              m_RendererPanel = nullptr;
+		RendererInspector*                          m_RendererInspector = nullptr;
+		TextureInspector*                           m_TextureInspector = nullptr;
 		Ref<Actor>                                  m_SelectedActor = nullptr;
-		MaterialLibraryInterface*                   m_MaterialLibraryInterface = nullptr;
+		MaterialInspector*                          m_MaterialInspector = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;
 		glm::vec2                                   m_SceneViewPort = { 0.0f, 0.0f };
 		std::string                                 m_FilePath = "";
@@ -145,7 +148,7 @@ namespace SmolEngine
 		inline static std::string                   m_TempString = "";               
 		inline static ImGuizmo::OPERATION           m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
-		friend class MaterialLibraryInterface;
+		friend class MaterialInspector;
 	};
 }
 

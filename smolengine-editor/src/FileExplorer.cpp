@@ -14,6 +14,7 @@ namespace SmolEngine
 	{
 		m_pTextureLoader = TexturesLoader::Get();
 		m_CurrentDir = current_path;
+		Import();
 	}
 
 	void FileExplorer::ClearSelection()
@@ -35,6 +36,34 @@ namespace SmolEngine
 		ImGui::End();
 	}
 
+	void FileExplorer::Import()
+	{
+		for (auto& p : std::filesystem::recursive_directory_iterator(m_CurrentDir))
+		{
+			if (std::filesystem::is_directory(p) == false)
+			{
+				std::filesystem::path path = p.path();
+				std::string ext = path.extension().u8string();
+
+				if (ext == ".jpg" || ext == ".png" || ext == ".ktx")
+				{
+					std::string new_path = path.parent_path().u8string() + "/" + path.stem().u8string() + ".s_image";
+					if (std::filesystem::exists(new_path) == false)
+					{
+						TextureCreateInfo texInfo = {};
+						texInfo.FilePath = path.u8string();
+						texInfo.Save(new_path);
+					}
+				}
+
+				if (ext == ".gltf")
+				{
+
+				}
+			}
+		}
+	}
+
 	void FileExplorer::SetOnFileSelectedCallback(const std::function<void(const std::string&, const std::string&, int)>& callback)
 	{
 		m_pOnFileSelected = callback;
@@ -47,17 +76,23 @@ namespace SmolEngine
 
 	void FileExplorer::DrawDirectory(const std::filesystem::path& orig_path)
 	{
+		std::string fileName = orig_path.filename().u8string();
+		std::string filePath = orig_path.u8string();
+		if (m_SelectedDir.empty())
+		{
+			m_SelectedDir = filePath;
+		}
+
 		// Folder icon
 		DrawIcon(&m_pTextureLoader->m_FolderButton);
-
-		std::string fileName = orig_path.filename().u8string();
 		auto& it = m_OpenDirectories.find(fileName);
 		bool found = it != m_OpenDirectories.end();
-		bool open = ImGui::TreeNodeEx(fileName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
-		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		bool open = ImGui::TreeNodeEx(fileName.c_str(), m_SelectedDir == filePath ? 
+			ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_OpenOnArrow);
+
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
-			m_PopUpBuffer = orig_path.u8string();
-			m_ePopUpFlags = PopUpFlags::Folder;
+			m_SelectedDir = filePath;
 		}
 
 		if (open)
@@ -74,12 +109,17 @@ namespace SmolEngine
 				}
 			}
 
+			// files
 			for (auto& child_file_path : std::filesystem::directory_iterator(orig_path))
 			{
 				auto p = child_file_path.path();
-				if (std::filesystem::is_directory(p) == false)
+				std::string child_fm = p.filename().stem().u8string();
+				if ((child_fm.find(m_SearchBuffer) != std::string::npos))
 				{
-					DrawNode(p, m_OpenDirectories[fileName]);
+					if (std::filesystem::is_directory(p) == false)
+					{
+						DrawNode(p, m_OpenDirectories[fileName]);
+					}
 				}
 			}
 
@@ -99,66 +139,30 @@ namespace SmolEngine
 		std::string path = fs_path.u8string();
 		std::string ext = fs_path.extension().u8string();
 
-		GenerateFile(fs_path, ext);
-
 		bool extSupported = std::find(m_FileExtensions.begin(), m_FileExtensions.end(), ext) != m_FileExtensions.end();
 		if (extSupported)
 		{
-			bool defaultIcon = true;
-			if (ext == ".s_image")
-			{
-				TextureCreateInfo texCI = {};
-				texCI.Load(path);
-				texCI.bImGUIHandle = true;
-				bool is_ktx = texCI.FilePath.find("ktx") != std::string::npos;
-
-				if (is_ktx == false)
-				{
-					auto& it = owner.m_IconsMap.find(path);
-					if (it == owner.m_IconsMap.end())
-					{
-						icon = std::make_shared<Texture>();
-						owner.m_IconsMap[path] = icon;
-
-						JobsSystem::Schedule([&owner, path, texCI]()
-							{
-								auto tex = owner.m_IconsMap[path];
-								Texture::Create(&texCI, tex.get());
-							});
-					}
-					else { icon = it->second; }
-
-					if (icon != nullptr)
-					{
-						if (icon->IsReady())
-						{
-							DrawIcon(icon.get());
-							defaultIcon = false;
-						}
-					}
-
-				}
-			}
-
-			if (defaultIcon == true)
-			{
-				DrawIcon(ext);
-			}
+			DrawNodeIcon(path, ext, owner, icon);
 
 			bool is_action_pending = false;
 			if (m_pPendeingAction != nullptr)
-				is_action_pending = m_pPendeingAction->Path == path;
+			{
+				std::filesystem::path p1(m_pPendeingAction->Path);
+				std::string f1 = p1.filename().u8string();
+				std::string f2 = fs_path.filename().u8string();
+
+				is_action_pending = f1 == f2;
+			}
 
 			if (is_action_pending == false)
 			{
 				bool selected = m_SelectedNode == name;
-				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, { 0.1f, 0.3f, 1.0f, 1.0f }); }
-
+				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, { 0.984, 0.952, 0.356, 1.0f }); }
 				bool open = ImGui::TreeNodeEx(name.c_str(),
 					selected ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Bullet);
-
 				if (selected) { ImGui::PopStyleColor(); }
-
+				 
+				// Pop Up
 				if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 				{
 					m_PopUpBuffer = path;
@@ -167,7 +171,7 @@ namespace SmolEngine
 
 				if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 				{
-					if (ImGui::IsMouseDoubleClicked(0))
+					if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 					{
 						m_SelectedNode = name;
 						if (m_pOnFileSelected != nullptr)
@@ -201,25 +205,40 @@ namespace SmolEngine
 			}
 			else
 			{
-				switch (m_pPendeingAction->Type)
-				{
-				case PendeingActionFlags::Rename:
+				if (m_pPendeingAction->Type == PendeingActionFlags::NewFile || m_pPendeingAction->Type == PendeingActionFlags::Rename)
 				{
 					float posX = ImGui::GetCursorPosX();
-					ImGui::SetCursorPosX(posX + 25.0f);
+					ImGui::SetCursorPosX(posX + 10.0f);
 
-					if (ImGui::InputTextWithHint("##ActionsRenameNode", "new name", &m_pPendeingAction->NewName, ImGuiInputTextFlags_EnterReturnsTrue))
+					ImGui::PushStyleColor(ImGuiCol_FrameBg, { 0.180f, 0.521f, 1.0f,  1.0f });
+					if (ImGui::InputTextWithHint("##ActionsRenameNode", name.c_str(), &m_pPendeingAction->NewName, ImGuiInputTextFlags_EnterReturnsTrue))
 					{
 						if (m_pPendeingAction->NewName.empty() == false)
 						{
 							std::filesystem::rename(path, fs_path.parent_path().u8string() + "/" + m_pPendeingAction->NewName + ext);
 						}
 
+						switch (m_pPendeingAction->Type)
+						{
+						case PendeingActionFlags::Rename:
+						{
+
+						}
+						case PendeingActionFlags::NewFile:
+						{
+							if (m_pPendeingAction->NewName.empty() == true)
+							{
+								std::filesystem::remove(path);
+							}
+
+							break;
+						}
+						}
+
 						delete m_pPendeingAction;
 						m_pPendeingAction = nullptr;
 					}
-					break;
-				}
+					ImGui::PopStyleColor();
 				}
 			}
 		}
@@ -255,11 +274,54 @@ namespace SmolEngine
 		}
 	}
 
+	void FileExplorer::DrawNodeIcon(const std::string& path, const std::string& ext, Directory& owner, Ref<Texture>& icon)
+	{
+		bool defaultIcon = true;
+		if (ext == ".s_image")
+		{
+			TextureCreateInfo texCI = {};
+			texCI.Load(path);
+			texCI.bImGUIHandle = true;
+			bool is_ktx = texCI.FilePath.find("ktx") != std::string::npos;
+
+			if (is_ktx == false)
+			{
+				auto& it = owner.m_IconsMap.find(path);
+				if (it == owner.m_IconsMap.end())
+				{
+					icon = std::make_shared<Texture>();
+					owner.m_IconsMap[path] = icon;
+
+					JobsSystem::Schedule([&owner, path, texCI]()
+					{
+						auto tex = owner.m_IconsMap[path];
+						Texture::Create(&texCI, tex.get());
+					});
+				}
+				else { icon = it->second; }
+
+				if (icon != nullptr)
+				{
+					if (icon->IsReady())
+					{
+						DrawIcon(icon.get());
+						defaultIcon = false;
+					}
+				}
+			}
+		}
+
+		if (defaultIcon == true)
+		{
+			DrawIcon(ext);
+		}
+	}
+
 	void FileExplorer::DrawPopUp()
 	{
 		switch (m_ePopUpFlags)
 		{
-		case PopUpFlags::Folder:  ImGui::OpenPopup("FileExplorerActions"); break;
+		case PopUpFlags::None:  if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) { ImGui::OpenPopup("FileExplorerActions"); }; break;
 		case PopUpFlags::Node: 	if (m_pPendeingAction == nullptr) { ImGui::OpenPopup("FileExplorerNodeActions"); }; break;
 		}
 
@@ -267,16 +329,21 @@ namespace SmolEngine
 		{
 			ImGui::MenuItem("actions", NULL, false, false);
 			ImGui::Separator();
+
 			if (ImGui::MenuItem("new material"))
 			{
-				uint32_t num_dublicates = CommandUtils::GetNumFilenameDublicates("new_material", m_PopUpBuffer);
-				std::string newPath = m_PopUpBuffer + "/new_material_" + std::to_string(num_dublicates) + ".s_material";
-				if (std::filesystem::exists(newPath) == false)
-				{
-					std::ofstream outfile(newPath);
-					outfile.close();
-				}
+				std::string newPath = m_SelectedDir + "/new_material" + ".s_material";
+				AddPendingAction(newPath, PendeingActionFlags::NewFile);
+				ClosePopUp();
+			}
 
+			if (ImGui::MenuItem("new shader"))
+			{
+				ClosePopUp();
+			}
+
+			if (ImGui::MenuItem("new script"))
+			{
 				ClosePopUp();
 			}
 
@@ -290,10 +357,7 @@ namespace SmolEngine
 			ImGui::Separator();
 			if (ImGui::MenuItem("rename"))
 			{
-				m_pPendeingAction = new PendeingAction();
-				m_pPendeingAction->Type = PendeingActionFlags::Rename;
-				m_pPendeingAction->Path = m_PopUpBuffer;
-
+				AddPendingAction(m_PopUpBuffer, PendeingActionFlags::Rename);
 				ClosePopUp();
 			}
 
@@ -322,24 +386,36 @@ namespace SmolEngine
 		}
 	}
 
+	void FileExplorer::AddPendingAction(const std::string& path, PendeingActionFlags action)
+	{
+		m_pPendeingAction = new PendeingAction();
+		m_pPendeingAction->Type = action;
+		m_pPendeingAction->Path = path;
+
+		switch (action)
+		{
+		case PendeingActionFlags::NewFile:
+		{
+			if (std::filesystem::exists(path) == false)
+			{
+				std::ofstream outfile(m_pPendeingAction->Path);
+				outfile.close();
+				return;
+			}
+
+			break;
+		}
+		case PendeingActionFlags::Rename: return;
+		}
+
+		delete m_pPendeingAction;
+		m_pPendeingAction = nullptr;
+	}
+
 	void FileExplorer::ClosePopUp()
 	{
 		ImGui::CloseCurrentPopup();
 		m_PopUpBuffer = "";
-	}
-
-	void FileExplorer::GenerateFile(const std::filesystem::path& path, const std::string& ext)
-	{
-		if (ext == ".jpg" || ext == ".png" || ext == ".ktx")
-		{
-			std::string new_path = path.parent_path().u8string() + "/" + path.stem().u8string() + ".s_image";
-			if (std::filesystem::exists(new_path) == false)
-			{
-				TextureCreateInfo texInfo = {};
-				texInfo.FilePath = path.u8string();
-				texInfo.Save(new_path);
-			}
-		}
 	}
 
 	void FileExplorer::Reset()
@@ -356,7 +432,18 @@ namespace SmolEngine
 
 	void FileExplorer::DrawHierarchy()
 	{
-		if (ImGui::TreeNodeEx("Root", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_Leaf))
+		{
+			ImGui::Image(m_pTextureLoader->m_SearchButton.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::SameLine();
+
+			float pos = ImGui::GetCursorPosY();
+			ImGui::SetCursorPosY(pos + 3);
+			ImGui::InputTextWithHint("Search", "", &m_SearchBuffer);
+			ImGui::Separator();
+		}
+
+		std::string root = "Root (" + m_CurrentDir + ")";
+		if (ImGui::TreeNodeEx(root.c_str(), ImGuiTreeNodeFlags_Leaf))
 		{
 			for (auto& file_path : std::filesystem::directory_iterator(m_CurrentDir))
 			{
@@ -367,8 +454,9 @@ namespace SmolEngine
 				}
 			}
 
-			DrawPopUp();
 			ImGui::TreePop();
 		}
+
+		DrawPopUp();
 	}
 }

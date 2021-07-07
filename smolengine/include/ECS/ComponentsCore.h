@@ -15,3 +15,4 @@
 #include "ECS/Components/PointLightComponent.h"
 #include "ECS/Components/SceneStateComponent.h"
 #include "ECS/Components/RigidbodyComponent.h"
+#include "ECS/ComponentHandler.h"

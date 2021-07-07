@@ -1,6 +1,7 @@
 #include "Editor.h"
 #include "EditorLayer.h"
 #include "Scripts/BasePlayerScript.h"
+#include "Scripts/BallSpawner.h"
 #include "ECS/Systems/ScriptingSystem.h"
 
 SmolEngine::Engine* CreateEngineContext()
@@ -47,6 +48,7 @@ namespace SmolEngine
 	void Editor::SetScripts(ScriptingSystem* scriptingSytem)
 	{
 		scriptingSytem->AddNativeClass<BasePlayerScript>("Base Player Script");
+		scriptingSytem->AddNativeClass<BallSpawner>("Ball Spawner");
 	}
 
 	void Editor::SetWorldAdminState(WorldAdminStateSComponent* state)
