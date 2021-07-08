@@ -22,6 +22,7 @@ namespace Frostium
 		static void Init(RendererStorage* storage);
 		static void Shutdown();
 		static void BeginScene(const ClearInfo* clearInfo);
+		static void DrawOffscreen(Framebuffer* fb);
 		static void EndScene();
 
 		static void SubmitMesh(const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale, Mesh* mesh, const uint32_t& PBRmaterialID = 0);

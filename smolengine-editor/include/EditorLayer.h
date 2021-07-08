@@ -5,8 +5,8 @@
 #include "TextureInspector.h"
 #include "TexturesLoader.h"
 #include "FileExplorer.h"
+#include "EditorConsole.h"
 #include "Core/Layer.h"
-#include "Core/EditorConsole.h"
 #include "MaterialInspector.h"
 #include "ECS/Components/BaseComponent.h"
 

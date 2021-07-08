@@ -13,10 +13,13 @@ namespace SmolEngine
 
 	Engine::Engine()
 	{
-		if (s_Instance != nullptr) 
-			std::runtime_error("Engine already instantiated");
+		if (s_Instance != nullptr)
+		{
+			RUNTIME_ERROR("Engine already instantiated.");
+		}
 
 		s_Instance = this;
+		SLog* log = new SLog("SmoleEngine");
 	}
 
 	Engine::~Engine()

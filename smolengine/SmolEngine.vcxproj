@@ -103,7 +103,6 @@
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Core\CommandUtils.h" />
     <ClInclude Include="include\Core\Core.h" />
-    <ClInclude Include="include\Core\EditorConsole.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Core\EntryPoint.h" />
     <ClInclude Include="include\Core\Layer.h" />

@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Editor.h" />
+    <ClInclude Include="include\EditorConsole.h" />
     <ClInclude Include="include\EditorLayer.h" />
     <ClInclude Include="include\FileExplorer.h" />
     <ClInclude Include="include\ImGuiExtension.h" />

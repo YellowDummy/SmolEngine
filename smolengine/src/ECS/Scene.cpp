@@ -100,11 +100,11 @@ namespace SmolEngine
 
 	Ref<Actor> Scene::FindActorByTag(const std::string& tag)
 	{
-		for (auto& actor : m_State->Actors)
-			if (tag == actor->GetTag())
-				return actor;
+		const auto& it = std::find_if(m_State->Actors.begin(), m_State->Actors.end(), 
+			[&](const Ref<Actor>& another) {return tag == another->GetTag(); });
 
-		return nullptr;
+		if (it != m_State->Actors.end()) { return *it; }
+		else { return nullptr; }
 	}
 
 	Ref<Actor> Scene::FindActorByID(uint32_t id)
@@ -208,7 +208,6 @@ namespace SmolEngine
 			myfile << storageRegistry.str();
 			myfile.close();
 			m_State->FilePath = filePath;
-			NATIVE_WARN(std::string("Scene saved successfully"));
 			return true;
 		}
 

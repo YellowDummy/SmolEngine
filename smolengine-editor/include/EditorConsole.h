@@ -55,32 +55,19 @@ namespace SmolEngine
 							m_Messages.clear();
 						}
 
-						static int current_item = 0;
-
 						ImGui::SameLine();
-						ImGui::Combo("Filter", &current_item, "None\0Info\0Error\0Warn\0\0");
+						ImGui::Combo("Filter", &m_CurrentItem, "None\0Info\0Error\0Warn\0\0");
 
 						ImGui::Separator();
 						ImGui::BeginChild("Log");
 						{
-							if (current_item == 0)
+							for (auto& msg : m_Messages)
 							{
-								for (auto& msg : m_Messages)
+								if (m_CurrentItem == 0 ? true: m_CurrentItem == (int)msg.Type)
 								{
 									ImGui::TextColored(msg.Color, msg.Text.c_str());
 								}
 							}
-							else
-							{
-								for (auto& msg : m_Messages)
-								{
-									if (current_item == (int)msg.Type)
-									{
-										ImGui::TextColored(msg.Color, msg.Text.c_str());
-									}
-								}
-							}
-
 						}
 						ImGui::EndChild();
 					}
@@ -155,12 +142,9 @@ namespace SmolEngine
 		static EditorConsole* GetConsole() { return s_Instance; }
 
 	private:
+
 		inline static EditorConsole*  s_Instance = nullptr;
+		int                           m_CurrentItem = 0;
 		std::vector<Message>          m_Messages;
 	};
-
-
-#define CONSOLE_INFO(string)  SmolEngine::EditorConsole::GetConsole()->AddMessageInfo(string)
-#define CONSOLE_WARN(string)  SmolEngine::EditorConsole::GetConsole()->AddMessageWarn(string)
-#define CONSOLE_ERROR(string) SmolEngine::EditorConsole::GetConsole()->AddMessageError(string)
 }

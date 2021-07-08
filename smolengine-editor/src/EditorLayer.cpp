@@ -43,8 +43,8 @@ namespace SmolEngine
 
 	void EditorLayer::OnAttach()
 	{
-		m_TexturesLoader = new TexturesLoader();
 		m_Console = new EditorConsole();
+		m_TexturesLoader = new TexturesLoader();
 		m_RendererInspector = new RendererInspector();
 		m_TextureInspector = new TextureInspector();
 		m_MaterialInspector = new MaterialInspector();
@@ -115,6 +115,28 @@ namespace SmolEngine
 			colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
 			colors[ImGuiCol_DockingPreview] = ImVec4(0.85f, 0.85f, 0.85f, 0.28f);
 		}
+
+		SLog::s_Instance->SetOnPrintCallback([&](const std::string&& msg, LogType type)
+		{
+			switch (type)
+			{
+			case LogType::Info:
+			{
+				m_Console->AddMessageInfo(msg);
+				break;
+			}
+			case LogType::Warning:
+			{
+				m_Console->AddMessageWarn(msg);
+				break;
+			}
+			case LogType::Error:
+			{
+				m_Console->AddMessageError(msg);
+				break;
+			}
+			}
+		});
 	}
 
 	void EditorLayer::OnDetach()
@@ -311,7 +333,7 @@ namespace SmolEngine
 					{
 						if (!m_World->SaveCurrentScene())
 						{
-							CONSOLE_ERROR("Couldn't save current scene!");
+							NATIVE_ERROR("Couldn't save current scene!");
 						}
 					}
 
@@ -759,7 +781,7 @@ namespace SmolEngine
 					}
 					else
 					{
-						CONSOLE_WARN("The scene is already in play mode!");
+						NATIVE_WARN("The scene is already in play mode!");
 					}
 				}
 
@@ -781,7 +803,7 @@ namespace SmolEngine
 					}
 					else
 					{
-						CONSOLE_WARN("The scene is not in play mode!");
+						NATIVE_WARN("The scene is not in play mode!");
 					}
 				}
 

@@ -41,6 +41,7 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Scripts\BallSpawner.h" />
+    <ClInclude Include="include\EditorConsole.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">

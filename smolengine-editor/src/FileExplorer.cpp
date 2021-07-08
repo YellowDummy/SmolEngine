@@ -157,7 +157,7 @@ namespace SmolEngine
 			if (is_action_pending == false)
 			{
 				bool selected = m_SelectedNode == name;
-				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, { 0.984, 0.952, 0.356, 1.0f }); }
+				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, { 0.984f, 0.952f, 0.356f, 1.0f }); }
 				bool open = ImGui::TreeNodeEx(name.c_str(),
 					selected ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Bullet);
 				if (selected) { ImGui::PopStyleColor(); }

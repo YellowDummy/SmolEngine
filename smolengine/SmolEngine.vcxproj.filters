@@ -309,9 +309,6 @@
     <ClInclude Include="include\Core\Core.h">
       <Filter>include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\Core\EditorConsole.h">
-      <Filter>include\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\Core\Engine.h">
       <Filter>include\Core</Filter>
     </ClInclude>

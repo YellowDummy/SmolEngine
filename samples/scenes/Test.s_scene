@@ -319,26 +319,26 @@ value61:
       value:
         ptr_wrapper:
           id: 4
+    - key: Camera
+      value:
+        ptr_wrapper:
+          id: 3
     - key: DefaultActor5
       value:
         ptr_wrapper:
           id: 2147483653
           data:
             value0: 1048582
-    - key: Camera
-      value:
-        ptr_wrapper:
-          id: 3
-    - key: Body
-      value:
-        ptr_wrapper:
-          id: 1
     - key: Floor
       value:
         ptr_wrapper:
           id: 2147483654
           data:
             value0: 1
+    - key: Body
+      value:
+        ptr_wrapper:
+          id: 1
     - key: Head
       value:
         ptr_wrapper:
