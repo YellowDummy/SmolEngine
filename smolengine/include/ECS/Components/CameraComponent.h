@@ -36,7 +36,6 @@ namespace SmolEngine
 		int                  ImGuiType = 0;
 		float                FOV = 75.0f;
 		bool                 bPrimaryCamera = false;
-		bool                 bShowPreview = false;
 		CameraComponentType  eType = CameraComponentType::Perspective;
 
 	private:

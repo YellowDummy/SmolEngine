@@ -106,6 +106,7 @@
     <ClInclude Include="include\Scripts\BasePlayerScript.h" />
     <ClInclude Include="include\TextureInspector.h" />
     <ClInclude Include="include\TexturesLoader.h" />
+    <ClInclude Include="include\ViewPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp" />
@@ -116,6 +117,7 @@
     <ClCompile Include="src\RendererInspector.cpp" />
     <ClCompile Include="src\Scripts\BasePlayerScript.cpp" />
     <ClCompile Include="src\TextureInspector.cpp" />
+    <ClCompile Include="src\ViewPort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\smolengine\SmolEngine.vcxproj">

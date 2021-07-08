@@ -50,34 +50,4 @@ namespace SmolEngine
 		}
 	}
 
-	void CameraSystem::OnBeginWorld()
-	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		const auto& group = reg->view<CameraComponent>();
-		for (const auto& entity : group)
-		{
-			auto& camera = group.get<CameraComponent>(entity);
-			if (camera.bPrimaryCamera)
-			{
-				camera.bShowPreview = true;
-				break;
-			}
-		}
-	}
-
-	void CameraSystem::OnEndWorld()
-	{
-		entt::registry* reg = WorldAdminStateSComponent::GetSingleton()->m_CurrentRegistry;
-		const auto& group = reg->view<CameraComponent>();
-		for (const auto& entity : group)
-		{
-			auto& camera = group.get<CameraComponent>(entity);
-			if (camera.bPrimaryCamera)
-			{
-				camera.bShowPreview = false;
-				break;
-			}
-		}
-	}
-
 }

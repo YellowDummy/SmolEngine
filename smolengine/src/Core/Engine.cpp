@@ -122,6 +122,7 @@ namespace SmolEngine
 					}
 
 					m_World->OnUpdate(deltaTime);
+
 				}
 				m_World->OnEndFrame();
 

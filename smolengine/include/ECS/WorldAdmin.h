@@ -83,6 +83,7 @@ namespace SmolEngine
 		friend class AnimationPanel;
 		friend class EditorLayer;
 		friend class Actor;
+		friend class SceneView;
 		friend class Engine;
 	};
 }

@@ -6,13 +6,13 @@
 #include "TexturesLoader.h"
 #include "FileExplorer.h"
 #include "EditorConsole.h"
+#include "ViewPort.h"
 #include "Core/Layer.h"
 #include "MaterialInspector.h"
 #include "ECS/Components/BaseComponent.h"
 
 #include <Frostium3D/EditorCamera.h>
 #include <Frostium3D/Libraries/imgui/imgui.h>
-#include <Frostium3D/Libraries/imgizmo/src/ImGuizmo.h>
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
 #include <Frostium3D/EditorCamera.h>
 #include <Frostium3D/Primitives/Texture.h>
@@ -69,7 +69,6 @@ namespace SmolEngine
 		// Draw
 		void DrawActor(Ref<Actor>& actor, uint32_t index = 0);
 		void DrawToolsBar();
-		void DrawSceneTetxure();
 		void DrawMeshPanel();
 		void DrawInfo(HeadComponent* head);
 		void DrawTransform(TransformComponent* transform);
@@ -81,7 +80,6 @@ namespace SmolEngine
 		void DrawCanvas(CanvasComponent* canvas);
 		void DrawBehaviorComponent(std::vector<OutValue>& outValues);
 		void DrawLight2D(Light2DSourceComponent* light);
-		void DrawSceneView(bool enabled);
 		void DrawInspector();
 		void DrawHierarchy();
 		void DrawMeshComponent(MeshComponent* meshComponent);
@@ -114,22 +112,17 @@ namespace SmolEngine
 		void DrawScriptComponent(uint32_t index);
 		void DrawMeshPrimitive(uint32_t type, const std::string& title, Texture* icon);
 		void CheckActor(Ref<Actor>& actor);
-		void CheckGameCameraState();
 
 		// Callbacks
 		void OnFileSelected(const std::string& path, const std::string& ext, int fileSize);
 		void OnFileDeleted(const std::string& path, const std::string& ext);
 
 	private:
-
-		bool                                        m_IsSceneViewFocused = false;
-		bool                                        m_IsGameViewFocused = false;
-		bool                                        m_GizmoEnabled = true;
-		bool                                        m_SnapEnabled = false;
-		bool                                        m_GameCameraEnabled = false;
 		TexturesLoader*                             m_TexturesLoader = nullptr;
 		FileExplorer*                               m_FileExplorer = nullptr;
 		WorldAdmin*                                 m_World = nullptr;
+		ViewPort*                                   m_SceneView = nullptr;
+		ViewPort*                                   m_GameView = nullptr;
 		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
 		RendererInspector*                          m_RendererInspector = nullptr;
@@ -137,7 +130,6 @@ namespace SmolEngine
 		Ref<Actor>                                  m_SelectedActor = nullptr;
 		MaterialInspector*                          m_MaterialInspector = nullptr;
 		SelectionFlags                              m_SelectionFlags = SelectionFlags::None;
-		glm::vec2                                   m_SceneViewPort = { 0.0f, 0.0f };
 		std::string                                 m_FilePath = "";
 		std::string                                 m_FileName = "";
 		uint32_t                                    m_IDBuffer = 0;
@@ -146,9 +138,9 @@ namespace SmolEngine
 		inline static std::string                   m_TempActorName = "";
 		inline static std::string                   m_TempActorTag = "";
 		inline static std::string                   m_TempString = "";               
-		inline static ImGuizmo::OPERATION           m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 		friend class MaterialInspector;
+		friend class SceneView;
 	};
 }
 

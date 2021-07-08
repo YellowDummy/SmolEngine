@@ -51,6 +51,9 @@ namespace SmolEngine
 		m_World = WorldAdmin::GetSingleton();
 		m_World->CreateScene(std::string("TestScene2.s_scene"));
 
+		m_SceneView = new SceneView(this);
+		m_GameView = new GameView();
+
 		m_FileExplorer = new FileExplorer();
 		m_FileExplorer->Create(Engine::GetEngine()->GetAssetsFolder());
 		m_FileExplorer->SetOnFileSelectedCallback(std::bind_front(&EditorLayer::OnFileSelected, this));
@@ -146,7 +149,7 @@ namespace SmolEngine
 
 	void EditorLayer::OnBeginFrame(DeltaTime deltaTime)
 	{
-		if (m_IsSceneViewFocused && m_GameCameraEnabled == false)
+		if(m_SceneView->IsFocused() && !m_GameView->IsFocused())
 		{
 			m_Camera->OnUpdate(deltaTime);
 		}
@@ -158,7 +161,12 @@ namespace SmolEngine
 
 	void EditorLayer::OnEndFrame(DeltaTime deltaTime)
 	{
-		if (!m_World->IsInPlayMode())
+		if (m_GameView->IsActive())
+		{
+			m_GameView->Render();
+		}
+
+		if (m_World->IsInPlayMode() == false)
 		{
 			RendererSystem::DebugDraw(m_RendererInspector->GetDebugState());
 		}
@@ -171,8 +179,10 @@ namespace SmolEngine
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		if(m_IsSceneViewFocused && m_GameCameraEnabled == false)
+		if (m_SceneView->IsFocused() && !m_GameView->IsFocused())
+		{
 			m_Camera->OnEvent(e);
+		}
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -214,16 +224,15 @@ namespace SmolEngine
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
-		CheckGameCameraState();
 		DrawToolsBar();
-		DrawSceneView(true);
+		DrawHierarchy();
+		DrawInspector();
 
+		m_SceneView->Draw();
+		m_GameView->Draw();
 		m_RendererInspector->OnUpdate(showRendererPanel);
 		m_Console->Update(showConsole);
 		m_FileExplorer->Update();
-
-		DrawHierarchy();
-		DrawInspector();
 
 		ImGui::End();
 
@@ -368,6 +377,9 @@ namespace SmolEngine
 				if (ImGui::MenuItem("Console"))
 					showConsole = true;
 
+				if (ImGui::MenuItem("Preview"))
+					m_GameView->SetActive(true);
+
 				if (ImGui::MenuItem("Renderer Settings"))
 					showRendererPanel = true;
 
@@ -378,152 +390,6 @@ namespace SmolEngine
 		ImGui::EndMainMenuBar();
 		ImGui::PopStyleVar();
 
-	}
-
-	void EditorLayer::DrawSceneTetxure()
-	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-		ImGui::BeginChild("TetxureScene");
-		{
-			if (ImGui::IsWindowHovered()) { m_IsSceneViewFocused = true; }
-			else { m_IsSceneViewFocused = false; }
-
-			Framebuffer* fb = Engine::GetEngine()->GetGraphicsContext()->GetFramebuffer();
-			ImVec2 ViewPortSize = ImGui::GetContentRegionAvail();
-			if (ViewPortSize.x != m_SceneViewPort.x || ViewPortSize.y != m_SceneViewPort.y)
-			{
-				m_SceneViewPort = { ViewPortSize.x, ViewPortSize.y };
-				GraphicsContext::GetSingleton()->SetFramebufferSize(static_cast<uint32_t>(m_SceneViewPort.x), static_cast<uint32_t>(m_SceneViewPort.y));
-			}
-
-			ImGui::Image(fb->GetImGuiTextureID(), ImVec2{ m_SceneViewPort.x, m_SceneViewPort.y });
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MeshPanel"))
-				{
-					std::string name = "DefaultActor" + std::to_string(m_World->GetActiveScene()->GetSceneState()->Actors.size());
-					auto actor = m_World->GetActiveScene()->CreateActor(name);
-					MeshComponent* meshComp = actor->AddComponent<MeshComponent>();
-
-					uint32_t meshIndex = *(uint32_t*)payload->Data;
-					meshComp->eDefaultType = (MeshComponent::DefaultMeshType)meshIndex;
-					auto defaultMeshes = GraphicsContext::GetSingleton()->GetDefaultMeshes();
-
-					switch (meshComp->eDefaultType)
-					{
-					case MeshComponent::DefaultMeshType::Cube: meshComp->DefaulPtr = defaultMeshes->Cube; break;
-					case MeshComponent::DefaultMeshType::Sphere: meshComp->DefaulPtr = defaultMeshes->Sphere; break;
-					case MeshComponent::DefaultMeshType::Capsule: meshComp->DefaulPtr = defaultMeshes->Capsule; break;
-					case MeshComponent::DefaultMeshType::Torus: meshComp->DefaulPtr = defaultMeshes->Torus; break;
-					}
-
-					uint32_t size = static_cast<uint32_t>(meshComp->DefaulPtr->GetChilds().size()) + 1;
-					meshComp->MaterialsData.resize(size);
-					m_SelectedActor = actor;
-					m_SelectionFlags = SelectionFlags::Inspector;
-				}
-
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
-				{
-					std::string path = *(std::string*)payload->Data;
-
-					if (FileExtensionCheck(path, ".s_scene"))
-					{
-						bool reload = m_World->GetActiveScene()->m_State->FilePath == path;
-						m_World->LoadScene(path, reload);
-						m_SelectedActor = nullptr;
-					}
-
-					if (FileExtensionCheck(path, ".gltf"))
-					{
-						std::string name = "DefaultActor" + std::to_string(m_World->GetActiveScene()->GetSceneState()->Actors.size());
-						auto actor = m_World->GetActiveScene()->CreateActor(name);
-						MeshComponent* mesh = actor->AddComponent<MeshComponent>();
-						TransformComponent* transform = actor->GetComponent<TransformComponent>();
-
-						{
-							float rayDistance = 20.0f;
-							float x =  ImGui::GetMousePos().x;
-							float y = ImGui::GetMousePos().y  - (m_SceneViewPort.y / 2.0f);
-
-							glm::vec3 startPos = m_Camera->GetPosition();
-							glm::mat4 viewProj = m_Camera->GetViewProjection();
-
-							transform->WorldPos = Utils::CastRay(startPos, glm::vec2(x, y), m_SceneViewPort.x, m_SceneViewPort.y, rayDistance, viewProj);
-						}
-
-						if (mesh)
-						{
-							ComponentHandler::ValidateMeshComponent(mesh, path);
-							m_SelectedActor = actor;
-						}
-						else
-						{
-							m_SelectedActor = nullptr;
-						}
-					}
-				}
-				ImGui::EndDragDropTarget();
-			}
-
-			// Gizmos
-			if (m_SelectedActor != nullptr && !m_World->IsInPlayMode() && !m_GameCameraEnabled)
-			{
-				auto transformComponent = m_World->GetActiveScene()->GetComponent<TransformComponent>(m_SelectedActor);
-				if (transformComponent)
-				{
-					float snapValue = 0.5f;
-					switch (m_Camera->GetType())
-					{
-					case CameraType::Perspective:
-					{
-						ImGuizmo::SetOrthographic(false);
-						break;
-					}
-					case CameraType::Ortho:
-					{
-						ImGuizmo::SetOrthographic(true);
-						break;
-					}
-					default:
-						break;
-					}
-
-					if (m_GizmoOperation == ImGuizmo::OPERATION::ROTATE)
-						snapValue = 45.0f;
-
-					ImGuizmo::SetDrawlist();
-					float width = (float)ImGui::GetWindowSize().x;
-					float height = (float)ImGui::GetWindowSize().y;
-					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
-
-					glm::mat4 transform;
-					glm::mat4 rotation = glm::toMat4(glm::quat(transformComponent->Rotation));
-					transform = glm::translate(glm::mat4(1.0f), transformComponent->WorldPos)
-						* rotation
-						* glm::scale(glm::mat4(1.0f), transformComponent->Scale);
-
-					float snapValues[3] = { snapValue, snapValue, snapValue };
-
-					ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjection()),
-						m_GizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, m_SnapEnabled ? snapValues: nullptr);
-
-					if (ImGuizmo::IsUsing())
-					{
-						glm::vec3 tranlation, rotation, scale;
-						Utils::DecomposeTransform(transform, tranlation, rotation, scale);
-
-						transformComponent->WorldPos = tranlation;
-						transformComponent->Rotation.x = rotation.x;
-						transformComponent->Rotation.y = rotation.y;
-						transformComponent->Rotation.z = rotation.z;
-						transformComponent->Scale = scale;
-					}
-				}
-			}
-		}
-		ImGui::EndChild();
-		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::DrawMeshPanel()
@@ -656,8 +522,6 @@ namespace SmolEngine
 				});
 			}
 		}
-
-		ImGui::Extensions::CheckBox("Preview", camera->bShowPreview);
 	}
 
 	void EditorLayer::DrawAudioSource(AudioSourceComponent* audio)
@@ -742,75 +606,6 @@ namespace SmolEngine
 		ImGui::NewLine();
 
 		ImGui::Extensions::CheckBox("Enabled", light->IsEnabled, 130.0f, "2DLightPanel");
-	}
-
-	void EditorLayer::DrawSceneView(bool enabled)
-	{
-		if (enabled)
-		{
-			ImGui::Begin("Scene View", nullptr, ImGuiWindowFlags_NoDecoration);
-			{
-				ImGui::NewLine();
-				ImGui::SetCursorPosX(10);
-				if (ImGui::ImageButton(m_TexturesLoader->m_MoveButton.GetImGuiTexture(), { 25, 25 }))
-				{
-					m_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-				}
-
-				ImGui::SameLine();
-				if (ImGui::ImageButton(m_TexturesLoader->m_RotateButton.GetImGuiTexture(), { 25, 25 }))
-				{
-					m_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
-				}
-
-
-				ImGui::SameLine();
-				if (ImGui::ImageButton(m_TexturesLoader->m_ScaleButton.GetImGuiTexture(), { 25, 25 }))
-				{
-					m_GizmoOperation = ImGuizmo::OPERATION::SCALE;
-				}
-
-				ImGui::SameLine();
-				ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.0f) - 25);
-				if (ImGui::ImageButton(m_TexturesLoader->m_PlayButton.GetImGuiTexture(), { 25, 25 }))
-				{
-					if (!m_World->IsInPlayMode())
-					{
-						m_World->SaveCurrentScene();
-						m_World->OnBeginWorld();
-					}
-					else
-					{
-						NATIVE_WARN("The scene is already in play mode!");
-					}
-				}
-
-				ImGui::SameLine();
-				if (ImGui::ImageButton(m_TexturesLoader->m_StopButton.GetImGuiTexture(), { 25, 25 }))
-				{
-					if (m_World->IsInPlayMode())
-					{
-						uint32_t selectedActorID = 0;
-						if (m_SelectedActor != nullptr)
-						{
-							selectedActorID = m_SelectedActor->GetID();
-						}
-
-						m_SelectedActor = nullptr;
-						m_World->OnEndWorld();
-						m_World->LoadLastSceneState();
-						m_SelectedActor = m_World->GetActiveScene()->FindActorByID(selectedActorID);
-					}
-					else
-					{
-						NATIVE_WARN("The scene is not in play mode!");
-					}
-				}
-
-				DrawSceneTetxure();
-			}
-			ImGui::End();
-		}
 	}
 
 	void EditorLayer::DrawInspector()
@@ -1545,22 +1340,6 @@ namespace SmolEngine
 				m_DisplayedActors = tmp;
 
 				CheckActor(child);
-			}
-		}
-	}
-
-	void EditorLayer::CheckGameCameraState()
-	{
-		m_GameCameraEnabled = false;
-		entt::registry& reg = m_World->GetActiveScene()->GetRegistry();
-		const auto& group = reg.view<CameraComponent>();
-		for (const auto& entity : group)
-		{
-			auto& camera = group.get<CameraComponent>(entity);
-			if (camera.bPrimaryCamera && camera.bShowPreview)
-			{
-				m_GameCameraEnabled = true;
-				break;
 			}
 		}
 	}

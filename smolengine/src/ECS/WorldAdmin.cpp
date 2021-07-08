@@ -53,7 +53,6 @@ namespace SmolEngine
 		scene->CalculateRelativePositions();
 		SceneStateComponent* sceneState = scene->GetSceneState();
 
-		CameraSystem::OnBeginWorld();
 		Physics2DSystem::OnBeginWorld();
 		PhysicsSystem::OnBeginWorld();
 		AudioSystem::OnBeginWorld();
@@ -70,12 +69,7 @@ namespace SmolEngine
 		for (const auto& entity : cameraGroup)
 		{
 			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
-			if (m_State->m_LevelEditorActive)
-			{
-				if (!camera.bPrimaryCamera || !camera.bShowPreview) { continue; }
-			}
-			else
-				if (!camera.bPrimaryCamera) { continue; }
+			if (camera.bPrimaryCamera == false || m_State->m_LevelEditorActive) { continue; }
 
 			// Calculating ViewProj
 			CameraSystem::CalculateView(&camera, &transform);
@@ -99,7 +93,6 @@ namespace SmolEngine
 	void WorldAdmin::OnEndWorld()
 	{
 		m_State->m_InPlayMode = false;
-		CameraSystem::OnEndWorld();
 		ScriptingSystem::OnEndWorld();
 		Physics2DSystem::OnEndWorld();
 		PhysicsSystem::OnEndWorld();
