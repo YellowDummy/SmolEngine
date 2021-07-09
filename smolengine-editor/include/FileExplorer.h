@@ -48,16 +48,20 @@ namespace SmolEngine
 			std::string         NewName;
 		};
 
-		void DrawHierarchy();
-		void DrawDirectory(const std::filesystem::path& path);
-		void DrawNode(const std::filesystem::path& path);
-		void DrawIcon(Texture* icon, bool flip = false);
-		void DrawIcon(const std::string& ext = "");
-		void DrawNodeIcon(const std::string& path, const std::string& ext, Ref<Texture>& icon);
-		void DrawPopUp();
-		void AddPendingAction(const std::string& path, PendeingActionFlags action);
-		void ClosePopUp();
-		void Reset();
+		void    DrawPopUp();
+		void    ClosePopUp();
+		void    Reset();
+		void    DrawHierarchy();
+		void    DrawSelectable(const std::string& name, const std::string& path);
+		void    DrawDirectory(const std::filesystem::path& path);
+		void    DrawNode(const std::filesystem::path& path);
+		void    DrawIcon(Texture* icon, bool flip = false);
+		void    DrawIcon(const std::string& ext = "");
+		void    DrawNodeIcon(const std::string& path, const std::string& ext, Ref<Texture>& icon);
+		void    AddPendingAction(const std::string& path, PendeingActionFlags action);
+		bool    IsAnyActionPending(const std::filesystem::path& node_path);
+		size_t  GetNodeSize(const std::string& path);
+			    
 	private:
 
 		std::function<void(const std::string&, const std::string&, int)>  m_pOnFileSelected = nullptr;
@@ -66,7 +70,7 @@ namespace SmolEngine
 		PendeingAction*                                                   m_pPendeingAction = nullptr;
 		PopUpFlags                                                        m_ePopUpFlags = PopUpFlags::None;
 		int                                                               m_SelectionIndex = 0;
-		glm::vec2                                                         m_ButtonSize = glm::vec2(23.0f);
+		glm::vec2                                                         m_ButtonSize = glm::vec2(33.0f, 23.0f);
 		ImVec4                                                            m_SelectColor = ImVec4(0.984f, 0.952f, 0.356f, 1.0f);
 		std::string                                                       m_PopUpBuffer;
 		std::string                                                       m_CurrentDir;
@@ -75,6 +79,7 @@ namespace SmolEngine
 		std::string                                                       m_SearchBuffer;
 		std::string                                                       m_DragAndDropBuffer;
 		std::unordered_map<std::string, Ref<Texture>>                     m_IconsMap = {};
+		std::unordered_map<std::string, Ref<Framebuffer>>                 m_MaterialPreviews = {};
 		std::vector<const char*>                                          m_FileExtensions = { ".s_image", ".s_scene", ".s_material", ".gltf" };
 	};													                  
 }

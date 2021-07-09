@@ -1,13 +1,26 @@
-value0: 4
+value0: 3
 value1: 0
 value2: 1
 value3: 2
-value4: 3
-value5: 1048575
-value6: 3
-value7: 1
-value8:
+value4: 1048575
+value5: 2
+value6: 1
+value7:
   value0: 1
+  value1: Player
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    ptr_wrapper:
+      id: 0
+  value6:
+    []
+  value7: 0
+  value8: 4
+value8: 2
+value9:
+  value0: 2
   value1: Camera
   value2: Default
   value3: true
@@ -19,38 +32,10 @@ value8:
     []
   value7: 0
   value8: 3
-value9: 2
-value10:
-  value0: 2
-  value1: Obj1
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    ptr_wrapper:
-      id: 0
-  value6:
-    []
-  value7: 0
-  value8: 3
-value11: 3
+value10: 1
+value11: 2
 value12:
-  value0: 3
-  value1: Obj2
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    ptr_wrapper:
-      id: 0
-  value6:
-    []
-  value7: 0
-  value8: 3
-value13: 1
-value14: 1
-value15:
-  value0: 0.75862067937850952
+  value0: 2.0091743469238281
   value1: 6
   value2: true
   value3: 0
@@ -59,26 +44,14 @@ value15:
   value6: 75
   value7: 0
   value8: 2
+value13: 0
+value14: 0
+value15: 0
 value16: 0
 value17: 0
-value18: 0
-value19: 0
-value20: 0
-value21: 3
-value22: 1
-value23:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: -2.7462749481201172
-  value7: 6.6524186134338379
-  value8: -1.3225836753845215
-  value9: 1
-value24: 2
-value25:
+value18: 2
+value19: 1
+value20:
   value0: 0
   value1: -0
   value2: 0
@@ -86,49 +59,46 @@ value25:
   value4: 1
   value5: 1
   value6: 0
-  value7: 6.8068981170654297
-  value8: -5.1029629707336426
+  value7: 1.6767709255218506
+  value8: 0
   value9: 1
-value26: 3
-value27:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
+value21: 2
+value22:
+  value0: 2.2808668613433838
+  value1: -0.2952384352684021
+  value2: -3.1399345397949219
+  value3: 0.9999842643737793
   value4: 1
-  value5: 1
-  value6: -3.486565113067627
-  value7: 6.8070001602172852
-  value8: -4.4082427024841309
+  value5: 1.0000619888305664
+  value6: -0.87323939800262451
+  value7: 2.9738550186157227
+  value8: -1.3111133575439453
   value9: 1
+value23: 0
+value24: 0
+value25: 1
+value26: 1
+value27:
+  value0:
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+  value1: 0
+  value2: false
+  value3: true
+  value4: ../samples/models\tank.gltf
+  value5: 2
 value28: 0
 value29: 0
-value30: 2
-value31: 2
+value30: 1
+value31: 0
 value32:
-  value0:
-    - value0: ../samples/materials\metal.s_material
-  value1: 1
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value33: 3
-value34:
-  value0:
-    - value0: ../samples/materials\metal.s_material
-  value1: 2
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value35: 0
-value36: 0
-value37: 1
-value38: 0
-value39:
   value0: 0
-  value1: 4
+  value1: 3
   value2: ../samples/scenes\Test.s_scene
   value3: Test
   value4:
@@ -141,7 +111,7 @@ value39:
     value6: 1
     value7: 1
     value8: 1
-    value9: 5
+    value9: 1
     value10:
       value0: ""
       value1: 2
@@ -180,37 +150,31 @@ value39:
     value21: 1
     value22: 1
     value23: 1
-    value24: 67
+    value24: 1
     value25: 56
-    value26: 0
+    value26: -80
     value27: 0
     value28: 1
     value29: 1
     value30: 350
     value31: 1
     value32: 45
-    value33: 0
-    value34: 0
+    value33: 1
+    value34: 1
     value35: 1
   value5:
-    - key: Camera
+    - key: Player
       value:
         ptr_wrapper:
           id: 2147483649
           data:
             value0: 1
-    - key: Obj1
+    - key: Camera
       value:
         ptr_wrapper:
           id: 2147483650
           data:
             value0: 2
-    - key: Obj2
-      value:
-        ptr_wrapper:
-          id: 2147483651
-          data:
-            value0: 3
   value6:
     - key: 1
       value:
@@ -220,15 +184,38 @@ value39:
       value:
         ptr_wrapper:
           id: 2
-    - key: 3
-      value:
-        ptr_wrapper:
-          id: 3
   value7:
     - ptr_wrapper:
         id: 1
     - ptr_wrapper:
         id: 2
-    - ptr_wrapper:
-        id: 3
-value40: 0
+value33: 1
+value34: 1
+value35:
+  value0:
+    value0:
+      ptr_wrapper:
+        id: 1
+    value1: 0
+    value2: 1
+    value3: 1
+    value4: 0
+    value5: 1
+    value6: 0.5
+    value7: 0.5
+    value8: 0
+    value9: 0
+    value10: 0
+    value11: 0.10000000149011612
+    value12: 0.10000000149011612
+    value13: 1
+    value14: 1.7000000476837158
+    value15: 0.60000002384185791
+    value16: 1
+    value17: 1
+    value18: 1
+    value19: ""
+    value20: 1
+    value21: 0
+    value22: 0
+  value1: 3

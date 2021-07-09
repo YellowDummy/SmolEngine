@@ -847,9 +847,9 @@ namespace SmolEngine
 				mesh = comp->DefaulPtr;
 
 
-			uint32_t count = static_cast<uint32_t>(mesh->GetChildCount());
-			std::vector<Mesh*> meshes(count + 1);
-			for (uint32_t i = 0; i < count + 1; ++i)
+			uint32_t count = static_cast<uint32_t>(mesh->GetChildCount()) + 1;
+			std::vector<Mesh*> meshes(count);
+			for (uint32_t i = 0; i < count; ++i)
 			{
 				if (i == 0)
 				{
@@ -857,8 +857,7 @@ namespace SmolEngine
 					continue;
 				}
 
-				Mesh* mesh = &mesh->GetChilds()[i - 1];
-				meshes[i] = mesh;
+				meshes[i] = &mesh->GetChilds()[i - 1];
 			}
 
 			ImGui::Begin("Mesh Inspector", &show);

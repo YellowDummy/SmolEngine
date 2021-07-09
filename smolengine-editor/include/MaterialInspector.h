@@ -36,6 +36,7 @@ namespace SmolEngine
 		void Save();
 
 		std::string GetCurrentPath() const;
+		static MaterialInspector* GetSingleton();
 	private:
 
 		void InitPreviewRenderer();
@@ -46,6 +47,10 @@ namespace SmolEngine
 		void ApplyChanges();
 
 	private:
+	    TexturesLoader*                               m_TexturesLoader = nullptr;
+		MaterialCreateInfo*                           m_MaterialCI = nullptr;
+		PreviewRenderingData*                         m_Data = nullptr;
+		inline static MaterialInspector*              s_Instance =nullptr;
 		bool                                          m_bShowPreview = false;
 		int                                           m_GeometryType = 1;
 		const uint32_t                                m_BindingPoint = 277;
@@ -53,9 +58,6 @@ namespace SmolEngine
 		std::string                                   m_CurrentFilePath = "";
 		std::string                                   m_CurrentName = "";
 		PBRMaterial                                   m_Material = {};
-		TexturesLoader*                               m_TexturesLoader = nullptr;
-		MaterialCreateInfo*                           m_MaterialCI = nullptr;
-		PreviewRenderingData*                         m_Data = nullptr;
 		std::unordered_map<std::string, Ref<Texture>> m_Textures;
 	};
 }

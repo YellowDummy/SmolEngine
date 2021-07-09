@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "FileExplorer.h"
+#include "MaterialInspector.h"
 
 #include <ECS/Systems/JobsSystem.h>
 #include <Core/CommandUtils.h>
+
 #include <Frostium3D/Primitives/Texture.h>
+#include <Frostium3D/MaterialLibrary.h>
 
 #include <imgui/imgui.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
@@ -80,16 +83,8 @@ namespace SmolEngine
 		std::string fileName = orig_path.filename().u8string();
 		std::string filePath = orig_path.u8string();
 
-		// Folder icon
 		DrawIcon(&m_pTextureLoader->m_FolderButton);
-		ImGui::SameLine();
-
-		bool selected = m_SelectedNode == filePath;
-		if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, m_SelectColor); }
-		{
-			ImGui::Selectable(fileName.c_str(), selected);
-		}
-		if (selected) { ImGui::PopStyleColor(); }
+		DrawSelectable(fileName, filePath);
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
@@ -106,36 +101,20 @@ namespace SmolEngine
 	void FileExplorer::DrawNode(const std::filesystem::path& fs_path)
 	{
 		Ref<Texture> icon = nullptr;
-		std::string name = fs_path.filename().stem().u8string();
+		std::string name = fs_path.filename().u8string();
 		std::string path = fs_path.u8string();
 		std::string ext = fs_path.extension().u8string();
 
 		bool extSupported = std::find(m_FileExtensions.begin(), m_FileExtensions.end(), ext) != m_FileExtensions.end();
 		if (extSupported)
 		{
-			bool is_action_pending = false;
-			if (m_pPendeingAction != nullptr)
-			{
-				std::filesystem::path p1(m_pPendeingAction->Path);
-				std::string f1 = p1.filename().u8string();
-				std::string f2 = fs_path.filename().u8string();
+			DrawNodeIcon(path, ext, icon);
 
-				is_action_pending = f1 == f2;
-			}
-
+			const bool is_action_pending = IsAnyActionPending(fs_path);
 			if (is_action_pending == false)
 			{
-				DrawNodeIcon(path, ext, icon);
-				ImGui::SameLine();
-
-				bool selected = m_SelectedNode == path;
-				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, m_SelectColor); }
-				{
-					ImGui::Selectable(name.c_str(), selected);
-				}
-				if (selected) { ImGui::PopStyleColor(); }
+				DrawSelectable(name, path);
 				 
-				// Pop Up
 				if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 				{
 					m_PopUpBuffer = path;
@@ -150,8 +129,7 @@ namespace SmolEngine
 
 						if (m_pOnFileSelected != nullptr)
 						{
-							std::ifstream in(path, std::ifstream::ate | std::ifstream::binary);
-							size_t fSize = in.tellg();
+							size_t fSize = GetNodeSize(path);
 							m_pOnFileSelected(path, ext, static_cast<int>(fSize));
 						}
 					}
@@ -189,10 +167,6 @@ namespace SmolEngine
 
 						switch (m_pPendeingAction->Type)
 						{
-						case PendeingActionFlags::Rename:
-						{
-
-						}
 						case PendeingActionFlags::NewFile:
 						{
 							if (m_pPendeingAction->NewName.empty() == true)
@@ -219,6 +193,8 @@ namespace SmolEngine
 			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y });
 		else
 			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+
+		ImGui::SameLine();
 	}
 
 	void FileExplorer::DrawIcon(const std::string& ext)
@@ -229,7 +205,7 @@ namespace SmolEngine
 		}
 		else if (ext == ".s_material")
 		{
-		   DrawIcon(&m_pTextureLoader->m_MaterialIcon);
+			DrawIcon(&m_pTextureLoader->m_MaterialIcon);
 		}
 		else if (ext == ".gltf")
 		{
@@ -275,6 +251,45 @@ namespace SmolEngine
 						defaultIcon = false;
 					}
 				}
+			}
+		}
+
+		if (ext == ".s_material")
+		{
+			auto& it = m_MaterialPreviews.find(path);
+			if (it == m_MaterialPreviews.end()) // Generates material icon
+			{
+				size_t fileSze = GetNodeSize(path);
+				if (fileSze > 0)
+				{
+					auto fb = std::make_shared<Framebuffer>();
+					{
+						FramebufferSpecification framebufferCI = {};
+						framebufferCI.Width = 96;
+						framebufferCI.Height = 96;
+						framebufferCI.bResizable = false;
+						framebufferCI.bUsedByImGui = true;
+						framebufferCI.bAutoSync = false;
+						framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
+						framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+
+						Framebuffer::Create(framebufferCI, fb.get());
+					}
+
+					MaterialCreateInfo materailCI = {};
+					if (materailCI.Load(path) == true)
+					{
+						MaterialInspector::GetSingleton()->RenderMaterialIcon(fb.get(), &materailCI);
+						m_MaterialPreviews[path] = fb;
+						defaultIcon = false;
+					}
+				}
+			}
+			else
+			{
+				ImGui::Image(it->second->GetImGuiTextureID(), ImVec2(m_ButtonSize.x, m_ButtonSize.y));
+				ImGui::SameLine();
+				defaultIcon = false;
 			}
 		}
 
@@ -379,6 +394,26 @@ namespace SmolEngine
 		m_pPendeingAction = nullptr;
 	}
 
+	bool FileExplorer::IsAnyActionPending(const std::filesystem::path& node_path)
+	{
+		if (m_pPendeingAction != nullptr)
+		{
+			std::filesystem::path p1(m_pPendeingAction->Path);
+			std::string f1 = p1.filename().u8string();
+			std::string f2 = node_path.filename().u8string();
+
+			return f1 == f2;
+		}
+
+		return false;
+	}
+
+	size_t FileExplorer::GetNodeSize(const std::string& path)
+	{
+		std::ifstream in(path, std::ifstream::ate | std::ifstream::binary);
+		return in.tellg();
+	}
+
 	void FileExplorer::ClosePopUp()
 	{
 		ImGui::CloseCurrentPopup();
@@ -387,6 +422,7 @@ namespace SmolEngine
 
 	void FileExplorer::Reset()
 	{
+		m_MaterialPreviews.clear();
 		m_IconsMap.clear();
 		m_SelectedNode.clear();
 		m_PopUpBuffer.clear();
@@ -485,5 +521,15 @@ namespace SmolEngine
 		}
 
 		DrawPopUp();
+	}
+
+	void FileExplorer::DrawSelectable(const std::string& name, const std::string& path)
+	{
+		bool selected = m_SelectedNode == path;
+		if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, m_SelectColor); }
+		{
+			ImGui::Selectable(name.c_str(), selected);
+		}
+		if (selected) { ImGui::PopStyleColor(); }
 	}
 }

@@ -13,6 +13,8 @@ namespace SmolEngine
 		void               Open(const std::string& filePath);
 
 	private:
+		Texture*           m_Preview = nullptr;
+		bool               m_Reload = false;
 		int                m_BorderColorFlag = 4;
 		int                m_AddressModeFlag = 0;
 		int                m_FormatFlag = 1;

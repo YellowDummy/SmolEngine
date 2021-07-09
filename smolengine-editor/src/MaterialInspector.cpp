@@ -18,12 +18,25 @@ namespace SmolEngine
 		m_TexturesLoader = TexturesLoader::Get();
 		m_MaterialCI = new MaterialCreateInfo();
 		m_Data = new PreviewRenderingData();
+		s_Instance = this;
 		InitPreviewRenderer();
 	}
 
 	MaterialInspector::~MaterialInspector()
 	{
 
+	}
+
+	void MaterialInspector::RenderMaterialIcon(Framebuffer* fb, MaterialCreateInfo* material)
+	{
+		ResetMaterial();
+		*m_MaterialCI = *material;
+
+		m_Data->Pipeline->SetFramebuffers({ fb });
+		{
+			RenderImage();
+		}
+		m_Data->Pipeline->SetFramebuffers({ m_Data->Framebuffer.get() });
 	}
 
 	void MaterialInspector::OpenExisting(const std::string& path)
@@ -136,6 +149,11 @@ namespace SmolEngine
 	std::string MaterialInspector::GetCurrentPath() const
 	{
 		return m_CurrentFilePath;
+	}
+
+	MaterialInspector* MaterialInspector::GetSingleton()
+	{
+		return s_Instance;
 	}
 
 	void MaterialInspector::ResetMaterial()
