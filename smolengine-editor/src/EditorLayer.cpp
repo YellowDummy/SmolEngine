@@ -38,7 +38,7 @@ namespace SmolEngine
 {
 	static bool showConsole = true;
 	static bool showGameView = false;
-	static bool showRendererPanel = true;
+	static bool showRendererPanel = false;
 	static bool showMeshInspector = false;
 
 	void EditorLayer::OnAttach()
@@ -224,15 +224,16 @@ namespace SmolEngine
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
-		DrawToolsBar();
-		DrawHierarchy();
-		DrawInspector();
-
 		m_SceneView->Draw();
 		m_GameView->Draw();
+
 		m_RendererInspector->OnUpdate(showRendererPanel);
 		m_Console->Update(showConsole);
 		m_FileExplorer->Update();
+
+		DrawToolsBar();
+		DrawHierarchy();
+		DrawInspector();
 
 		ImGui::End();
 

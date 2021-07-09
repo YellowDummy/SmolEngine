@@ -14,6 +14,7 @@ namespace SmolEngine
 	{
 		m_pTextureLoader = TexturesLoader::Get();
 		m_CurrentDir = current_path;
+		m_HomeDir = m_CurrentDir;
 		Import();
 	}
 
@@ -78,61 +79,31 @@ namespace SmolEngine
 	{
 		std::string fileName = orig_path.filename().u8string();
 		std::string filePath = orig_path.u8string();
-		if (m_SelectedDir.empty())
-		{
-			m_SelectedDir = filePath;
-		}
 
 		// Folder icon
 		DrawIcon(&m_pTextureLoader->m_FolderButton);
-		auto& it = m_OpenDirectories.find(fileName);
-		bool found = it != m_OpenDirectories.end();
-		bool open = ImGui::TreeNodeEx(fileName.c_str(), m_SelectedDir == filePath ? 
-			ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_OpenOnArrow);
+		ImGui::SameLine();
+
+		bool selected = m_SelectedNode == filePath;
+		if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, m_SelectColor); }
+		{
+			ImGui::Selectable(fileName.c_str(), selected);
+		}
+		if (selected) { ImGui::PopStyleColor(); }
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
-			m_SelectedDir = filePath;
-		}
+			m_SelectedNode = filePath;
 
-		if (open)
-		{
-			if (found == false) { m_OpenDirectories[fileName] = Directory(); }
-
-			// first draw directories
-			for (auto& child_file_path : std::filesystem::directory_iterator(orig_path))
+			if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
-				auto p = child_file_path.path();
-				if (std::filesystem::is_directory(p) == true)
-				{
-					DrawDirectory(p);
-				}
+				m_CurrentDir = filePath;
+				Reset();
 			}
-
-			// files
-			for (auto& child_file_path : std::filesystem::directory_iterator(orig_path))
-			{
-				auto p = child_file_path.path();
-				std::string child_fm = p.filename().stem().u8string();
-				if ((child_fm.find(m_SearchBuffer) != std::string::npos))
-				{
-					if (std::filesystem::is_directory(p) == false)
-					{
-						DrawNode(p, m_OpenDirectories[fileName]);
-					}
-				}
-			}
-
-			ImGui::TreePop();
-		}
-		else
-		{
-			if (found)
-				m_OpenDirectories.erase(fileName);
 		}
 	}
 
-	void FileExplorer::DrawNode(const std::filesystem::path& fs_path, Directory& owner)
+	void FileExplorer::DrawNode(const std::filesystem::path& fs_path)
 	{
 		Ref<Texture> icon = nullptr;
 		std::string name = fs_path.filename().stem().u8string();
@@ -142,8 +113,6 @@ namespace SmolEngine
 		bool extSupported = std::find(m_FileExtensions.begin(), m_FileExtensions.end(), ext) != m_FileExtensions.end();
 		if (extSupported)
 		{
-			DrawNodeIcon(path, ext, owner, icon);
-
 			bool is_action_pending = false;
 			if (m_pPendeingAction != nullptr)
 			{
@@ -156,10 +125,14 @@ namespace SmolEngine
 
 			if (is_action_pending == false)
 			{
-				bool selected = m_SelectedNode == name;
-				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, { 0.984f, 0.952f, 0.356f, 1.0f }); }
-				bool open = ImGui::TreeNodeEx(name.c_str(),
-					selected ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Bullet);
+				DrawNodeIcon(path, ext, icon);
+				ImGui::SameLine();
+
+				bool selected = m_SelectedNode == path;
+				if (selected) { ImGui::PushStyleColor(ImGuiCol_Text, m_SelectColor); }
+				{
+					ImGui::Selectable(name.c_str(), selected);
+				}
 				if (selected) { ImGui::PopStyleColor(); }
 				 
 				// Pop Up
@@ -173,7 +146,8 @@ namespace SmolEngine
 				{
 					if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 					{
-						m_SelectedNode = name;
+						m_SelectedNode = path;
+
 						if (m_pOnFileSelected != nullptr)
 						{
 							std::ifstream in(path, std::ifstream::ate | std::ifstream::binary);
@@ -200,16 +174,11 @@ namespace SmolEngine
 					ImGui::Text(name.c_str());
 					ImGui::EndDragDropSource();
 				}
-
-				if (open) { ImGui::TreePop(); }
 			}
 			else
 			{
 				if (m_pPendeingAction->Type == PendeingActionFlags::NewFile || m_pPendeingAction->Type == PendeingActionFlags::Rename)
 				{
-					float posX = ImGui::GetCursorPosX();
-					ImGui::SetCursorPosX(posX + 10.0f);
-
 					ImGui::PushStyleColor(ImGuiCol_FrameBg, { 0.180f, 0.521f, 1.0f,  1.0f });
 					if (ImGui::InputTextWithHint("##ActionsRenameNode", name.c_str(), &m_pPendeingAction->NewName, ImGuiInputTextFlags_EnterReturnsTrue))
 					{
@@ -250,8 +219,6 @@ namespace SmolEngine
 			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y });
 		else
 			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
-
-		ImGui::SameLine();
 	}
 
 	void FileExplorer::DrawIcon(const std::string& ext)
@@ -274,7 +241,7 @@ namespace SmolEngine
 		}
 	}
 
-	void FileExplorer::DrawNodeIcon(const std::string& path, const std::string& ext, Directory& owner, Ref<Texture>& icon)
+	void FileExplorer::DrawNodeIcon(const std::string& path, const std::string& ext,  Ref<Texture>& icon)
 	{
 		bool defaultIcon = true;
 		if (ext == ".s_image")
@@ -286,15 +253,15 @@ namespace SmolEngine
 
 			if (is_ktx == false)
 			{
-				auto& it = owner.m_IconsMap.find(path);
-				if (it == owner.m_IconsMap.end())
+				auto& it = m_IconsMap.find(path);
+				if (it == m_IconsMap.end())
 				{
 					icon = std::make_shared<Texture>();
-					owner.m_IconsMap[path] = icon;
+					m_IconsMap[path] = icon;
 
-					JobsSystem::Schedule([&owner, path, texCI]()
+					JobsSystem::Schedule([this, path, texCI]()
 					{
-						auto tex = owner.m_IconsMap[path];
+						auto tex = m_IconsMap[path];
 						Texture::Create(&texCI, tex.get());
 					});
 				}
@@ -332,7 +299,7 @@ namespace SmolEngine
 
 			if (ImGui::MenuItem("new material"))
 			{
-				std::string newPath = m_SelectedDir + "/new_material" + ".s_material";
+				std::string newPath = m_CurrentDir + "/new_material" + ".s_material";
 				AddPendingAction(newPath, PendeingActionFlags::NewFile);
 				ClosePopUp();
 			}
@@ -420,41 +387,101 @@ namespace SmolEngine
 
 	void FileExplorer::Reset()
 	{
-		m_SelectedNode = "";
-		m_PopUpBuffer = "";
+		m_IconsMap.clear();
+		m_SelectedNode.clear();
+		m_PopUpBuffer.clear();
+
 		if (m_pPendeingAction != nullptr)
 		{
 			delete m_pPendeingAction;
 			m_pPendeingAction = nullptr;
 		}
+
 		ImGui::CloseCurrentPopup();
 	}
 
 	void FileExplorer::DrawHierarchy()
 	{
 		{
-			ImGui::Image(m_pTextureLoader->m_SearchButton.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0));
+			{
+				bool active = std::filesystem::equivalent(m_CurrentDir, m_HomeDir) == false;
+				if (active == false) { ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f); }
+
+				if (ImGui::ImageButton(m_pTextureLoader->m_ReturnIcon.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0)))
+				{
+					if (active)
+					{
+						std::filesystem::path p(m_CurrentDir);
+						m_CurrentDir = p.parent_path().u8string();
+						Reset();
+					}
+				}
+
+				if (active == false) { ImGui::PopStyleVar(); }
+			}
+
+			ImGui::SameLine();
+			if (ImGui::ImageButton(m_pTextureLoader->m_ForwardIcon.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0)))
+			{
+				if (m_SelectedNode.empty() == false)
+				{
+					m_CurrentDir = m_SelectedNode;
+					Reset();
+				}
+			}
+
+			ImGui::SameLine();
+			if (ImGui::ImageButton(m_pTextureLoader->m_UpdateIcon.GetImGuiTexture(), { 25, 25 }, ImVec2(0, 1), ImVec2(1, 0)))
+			{
+				Import();
+			}
+
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Text("import");
+				ImGui::EndTooltip();
+			}
+
 			ImGui::SameLine();
 
 			float pos = ImGui::GetCursorPosY();
 			ImGui::SetCursorPosY(pos + 3);
-			ImGui::InputTextWithHint("Search", "", &m_SearchBuffer);
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 200);
+			ImGui::InputTextWithHint("Filter", "search", &m_SearchBuffer);
 			ImGui::Separator();
 		}
 
-		std::string root = "Root (" + m_CurrentDir + ")";
-		if (ImGui::TreeNodeEx(root.c_str(), ImGuiTreeNodeFlags_Leaf))
+		if (m_SelectedNode.empty())
 		{
 			for (auto& file_path : std::filesystem::directory_iterator(m_CurrentDir))
 			{
-				auto p = file_path.path();
 				if (std::filesystem::is_directory(file_path))
 				{
-					DrawDirectory(p);
+					auto p = file_path.path();
+					m_SelectedNode = p.u8string();
+					break;
 				}
 			}
+		}
 
-			ImGui::TreePop();
+		// first draw directories
+		for (auto& file_path : std::filesystem::directory_iterator(m_CurrentDir))
+		{
+			if (std::filesystem::is_directory(file_path))
+			{
+				auto p = file_path.path();
+				DrawDirectory(p);
+			}
+		}
+
+		for (auto& file_path : std::filesystem::directory_iterator(m_CurrentDir))
+		{
+			if (std::filesystem::is_directory(file_path) == false)
+			{
+				auto p = file_path.path();
+				DrawNode(p);
+			}
 		}
 
 		DrawPopUp();

@@ -8,7 +8,7 @@ value6: 3
 value7: 1
 value8:
   value0: 1
-  value1: DefaultActor0
+  value1: Camera
   value2: Default
   value3: true
   value4: false
@@ -22,7 +22,7 @@ value8:
 value9: 2
 value10:
   value0: 2
-  value1: DefaultActor1
+  value1: Obj1
   value2: Default
   value3: true
   value4: false
@@ -36,7 +36,7 @@ value10:
 value11: 3
 value12:
   value0: 3
-  value1: DefaultActor2
+  value1: Obj2
   value2: Default
   value3: true
   value4: false
@@ -193,19 +193,19 @@ value39:
     value34: 0
     value35: 1
   value5:
-    - key: DefaultActor0
+    - key: Camera
       value:
         ptr_wrapper:
           id: 2147483649
           data:
             value0: 1
-    - key: DefaultActor1
+    - key: Obj1
       value:
         ptr_wrapper:
           id: 2147483650
           data:
             value0: 2
-    - key: DefaultActor2
+    - key: Obj2
       value:
         ptr_wrapper:
           id: 2147483651

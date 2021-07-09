@@ -49,9 +49,7 @@ namespace SmolEngine
 
 	void MaterialInspector::Close()
 	{
-		ResetMaterial();
 		m_CurrentFilePath = "";
-		m_Textures.clear();
 	}
 
 	void MaterialInspector::Update()
@@ -65,6 +63,22 @@ namespace SmolEngine
 			ImGui::Separator();
 			ImGui::SetCursorPosX(12);
 			ImGui::Image(m_Data->Framebuffer->GetImGuiTextureID(), { 440, 280 });
+			if (ImGui::IsItemHovered())
+			{
+				float my_tex_h = 280;
+				float my_tex_w = 440;
+				ImVec2 pos = ImGui::GetCursorScreenPos();
+				auto& io = ImGui::GetIO();
+				ImGui::BeginTooltip();
+				float region_sz = 32.0f;
+				float region_x = io.MousePos.x - pos.x - region_sz * 0.5f;
+				float region_y = io.MousePos.y - pos.y - region_sz * 0.5f;
+				float zoom = 5.0f;
+				ImVec2 uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h);
+				ImVec2 uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h);
+				ImGui::Image(m_Data->Framebuffer->GetImGuiTextureID(), ImVec2(region_sz * zoom, region_sz * zoom), uv0, uv1);
+				ImGui::EndTooltip();
+			}
 		}
 
 		if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
@@ -210,6 +224,7 @@ namespace SmolEngine
 		{
 			EditorCameraCreateInfo info{};
 			info.FOV = 35;
+			info.WorldPos = glm::vec3(0, 0, -2);
 			m_Data->Camera = std::make_shared<EditorCamera>(&info);
 		}
 
@@ -371,6 +386,25 @@ namespace SmolEngine
 		else { icon = &m_TexturesLoader->m_BackgroundIcon; }
 
 		ImGui::Image(icon->GetImGuiTexture(), { 60, 60 });
+		if (it != m_Textures.end())
+		{
+			if (ImGui::IsItemHovered())
+			{
+				float my_tex_h = 60;
+				float my_tex_w = 60;
+				ImVec2 pos = ImGui::GetCursorScreenPos();
+				auto& io = ImGui::GetIO();
+				ImGui::BeginTooltip();
+				float region_sz = 32.0f;
+				float region_x = io.MousePos.x - pos.x - region_sz * 0.5f;
+				float region_y = io.MousePos.y - pos.y - region_sz * 0.5f;
+				float zoom = 5.0f;
+				ImVec2 uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h);
+				ImVec2 uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h);
+				ImGui::Image(icon->GetImGuiTexture(), ImVec2(region_sz * zoom, region_sz * zoom), uv0, uv1);
+				ImGui::EndTooltip();
+			}
+		}
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FileBrowser"))
