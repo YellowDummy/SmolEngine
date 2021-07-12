@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Core/Engine.h"
 
+#include "Scripting/MonoContext.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
@@ -34,6 +35,9 @@ namespace SmolEngine
 		m_ScriptingSystem = new ScriptingSystem();
 		m_World = new WorldAdmin();
 		m_World->Init();
+
+		m_MonoContext = new MonoContext();
+		m_MonoContext->InitMono();
 
 		WindowCreateInfo windowCI = {};
 		windowCI.bFullscreen = false;

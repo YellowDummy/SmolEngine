@@ -355,6 +355,7 @@ namespace SmolEngine
 		{
 			ImGui::MenuItem("actions", NULL, false, false);
 			ImGui::Separator();
+
 			if (ImGui::MenuItem("rename"))
 			{
 				AddPendingAction(m_PopUpBuffer, PendeingActionFlags::Rename);

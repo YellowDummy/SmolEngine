@@ -26,6 +26,8 @@ namespace SmolEngine
 	class WorldAdmin;
 	class Scene;
 	class ScriptingSystem;
+	class MonoContext;
+
 	class Engine
 	{
 	public:
@@ -71,6 +73,7 @@ namespace SmolEngine
 		WorldAdmin*                  m_World = nullptr;
 		LayerManager*                m_LayerHandler = nullptr;
 		ScriptingSystem*             m_ScriptingSystem = nullptr;
+		MonoContext*                 m_MonoContext = nullptr;
 		std::string                  m_AssetsFolder;
 		std::function<void(Scene*)>  m_SceneLoadCl = nullptr;
 		std::function<void(Scene*)>  m_SceneUnLoadCl = nullptr;

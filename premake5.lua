@@ -50,6 +50,7 @@ project "SmolEngine"
 		"smolengine/include/Libraries/Frostium3D/Libraries/cereal/include/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/taskflow/",
 		"smolengine/include/Libraries/Frostium3D/Libraries/glm/",
+		"vendor/mono/include/mono-2.0/",
 		"vendor/bullet3/include/"
 	}
 
@@ -57,6 +58,7 @@ project "SmolEngine"
 	{ 
 		"Box2D",
 		"Yaml-cpp",
+		"vendor/mono/lib/mono-2.0-sgen.lib",
 		"vendor/fmod/libs/fmodL_vc.lib",
 		"vendor/fmod/libs/fmodstudioL_vc.lib"
 	}

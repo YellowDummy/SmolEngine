@@ -34,9 +34,6 @@
     <Filter Include="include\Libraries\Frostium3D\Extensions">
       <UniqueIdentifier>{13D981F6-7F68-43E1-8864-24F9F4727EED}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Libraries\Frostium3D\ImGUI">
-      <UniqueIdentifier>{5E442270-4A80-25DA-B392-3DD19FEDCDF4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Libraries\Frostium3D\Libraries">
       <UniqueIdentifier>{E0E0B396-CC32-8B86-B551-C896A142A46F}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="include\Libraries\Frostium3D\OpenGL">
       <UniqueIdentifier>{28EBB082-94A4-1B2D-1D04-360789BCD19C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Libraries\Frostium3D\Primitives">
+      <UniqueIdentifier>{CF99719D-3B29-3388-4425-14A0B0336E94}</UniqueIdentifier>
     </Filter>
     <Filter Include="include\Libraries\Frostium3D\Utils">
       <UniqueIdentifier>{D4D4FF70-C010-03DB-2923-1BD2157EABF5}</UniqueIdentifier>
@@ -396,6 +396,9 @@
     <ClInclude Include="include\ECS\Components\Singletons\WorldAdminStateSComponent.h">
       <Filter>include\ECS\Components\Singletons</Filter>
     </ClInclude>
+    <ClInclude Include="include\ECS\Components\SpotLightComponent.h">
+      <Filter>include\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="include\ECS\Components\Texture2DComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
@@ -456,7 +459,10 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\Core.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\CubeTexture.h">
+    <ClInclude Include="include\Libraries\Frostium3D\Common\DefaultMeshes.h">
+      <Filter>include\Libraries\Frostium3D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Common\EnvironmentMap.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Events.h">
@@ -465,28 +471,13 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\Flags.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Framebuffer.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\FramebufferSpecification.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\GraphicsPipelineInfos.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\IndexBuffer.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Input.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\InputCodes.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Material.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Mesh.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Renderer2DStorage.h">
@@ -504,25 +495,10 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\SPIRVReflection.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Shader.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\SubTexture.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Text.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Texture.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Time.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\VertexArray.h">
-      <Filter>include\Libraries\Frostium3D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Common\VertexBuffer.h">
       <Filter>include\Libraries\Frostium3D\Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Common\Window.h">
@@ -537,7 +513,10 @@
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystem.h">
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\ImGuiContext.h">
+      <Filter>include\Libraries\Frostium3D\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\ImGuiVulkanImpl.h">
       <Filter>include\Libraries\Frostium3D\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystemInstance.h">
@@ -546,20 +525,14 @@
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\Profiler.h">
       <Filter>include\Libraries\Frostium3D\Extensions</Filter>
     </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\FrostiumCore.h">
+      <Filter>include\Libraries\Frostium3D</Filter>
+    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsContext.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsPipeline.h">
       <Filter>include\Libraries\Frostium3D</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiContext.h">
-      <Filter>include\Libraries\Frostium3D\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiExtension.h">
-      <Filter>include\Libraries\Frostium3D\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiVulkanImpl.h">
-      <Filter>include\Libraries\Frostium3D\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\allocators.h">
       <Filter>include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson</Filter>
@@ -1239,6 +1212,30 @@
     <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglVertexArray.h">
       <Filter>include\Libraries\Frostium3D\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\CubeMap.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Framebuffer.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\IndexBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Mesh.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Shader.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Texture.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\VertexArray.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\VertexBuffer.h">
+      <Filter>include\Libraries\Frostium3D\Primitives</Filter>
+    </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\RayTracer.h">
       <Filter>include\Libraries\Frostium3D</Filter>
     </ClInclude>
@@ -1276,9 +1273,6 @@
       <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanCommandBuffer.h">
-      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanCommandPool.h">
       <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanContext.h">
@@ -1321,9 +1315,6 @@
       <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanShader.h">
-      <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanShaderResources.h">
       <Filter>include\Libraries\Frostium3D\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanStagingBuffer.h">
@@ -1635,7 +1626,9 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\Components\SpotLightComponent.h" />
+    <ClInclude Include="include\Scripting\MonoContext.h">
+      <Filter>include\Scripting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1745,6 +1738,9 @@
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\MonoContext.cpp">
+      <Filter>src\Scripting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

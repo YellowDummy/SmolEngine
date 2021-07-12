@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;SMOLENGINE_DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\mono\include\mono-2.0;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -70,7 +70,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium_d.lib;..\vendor\bullet3\libs\BulletCollision_Debug.lib;..\vendor\bullet3\libs\BulletDynamics_Debug.lib;..\vendor\bullet3\libs\LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\mono\lib\mono-2.0-sgen.lib;..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium_d.lib;..\vendor\bullet3\libs\BulletCollision_Debug.lib;..\vendor\bullet3\libs\BulletDynamics_Debug.lib;..\vendor\bullet3\libs\LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -79,7 +79,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FROSTIUM_SMOLENGINE_IMPL;PLATFORM_WIN;BUILD_DLL;GLFW_INCLUDE_NONE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Libraries;include\Libraries\yaml-cpp\include;include\Libraries\box_2D\include;include\Libraries\fmod\include;include\Libraries\Frostium3D;include\Libraries\Frostium3D\Libraries;include\Libraries\Frostium3D\Libraries\vulkan;include\Libraries\Frostium3D\Libraries\spdlog\include;include\Libraries\Frostium3D\Libraries\cereal\include;include\Libraries\Frostium3D\Libraries\taskflow;include\Libraries\Frostium3D\Libraries\glm;..\vendor\mono\include\mono-2.0;..\vendor\bullet3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -95,7 +95,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium.lib;..\vendor\bullet3\libs\BulletCollision.lib;..\vendor\bullet3\libs\BulletDynamics.lib;..\vendor\bullet3\libs\LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\vendor\mono\lib\mono-2.0-sgen.lib;..\vendor\fmod\libs\fmodL_vc.lib;..\vendor\fmod\libs\fmodstudioL_vc.lib;..\vendor\frostium\libs\Frostium.lib;..\vendor\bullet3\libs\BulletCollision.lib;..\vendor\bullet3\libs\BulletDynamics.lib;..\vendor\bullet3\libs\LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -153,41 +153,31 @@
     <ClInclude Include="include\Libraries\Frostium3D\Common\Camera.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Common.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Core.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\CubeTexture.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Common\DefaultMeshes.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Common\EnvironmentMap.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Events.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Flags.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Framebuffer.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\FramebufferSpecification.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\GraphicsPipelineInfos.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\IndexBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Input.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\InputCodes.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Material.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Mesh.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Renderer2DStorage.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\RendererShared.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\RendererStorage.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\SLog.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\SPIRVReflection.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Shader.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\SubTexture.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Text.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\Texture.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Time.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\VertexArray.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Common\VertexBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Common\Window.h" />
     <ClInclude Include="include\Libraries\Frostium3D\DebugRenderer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\DeferredRenderer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\EditorCamera.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystem.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\ImGuiContext.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Extensions\ImGuiVulkanImpl.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\JobsSystemInstance.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Extensions\Profiler.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\FrostiumCore.h" />
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsContext.h" />
     <ClInclude Include="include\Libraries\Frostium3D\GraphicsPipeline.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiContext.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiExtension.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\ImGUI\ImGuiVulkanImpl.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\allocators.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Libraries\cereal\include\cereal\external\rapidjson\document.h" />
@@ -414,6 +404,14 @@
     <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglShader.h" />
     <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglTexture.h" />
     <ClInclude Include="include\Libraries\Frostium3D\OpenGL\OpenglVertexArray.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\CubeMap.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Framebuffer.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\IndexBuffer.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Mesh.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Shader.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\Texture.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\VertexArray.h" />
+    <ClInclude Include="include\Libraries\Frostium3D\Primitives\VertexBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\RayTracer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\RaytracingPipeline.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Renderer2D.h" />
@@ -427,7 +425,6 @@
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanBufferPool.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanCommandBuffer.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanCommandPool.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanContext.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanDescriptor.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanDevice.h" />
@@ -442,7 +439,6 @@
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanScratchBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanShader.h" />
-    <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanShaderResources.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanStagingBuffer.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanSwapchain.h" />
     <ClInclude Include="include\Libraries\Frostium3D\Vulkan\VulkanTexture.h" />
@@ -544,6 +540,7 @@
     <ClInclude Include="include\Physics\Bullet3\RigidActor.h" />
     <ClInclude Include="include\Physics\Bullet3\RigidBody.h" />
     <ClInclude Include="include\Scripting\BehaviourPrimitive.h" />
+    <ClInclude Include="include\Scripting\MonoContext.h" />
     <ClInclude Include="include\SmolEngineCore.h" />
     <ClInclude Include="include\stdafx.h" />
   </ItemGroup>
@@ -583,6 +580,7 @@
     <ClCompile Include="src\Physics\Bullet3\RigidActor.cpp" />
     <ClCompile Include="src\Physics\Bullet3\RigidBody.cpp" />
     <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp" />
+    <ClCompile Include="src\Scripting\MonoContext.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
