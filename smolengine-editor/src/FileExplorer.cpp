@@ -13,6 +13,14 @@
 
 namespace SmolEngine
 {
+	FileExplorer::FileExplorer()
+		:
+		m_ButtonSize(35.0f, 25.0f),
+		m_SelectColor(0.984f, 0.952f, 0.356f, 1.0f)
+	{
+
+	}
+
 	void FileExplorer::Create(const std::string& current_path)
 	{
 		m_pTextureLoader = TexturesLoader::Get();
@@ -83,7 +91,9 @@ namespace SmolEngine
 		std::string fileName = orig_path.filename().u8string();
 		std::string filePath = orig_path.u8string();
 
-		DrawIcon(&m_pTextureLoader->m_FolderButton);
+		ImGui::Image(m_pTextureLoader->m_FolderButton.GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+		ImGui::SameLine();
+
 		DrawSelectable(fileName, filePath);
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
@@ -100,7 +110,6 @@ namespace SmolEngine
 
 	void FileExplorer::DrawNode(const std::filesystem::path& fs_path)
 	{
-		Ref<Texture> icon = nullptr;
 		std::string name = fs_path.filename().u8string();
 		std::string path = fs_path.u8string();
 		std::string ext = fs_path.extension().u8string();
@@ -108,7 +117,7 @@ namespace SmolEngine
 		bool extSupported = std::find(m_FileExtensions.begin(), m_FileExtensions.end(), ext) != m_FileExtensions.end();
 		if (extSupported)
 		{
-			DrawNodeIcon(path, ext, icon);
+			DrawIcon(path, ext);
 
 			const bool is_action_pending = IsAnyActionPending(fs_path);
 			if (is_action_pending == false)
@@ -139,16 +148,7 @@ namespace SmolEngine
 				{
 					m_DragAndDropBuffer = path;
 					ImGui::SetDragDropPayload("FileBrowser", &m_DragAndDropBuffer, sizeof(std::string));
-					if (icon != nullptr)
-					{
-						if (icon->GetInfo().Width > 0)
-							DrawIcon(icon.get());
-					}
-					else
-					{
-						DrawIcon(ext);
-					}
-
+					DrawIcon(path, ext);
 					ImGui::Text(name.c_str());
 					ImGui::EndDragDropSource();
 				}
@@ -187,115 +187,15 @@ namespace SmolEngine
 		}
 	}
 
-	void FileExplorer::DrawIcon(Texture* icon, bool flip)
+	void FileExplorer::DrawIcon(const std::string& path, const std::string& ext)
 	{
-		if(flip)
-			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y });
-		else
-			ImGui::Image(icon->GetImGuiTexture(), { m_ButtonSize.x, m_ButtonSize.y }, ImVec2(1, 1), ImVec2(0, 0));
+		void* descriptorPtr = nullptr;
+		GetIcon(path, ext, descriptorPtr);
 
-		ImGui::SameLine();
-	}
-
-	void FileExplorer::DrawIcon(const std::string& ext)
-	{
-		if (ext == ".s_scene")
+		if (descriptorPtr != nullptr)
 		{
-		   DrawIcon(&m_pTextureLoader->m_SceneIcon);
-		}
-		else if (ext == ".s_material")
-		{
-			DrawIcon(&m_pTextureLoader->m_MaterialIcon);
-		}
-		else if (ext == ".gltf")
-		{
-		   DrawIcon(&m_pTextureLoader->m_glTFIcon);
-		}
-		else
-		{
-			DrawIcon(&m_pTextureLoader->m_DocumentsIcon);
-		}
-	}
-
-	void FileExplorer::DrawNodeIcon(const std::string& path, const std::string& ext,  Ref<Texture>& icon)
-	{
-		bool defaultIcon = true;
-		if (ext == ".s_image")
-		{
-			TextureCreateInfo texCI = {};
-			texCI.Load(path);
-			texCI.bImGUIHandle = true;
-			bool is_ktx = texCI.FilePath.find("ktx") != std::string::npos;
-
-			if (is_ktx == false)
-			{
-				auto& it = m_IconsMap.find(path);
-				if (it == m_IconsMap.end())
-				{
-					icon = std::make_shared<Texture>();
-					m_IconsMap[path] = icon;
-
-					JobsSystem::Schedule([this, path, texCI]()
-					{
-						auto tex = m_IconsMap[path];
-						Texture::Create(&texCI, tex.get());
-					});
-				}
-				else { icon = it->second; }
-
-				if (icon != nullptr)
-				{
-					if (icon->IsReady())
-					{
-						DrawIcon(icon.get());
-						defaultIcon = false;
-					}
-				}
-			}
-		}
-
-		if (ext == ".s_material")
-		{
-			auto& it = m_MaterialPreviews.find(path);
-			if (it == m_MaterialPreviews.end()) // Generates material icon
-			{
-				size_t fileSze = GetNodeSize(path);
-				if (fileSze > 0)
-				{
-					auto fb = std::make_shared<Framebuffer>();
-					{
-						FramebufferSpecification framebufferCI = {};
-						framebufferCI.Width = 96;
-						framebufferCI.Height = 96;
-						framebufferCI.bResizable = false;
-						framebufferCI.bUsedByImGui = true;
-						framebufferCI.bAutoSync = false;
-						framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
-						framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
-
-						Framebuffer::Create(framebufferCI, fb.get());
-					}
-
-					MaterialCreateInfo materailCI = {};
-					if (materailCI.Load(path) == true)
-					{
-						MaterialInspector::GetSingleton()->RenderMaterialIcon(fb.get(), &materailCI);
-						m_MaterialPreviews[path] = fb;
-						defaultIcon = false;
-					}
-				}
-			}
-			else
-			{
-				ImGui::Image(it->second->GetImGuiTextureID(), ImVec2(m_ButtonSize.x, m_ButtonSize.y));
-				ImGui::SameLine();
-				defaultIcon = false;
-			}
-		}
-
-		if (defaultIcon == true)
-		{
-			DrawIcon(ext);
+			ImGui::Image(descriptorPtr, { m_ButtonSize.x, m_ButtonSize.y });
+			ImGui::SameLine();
 		}
 	}
 
@@ -414,6 +314,94 @@ namespace SmolEngine
 		return in.tellg();
 	}
 
+	void FileExplorer::GetIcon(const std::string& path, const std::string& ext, void*& descriptorPtr)
+	{
+		if (ext == ".s_image")
+		{
+			TextureCreateInfo texCI = {};
+			texCI.Load(path);
+			texCI.bImGUIHandle = true;
+			bool is_ktx = texCI.FilePath.find("ktx") != std::string::npos;
+
+			if (is_ktx == false)
+			{
+				auto& it = m_IconsMap.find(path);
+				if (it == m_IconsMap.end())
+				{
+					auto icon = std::make_shared<Texture>();
+					m_IconsMap[path] = icon;
+					JobsSystem::Schedule([this, path, texCI]()
+					{
+						auto tex = m_IconsMap[path];
+						Texture::Create(&texCI, tex.get());
+					});
+				}
+				else 
+				{ 
+					descriptorPtr = it->second->GetImGuiTexture();
+				}
+			}
+			else
+			{
+				descriptorPtr = m_pTextureLoader->m_DocumentsIcon.GetImGuiTexture();
+			}
+		}
+		else if (ext == ".s_material")
+		{
+			auto& it = m_MaterialPreviews.find(path);
+			if (it == m_MaterialPreviews.end()) // Generates material icon
+			{
+				size_t fileSze = GetNodeSize(path);
+				if (fileSze > 0)
+				{
+					auto fb = std::make_shared<Framebuffer>();
+					{
+						FramebufferSpecification framebufferCI = {};
+						FramebufferAttachment colorAttach = FramebufferAttachment(AttachmentFormat::Color, true);
+						colorAttach.ClearColor = glm::vec4(0.1, 0.1, 0.1, 1);
+
+						framebufferCI.Width = 256;
+						framebufferCI.Height = 256;
+						framebufferCI.bResizable = false;
+						framebufferCI.bUsedByImGui = true;
+						framebufferCI.bAutoSync = false;
+						framebufferCI.Attachments = { colorAttach };
+						framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_1;
+
+						Framebuffer::Create(framebufferCI, fb.get());
+					}
+
+					MaterialCreateInfo materailCI = {};
+					if (materailCI.Load(path) == true)
+					{
+						MaterialInspector::GetSingleton()->RenderMaterialIcon(fb.get(), &materailCI);
+						m_MaterialPreviews[path] = fb;
+					}
+				}
+			}
+			else
+			{
+				descriptorPtr = it->second->GetImGuiTextureID();
+			}
+		}
+		else if (ext == ".s_scene")
+		{
+			descriptorPtr = m_pTextureLoader->m_SceneIcon.GetImGuiTexture();
+		}
+		else if (ext == ".s_material")
+		{
+			descriptorPtr = m_pTextureLoader->m_MaterialIcon.GetImGuiTexture();
+		}
+		else if (ext == ".gltf")
+		{
+			descriptorPtr = m_pTextureLoader->m_glTFIcon.GetImGuiTexture();
+		}
+		else
+		{
+			descriptorPtr = m_pTextureLoader->m_DocumentsIcon.GetImGuiTexture();
+		}
+	}
+
 	void FileExplorer::ClosePopUp()
 	{
 		ImGui::CloseCurrentPopup();
@@ -472,10 +460,14 @@ namespace SmolEngine
 				Import();
 			}
 
+			ImGui::SameLine();
+			ImGui::TextDisabled("(?)");
 			if (ImGui::IsItemHovered())
 			{
 				ImGui::BeginTooltip();
-				ImGui::Text("import");
+				ImGui::PushTextWrapPos(450.0f);
+				ImGui::TextUnformatted("import");
+				ImGui::PopTextWrapPos();
 				ImGui::EndTooltip();
 			}
 

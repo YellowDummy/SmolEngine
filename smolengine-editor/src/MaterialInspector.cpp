@@ -251,13 +251,13 @@ namespace SmolEngine
 			Ref<Framebuffer> fb = std::make_shared<Framebuffer>();
 
 			FramebufferSpecification framebufferCI = {};
-			framebufferCI.Width = 380;
-			framebufferCI.Height = 200;
+			framebufferCI.Width = 1024;
+			framebufferCI.Height = 1024;
 			framebufferCI.bResizable = false;
 			framebufferCI.bUsedByImGui = true;
 			framebufferCI.bAutoSync = false;
 			framebufferCI.Attachments = { FramebufferAttachment(AttachmentFormat::Color, true) };
-			framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_MAX_SUPPORTED;
+			framebufferCI.eMSAASampels = MSAASamples::SAMPLE_COUNT_1;
 
 			Framebuffer::Create(framebufferCI, fb.get());
 			m_Data->Framebuffer = fb;

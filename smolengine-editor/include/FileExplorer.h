@@ -17,6 +17,7 @@ namespace SmolEngine
 	class FileExplorer
 	{
 	public:
+		FileExplorer();
 
 		void Create(const std::string& current_path);
 		void ClearSelection();
@@ -55,12 +56,11 @@ namespace SmolEngine
 		void    DrawSelectable(const std::string& name, const std::string& path);
 		void    DrawDirectory(const std::filesystem::path& path);
 		void    DrawNode(const std::filesystem::path& path);
-		void    DrawIcon(Texture* icon, bool flip = false);
-		void    DrawIcon(const std::string& ext = "");
-		void    DrawNodeIcon(const std::string& path, const std::string& ext, Ref<Texture>& icon);
+		void    DrawIcon(const std::string& path, const std::string& ext = "");
 		void    AddPendingAction(const std::string& path, PendeingActionFlags action);
 		bool    IsAnyActionPending(const std::filesystem::path& node_path);
 		size_t  GetNodeSize(const std::string& path);
+		void    GetIcon(const std::string& path, const std::string& ext, void*& descriptorPtr);
 			    
 	private:
 
@@ -70,8 +70,8 @@ namespace SmolEngine
 		PendeingAction*                                                   m_pPendeingAction = nullptr;
 		PopUpFlags                                                        m_ePopUpFlags = PopUpFlags::None;
 		int                                                               m_SelectionIndex = 0;
-		glm::vec2                                                         m_ButtonSize = glm::vec2(33.0f, 23.0f);
-		ImVec4                                                            m_SelectColor = ImVec4(0.984f, 0.952f, 0.356f, 1.0f);
+		glm::vec2                                                         m_ButtonSize;
+		ImVec4                                                            m_SelectColor;
 		std::string                                                       m_PopUpBuffer;
 		std::string                                                       m_CurrentDir;
 		std::string                                                       m_HomeDir;
