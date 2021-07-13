@@ -25,7 +25,7 @@ namespace SmolEngine
 		MonoDomain* domain = mono_jit_init("CSharp_Domain");
 
 		//Load the binary file as an Assembly
-		MonoAssembly* csharpAssembly = mono_domain_assembly_open(domain, "D:\Engines\SmolEngine\samples\scripts\CSharp.exe");
+		MonoAssembly* csharpAssembly = mono_domain_assembly_open(domain, "../vendor/mono/CSharp/Debug/CSharp.exe");
 		if (!csharpAssembly)
 		{
 			//Error detected
@@ -35,7 +35,7 @@ namespace SmolEngine
 		//SetUp Internal Calls called from CSharp
 
         //Namespace.Class::Method + a Function pointer with the actual definition
-		mono_add_internal_call("GameX.Program::PrintMethod", &PrintMethod);
+		mono_add_internal_call("SmolEngine.Game::PrintMethod", &PrintMethod);
 
 		int argc = 1;
 		char* argv[1] = { (char*)"CSharp" };
