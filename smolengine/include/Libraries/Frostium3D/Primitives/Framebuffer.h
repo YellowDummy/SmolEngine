@@ -76,14 +76,14 @@ namespace Frostium
 	struct FramebufferAttachment
 	{
 		FramebufferAttachment() = default;
-
 		FramebufferAttachment(AttachmentFormat _format, bool _bClearOp = false,
 			const std::string& _name = "")
 			:Format(_format), bClearOp(_bClearOp), Name(_name) { }
 
-		AttachmentFormat                     Format = AttachmentFormat::Color;
-		std::string                          Name = "";
 		bool                                 bClearOp = true;
+		std::string                          Name = "";
+		AttachmentFormat                     Format = AttachmentFormat::Color;
+		glm::vec4                            ClearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	};
 
 	struct FramebufferSpecification

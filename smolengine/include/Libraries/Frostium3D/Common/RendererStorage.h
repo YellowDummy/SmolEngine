@@ -155,6 +155,7 @@ namespace Frostium
 		bool                   bFXAA = true;
 		bool                   bBloom = false;
 		bool                   bIBL = true;
+		float                  FrustumRadius = 20.0f;
 		DebugViewFlags         eDebugView = DebugViewFlags::None;
 		LightingProperties     Lighting = {};
 		BloomProperties        Bloom = {};

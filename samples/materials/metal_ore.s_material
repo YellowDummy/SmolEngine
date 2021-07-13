@@ -1,0 +1,68 @@
+{
+    "value0": 0.20000000298023225,
+    "value1": 1.0,
+    "value2": 1.0,
+    "value3": {
+        "value0": true,
+        "value1": true,
+        "value2": true,
+        "value3": 1,
+        "value4": 2,
+        "value5": 1,
+        "value6": 4,
+        "value7": "../samples/materials\\metal\\streaky-metal1_albedo.png"
+    },
+    "value4": {
+        "value0": true,
+        "value1": true,
+        "value2": true,
+        "value3": 1,
+        "value4": 0,
+        "value5": 1,
+        "value6": 4,
+        "value7": "../samples/materials\\metal\\streaky-metal1_normal-ogl.png"
+    },
+    "value5": {
+        "value0": true,
+        "value1": true,
+        "value2": true,
+        "value3": 1,
+        "value4": 0,
+        "value5": 1,
+        "value6": 4,
+        "value7": "../samples/materials\\metal\\streaky-metal1_metallic.png"
+    },
+    "value6": {
+        "value0": true,
+        "value1": true,
+        "value2": true,
+        "value3": 1,
+        "value4": 0,
+        "value5": 1,
+        "value6": 4,
+        "value7": "../samples/materials\\metal\\streaky-metal1_roughness.png"
+    },
+    "value7": {
+        "value0": true,
+        "value1": true,
+        "value2": true,
+        "value3": 1,
+        "value4": 0,
+        "value5": 1,
+        "value6": 4,
+        "value7": "../samples/materials\\metal\\streaky-metal1_ao.png"
+    },
+    "value8": {
+        "value0": true,
+        "value1": true,
+        "value2": false,
+        "value3": 1,
+        "value4": 0,
+        "value5": 1,
+        "value6": 4,
+        "value7": ""
+    },
+    "value9": 1.0,
+    "value10": 0.9999899864196777,
+    "value11": 0.9999899864196777
+}

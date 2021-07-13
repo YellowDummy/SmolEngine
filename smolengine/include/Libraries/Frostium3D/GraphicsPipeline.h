@@ -49,8 +49,9 @@ namespace Frostium
 
 		bool SubmitBuffer(uint32_t bindingPoint, size_t size, const void* data, uint32_t offset = 0);
 		void SubmitPushConstant(ShaderType shaderStage, size_t size, const void* data);
-		void SetVertexBuffers(const std::vector<Ref<VertexBuffer>>& buffer);
-		void SetIndexBuffers(const std::vector<Ref<IndexBuffer>>& buffer);
+		void SetFramebuffers(const std::vector<Framebuffer*>& fb);
+		void SetVertexBuffers(const std::vector<Ref<VertexBuffer>>& vb);
+		void SetIndexBuffers(const std::vector<Ref<IndexBuffer>>& ib);
 #ifndef FROSTIUM_OPENGL_IMPL
 		bool UpdateVulkanImageDescriptor(uint32_t bindingPoint, const VkDescriptorImageInfo& imageInfo);
 #endif

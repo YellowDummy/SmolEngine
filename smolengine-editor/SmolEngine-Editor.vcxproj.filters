@@ -41,6 +41,8 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Scripts\BallSpawner.h" />
+    <ClInclude Include="include\EditorConsole.h" />
+    <ClInclude Include="include\ViewPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp">
@@ -65,5 +67,6 @@
     <ClCompile Include="src\MaterialInspector.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ViewPort.cpp" />
   </ItemGroup>
 </Project>

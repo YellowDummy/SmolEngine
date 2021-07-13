@@ -60,6 +60,15 @@ namespace SmolEngine
 			texCI.FilePath = "assets/buttons/torus_icon.png";
 			Texture::Create(&texCI, &m_TorusIcon);
 
+			texCI.FilePath = "assets/buttons/return_button.png";
+			Texture::Create(&texCI, &m_ReturnIcon);
+
+			texCI.FilePath = "assets/buttons/forward_button.png";
+			Texture::Create(&texCI, &m_ForwardIcon);
+
+			texCI.FilePath = "assets/buttons/update_button.png";
+			Texture::Create(&texCI, &m_UpdateIcon);
+
 			texCI.FilePath = "assets/buttons/glTF_button.png";
 			texCI.bVerticalFlip = false;
 			Texture::Create(&texCI, &m_glTFIcon);
@@ -86,6 +95,9 @@ namespace SmolEngine
 		Texture  m_SphereIcon{};
 		Texture  m_CapsuleIcon{};
 		Texture  m_TorusIcon{};
+		Texture  m_ReturnIcon{};
+		Texture  m_ForwardIcon{};
+		Texture  m_UpdateIcon{};
 	private:
 
 		inline static TexturesLoader* s_Instance = nullptr;

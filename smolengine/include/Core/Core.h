@@ -27,4 +27,6 @@ namespace SmolEngine
 
     template<typename T>
     using Ref = std::shared_ptr<T>;
+
+#define RUNTIME_ERROR(...) NATIVE_ERROR(__VA_ARGS__); abort()
 }

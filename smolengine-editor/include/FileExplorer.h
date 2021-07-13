@@ -17,6 +17,7 @@ namespace SmolEngine
 	class FileExplorer
 	{
 	public:
+		FileExplorer();
 
 		void Create(const std::string& current_path);
 		void ClearSelection();
@@ -48,21 +49,19 @@ namespace SmolEngine
 			std::string         NewName;
 		};
 
-		struct Directory
-		{
-			std::unordered_map<std::string, Ref<Texture>> m_IconsMap = {};
-		};
-
-		void DrawHierarchy();
-		void DrawDirectory(const std::filesystem::path& path);
-		void DrawNode(const std::filesystem::path& path, Directory& owner);
-		void DrawIcon(Texture* icon, bool flip = false);
-		void DrawIcon(const std::string& ext = "");
-		void DrawNodeIcon(const std::string& path, const std::string& ext, Directory& owner, Ref<Texture>& icon);
-		void DrawPopUp();
-		void AddPendingAction(const std::string& path, PendeingActionFlags action);
-		void ClosePopUp();
-		void Reset();
+		void    DrawPopUp();
+		void    ClosePopUp();
+		void    Reset();
+		void    DrawHierarchy();
+		void    DrawSelectable(const std::string& name, const std::string& path);
+		void    DrawDirectory(const std::filesystem::path& path);
+		void    DrawNode(const std::filesystem::path& path);
+		void    DrawIcon(const std::string& path, const std::string& ext = "");
+		void    AddPendingAction(const std::string& path, PendeingActionFlags action);
+		bool    IsAnyActionPending(const std::filesystem::path& node_path);
+		size_t  GetNodeSize(const std::string& path);
+		void    GetIcon(const std::string& path, const std::string& ext, void*& descriptorPtr);
+			    
 	private:
 
 		std::function<void(const std::string&, const std::string&, int)>  m_pOnFileSelected = nullptr;
@@ -71,14 +70,16 @@ namespace SmolEngine
 		PendeingAction*                                                   m_pPendeingAction = nullptr;
 		PopUpFlags                                                        m_ePopUpFlags = PopUpFlags::None;
 		int                                                               m_SelectionIndex = 0;
-		glm::vec2                                                         m_ButtonSize = glm::vec2(23.0f);
+		glm::vec2                                                         m_ButtonSize;
+		ImVec4                                                            m_SelectColor;
 		std::string                                                       m_PopUpBuffer;
 		std::string                                                       m_CurrentDir;
-		std::string                                                       m_SelectedDir;
+		std::string                                                       m_HomeDir;
 		std::string                                                       m_SelectedNode;
 		std::string                                                       m_SearchBuffer;
 		std::string                                                       m_DragAndDropBuffer;
-		std::unordered_map<std::string, Directory>                        m_OpenDirectories;
+		std::unordered_map<std::string, Ref<Texture>>                     m_IconsMap = {};
+		std::unordered_map<std::string, Ref<Framebuffer>>                 m_MaterialPreviews = {};
 		std::vector<const char*>                                          m_FileExtensions = { ".s_image", ".s_scene", ".s_material", ".gltf" };
 	};													                  
 }

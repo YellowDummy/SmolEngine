@@ -53,7 +53,6 @@ namespace SmolEngine
 		scene->CalculateRelativePositions();
 		SceneStateComponent* sceneState = scene->GetSceneState();
 
-		CameraSystem::OnBeginWorld();
 		Physics2DSystem::OnBeginWorld();
 		PhysicsSystem::OnBeginWorld();
 		AudioSystem::OnBeginWorld();
@@ -70,12 +69,7 @@ namespace SmolEngine
 		for (const auto& entity : cameraGroup)
 		{
 			const auto& [camera, transform] = cameraGroup.get<CameraComponent, TransformComponent>(entity);
-			if (m_State->m_LevelEditorActive)
-			{
-				if (!camera.bPrimaryCamera || !camera.bShowPreview) { continue; }
-			}
-			else
-				if (!camera.bPrimaryCamera) { continue; }
+			if (camera.bPrimaryCamera == false || m_State->m_LevelEditorActive) { continue; }
 
 			// Calculating ViewProj
 			CameraSystem::CalculateView(&camera, &transform);
@@ -99,7 +93,6 @@ namespace SmolEngine
 	void WorldAdmin::OnEndWorld()
 	{
 		m_State->m_InPlayMode = false;
-		CameraSystem::OnEndWorld();
 		ScriptingSystem::OnEndWorld();
 		Physics2DSystem::OnEndWorld();
 		PhysicsSystem::OnEndWorld();
@@ -131,7 +124,7 @@ namespace SmolEngine
 		if (!m_State->m_InPlayMode) { return; }
 	}
 
-	void WorldAdmin::ReloadActiveScene()
+	void WorldAdmin::ReloadAssets()
 	{
 		Scene* activeScene = GetActiveScene();
 		SceneStateComponent* sceneState = activeScene->GetSceneState();
@@ -172,16 +165,18 @@ namespace SmolEngine
 			DeferredRenderer::UpdateMaterials();
 		}
 
-		m_State->m_Scenes[m_State->m_ActiveSceneID].Free();
-		if (GetActiveScene()->Load(path))
+		// Free previous state
+		Scene* activeScene = GetActiveScene();
+		activeScene->Free();
+
+		if (activeScene->Load(path) == true)
 		{
-			Scene* current_scene = &m_State->m_Scenes[m_State->m_ActiveSceneID];
-			m_State->m_CurrentRegistry = &current_scene->m_SceneData.m_Registry;
+			m_State->m_CurrentRegistry = &activeScene->m_SceneData.m_Registry;
 
 			if (is_reload == false)
 			{
 				m_State->m_MeshMap.clear();
-				SceneStateComponent* sceneState = current_scene->GetSceneState();
+				SceneStateComponent* sceneState = activeScene->GetSceneState();
 
 				{
 					auto& cube_path = sceneState->PipelineState.Environment.CubeMapPath;
@@ -221,8 +216,8 @@ namespace SmolEngine
 				DeferredRenderer::SubmitDirLight(&sceneState->PipelineState.DirLight);
 			}
 
-			ReloadActiveScene();
-			NATIVE_WARN(std::string("Scene loaded successfully"));
+			ReloadAssets();
+			NATIVE_WARN(is_reload ? "Scene reloaded successfully" : "Scene loaded successfully");
 			return true;
 		}
 

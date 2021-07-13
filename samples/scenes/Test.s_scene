@@ -1,31 +1,12 @@
-value0: 8
+value0: 3
 value1: 0
 value2: 1
 value3: 2
-value4: 3
-value5: 4
-value6: 5
-value7: 1048582
-value8: 2097151
-value9: 7
-value10: 6
-value11: 1
-value12:
+value4: 1048575
+value5: 2
+value6: 1
+value7:
   value0: 1
-  value1: Floor
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    ptr_wrapper:
-      id: 0
-  value6:
-    []
-  value7: 0
-  value8: 4
-value13: 2
-value14:
-  value0: 2
   value1: Player
   value2: Default
   value3: true
@@ -34,68 +15,13 @@ value14:
     ptr_wrapper:
       id: 0
   value6:
-    - ptr_wrapper:
-        id: 2147483649
-        data:
-          value0: 3
-    - ptr_wrapper:
-        id: 2147483650
-        data:
-          value0: 4
-    - ptr_wrapper:
-        id: 2147483651
-        data:
-          value0: 5
+    []
   value7: 0
   value8: 4
-value15: 3
-value16:
-  value0: 3
-  value1: Body
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    ptr_wrapper:
-      id: 2147483652
-      data:
-        value0: 2
-  value6:
-    []
-  value7: 0
-  value8: 3
-value17: 4
-value18:
-  value0: 4
-  value1: Head
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    ptr_wrapper:
-      id: 4
-  value6:
-    []
-  value7: 0
-  value8: 3
-value19: 5
-value20:
-  value0: 5
+value8: 2
+value9:
+  value0: 2
   value1: Camera
-  value2: Default
-  value3: true
-  value4: false
-  value5:
-    ptr_wrapper:
-      id: 4
-  value6:
-    []
-  value7: 0
-  value8: 3
-value21: 1048582
-value22:
-  value0: 8
-  value1: DefaultActor5
   value2: Default
   value3: true
   value4: false
@@ -105,152 +31,74 @@ value22:
   value6:
     []
   value7: 0
-  value8: 4
-value23: 1
-value24: 5
-value25:
-  value0: 1.6258993148803711
+  value8: 3
+value10: 1
+value11: 2
+value12:
+  value0: 2.0091743469238281
   value1: 6
-  value2: false
+  value2: true
   value3: 0
   value4: 0.10000000149011612
   value5: 1000
   value6: 75
   value7: 0
   value8: 2
-value26: 0
-value27: 0
+value13: 0
+value14: 0
+value15: 0
+value16: 0
+value17: 0
+value18: 2
+value19: 1
+value20:
+  value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 1.6767709255218506
+  value8: 0
+  value9: 1
+value21: 2
+value22:
+  value0: 2.2808668613433838
+  value1: -0.2952384352684021
+  value2: -3.1399345397949219
+  value3: 0.9999842643737793
+  value4: 1
+  value5: 1.0000619888305664
+  value6: -0.87323939800262451
+  value7: 2.9738550186157227
+  value8: -1.3111133575439453
+  value9: 1
+value23: 0
+value24: 0
+value25: 1
+value26: 1
+value27:
+  value0:
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+    - value0: ../samples\materials\metal.s_material
+  value1: 0
+  value2: false
+  value3: true
+  value4: ../samples/models\tank.gltf
+  value5: 2
 value28: 0
 value29: 0
-value30: 0
-value31: 6
-value32: 1
-value33:
+value30: 1
+value31: 0
+value32:
   value0: 0
-  value1: -0
-  value2: 0
-  value3: 15
-  value4: 1
-  value5: 15
-  value6: 0
-  value7: 6.7194623947143555
-  value8: 0
-  value9: 1
-value34: 2
-value35:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 0.99999964237213135
-  value5: 0.99999964237213135
-  value6: 0.046073794364929199
-  value7: 34.070411682128906
-  value8: 0.39083611965179443
-  value9: 1
-value36: 3
-value37:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 0
-  value7: 32.866409301757812
-  value8: 0.3827134370803833
-  value9: 1
-value38: 4
-value39:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 0
-  value7: 35.442562103271484
-  value8: 0.3915092945098877
-  value9: 1
-value40: 5
-value41:
-  value0: -0.40000000596046448
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: -0.37070035934448242
-  value7: 44.788162231445312
-  value8: 24.521684646606445
-  value9: 1
-value42: 1048582
-value43:
-  value0: 0
-  value1: -0
-  value2: 0
-  value3: 1
-  value4: 1
-  value5: 1
-  value6: 0
-  value7: 46.871978759765625
-  value8: 0
-  value9: 1
-value44: 0
-value45: 0
-value46: 5
-value47: 1
-value48:
-  value0:
-    - value0: ../samples/materials\metal.s_material
-  value1: 1
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value49: 2
-value50:
-  value0:
-    - value0: ""
-  value1: 4
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value51: 3
-value52:
-  value0:
-    - value0: ""
   value1: 3
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value53: 4
-value54:
-  value0:
-    - value0: ""
-  value1: 1
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value55: 1048582
-value56:
-  value0:
-    - value0: ../samples/materials\metal.s_material
-  value1: 2
-  value2: false
-  value3: true
-  value4: ""
-  value5: 2
-value57: 0
-value58: 0
-value59: 1
-value60: 0
-value61:
-  value0: 0
-  value1: 9
   value2: ../samples/scenes\Test.s_scene
   value3: Test
   value4:
@@ -263,7 +111,7 @@ value61:
     value6: 1
     value7: 1
     value8: 1
-    value9: 5
+    value9: 1
     value10:
       value0: ""
       value1: 2
@@ -298,13 +146,13 @@ value61:
     value17: 0.031199999153614044
     value18: 29
     value19: 0.75
-    value20: 0.99215686321258545
+    value20: 1
     value21: 1
     value22: 1
     value23: 1
-    value24: 40
-    value25: 100
-    value26: 46
+    value24: 1
+    value25: 56
+    value26: -80
     value27: 0
     value28: 1
     value29: 1
@@ -318,117 +166,36 @@ value61:
     - key: Player
       value:
         ptr_wrapper:
-          id: 4
-    - key: DefaultActor5
-      value:
-        ptr_wrapper:
-          id: 2147483653
+          id: 2147483649
           data:
-            value0: 1048582
+            value0: 1
     - key: Camera
       value:
         ptr_wrapper:
-          id: 3
-    - key: Body
-      value:
-        ptr_wrapper:
-          id: 1
-    - key: Floor
-      value:
-        ptr_wrapper:
-          id: 2147483654
+          id: 2147483650
           data:
-            value0: 1
-    - key: Head
-      value:
-        ptr_wrapper:
-          id: 2
+            value0: 2
   value6:
     - key: 1
       value:
         ptr_wrapper:
-          id: 6
+          id: 1
     - key: 2
       value:
         ptr_wrapper:
-          id: 4
-    - key: 3
-      value:
-        ptr_wrapper:
-          id: 1
-    - key: 4
-      value:
-        ptr_wrapper:
           id: 2
-    - key: 5
-      value:
-        ptr_wrapper:
-          id: 3
-    - key: 6
-      value:
-        ptr_wrapper:
-          id: 2147483655
-          data:
-            value0: 6
-    - key: 7
-      value:
-        ptr_wrapper:
-          id: 2147483656
-          data:
-            value0: 7
-    - key: 8
-      value:
-        ptr_wrapper:
-          id: 5
   value7:
-    - ptr_wrapper:
-        id: 6
-    - ptr_wrapper:
-        id: 4
     - ptr_wrapper:
         id: 1
     - ptr_wrapper:
         id: 2
-    - ptr_wrapper:
-        id: 3
-    - ptr_wrapper:
-        id: 5
-value62: 3
-value63: 2
-value64:
+value33: 1
+value34: 1
+value35:
   value0:
     value0:
       ptr_wrapper:
-        id: 4
-    value1: 0
-    value2: 0
-    value3: 0
-    value4: 0
-    value5: 1
-    value6: 0.5
-    value7: 0.5
-    value8: 0.30000001192092896
-    value9: 0
-    value10: 0
-    value11: 0.10000000149011612
-    value12: 0.10000000149011612
-    value13: 1
-    value14: 1
-    value15: 3
-    value16: 1
-    value17: 3.5
-    value18: 1.5
-    value19: ""
-    value20: 1
-    value21: 0
-    value22: 0
-  value1: 3
-value65: 1
-value66:
-  value0:
-    value0:
-      ptr_wrapper:
-        id: 6
+        id: 1
     value1: 0
     value2: 1
     value3: 1
@@ -436,43 +203,14 @@ value66:
     value5: 1
     value6: 0.5
     value7: 0.5
-    value8: 1.5
+    value8: 0
     value9: 0
     value10: 0
     value11: 0.10000000149011612
     value12: 0.10000000149011612
     value13: 1
-    value14: 15
-    value15: 1
-    value16: 15
-    value17: 1
-    value18: 1
-    value19: ""
-    value20: 1
-    value21: 0
-    value22: 0
-  value1: 3
-value67: 1048582
-value68:
-  value0:
-    value0:
-      ptr_wrapper:
-        id: 5
-    value1: 1
-    value2: 0
-    value3: 0
-    value4: 1
-    value5: 1
-    value6: 0.5
-    value7: 0.5
-    value8: 1
-    value9: 0
-    value10: 0
-    value11: 0.10000000149011612
-    value12: 0.10000000149011612
-    value13: 1
-    value14: 1
-    value15: 1
+    value14: 1.7000000476837158
+    value15: 0.60000002384185791
     value16: 1
     value17: 1
     value18: 1

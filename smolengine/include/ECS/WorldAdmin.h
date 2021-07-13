@@ -50,7 +50,6 @@ namespace SmolEngine
 
 		void                         Init();
 		void                         ShutDown();
-		void                         ReloadActiveScene();
 			                         
 		void                         OnEndWorld();
 		void                         OnBeginWorld();
@@ -62,7 +61,7 @@ namespace SmolEngine
 		bool                         IsInPlayMode();
 		bool                         LoadStaticComponents();
 		bool                         ChangeActorName(Ref<Actor>& actor, const std::string& name);
-			                         
+		void                         ReloadAssets();
 		void                         Reload2DTextures(entt::registry& registry);
 		void                         Reload2DAnimations(entt::registry& registry);
 		void                         ReloadAudioClips(entt::registry& registry, AudioEngine* engine);
@@ -84,6 +83,7 @@ namespace SmolEngine
 		friend class AnimationPanel;
 		friend class EditorLayer;
 		friend class Actor;
+		friend class SceneView;
 		friend class Engine;
 	};
 }

@@ -1,5 +1,9 @@
 #pragma once
 #include "Common/Core.h"
+
+#include <functional>
+#include <sstream>
+
 extern "C++"
 {
 #include <spdlog/spdlog.h>
@@ -12,32 +16,70 @@ namespace SmolEngine
 namespace Frostium
 #endif
 {
+	enum class LogType
+	{
+		Info, 
+		Warning, 
+		Error
+	};
+
 	class SLog
 	{
 	public:
-
-		SLog();
+		SLog(const std::string& name = "Frostium");
 		~SLog();
 
-		static void InitLog();
-		static spdlog::logger* GetNativeLogger();
+		void                    SetOnPrintCallback(const std::function<void(const std::string&&, LogType)>& callback);
+		static spdlog::logger*  GetLogger();
 
-	private:
-		
-		static SLog*                    s_Instance;
-		std::shared_ptr<spdlog::logger> m_NativeLogger = nullptr;
+	public:
+		inline static SLog*                               s_Instance = nullptr;
+		std::function<void(const std::string&&, LogType)> m_Callback = nullptr;
+		std::shared_ptr<spdlog::logger>                   m_Logger = nullptr;
 	};
-}
 
-#ifdef FROSTIUM_SMOLENGINE_IMPL
-#define NATIVE_ERROR(...) ::SmolEngine::SLog::GetNativeLogger()->error(__VA_ARGS__)
-#define NATIVE_WARN(...)  ::SmolEngine::SLog::GetNativeLogger()->warn(__VA_ARGS__)
-#define NATIVE_INFO(...)  ::SmolEngine::SLog::GetNativeLogger()->trace(__VA_ARGS__)
-#else
-#define NATIVE_ERROR(...) ::Frostium::SLog::GetNativeLogger()->error(__VA_ARGS__)
-#define NATIVE_WARN(...)  ::Frostium::SLog::GetNativeLogger()->warn(__VA_ARGS__)
-#define NATIVE_INFO(...)  ::Frostium::SLog::GetNativeLogger()->trace(__VA_ARGS__)
-#endif
+	template<typename FormatString, typename... Args>
+	void NATIVE_ERROR(FormatString&& fmt, Args&& ...args)
+	{
+		SLog::GetLogger()->error(std::forward<FormatString>(fmt), std::forward<Args>(args)...);
+		auto& callback = SLog::s_Instance->m_Callback;
+		if (callback != nullptr)
+		{
+			spdlog::memory_buf_t buf;
+			fmt::format_to(buf, fmt, args...);
+			auto result = std::string(buf.data(), buf.size());
+			callback(std::forward<std::string>(result), LogType::Error);
+		}
+	}
+
+	template<typename FormatString, typename... Args>
+	void NATIVE_INFO(FormatString&& fmt, Args&& ...args)
+	{
+		SLog::GetLogger()->trace(std::forward<FormatString>(fmt), std::forward<Args>(args)...);
+		auto& callback = SLog::s_Instance->m_Callback;
+		if (callback != nullptr)
+		{
+			spdlog::memory_buf_t buf;
+			fmt::format_to(buf, fmt, args...);
+			auto result = std::string(buf.data(), buf.size());
+			callback(std::forward<std::string>(result), LogType::Info);
+		}
+	}
+
+	template<typename FormatString, typename... Args>
+	void NATIVE_WARN(FormatString&& fmt, Args&& ...args)
+	{
+		SLog::GetLogger()->warn(std::forward<FormatString>(fmt), std::forward<Args>(args)...);
+		auto& callback = SLog::s_Instance->m_Callback;
+		if (callback != nullptr)
+		{
+			spdlog::memory_buf_t buf;
+			fmt::format_to(buf, fmt, args...);
+			auto result = std::string(buf.data(), buf.size());
+			callback(std::forward<std::string>(result), LogType::Warning);
+		}
+	}
+}
 
 
 

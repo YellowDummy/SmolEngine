@@ -1,6 +1,6 @@
 ## Level-Editor
 ![SmolEngine](https://i.imgur.com/f09k9sF.png)
-![SmolEngine](https://i.imgur.com/dEXmEGZ.png)
+![SmolEngine](https://i.imgur.com/Eso9Lk3.png)
 
 The engine is still at a very early stage and is not ready for production.
 
@@ -16,7 +16,7 @@ The engine is still at a very early stage and is not ready for production.
 
 ## Short-term goals
 - Documentation (doxygen)
-- Tutorial for Beginners
+- Tutorial
 - Lua or C# scripting
 - Release a game on itch.io
 
