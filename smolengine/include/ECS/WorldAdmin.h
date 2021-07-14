@@ -47,9 +47,6 @@ namespace SmolEngine
 		Scene*                       GetActiveScene();
 
 	private:
-
-		void                         Init();
-		void                         ShutDown();
 			                         
 		void                         OnEndWorld();
 		void                         OnBeginWorld();

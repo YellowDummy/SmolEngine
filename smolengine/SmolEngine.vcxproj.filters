@@ -1623,9 +1623,11 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scripting\MonoContext.h">
+    <ClInclude Include="include\Scripting\CSharp\MonoContext.h">
       <Filter>include\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="include\Scripting\CSharp\CSharpAPI.h" />
+    <ClInclude Include="include\Scripting\CSharp\CSharpDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1736,8 +1738,9 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripting\MonoContext.cpp">
+    <ClCompile Include="src\Scripting\CSharp\MonoContext.cpp">
       <Filter>src\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\CSharpAPI.cpp" />
   </ItemGroup>
 </Project>

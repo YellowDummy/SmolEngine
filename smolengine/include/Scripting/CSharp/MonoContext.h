@@ -6,7 +6,6 @@ namespace SmolEngine
 	class MonoContext
 	{
 	public:
-
-		void InitMono();
+		MonoContext();
 	};
 }

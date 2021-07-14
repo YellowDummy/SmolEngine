@@ -539,7 +539,9 @@
     <ClInclude Include="include\Physics\Bullet3\RigidActor.h" />
     <ClInclude Include="include\Physics\Bullet3\RigidBody.h" />
     <ClInclude Include="include\Scripting\BehaviourPrimitive.h" />
-    <ClInclude Include="include\Scripting\MonoContext.h" />
+    <ClInclude Include="include\Scripting\CSharp\CSharpAPI.h" />
+    <ClInclude Include="include\Scripting\CSharp\CSharpDefs.h" />
+    <ClInclude Include="include\Scripting\CSharp\MonoContext.h" />
     <ClInclude Include="include\SmolEngineCore.h" />
     <ClInclude Include="include\stdafx.h" />
   </ItemGroup>
@@ -579,7 +581,8 @@
     <ClCompile Include="src\Physics\Bullet3\RigidActor.cpp" />
     <ClCompile Include="src\Physics\Bullet3\RigidBody.cpp" />
     <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp" />
-    <ClCompile Include="src\Scripting\MonoContext.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\CSharpAPI.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\MonoContext.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

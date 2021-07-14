@@ -34,17 +34,8 @@ namespace SmolEngine
 	WorldAdmin::WorldAdmin()
 	{
 		s_World = this;
-	}
-
-	void WorldAdmin::Init()
-	{
 		LoadStaticComponents();
 		m_State->m_InPlayMode = false;
-	}
-
-	void WorldAdmin::ShutDown()
-	{
-
 	}
 
 	void WorldAdmin::OnBeginWorld()

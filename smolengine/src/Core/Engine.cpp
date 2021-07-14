@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Core/Engine.h"
 
-#include "Scripting/MonoContext.h"
+#include "Scripting/CSharp/MonoContext.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
@@ -37,10 +37,7 @@ namespace SmolEngine
 		m_LayerHandler = new LayerManager();
 		m_ScriptingSystem = new ScriptingSystem();
 		m_World = new WorldAdmin();
-		m_World->Init();
-
 		m_MonoContext = new MonoContext();
-		m_MonoContext->InitMono();
 
 		WindowCreateInfo windowCI = {};
 		windowCI.bFullscreen = false;
@@ -92,7 +89,6 @@ namespace SmolEngine
 			NATIVE_INFO("State : Shutdown");
 
 			m_Running = false;
-			WorldAdmin::GetSingleton()->ShutDown();
 			m_GraphicsContext->ShutDown();
 			exit(0);
 		}
