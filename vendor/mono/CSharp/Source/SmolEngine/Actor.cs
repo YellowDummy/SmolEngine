@@ -15,6 +15,11 @@ namespace SmolEngine
             Console.WriteLine(ID);
         }
 
+        ~Actor()
+        {
+            Console.WriteLine("Destroed!");
+        }
+
         // Methods
 
         public T GetComponent<T>()

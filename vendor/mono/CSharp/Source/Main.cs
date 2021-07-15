@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace SmolEngine
 {
@@ -7,6 +10,29 @@ namespace SmolEngine
         Test()
         {
             Console.WriteLine("Im created!");
+        }
+    }
+
+    public class Names
+    {
+        Names()
+        {
+            Type[] typelist = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "SmolEngine");
+            for (int i = 0; i < typelist.Length; i++)
+            {
+                Classes.Add(typelist[i].Name);
+                Console.WriteLine(typelist[i].Name);
+            }
+        }
+
+        public List<string> Classes = new List<string>();
+
+        private Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
+        {
+            return
+              assembly.GetTypes()
+                      .Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
+                      .ToArray();
         }
     }
 

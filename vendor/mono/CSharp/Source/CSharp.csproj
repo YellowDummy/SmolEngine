@@ -49,6 +49,7 @@
     <Compile Include="SmolEngine\Components.cs" />
     <Compile Include="SmolEngine\CppAPI.cs" />
     <Compile Include="SmolEngine\Math.cs" />
+    <Compile Include="SmolEngine\Reflection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

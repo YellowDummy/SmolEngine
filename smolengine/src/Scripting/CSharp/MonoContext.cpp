@@ -19,51 +19,29 @@
 
 namespace SmolEngine
 {
-	void PrintMethod(MonoString* string)
+	void AddClass(MonoString* mono_str)
 	{
-		char* cppString = mono_string_to_utf8(string);
-
-		std::cout << cppString;
-
-		mono_free(cppString);
+		char* cpp_str = mono_string_to_utf8(mono_str);
+		MonoContext::GetSingleton()->m_ClassNames.emplace_back(cpp_str);
+		mono_free(cpp_str);
 	}
 
 	MonoContext::MonoContext()
 	{
-		//Indicate Mono where you installed the lib and etc folders
 		mono_set_dirs("../vendor/mono/lib", "../vendor/mono/etc");
 
-		//Create the main CSharp domain
-		MonoDomain* domain = mono_jit_init("CSharp_Domain");
-
-		//Load the binary file as an Assembly
-		MonoAssembly* csharpAssembly = mono_domain_assembly_open(domain, "../vendor/mono/CSharp/Debug/CSharp.exe");
-		if (!csharpAssembly)
-		{
-			//Error detected
-			RUNTIME_ERROR("Failed to create mono context");
-		}
-
+		m_Domain = mono_jit_init("CSharp_Domain");
 		s_Instance = this;
-		m_Domain = domain;
 
-		/* we usually get the class we need during initialization */
-		MonoImage* image = mono_assembly_get_image(csharpAssembly);
-		MonoClass* my_class = mono_class_from_name(image, "SmolEngine", "Actor");
+		CreateAssembly();
+		ResolveFunctions();
+		ResolveClasses();
+		Run();
+		GetClassNames();
 
-		{
-			//SetUp Internal Calls called from CSharp
-			//Namespace.Class::Method + a Function pointer with the actual definition
-			mono_add_internal_call("SmolEngine.CppAPI::GetSetTransformComponent", &GetSetTransformComponentCSharp);
-			mono_add_internal_call("SmolEngine.CppAPI::GetSetHeadComponent", &GetSetHeadComponentCSharp);
+		OnRecompilation();
 
-			int argc = 1;
-			char* argv[1] = { (char*)"CSharp" };
-
-			//Call the main method in this code
-			mono_jit_exec(domain, csharpAssembly, argc, argv);
-		}
-
+#if 0
 		{
 			/* allocate memory for the object */
 			MonoMethodDesc* desc = mono_method_desc_new(":.ctor(uint)", FALSE);
@@ -76,11 +54,83 @@ namespace SmolEngine
 
 			MonoObject* my_class_instance = mono_object_new(domain, my_class);
 			auto p = mono_runtime_invoke(ctor, my_class_instance, args, NULL);
+	}
+#endif 
+	}
+
+	void MonoContext::Run()
+	{
+		// Call the main method in this code
+		int argc = 1;
+		char* argv[1] = { (char*)"CSharp" };
+		mono_jit_exec(m_Domain, m_CSharpAssembly, argc, argv);
+	}
+
+	void MonoContext::Shutdown()
+	{
+		if (m_CSharpAssembly != nullptr)
+		{
+			mono_assemblies_cleanup();
+
+			m_DefaultClasses.clear();
+			m_ClassNames.clear();
+			m_CSharpAssembly = nullptr;
 		}
 	}
 
-	MonoDomain* MonoContext::GetDomain()
+	bool MonoContext::IsRunning()
 	{
-		return s_Instance->m_Domain;
+		return m_CSharpAssembly != nullptr;
+	}
+
+	MonoContext* MonoContext::GetSingleton()
+	{
+		return s_Instance;
+	}
+
+	void MonoContext::OnRecompilation()
+	{
+		Shutdown();
+		CreateAssembly();
+		ResolveClasses();
+		Run();
+		GetClassNames();
+	}
+
+	void MonoContext::CreateAssembly()
+	{
+		//Load the binary file as an Assembly
+		MonoAssembly* csharpAssembly = mono_domain_assembly_open(m_Domain, "../vendor/mono/CSharp/Debug/CSharp.exe");
+		if (!csharpAssembly)
+		{
+			//Error detected
+			RUNTIME_ERROR("Failed to create mono context");
+		}
+
+		m_CSharpAssembly = csharpAssembly;
+	}
+
+	void MonoContext::ResolveFunctions()
+	{
+		// SetUp Internal Calls called from CSharp
+		// Namespace.Class::Method + a Function pointer with the actual definition
+		mono_add_internal_call("SmolEngine.CppAPI::GetSetTransformComponent", &GetSetTransformComponentCSharp);
+		mono_add_internal_call("SmolEngine.CppAPI::GetSetHeadComponent", &GetSetHeadComponentCSharp);
+		mono_add_internal_call("SmolEngine.Reflection::PushClassName", &AddClass);
+	}
+
+	void MonoContext::ResolveClasses()
+	{
+		// Adds default classes
+		MonoImage* image = mono_assembly_get_image(m_CSharpAssembly);
+
+		m_DefaultClasses[ClassDefs::Actor] = mono_class_from_name(image, "SmolEngine", "Actor");
+		m_DefaultClasses[ClassDefs::Reflection] = mono_class_from_name(image, "SmolEngine", "Reflection");
+	}
+
+	void MonoContext::GetClassNames()
+	{
+		MonoObject* instance = mono_object_new(m_Domain, m_DefaultClasses[ClassDefs::Reflection]);
+		mono_runtime_object_init(instance);
 	}
 }
