@@ -6,23 +6,16 @@
 
 namespace SmolEngine
 {
-    struct Vector3
-    {
-        float X;
-        float Y;
-        float Z;
-    };
-
     struct TransformComponentCSharp
     {
-        Vector3 WorldPos;
-        Vector3 Rotation;
-        Vector3 Scale;
+        glm::vec3 WorldPos;
+        glm::vec3 Rotation;
+        glm::vec3 Scale;
     };
 
     struct HeadComponentCSharp
     {
-        MonoString* Name;
-        MonoString* Tag;
+        MonoString* Name = nullptr;
+        MonoString* Tag = nullptr;
     };
 }

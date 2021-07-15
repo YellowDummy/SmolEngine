@@ -7,7 +7,7 @@
         "value1": true,
         "value2": true,
         "value3": 1,
-        "value4": 2,
+        "value4": 0,
         "value5": 1,
         "value6": 4,
         "value7": "../samples/materials\\metal\\streaky-metal1_albedo.png"

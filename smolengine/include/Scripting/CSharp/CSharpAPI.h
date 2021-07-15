@@ -6,6 +6,6 @@ namespace SmolEngine
 	struct TransformComponentCSharp;
 	struct HeadComponentCSharp;
 
-	void GetTransformComponentCSharp(TransformComponentCSharp* obj, uint32_t id);
-	void GetHeadComponentCSharp(HeadComponentCSharp* obj, uint32_t id);
+	bool GetSetTransformComponentCSharp(TransformComponentCSharp* obj, uint32_t id, bool set);
+	bool GetSetHeadComponentCSharp(HeadComponentCSharp* obj, uint32_t id, bool set);
 }

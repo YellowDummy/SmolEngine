@@ -5,22 +5,22 @@
     "value3": {
         "value0": true,
         "value1": true,
-        "value2": false,
+        "value2": true,
         "value3": 1,
         "value4": 0,
         "value5": 1,
         "value6": 4,
-        "value7": ""
+        "value7": "../samples/materials\\sponza_textures\\Background_Albedo.png"
     },
     "value4": {
         "value0": true,
         "value1": true,
-        "value2": false,
+        "value2": true,
         "value3": 1,
         "value4": 0,
         "value5": 1,
         "value6": 4,
-        "value7": ""
+        "value7": "../samples/materials\\sponza_textures\\Background_Normal.png"
     },
     "value5": {
         "value0": true,
@@ -35,12 +35,12 @@
     "value6": {
         "value0": true,
         "value1": true,
-        "value2": false,
+        "value2": true,
         "value3": 1,
         "value4": 0,
         "value5": 1,
         "value6": 4,
-        "value7": ""
+        "value7": "../samples/materials\\sponza_textures\\Background_Roughness.png"
     },
     "value7": {
         "value0": true,

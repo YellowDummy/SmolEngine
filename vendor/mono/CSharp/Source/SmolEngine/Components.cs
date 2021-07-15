@@ -1,12 +1,16 @@
 ﻿
+using System.Runtime.InteropServices;
+
 namespace SmolEngine
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct HeadComponent
     {
-        public readonly string Name;
-        public readonly string Tag;
+        public string Name;
+        public string Tag;                                                                                                                                                                                                                                                      
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct TransformComponent
     {
         public Vector3 WorldPos;

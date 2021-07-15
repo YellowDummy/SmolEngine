@@ -2,9 +2,20 @@
 #include "Scripting/CSharp/MonoContext.h"
 #include "Scripting/CSharp/CSharpAPI.h"
 
-#include <iostream>
 #include <mono/metadata/assembly.h>
 #include <mono/jit/jit.h>
+#include <mono/utils/mono-counters.h>
+#include <mono/utils/mono-logger.h>
+#include <mono/metadata/appdomain.h>
+#include <mono/metadata/object.h>
+#include <mono/metadata/assembly.h>
+#include <mono/metadata/threads.h>
+#include <mono/metadata/mono-debug.h>
+#include <mono/metadata/mono-config.h>
+#include <mono/metadata/mono-gc.h>
+#include <mono/metadata/profiler.h>
+#include <mono/metadata/debug-helpers.h>
+
 
 namespace SmolEngine
 {
@@ -33,26 +44,43 @@ namespace SmolEngine
 			RUNTIME_ERROR("Failed to create mono context");
 		}
 
+		s_Instance = this;
+		m_Domain = domain;
+
 		/* we usually get the class we need during initialization */
 		MonoImage* image = mono_assembly_get_image(csharpAssembly);
-		MonoClass* my_class = mono_class_from_name(image, "SmolEngine", "Test");
+		MonoClass* my_class = mono_class_from_name(image, "SmolEngine", "Actor");
 
-		//SetUp Internal Calls called from CSharp
+		{
+			//SetUp Internal Calls called from CSharp
+			//Namespace.Class::Method + a Function pointer with the actual definition
+			mono_add_internal_call("SmolEngine.CppAPI::GetSetTransformComponent", &GetSetTransformComponentCSharp);
+			mono_add_internal_call("SmolEngine.CppAPI::GetSetHeadComponent", &GetSetHeadComponentCSharp);
 
-		//Namespace.Class::Method + a Function pointer with the actual definition
-		mono_add_internal_call("SmolEngine.Game::PrintMethod", &PrintMethod);
-		mono_add_internal_call("SmolEngine.Actor::GetTransform", &GetTransformComponentCSharp);
-		mono_add_internal_call("SmolEngine.Actor::HeadComponent", &GetHeadComponentCSharp);
+			int argc = 1;
+			char* argv[1] = { (char*)"CSharp" };
 
-		int argc = 1;
-		char* argv[1] = { (char*)"CSharp" };
+			//Call the main method in this code
+			mono_jit_exec(domain, csharpAssembly, argc, argv);
+		}
 
-		//Call the main method in this code
-		mono_jit_exec(domain, csharpAssembly, argc, argv);
+		{
+			/* allocate memory for the object */
+			MonoMethodDesc* desc = mono_method_desc_new(":.ctor(uint)", FALSE);
+			MonoMethod* ctor = mono_method_desc_search_in_class(desc, my_class);
+			mono_method_desc_free(desc);
 
-		/* allocate memory for the object */
-		MonoObject* my_class_instance = mono_object_new(domain, my_class);
-		/* execute the default argument-less constructor */
-		mono_runtime_object_init(my_class_instance);
+			void* args[1];
+			uint32_t id = 266;
+			args[0] = &id;
+
+			MonoObject* my_class_instance = mono_object_new(domain, my_class);
+			auto p = mono_runtime_invoke(ctor, my_class_instance, args, NULL);
+		}
+	}
+
+	MonoDomain* MonoContext::GetDomain()
+	{
+		return s_Instance->m_Domain;
 	}
 }

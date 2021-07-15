@@ -1,35 +1,52 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 namespace SmolEngine
 {
     public class Actor
     {
-        public Actor(uint _id)
-        {
-            ID = _id;
-            Console.WriteLine("kekus");
-        }
-
-        // Methods
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        extern static void GetTransform(TransformComponent comp, uint ID);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        extern static void GetHead(HeadComponent comp, uint ID);
-
-
         // Properties
 
         private readonly uint ID = 0;
 
-        public TransformComponent GetComponent()
+        public Actor(uint _id)
         {
-            TransformComponent obj = new TransformComponent();
-            obj.WorldPos.X = 2;
-            GetTransform(obj, ID);
-            return obj;
+            ID = _id;
+            Console.WriteLine(ID);
+        }
+
+        // Methods
+
+        public T GetComponent<T>()
+        {
+            if (typeof(T) == typeof(TransformComponent))
+            {
+                var comp = new TransformComponent();
+                bool is_exists = CppAPI.GetSetTransformComponent(ref comp, ID, false);
+                if(is_exists)
+                {
+                    return (T)(object)comp;
+                }
+            }
+
+            if (typeof(T) == typeof(HeadComponent))
+            {
+                var comp = new HeadComponent();
+                comp.Name = "None";
+                comp.Name = "None";
+                bool is_exists = CppAPI.GetSetHeadComponent(ref comp, ID, false);
+                if(is_exists)
+                {
+                    return (T)(object)comp;
+                }
+            }
+
+            return (T)default;
+        }
+
+        public bool HasComponent<T>()
+        {
+            return false;
         }
     }
 }

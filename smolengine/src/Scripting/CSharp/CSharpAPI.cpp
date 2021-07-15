@@ -1,33 +1,44 @@
 #include "stdafx.h"
+
 #include "Scripting/CSharp/CSharpAPI.h"
 #include "Scripting/CSharp/CSharpDefs.h"
+#include "Scripting/CSharp/MonoContext.h"
 
 #include "ECS/ComponentsCore.h"
 
 namespace SmolEngine
 {
-	Vector3 FromGLM(const glm::vec3& vec)
-	{
-		Vector3 result;
-		result.X = vec.x;
-		result.Y = vec.y;
-		result.Z = vec.z;
-
-		return result;
-	}
-
-	void GetTransformComponentCSharp(TransformComponentCSharp* obj, uint32_t id)
+	bool GetSetTransformComponentCSharp(TransformComponentCSharp* obj, uint32_t id, bool set)
 	{
 		TransformComponent t1 = {  };
-		t1.WorldPos = { 2, 2, 2 };
+		t1.WorldPos = { 6, 0, 2 };
 
-		obj->WorldPos = FromGLM(t1.WorldPos);
-		obj->Scale = FromGLM(t1.Scale);
-		obj->Rotation = FromGLM(t1.Rotation);
+		obj->WorldPos = t1.WorldPos;
+		obj->Scale = t1.Scale;
+		obj->Rotation = t1.Rotation;
+
+		return true;
 	}
 
-	void GetHeadComponentCSharp(HeadComponentCSharp* obj, uint32_t id)
+	bool GetSetHeadComponentCSharp(HeadComponentCSharp* obj, uint32_t id, bool set)
 	{
+		char* mono_name = mono_string_to_utf8(obj->Name);
+		char* mono_tag = mono_string_to_utf8(obj->Name);
 
+		std::string name(mono_name);
+		std::string tag(mono_tag);
+
+		NATIVE_ERROR("Name: {}, Tag: {}", name, tag);
+
+		mono_free(mono_name);
+		mono_free(mono_tag);
+
+		name += "_name";
+		tag += "_tag";
+
+		obj->Name = mono_string_new(MonoContext::GetDomain(), name.c_str());
+		obj->Tag = mono_string_new(MonoContext::GetDomain(), tag.c_str());
+
+		return true;
 	}
 }
