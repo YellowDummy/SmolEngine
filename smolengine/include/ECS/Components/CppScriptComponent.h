@@ -14,10 +14,10 @@
 namespace SmolEngine
 {
 	class Actor;
-	struct BehaviourComponent: public BaseComponent
+	struct CppScriptComponent: public BaseComponent
 	{
-		BehaviourComponent() = default;
-		BehaviourComponent(uint32_t id) 
+		CppScriptComponent() = default;
+		CppScriptComponent(uint32_t id)
 			:BaseComponent(id) {}
 
 		struct OutData

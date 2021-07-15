@@ -339,9 +339,6 @@
     <ClInclude Include="include\ECS\Components\BaseComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\Components\BehaviourComponent.h">
-      <Filter>include\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="include\ECS\Components\CameraComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
@@ -1628,6 +1625,10 @@
     </ClInclude>
     <ClInclude Include="include\Scripting\CSharp\CSharpAPI.h" />
     <ClInclude Include="include\Scripting\CSharp\CSharpDefs.h" />
+    <ClInclude Include="include\ECS\Components\CSharpScriptComponent.h" />
+    <ClInclude Include="include\ECS\Components\CppScriptComponent.h">
+      <Filter>include\ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">

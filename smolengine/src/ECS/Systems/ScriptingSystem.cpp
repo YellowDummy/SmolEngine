@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ECS/Systems/ScriptingSystem.h"
-#include "ECS/Components/BehaviourComponent.h"
+#include "ECS/Components/CppScriptComponent.h"
 #include "ECS/Components/HeadComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/WorldAdmin.h"
@@ -19,19 +19,19 @@ namespace SmolEngine
 		if (it == instance->MetaMap.end())
 			return false;
 
-		BehaviourComponent* component = nullptr;
-		if (!WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<BehaviourComponent>(actor))
+		CppScriptComponent* component = nullptr;
+		if (!WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<CppScriptComponent>(actor))
 		{
-			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<BehaviourComponent>(actor);
+			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<CppScriptComponent>(actor);
 			component->Actor = actor;
 		}
 		else
-			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<BehaviourComponent>(actor);
+			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<CppScriptComponent>(actor);
 
 		int32_t index = static_cast<int32_t>(actor->GetComponentsCount());
 		actor->GetInfo()->ComponentsCount++;
 
-		BehaviourComponent::ScriptInstance scriptInstance = {};
+		CppScriptComponent::ScriptInstance scriptInstance = {};
 		scriptInstance.KeyName = scriptName;
 		scriptInstance.Script = it->second.ClassInstance;
 
@@ -45,7 +45,7 @@ namespace SmolEngine
 			{
 			case BehaviourPrimitive::OutValueType::Int:
 			{
-				BehaviourComponent::OutData::IntBuffer intB;
+				CppScriptComponent::OutData::IntBuffer intB;
 				intB.Name = value.ValueName;
 				intB.Value = 0;
 
@@ -55,7 +55,7 @@ namespace SmolEngine
 			}
 			case BehaviourPrimitive::OutValueType::Float:
 			{
-				BehaviourComponent::OutData::FloatBuffer floatB;
+				CppScriptComponent::OutData::FloatBuffer floatB;
 				floatB.Name = value.ValueName;
 				floatB.Value = 0.0f;
 
@@ -65,7 +65,7 @@ namespace SmolEngine
 			}
 			case BehaviourPrimitive::OutValueType::String:
 			{
-				BehaviourComponent::OutData::StringBuffer strB;
+				CppScriptComponent::OutData::StringBuffer strB;
 				strB.Name = value.ValueName;
 				strB.Value = "DefaultName";
 
@@ -88,10 +88,10 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<BehaviourComponent>();
+		const auto& view = reg->view<CppScriptComponent>();
 		for (const auto& entity : view)
 		{
-			auto& behaviour = view.get<BehaviourComponent>(entity);
+			auto& behaviour = view.get<CppScriptComponent>(entity);
 			for (auto& script : behaviour.Scripts)
 				instance->MetaMap[script.KeyName].OnBeginFunc.invoke(script.Script);
 		}
@@ -102,10 +102,10 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<BehaviourComponent>();
+		const auto& view = reg->view<CppScriptComponent>();
 		for (const auto& entity : view)
 		{
-			auto& behaviour = view.get<BehaviourComponent>(entity);
+			auto& behaviour = view.get<CppScriptComponent>(entity);
 			for (auto& script : behaviour.Scripts)
 				instance->MetaMap[script.KeyName].OnDestroyFunc.invoke(script.Script);
 		}
@@ -116,10 +116,10 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<BehaviourComponent>();
+		const auto& view = reg->view<CppScriptComponent>();
 		for (const auto& entity : view)
 		{
-			auto& behaviour = view.get<BehaviourComponent>(entity);
+			auto& behaviour = view.get<CppScriptComponent>(entity);
 			for (auto& script : behaviour.Scripts)
 				instance->MetaMap[script.KeyName].OnProcessFunc.invoke(script.Script, deltaTime.GetTime());
 		}
@@ -129,7 +129,7 @@ namespace SmolEngine
 	{
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		BehaviourComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponentEX<BehaviourComponent>(actor);
+		CppScriptComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponentEX<CppScriptComponent>(actor);
 		if (behaviour && instance)
 		{
 			for (auto& script : behaviour->Scripts)
@@ -140,10 +140,10 @@ namespace SmolEngine
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		auto admin = WorldAdmin::GetSingleton();
-		if (admin->GetActiveScene()->HasComponent<BehaviourComponent>(*actorB))
+		if (admin->GetActiveScene()->HasComponent<CppScriptComponent>(*actorB))
 		{
 			ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-			BehaviourComponent* behaviour = admin->GetActiveScene()->GetComponent<BehaviourComponent>(*actorB);
+			CppScriptComponent* behaviour = admin->GetActiveScene()->GetComponent<CppScriptComponent>(*actorB);
 
 			for (auto& script : behaviour->Scripts)
 				instance->MetaMap[script.KeyName].OnCollBeginFunc.invoke(script.Script, actorA, isTrigger);
@@ -153,10 +153,10 @@ namespace SmolEngine
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		auto admin = WorldAdmin::GetSingleton();
-		if (admin->GetActiveScene()->HasComponent<BehaviourComponent>(*actorB))
+		if (admin->GetActiveScene()->HasComponent<CppScriptComponent>(*actorB))
 		{
 			ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-			BehaviourComponent* behaviour = admin->GetActiveScene()->GetComponent<BehaviourComponent>(*actorB);
+			CppScriptComponent* behaviour = admin->GetActiveScene()->GetComponent<CppScriptComponent>(*actorB);
 
 			for (auto& script : behaviour->Scripts)
 				instance->MetaMap[script.KeyName].OnCollEndFunc.invoke(script.Script, actorA, isTrigger);
@@ -168,10 +168,10 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<BehaviourComponent>();
+		const auto& view = reg->view<CppScriptComponent>();
 		for (const auto& entity : view)
 		{
-			auto& behaviour = view.get<BehaviourComponent>(entity);
+			auto& behaviour = view.get<CppScriptComponent>(entity);
 			for (auto& script : behaviour.Scripts)
 				instance->MetaMap[script.KeyName].OnDebugDrawFunc.invoke(script.Script);
 		}

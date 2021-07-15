@@ -6,7 +6,6 @@
 
 namespace SmolEngine
 {
-	struct BehaviourComponent;
 	struct SceneStateComponent;
 
 	class Scene

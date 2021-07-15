@@ -156,14 +156,6 @@ namespace SmolEngine
 			meshNew->MaterialsData= meshOld->MaterialsData;
 			meshNew->MeshPtr = meshOld->MeshPtr;
 		}
-
-		if (actor->HasComponent<BehaviourComponent>())
-		{
-			auto scriptOld = actor->GetComponent<BehaviourComponent>();
-			auto scriptNew = newObj->AddComponent<BehaviourComponent>();
-			*scriptNew = *scriptOld;
-		}
-
 	}
 
 	void Scene::DeleteActor(Ref<Actor>& actor)
@@ -195,7 +187,8 @@ namespace SmolEngine
 			cereal::YAMLOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<
 				HeadComponent, CameraComponent,
-				BehaviourComponent, Texture2DComponent, Animation2DComponent,
+				CppScriptComponent, CSharpScriptComponent,
+				Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Rigidbody2DComponent, MeshComponent,
 				PointLightComponent, SpotLightComponent, SceneStateComponent, RigidbodyComponent>(output);
@@ -235,7 +228,8 @@ namespace SmolEngine
 
 			entt::snapshot_loader{ m_SceneData.m_Registry }.entities(regisrtyInput).component<
 				HeadComponent, CameraComponent,
-				BehaviourComponent, Texture2DComponent, Animation2DComponent,
+				CppScriptComponent, CSharpScriptComponent,
+				Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Rigidbody2DComponent, MeshComponent,
 				PointLightComponent, SpotLightComponent, SceneStateComponent, RigidbodyComponent>(regisrtyInput);

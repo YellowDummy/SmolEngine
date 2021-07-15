@@ -27,7 +27,7 @@ namespace SmolEngine
 	struct AudioSourceComponent;
 	struct Animation2DComponent;
 	struct CanvasComponent;
-	struct BehaviourComponent;
+	struct CppScriptComponent;
 	struct Light2DSourceComponent;
 	struct MeshComponent;
 	struct DirectionalLightComponent;

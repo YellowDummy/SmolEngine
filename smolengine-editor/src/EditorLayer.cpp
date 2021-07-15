@@ -1273,11 +1273,11 @@ namespace SmolEngine
 
 	void EditorLayer::DrawScriptComponent(uint32_t index)
 	{
-		if (m_World->GetActiveScene()->HasComponent<BehaviourComponent>(m_SelectedActor))
+		if (m_World->GetActiveScene()->HasComponent<CppScriptComponent>(m_SelectedActor))
 		{
-			BehaviourComponent* comp = m_World->GetActiveScene()->GetComponent<BehaviourComponent>(m_SelectedActor);
+			CppScriptComponent* comp = m_World->GetActiveScene()->GetComponent<CppScriptComponent>(m_SelectedActor);
 			std::string scriptName = "";
-			BehaviourComponent::OutData* data = nullptr;
+			CppScriptComponent::OutData* data = nullptr;
 			for (auto& [name, container] : comp->OutValues)
 			{
 				if (container.ScriptID == index)

@@ -16,7 +16,6 @@ namespace SmolEngine
 	struct WorldAdminStateSComponent;
 	struct CameraComponent;
 	struct TransformComponent;
-	struct BehaviourComponent;
 	struct SystemInstance;
 	struct SceneData;
 	struct MeshComponent;

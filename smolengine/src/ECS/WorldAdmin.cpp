@@ -396,10 +396,10 @@ namespace SmolEngine
 	{
 		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
 
-		const auto& view = reg.view<BehaviourComponent>();
+		const auto& view = reg.view<CppScriptComponent>();
 		for (const auto& entity : view)
 		{
-			auto& behaviour = view.get<BehaviourComponent>(entity);
+			auto& behaviour = view.get<CppScriptComponent>(entity);
 			if (!behaviour.Actor)
 			{
 				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
