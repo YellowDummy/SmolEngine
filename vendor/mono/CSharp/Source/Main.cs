@@ -9,9 +9,10 @@ namespace SmolEngine
     {
         Test()
         {
-            Console.WriteLine("Im created!");
+            Console.WriteLine("Im created!!");
         }
     }
+
 
     public class Names
     {
@@ -38,11 +39,9 @@ namespace SmolEngine
 
     public class Game
     {
-        static void Main(string[] args)
+        static void Main(string[] arg)
         {
-            Console.WriteLine("This main is being called from CPP");
-
-            Actor a = new Actor(22);
+            Actor a = new Actor(2222);
             var transform = a.GetComponent<TransformComponent>();
             var head = a.GetComponent<HeadComponent>();
 

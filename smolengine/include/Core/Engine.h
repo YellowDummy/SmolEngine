@@ -49,6 +49,7 @@ namespace SmolEngine
 		// Getters					 
 		inline static Engine*        GetEngine() { return s_Instance; }
 		GraphicsContext*             GetGraphicsContext() const;
+		MonoContext*                 GetMonoContext() const;
 		uint32_t                     GetWindowHeight() const;
 		uint32_t                     GetWindowWidth() const;
 		float                        GetFPSCount() const;

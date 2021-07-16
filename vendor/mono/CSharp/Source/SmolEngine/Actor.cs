@@ -13,6 +13,7 @@ namespace SmolEngine
         {
             ID = _id;
             Console.WriteLine(ID);
+            Console.WriteLine("It's work!!!!!");
         }
 
         ~Actor()

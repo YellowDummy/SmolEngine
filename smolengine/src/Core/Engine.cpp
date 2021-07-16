@@ -176,6 +176,11 @@ namespace SmolEngine
 		return m_GraphicsContext;
 	}
 
+	MonoContext* Engine::GetMonoContext() const
+	{
+		return m_MonoContext;
+	}
+
 	uint32_t Engine::GetWindowHeight() const
 	{
 		return m_GraphicsContext->GetWindowData()->Height;

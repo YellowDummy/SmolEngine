@@ -5,6 +5,7 @@
 
 typedef struct _MonoAssembly MonoAssembly;
 typedef struct _MonoClass MonoClass;
+typedef struct _MonoImage MonoImage;
 
 #ifndef _MONO_UTILS_FORWARD_
 #define _MONO_UTILS_FORWARD_
@@ -29,19 +30,25 @@ namespace SmolEngine
 
 		bool                        IsRunning();
 		static MonoContext*         GetSingleton();
-		void                        OnRecompilation();
+		void                        Track();
 
 	private:
-		void                        Run();
 		void                        Shutdown();
-		void                        CreateAssembly();
+		void                        LoadAssembly(bool is_initialization = false);
 		void                        ResolveFunctions();
 		void                        ResolveClasses();
 		void                        GetClassNames();
+		void                        OnRecompilation();
+		void                        LoadMonoImage();
+		void                        LoadDomain();
 
 	public:
 		MonoDomain*                                 m_Domain = nullptr;
+		MonoDomain*                                 m_RootDomain = nullptr;
 		MonoAssembly*                               m_CSharpAssembly = nullptr;
+		MonoImage*                                  m_Image = nullptr;
+		std::string                                 m_DLLPath = "../vendor/mono/CSharp/Debug/CSharp.exe";
+		std::filesystem::file_time_type             m_LastWriteTime;
 		std::vector<std::string>                    m_ClassNames;
 		std::unordered_map<ClassDefs, MonoClass*>   m_DefaultClasses;
 												   

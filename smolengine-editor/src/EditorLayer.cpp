@@ -20,6 +20,8 @@
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"
 #include "ECS/Scene.h"
 
+#include "Scripting/CSharp/MonoContext.h"
+
 #include <Frostium3D/Libraries/imgui/imgui.h>
 #include <Frostium3D/Libraries/imgui/imgui_internal.h>
 #include <Frostium3D/Libraries/glm/glm/glm.hpp>
@@ -223,6 +225,8 @@ namespace SmolEngine
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+
+		Engine::GetEngine()->GetMonoContext()->Track();
 
 		m_SceneView->Draw();
 		m_GameView->Draw();
