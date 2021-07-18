@@ -4,7 +4,7 @@
 #include "ECS/Actor.h"
 #include "ECS/WorldAdmin.h"
 #include "ECS/Systems/ScriptingSystem.h"
-#include "Scripting/BehaviourPrimitive.h"
+#include "Scripting/CPP/BehaviourPrimitive.h"
 
 namespace SmolEngine
 {

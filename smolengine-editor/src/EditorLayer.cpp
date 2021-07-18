@@ -21,6 +21,7 @@
 #include "ECS/Scene.h"
 
 #include "Scripting/CSharp/MonoContext.h"
+#include "Scripting/CPP/MetaContext.h"
 
 #include <Frostium3D/Libraries/imgui/imgui.h>
 #include <Frostium3D/Libraries/imgui/imgui_internal.h>
@@ -226,8 +227,7 @@ namespace SmolEngine
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
-		Engine::GetEngine()->GetMonoContext()->Track();
-
+		MonoContext::GetSingleton()->Track();
 		m_SceneView->Draw();
 		m_GameView->Draw();
 
@@ -1241,13 +1241,13 @@ namespace SmolEngine
 			ImGui::MenuItem("New Script", NULL, false, false);
 			ImGui::Separator();
 
-			ScriptingSystemStateSComponent* state = ScriptingSystemStateSComponent::GetSingleton();
+			auto& meta_map = ScriptingSystemStateSComponent::GetSingleton()->m_MetaContext->GetMeta();
 
-			for (const auto& [name, meta] : state->MetaMap)
+			for (const auto& [name, meta] : meta_map)
 			{
 				if (ImGui::MenuItem(name.c_str()))
 				{
-					m_World->GetActiveScene()->AddScript(m_SelectedActor, name);
+					ScriptingSystem::AttachNativeScript(m_SelectedActor, name);
 					ImGui::CloseCurrentPopup();
 				}
 			}

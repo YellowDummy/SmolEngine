@@ -19,8 +19,9 @@ namespace SmolEngine
 {
 	enum class ClassDefs
 	{
+		BehaviourPrimitive,
 		Actor,
-		Reflection
+		UnitTests
 	};
 
 	class MonoContext
@@ -37,8 +38,9 @@ namespace SmolEngine
 		void                        LoadAssembly(bool is_initialization = false);
 		void                        ResolveFunctions();
 		void                        ResolveClasses();
-		void                        GetClassNames();
+		void                        ResolveMeta();
 		void                        OnRecompilation();
+		void                        RunTest();
 		void                        LoadMonoImage();
 		void                        LoadDomain();
 
@@ -47,7 +49,7 @@ namespace SmolEngine
 		MonoDomain*                                 m_RootDomain = nullptr;
 		MonoAssembly*                               m_CSharpAssembly = nullptr;
 		MonoImage*                                  m_Image = nullptr;
-		std::string                                 m_DLLPath = "../vendor/mono/CSharp/Debug/CSharp.exe";
+		std::string                                 m_DLLPath = "../vendor/mono/CSharp/Debug/CSharp.dll";
 		std::filesystem::file_time_type             m_LastWriteTime;
 		std::vector<std::string>                    m_ClassNames;
 		std::unordered_map<ClassDefs, MonoClass*>   m_DefaultClasses;

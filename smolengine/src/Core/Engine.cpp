@@ -35,9 +35,7 @@ namespace SmolEngine
 		//---------------------------------------------------------------------///
 
 		m_LayerHandler = new LayerManager();
-		m_ScriptingSystem = new ScriptingSystem();
 		m_World = new WorldAdmin();
-		m_MonoContext = new MonoContext();
 
 		WindowCreateInfo windowCI = {};
 		windowCI.bFullscreen = false;
@@ -53,28 +51,31 @@ namespace SmolEngine
 		graphicsContextCI.ResourcesFolderPath = "../resources/";
 		graphicsContextCI.Flags = Features_Renderer_3D_Flags | Features_Renderer_2D_Flags | Features_ImGui_Flags;
 
-		EngineContextCreateInfo engineContextCI = {};
-		Physics2DContextCreateInfo physicsContextCI = {};
 
 		// User Side
 		// Graphics Context
-		SetGraphicsContext(&graphicsContextCI);
+		OnGraphicsModuleCreation(&graphicsContextCI);
 		GraphicsEngineSComponent* graphicsEngine = GraphicsEngineSComponent::Get();
 		graphicsContextCI.pRendererStorage = &graphicsEngine->Strorage;
 		graphicsContextCI.pRenderer2DStorage = &graphicsEngine->Storage2D;
 		m_GraphicsContext = new GraphicsContext(&graphicsContextCI);
-		m_GraphicsContext->SetEventCallback(std::bind(&Engine::OnEvent, this, std::placeholders::_1));
-		// Graphics engine and game engine use the same jobs system,
-		// but different queues in use
+		m_GraphicsContext->SetEventCallback(std::bind_front(&Engine::OnEvent, this));
+		// Graphics engine and game engine use the same jobs system, but different queues in use
 		JobsSystemStateSComponent::GetSingleton()->Executor = m_GraphicsContext->GetJobsSystemInstance()->GetExecutor();
 
-		SetEngineContext(&engineContextCI);
+		EngineModuleCreateInfo engineContextCI = {};
+		OnEngineModuleCreation(&engineContextCI);
 		m_AssetsFolder = engineContextCI.AssetsFolder;
 
-		SetPhysics2DContext(&physicsContextCI);
-		SetLayers(m_LayerHandler);
-		SetScripts(m_ScriptingSystem);
-		SetWorldAdminState(m_World->m_State);
+		PhysicsModuleCreateInfo physicsContextCI = {};
+		OnPhysicsModuleCreation(&physicsContextCI);
+
+		OnLayerModuleCreation(m_LayerHandler);
+		{
+			Scope<ScriptingSystem> system = std::make_unique<ScriptingSystem>();
+			OnScriptModuleCreation(system.get());
+		}
+		OnWorldAdminModuleCreation(m_World->m_State);
 		OnInitializationComplete(m_World);
 
 		NATIVE_INFO("Initialized successfully");
@@ -174,11 +175,6 @@ namespace SmolEngine
 	GraphicsContext* Engine::GetGraphicsContext() const
 	{
 		return m_GraphicsContext;
-	}
-
-	MonoContext* Engine::GetMonoContext() const
-	{
-		return m_MonoContext;
 	}
 
 	uint32_t Engine::GetWindowHeight() const

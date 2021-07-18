@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{045DC8F2-D706-47AF-95CA-2A64DB94B7DB}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>CSharp</RootNamespace>
     <AssemblyName>CSharp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -18,7 +18,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -55,10 +55,12 @@
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmolEngine\Actor.cs" />
+    <Compile Include="SmolEngine\BehaviourPrimitive.cs" />
     <Compile Include="SmolEngine\Components.cs" />
     <Compile Include="SmolEngine\CppAPI.cs" />
+    <Compile Include="SmolEngine\Input.cs" />
+    <Compile Include="SmolEngine\Log.cs" />
     <Compile Include="SmolEngine\Math.cs" />
-    <Compile Include="SmolEngine\Reflection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

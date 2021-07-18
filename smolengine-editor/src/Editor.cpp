@@ -16,7 +16,7 @@ namespace SmolEngine
 		delete m_Camera;
 	}
 
-	void Editor::SetGraphicsContext(GraphicsContextInitInfo* info)
+	void Editor::OnGraphicsModuleCreation(GraphicsContextInitInfo* info)
 	{
 		info->pWindowCI->Height = 1080;
 		info->pWindowCI->Width = 1920;
@@ -30,12 +30,11 @@ namespace SmolEngine
 		info->bTargetsSwapchain = false; // render imgui to the swap chain and later on render whole scene as imgui texture
 	}
 
-	void Editor::SetPhysics2DContext(Physics2DContextCreateInfo* info)
+	void Editor::OnPhysicsModuleCreation(PhysicsModuleCreateInfo* info)
 	{
-
 	}
 
-	void Editor::SetLayers(LayerManager* layerManager)
+	void Editor::OnLayerModuleCreation(LayerManager* layerManager)
 	{
 		EditorCameraCreateInfo camCI = {};
 		camCI.WorldPos = { 0, 5, 0 };
@@ -45,13 +44,13 @@ namespace SmolEngine
 		layerManager->AddLayer(editorLayer);
 	}
 
-	void Editor::SetScripts(ScriptingSystem* scriptingSytem)
+	void Editor::OnScriptModuleCreation(ScriptingSystem* scriptingSytem)
 	{
 		scriptingSytem->AddNativeClass<BasePlayerScript>("Base Player Script");
 		scriptingSytem->AddNativeClass<BallSpawner>("Ball Spawner");
 	}
 
-	void Editor::SetWorldAdminState(WorldAdminStateSComponent* state)
+	void Editor::OnWorldAdminModuleCreation(WorldAdminStateSComponent* state)
 	{
 		state->m_LevelEditorActive = true;
 	}

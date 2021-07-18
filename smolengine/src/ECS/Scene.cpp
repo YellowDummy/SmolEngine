@@ -264,8 +264,14 @@ namespace SmolEngine
 		return m_SceneData.m_Registry;
 	}
 
-	bool Scene::AddScript(Ref<Actor>& actor, const std::string& name)
+	bool Scene::AddCppScript(Ref<Actor>& actor, const std::string& script_name)
 	{
-		return ScriptingSystem::AttachNativeScript(actor, name);
+		return ScriptingSystem::AttachNativeScript(actor, script_name);
 	}
+
+	bool Scene::AddCSharpScript(Ref<Actor>& actor, const std::string& class_name)
+	{
+		return ScriptingSystem::AttachCSharpScript(actor, class_name);
+	}
+
 }

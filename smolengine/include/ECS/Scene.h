@@ -99,7 +99,8 @@ namespace SmolEngine
 			return m_SceneData.m_Registry.try_get<T>(ent);
 		}
 
-		bool AddScript(Ref<Actor>& actor, const std::string& script_name);
+		bool AddCppScript(Ref<Actor>& actor, const std::string& script_name);
+		bool AddCSharpScript(Ref<Actor>& actor, const std::string& class_name);
 
 	private:
 

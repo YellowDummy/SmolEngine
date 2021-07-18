@@ -12,12 +12,12 @@
 
 namespace SmolEngine
 {
-	struct Physics2DContextCreateInfo
+	struct PhysicsModuleCreateInfo
 	{
 		glm::vec2 GravityDir = glm::vec2(0.0f, -9.81f);
 	};
 
-	struct EngineContextCreateInfo
+	struct EngineModuleCreateInfo
 	{
 		std::string AssetsFolder = "../samples/";
 	};
@@ -26,7 +26,6 @@ namespace SmolEngine
 	class WorldAdmin;
 	class Scene;
 	class ScriptingSystem;
-	class MonoContext;
 
 	class Engine
 	{
@@ -38,18 +37,17 @@ namespace SmolEngine
 		void                         Shutdown();
 									 
 		// Methods to implement		 
-		virtual void                 SetEngineContext(EngineContextCreateInfo* info) {}
-		virtual void                 SetGraphicsContext(GraphicsContextInitInfo* info) {}
-		virtual void                 SetPhysics2DContext(Physics2DContextCreateInfo* info) {}
-		virtual void                 SetLayers(LayerManager* layerManager) {}
-		virtual void                 SetScripts(ScriptingSystem* scriptingSytem) {}
-		virtual void                 SetWorldAdminState(WorldAdminStateSComponent* state) {}
+		virtual void                 OnEngineModuleCreation(EngineModuleCreateInfo* info) {}
+		virtual void                 OnGraphicsModuleCreation(GraphicsContextInitInfo* info) {}
+		virtual void                 OnPhysicsModuleCreation(PhysicsModuleCreateInfo* info) {}
+		virtual void                 OnLayerModuleCreation(LayerManager* layerManager) {}
+		virtual void                 OnWorldAdminModuleCreation(WorldAdminStateSComponent* state) {}
+		virtual void                 OnScriptModuleCreation(ScriptingSystem* system) {}
 		virtual void                 OnInitializationComplete(WorldAdmin* admin) {}
 									 
 		// Getters					 
 		inline static Engine*        GetEngine() { return s_Instance; }
 		GraphicsContext*             GetGraphicsContext() const;
-		MonoContext*                 GetMonoContext() const;
 		uint32_t                     GetWindowHeight() const;
 		uint32_t                     GetWindowWidth() const;
 		float                        GetFPSCount() const;
@@ -73,8 +71,6 @@ namespace SmolEngine
 		GraphicsContext*             m_GraphicsContext = nullptr;
 		WorldAdmin*                  m_World = nullptr;
 		LayerManager*                m_LayerHandler = nullptr;
-		ScriptingSystem*             m_ScriptingSystem = nullptr;
-		MonoContext*                 m_MonoContext = nullptr;
 		std::string                  m_AssetsFolder;
 		std::function<void(Scene*)>  m_SceneLoadCl = nullptr;
 		std::function<void(Scene*)>  m_SceneUnLoadCl = nullptr;

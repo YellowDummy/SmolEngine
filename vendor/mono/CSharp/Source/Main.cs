@@ -1,54 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace SmolEngine
 {
-    public class Test
+    public class GameLogic : BehaviourPrimitive
     {
-        Test()
+
+    }
+
+
+    public class Tests
+    {
+        Tests()
         {
+
             Console.WriteLine("Im created!!");
+
+            BehaviourPrimitive b = new BehaviourPrimitive();
+            var comp = b.GetComponent<TransformComponent>();
+
+            Console.WriteLine(comp.ToString());
         }
-    }
 
-
-    public class Names
-    {
-        Names()
+        private void CallMe(uint val1, uint val2)
         {
-            Type[] typelist = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "SmolEngine");
-            for (int i = 0; i < typelist.Length; i++)
-            {
-                Classes.Add(typelist[i].Name);
-                Console.WriteLine(typelist[i].Name);
-            }
+            Console.WriteLine($"Value1: {val1}, Value2: {val2}");
         }
-
-        public List<string> Classes = new List<string>();
-
-        private Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
-        {
-            return
-              assembly.GetTypes()
-                      .Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
-                      .ToArray();
-        }
-    }
-
-    public class Game
-    {
-        static void Main(string[] arg)
-        {
-            Actor a = new Actor(2222);
-            var transform = a.GetComponent<TransformComponent>();
-            var head = a.GetComponent<HeadComponent>();
-
-            Console.WriteLine(head.Name);
-            Console.WriteLine(head.Tag);
-            Console.WriteLine(transform.ToString());
-        }
-
     }
 }

@@ -539,7 +539,8 @@
     <ClInclude Include="include\Physics\Box2D\RayCast2D.h" />
     <ClInclude Include="include\Physics\Bullet3\RigidActor.h" />
     <ClInclude Include="include\Physics\Bullet3\RigidBody.h" />
-    <ClInclude Include="include\Scripting\BehaviourPrimitive.h" />
+    <ClInclude Include="include\Scripting\CPP\BehaviourPrimitive.h" />
+    <ClInclude Include="include\Scripting\CPP\MetaContext.h" />
     <ClInclude Include="include\Scripting\CSharp\CSharpAPI.h" />
     <ClInclude Include="include\Scripting\CSharp\CSharpDefs.h" />
     <ClInclude Include="include\Scripting\CSharp\MonoContext.h" />
@@ -581,7 +582,8 @@
     <ClCompile Include="src\Physics\Box2D\RayCast2D.cpp" />
     <ClCompile Include="src\Physics\Bullet3\RigidActor.cpp" />
     <ClCompile Include="src\Physics\Bullet3\RigidBody.cpp" />
-    <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp" />
+    <ClCompile Include="src\Scripting\CPP\BehaviourPrimitive.cpp" />
+    <ClCompile Include="src\Scripting\CPP\MetaContext.cpp" />
     <ClCompile Include="src\Scripting\CSharp\CSharpAPI.cpp" />
     <ClCompile Include="src\Scripting\CSharp\MonoContext.cpp" />
     <ClCompile Include="src\stdafx.cpp">

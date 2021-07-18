@@ -1,32 +1,26 @@
 #include "stdafx.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/CppScriptComponent.h"
+#include "ECS/Components/CSharpScriptComponent.h"
 #include "ECS/Components/HeadComponent.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/WorldAdmin.h"
 
-#include "Scripting/BehaviourPrimitive.h"
+#include "Scripting/CPP/BehaviourPrimitive.h"
+#include "Scripting/CPP/MetaContext.h"
+#include "Scripting/CSharp/MonoContext.h"
 
 namespace SmolEngine
 {
 	bool ScriptingSystem::AttachNativeScript(Ref<Actor>& actor, const std::string& scriptName)
 	{
-		ScriptingSystemStateSComponent* instance = m_State;
-		if (instance == nullptr)
+		MetaContext* meta_context = m_State->m_MetaContext;
+		auto& it = meta_context->m_MetaMap.find(scriptName);
+		if (it == meta_context->m_MetaMap.end())
 			return false;
 
-		auto& it = instance->MetaMap.find(scriptName);
-		if (it == instance->MetaMap.end())
-			return false;
-
-		CppScriptComponent* component = nullptr;
-		if (!WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<CppScriptComponent>(actor))
-		{
-			component = WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<CppScriptComponent>(actor);
-			component->Actor = actor;
-		}
-		else
-			component = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<CppScriptComponent>(actor);
+		CppScriptComponent* component = GetOrCreateComponent<CppScriptComponent>(actor);
+		component->Actor = actor;
 
 		int32_t index = static_cast<int32_t>(actor->GetComponentsCount());
 		actor->GetInfo()->ComponentsCount++;
@@ -83,6 +77,23 @@ namespace SmolEngine
 		return true;
 	}
 
+	bool ScriptingSystem::AttachCSharpScript(Ref<Actor>& actor, const std::string& className)
+	{
+		MonoContext* mono = m_State->m_MonoContext;
+		bool class_found = std::find(mono->m_ClassNames.begin(), mono->m_ClassNames.end(), className) != mono->m_ClassNames.end();
+		if (class_found)
+		{
+			CSharpScriptComponent* component = GetOrCreateComponent<CSharpScriptComponent>(actor);
+			Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+
+			return true;
+		}
+
+
+
+		return false;
+	}
+
 	void ScriptingSystem::OnBeginWorld()
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
@@ -92,8 +103,7 @@ namespace SmolEngine
 		for (const auto& entity : view)
 		{
 			auto& behaviour = view.get<CppScriptComponent>(entity);
-			for (auto& script : behaviour.Scripts)
-				instance->MetaMap[script.KeyName].OnBeginFunc.invoke(script.Script);
+			m_State->m_MetaContext->OnBegin(&behaviour);
 		}
 	}
 
@@ -106,8 +116,7 @@ namespace SmolEngine
 		for (const auto& entity : view)
 		{
 			auto& behaviour = view.get<CppScriptComponent>(entity);
-			for (auto& script : behaviour.Scripts)
-				instance->MetaMap[script.KeyName].OnDestroyFunc.invoke(script.Script);
+			m_State->m_MetaContext->OnDestroy(&behaviour);
 		}
 	}
 
@@ -120,60 +129,41 @@ namespace SmolEngine
 		for (const auto& entity : view)
 		{
 			auto& behaviour = view.get<CppScriptComponent>(entity);
-			for (auto& script : behaviour.Scripts)
-				instance->MetaMap[script.KeyName].OnProcessFunc.invoke(script.Script, deltaTime.GetTime());
+			m_State->m_MetaContext->OnUpdate(&behaviour, deltaTime.GetTime());
 		}
 	}
 
 	void ScriptingSystem::OnDestroy(Actor* actor)
 	{
-		ScriptingSystemStateSComponent* instance = m_State;
-
-		CppScriptComponent* behaviour = WorldAdmin::GetSingleton()->GetActiveScene()->GetComponentEX<CppScriptComponent>(actor);
-		if (behaviour && instance)
-		{
-			for (auto& script : behaviour->Scripts)
-				instance->MetaMap[script.KeyName].OnDestroyFunc.invoke(script.Script);
-		}
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		CppScriptComponent* behaviour = scene->GetComponentEX<CppScriptComponent>(actor);
+		if (behaviour)
+			m_State->m_MetaContext->OnDestroy(behaviour);
 	}
 
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		auto admin = WorldAdmin::GetSingleton();
-		if (admin->GetActiveScene()->HasComponent<CppScriptComponent>(*actorB))
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		if (scene->HasComponent<CppScriptComponent>(*actorB))
 		{
-			ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-			CppScriptComponent* behaviour = admin->GetActiveScene()->GetComponent<CppScriptComponent>(*actorB);
-
-			for (auto& script : behaviour->Scripts)
-				instance->MetaMap[script.KeyName].OnCollBeginFunc.invoke(script.Script, actorA, isTrigger);
+			CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(*actorB);
+			m_State->m_MetaContext->OnCollisionBegin(comp, actorA, isTrigger);
 		}
 	}
 
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		auto admin = WorldAdmin::GetSingleton();
-		if (admin->GetActiveScene()->HasComponent<CppScriptComponent>(*actorB))
+		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		if (scene->HasComponent<CppScriptComponent>(*actorB))
 		{
-			ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
-			CppScriptComponent* behaviour = admin->GetActiveScene()->GetComponent<CppScriptComponent>(*actorB);
-
-			for (auto& script : behaviour->Scripts)
-				instance->MetaMap[script.KeyName].OnCollEndFunc.invoke(script.Script, actorA, isTrigger);
+			CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(*actorB);
+			instance->m_MetaContext->OnCollisionEnd(comp, actorA, isTrigger);
 		}
 	}
 
-	void ScriptingSystem::OnDebugDraw()
+	void ScriptingSystem::OnSceneReloaded(void* registry_)
 	{
-		entt::registry* reg = m_World->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = m_State;
-
-		const auto& view = reg->view<CppScriptComponent>();
-		for (const auto& entity : view)
-		{
-			auto& behaviour = view.get<CppScriptComponent>(entity);
-			for (auto& script : behaviour.Scripts)
-				instance->MetaMap[script.KeyName].OnDebugDrawFunc.invoke(script.Script);
-		}
+		m_State->m_MetaContext->OnSceneReloaded(registry_);
 	}
 }

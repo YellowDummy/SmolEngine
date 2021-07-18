@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SmolEngineCore.h"
-#include "Scripting/BehaviourPrimitive.h"
 
 namespace SmolEngine
 {

@@ -17,14 +17,10 @@ namespace SmolEngine
 	{
 	public:
 
-		// MeshComponent
 		static bool ValidateMeshComponent(MeshComponent* comp, const std::string& filePath, bool pooling = true);
 		static bool SetMeshMaterial(MeshComponent* comp, Mesh* mesh, const std::string& material_path);
 
-		//Texture
 		static bool ValidateTexture2DComponent(Texture2DComponent* comp, const std::string& filePath);
-
-		//Physics
 		static bool ValidateBody2DComponent(Rigidbody2DComponent* comp, Ref<Actor>& actor);
 		static bool ValidateRigidBodyComponent(RigidbodyComponent* comp, Ref<Actor>& actor);
 		static bool ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Ref<Actor>& actor);

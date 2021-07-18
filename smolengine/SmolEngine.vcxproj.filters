@@ -1611,7 +1611,7 @@
     <ClInclude Include="include\Physics\Bullet3\RigidBody.h">
       <Filter>include\Physics\Bullet3</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scripting\BehaviourPrimitive.h">
+    <ClInclude Include="include\Scripting\CPP\BehaviourPrimitive.h">
       <Filter>include\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="include\SmolEngineCore.h">
@@ -1629,6 +1629,7 @@
     <ClInclude Include="include\ECS\Components\CppScriptComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="include\Scripting\CPP\MetaContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">
@@ -1733,7 +1734,7 @@
     <ClCompile Include="src\Physics\Bullet3\RigidBody.cpp">
       <Filter>src\Physics\Bullet3</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripting\BehaviourPrimitive.cpp">
+    <ClCompile Include="src\Scripting\CPP\BehaviourPrimitive.cpp">
       <Filter>src\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
@@ -1743,5 +1744,6 @@
       <Filter>src\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\CSharpAPI.cpp" />
+    <ClCompile Include="src\Scripting\CPP\MetaContext.cpp" />
   </ItemGroup>
 </Project>

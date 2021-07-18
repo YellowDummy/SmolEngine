@@ -6,29 +6,17 @@
 
 namespace SmolEngine
 {
+	class MetaContext;
+	class MonoContext;
+
 	struct ScriptingSystemStateSComponent
 	{
 		ScriptingSystemStateSComponent();
 		~ScriptingSystemStateSComponent();
-
-		// Getters
 		static ScriptingSystemStateSComponent* GetSingleton();
 
-		struct MetaData
-		{
-			meta::any  ClassInstance;
-
-			meta::func OnBeginFunc;
-			meta::func OnProcessFunc;
-			meta::func OnDestroyFunc;
-
-			meta::func OnCollBeginFunc;
-			meta::func OnCollEndFunc;
-			meta::func OnDebugDrawFunc;
-		};
-
-		std::hash<std::string_view>                    Hash{};
-		std::unordered_map<std::string, MetaData>      MetaMap;
+		MetaContext* m_MetaContext = nullptr;
+		MonoContext* m_MonoContext = nullptr;
 
 	private:
 		inline static ScriptingSystemStateSComponent* Instance = nullptr;

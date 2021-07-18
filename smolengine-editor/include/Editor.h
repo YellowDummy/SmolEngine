@@ -12,11 +12,11 @@ namespace SmolEngine
 
 		~Editor();
 
-		void SetGraphicsContext(GraphicsContextInitInfo* info) override;
-		void SetPhysics2DContext(Physics2DContextCreateInfo* info)override;
-		void SetLayers(LayerManager* layerManager) override;
-		void SetScripts(ScriptingSystem* scriptingSytem) override;
-		void SetWorldAdminState(WorldAdminStateSComponent* state) override;
+		void OnGraphicsModuleCreation(GraphicsContextInitInfo* info) override;
+		void OnPhysicsModuleCreation(PhysicsModuleCreateInfo* info) override;
+		void OnLayerModuleCreation(LayerManager* layerManager) override;
+		void OnScriptModuleCreation(ScriptingSystem* scriptingSytem) override;
+		void OnWorldAdminModuleCreation(WorldAdminStateSComponent* state) override;
 
 	private:
 

@@ -105,6 +105,7 @@ namespace SmolEngine
 		friend class CollisionListener2D;
 		friend class ScriptingSystem;
 		friend class WorldAdmin;
+		friend class MetaContext;
 		friend class Scene;
 	};
 }

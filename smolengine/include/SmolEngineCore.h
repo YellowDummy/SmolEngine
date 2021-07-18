@@ -23,4 +23,4 @@
 #include <Frostium3D/Common/SLog.h>
 #include <Frostium3D/Common/Input.h>
 
-#include "Scripting/BehaviourPrimitive.h"
+#include "Scripting/CPP/BehaviourPrimitive.h"
