@@ -36,8 +36,8 @@ namespace SmolEngine
 		name += "_name";
 		tag += "_tag";
 
-		obj->Name = mono_string_new(MonoContext::GetSingleton()->m_Domain, name.c_str());
-		obj->Tag = mono_string_new(MonoContext::GetSingleton()->m_Domain, tag.c_str());
+		obj->Name = mono_string_new(MonoContext::GetSingleton()->GetDomain(), name.c_str());
+		obj->Tag = mono_string_new(MonoContext::GetSingleton()->GetDomain(), tag.c_str());
 
 		return true;
 	}

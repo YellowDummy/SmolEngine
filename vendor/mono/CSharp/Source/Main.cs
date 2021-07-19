@@ -4,7 +4,31 @@ namespace SmolEngine
 {
     public class GameLogic : BehaviourPrimitive
     {
+        private void OnBegin()
+        {
 
+        }
+
+        private void OnUpdate()
+        {
+
+        }
+
+        private void OnDestroy()
+        {
+
+        }
+
+        // Optional
+        private void OnCollisionBegin(uint another_id, bool is_trigger)
+        {
+
+        }
+
+        private void OnCollisionEnd(uint another_id, bool is_trigger)
+        {
+
+        }
     }
 
 

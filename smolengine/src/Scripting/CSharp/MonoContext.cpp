@@ -2,6 +2,8 @@
 #include "Scripting/CSharp/MonoContext.h"
 #include "Scripting/CSharp/CSharpAPI.h"
 
+#include "ECS/Components/CSharpScriptComponent.h"
+
 #include <mono/metadata/assembly.h>
 #include <mono/jit/jit.h>
 #include <mono/utils/mono-counters.h>
@@ -40,7 +42,11 @@ namespace SmolEngine
 
 		s_Instance = this;
 		m_RootDomain = mono_jit_init("CSharp_Domain");
+		Create();
+	}
 
+	void MonoContext::Create()
+	{
 		LoadDomain();
 		LoadMonoImage();
 		LoadAssembly();
@@ -55,8 +61,8 @@ namespace SmolEngine
 			mono_domain_finalize(m_Domain, 2000);
 			mono_domain_unload(m_Domain);
 
-			m_DefaultClasses.clear();
-			m_ClassNames.clear();
+			m_InternalClasses.clear();
+			m_MetaMap.clear();
 			m_Domain = nullptr;
 			m_CSharpAssembly = nullptr;
 			m_Image = nullptr;
@@ -73,6 +79,16 @@ namespace SmolEngine
 		return s_Instance;
 	}
 
+	MonoDomain* MonoContext::GetDomain()
+	{
+		return m_Domain;
+	}
+
+	void MonoContext::SetOnReloadCallback(const std::function<void()>& callback)
+	{
+		m_Callback = callback;
+	}
+
 	void MonoContext::Track()
 	{
 		std::filesystem::path p(m_DLLPath);
@@ -83,6 +99,8 @@ namespace SmolEngine
 			{
 				NATIVE_INFO("C# module: Reloading...");
 				OnRecompilation();
+				if (m_Callback != nullptr)
+					m_Callback();
 				NATIVE_INFO("C# module: Reloading complete!");
 			}
 		}
@@ -91,15 +109,13 @@ namespace SmolEngine
 	void MonoContext::OnRecompilation()
 	{
 		Shutdown();
-		LoadDomain();
-		LoadMonoImage();
-		LoadAssembly();
+		Create();
 	}
 
 	void MonoContext::RunTest()
 	{
 		{
-			MonoClass* m_class = m_DefaultClasses[ClassDefs::UnitTests];
+			MonoClass* m_class = m_InternalClasses[ClassDefs::UnitTests];
 			MonoMethod* method = mono_class_get_method_from_name(m_class, "CallMe", 2);
 			MonoObject* instance = mono_object_new(m_Domain, m_class);
 			mono_runtime_object_init(instance);
@@ -118,10 +134,10 @@ namespace SmolEngine
 		}
 
 		{
-			MonoObject* instance = mono_object_new(m_Domain, m_DefaultClasses[ClassDefs::BehaviourPrimitive]);
+			MonoObject* instance = mono_object_new(m_Domain, m_InternalClasses[ClassDefs::BehaviourPrimitive]);
 			mono_runtime_object_init(instance);
 
-			auto field = mono_class_get_field_from_name(m_DefaultClasses[ClassDefs::BehaviourPrimitive], "ID");
+			auto field = mono_class_get_field_from_name(m_InternalClasses[ClassDefs::BehaviourPrimitive], "ID");
 			if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_U4) // uint32
 			{
 				uint32_t id = 222;
@@ -154,7 +170,7 @@ namespace SmolEngine
 		std::vector<uint8_t> data((std::istreambuf_iterator<char>(instream)), std::istreambuf_iterator<char>());
 
 		m_Image = mono_image_open_from_data_with_name(
-			(char*)&data[0], data.size(),
+			(char*)&data[0], static_cast<uint32_t>(data.size()),
 			true, &status, false,
 			"SmolEngine");
 
@@ -170,7 +186,7 @@ namespace SmolEngine
 		{
 			instream = std::ifstream(pdbPath.c_str(), std::ios::in | std::ios::binary);
 			data = std::vector<uint8_t>((std::istreambuf_iterator<char>(instream)), std::istreambuf_iterator<char>());
-			mono_debug_open_image_from_memory(m_Image, &data[0], data.size());
+			mono_debug_open_image_from_memory(m_Image, &data[0], static_cast<uint32_t>(data.size()));
 		}
 
 	}
@@ -180,6 +196,95 @@ namespace SmolEngine
 		std::string name = "SmolEngine.ScriptsDomain";
 		m_Domain = mono_domain_create_appdomain((char*)name.c_str(), NULL);
 		mono_domain_set(m_Domain, false);
+	}
+
+	void* MonoContext::CreateClassInstance(const std::string& class_name)
+	{
+		auto& it = m_MetaMap.find(class_name);
+		if (it != m_MetaMap.end())
+		{
+			const MonoContext::MetaData& meta = it->second;
+			MonoObject* instance = mono_object_new(m_Domain, meta.pClass);
+			mono_runtime_object_init(instance);
+			return instance;
+		}
+
+		return nullptr;
+	}
+
+	void* MonoContext::GetMethod(const char* signature, const char* class_name, MonoClass* p_class)
+	{
+		std::stringstream ss;
+		ss << class_name << ":" << signature;
+		MonoMethodDesc* desc = mono_method_desc_new(ss.str().c_str(), NULL);
+		MonoMethod* method = mono_method_desc_search_in_class(desc, p_class);
+
+		mono_method_desc_free(desc);
+		return method;
+	}
+
+	void MonoContext::OnBegin(const CSharpScriptComponent* comp)
+	{
+		const MonoContext::MetaData* meta = GetMeta(comp);
+		if (meta != nullptr)
+		{
+			MonoObject* instance = (MonoObject*)comp->ClassInstance;
+			MonoObject* result = mono_runtime_invoke(meta->pOnBegin, instance, NULL, NULL);
+		}
+	}
+
+	void MonoContext::OnUpdate(const CSharpScriptComponent* comp)
+	{
+		const MonoContext::MetaData* meta = GetMeta(comp);
+		if (meta != nullptr)
+		{
+			MonoObject* instance = (MonoObject*)comp->ClassInstance;
+			MonoObject* result = mono_runtime_invoke(meta->pOnUpdate, instance, NULL, NULL);
+		}
+	}
+
+	void MonoContext::OnInternalUpdate(float delta)
+	{
+
+	}
+
+	void MonoContext::OnDestroy(const CSharpScriptComponent* comp)
+	{
+		const MonoContext::MetaData* meta = GetMeta(comp);
+		if (meta != nullptr)
+		{
+			MonoObject* instance = (MonoObject*)comp->ClassInstance;
+			MonoObject* result = mono_runtime_invoke(meta->pOnDestroy, instance, NULL, NULL);
+		}
+	}
+
+	void MonoContext::OnCollisionBegin(const CSharpScriptComponent* comp, Actor* another, bool isTrigger)
+	{
+
+	}
+
+	void MonoContext::OnCollisionEnd(const CSharpScriptComponent* comp, Actor* another, bool isTrigger)
+	{
+
+	}
+
+	void MonoContext::OnReload(CSharpScriptComponent* comp)  /* scene reload */
+	{
+
+	}
+
+	const MonoContext::MetaData* MonoContext::GetMeta(const CSharpScriptComponent* comp) const
+	{
+		if (comp->ClassInstance != nullptr)
+		{
+			auto& it = m_MetaMap.find(comp->ClassName);
+			if (it != m_MetaMap.end())
+			{
+				return &it->second;
+			}
+		}
+
+		return nullptr;
 	}
 
 	void MonoContext::LoadAssembly(bool is_initialization)
@@ -206,15 +311,14 @@ namespace SmolEngine
 
 	void MonoContext::ResolveClasses()
 	{
-		m_DefaultClasses[ClassDefs::Actor] = mono_class_from_name(m_Image, "SmolEngine", "Actor");
-		m_DefaultClasses[ClassDefs::BehaviourPrimitive] = mono_class_from_name(m_Image, "SmolEngine", "BehaviourPrimitive");
-		m_DefaultClasses[ClassDefs::UnitTests] = mono_class_from_name(m_Image, "SmolEngine", "Tests");
+		m_InternalClasses[ClassDefs::Actor] = mono_class_from_name(m_Image, "SmolEngine", "Actor");
+		m_InternalClasses[ClassDefs::BehaviourPrimitive] = mono_class_from_name(m_Image, "SmolEngine", "BehaviourPrimitive");
+		m_InternalClasses[ClassDefs::UnitTests] = mono_class_from_name(m_Image, "SmolEngine", "Tests");
 	}
 
-	/* Get all classes and namespaces */
 	void MonoContext::ResolveMeta()
 	{
-		MonoClass* b_class = m_DefaultClasses[ClassDefs::BehaviourPrimitive];
+		MonoClass* b_class = m_InternalClasses[ClassDefs::BehaviourPrimitive];
 		const char* b_class_name = mono_class_get_name(b_class);
 		const char* b_class_name_space = mono_class_get_namespace(b_class);
 		 
@@ -224,19 +328,30 @@ namespace SmolEngine
 		/* For each row, get some of its values */
 		for (int i = 0; i < rows; i++)
 		{
-			MonoClass* _class = nullptr;
 			uint32_t cols[MONO_TYPEDEF_SIZE];
 			mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
 			const char* name = mono_metadata_string_heap(m_Image, cols[MONO_TYPEDEF_NAME]);
 			const char* name_space = mono_metadata_string_heap(m_Image, cols[MONO_TYPEDEF_NAMESPACE]);
-
 			bool is_same = strcmp(name, b_class_name) == 0 && strcmp(name_space, b_class_name_space) == 0;
+
 			if (is_same == false)
 			{
 				MonoClass* mono_class = mono_class_from_name(m_Image, name_space, name);
 				if (mono_class_is_subclass_of(mono_class, b_class, false))
 				{
-					m_ClassNames.emplace_back(name);
+					MonoContext::MetaData meta = {};
+
+					meta.pClass = mono_class;
+					meta.pOnBegin = (MonoMethod*)GetMethod("OnBegin()", name, mono_class);
+					meta.pOnDestroy = (MonoMethod*)GetMethod("OnDestroy()", name, mono_class);
+					meta.pOnUpdate = (MonoMethod*)GetMethod("OnUpdate()", name, mono_class);
+					meta.pOnCollisionBegin = (MonoMethod*)GetMethod("OnCollisionBegin (uint,bool)", name, mono_class);
+					meta.pOnCollisionEnd = (MonoMethod*)GetMethod("OnCollisionEnd (uint,bool)", name, mono_class);
+
+					if (meta.pOnBegin && meta.pOnDestroy && meta.pOnUpdate)
+					{
+						m_MetaMap[name] = std::move(meta);
+					}
 				}
 			}
 		}

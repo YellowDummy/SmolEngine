@@ -18,8 +18,8 @@ public:
 
 private:
 
-	float* m_Speed = nullptr;
-	float* m_CameraSpeed = nullptr;
+	float*     m_Speed = nullptr;
+	float*     m_CameraSpeed = nullptr;
 
 	float      m_Yaw = 0;
 	float      m_Pitch = 0.0f;

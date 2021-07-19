@@ -9,7 +9,7 @@ The engine is still at a very early stage and is not ready for production.
 - Custom [graphics engine](https://github.com/YellowDummy/Frostium3D)
 - Data-Oriented Entity Component System
 - Full-featured Level Editor
-- C++/C# (Mono) Scripting
+- C#/C++ Scripting
 - 2D/3D physics engines (Box2D/Bullet3)
 - Audio (FMOD)
 - Materials

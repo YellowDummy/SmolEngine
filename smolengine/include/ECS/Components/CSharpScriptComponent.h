@@ -4,8 +4,6 @@
 
 #include <cereal/cereal.hpp>
 
-typedef struct _MonoClass MonoClass;
-
 namespace SmolEngine
 {
 	struct CSharpScriptComponent : public BaseComponent
@@ -14,7 +12,7 @@ namespace SmolEngine
 		CSharpScriptComponent(uint32_t id)
 			: BaseComponent(id) {}
 
-		MonoClass*  ClassInstance = nullptr;
+		void*       ClassInstance = nullptr;
 		std::string ClassName = "";
 
 	private:

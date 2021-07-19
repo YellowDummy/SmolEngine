@@ -71,7 +71,7 @@ namespace SmolEngine
 		void OnDestroy(CppScriptComponent* comp);
 		void OnCollisionBegin(CppScriptComponent* comp, Actor* another, bool isTrigger);
 		void OnCollisionEnd(CppScriptComponent* comp, Actor* another, bool isTrigger);
-		void OnSceneReloaded(void* registry_);
+		void OnReload(CppScriptComponent* comp);
 
 	private:;
 

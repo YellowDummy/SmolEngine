@@ -53,70 +53,63 @@ namespace SmolEngine
 		}
 	}
 
-	void MetaContext::OnSceneReloaded(void* registry_)
+	void MetaContext::OnReload(CppScriptComponent* comp)
 	{
-		entt::registry* registry = static_cast<entt::registry*>(registry_);
-
-		const auto& view = registry->view<CppScriptComponent>();
-		for (const auto& entity : view)
+		if (!comp->Actor)
 		{
-			auto& behaviour = view.get<CppScriptComponent>(entity);
-			if (!behaviour.Actor)
+			NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
+			return;
+		}
+
+		for (auto& script :comp->Scripts)
+		{
+			auto& it = m_MetaMap.find(script.KeyName);
+			if (it == m_MetaMap.end())
 			{
-				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
+				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Script {} not found!", script.KeyName);
 				continue;
 			}
 
-			for (auto& script : behaviour.Scripts)
+			script.Script = it->second.ClassInstance;
+			auto& primitive = script.Script.cast<BehaviourPrimitive>();
+			primitive.m_Actor = comp->Actor.get();
+
+			auto& s_it = comp->OutValues.find(script.KeyName);
+			if (s_it == comp->OutValues.end())
+				continue;
+
+			for (auto& valueInt : s_it->second.Ints)
 			{
-				auto& it = m_MetaMap.find(script.KeyName);
-				if (it == m_MetaMap.end())
+				for (auto& primitiveValue : primitive.m_OutValues)
 				{
-					NATIVE_ERROR("ScriptingSystem::ReloadScripts::Script {} not found!", script.KeyName);
-					continue;
-				}
-
-				script.Script = it->second.ClassInstance;
-				auto& primitive = script.Script.cast<BehaviourPrimitive>();
-				primitive.m_Actor = behaviour.Actor.get();
-
-				auto& s_it = behaviour.OutValues.find(script.KeyName);
-				if (s_it == behaviour.OutValues.end())
-					continue;
-
-				for (auto& valueInt : s_it->second.Ints)
-				{
-					for (auto& primitiveValue : primitive.m_OutValues)
+					if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Int)
 					{
-						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Int)
-						{
-							if (valueInt.Name == primitiveValue.ValueName)
-								primitiveValue.Ptr = &valueInt.Value;
-						}
+						if (valueInt.Name == primitiveValue.ValueName)
+							primitiveValue.Ptr = &valueInt.Value;
 					}
 				}
+			}
 
-				for (auto& valueFloat : s_it->second.Floats)
+			for (auto& valueFloat : s_it->second.Floats)
+			{
+				for (auto& primitiveValue : primitive.m_OutValues)
 				{
-					for (auto& primitiveValue : primitive.m_OutValues)
+					if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Float)
 					{
-						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Float)
-						{
-							if (valueFloat.Name == primitiveValue.ValueName)
-								primitiveValue.Ptr = &valueFloat.Value;
-						}
+						if (valueFloat.Name == primitiveValue.ValueName)
+							primitiveValue.Ptr = &valueFloat.Value;
 					}
 				}
+			}
 
-				for (auto& valueString : s_it->second.Strings)
+			for (auto& valueString : s_it->second.Strings)
+			{
+				for (auto& primitiveValue : primitive.m_OutValues)
 				{
-					for (auto& primitiveValue : primitive.m_OutValues)
+					if (primitiveValue.Type == BehaviourPrimitive::OutValueType::String)
 					{
-						if (primitiveValue.Type == BehaviourPrimitive::OutValueType::String)
-						{
-							if (valueString.Name == primitiveValue.ValueName)
-								primitiveValue.Ptr = &valueString.Value;
-						}
+						if (valueString.Name == primitiveValue.ValueName)
+							primitiveValue.Ptr = &valueString.Value;
 					}
 				}
 			}

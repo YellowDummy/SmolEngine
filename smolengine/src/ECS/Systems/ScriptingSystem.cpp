@@ -12,6 +12,9 @@
 
 namespace SmolEngine
 {
+	// 19.07.2021
+	// TODO: create interface 
+
 	bool ScriptingSystem::AttachNativeScript(Ref<Actor>& actor, const std::string& scriptName)
 	{
 		MetaContext* meta_context = m_State->m_MetaContext;
@@ -80,16 +83,17 @@ namespace SmolEngine
 	bool ScriptingSystem::AttachCSharpScript(Ref<Actor>& actor, const std::string& className)
 	{
 		MonoContext* mono = m_State->m_MonoContext;
-		bool class_found = std::find(mono->m_ClassNames.begin(), mono->m_ClassNames.end(), className) != mono->m_ClassNames.end();
-		if (class_found)
+		auto& it = mono->m_MetaMap.find(className);
+		if (it != mono->m_MetaMap.end())
 		{
 			CSharpScriptComponent* component = GetOrCreateComponent<CSharpScriptComponent>(actor);
-			Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-
-			return true;
+			if (component->ClassInstance == nullptr)
+			{
+				component->ClassName = className;
+				component->ClassInstance = mono->CreateClassInstance(className);
+				return component->ClassInstance != nullptr;
+			}
 		}
-
-
 
 		return false;
 	}
@@ -99,11 +103,23 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<CppScriptComponent>();
-		for (const auto& entity : view)
+		// C++
 		{
-			auto& behaviour = view.get<CppScriptComponent>(entity);
-			m_State->m_MetaContext->OnBegin(&behaviour);
+			const auto& view = reg->view<CppScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CppScriptComponent>(entity);
+				m_State->m_MetaContext->OnBegin(&behaviour);
+			}
+		}
+		// C#
+		{
+			const auto& view = reg->view<CSharpScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CSharpScriptComponent>(entity);
+				m_State->m_MonoContext->OnBegin(&behaviour);
+			}
 		}
 	}
 
@@ -112,11 +128,23 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<CppScriptComponent>();
-		for (const auto& entity : view)
+		// C++
 		{
-			auto& behaviour = view.get<CppScriptComponent>(entity);
-			m_State->m_MetaContext->OnDestroy(&behaviour);
+			const auto& view = reg->view<CppScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CppScriptComponent>(entity);
+				m_State->m_MetaContext->OnDestroy(&behaviour);
+			}
+		}
+		// C#
+		{
+			const auto& view = reg->view<CSharpScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CSharpScriptComponent>(entity);
+				m_State->m_MonoContext->OnDestroy(&behaviour);
+			}
 		}
 	}
 
@@ -125,45 +153,105 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		ScriptingSystemStateSComponent* instance = m_State;
 
-		const auto& view = reg->view<CppScriptComponent>();
-		for (const auto& entity : view)
+		// C++
 		{
-			auto& behaviour = view.get<CppScriptComponent>(entity);
-			m_State->m_MetaContext->OnUpdate(&behaviour, deltaTime.GetTime());
+			const auto& view = reg->view<CppScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CppScriptComponent>(entity);
+				m_State->m_MetaContext->OnUpdate(&behaviour, deltaTime.GetTime());
+			}
 		}
+		// C#
+		{
+			m_State->m_MonoContext->OnInternalUpdate(deltaTime.GetTime());
+
+			const auto& view = reg->view<CSharpScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CSharpScriptComponent>(entity);
+				m_State->m_MonoContext->OnUpdate(&behaviour);
+			}
+		}
+
 	}
 
 	void ScriptingSystem::OnDestroy(Actor* actor)
 	{
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-		CppScriptComponent* behaviour = scene->GetComponentEX<CppScriptComponent>(actor);
-		if (behaviour)
-			m_State->m_MetaContext->OnDestroy(behaviour);
+
+		// C++
+		{
+			CppScriptComponent* behaviour = scene->GetComponentEX<CppScriptComponent>(actor);
+			if (behaviour)
+				m_State->m_MetaContext->OnDestroy(behaviour);
+		}
+		// C#
+		{
+			CSharpScriptComponent* behaviour = scene->GetComponentEX<CSharpScriptComponent>(actor);
+			if (behaviour)
+				m_State->m_MonoContext->OnDestroy(behaviour);
+		}
+
 	}
 
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-		if (scene->HasComponent<CppScriptComponent>(*actorB))
+
+		// C++
 		{
-			CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(*actorB);
-			m_State->m_MetaContext->OnCollisionBegin(comp, actorA, isTrigger);
+			if (scene->HasComponent<CppScriptComponent>(*actorB))
+			{
+				CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(*actorB);
+				m_State->m_MetaContext->OnCollisionBegin(comp, actorA, isTrigger);
+			}
+		}
+		// C#
+		{
+			if (scene->HasComponent<CSharpScriptComponent>(*actorB))
+			{
+				CSharpScriptComponent* comp = scene->GetComponent<CSharpScriptComponent>(*actorB);
+				m_State->m_MonoContext->OnCollisionBegin(comp, actorA, isTrigger);
+			}
 		}
 	}
 
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
-		ScriptingSystemStateSComponent* instance = ScriptingSystemStateSComponent::GetSingleton();
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-		if (scene->HasComponent<CppScriptComponent>(*actorB))
+
+		// C++
 		{
-			CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(*actorB);
-			instance->m_MetaContext->OnCollisionEnd(comp, actorA, isTrigger);
+			if (scene->HasComponent<CppScriptComponent>(*actorB))
+			{
+				CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(*actorB);
+				m_State->m_MetaContext->OnCollisionEnd(comp, actorA, isTrigger);
+			}
+		}
+		// C#
+		{
+			if (scene->HasComponent<CSharpScriptComponent>(*actorB))
+			{
+				CSharpScriptComponent* comp = scene->GetComponent<CSharpScriptComponent>(*actorB);
+				m_State->m_MonoContext->OnCollisionEnd(comp, actorA, isTrigger);
+			}
 		}
 	}
 
 	void ScriptingSystem::OnSceneReloaded(void* registry_)
 	{
-		m_State->m_MetaContext->OnSceneReloaded(registry_);
+		entt::registry* registry = static_cast<entt::registry*>(registry_);
+
+		// C++
+		{
+			const auto& view = registry->view<CppScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CppScriptComponent>(entity);
+				m_State->m_MetaContext->OnReload(&behaviour);
+			}
+		}
+
 	}
 }
