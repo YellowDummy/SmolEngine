@@ -23,37 +23,39 @@ namespace SmolEngine
 	class Actor;
 	struct CSharpScriptComponent;
 
-	enum class ClassDefs
-	{
-		BehaviourPrimitive,
-		Actor,
-		UnitTests
-	};
-
 	class MonoContext
 	{
 	public:
 		MonoContext();
 
-		void                         Create();
-		void                         Shutdown();
-		void                         Track();
-		bool                         IsRunning();
-		static MonoContext*          GetSingleton();
-		MonoDomain*                  GetDomain();
-		void                         SetOnReloadCallback(const std::function<void()>& callback);
+		void                        Create();
+		void                        Shutdown();
+		void                        Track();
+		bool                        IsRunning();
+		static MonoContext*         GetSingleton();
+		MonoDomain*                 GetDomain();
+		void                        SetOnReloadCallback(const std::function<void()>& callback);
 							
 	private:
-		struct MetaData
+		enum class InternalClassType
 		{
-			MonoClass*               pClass = nullptr;
-			MonoMethod*              pOnUpdate = nullptr;
-			MonoMethod*              pOnBegin = nullptr;
-			MonoMethod*              pOnDestroy = nullptr;
-			MonoMethod*              pOnCollisionBegin = nullptr;
-			MonoMethod*              pOnCollisionEnd = nullptr;
+			BehaviourPrimitive,
+			Actor,
+			Input,
+			Log,
+			UnitTests
 		};
 
+		struct MetaData
+		{
+			MonoClass*              pClass = nullptr;
+			MonoMethod*             pOnUpdate = nullptr;
+			MonoMethod*             pOnBegin = nullptr;
+			MonoMethod*             pOnDestroy = nullptr;
+			MonoMethod*             pOnCollisionBegin = nullptr;
+			MonoMethod*             pOnCollisionEnd = nullptr;
+		};				
+									                 
 		void                         LoadAssembly(bool is_initialization = false);
 		void                         ResolveFunctions();
 		void                         ResolveClasses();
@@ -73,20 +75,20 @@ namespace SmolEngine
 		void                         OnCollisionEnd(const CSharpScriptComponent* comp, Actor* another, bool isTrigger);
 		void                         OnReload(CSharpScriptComponent* comp);  /* scene reload */
 		const MonoContext::MetaData* GetMeta(const CSharpScriptComponent* comp) const;
-	
 												  
 	private:		       
-		inline static MonoContext*                   s_Instance = nullptr;
-		MonoDomain*                                  m_Domain = nullptr;
-		MonoDomain*                                  m_RootDomain = nullptr;
-		MonoAssembly*                                m_CSharpAssembly = nullptr;
-		MonoImage*                                   m_Image = nullptr;
-		std::function<void()>                        m_Callback = nullptr;
-		std::string                                  m_DLLPath = "../vendor/mono/CSharp/Debug/CSharp.dll";
-		std::filesystem::file_time_type              m_LastWriteTime;
-		std::unordered_map<std::string, MetaData>    m_MetaMap;
-		std::unordered_map<ClassDefs, MonoClass*>    m_InternalClasses;
+		inline static MonoContext*                        s_Instance = nullptr;
+		MonoDomain*                                       m_Domain = nullptr;
+		MonoDomain*                                       m_RootDomain = nullptr;
+		MonoAssembly*                                     m_CSharpAssembly = nullptr;
+		MonoImage*                                        m_Image = nullptr;
+		std::function<void()>                             m_Callback = nullptr;
+		std::string                                       m_DLLPath = "../vendor/mono/CSharp/Debug/CSharp.dll";
+		std::filesystem::file_time_type                   m_LastWriteTime;
+		std::unordered_map<std::string, MetaData>         m_MetaMap;
+		std::unordered_map<InternalClassType, MonoClass*> m_InternalClasses;
 
 		friend class ScriptingSystem;
+		friend class EditorLayer;
 	};   
 }

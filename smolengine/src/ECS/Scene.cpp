@@ -64,7 +64,7 @@ namespace SmolEngine
 		const auto searchNameResult = m_State->ActorNameSet.find(name);
 		if (searchNameResult != m_State->ActorNameSet.end())
 		{
-			NATIVE_ERROR("Actor {} already exist!", name);
+			NATIVE_ERROR("[Scene]: Actor {} already exist!", name);
 			return nullptr;
 		}
 
@@ -204,7 +204,7 @@ namespace SmolEngine
 			return true;
 		}
 
-		NATIVE_ERROR(std::string("Could not write to a file!"));
+		NATIVE_ERROR("[Scene]: Could not write to a file!");
 		return false;
 	}
 
@@ -214,7 +214,7 @@ namespace SmolEngine
 		std::stringstream buffer;
 		if (!file)
 		{
-			NATIVE_ERROR("Could not open the file: {}", filePath);
+			NATIVE_ERROR("[Scene]: Could not open the file: {}", filePath);
 			return false;
 		}
 		// Copying file content to a buffer

@@ -36,6 +36,9 @@ namespace SmolEngine
 		static void OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger);
 		static void OnSceneReloaded(void* registry_);
 
+		static void CreateScripts();
+		static void ClearScripts();
+
 		template<typename T>
 		static T* GetOrCreateComponent(Ref<Actor>& actor)
 		{

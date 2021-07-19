@@ -20,6 +20,8 @@
 #include "ECS/Components/Singletons/Bullet3WorldSComponent.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 
+#include "Scripting/CSharp/MonoContext.h"
+
 #include <Frostium3D/DeferredRenderer.h>
 #include <Frostium3D/Renderer2D.h>
 #include <Frostium3D/MaterialLibrary.h>
@@ -35,6 +37,8 @@ namespace SmolEngine
 	{
 		s_World = this;
 		LoadStaticComponents();
+
+		MonoContext::GetSingleton()->SetOnReloadCallback(std::bind_front(&WorldAdmin::OnHotReload, this));
 		m_State->m_InPlayMode = false;
 	}
 
@@ -42,7 +46,6 @@ namespace SmolEngine
 	{
 		Scene* scene = GetActiveScene();
 		scene->CalculateRelativePositions();
-		SceneStateComponent* sceneState = scene->GetSceneState();
 
 		Physics2DSystem::OnBeginWorld();
 		PhysicsSystem::OnBeginWorld();
@@ -115,6 +118,11 @@ namespace SmolEngine
 		if (!m_State->m_InPlayMode) { return; }
 	}
 
+	void WorldAdmin::OnHotReload()
+	{
+
+	}
+
 	void WorldAdmin::ReloadAssets()
 	{
 		Scene* activeScene = GetActiveScene();
@@ -139,7 +147,7 @@ namespace SmolEngine
 		std::ifstream file(path);
 		if (!file)
 		{
-			NATIVE_ERROR("Could not open the file: {}", path);
+			NATIVE_ERROR("[WorldAdmin]: Could not open the file: {}", path);
 			return false;
 		}
 
@@ -208,7 +216,7 @@ namespace SmolEngine
 			}
 
 			ReloadAssets();
-			NATIVE_WARN(is_reload ? "Scene reloaded successfully" : "Scene loaded successfully");
+			NATIVE_WARN(is_reload ? "[WorldAdmin]: Scene reloaded successfully" : "[WorldAdmin]: Scene loaded successfully");
 			return true;
 		}
 

@@ -30,15 +30,8 @@ namespace SmolEngine
 	{
 	public:
 
-		EditorConsole()
-		{
-			s_Instance = this;
-		}
-
-		~EditorConsole()
-		{
-			s_Instance = nullptr;
-		}
+		EditorConsole() { s_Instance = this; }
+		~EditorConsole() { s_Instance = nullptr; }
 
 		void Update(bool& enabled)
 		{
@@ -93,35 +86,18 @@ namespace SmolEngine
 
 			switch (logLevel)
 			{
-			case LogLevel::Info:
-			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << message;
-				msg.Text = oss.str();
-				msg.Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-				m_Messages.push_back(msg);
-				break;
-			}
-			case LogLevel::Warn:
-			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << message;
-				msg.Text = oss.str();
-				msg.Color = ImVec4{ 2.2f, 1.2f, 0.1f, 1.0f };
-				m_Messages.push_back(msg);
-				break;
-			}
-			case LogLevel::Error:
-			{
-				oss << "[" << hour << ":" << min << ":" << second << "] " << message;
-				msg.Text = oss.str();
-				msg.Color = ImVec4{ 0.99f, 0.1f, 0.1f, 1.0f };
-				m_Messages.push_back(msg);
-				break;
+			case LogLevel::Info: msg.Color = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f }; break;
+			case LogLevel::Warn: msg.Color = ImVec4{ 2.2f, 1.2f, 0.1f, 1.0f }; break;
+			case LogLevel::Error: msg.Color = ImVec4{ 0.99f, 0.1f, 0.1f, 1.0f }; break;
 			}
 
-			default:
-				NATIVE_WARN("Message wasn't added to the console!");
-				break;
-			}
+			bool ext_found = message.find("[") != std::string::npos && message.find("]") != std::string::npos;
+			oss << "[" << hour << ":" << min << ":" << second << "] ";
+			if (ext_found == false) { oss << "[Core]: "; }
+
+			oss << message;
+			msg.Text = oss.str();
+			m_Messages.push_back(msg);
 		}
 
 		void AddMessageInfo(const std::string& message)

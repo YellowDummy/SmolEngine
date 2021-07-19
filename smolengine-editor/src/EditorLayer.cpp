@@ -648,7 +648,15 @@ namespace SmolEngine
 
 					ImGui::SameLine();
 					if (ImGui::Button("Add C++ Script"))
+					{
 						ImGui::OpenPopup("AddCScriptPopUp");
+					}
+
+					ImGui::SameLine();
+					if (ImGui::Button("Add C# Script"))
+					{
+						ImGui::OpenPopup("AddCSharpScriptPopUp");
+					}
 
 					DrawScriptPopUp();
 					DrawComponentPopUp();
@@ -1253,6 +1261,23 @@ namespace SmolEngine
 			}
 			ImGui::EndPopup();
 		}
+
+		if (ImGui::BeginPopup("AddCSharpScriptPopUp"))
+		{
+			ImGui::MenuItem("New Script", NULL, false, false);
+			ImGui::Separator();
+			auto& meta_map = ScriptingSystemStateSComponent::GetSingleton()->m_MonoContext->m_MetaMap;
+			for (const auto& [name, meta] : meta_map)
+			{
+				if (ImGui::MenuItem(name.c_str()))
+				{
+					ScriptingSystem::AttachCSharpScript(m_SelectedActor, name);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	bool EditorLayer::FileExtensionCheck(std::string& path, const std::string& ext)
@@ -1277,9 +1302,11 @@ namespace SmolEngine
 
 	void EditorLayer::DrawScriptComponent(uint32_t index)
 	{
-		if (m_World->GetActiveScene()->HasComponent<CppScriptComponent>(m_SelectedActor))
+		Scene* scene = m_World->GetActiveScene();
+
+		if (scene->HasComponent<CppScriptComponent>(m_SelectedActor))
 		{
-			CppScriptComponent* comp = m_World->GetActiveScene()->GetComponent<CppScriptComponent>(m_SelectedActor);
+			CppScriptComponent* comp = scene->GetComponent<CppScriptComponent>(m_SelectedActor);
 			std::string scriptName = "";
 			CppScriptComponent::OutData* data = nullptr;
 			for (auto& [name, container] : comp->OutValues)
@@ -1312,6 +1339,23 @@ namespace SmolEngine
 					ImGui::Extensions::InputRawString(str.Name, str.Value, "Value");
 
 				ImGui::NewLine();
+			}
+		}
+
+		if (scene->HasComponent<CSharpScriptComponent>(m_SelectedActor))
+		{
+			CSharpScriptComponent* comp = scene->GetComponent<CSharpScriptComponent>(m_SelectedActor);
+			if (comp->ComponentID == index)
+			{
+				if (ImGui::CollapsingHeader(comp->ClassName.c_str()))
+				{
+					ImGui::NewLine();
+					ImGui::Extensions::Text("Script Type", "C# Script");
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					ImGui::NewLine();
+				}
 			}
 		}
 	}

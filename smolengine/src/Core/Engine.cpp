@@ -25,13 +25,13 @@ namespace SmolEngine
 
 	Engine::~Engine()
 	{
-		NATIVE_INFO("State : Shutdown");
+		NATIVE_INFO("[Engine]: State = Shutdown");
 		m_Running = false;
 	}
 
 	void Engine::Init()
 	{
-		NATIVE_INFO("State = Startup");
+		NATIVE_INFO("[Engine]: State = Startup");
 		//---------------------------------------------------------------------///
 
 		m_LayerHandler = new LayerManager();
@@ -78,7 +78,7 @@ namespace SmolEngine
 		OnWorldAdminModuleCreation(m_World->m_State);
 		OnInitializationComplete(m_World);
 
-		NATIVE_INFO("Initialized successfully");
+		NATIVE_INFO("[Engine]: Initialized successfully");
 		m_Running = true;
 		Run();
 	}
@@ -87,7 +87,7 @@ namespace SmolEngine
 	{
 		if (m_Running)
 		{
-			NATIVE_INFO("State : Shutdown");
+			NATIVE_INFO("[Engine]: State = Shutdown");
 
 			m_Running = false;
 			m_GraphicsContext->ShutDown();
@@ -97,7 +97,7 @@ namespace SmolEngine
 
 	void Engine::Run()
 	{
-		NATIVE_INFO("State = Runtime");
+		NATIVE_INFO("[Engine]: State = Runtime");
 		uint32_t frames = 0;
 		float t1 = m_GraphicsContext->GetGltfTime();
 

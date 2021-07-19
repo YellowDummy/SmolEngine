@@ -90,8 +90,7 @@ namespace SmolEngine
 			if (component->ClassInstance == nullptr)
 			{
 				component->ClassName = className;
-				component->ClassInstance = mono->CreateClassInstance(className);
-				return component->ClassInstance != nullptr;
+				return true;
 			}
 		}
 
@@ -100,9 +99,9 @@ namespace SmolEngine
 
 	void ScriptingSystem::OnBeginWorld()
 	{
-		entt::registry* reg = m_World->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = m_State;
+		CreateScripts();
 
+		entt::registry* reg = m_World->m_CurrentRegistry;
 		// C++
 		{
 			const auto& view = reg->view<CppScriptComponent>();
@@ -126,8 +125,6 @@ namespace SmolEngine
 	void ScriptingSystem::OnEndWorld()
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = m_State;
-
 		// C++
 		{
 			const auto& view = reg->view<CppScriptComponent>();
@@ -146,13 +143,13 @@ namespace SmolEngine
 				m_State->m_MonoContext->OnDestroy(&behaviour);
 			}
 		}
+
+		ClearScripts();
 	}
 
 	void ScriptingSystem::OnUpdate(DeltaTime deltaTime)
 	{
 		entt::registry* reg = m_World->m_CurrentRegistry;
-		ScriptingSystemStateSComponent* instance = m_State;
-
 		// C++
 		{
 			const auto& view = reg->view<CppScriptComponent>();
@@ -179,7 +176,6 @@ namespace SmolEngine
 	void ScriptingSystem::OnDestroy(Actor* actor)
 	{
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-
 		// C++
 		{
 			CppScriptComponent* behaviour = scene->GetComponentEX<CppScriptComponent>(actor);
@@ -198,7 +194,6 @@ namespace SmolEngine
 	void ScriptingSystem::OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-
 		// C++
 		{
 			if (scene->HasComponent<CppScriptComponent>(*actorB))
@@ -220,7 +215,6 @@ namespace SmolEngine
 	void ScriptingSystem::OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger)
 	{
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-
 		// C++
 		{
 			if (scene->HasComponent<CppScriptComponent>(*actorB))
@@ -242,7 +236,6 @@ namespace SmolEngine
 	void ScriptingSystem::OnSceneReloaded(void* registry_)
 	{
 		entt::registry* registry = static_cast<entt::registry*>(registry_);
-
 		// C++
 		{
 			const auto& view = registry->view<CppScriptComponent>();
@@ -253,5 +246,31 @@ namespace SmolEngine
 			}
 		}
 
+	}
+
+	void ScriptingSystem::CreateScripts()
+	{
+		entt::registry* reg = m_World->m_CurrentRegistry;
+		// C#
+		{
+			MonoContext* mono = MonoContext::GetSingleton();
+			const auto& view = reg->view<CSharpScriptComponent>();
+			for (const auto& entity : view)
+			{
+				auto& behaviour = view.get<CSharpScriptComponent>(entity);
+				behaviour.ClassInstance = mono->CreateClassInstance(behaviour.ClassName);
+				if (behaviour.ClassInstance == nullptr)
+				{
+					behaviour.ClassName = "";
+				}
+			}
+		}
+	}
+
+	void ScriptingSystem::ClearScripts()
+	{
+		MonoContext* mono = MonoContext::GetSingleton();
+		mono->Shutdown();
+		mono->Create();
 	}
 }

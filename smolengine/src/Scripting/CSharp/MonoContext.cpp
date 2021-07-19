@@ -57,8 +57,10 @@ namespace SmolEngine
 		if (m_CSharpAssembly != nullptr && m_Domain != m_RootDomain)
 		{
 			mono_domain_set(m_RootDomain, false);
+
 			mono_image_close(m_Image);
 			mono_domain_finalize(m_Domain, 2000);
+			mono_gc_collect(mono_gc_max_generation());
 			mono_domain_unload(m_Domain);
 
 			m_InternalClasses.clear();
@@ -97,11 +99,11 @@ namespace SmolEngine
 			auto time = std::filesystem::last_write_time(p);
 			if (time != m_LastWriteTime)
 			{
-				NATIVE_INFO("C# module: Reloading...");
+				NATIVE_WARN("[C# module]: Reloading...");
 				OnRecompilation();
 				if (m_Callback != nullptr)
 					m_Callback();
-				NATIVE_INFO("C# module: Reloading complete!");
+				NATIVE_WARN("[C# module]: Reloading complete!");
 			}
 		}
 	}
@@ -115,7 +117,7 @@ namespace SmolEngine
 	void MonoContext::RunTest()
 	{
 		{
-			MonoClass* m_class = m_InternalClasses[ClassDefs::UnitTests];
+			MonoClass* m_class = m_InternalClasses[InternalClassType::UnitTests];
 			MonoMethod* method = mono_class_get_method_from_name(m_class, "CallMe", 2);
 			MonoObject* instance = mono_object_new(m_Domain, m_class);
 			mono_runtime_object_init(instance);
@@ -134,10 +136,10 @@ namespace SmolEngine
 		}
 
 		{
-			MonoObject* instance = mono_object_new(m_Domain, m_InternalClasses[ClassDefs::BehaviourPrimitive]);
+			MonoObject* instance = mono_object_new(m_Domain, m_InternalClasses[InternalClassType::BehaviourPrimitive]);
 			mono_runtime_object_init(instance);
 
-			auto field = mono_class_get_field_from_name(m_InternalClasses[ClassDefs::BehaviourPrimitive], "ID");
+			auto field = mono_class_get_field_from_name(m_InternalClasses[InternalClassType::BehaviourPrimitive], "ID");
 			if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_U4) // uint32
 			{
 				uint32_t id = 222;
@@ -145,7 +147,7 @@ namespace SmolEngine
 
 				uint32_t val = 0;
 				mono_field_get_value(instance, field, &val);
-				NATIVE_ERROR("field value: {}", val);
+				NATIVE_INFO("field value: {}", val);
 			}
 #if 0
 			///* allocate memory for the object */
@@ -311,14 +313,16 @@ namespace SmolEngine
 
 	void MonoContext::ResolveClasses()
 	{
-		m_InternalClasses[ClassDefs::Actor] = mono_class_from_name(m_Image, "SmolEngine", "Actor");
-		m_InternalClasses[ClassDefs::BehaviourPrimitive] = mono_class_from_name(m_Image, "SmolEngine", "BehaviourPrimitive");
-		m_InternalClasses[ClassDefs::UnitTests] = mono_class_from_name(m_Image, "SmolEngine", "Tests");
+		m_InternalClasses[InternalClassType::Input] = mono_class_from_name(m_Image, "SmolEngine", "Input");
+		m_InternalClasses[InternalClassType::Log] = mono_class_from_name(m_Image, "SmolEngine", "Log");
+		m_InternalClasses[InternalClassType::Actor] = mono_class_from_name(m_Image, "SmolEngine", "Actor");
+		m_InternalClasses[InternalClassType::BehaviourPrimitive] = mono_class_from_name(m_Image, "SmolEngine", "BehaviourPrimitive");
+		m_InternalClasses[InternalClassType::UnitTests] = mono_class_from_name(m_Image, "SmolEngine", "Tests");
 	}
 
 	void MonoContext::ResolveMeta()
 	{
-		MonoClass* b_class = m_InternalClasses[ClassDefs::BehaviourPrimitive];
+		MonoClass* b_class = m_InternalClasses[InternalClassType::BehaviourPrimitive];
 		const char* b_class_name = mono_class_get_name(b_class);
 		const char* b_class_name_space = mono_class_get_namespace(b_class);
 		 

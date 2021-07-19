@@ -53,6 +53,7 @@ namespace SmolEngine
 		void                         OnEndFrame();
 		void                         OnUpdate(DeltaTime deltaTime);
 		void                         OnEvent(Event& e);
+		void                         OnHotReload();
 			                         
 		bool                         IsInPlayMode();
 		bool                         LoadStaticComponents();

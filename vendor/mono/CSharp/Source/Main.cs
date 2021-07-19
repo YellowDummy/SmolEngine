@@ -11,7 +11,7 @@ namespace SmolEngine
 
         private void OnUpdate()
         {
-
+           // Console.WriteLine("Update!");
         }
 
         private void OnDestroy()
@@ -30,7 +30,6 @@ namespace SmolEngine
 
         }
     }
-
 
     public class Tests
     {
