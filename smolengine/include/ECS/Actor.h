@@ -39,7 +39,6 @@ namespace SmolEngine
 		Ref<Actor>                   GetChildByIndex(uint32_t index);
 		std::vector<Ref<Actor>>&     GetChilds();
 		Ref<Actor>                   GetParent() const;
-		Ref<Actor>                   GetRootActor();
 		Ref<Actor>                   FindActorByID(uint32_t id);
 
 		// Setters
@@ -66,6 +65,7 @@ namespace SmolEngine
 		friend class Scene;
 		friend class EditorLayer;
 		friend class ScriptingSystem;
+		friend class MonoContext;
 
 		template<typename Archive>
 		void serialize(Archive& archive)

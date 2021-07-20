@@ -134,35 +134,6 @@ namespace SmolEngine
 				mono_runtime_invoke(method, instance, args, NULL);
 			}
 		}
-
-		{
-			MonoObject* instance = mono_object_new(m_Domain, m_InternalClasses[InternalClassType::BehaviourPrimitive]);
-			mono_runtime_object_init(instance);
-
-			auto field = mono_class_get_field_from_name(m_InternalClasses[InternalClassType::BehaviourPrimitive], "ID");
-			if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_U4) // uint32
-			{
-				uint32_t id = 222;
-				mono_field_set_value(instance, field, &id);
-
-				uint32_t val = 0;
-				mono_field_get_value(instance, field, &val);
-				NATIVE_INFO("field value: {}", val);
-			}
-#if 0
-			///* allocate memory for the object */
-			MonoMethodDesc* desc = mono_method_desc_new(":.ctor(uint)", FALSE);
-			MonoMethod* ctor = mono_method_desc_search_in_class(desc, m_DefaultClasses[ClassDefs::BehaviourPrimitive]);
-			mono_method_desc_free(desc);
-
-			void* args[1];
-			uint32_t id = 266;
-			args[0] = &id;
-
-			auto p = mono_runtime_invoke(ctor, instance, args, NULL);
-#endif
-
-		}
 	}
 
 	void MonoContext::LoadMonoImage()
@@ -195,20 +166,29 @@ namespace SmolEngine
 
 	void MonoContext::LoadDomain()
 	{
-		std::string name = "SmolEngine.ScriptsDomain";
-		m_Domain = mono_domain_create_appdomain((char*)name.c_str(), NULL);
+		m_Domain = mono_domain_create_appdomain("SmolEngine.ScriptsDomain", NULL);
 		mono_domain_set(m_Domain, false);
 	}
 
-	void* MonoContext::CreateClassInstance(const std::string& class_name)
+	void* MonoContext::CreateClassInstance(const std::string& class_name, const Ref<Actor>& actor)
 	{
 		auto& it = m_MetaMap.find(class_name);
 		if (it != m_MetaMap.end())
 		{
-			const MonoContext::MetaData& meta = it->second;
-			MonoObject* instance = mono_object_new(m_Domain, meta.pClass);
-			mono_runtime_object_init(instance);
-			return instance;
+			const auto& meta = it->second;
+			MonoClassField* id_field = mono_class_get_field_from_name(meta.pClass, "MyEntityID");
+			if (id_field)
+			{
+				if (mono_type_get_type(mono_field_get_type(id_field)) == MONO_TYPE_U4) // uint32
+				{
+					MonoObject* instance = mono_object_new(m_Domain, meta.pClass);
+					mono_runtime_object_init(instance);
+
+					uint32_t id = (uint32_t)actor->m_Entity;
+					mono_field_set_value(instance, id_field, &id);
+					return instance;
+				}
+			}
 		}
 
 		return nullptr;
@@ -307,14 +287,22 @@ namespace SmolEngine
 	{
 		// SetUp Internal Calls called from CSharp
 		// Namespace.Class::Method + a Function pointer with the actual definition
-		mono_add_internal_call("SmolEngine.CppAPI::GetSetTransformComponent", &GetSetTransformComponentCSharp);
-		mono_add_internal_call("SmolEngine.CppAPI::GetSetHeadComponent", &GetSetHeadComponentCSharp);
+
+		mono_add_internal_call("SmolEngine.CppAPI::GetComponent", &GetComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.CppAPI::SetComponent", &SetComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.CppAPI::HasComponent", &HasComponent_CSharpAPI);
+
+		mono_add_internal_call("SmolEngine.CppAPI::GetEntityName", &GetEntityName_CSharpAPI);
+		mono_add_internal_call("SmolEngine.CppAPI::GetEntityTag", &GetEntityTag_CSharpAPI);
+
+		mono_add_internal_call("SmolEngine.Input::IsKeyInput", &IsKeyInput_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Input::IsMouseInput", &IsMouseInput_CSharpAPI);
+
+		mono_add_internal_call("SmolEngine.SLog::AddMessage", &AddMessage_CSharpAPI);
 	}
 
 	void MonoContext::ResolveClasses()
 	{
-		m_InternalClasses[InternalClassType::Input] = mono_class_from_name(m_Image, "SmolEngine", "Input");
-		m_InternalClasses[InternalClassType::Log] = mono_class_from_name(m_Image, "SmolEngine", "Log");
 		m_InternalClasses[InternalClassType::Actor] = mono_class_from_name(m_Image, "SmolEngine", "Actor");
 		m_InternalClasses[InternalClassType::BehaviourPrimitive] = mono_class_from_name(m_Image, "SmolEngine", "BehaviourPrimitive");
 		m_InternalClasses[InternalClassType::UnitTests] = mono_class_from_name(m_Image, "SmolEngine", "Tests");

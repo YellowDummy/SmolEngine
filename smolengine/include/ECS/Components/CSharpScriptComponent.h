@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "ECS/Actor.h"
 #include "ECS/Components/BaseComponent.h"
 
 #include <cereal/cereal.hpp>
@@ -12,6 +13,7 @@ namespace SmolEngine
 		CSharpScriptComponent(uint32_t id)
 			: BaseComponent(id) {}
 
+		Ref<Actor>  Actor = nullptr;
 		void*       ClassInstance = nullptr;
 		std::string ClassName = "";
 
@@ -21,7 +23,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(ClassName, ComponentID);
+			archive(ClassName, Actor, ComponentID);
 		}
 	};
 }

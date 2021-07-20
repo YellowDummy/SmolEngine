@@ -32,7 +32,7 @@ namespace SmolEngine
 				auto rb = ball->AddComponent<RigidbodyComponent>();
 				rb->CreateInfo.eShape = RigidBodyShape::Sphere;
 				rb->CreateInfo.eType = RigidBodyType::Dynamic;
-				ComponentHandler::ValidateRigidBodyComponent_Script(rb, ball);
+				ComponentHandler::ValidateRigidBodyComponent_Runtime(rb, ball);
 
 				m_ID++;
 			}

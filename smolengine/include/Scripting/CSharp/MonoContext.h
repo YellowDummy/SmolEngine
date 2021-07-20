@@ -41,8 +41,6 @@ namespace SmolEngine
 		{
 			BehaviourPrimitive,
 			Actor,
-			Input,
-			Log,
 			UnitTests
 		};
 
@@ -64,7 +62,7 @@ namespace SmolEngine
 		void                         RunTest();
 		void                         LoadMonoImage();
 		void                         LoadDomain();
-		void*                        CreateClassInstance(const std::string& class_name);
+		void*                        CreateClassInstance(const std::string& class_name, const Ref<Actor>& actor);
 		void*                        GetMethod(const char* signature, const char* class_name, MonoClass* p_class);
 							         
 		void                         OnBegin(const CSharpScriptComponent* comp);

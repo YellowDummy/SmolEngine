@@ -6,12 +6,17 @@ namespace SmolEngine
     {
         private void OnBegin()
         {
+            TransformComponent transform = GetComponent<TransformComponent>();
 
+            SLog.WriteLine(transform.ToString());
         }
 
         private void OnUpdate()
         {
-           // Console.WriteLine("Update!");
+            if(Input.IsKeyPressed(KeyCode.V))
+            {
+                SLog.WriteLine($"Pressed V Key!, actor ID is {GetID()}", LogLevel.Error);
+            }
         }
 
         private void OnDestroy()
@@ -35,13 +40,7 @@ namespace SmolEngine
     {
         Tests()
         {
-
-            Console.WriteLine("Im created!!");
-
-            BehaviourPrimitive b = new BehaviourPrimitive();
-            var comp = b.GetComponent<TransformComponent>();
-
-            Console.WriteLine(comp.ToString());
+            Console.WriteLine("Test init");
         }
 
         private void CallMe(uint val1, uint val2)

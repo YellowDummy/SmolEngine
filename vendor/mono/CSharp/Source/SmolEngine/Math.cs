@@ -8,6 +8,12 @@ namespace SmolEngine
     {
         public float X;
         public float Y;
+
+        public Vector2(float _x, float _y)
+        {
+            X = _x;
+            Y = _y;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -16,6 +22,13 @@ namespace SmolEngine
         public float X;
         public float Y;
         public float Z;
+
+        public Vector3(float _x, float _y, float _z)
+        {
+            X = _x;
+            Y = _y;
+            Z = _z;
+        }
 
         public override string ToString()
         {

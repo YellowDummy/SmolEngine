@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace SmolEngine
 {
@@ -6,35 +7,28 @@ namespace SmolEngine
     {
         public Actor()
         {
-            Console.WriteLine("Created new actor");
+            SLog.WriteLine("Created new actor!", LogLevel.Warn);
         }
 
         // Properties
 
-        private readonly uint ID = 0;
+        private readonly uint MyEntityID = 0;
 
         // Methods
         public T GetComponent<T>()
         {
+            ushort type = Utils.GetComponentType<T>();
+
             if (typeof(T) == typeof(TransformComponent))
             {
-                var comp = new TransformComponent();
-                bool is_exists = CppAPI.GetSetTransformComponent(ref comp, ID, false);
-                if (is_exists)
+                TransformComponent component;
+                unsafe
                 {
-                    return (T)(object)comp;
-                }
-            }
-
-            if (typeof(T) == typeof(HeadComponent))
-            {
-                var comp = new HeadComponent();
-                comp.Name = "None";
-                comp.Name = "None";
-                bool is_exists = CppAPI.GetSetHeadComponent(ref comp, ID, false);
-                if (is_exists)
-                {
-                    return (T)(object)comp;
+                    bool found = CppAPI.GetComponent(&component, MyEntityID, type);
+                    if (found)
+                    {
+                        return (T)(object)component;
+                    }
                 }
             }
 
@@ -43,7 +37,29 @@ namespace SmolEngine
 
         public bool HasComponent<T>()
         {
+            ushort type = Utils.GetComponentType<T>();
+
+            if (typeof(T) == typeof(TransformComponent))
+            {
+                return CppAPI.HasComponent(MyEntityID, type);
+            }
+
             return false;
+        }
+
+        public string GetName()
+        {
+            return CppAPI.GetEntityName(MyEntityID);
+        }
+
+        public string GetTag()
+        {
+            return CppAPI.GetEntityTag(MyEntityID);
+        }
+
+        public uint GetID()
+        {
+            return MyEntityID;
         }
     }
 }

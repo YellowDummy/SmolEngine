@@ -90,6 +90,7 @@ namespace SmolEngine
 			if (component->ClassInstance == nullptr)
 			{
 				component->ClassName = className;
+				component->Actor = actor;
 				return true;
 			}
 		}
@@ -253,17 +254,24 @@ namespace SmolEngine
 		entt::registry* reg = m_World->m_CurrentRegistry;
 		// C#
 		{
-			MonoContext* mono = MonoContext::GetSingleton();
 			const auto& view = reg->view<CSharpScriptComponent>();
 			for (const auto& entity : view)
 			{
 				auto& behaviour = view.get<CSharpScriptComponent>(entity);
-				behaviour.ClassInstance = mono->CreateClassInstance(behaviour.ClassName);
-				if (behaviour.ClassInstance == nullptr)
-				{
-					behaviour.ClassName = "";
-				}
+				CreateScript(&behaviour);
 			}
+		}
+	}
+
+	void ScriptingSystem::CreateScript(CSharpScriptComponent* comp)
+	{
+		if (comp->Actor && !comp->ClassName.empty())
+		{
+			MonoContext* mono = MonoContext::GetSingleton();
+			comp->ClassInstance = mono->CreateClassInstance(comp->ClassName, comp->Actor);
+
+			if (!comp->ClassInstance)
+				comp->ClassName = "";
 		}
 	}
 

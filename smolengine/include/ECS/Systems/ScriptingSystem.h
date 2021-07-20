@@ -12,6 +12,7 @@ namespace SmolEngine
 {
 	struct WorldAdminStateSComponent;
 	struct ScriptingSystemStateSComponent;
+	struct CSharpScriptComponent;
 	class Actor;
 
 	class ScriptingSystem
@@ -37,6 +38,7 @@ namespace SmolEngine
 		static void OnSceneReloaded(void* registry_);
 
 		static void CreateScripts();
+		static void CreateScript(CSharpScriptComponent* comp);
 		static void ClearScripts();
 
 		template<typename T>
@@ -59,5 +61,6 @@ namespace SmolEngine
 		friend class WorldAdmin;
 		friend class Scene;
 		friend class CollisionListener2D;
+		friend class ComponentHandler;
 	};
 }

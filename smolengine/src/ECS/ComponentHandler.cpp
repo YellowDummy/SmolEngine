@@ -4,6 +4,7 @@
 #include "ECS/ComponentsCore.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/Systems/PhysicsSystem.h"
+#include "ECS/Systems/ScriptingSystem.h"
 
 #ifndef FROSTIUM_SMOLENGINE_IMPL
 #define FROSTIUM_SMOLENGINE_IMPL
@@ -143,7 +144,22 @@ namespace SmolEngine
 		return false;
 	}
 
-	bool ComponentHandler::ValidateRigidBodyComponent_Script(RigidbodyComponent* comp, Ref<Actor>& actor)
+	bool ComponentHandler::ValidateCSharpScriptComponent(CSharpScriptComponent* comp, Ref<Actor>& actor, const std::string& class_name)
+	{
+		comp->Actor = actor;
+		comp->ClassName = class_name;
+		return true;
+	}
+
+	bool ComponentHandler::ValidateCSharpScriptComponent_Runtime(CSharpScriptComponent* comp, Ref<Actor>& actor, const std::string& class_name)
+	{
+		ValidateCSharpScriptComponent(comp, actor, class_name);
+		ScriptingSystem::CreateScript(comp);
+
+		return comp->ClassInstance != nullptr;
+	}
+
+	bool ComponentHandler::ValidateRigidBodyComponent_Runtime(RigidbodyComponent* comp, Ref<Actor>& actor)
 	{
 		if (ValidateRigidBodyComponent(comp, actor))
 		{

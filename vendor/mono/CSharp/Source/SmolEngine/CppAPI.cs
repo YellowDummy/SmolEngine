@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Runtime.CompilerServices;
 
 namespace SmolEngine
@@ -6,9 +7,18 @@ namespace SmolEngine
     class CppAPI
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static bool GetSetTransformComponent(ref TransformComponent comp, uint ID, bool set);
+        unsafe public extern static bool GetComponent(void* ptr, uint entity_id, ushort component_type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static bool GetSetHeadComponent(ref HeadComponent comp, uint ID, bool set);
+        unsafe public extern static bool SetComponent(void* ptr, uint entity_id, ushort component_type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static bool HasComponent(uint entity_id, ushort component_type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static string GetEntityName(uint entity_id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static string GetEntityTag(uint entity_id);
     }
 }
