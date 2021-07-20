@@ -12,10 +12,7 @@ namespace SmolEngine
         extern static uint LoadMaterial_EX(string path, uint entity_id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern static bool SetMaterial_EX(uint mesh_index, uint material_id, uint entity_id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        extern static void SetVisible_EX(uint entity_id, bool value); 
+        extern static bool SetMaterial_EX(uint mesh_index, string material_path, uint entity_id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern static void ResetAll_EX(uint entity_id);
@@ -25,13 +22,13 @@ namespace SmolEngine
 
 
         private bool _IsVisible;
-        private bool _IsActive;
-        private uint _Handler;
+        private readonly bool _IsActive;
+        private readonly uint _Handler;
 
         public bool IsVisible
         {
             get { return _IsVisible; }
-            set { _IsVisible = value; SetVisible_EX(_Handler, value); }
+            set { _IsVisible = value; OnChange(); }
         }
 
         public bool LoadModel(string path)
@@ -49,9 +46,9 @@ namespace SmolEngine
             return LoadMaterial_EX(path, _Handler);
         }
 
-        public bool SetMaterial(uint index, uint material_id)
+        public bool SetMaterial(uint index, string material_path)
         {
-            return SetMaterial_EX(index, material_id, _Handler);
+            return SetMaterial_EX(index, material_path, _Handler);
         }
 
         // sub meshes
@@ -63,6 +60,19 @@ namespace SmolEngine
         public void ResetAll()
         {
             ResetAll_EX(_Handler);
+        }
+
+        private void OnChange()
+        {
+            var copy = this;
+            unsafe
+            {
+                bool result = Actor.SetComponent_EX(&copy, _Handler, (ushort)ComponentTypeEX.Mesh);
+                if (result)
+                {
+                    this = copy;
+                }
+            }
         }
     }
 }

@@ -307,7 +307,6 @@ namespace SmolEngine
 		mono_add_internal_call("SmolEngine.MeshComponent::LoadModel_EX", &MeshLoadModel_CSharpAPI);
 		mono_add_internal_call("SmolEngine.MeshComponent::LoadMaterial_EX", &MeshLoadMaterial_CSharpAPI);
 		mono_add_internal_call("SmolEngine.MeshComponent::SetMaterial_EX", &MeshSetMaterial__CSharpAPI);
-		mono_add_internal_call("SmolEngine.MeshComponent::SetVisible_EX", &MeshSetVisible_CSharpAPI);
 		mono_add_internal_call("SmolEngine.MeshComponent::ResetAll_EX", &MeshResetAll_CSharpAPI);
 		mono_add_internal_call("SmolEngine.MeshComponent::GetChildsCount_EX", &MeshGetChildsCount_CSharpAPI);
 	}

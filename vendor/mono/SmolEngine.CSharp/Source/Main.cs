@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace SmolEngine
 {
@@ -11,7 +12,13 @@ namespace SmolEngine
             SLog.WriteLine("My name: " + GetName());
             SLog.WriteLine("My tag: " + GetTag());
 
-            transform.Position = new Vector3(5, 5, 5);
+            transform.Position = new Vector3(0, 2, 0);
+
+            if(HasComponent<MeshComponent>())
+            {
+                var mesh_comp = GetComponent<MeshComponent>();
+                mesh_comp.LoadModel("../samples/models/tank.gltf");
+            }
         }
 
         private void OnUpdate()

@@ -21,11 +21,10 @@ namespace SmolEngine
 	void       AddMessage_CSharpAPI(void* mono_string, uint32_t level);
 
 	// Mesh
-	void       MeshSetVisible_CSharpAPI(uint32_t entity_id, bool value);
 	void       MeshResetAll_CSharpAPI(uint32_t entity_id);
 	uint32_t   MeshGetChildsCount_CSharpAPI(uint32_t entity_id);
 	bool       MeshLoadModel_CSharpAPI(void* str, uint32_t entity_id);
-	bool       MeshSetMaterial__CSharpAPI(uint32_t mesh_index, uint32_t material_index, uint32_t entity_id);
+	bool       MeshSetMaterial__CSharpAPI(uint32_t mesh_index, void* material_path, uint32_t entity_id);
 	uint32_t   MeshLoadMaterial_CSharpAPI(void* str, uint32_t entity_id);
 
 }

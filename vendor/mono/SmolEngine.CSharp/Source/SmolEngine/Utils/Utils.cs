@@ -31,6 +31,11 @@ namespace SmolEngine
                 return (ushort)ComponentTypeEX.Transform;
             }
 
+            if (typeof(T) == typeof(MeshComponent))
+            {
+                return (ushort)ComponentTypeEX.Mesh;
+            }
+
             return (ushort)ComponentTypeEX.MaxEnum;
         }
     }
