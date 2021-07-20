@@ -8,6 +8,10 @@
 #include <mono/jit/jit.h>
 #include <mono/utils/mono-counters.h>
 #include <mono/utils/mono-logger.h>
+
+#include <mono/metadata/environment.h>
+#include <mono/metadata/exception.h>
+
 #include <mono/metadata/appdomain.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/assembly.h>
@@ -20,12 +24,12 @@
 
 namespace SmolEngine
 {
-	void Log(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void* user_data)
+	void LogHook(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void* user_data)
 	{
 		NATIVE_INFO(message);
 	}
 
-	void Print(const char* string, mono_bool is_stdout)
+	void PrintHook(const char* string, mono_bool is_stdout)
 	{
 		NATIVE_INFO(string);
 	}
@@ -36,9 +40,9 @@ namespace SmolEngine
 		mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 		mono_config_parse(NULL);
 		mono_set_signal_chaining(true);
-		mono_trace_set_log_handler(Log, nullptr);
-		mono_trace_set_print_handler(Print);
-		mono_trace_set_printerr_handler(Print);
+		mono_trace_set_log_handler(LogHook, nullptr);
+		mono_trace_set_print_handler(PrintHook);
+		mono_trace_set_printerr_handler(PrintHook);
 
 		s_Instance = this;
 		m_RootDomain = mono_jit_init("CSharp_Domain");

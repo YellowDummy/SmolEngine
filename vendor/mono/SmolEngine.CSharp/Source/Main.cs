@@ -8,7 +8,10 @@ namespace SmolEngine
         {
             TransformComponent transform = GetComponent<TransformComponent>();
 
-            SLog.WriteLine(transform.ToString());
+            SLog.WriteLine("My name: " + GetName());
+            SLog.WriteLine("My tag: " + GetTag());
+
+            transform.Position = new Vector3(5, 5, 5);
         }
 
         private void OnUpdate()

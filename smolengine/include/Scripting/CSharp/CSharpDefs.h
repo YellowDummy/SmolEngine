@@ -11,11 +11,6 @@ namespace SmolEngine
         glm::vec3 WorldPos;
         glm::vec3 Rotation;
         glm::vec3 Scale;
-    };
-
-    struct HeadComponentCSharp
-    {
-        MonoString* Name = nullptr;
-        MonoString* Tag = nullptr;
+        uint32_t  Handler;
     };
 }

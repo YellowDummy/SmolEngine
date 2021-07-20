@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Core/Engine.h"
 
-#include "Scripting/CSharp/MonoContext.h"
 #include "ECS/Systems/ScriptingSystem.h"
 #include "ECS/Components/Singletons/GraphicsEngineSComponent.h"
 #include "ECS/Components/Singletons/JobsSystemStateSComponent.h"

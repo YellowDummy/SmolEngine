@@ -45,7 +45,7 @@ namespace SmolEngine
 				c_component->Scale = native_component->Scale;
 				c_component->WorldPos = native_component->WorldPos;
 				c_component->Rotation = native_component->Rotation;
-
+				c_component->Handler = entity_id;
 				return true;
 			}
 
@@ -86,6 +86,22 @@ namespace SmolEngine
 
 	bool HasComponent_CSharpAPI(uint32_t entity_id, uint16_t component_type)
 	{
+		ComponentTypeEX type = (ComponentTypeEX)component_type;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		entt::entity id = (entt::entity)entity_id;
+
+		switch (type)
+		{
+		case ComponentTypeEX::Transform: return scene->HasComponent<TransformComponent>(id);
+		case ComponentTypeEX::Mesh: return scene->HasComponent<MeshComponent>(id);
+		case ComponentTypeEX::RigidBody: return scene->HasComponent<RigidbodyComponent>(id);
+		case ComponentTypeEX::RigidBody2D: return scene->HasComponent<Rigidbody2DComponent>(id);
+		case ComponentTypeEX::Camera: return scene->HasComponent<CameraComponent>(id);
+		case ComponentTypeEX::PointLight: return scene->HasComponent<PointLightComponent>(id);
+		case ComponentTypeEX::SpotLight: return scene->HasComponent<SpotLightComponent>(id);
+		case ComponentTypeEX::Texture2D: return scene->HasComponent<Texture2DComponent>(id);
+		}
+
 		return false;
 	}
 
@@ -116,11 +132,23 @@ namespace SmolEngine
 
 	void* GetEntityName_CSharpAPI(uint32_t entity_id)
 	{
-		return nullptr;
+		entt::entity id = (entt::entity)entity_id;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		MonoDomain* domain = MonoContext::GetSingleton()->GetDomain();
+
+		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
+		MonoString* str = mono_string_new(domain, head->Name.c_str());
+		return str;
 	}
 
 	void* GetEntityTag_CSharpAPI(uint32_t entity_id)
 	{
-		return nullptr;
+		entt::entity id = (entt::entity)entity_id;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		MonoDomain* domain = MonoContext::GetSingleton()->GetDomain();
+
+		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
+		MonoString* str = mono_string_new(domain, head->Tag.c_str());
+		return str;
 	}
 }

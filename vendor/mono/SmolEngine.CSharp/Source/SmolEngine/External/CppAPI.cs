@@ -4,6 +4,22 @@ using System.Runtime.CompilerServices;
 
 namespace SmolEngine
 {
+    enum ComponentTypeEX
+    {
+        Null,
+        Transform,
+        Camera,
+        RigidBody,
+        RigidBody2D,
+        Mesh,
+        PointLight,
+        SpotLight,
+        Light2D,
+        Texture2D,
+        RendererState,
+        Canvas
+    }
+
     class CppAPI
     {
         [MethodImpl(MethodImplOptions.InternalCall)]

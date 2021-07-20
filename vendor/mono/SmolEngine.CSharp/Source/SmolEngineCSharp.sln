@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp", "CSharp.csproj", "{045DC8F2-D706-47AF-95CA-2A64DB94B7DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmolEngine.CSharp", "SmolEngine.CSharp.csproj", "{045DC8F2-D706-47AF-95CA-2A64DB94B7DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

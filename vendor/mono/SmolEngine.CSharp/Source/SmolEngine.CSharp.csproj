@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{045DC8F2-D706-47AF-95CA-2A64DB94B7DB}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CSharp</RootNamespace>
-    <AssemblyName>CSharp</AssemblyName>
+    <RootNamespace>SmolEngine</RootNamespace>
+    <AssemblyName>SmolEngine.CSharp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -56,14 +56,15 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SmolEngine\Actor.cs" />
-    <Compile Include="SmolEngine\BehaviourPrimitive.cs" />
-    <Compile Include="SmolEngine\Components.cs" />
-    <Compile Include="SmolEngine\CppAPI.cs" />
-    <Compile Include="SmolEngine\Input.cs" />
-    <Compile Include="SmolEngine\SLog.cs" />
-    <Compile Include="SmolEngine\Math.cs" />
-    <Compile Include="SmolEngine\Utils.cs" />
+    <Compile Include="SmolEngine\ECS\Actor.cs" />
+    <Compile Include="SmolEngine\ECS\BehaviourPrimitive.cs" />
+    <Compile Include="SmolEngine\ECS\Components\MeshComponent.cs" />
+    <Compile Include="SmolEngine\ECS\Components\TransformComponent.cs" />
+    <Compile Include="SmolEngine\External\CppAPI.cs" />
+    <Compile Include="SmolEngine\Utils\Input.cs" />
+    <Compile Include="SmolEngine\Utils\SLog.cs" />
+    <Compile Include="SmolEngine\Utils\Math.cs" />
+    <Compile Include="SmolEngine\Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
