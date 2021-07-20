@@ -13,4 +13,11 @@ namespace SmolEngine
         glm::vec3 Scale;
         uint32_t  Handler;
     };
+
+    struct MeshComponentCSharp
+    {
+        bool      IsVisible;
+        bool      IsActive;
+        uint32_t  Handler;
+    };
 }

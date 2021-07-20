@@ -160,22 +160,20 @@ namespace SmolEngine
 	static class Input
     {
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		extern static bool IsKeyInput(ushort key);
+		extern static bool IsKeyPressed_EX(ushort key);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		extern static bool IsMouseInput(ushort button);
+		extern static bool IsMouseButtonPressed_EX(ushort button);
 
 
 		public static bool IsKeyPressed(KeyCode code)
 		{
-			ushort key = (ushort)code;
-			return IsKeyInput(key);
+			return IsKeyPressed_EX((ushort)code);
 		}
 
 		public static bool IsMouseButtonPressed(MouseCode code)
 		{
-			ushort button = (ushort)code;
-			return IsMouseInput(button);
+			return IsMouseButtonPressed_EX((ushort)code);
 		}
 	}
 }

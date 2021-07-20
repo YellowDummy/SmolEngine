@@ -13,7 +13,6 @@ namespace SmolEngine
 {
 	enum class ComponentTypeEX : uint16_t
 	{
-		Null,
 		Transform,
 		Camera,
 		RigidBody,
@@ -24,7 +23,8 @@ namespace SmolEngine
 		Light2D,
 		Texture2D,
 		RendererState,
-		Canvas
+		Canvas,
+		MaxEnum
 	};
 
 	bool GetComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
@@ -37,15 +37,28 @@ namespace SmolEngine
 		{
 		case ComponentTypeEX::Transform:
 		{
-			TransformComponent* native_component = scene->GetComponent<TransformComponent>(id);
-			if (native_component)
+			TransformComponent* native_comp = scene->GetComponent<TransformComponent>(id);
+			if (native_comp)
 			{
-				TransformComponentCSharp* c_component = (TransformComponentCSharp*)ptr;
+				auto* c_comp = (TransformComponentCSharp*)ptr;
+				c_comp->Scale = native_comp->Scale;
+				c_comp->WorldPos = native_comp->WorldPos;
+				c_comp->Rotation = native_comp->Rotation;
+				c_comp->Handler = entity_id;
+				return true;
+			}
 
-				c_component->Scale = native_component->Scale;
-				c_component->WorldPos = native_component->WorldPos;
-				c_component->Rotation = native_component->Rotation;
-				c_component->Handler = entity_id;
+			break;
+		}
+		case ComponentTypeEX::Mesh:
+		{
+			MeshComponent* native_comp = scene->GetComponent<MeshComponent>(id);
+			if (native_comp)
+			{
+				auto* c_comp = (MeshComponentCSharp*)ptr;
+				c_comp->Handler = entity_id;
+				c_comp->IsVisible = native_comp->bShow;
+				c_comp->IsActive = native_comp->DefaulPtr != nullptr || native_comp->MeshPtr != nullptr;
 				return true;
 			}
 
@@ -66,14 +79,25 @@ namespace SmolEngine
 		{
 		case ComponentTypeEX::Transform:
 		{
-			TransformComponent* native_component = scene->GetComponent<TransformComponent>(id);
-			if (native_component)
+			TransformComponent* native_comp = scene->GetComponent<TransformComponent>(id);
+			if (native_comp)
 			{
-				TransformComponentCSharp* c_component = (TransformComponentCSharp*)ptr;
+				TransformComponentCSharp* c_comp = (TransformComponentCSharp*)ptr;
+				native_comp->Scale = c_comp->Scale;
+				native_comp->WorldPos = c_comp->WorldPos;
+				native_comp->Rotation = c_comp->Rotation;
+				return true;
+			}
 
-				native_component->Scale = c_component->Scale;
-				native_component->WorldPos = c_component->WorldPos;
-				native_component->Rotation = c_component->Rotation;
+			break;
+		}
+		case ComponentTypeEX::Mesh:
+		{
+			MeshComponent* native_comp = scene->GetComponent<MeshComponent>(id);
+			if (native_comp)
+			{
+				auto* c_comp = (MeshComponentCSharp*)ptr;
+				native_comp->bShow = c_comp->IsVisible;
 				return true;
 			}
 
@@ -81,6 +105,11 @@ namespace SmolEngine
 		}
 		}
 
+		return false;
+	}
+
+	bool AddComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
+	{
 		return false;
 	}
 
@@ -103,6 +132,28 @@ namespace SmolEngine
 		}
 
 		return false;
+	}
+
+	void* GetEntityName_CSharpAPI(uint32_t entity_id)
+	{
+		entt::entity id = (entt::entity)entity_id;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		MonoDomain* domain = MonoContext::GetSingleton()->GetDomain();
+
+		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
+		MonoString* str = mono_string_new(domain, head->Name.c_str());
+		return str;
+	}
+
+	void* GetEntityTag_CSharpAPI(uint32_t entity_id)
+	{
+		entt::entity id = (entt::entity)entity_id;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		MonoDomain* domain = MonoContext::GetSingleton()->GetDomain();
+
+		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
+		MonoString* str = mono_string_new(domain, head->Tag.c_str());
+		return str;
 	}
 
 	bool IsKeyInput_CSharpAPI(uint16_t key)
@@ -130,25 +181,33 @@ namespace SmolEngine
 		mono_free(cpp_str);
 	}
 
-	void* GetEntityName_CSharpAPI(uint32_t entity_id)
+	void MeshSetVisible_CSharpAPI(uint32_t entity_id, bool value)
 	{
-		entt::entity id = (entt::entity)entity_id;
-		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-		MonoDomain* domain = MonoContext::GetSingleton()->GetDomain();
 
-		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
-		MonoString* str = mono_string_new(domain, head->Name.c_str());
-		return str;
 	}
 
-	void* GetEntityTag_CSharpAPI(uint32_t entity_id)
+	void MeshResetAll_CSharpAPI(uint32_t entity_id)
 	{
-		entt::entity id = (entt::entity)entity_id;
-		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-		MonoDomain* domain = MonoContext::GetSingleton()->GetDomain();
 
-		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
-		MonoString* str = mono_string_new(domain, head->Tag.c_str());
-		return str;
+	}
+
+	uint32_t MeshGetChildsCount_CSharpAPI(uint32_t entity_id)
+	{
+		return uint32_t();
+	}
+
+	bool MeshLoadModel_CSharpAPI(void* str, uint32_t entity_id)
+	{
+		return false;
+	}
+
+	bool MeshSetMaterial__CSharpAPI(uint32_t mesh_index, uint32_t material_index, uint32_t entity_id)
+	{
+		return false;
+	}
+
+	uint32_t MeshLoadMaterial_CSharpAPI(void* str, uint32_t entity_id)
+	{
+		return uint32_t();
 	}
 }

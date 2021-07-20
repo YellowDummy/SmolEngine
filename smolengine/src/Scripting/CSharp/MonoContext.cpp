@@ -292,17 +292,24 @@ namespace SmolEngine
 		// SetUp Internal Calls called from CSharp
 		// Namespace.Class::Method + a Function pointer with the actual definition
 
-		mono_add_internal_call("SmolEngine.CppAPI::GetComponent", &GetComponent_CSharpAPI);
-		mono_add_internal_call("SmolEngine.CppAPI::SetComponent", &SetComponent_CSharpAPI);
-		mono_add_internal_call("SmolEngine.CppAPI::HasComponent", &HasComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::GetComponent_EX", &GetComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::SetComponent_EX", &SetComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::HasComponent_EX", &HasComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::AddComponent_EX", &AddComponent_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::GetEntityName_EX", &GetEntityName_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::GetEntityTag_EX", &GetEntityTag_CSharpAPI);
 
-		mono_add_internal_call("SmolEngine.CppAPI::GetEntityName", &GetEntityName_CSharpAPI);
-		mono_add_internal_call("SmolEngine.CppAPI::GetEntityTag", &GetEntityTag_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Input::IsKeyPressed_EX", &IsKeyInput_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Input::IsMouseButtonPressed_EX", &IsMouseInput_CSharpAPI);
+		mono_add_internal_call("SmolEngine.SLog::WriteLine_EX", &AddMessage_CSharpAPI);
 
-		mono_add_internal_call("SmolEngine.Input::IsKeyInput", &IsKeyInput_CSharpAPI);
-		mono_add_internal_call("SmolEngine.Input::IsMouseInput", &IsMouseInput_CSharpAPI);
 
-		mono_add_internal_call("SmolEngine.SLog::AddMessage", &AddMessage_CSharpAPI);
+		mono_add_internal_call("SmolEngine.MeshComponent::LoadModel_EX", &MeshLoadModel_CSharpAPI);
+		mono_add_internal_call("SmolEngine.MeshComponent::LoadMaterial_EX", &MeshLoadMaterial_CSharpAPI);
+		mono_add_internal_call("SmolEngine.MeshComponent::SetMaterial_EX", &MeshSetMaterial__CSharpAPI);
+		mono_add_internal_call("SmolEngine.MeshComponent::SetVisible_EX", &MeshSetVisible_CSharpAPI);
+		mono_add_internal_call("SmolEngine.MeshComponent::ResetAll_EX", &MeshResetAll_CSharpAPI);
+		mono_add_internal_call("SmolEngine.MeshComponent::GetChildsCount_EX", &MeshGetChildsCount_CSharpAPI);
 	}
 
 	void MonoContext::ResolveClasses()

@@ -60,7 +60,6 @@
     <Compile Include="SmolEngine\ECS\BehaviourPrimitive.cs" />
     <Compile Include="SmolEngine\ECS\Components\MeshComponent.cs" />
     <Compile Include="SmolEngine\ECS\Components\TransformComponent.cs" />
-    <Compile Include="SmolEngine\External\CppAPI.cs" />
     <Compile Include="SmolEngine\Utils\Input.cs" />
     <Compile Include="SmolEngine\Utils\SLog.cs" />
     <Compile Include="SmolEngine\Utils\Math.cs" />
@@ -69,6 +68,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SmolEngine\External\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -6,6 +6,22 @@ using System.Threading.Tasks;
 
 namespace SmolEngine
 {
+    enum ComponentTypeEX
+    {
+        Transform,
+        Camera,
+        RigidBody,
+        RigidBody2D,
+        Mesh,
+        PointLight,
+        SpotLight,
+        Light2D,
+        Texture2D,
+        RendererState,
+        Canvas,
+        MaxEnum
+    }
+
     class Utils
     {
         static public ushort GetComponentType<T>()
@@ -15,7 +31,7 @@ namespace SmolEngine
                 return (ushort)ComponentTypeEX.Transform;
             }
 
-            return (ushort)ComponentTypeEX.Null;
+            return (ushort)ComponentTypeEX.MaxEnum;
         }
     }
 }
