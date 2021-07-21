@@ -298,9 +298,11 @@ namespace SmolEngine
 		mono_add_internal_call("SmolEngine.Actor::AddComponent_EX", &AddComponent_CSharpAPI);
 		mono_add_internal_call("SmolEngine.Actor::GetEntityName_EX", &GetEntityName_CSharpAPI);
 		mono_add_internal_call("SmolEngine.Actor::GetEntityTag_EX", &GetEntityTag_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Actor::DestroyComponent_EX", &DestroyComponent_CSharpAPI);
 
 		mono_add_internal_call("SmolEngine.Input::IsKeyPressed_EX", &IsKeyInput_CSharpAPI);
 		mono_add_internal_call("SmolEngine.Input::IsMouseButtonPressed_EX", &IsMouseInput_CSharpAPI);
+		mono_add_internal_call("SmolEngine.Input::GetMousePos_EX", &GetMousePos_CSharpAPI);
 		mono_add_internal_call("SmolEngine.SLog::WriteLine_EX", &AddMessage_CSharpAPI);
 
 

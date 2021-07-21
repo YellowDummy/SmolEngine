@@ -21,6 +21,7 @@ namespace SmolEngine
 	bool       IsKeyInput_CSharpAPI(uint16_t key);
 	bool       IsMouseInput_CSharpAPI(uint16_t button);
 	void       AddMessage_CSharpAPI(void* mono_string, uint32_t level);
+	void       GetMousePos_CSharpAPI(glm::vec2* pos);
 
 	// Mesh
 	void       MeshResetAll_CSharpAPI(uint32_t entity_id);

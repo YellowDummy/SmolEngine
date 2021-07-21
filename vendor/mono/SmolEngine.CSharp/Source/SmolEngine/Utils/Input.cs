@@ -165,6 +165,9 @@ namespace SmolEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		extern static bool IsMouseButtonPressed_EX(ushort button);
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		extern static void GetMousePos_EX(ref Vector2 value);
+
 
 		public static bool IsKeyPressed(KeyCode code)
 		{
@@ -175,5 +178,12 @@ namespace SmolEngine
 		{
 			return IsMouseButtonPressed_EX((ushort)code);
 		}
+
+		public static Vector2 GetMousePos()
+        {
+			Vector2 pos = new Vector2();
+			GetMousePos_EX(ref pos);
+			return pos;
+        }
 	}
 }

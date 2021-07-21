@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace SmolEngine
 {
@@ -14,6 +15,9 @@ namespace SmolEngine
         internal unsafe extern static bool AddComponent_EX(void* ptr, uint entity_id, ushort component_type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal unsafe extern static bool DestroyComponent_EX(uint entity_id, ushort component_type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool HasComponent_EX(uint entity_id, ushort component_type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -24,7 +28,7 @@ namespace SmolEngine
 
         private readonly uint MyEntityID = 0;
 
-        public T AddComponent<T>() where T : unmanaged
+        public T? AddComponent<T>() where T : unmanaged
         {
             ushort type = Utils.GetComponentType<T>();
             if (type < (ushort)ComponentTypeEX.MaxEnum)
@@ -32,18 +36,17 @@ namespace SmolEngine
                 var component = (T)default;
                 unsafe
                 {
-                    bool add = AddComponent_EX(&component, MyEntityID, type);
-                    if(add)
+                    if(AddComponent_EX(&component, MyEntityID, type) == true)
                     {
                         return (T)(object)component;
                     }
                 }
             }
-            
-            return (T)default;
+
+            return null;
         }
 
-        public T GetComponent<T>() where T : unmanaged
+        public T? GetComponent<T>() where T : unmanaged
         {
             ushort type = Utils.GetComponentType<T>();
             if(type < (ushort) ComponentTypeEX.MaxEnum)
@@ -51,15 +54,25 @@ namespace SmolEngine
                 var component = (T)default;
                 unsafe
                 {
-                    bool found = GetComponent_EX(&component, MyEntityID, type);
-                    if (found)
-                    {
-                        return (T)(object)component;
-                    }
+                   if(GetComponent_EX(&component, MyEntityID, type) == true)
+                   {
+                       return (T)(object)component;
+                   }
                 }
             }
 
-            return (T)default;
+            return null;
+        }
+
+        public bool DestroyComponent<T>()
+        {
+            ushort type = Utils.GetComponentType<T>();
+            if (type < (ushort)ComponentTypeEX.MaxEnum)
+            {
+                return DestroyComponent_EX(MyEntityID, type);
+            }
+
+            return false;
         }
 
         public bool HasComponent<T>()

@@ -21,29 +21,50 @@ namespace SmolEngine
         extern static uint GetChildsCount_EX(uint entity_id);
 
 
-        private bool _IsVisible;
-        private readonly bool _IsActive;
-        private readonly uint _Handler;
+        private bool                    _IsVisible;
+        private bool                    _IsActive;
+        private readonly unsafe uint*   _Handler;
 
         public bool IsVisible
         {
             get { return _IsVisible; }
-            set { _IsVisible = value; OnChange(); }
+            set { _IsVisible = value; OnValueChanged(); }
         }
 
         public bool LoadModel(string path)
         {
-            return LoadModel_EX(path, _Handler);
+            unsafe
+            {
+                if (_Handler != null)
+                    return LoadModel_EX(path, *_Handler);
+            }
+
+            return false;
         }
 
         public uint LoadMaterial(string path)
         {
-            return LoadMaterial_EX(path, _Handler);
+            unsafe
+            {
+                if (_Handler != null)
+                {
+                    _IsActive = true;
+                    return LoadMaterial_EX(path, *_Handler);
+                }
+            }
+
+            return 0;
         }
 
         public bool SetMaterial(uint index, string material_path)
         {
-            return SetMaterial_EX(index, material_path, _Handler);
+            unsafe
+            {
+                if (_Handler != null)
+                    return SetMaterial_EX(index, material_path, *_Handler);
+            }
+
+            return false;
         }
 
         public bool IsActibe()
@@ -54,25 +75,30 @@ namespace SmolEngine
         // sub meshes
         public uint GetChildsCount()
         {
-            return GetChildsCount_EX(_Handler);
+            unsafe
+            {
+                if (_Handler != null)
+                    return GetChildsCount_EX(*_Handler);
+            }
+
+            return 0;
         }
 
         public void ResetAll()
         {
-            ResetAll_EX(_Handler);
-        }
-
-        private void OnChange()
-        {
-            var copy = this;
             unsafe
             {
-                bool result = Actor.SetComponent_EX(&copy, _Handler,
-                    (ushort)ComponentTypeEX.MeshComponent);
-                if (result)
-                {
-                    this = copy;
-                }
+                if (_Handler != null)
+                    ResetAll_EX(*_Handler);
+            }
+        }
+
+        private void OnValueChanged()
+        {
+            unsafe
+            {
+                if (_Handler != null)
+                    Utils.OnComponentUpdated(ref this, *_Handler);
             }
         }
     }

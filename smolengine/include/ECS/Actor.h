@@ -54,8 +54,8 @@ namespace SmolEngine
 		T* AddComponent(Args&&... args) { return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponentEX<T>(this, args...); }
 
 	private:
-
 		HeadComponent*               GetInfo();
+
 		entt::entity                 m_Entity{};
 
 	private:

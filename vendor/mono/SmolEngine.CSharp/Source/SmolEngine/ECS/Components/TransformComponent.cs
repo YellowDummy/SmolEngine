@@ -9,7 +9,7 @@ namespace SmolEngine
         private Vector3 _Positios;
         private Vector3 _Rotation;
         private Vector3 _Scale;
-        private uint    _Handler;
+        unsafe private readonly uint* _Handler;
 
         public Vector3 Position
         {
@@ -59,12 +59,8 @@ namespace SmolEngine
         {
             unsafe
             {
-                TransformComponent obj = this;
-                if(Actor.SetComponent_EX(&obj, _Handler, 
-                    (ushort)ComponentTypeEX.TransformComponent) == true)
-                {
-                    this = obj;
-                }
+                if (_Handler != null)
+                    Utils.OnComponentUpdated(ref this, *_Handler);
             }
         }
 

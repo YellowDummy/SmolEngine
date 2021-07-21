@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace SmolEngine
 {
@@ -37,6 +34,19 @@ namespace SmolEngine
             }
 
             return (ushort)ComponentTypeEX.MaxEnum;
+        }
+
+        public static void OnComponentUpdated<T>(ref T component, uint entity_id) where T : unmanaged
+        {
+            ushort type = GetComponentType<T>();
+            if (type < (ushort)ComponentTypeEX.MaxEnum)
+            {
+                var obj = component;
+                unsafe
+                {
+                    Actor.SetComponent_EX(&obj, entity_id, type);
+                }
+            }
         }
     }
 }

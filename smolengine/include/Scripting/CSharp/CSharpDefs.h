@@ -8,25 +8,35 @@ namespace SmolEngine
 {
     struct TransformComponentCSharp
     {
-        glm::vec3 WorldPos;
-        glm::vec3 Rotation;
-        glm::vec3 Scale;
-        uint32_t  Handler;
+        glm::vec3  WorldPos;
+        glm::vec3  Rotation;
+        glm::vec3  Scale;
+        uint32_t*  Handler;
     };
 
     struct MeshComponentCSharp
     {
         bool      IsVisible;
         bool      IsActive;
-        uint32_t  Handler;
+        uint32_t* Handler;
     };
 
     struct RigidBodyComponentCSharp
     {
-        uint32_t  Handler;
+        bool      Created;
         uint16_t  Shape;
         uint16_t  Type;
-        bool      Created;
+        uint32_t* Handler;
+    };
+
+    struct CameraComponentCSharp
+    {
+        float     FOV;
+        float     zNear;
+        float     zFar;
+        float     Zoom;
+        bool      IsPrimary;
+        uint32_t* Handler;
     };
 
     struct RigidBodyCreateInfoCSharp

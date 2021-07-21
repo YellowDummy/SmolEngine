@@ -1,10 +1,12 @@
-value0: 2
+value0: 4
 value1: 0
 value2: 1
-value3: 1048575
-value4: 1
-value5: 1
-value6:
+value3: 2
+value4: 3
+value5: 1048575
+value6: 3
+value7: 1
+value8:
   value0: 1
   value1: DefaultActor0
   value2: Default
@@ -17,25 +19,73 @@ value6:
     []
   value7: 0
   value8: 3
-value7: 0
-value8: 0
-value9: 1
-value10: 1
-value11:
-  value0: GameLogic
+value9: 2
+value10:
+  value0: 2
+  value1: DefaultActor1
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    ptr_wrapper:
+      id: 0
+  value6:
+    []
+  value7: 0
+  value8: 4
+value11: 3
+value12:
+  value0: 3
+  value1: DefaultActor2
+  value2: Default
+  value3: true
+  value4: false
+  value5:
+    ptr_wrapper:
+      id: 0
+  value6:
+    []
+  value7: 0
+  value8: 3
+value13: 1
+value14: 2
+value15:
+  value0: 1.7360656261444092
+  value1: 6
+  value2: true
+  value3: 0
+  value4: 0.10000000149011612
+  value5: 1000
+  value6: 75
+  value7: 0
+  value8: 3
+value16: 0
+value17: 2
+value18: 2
+value19:
+  value0: CameraBehaviour
   value1:
     ptr_wrapper:
       id: 2147483649
       data:
-        value0: 1
+        value0: 2
   value2: 2
-value12: 0
-value13: 0
-value14: 0
-value15: 0
-value16: 1
-value17: 1
-value18:
+value20: 3
+value21:
+  value0: GameLogic
+  value1:
+    ptr_wrapper:
+      id: 2147483650
+      data:
+        value0: 3
+  value2: 2
+value22: 0
+value23: 0
+value24: 0
+value25: 0
+value26: 3
+value27: 1
+value28:
   value0: 0
   value1: -0
   value2: 0
@@ -43,19 +93,52 @@ value18:
   value4: 1
   value5: 1
   value6: 0
-  value7: 15.988698959350586
-  value8: 1.508202075958252
+  value7: 6.4544949531555176
+  value8: 0
   value9: 1
-value19: 0
-value20: 0
-value21: 0
-value22: 0
-value23: 0
-value24: 1
-value25: 0
-value26:
+value29: 2
+value30:
   value0: 0
+  value1: -0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 25
+  value8: 0
+  value9: 1
+value31: 3
+value32:
+  value0: 0
+  value1: 0
+  value2: 0
+  value3: 1
+  value4: 1
+  value5: 1
+  value6: 0
+  value7: 0
+  value8: 0
+  value9: 1
+value33: 0
+value34: 0
+value35: 1
+value36: 1
+value37:
+  value0:
+    - value0: ""
   value1: 2
+  value2: false
+  value3: true
+  value4: ""
+  value5: 2
+value38: 0
+value39: 0
+value40: 1
+value41: 0
+value42:
+  value0: 0
+  value1: 4
   value2: D:\Engines\SmolEngine\samples\scenes\Test.s_scene
   value3: Test
   value4:
@@ -123,13 +206,35 @@ value26:
     - key: DefaultActor0
       value:
         ptr_wrapper:
+          id: 2147483651
+          data:
+            value0: 1
+    - key: DefaultActor1
+      value:
+        ptr_wrapper:
           id: 1
+    - key: DefaultActor2
+      value:
+        ptr_wrapper:
+          id: 2
   value6:
     - key: 1
       value:
         ptr_wrapper:
+          id: 3
+    - key: 2
+      value:
+        ptr_wrapper:
           id: 1
+    - key: 3
+      value:
+        ptr_wrapper:
+          id: 2
   value7:
     - ptr_wrapper:
+        id: 3
+    - ptr_wrapper:
         id: 1
-value27: 0
+    - ptr_wrapper:
+        id: 2
+value43: 0

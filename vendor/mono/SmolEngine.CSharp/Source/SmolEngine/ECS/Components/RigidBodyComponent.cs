@@ -68,18 +68,24 @@ namespace SmolEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern static void SetImpact_EX(ref Vector3 value, uint entity_id, ImpactFlags flags);
 
-        private readonly uint _Handler;
+        private bool _IsCreated;
         private RigidBodyShape _Shape;
         private RigidBodyType _Type;
-        private bool _IsCreated;
+        private readonly unsafe uint* _Handler;
 
         public void Create(RigidBodyCreateInfo info)
         {
-            _Shape = info.eShape;
-            _Type = info.eType;
-            _IsCreated = true;
+            unsafe
+            {
+                if(_Handler != null)
+                {
+                    _Shape = info.eShape;
+                    _Type = info.eType;
+                    _IsCreated = true;
 
-            CreateRigidBody_EX(ref info, _Handler);
+                    CreateRigidBody_EX(ref info, *_Handler);
+                }
+            }
         }
 
         public bool IsActive()
@@ -99,22 +105,38 @@ namespace SmolEngine
 
         public void AddForce(Vector3 force)
         {
-            SetImpact_EX(ref force, _Handler, ImpactFlags.Force);
+            unsafe
+            {
+                if (_Handler != null)
+                    SetImpact_EX(ref force, *_Handler, ImpactFlags.Force);
+            }
         }
 
         public void AddImpulse(Vector3 impulse)
         {
-            SetImpact_EX(ref impulse, _Handler, ImpactFlags.Impulse);
+            unsafe
+            {
+                if (_Handler != null)
+                    SetImpact_EX(ref impulse, *_Handler, ImpactFlags.Impulse);
+            }
         }
 
         public void AddTorque(Vector3 torque)
         {
-            SetImpact_EX(ref torque, _Handler, ImpactFlags.Torque);
+            unsafe
+            {
+                if (_Handler != null)
+                    SetImpact_EX(ref torque, *_Handler, ImpactFlags.Torque);
+            }
         }
 
         public void SetGravity(Vector3 gravity)
         {
-            SetImpact_EX(ref gravity, _Handler, ImpactFlags.Gravity);
+            unsafe
+            {
+                if (_Handler != null)
+                    SetImpact_EX(ref gravity, *_Handler, ImpactFlags.Gravity);
+            }
         }
     }
 }

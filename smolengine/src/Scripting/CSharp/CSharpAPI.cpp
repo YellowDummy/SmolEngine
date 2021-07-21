@@ -38,35 +38,62 @@ namespace SmolEngine
 		Gravity
 	};
 
-	void SetGetTransform(TransformComponent* native_comp, TransformComponentCSharp* c_comp, uint32_t entity_id, bool get)
+	template<typename T>
+	void CheckHandler(T* component, uint32_t entity_id)
+	{
+		if (component->Handler == nullptr)
+		{
+			Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+			HeadComponent* head = scene->GetComponent<HeadComponent>((entt::entity)entity_id);
+			Ref<Actor> actor = scene->FindActorByID(head->ActorID);
+			component->Handler = (uint32_t*)actor.get();
+		}
+	}
+
+	void SetGetTransform(TransformComponent* native_comp, TransformComponentCSharp* c_comp, bool get)
 	{
 		if (get)
 		{
 			c_comp->Scale = native_comp->Scale;
 			c_comp->WorldPos = native_comp->WorldPos;
 			c_comp->Rotation = native_comp->Rotation;
-			c_comp->Handler = entity_id;
+			return;
 		}
-		else
-		{
-			native_comp->Scale = c_comp->Scale;
-			native_comp->WorldPos = c_comp->WorldPos;
-			native_comp->Rotation = c_comp->Rotation;
-		}
+
+		native_comp->Scale = c_comp->Scale;
+		native_comp->WorldPos = c_comp->WorldPos;
+		native_comp->Rotation = c_comp->Rotation;
 	}
 
-	void SetGetMesh_Component(MeshComponent* native_comp, MeshComponentCSharp* c_comp, uint32_t entity_id, bool get)
+	void SetGetMesh_Component(MeshComponent* native_comp, MeshComponentCSharp* c_comp, bool get)
 	{
 		if (get)
 		{
-			c_comp->Handler = entity_id;
 			c_comp->IsVisible = native_comp->bShow;
 			c_comp->IsActive = native_comp->DefaulPtr != nullptr || native_comp->MeshPtr != nullptr;
+			return;
 		}
-		else
+
+		native_comp->bShow = c_comp->IsVisible;
+	}
+
+	void SetGetCamera_Component(CameraComponent* native_comp, CameraComponentCSharp* c_comp, bool get)
+	{
+		if (get)
 		{
-			native_comp->bShow = c_comp->IsVisible;
+			c_comp->FOV = native_comp->FOV;
+			c_comp->zFar = native_comp->zFar;
+			c_comp->zNear = native_comp->zNear;
+			c_comp->Zoom = native_comp->ZoomLevel;
+			c_comp->IsPrimary = native_comp->bPrimaryCamera;
+			return;
 		}
+
+		native_comp->FOV = c_comp->FOV;
+		native_comp->zFar = c_comp->zFar;
+		native_comp->zNear = c_comp->zNear;
+		native_comp->ZoomLevel = c_comp->Zoom;
+		native_comp->bPrimaryCamera = c_comp->IsPrimary;
 	}
 
 	bool ModifyComponent(void* ptr, uint32_t entity_id, uint16_t component_type, bool get_flag, bool add_flag = false)
@@ -74,7 +101,6 @@ namespace SmolEngine
 		ComponentTypeEX type = (ComponentTypeEX)component_type;
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
 		entt::entity id = (entt::entity)entity_id;
-
 		switch (type)
 		{
 		case ComponentTypeEX::Transform:
@@ -82,7 +108,10 @@ namespace SmolEngine
 			auto* native_comp = add_flag == false ? scene->GetComponent<TransformComponent>(id): scene->AddComponent<TransformComponent>(id);
 			auto* c_comp = (TransformComponentCSharp*)ptr;
 			if (native_comp)
-				SetGetTransform(native_comp, c_comp, entity_id, get_flag);
+			{
+				CheckHandler<TransformComponentCSharp>(c_comp, entity_id);
+				SetGetTransform(native_comp, c_comp, get_flag);
+			}
 
 			return native_comp != nullptr;
 		}
@@ -91,7 +120,10 @@ namespace SmolEngine
 			auto* native_comp = add_flag == false ?  scene->GetComponent<MeshComponent>(id): scene->AddComponent<MeshComponent>(id);
 			auto* c_comp = (MeshComponentCSharp*)ptr;
 			if (native_comp)
-				SetGetMesh_Component(native_comp, c_comp, entity_id, get_flag);
+			{
+				CheckHandler<MeshComponentCSharp>(c_comp, entity_id);
+				SetGetMesh_Component(native_comp, c_comp, get_flag);
+			}
 
 			return native_comp != nullptr;
 		}
@@ -99,7 +131,23 @@ namespace SmolEngine
 		{
 			auto* native_comp = add_flag == false ? scene->GetComponent<RigidbodyComponent>(id) : scene->AddComponent<RigidbodyComponent>(id);
 			auto* c_comp = (RigidBodyComponentCSharp*)ptr;
-			c_comp->Handler = entity_id;
+			if (native_comp)
+			{
+				CheckHandler<RigidBodyComponentCSharp>(c_comp, entity_id);
+			}
+
+			return native_comp != nullptr;
+		}
+		case ComponentTypeEX::Camera:
+		{
+			auto* native_comp = add_flag == false ? scene->GetComponent<CameraComponent>(id) : scene->AddComponent<CameraComponent>(id);
+			auto* c_comp = (CameraComponentCSharp*)ptr;
+			if (native_comp)
+			{
+				CheckHandler<CameraComponentCSharp>(c_comp, entity_id);
+				SetGetCamera_Component(native_comp, c_comp, get_flag);
+			}
+
 			return native_comp != nullptr;
 		}
 		}
@@ -115,7 +163,7 @@ namespace SmolEngine
 
 	bool SetComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
 	{
-		const bool get_flag = true;
+		const bool get_flag = false;
 		return ModifyComponent(ptr, entity_id, component_type, get_flag);
 	}
 
@@ -211,6 +259,12 @@ namespace SmolEngine
 		}
 
 		mono_free(cpp_str);
+	}
+
+	void GetMousePos_CSharpAPI(glm::vec2* pos)
+	{
+		pos->x = Input::GetMouseX();
+		pos->y = Input::GetMouseY();
 	}
 
 	void MeshResetAll_CSharpAPI(uint32_t entity_id)
