@@ -13,6 +13,7 @@ namespace SmolEngine
 	bool       SetComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type);
 	bool       HasComponent_CSharpAPI(uint32_t entity_id, uint16_t component_type);
 	bool       AddComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type);
+	bool       DestroyComponent_CSharpAPI(uint32_t entity_id, uint16_t component_type);
 	void*      GetEntityName_CSharpAPI(uint32_t entity_id);
 	void*      GetEntityTag_CSharpAPI(uint32_t entity_id);
 
@@ -30,5 +31,6 @@ namespace SmolEngine
 
 	// Rigidbody
 	void      RigidBodyCreate_CSharpAPI(RigidBodyCreateInfoCSharp* ptr, uint32_t entity_id);
+	void      RigidBodySetImpact_CSharpAPI(glm::vec3* dir, uint32_t entity_id, uint16_t flags);
 
 }

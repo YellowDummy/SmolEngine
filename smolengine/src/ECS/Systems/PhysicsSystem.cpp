@@ -28,6 +28,13 @@ namespace SmolEngine
 		rb->setAngularFactor(btVector3(axis.x, axis.y, axis.z));
 	}
 
+	void PhysicsSystem::SetGravity(RigidbodyComponent* component, const glm::vec3& gravity)
+	{
+		btRigidBody* rb = component->m_Body;
+		rb->activate(true);
+		rb->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+	}
+
 	void PhysicsSystem::AddForce(RigidbodyComponent* component, const glm::vec3& dir)
 	{
 		btRigidBody* rb = component->m_Body;

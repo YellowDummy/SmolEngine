@@ -34,9 +34,10 @@ public class GameLogic : BehaviourPrimitive
         var rb = AddComponent<RigidBodyComponent>();
         var rbInfo = new RigidBodyCreateInfo();
         rbInfo.CreateDefault();
-        rbInfo.eType = RigidBodyType.Static;
+        rbInfo.eType = RigidBodyType.Dynamic;
 
         rb.Create(rbInfo);
+        rb.AddImpulse(new Vector3(0, 20, 0));
 
         SLog.WriteLine("OnBegin: exit", LogLevel.Warn);
     }

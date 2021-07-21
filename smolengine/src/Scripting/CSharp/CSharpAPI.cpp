@@ -6,6 +6,7 @@
 
 #include "ECS/ComponentsCore.h"
 #include "ECS/ComponentHandler.h"
+#include "ECS/Systems/PhysicsSystem.h"
 
 #include <mono/jit/jit.h>
 #include <Frostium3D/Common/Input.h>
@@ -27,6 +28,14 @@ namespace SmolEngine
 		RendererState,
 		Canvas,
 		MaxEnum
+	};
+
+	enum class ImpactFlags : uint16_t
+	{
+		Force,
+		Impulse,
+		Torque,
+		Gravity
 	};
 
 	void SetGetTransform(TransformComponent* native_comp, TransformComponentCSharp* c_comp, uint32_t entity_id, bool get)
@@ -115,6 +124,27 @@ namespace SmolEngine
 		const bool get_flag = true;
 		const bool add_flag = true;
 		return ModifyComponent(ptr, entity_id, component_type, get_flag, add_flag);
+	}
+
+	bool DestroyComponent_CSharpAPI(uint32_t entity_id, uint16_t component_type)
+	{
+		ComponentTypeEX type = (ComponentTypeEX)component_type;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		entt::entity id = (entt::entity)entity_id;
+
+		switch (type)
+		{
+		case ComponentTypeEX::Transform: return scene->DestroyComponent<TransformComponent>(id);
+		case ComponentTypeEX::Mesh: return scene->DestroyComponent<MeshComponent>(id);
+		case ComponentTypeEX::RigidBody: return scene->DestroyComponent<RigidbodyComponent>(id);
+		case ComponentTypeEX::RigidBody2D: return scene->DestroyComponent<Rigidbody2DComponent>(id);
+		case ComponentTypeEX::Camera: return scene->DestroyComponent<CameraComponent>(id);
+		case ComponentTypeEX::PointLight: return scene->DestroyComponent<PointLightComponent>(id);
+		case ComponentTypeEX::SpotLight: return scene->DestroyComponent<SpotLightComponent>(id);
+		case ComponentTypeEX::Texture2D: return scene->DestroyComponent<Texture2DComponent>(id);
+		}
+
+		return false;
 	}
 
 	bool HasComponent_CSharpAPI(uint32_t entity_id, uint16_t component_type)
@@ -256,6 +286,23 @@ namespace SmolEngine
 
 		component->CreateInfo = info;
 		ComponentHandler::ValidateRigidBodyComponent(component, actor);
+	}
+
+	void RigidBodySetImpact_CSharpAPI(glm::vec3* value, uint32_t entity_id, uint16_t flags)
+	{
+		ImpactFlags flag_ = (ImpactFlags)flags;
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		RigidbodyComponent* rb = scene->GetComponent<RigidbodyComponent>((entt::entity)entity_id);
+		if (rb)
+		{
+			switch (flag_)
+			{
+			case ImpactFlags::Force: PhysicsSystem::AddForce(rb, *value); break;
+			case ImpactFlags::Impulse: PhysicsSystem::AddImpulse(rb, *value); break;
+			case ImpactFlags::Torque: PhysicsSystem::AddTorque(rb, *value); break;
+			case ImpactFlags::Gravity: PhysicsSystem::SetGravity(rb, *value); break;
+			}
+		}
 	}
 
 	bool MeshLoadModel_CSharpAPI(void* str, uint32_t entity_id)

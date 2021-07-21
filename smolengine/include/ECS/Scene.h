@@ -34,85 +34,83 @@ namespace SmolEngine
 		template<typename T, typename... Args>
 		T* AddComponentEX(Actor* actor, Args&&... args)
 		{
-			entt::entity ent = actor->m_Entity;
-			HeadComponent* head = actor->GetInfo();
-
-			if (HasComponent<T>(ent))
-			{
-				NATIVE_ERROR("Actor already have component!");
-				return nullptr;
-			}
-
-			auto& component = m_SceneData.m_Registry.emplace<T>(ent, std::forward<Args>(args)...);
-			component.ComponentID = head->ComponentsCount;
-			head->ComponentsCount++;
-			return &component;
+			return AddComponent<T>(actor->m_Entity, args...);
 		}
 
 		template<typename T, typename... Args>
 		T* AddComponent(Ref<Actor>& actor, Args&&... args)
 		{
-			if (HasComponent<T>(actor))
+			return AddComponent<T>(actor->m_Entity, args...);
+		}
+
+		template<typename T, typename... Args>
+		T* AddComponent(entt::entity entt_id, Args&&... args)
+		{
+			if (HasComponent<T>(entt_id))
 			{
 				NATIVE_ERROR("Actor already have component!");
 				return nullptr;
 			}
 
-			HeadComponent* head = actor->GetInfo();
-			entt::entity ent = actor->m_Entity;
-			auto& component = m_SceneData.m_Registry.emplace<T>(ent, std::forward<Args>(args)...);
+			HeadComponent* head = GetComponent<HeadComponent>(entt_id);
+			auto& component = m_SceneData.m_Registry.emplace<T>(entt_id, std::forward<Args>(args)...);
 			component.ComponentID = head->ComponentsCount;
 			head->ComponentsCount++;
 			return &component;
 		}
 
-		template<typename T, typename... Args>
-		T* AddComponent(entt::entity entt, Args&&... args)
+		template<typename T>
+		bool DestroyComponent(Actor* actor)
 		{
-			if (HasComponent<T>(entt))
+			return DestroyComponent<T>(actor->m_Entity);
+		}
+
+		template<typename T>
+		bool DestroyComponent(Ref<Actor>& actor)
+		{
+			return DestroyComponent<T>(actor->m_Entity);
+		}
+
+		template<typename T>
+		bool DestroyComponent(entt::entity entt_id)
+		{
+			if (HasComponent<T>(entt_id))
 			{
-				NATIVE_ERROR("Actor already have component!");
-				return nullptr;
+				m_SceneData.m_Registry.remove<T>(entt_id);
+				return true;
 			}
 
-			HeadComponent* head = GetComponent<HeadComponent>(entt);
-			auto& component = m_SceneData.m_Registry.emplace<T>(entt, std::forward<Args>(args)...);
-			component.ComponentID = head->ComponentsCount;
-			head->ComponentsCount++;
-			return &component;
+			return false;
 		}
 
 		template<typename T>
 		bool HasComponent(Ref<Actor>& actor)
 		{
-			entt::entity ent = actor->m_Entity;
-			return m_SceneData.m_Registry.try_get<T>(ent) != nullptr;
+			return HasComponent<T>(actor->m_Entity);
 		}
 
 		template<typename T>
-		bool HasComponent(entt::entity ent)
+		bool HasComponent(entt::entity entt_id)
 		{
-			return m_SceneData.m_Registry.try_get<T>(ent) != nullptr;
-		}
-
-		template<typename T>
-		T* GetComponent(entt::entity ent)
-		{
-			return m_SceneData.m_Registry.try_get<T>(ent);
+			return m_SceneData.m_Registry.try_get<T>(entt_id) != nullptr;
 		}
 
 		template<typename T>
 		T* GetComponent(Ref<Actor>& actor)
 		{
-			entt::entity ent = actor->m_Entity;
-			return m_SceneData.m_Registry.try_get<T>(ent);
+			return GetComponent<T>(actor->m_Entity);
 		}
 
 		template<typename T>
 		T* GetComponentEX(Actor* actor)
 		{
-			entt::entity ent = actor->m_Entity;
-			return m_SceneData.m_Registry.try_get<T>(ent);
+			return GetComponent<T>(actor->m_Entity);
+		}
+
+		template<typename T>
+		T* GetComponent(entt::entity entt_id)
+		{
+			return m_SceneData.m_Registry.try_get<T>(entt_id);
 		}
 
 		bool AddCppScript(Ref<Actor>& actor, const std::string& script_name);

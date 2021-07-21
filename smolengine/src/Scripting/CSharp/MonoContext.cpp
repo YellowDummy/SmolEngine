@@ -311,6 +311,7 @@ namespace SmolEngine
 		mono_add_internal_call("SmolEngine.MeshComponent::GetChildsCount_EX", &MeshGetChildsCount_CSharpAPI);
 
 		mono_add_internal_call("SmolEngine.RigidBodyComponent::CreateRigidBody_EX", &RigidBodyCreate_CSharpAPI);
+		mono_add_internal_call("SmolEngine.RigidBodyComponent::SetImpact_EX", &RigidBodySetImpact_CSharpAPI);
 	}
 
 	void MonoContext::ResolveClasses()
@@ -341,20 +342,23 @@ namespace SmolEngine
 			if (is_same == false)
 			{
 				MonoClass* mono_class = mono_class_from_name(m_Image, name_space, name);
-				if (mono_class_is_subclass_of(mono_class, b_class, false))
+				if (mono_class)
 				{
-					MonoContext::MetaData meta = {};
-
-					meta.pClass = mono_class;
-					meta.pOnBegin = (MonoMethod*)GetMethod("OnBegin()", name, mono_class);
-					meta.pOnDestroy = (MonoMethod*)GetMethod("OnDestroy()", name, mono_class);
-					meta.pOnUpdate = (MonoMethod*)GetMethod("OnUpdate()", name, mono_class);
-					meta.pOnCollisionBegin = (MonoMethod*)GetMethod("OnCollisionBegin (uint,bool)", name, mono_class);
-					meta.pOnCollisionEnd = (MonoMethod*)GetMethod("OnCollisionEnd (uint,bool)", name, mono_class);
-
-					if (meta.pOnBegin && meta.pOnDestroy && meta.pOnUpdate)
+					if (mono_class_is_subclass_of(mono_class, b_class, false))
 					{
-						m_MetaMap[name] = std::move(meta);
+						MonoContext::MetaData meta = {};
+
+						meta.pClass = mono_class;
+						meta.pOnBegin = (MonoMethod*)GetMethod("OnBegin()", name, mono_class);
+						meta.pOnDestroy = (MonoMethod*)GetMethod("OnDestroy()", name, mono_class);
+						meta.pOnUpdate = (MonoMethod*)GetMethod("OnUpdate()", name, mono_class);
+						meta.pOnCollisionBegin = (MonoMethod*)GetMethod("OnCollisionBegin (uint,bool)", name, mono_class);
+						meta.pOnCollisionEnd = (MonoMethod*)GetMethod("OnCollisionEnd (uint,bool)", name, mono_class);
+
+						if (meta.pOnBegin && meta.pOnDestroy && meta.pOnUpdate)
+						{
+							m_MetaMap[name] = std::move(meta);
+						}
 					}
 				}
 			}
