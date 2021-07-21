@@ -29,7 +29,15 @@ namespace SmolEngine
             ushort type = Utils.GetComponentType<T>();
             if (type < (ushort)ComponentTypeEX.MaxEnum)
             {
-
+                var component = (T)default;
+                unsafe
+                {
+                    bool add = AddComponent_EX(&component, MyEntityID, type);
+                    if(add)
+                    {
+                        return (T)(object)component;
+                    }
+                }
             }
             
             return (T)default;

@@ -953,20 +953,20 @@ namespace SmolEngine
 
 		if (component->CreateInfo.eShape == RigidBodyShape::Box)
 		{
-			ImGui::Extensions::InputFloat("X", component->CreateInfo.BoxShapeInfo.X);
-			ImGui::Extensions::InputFloat("Y", component->CreateInfo.BoxShapeInfo.Y);
-			ImGui::Extensions::InputFloat("Z", component->CreateInfo.BoxShapeInfo.Z);
+			ImGui::Extensions::InputFloat("X", component->CreateInfo.Size.x);
+			ImGui::Extensions::InputFloat("Y", component->CreateInfo.Size.y);
+			ImGui::Extensions::InputFloat("Z", component->CreateInfo.Size.z);
 		}
 
 		if (component->CreateInfo.eShape == RigidBodyShape::Sphere)
 		{
-			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.SphereShape.Radius);
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.Size.x);
 		}
 
 		if (component->CreateInfo.eShape == RigidBodyShape::Capsule)
 		{
-			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.CapsuleShapeInfo.Radius);
-			ImGui::Extensions::InputFloat("Height", component->CreateInfo.CapsuleShapeInfo.Height);
+			ImGui::Extensions::InputFloat("Radius", component->CreateInfo.Size.x);
+			ImGui::Extensions::InputFloat("Height", component->CreateInfo.Size.y);
 		}
 
 		if (component->CreateInfo.eShape == RigidBodyShape::Convex)
@@ -975,9 +975,9 @@ namespace SmolEngine
 			ImGui::Separator();
 			ImGui::NewLine();
 
-			if (!component->CreateInfo.ConvexShapeInfo.FilePath.empty())
+			if (!component->CreateInfo.FilePath.empty())
 			{
-				std::filesystem::path p(component->CreateInfo.ConvexShapeInfo.FilePath);
+				std::filesystem::path p(component->CreateInfo.FilePath);
 				ImGui::SetCursorPosX(12);
 				ImGui::Extensions::Text(p.filename().stem().u8string(), "");
 			}
@@ -987,7 +987,7 @@ namespace SmolEngine
 			{
 				const auto& result = Utils::OpenFile("glTF 2.0 (*gltf)\0*.gltf\0");
 				if (result.has_value())
-					component->CreateInfo.ConvexShapeInfo.FilePath = result.value();
+					component->CreateInfo.FilePath = result.value();
 			}
 
 			if (ImGui::BeginDragDropTarget())
@@ -997,7 +997,7 @@ namespace SmolEngine
 					std::string& path = *(std::string*)payload->Data;
 					if (FileExtensionCheck(path, ".gltf"))
 					{
-						component->CreateInfo.ConvexShapeInfo.FilePath = path;
+						component->CreateInfo.FilePath = path;
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -1006,7 +1006,7 @@ namespace SmolEngine
 			ImGui::SetCursorPosX(10);
 			if (ImGui::Button("Clear", { ImGui::GetWindowWidth() - 20.0f, 20.0f }))
 			{
-				component->CreateInfo.ConvexShapeInfo.FilePath = "";
+				component->CreateInfo.FilePath = "";
 			}
 
 			ImGui::NewLine();

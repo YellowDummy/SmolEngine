@@ -40,6 +40,7 @@ namespace SmolEngine
 		bool                         SaveScene(const std::string& filePath);
 		bool                         LoadScene(const std::string& filePath, bool reload = false);
 		bool                         SwapScene(uint32_t index);
+		bool                         IsInPlayMode();
 								     
 		void                         SetBeginSceneInfo(BeginSceneInfo* info);
 		inline static WorldAdmin*    GetSingleton() { return s_World; }
@@ -55,7 +56,6 @@ namespace SmolEngine
 		void                         OnEvent(Event& e);
 		void                         OnHotReload();
 			                         
-		bool                         IsInPlayMode();
 		bool                         LoadStaticComponents();
 		bool                         ChangeActorName(Ref<Actor>& actor, const std::string& name);
 		void                         ReloadAssets();

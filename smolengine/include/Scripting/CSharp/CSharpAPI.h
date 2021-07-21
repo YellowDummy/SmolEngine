@@ -5,6 +5,7 @@ namespace SmolEngine
 {
 	struct TransformComponentCSharp;
 	struct HeadComponentCSharp;
+	struct RigidBodyCreateInfoCSharp;
 
 
 	// Actor
@@ -26,5 +27,8 @@ namespace SmolEngine
 	bool       MeshLoadModel_CSharpAPI(void* str, uint32_t entity_id);
 	bool       MeshSetMaterial__CSharpAPI(uint32_t mesh_index, void* material_path, uint32_t entity_id);
 	uint32_t   MeshLoadMaterial_CSharpAPI(void* str, uint32_t entity_id);
+
+	// Rigidbody
+	void      RigidBodyCreate_CSharpAPI(RigidBodyCreateInfoCSharp* ptr, uint32_t entity_id);
 
 }

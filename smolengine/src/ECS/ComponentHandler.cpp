@@ -138,6 +138,13 @@ namespace SmolEngine
 		if (comp && actor)
 		{
 			comp->CreateInfo.pActor = actor;
+			if (WorldAdmin::GetSingleton()->IsInPlayMode())
+			{
+				TransformComponent* transform = actor->GetComponent<TransformComponent>();
+				comp->Create(&comp->CreateInfo, transform->WorldPos, transform->Rotation);
+				PhysicsSystem::AttachBodyToActiveScene(dynamic_cast<RigidActor*>(comp));
+			}
+
 			return true;
 		}
 
@@ -148,28 +155,12 @@ namespace SmolEngine
 	{
 		comp->Actor = actor;
 		comp->ClassName = class_name;
-		return true;
-	}
-
-	bool ComponentHandler::ValidateCSharpScriptComponent_Runtime(CSharpScriptComponent* comp, Ref<Actor>& actor, const std::string& class_name)
-	{
-		ValidateCSharpScriptComponent(comp, actor, class_name);
-		ScriptingSystem::CreateScript(comp);
-
-		return comp->ClassInstance != nullptr;
-	}
-
-	bool ComponentHandler::ValidateRigidBodyComponent_Runtime(RigidbodyComponent* comp, Ref<Actor>& actor)
-	{
-		if (ValidateRigidBodyComponent(comp, actor))
+		if (WorldAdmin::GetSingleton()->IsInPlayMode())
 		{
-			TransformComponent* transform = actor->GetComponent<TransformComponent>();
-			comp->Create(&comp->CreateInfo, transform->WorldPos, transform->Rotation);
-
-			PhysicsSystem::AttachBodyToActiveScene(dynamic_cast<RigidActor*>(comp));
-			return true;
+			ScriptingSystem::CreateScript(comp);
+			return comp->ClassInstance != nullptr;
 		}
 
-		return false;
+		return true;
 	}
 }

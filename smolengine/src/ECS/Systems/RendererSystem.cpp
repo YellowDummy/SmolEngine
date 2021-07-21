@@ -168,18 +168,17 @@ namespace SmolEngine
 					{
 					case RigidBodyShape::Box:
 					{
-						DebugRenderer::DrawBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1), transform.WorldPos, transform.Rotation,
-							glm::vec3(info.BoxShapeInfo.X, info.BoxShapeInfo.Y, info.BoxShapeInfo.Z));
+						DebugRenderer::DrawBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1), transform.WorldPos, transform.Rotation, info.Size);
 						break;
 					}
 					case RigidBodyShape::Sphere:
 					{
-						DebugRenderer::DrawSphere(info.SphereShape.Radius, transform.WorldPos, transform.Rotation, glm::vec3(1.0f));
+						DebugRenderer::DrawSphere(info.Size.x, transform.WorldPos, transform.Rotation, glm::vec3(1.0f));
 						break;
 					}
 					case RigidBodyShape::Capsule:
 					{
-						DebugRenderer::DrawCapsule(info.CapsuleShapeInfo.Radius, info.CapsuleShapeInfo.Height / 2.0f, 1, transform.WorldPos, transform.Rotation, glm::vec3(1.0f));
+						DebugRenderer::DrawCapsule(info.Size.x, info.Size.y / 2.0f, 1, transform.WorldPos, transform.Rotation, glm::vec3(1.0f));
 						break;
 					}
 					}

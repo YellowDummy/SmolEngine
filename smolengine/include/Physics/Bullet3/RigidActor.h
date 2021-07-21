@@ -28,33 +28,10 @@ namespace SmolEngine
 		Convex
 	};
 
-	struct CapsuleShapeCreateInfo
-	{
-		float                      Radius = 1.0f;
-		float                      Height = 1.0f;
-	};
-
-	struct BoxShapeCreateInfo
-	{
-		float                      X = 1.0f;
-		float                      Y = 1.0f;
-		float                      Z = 1.0f;
-	};
-
-	struct SphereShapeCreateInfo
-	{
-		float                      Radius = 1.0f;
-	};
-
-	struct ConvexShapeCreateInfo
-	{
-		std::string                FilePath;
-		Ref<Mesh>                  Mesh = nullptr;
-	};
-
 	struct BodyCreateInfo
 	{
 		Ref<Actor>                 pActor = nullptr;
+		Ref<Mesh>                  Mesh = nullptr;
 		int                        ShapeIndex = 0;
 		int                        StateIndex = 1;
 		float                      Mass = 1.0f;
@@ -67,10 +44,8 @@ namespace SmolEngine
 		float                      SpinningFriction = 0.1f;
 		RigidBodyShape             eShape = RigidBodyShape::Box;
 		RigidBodyType              eType = RigidBodyType::Static;
-		BoxShapeCreateInfo         BoxShapeInfo{};
-		SphereShapeCreateInfo      SphereShape{};
-		CapsuleShapeCreateInfo     CapsuleShapeInfo{};
-		ConvexShapeCreateInfo      ConvexShapeInfo{};
+		std::string                FilePath = "";
+		glm::vec3                  Size = glm::vec3(1.0);
 		glm::vec3                  LocalInertia = glm::vec3(1, 0, 0);
 
 	private:
@@ -83,10 +58,7 @@ namespace SmolEngine
 			archive(pActor, eShape, eType, StateIndex, ShapeIndex, Mass, Density,
 				Friction, Restitution, LinearDamping, AngularDamping,
 				RollingFriction, SpinningFriction,
-				SphereShape.Radius,
-				BoxShapeInfo.X, BoxShapeInfo.Y, BoxShapeInfo.Z,
-				CapsuleShapeInfo.Height, CapsuleShapeInfo.Radius,
-				ConvexShapeInfo.FilePath,
+				Size.x, Size.y, Size.z, FilePath,
 				LocalInertia.x, LocalInertia.y, LocalInertia.z);
 		}
 	};

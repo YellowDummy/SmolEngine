@@ -36,11 +36,6 @@ namespace SmolEngine
             return LoadModel_EX(path, _Handler);
         }
 
-        public bool IsActibe()
-        {
-            return _IsActive;
-        }
-
         public uint LoadMaterial(string path)
         {
             return LoadMaterial_EX(path, _Handler);
@@ -49,6 +44,11 @@ namespace SmolEngine
         public bool SetMaterial(uint index, string material_path)
         {
             return SetMaterial_EX(index, material_path, _Handler);
+        }
+
+        public bool IsActibe()
+        {
+            return _IsActive;
         }
 
         // sub meshes
@@ -67,7 +67,8 @@ namespace SmolEngine
             var copy = this;
             unsafe
             {
-                bool result = Actor.SetComponent_EX(&copy, _Handler, (ushort)ComponentTypeEX.Mesh);
+                bool result = Actor.SetComponent_EX(&copy, _Handler,
+                    (ushort)ComponentTypeEX.MeshComponent);
                 if (result)
                 {
                     this = copy;

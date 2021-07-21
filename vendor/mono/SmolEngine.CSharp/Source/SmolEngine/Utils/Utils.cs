@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 
 namespace SmolEngine
 {
-    enum ComponentTypeEX
+    enum ComponentTypeEX: ushort
     {
-        Transform,
-        Camera,
-        RigidBody,
-        RigidBody2D,
-        Mesh,
-        PointLight,
-        SpotLight,
-        Light2D,
-        Texture2D,
-        RendererState,
-        Canvas,
+        TransformComponent,
+        CameraComponent,
+        RigidBodyComponent,
+        RigidBody2DComponent,
+        MeshComponent,
+        PointLightComponent,
+        SpotLightComponent,
+        Light2DComponent,
+        Texture2DComponent,
+        RendererStateComponent,
+        CanvasComponent,
+
         MaxEnum
     }
 
@@ -26,14 +27,13 @@ namespace SmolEngine
     {
         static public ushort GetComponentType<T>()
         {
-            if (typeof(T) == typeof(TransformComponent))
+            string[] names = Enum.GetNames(typeof(ComponentTypeEX));
+            for(int i = 0;  i < names.Length; i++)
             {
-                return (ushort)ComponentTypeEX.Transform;
-            }
-
-            if (typeof(T) == typeof(MeshComponent))
-            {
-                return (ushort)ComponentTypeEX.Mesh;
+                if (typeof(T).Name == names[i])
+                {
+                    return (ushort)i;
+                }
             }
 
             return (ushort)ComponentTypeEX.MaxEnum;

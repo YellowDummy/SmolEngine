@@ -60,7 +60,8 @@ namespace SmolEngine
             unsafe
             {
                 TransformComponent obj = this;
-                if(Actor.SetComponent_EX(&obj, _Handler, (ushort)ComponentTypeEX.Transform) == true)
+                if(Actor.SetComponent_EX(&obj, _Handler, 
+                    (ushort)ComponentTypeEX.TransformComponent) == true)
                 {
                     this = obj;
                 }

@@ -309,6 +309,8 @@ namespace SmolEngine
 		mono_add_internal_call("SmolEngine.MeshComponent::SetMaterial_EX", &MeshSetMaterial__CSharpAPI);
 		mono_add_internal_call("SmolEngine.MeshComponent::ResetAll_EX", &MeshResetAll_CSharpAPI);
 		mono_add_internal_call("SmolEngine.MeshComponent::GetChildsCount_EX", &MeshGetChildsCount_CSharpAPI);
+
+		mono_add_internal_call("SmolEngine.RigidBodyComponent::CreateRigidBody_EX", &RigidBodyCreate_CSharpAPI);
 	}
 
 	void MonoContext::ResolveClasses()

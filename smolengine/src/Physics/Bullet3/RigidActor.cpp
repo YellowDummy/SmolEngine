@@ -71,25 +71,25 @@ namespace SmolEngine
 
 	void RigidActor::CreateCapsule(BodyCreateInfo* info)
 	{
-		m_Shape = new btCapsuleShape(info->CapsuleShapeInfo.Radius, info->CapsuleShapeInfo.Height);
+		m_Shape = new btCapsuleShape(info->Size.x, info->Size.y);
 	}
 
 	void RigidActor::CreateSphere(BodyCreateInfo* info)
 	{
-		m_Shape = new btSphereShape(info->SphereShape.Radius);
+		m_Shape = new btSphereShape(info->Size.x);
 	}
 
 	void RigidActor::CreateBox(BodyCreateInfo* info)
 	{
-		m_Shape = new btBoxShape(btVector3(info->BoxShapeInfo.X, info->BoxShapeInfo.Y, info->BoxShapeInfo.Z));
+		m_Shape = new btBoxShape(btVector3(info->Size.x, info->Size.y, info->Size.z));
 	}
 
 	void RigidActor::CreateConvex(BodyCreateInfo* info)
 	{
-		if (info->ConvexShapeInfo.FilePath.empty() == false)
+		if (info->FilePath.empty() == false)
 		{
 			ImportedDataGlTF* data = new ImportedDataGlTF();
-			if (glTFImporter::Import(info->ConvexShapeInfo.FilePath, data))
+			if (glTFImporter::Import(info->FilePath, data))
 			{
 				auto& model = data->Primitives[0];
 				auto trimesh = new btTriangleMesh();

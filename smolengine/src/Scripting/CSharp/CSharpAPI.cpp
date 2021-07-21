@@ -29,7 +29,38 @@ namespace SmolEngine
 		MaxEnum
 	};
 
-	bool GetComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
+	void SetGetTransform(TransformComponent* native_comp, TransformComponentCSharp* c_comp, uint32_t entity_id, bool get)
+	{
+		if (get)
+		{
+			c_comp->Scale = native_comp->Scale;
+			c_comp->WorldPos = native_comp->WorldPos;
+			c_comp->Rotation = native_comp->Rotation;
+			c_comp->Handler = entity_id;
+		}
+		else
+		{
+			native_comp->Scale = c_comp->Scale;
+			native_comp->WorldPos = c_comp->WorldPos;
+			native_comp->Rotation = c_comp->Rotation;
+		}
+	}
+
+	void SetGetMesh_Component(MeshComponent* native_comp, MeshComponentCSharp* c_comp, uint32_t entity_id, bool get)
+	{
+		if (get)
+		{
+			c_comp->Handler = entity_id;
+			c_comp->IsVisible = native_comp->bShow;
+			c_comp->IsActive = native_comp->DefaulPtr != nullptr || native_comp->MeshPtr != nullptr;
+		}
+		else
+		{
+			native_comp->bShow = c_comp->IsVisible;
+		}
+	}
+
+	bool ModifyComponent(void* ptr, uint32_t entity_id, uint16_t component_type, bool get_flag, bool add_flag = false)
 	{
 		ComponentTypeEX type = (ComponentTypeEX)component_type;
 		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
@@ -39,80 +70,51 @@ namespace SmolEngine
 		{
 		case ComponentTypeEX::Transform:
 		{
-			TransformComponent* native_comp = scene->GetComponent<TransformComponent>(id);
+			auto* native_comp = add_flag == false ? scene->GetComponent<TransformComponent>(id): scene->AddComponent<TransformComponent>(id);
+			auto* c_comp = (TransformComponentCSharp*)ptr;
 			if (native_comp)
-			{
-				auto* c_comp = (TransformComponentCSharp*)ptr;
-				c_comp->Scale = native_comp->Scale;
-				c_comp->WorldPos = native_comp->WorldPos;
-				c_comp->Rotation = native_comp->Rotation;
-				c_comp->Handler = entity_id;
-				return true;
-			}
+				SetGetTransform(native_comp, c_comp, entity_id, get_flag);
 
-			break;
+			return native_comp != nullptr;
 		}
 		case ComponentTypeEX::Mesh:
 		{
-			MeshComponent* native_comp = scene->GetComponent<MeshComponent>(id);
+			auto* native_comp = add_flag == false ?  scene->GetComponent<MeshComponent>(id): scene->AddComponent<MeshComponent>(id);
+			auto* c_comp = (MeshComponentCSharp*)ptr;
 			if (native_comp)
-			{
-				auto* c_comp = (MeshComponentCSharp*)ptr;
-				c_comp->Handler = entity_id;
-				c_comp->IsVisible = native_comp->bShow;
-				c_comp->IsActive = native_comp->DefaulPtr != nullptr || native_comp->MeshPtr != nullptr;
-				return true;
-			}
+				SetGetMesh_Component(native_comp, c_comp, entity_id, get_flag);
 
-			break;
+			return native_comp != nullptr;
+		}
+		case ComponentTypeEX::RigidBody:
+		{
+			auto* native_comp = add_flag == false ? scene->GetComponent<RigidbodyComponent>(id) : scene->AddComponent<RigidbodyComponent>(id);
+			auto* c_comp = (RigidBodyComponentCSharp*)ptr;
+			c_comp->Handler = entity_id;
+			return native_comp != nullptr;
 		}
 		}
 
 		return false;
+	}
+
+	bool GetComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
+	{
+		const bool get_flag = true;
+		return ModifyComponent(ptr, entity_id, component_type, get_flag);
 	}
 
 	bool SetComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
 	{
-		ComponentTypeEX type = (ComponentTypeEX)component_type;
-		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
-		entt::entity id = (entt::entity)entity_id;
-
-		switch (type)
-		{
-		case ComponentTypeEX::Transform:
-		{
-			TransformComponent* native_comp = scene->GetComponent<TransformComponent>(id);
-			if (native_comp)
-			{
-				TransformComponentCSharp* c_comp = (TransformComponentCSharp*)ptr;
-				native_comp->Scale = c_comp->Scale;
-				native_comp->WorldPos = c_comp->WorldPos;
-				native_comp->Rotation = c_comp->Rotation;
-				return true;
-			}
-
-			break;
-		}
-		case ComponentTypeEX::Mesh:
-		{
-			MeshComponent* native_comp = scene->GetComponent<MeshComponent>(id);
-			if (native_comp)
-			{
-				auto* c_comp = (MeshComponentCSharp*)ptr;
-				native_comp->bShow = c_comp->IsVisible;
-				return true;
-			}
-
-			break;
-		}
-		}
-
-		return false;
+		const bool get_flag = true;
+		return ModifyComponent(ptr, entity_id, component_type, get_flag);
 	}
 
 	bool AddComponent_CSharpAPI(void* ptr, uint32_t entity_id, uint16_t component_type)
 	{
-		return false;
+		const bool get_flag = true;
+		const bool add_flag = true;
+		return ModifyComponent(ptr, entity_id, component_type, get_flag, add_flag);
 	}
 
 	bool HasComponent_CSharpAPI(uint32_t entity_id, uint16_t component_type)
@@ -227,6 +229,33 @@ namespace SmolEngine
 		}
 
 		return UINT32_MAX;
+	}
+
+	void RigidBodyCreate_CSharpAPI(RigidBodyCreateInfoCSharp* ptr, uint32_t entity_id)
+	{
+		Scene* scene = WorldAdmin::GetSingleton()->GetActiveScene();
+		entt::entity id = (entt::entity)entity_id;
+
+		HeadComponent* head = scene->GetComponent<HeadComponent>(id);
+		Ref<Actor> actor = scene->FindActorByID(head->ActorID);
+		RigidbodyComponent* component = scene->GetComponent<RigidbodyComponent>(id);
+		if (!component) { component = scene->AddComponent<RigidbodyComponent>(id); }
+
+		BodyCreateInfo info = {};
+		info.eShape = (RigidBodyShape)ptr->eShape;
+		info.eType = (RigidBodyType)ptr->eType;
+		info.Size = ptr->Size;
+		info.Mass = ptr->Mass;
+		info.Density = ptr->Density;
+		info.Friction = ptr->Friction;
+		info.Restitution = ptr->Restitution;
+		info.LinearDamping = ptr->LinearDamping;
+		info.AngularDamping = ptr->AngularDamping;
+		info.RollingFriction = ptr->RollingFriction;
+		info.SpinningFriction = ptr->SpinningFriction;
+
+		component->CreateInfo = info;
+		ComponentHandler::ValidateRigidBodyComponent(component, actor);
 	}
 
 	bool MeshLoadModel_CSharpAPI(void* str, uint32_t entity_id)

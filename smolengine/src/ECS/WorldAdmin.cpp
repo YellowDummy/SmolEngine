@@ -44,6 +44,7 @@ namespace SmolEngine
 
 	void WorldAdmin::OnBeginWorld()
 	{
+		m_State->m_InPlayMode = true;
 		Scene* scene = GetActiveScene();
 		scene->CalculateRelativePositions();
 
@@ -51,8 +52,6 @@ namespace SmolEngine
 		PhysicsSystem::OnBeginWorld();
 		AudioSystem::OnBeginWorld();
 		ScriptingSystem::OnBeginWorld();
-
-		m_State->m_InPlayMode = true;
 	}
 
 	void WorldAdmin::OnBeginFrame()
@@ -87,6 +86,7 @@ namespace SmolEngine
 	void WorldAdmin::OnEndWorld()
 	{
 		m_State->m_InPlayMode = false;
+
 		ScriptingSystem::OnEndWorld();
 		Physics2DSystem::OnEndWorld();
 		PhysicsSystem::OnEndWorld();
@@ -272,7 +272,7 @@ namespace SmolEngine
 
 	bool WorldAdmin::IsInPlayMode()
 	{
-		return m_State->m_InPlayMode == true;
+		return m_State->m_InPlayMode;
 	}
 
 	bool WorldAdmin::CreateScene(const std::string& filePath)

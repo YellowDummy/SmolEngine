@@ -58,7 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmolEngine\ECS\Actor.cs" />
     <Compile Include="SmolEngine\ECS\BehaviourPrimitive.cs" />
+    <Compile Include="SmolEngine\ECS\Components\CameraComponent.cs" />
     <Compile Include="SmolEngine\ECS\Components\MeshComponent.cs" />
+    <Compile Include="SmolEngine\ECS\Components\RigidBodyComponent.cs" />
     <Compile Include="SmolEngine\ECS\Components\TransformComponent.cs" />
     <Compile Include="SmolEngine\Utils\Input.cs" />
     <Compile Include="SmolEngine\Utils\SLog.cs" />
