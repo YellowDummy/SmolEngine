@@ -150,17 +150,4 @@ namespace SmolEngine
 
 		return false;
 	}
-
-	bool ComponentHandler::ValidateCSharpScriptComponent(CSharpScriptComponent* comp, Ref<Actor>& actor, const std::string& class_name)
-	{
-		comp->Actor = actor;
-		comp->ClassName = class_name;
-		if (WorldAdmin::GetSingleton()->IsInPlayMode())
-		{
-			ScriptingSystem::CreateScript(comp);
-			return comp->ClassInstance != nullptr;
-		}
-
-		return true;
-	}
 }

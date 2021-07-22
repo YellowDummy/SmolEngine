@@ -175,29 +175,28 @@ namespace SmolEngine
 			if (is_reload == false)
 			{
 				m_State->m_MeshMap.clear();
-				SceneStateComponent* sceneState = activeScene->GetSceneState();
 
+				const auto& view = m_State->m_CurrentRegistry->view<RendererStateComponent>();
+				for (const auto& entity : view)
 				{
-					auto& cube_path = sceneState->PipelineState.Environment.CubeMapPath;
-					auto cubeMap = sceneState->PipelineState.Environment.CubeMap;
-
-					if (cube_path.empty() == false)
+					auto& rendere_state = view.get<RendererStateComponent>(entity);
+					if (!rendere_state.CubeMapPath.empty())
 					{
 						TextureCreateInfo texCI = {};
-						if (texCI.Load(cube_path) == true)
+						if (texCI.Load(rendere_state.CubeMapPath) == true)
 						{
-							cubeMap = new CubeMap();
-							CubeMap::Create(&texCI, cubeMap);
-							DeferredRenderer::SetEnvironmentCube(cubeMap);
+							rendere_state.CubeMap = new CubeMap();
+							CubeMap::Create(&texCI, rendere_state.CubeMap);
+							DeferredRenderer::SetEnvironmentCube(rendere_state.CubeMap);
 						}
 
 					}
 					else
-						DeferredRenderer::SetDynamicSkyboxProperties(sceneState->PipelineState.Environment.SkyProperties);
-				}
+					{
+						DeferredRenderer::SetDynamicSkyboxProperties(rendere_state.SkyProperties);
+					}
 
-				{
-					Mask& mask = sceneState->PipelineState.DirtMask;
+					Mask& mask = rendere_state.DirtMask;
 					if (mask.Path.empty() == false)
 					{
 						TextureCreateInfo texCI = {};
@@ -209,10 +208,12 @@ namespace SmolEngine
 							DeferredRenderer::SetDirtMask(dirt_mask, mask.Intensity, mask.IntensityBase);
 						}
 					}
-				}
 
-				DeferredRenderer::SetRendererState(&sceneState->PipelineState.State);
-				DeferredRenderer::SubmitDirLight(&sceneState->PipelineState.DirLight);
+					DeferredRenderer::SetRendererState(&rendere_state.State);
+					DeferredRenderer::SubmitDirLight(&rendere_state.DirLight);
+
+					break;
+				}
 			}
 
 			ReloadAssets();
@@ -402,7 +403,7 @@ namespace SmolEngine
 
 	void WorldAdmin::ReloadScripts(entt::registry& reg)
 	{
-		ScriptingSystem::OnSceneReloaded(&reg);
+		ScriptingSystem::OnConstruct(&reg);
 	}
 
 	bool WorldAdmin::LoadStaticComponents()

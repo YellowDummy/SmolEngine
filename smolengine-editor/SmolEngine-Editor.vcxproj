@@ -101,7 +101,6 @@
     <ClInclude Include="include\FileExplorer.h" />
     <ClInclude Include="include\ImGuiExtension.h" />
     <ClInclude Include="include\MaterialInspector.h" />
-    <ClInclude Include="include\RendererInspector.h" />
     <ClInclude Include="include\Scripts\BallSpawner.h" />
     <ClInclude Include="include\Scripts\BasePlayerScript.h" />
     <ClInclude Include="include\TextureInspector.h" />
@@ -114,7 +113,6 @@
     <ClCompile Include="src\FileExplorer.cpp" />
     <ClCompile Include="src\ImGuiExtension.cpp" />
     <ClCompile Include="src\MaterialInspector.cpp" />
-    <ClCompile Include="src\RendererInspector.cpp" />
     <ClCompile Include="src\Scripts\BasePlayerScript.cpp" />
     <ClCompile Include="src\TextureInspector.cpp" />
     <ClCompile Include="src\ViewPort.cpp" />

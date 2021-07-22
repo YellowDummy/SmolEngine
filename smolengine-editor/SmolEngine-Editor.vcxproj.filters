@@ -34,9 +34,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\TextureInspector.h" />
-    <ClInclude Include="include\RendererInspector.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\MaterialInspector.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -61,9 +58,6 @@
       <Filter>src\Scripts</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureInspector.cpp" />
-    <ClCompile Include="src\RendererInspector.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\MaterialInspector.cpp">
       <Filter>src</Filter>
     </ClCompile>

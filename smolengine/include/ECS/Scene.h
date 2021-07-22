@@ -32,12 +32,6 @@ namespace SmolEngine
 		entt::registry&         GetRegistry();
 
 		template<typename T, typename... Args>
-		T* AddComponentEX(Actor* actor, Args&&... args)
-		{
-			return AddComponent<T>(actor->m_Entity, args...);
-		}
-
-		template<typename T, typename... Args>
 		T* AddComponent(Ref<Actor>& actor, Args&&... args)
 		{
 			return AddComponent<T>(actor->m_Entity, args...);
@@ -57,12 +51,6 @@ namespace SmolEngine
 			component.ComponentID = head->ComponentsCount;
 			head->ComponentsCount++;
 			return &component;
-		}
-
-		template<typename T>
-		bool DestroyComponent(Actor* actor)
-		{
-			return DestroyComponent<T>(actor->m_Entity);
 		}
 
 		template<typename T>
@@ -97,12 +85,6 @@ namespace SmolEngine
 
 		template<typename T>
 		T* GetComponent(Ref<Actor>& actor)
-		{
-			return GetComponent<T>(actor->m_Entity);
-		}
-
-		template<typename T>
-		T* GetComponentEX(Actor* actor)
 		{
 			return GetComponent<T>(actor->m_Entity);
 		}

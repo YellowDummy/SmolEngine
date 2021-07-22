@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Scripting/CPP/MetaContext.h"
 
-#include "ECS/Components/CppScriptComponent.h"
+#include "ECS/Components/ScriptComponent.h"
 #include "Scripting/CPP/BehaviourPrimitive.h"
 
 #include <entt/entt.hpp>
@@ -13,106 +13,70 @@ namespace SmolEngine
 		return m_MetaMap;
 	}
 
-	void MetaContext::OnBegin(CppScriptComponent* comp)
+	void MetaContext::OnBegin(ScriptComponent* comp)
 	{
-		for (auto& script : comp->Scripts)
+		OnConstruct(comp);
+
+		for (auto& script : comp->CppScripts)
 		{
-			m_MetaMap[script.KeyName].OnBeginFunc.invoke(script.Script);
+			m_MetaMap[script.Name].OnBeginFunc.invoke(script.Instance);
 		}
 	}
 
-	void MetaContext::OnUpdate(CppScriptComponent* comp, float deltaTime)
+	void MetaContext::OnUpdate(ScriptComponent* comp, float deltaTime)
 	{
-		for (auto& script : comp->Scripts)
+		for (auto& script : comp->CppScripts)
 		{
-			m_MetaMap[script.KeyName].OnProcessFunc.invoke(script.Script, deltaTime);
+			m_MetaMap[script.Name].OnProcessFunc.invoke(script.Instance, deltaTime);
 		}
 	}
 
-	void MetaContext::OnDestroy(CppScriptComponent* comp)
+	void MetaContext::OnDestroy(ScriptComponent* comp)
 	{
-		for (auto& script : comp->Scripts)
+		for (auto& script : comp->CppScripts)
 		{
-			m_MetaMap[script.KeyName].OnDestroyFunc.invoke(script.Script);
+			m_MetaMap[script.Name].OnDestroyFunc.invoke(script.Instance);
 		}
 	}
 
-	void MetaContext::OnCollisionBegin(CppScriptComponent* comp, Actor* another, bool isTrigger)
+	void MetaContext::OnCollisionBegin(ScriptComponent* comp, Actor* another, bool isTrigger)
 	{
-		for (auto& script : comp->Scripts)
+		for (auto& script : comp->CppScripts)
 		{
-			m_MetaMap[script.KeyName].OnCollBeginFunc.invoke(script.Script, another, isTrigger);
+			m_MetaMap[script.Name].OnCollBeginFunc.invoke(script.Instance, another, isTrigger);
 		}
 	}
 
-	void MetaContext::OnCollisionEnd(CppScriptComponent* comp, Actor* another, bool isTrigger)
+	void MetaContext::OnCollisionEnd(ScriptComponent* comp, Actor* another, bool isTrigger)
 	{
-		for (auto& script : comp->Scripts)
+		for (auto& script : comp->CppScripts)
 		{
-			m_MetaMap[script.KeyName].OnCollEndFunc.invoke(script.Script, another, isTrigger);
+			m_MetaMap[script.Name].OnCollEndFunc.invoke(script.Instance, another, isTrigger);
 		}
 	}
 
-	void MetaContext::OnReload(CppScriptComponent* comp)
+	void MetaContext::OnConstruct(ScriptComponent* comp)
 	{
-		if (!comp->Actor)
+		if (!comp->pActor)
 		{
-			NATIVE_ERROR("ScriptingSystem::ReloadScripts::Actor not found!");
+			NATIVE_ERROR("[ScriptingSystem]: Actor is nullptr!");
 			return;
 		}
 
-		for (auto& script :comp->Scripts)
+		for (auto& script : comp->CppScripts)
 		{
-			auto& it = m_MetaMap.find(script.KeyName);
+			auto& it = m_MetaMap.find(script.Name);
 			if (it == m_MetaMap.end())
 			{
-				NATIVE_ERROR("ScriptingSystem::ReloadScripts::Script {} not found!", script.KeyName);
+				NATIVE_ERROR("[ScriptingSystem]: Script {} not found!", script.Name);
 				continue;
 			}
 
-			script.Script = it->second.ClassInstance;
-			auto& primitive = script.Script.cast<BehaviourPrimitive>();
-			primitive.m_Actor = comp->Actor.get();
+			script.Instance = it->second.ClassInstance;
+			auto& primitive = script.Instance.cast<BehaviourPrimitive>();
 
-			auto& s_it = comp->OutValues.find(script.KeyName);
-			if (s_it == comp->OutValues.end())
-				continue;
-
-			for (auto& valueInt : s_it->second.Ints)
-			{
-				for (auto& primitiveValue : primitive.m_OutValues)
-				{
-					if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Int)
-					{
-						if (valueInt.Name == primitiveValue.ValueName)
-							primitiveValue.Ptr = &valueInt.Value;
-					}
-				}
-			}
-
-			for (auto& valueFloat : s_it->second.Floats)
-			{
-				for (auto& primitiveValue : primitive.m_OutValues)
-				{
-					if (primitiveValue.Type == BehaviourPrimitive::OutValueType::Float)
-					{
-						if (valueFloat.Name == primitiveValue.ValueName)
-							primitiveValue.Ptr = &valueFloat.Value;
-					}
-				}
-			}
-
-			for (auto& valueString : s_it->second.Strings)
-			{
-				for (auto& primitiveValue : primitive.m_OutValues)
-				{
-					if (primitiveValue.Type == BehaviourPrimitive::OutValueType::String)
-					{
-						if (valueString.Name == primitiveValue.ValueName)
-							primitiveValue.Ptr = &valueString.Value;
-					}
-				}
-			}
+			primitive.m_Actor = comp->pActor;
+			primitive.m_FieldManager = script.Fields;
 		}
 	}
 }

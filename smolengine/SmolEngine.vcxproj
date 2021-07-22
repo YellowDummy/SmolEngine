@@ -113,10 +113,10 @@
     <ClInclude Include="include\ECS\Components\Animation2DComponent.h" />
     <ClInclude Include="include\ECS\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\BaseComponent.h" />
-    <ClInclude Include="include\ECS\Components\CppScriptComponent.h" />
+    <ClInclude Include="include\ECS\Components\ScriptComponent.h" />
     <ClInclude Include="include\ECS\Components\CameraComponent.h" />
     <ClInclude Include="include\ECS\Components\CanvasComponent.h" />
-    <ClInclude Include="include\ECS\Components\CSharpScriptComponent.h" />
+    <ClInclude Include="include\ECS\Components\RendererStateComponent.h" />
     <ClInclude Include="include\ECS\Components\HeadComponent.h" />
     <ClInclude Include="include\ECS\Components\Light2DSourceComponent.h" />
     <ClInclude Include="include\ECS\Components\MeshComponent.h" />
@@ -546,6 +546,7 @@
     <ClInclude Include="include\Scripting\CSharp\MonoContext.h" />
     <ClInclude Include="include\SmolEngineCore.h" />
     <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\Scripting\FieldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp" />

@@ -22,6 +22,8 @@ public class CameraBehaviour: BehaviourPrimitive
     TransformComponent tranform;
     CameraComponent camera;
 
+    public float Speed = 0.0f;
+
     private void OnBegin()
     {
         var t_result = GetComponent<TransformComponent>();

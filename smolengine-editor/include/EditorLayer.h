@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SmolEngineCore.h"
-#include "RendererInspector.h"
 #include "TextureInspector.h"
 #include "TexturesLoader.h"
 #include "FileExplorer.h"
@@ -27,7 +26,6 @@ namespace SmolEngine
 	struct AudioSourceComponent;
 	struct Animation2DComponent;
 	struct CanvasComponent;
-	struct CppScriptComponent;
 	struct Light2DSourceComponent;
 	struct MeshComponent;
 	struct DirectionalLightComponent;
@@ -35,6 +33,7 @@ namespace SmolEngine
 	struct SpotLightComponent;
 	struct RigidbodyComponent;
 	struct StaticbodyComponent;
+	struct RendererStateComponent;
 
 	class Actor;
 	class EditorCamera;
@@ -87,6 +86,7 @@ namespace SmolEngine
 		void DrawPointLightComponent(PointLightComponent* light);
 		void DrawSpotLightComponent(SpotLightComponent* light);
 		void DrawRigidBodyComponent(RigidbodyComponent* component);
+		void DrawRendererStateComponent(RendererStateComponent* component);
 
 		void DrawComponents();
 		void DrawComponentPopUp();
@@ -125,7 +125,6 @@ namespace SmolEngine
 		ViewPort*                                   m_GameView = nullptr;
 		EditorCamera*                               m_Camera = nullptr;
 		EditorConsole*                              m_Console = nullptr;
-		RendererInspector*                          m_RendererInspector = nullptr;
 		TextureInspector*                           m_TextureInspector = nullptr;
 		Ref<Actor>                                  m_SelectedActor = nullptr;
 		MaterialInspector*                          m_MaterialInspector = nullptr;

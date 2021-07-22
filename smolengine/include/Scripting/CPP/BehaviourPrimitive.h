@@ -4,6 +4,8 @@
 #include "ECS/Scene.h"
 #include "ECS/Actor.h"
 
+#include "Scripting/FieldManager.h"
+
 #include <string>
 #include <vector>
 #include <type_traits>
@@ -37,37 +39,19 @@ namespace SmolEngine
 
 
 		template<typename T>
-		bool CreateValue(const std::string& name)
+		bool CreateValue(const T& intiial_value, const std::string& name)
 		{
-			OutValue info = {};
-			info.Ptr = nullptr;
-			info.ValueName = name;
-
-			if (std::is_same<int32_t, T>::value)
-				info.Type = OutValueType::Int;
-
-			if (std::is_same<float, T>::value)
-				info.Type = OutValueType::Float;
-
-			if (std::is_same<std::string, T>::value)
-				info.Type = OutValueType::String;
-
-			if (info.Type != OutValueType::None)
-			{
-				m_OutValues.emplace_back(info);
-				return true;
-			}
-
-			return false;
+			T value = intiial_value;
+			return m_FieldManager.PushVariable<T>(&value, name);
 		}
 
 		template<typename T>
 		T* GetValue(const std::string& name)
 		{
-			for (const auto& value : m_OutValues)
+			Ref<FieldView> view = m_FieldManager.GetVarriable<T>(name);
+			if (view)
 			{
-				if (value.ValueName == name)
-					return static_cast<T*>(value.Ptr);
+				return static_cast<T*>(view->ptr);
 			}
 
 			return nullptr;
@@ -76,28 +60,18 @@ namespace SmolEngine
 		template<typename T>
 		T* GetComponent() { return m_Actor->GetComponent<T>(); }
 
+		template<typename T, typename... Args>
+		T* AddComponent(Args&&... args) { return m_Actor->AddComponent<T>(args...); }
+
+		template<typename T>
+		bool DestroyComponent() { return m_Actor->DestroyComponent<T>(); }
+
 		template<typename T>
 		bool HasComponent() { return m_Actor->HasComponent<T>(); }
 
 	private:
-
-		enum class OutValueType : uint16_t
-		{
-			None,
-			Int,
-			Float,
-			String
-		};
-
-		struct OutValue
-		{
-			void*        Ptr = nullptr;
-			std::string  ValueName = "";
-			OutValueType Type = OutValueType::None;
-		};
-
-		Actor*                   m_Actor = nullptr;
-		std::vector<OutValue>    m_OutValues;
+		Ref<Actor>               m_Actor = nullptr;
+		FieldManager             m_FieldManager = {};
 
 	private:
 

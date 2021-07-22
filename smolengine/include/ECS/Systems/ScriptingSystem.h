@@ -12,7 +12,7 @@ namespace SmolEngine
 {
 	struct WorldAdminStateSComponent;
 	struct ScriptingSystemStateSComponent;
-	struct CSharpScriptComponent;
+
 	class Actor;
 
 	class ScriptingSystem
@@ -35,11 +35,9 @@ namespace SmolEngine
 		static void OnUpdate(DeltaTime deltaTime);
 		static void OnCollisionBegin(Actor* actorB, Actor* actorA, bool isTrigger);
 		static void OnCollisionEnd(Actor* actorB, Actor* actorA, bool isTrigger);
-		static void OnSceneReloaded(void* registry_);
+		static void OnConstruct(void* registry_);
 
-		static void CreateScripts();
-		static void CreateScript(CSharpScriptComponent* comp);
-		static void ClearScripts();
+		static void ClearRuntime();
 
 		template<typename T>
 		static T* GetOrCreateComponent(Ref<Actor>& actor)

@@ -10,7 +10,7 @@ namespace SmolEngine
 	struct Rigidbody2DComponent;
 	struct RigidbodyComponent;
 	struct StaticbodyComponent;
-	struct CSharpScriptComponent;
+	struct ScriptComponent;
 	class Actor;
 	class Mesh;
 
@@ -24,6 +24,5 @@ namespace SmolEngine
 		static bool ValidateTexture2DComponent(Texture2DComponent* comp, const std::string& filePath);
 		static bool ValidateBody2DComponent(Rigidbody2DComponent* comp, Ref<Actor>& actor);
 		static bool ValidateRigidBodyComponent(RigidbodyComponent* comp, Ref<Actor>& actor);
-		static bool ValidateCSharpScriptComponent(CSharpScriptComponent* comp, Ref<Actor>& actor, const std::string& class_name);
 	};
 }

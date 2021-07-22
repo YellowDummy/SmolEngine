@@ -2,8 +2,7 @@
 
 #include "ECS/Components/Animation2DComponent.h"
 #include "ECS/Components/AudioSourceComponent.h"
-#include "ECS/Components/CppScriptComponent.h"
-#include "ECS/Components/CSharpScriptComponent.h"
+#include "ECS/Components/ScriptComponent.h"
 #include "ECS/Components/Rigidbody2DComponent.h"
 #include "ECS/Components/CameraComponent.h"
 #include "ECS/Components/CanvasComponent.h"
@@ -15,5 +14,6 @@
 #include "ECS/Components/SpotLightComponent.h"
 #include "ECS/Components/PointLightComponent.h"
 #include "ECS/Components/SceneStateComponent.h"
+#include "ECS/Components/RendererStateComponent.h"
 #include "ECS/Components/RigidbodyComponent.h"
 #include "ECS/ComponentHandler.h"

@@ -5,6 +5,8 @@
 #include <functional>
 #include <unordered_map>
 
+#include "Scripting/FieldManager.h"
+
 typedef struct _MonoAssembly MonoAssembly;
 typedef struct _MonoClass MonoClass;
 typedef struct _MonoImage MonoImage;
@@ -21,7 +23,7 @@ typedef struct _MonoJitInfo MonoJitInfo;
 namespace SmolEngine
 {
 	class Actor;
-	struct CSharpScriptComponent;
+	struct ScriptComponent;
 
 	class MonoContext
 	{
@@ -52,6 +54,7 @@ namespace SmolEngine
 			MonoMethod*             pOnDestroy = nullptr;
 			MonoMethod*             pOnCollisionBegin = nullptr;
 			MonoMethod*             pOnCollisionEnd = nullptr;
+			FieldManager            Fields = {};
 		};				
 									                 
 		void                         LoadAssembly(bool is_initialization = false);
@@ -65,14 +68,14 @@ namespace SmolEngine
 		void*                        CreateClassInstance(const std::string& class_name, const Ref<Actor>& actor);
 		void*                        GetMethod(const char* signature, const char* class_name, MonoClass* p_class);
 							         
-		void                         OnBegin(const CSharpScriptComponent* comp);
-		void                         OnUpdate(const CSharpScriptComponent* comp);
+		void                         OnBegin(ScriptComponent* comp);
+		void                         OnUpdate(const ScriptComponent* comp);
 		void                         OnInternalUpdate(float delta);
-		void                         OnDestroy(const CSharpScriptComponent* comp);
-		void                         OnCollisionBegin(const CSharpScriptComponent* comp, Actor* another, bool isTrigger);
-		void                         OnCollisionEnd(const CSharpScriptComponent* comp, Actor* another, bool isTrigger);
-		void                         OnReload(CSharpScriptComponent* comp);  /* scene reload */
-		const MonoContext::MetaData* GetMeta(const CSharpScriptComponent* comp) const;
+		void                         OnDestroy(ScriptComponent* comp);
+		void                         OnCollisionBegin(const ScriptComponent* comp, Actor* another, bool isTrigger);
+		void                         OnCollisionEnd(const ScriptComponent* comp, Actor* another, bool isTrigger);
+		void                         OnConstruct(ScriptComponent* comp); 
+		const MonoContext::MetaData* GetMeta(const ScriptComponent* comp, const std::string& class_name) const;
 												  
 	private:		       
 		inline static MonoContext*                        s_Instance = nullptr;

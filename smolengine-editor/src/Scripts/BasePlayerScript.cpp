@@ -14,8 +14,8 @@ namespace SmolEngine
 
 	BasePlayerScript::BasePlayerScript()
 	{
-		CreateValue<float>("Speed");
-		CreateValue<float>("Camera Speed");
+		CreateValue<float>(22.0f, "Speed");
+		CreateValue<float>(5.0f, "Camera Speed");
 	}
 
 	void BasePlayerScript::OnProcess(float deltaTime)

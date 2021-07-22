@@ -187,11 +187,11 @@ namespace SmolEngine
 			cereal::YAMLOutputArchive output{ storageRegistry };
 			entt::snapshot{ m_SceneData.m_Registry }.entities(output).component<
 				HeadComponent, CameraComponent,
-				CppScriptComponent, CSharpScriptComponent,
+				ScriptComponent,
 				Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Rigidbody2DComponent, MeshComponent,
-				PointLightComponent, SpotLightComponent, SceneStateComponent, RigidbodyComponent>(output);
+				PointLightComponent, SpotLightComponent, SceneStateComponent, RendererStateComponent, RigidbodyComponent>(output);
 		}
 
 		// Writing result to a file
@@ -228,11 +228,11 @@ namespace SmolEngine
 
 			entt::snapshot_loader{ m_SceneData.m_Registry }.entities(regisrtyInput).component<
 				HeadComponent, CameraComponent,
-				CppScriptComponent, CSharpScriptComponent,
+				ScriptComponent,
 				Texture2DComponent, Animation2DComponent,
 				Light2DSourceComponent, AudioSourceComponent, TransformComponent,
 				CanvasComponent, Rigidbody2DComponent, MeshComponent,
-				PointLightComponent, SpotLightComponent, SceneStateComponent, RigidbodyComponent>(regisrtyInput);
+				PointLightComponent, SpotLightComponent, SceneStateComponent, RendererStateComponent, RigidbodyComponent>(regisrtyInput);
 		}
 
 		// Updates sets

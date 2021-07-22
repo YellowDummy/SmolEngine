@@ -1625,11 +1625,12 @@
     </ClInclude>
     <ClInclude Include="include\Scripting\CSharp\CSharpAPI.h" />
     <ClInclude Include="include\Scripting\CSharp\CSharpDefs.h" />
-    <ClInclude Include="include\ECS\Components\CSharpScriptComponent.h" />
-    <ClInclude Include="include\ECS\Components\CppScriptComponent.h">
+    <ClInclude Include="include\Scripting\CPP\MetaContext.h" />
+    <ClInclude Include="include\ECS\Components\RendererStateComponent.h" />
+    <ClInclude Include="include\Scripting\FieldManager.h" />
+    <ClInclude Include="include\ECS\Components\ScriptComponent.h">
       <Filter>include\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scripting\CPP\MetaContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioClip.cpp">

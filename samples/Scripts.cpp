@@ -11,8 +11,8 @@ TransformComponent* cameraTransform = nullptr;
 
 BasePlayerScript::BasePlayerScript()
 {
-	CreateValue<float>("Speed");
-	CreateValue<float>("Camera Speed");
+	CreateValue<float>(22, "Speed");
+	CreateValue<float>(5, "Camera Speed");
 }
 
 void BasePlayerScript::OnProcess(float deltaTime)

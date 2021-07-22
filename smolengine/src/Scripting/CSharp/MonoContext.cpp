@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "Scripting/CSharp/MonoContext.h"
 #include "Scripting/CSharp/CSharpAPI.h"
-
-#include "ECS/Components/CSharpScriptComponent.h"
+#include "ECS/Components/ScriptComponent.h"
 
 #include <mono/metadata/assembly.h>
 #include <mono/jit/jit.h>
@@ -14,6 +13,7 @@
 
 #include <mono/metadata/appdomain.h>
 #include <mono/metadata/object.h>
+#include <mono/metadata/attrdefs.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/threads.h>
 #include <mono/metadata/mono-debug.h>
@@ -209,23 +209,33 @@ namespace SmolEngine
 		return method;
 	}
 
-	void MonoContext::OnBegin(const CSharpScriptComponent* comp)
+	void MonoContext::OnBegin(ScriptComponent* comp)
 	{
-		const MonoContext::MetaData* meta = GetMeta(comp);
-		if (meta != nullptr)
+		for (auto& script : comp->CSharpScripts)
 		{
-			MonoObject* instance = (MonoObject*)comp->ClassInstance;
-			MonoObject* result = mono_runtime_invoke(meta->pOnBegin, instance, NULL, NULL);
+			const MonoContext::MetaData* meta = GetMeta(comp, script.Name);
+			if (meta != nullptr)
+			{
+				MonoObject* instance = (MonoObject*)CreateClassInstance(script.Name, comp->pActor);
+				if (instance)
+				{
+					script.Instance = instance;
+					MonoObject* result = mono_runtime_invoke(meta->pOnBegin, instance, NULL, NULL);
+				}
+			}
 		}
 	}
 
-	void MonoContext::OnUpdate(const CSharpScriptComponent* comp)
+	void MonoContext::OnUpdate(const ScriptComponent* comp)
 	{
-		const MonoContext::MetaData* meta = GetMeta(comp);
-		if (meta != nullptr)
+		for (auto& script : comp->CSharpScripts)
 		{
-			MonoObject* instance = (MonoObject*)comp->ClassInstance;
-			MonoObject* result = mono_runtime_invoke(meta->pOnUpdate, instance, NULL, NULL);
+			const MonoContext::MetaData* meta = GetMeta(comp, script.Name);
+			if (meta != nullptr && script.Instance)
+			{
+				MonoObject* instance = (MonoObject*)script.Instance;
+				MonoObject* result = mono_runtime_invoke(meta->pOnUpdate, instance, NULL, NULL);
+			}
 		}
 	}
 
@@ -234,40 +244,42 @@ namespace SmolEngine
 
 	}
 
-	void MonoContext::OnDestroy(const CSharpScriptComponent* comp)
+	void MonoContext::OnDestroy(ScriptComponent* comp)
 	{
-		const MonoContext::MetaData* meta = GetMeta(comp);
-		if (meta != nullptr)
+		for (auto& script : comp->CSharpScripts)
 		{
-			MonoObject* instance = (MonoObject*)comp->ClassInstance;
-			MonoObject* result = mono_runtime_invoke(meta->pOnDestroy, instance, NULL, NULL);
+			const MonoContext::MetaData* meta = GetMeta(comp, script.Name);
+			if (meta != nullptr && script.Instance)
+			{
+				MonoObject* instance = (MonoObject*)script.Instance;
+				MonoObject* result = mono_runtime_invoke(meta->pOnDestroy, instance, NULL, NULL);
+
+				script.Instance = nullptr;
+			}
 		}
 	}
 
-	void MonoContext::OnCollisionBegin(const CSharpScriptComponent* comp, Actor* another, bool isTrigger)
+	void MonoContext::OnCollisionBegin(const ScriptComponent* comp, Actor* another, bool isTrigger)
 	{
 
 	}
 
-	void MonoContext::OnCollisionEnd(const CSharpScriptComponent* comp, Actor* another, bool isTrigger)
+	void MonoContext::OnCollisionEnd(const ScriptComponent* comp, Actor* another, bool isTrigger)
 	{
 
 	}
 
-	void MonoContext::OnReload(CSharpScriptComponent* comp)  /* scene reload */
+	void MonoContext::OnConstruct(ScriptComponent* comp)
 	{
 
 	}
 
-	const MonoContext::MetaData* MonoContext::GetMeta(const CSharpScriptComponent* comp) const
+	const MonoContext::MetaData* MonoContext::GetMeta(const ScriptComponent* comp, const std::string& class_name) const
 	{
-		if (comp->ClassInstance != nullptr)
+		auto& it = m_MetaMap.find(class_name);
+		if (it != m_MetaMap.end())
 		{
-			auto& it = m_MetaMap.find(comp->ClassName);
-			if (it != m_MetaMap.end())
-			{
-				return &it->second;
-			}
+			return &it->second;
 		}
 
 		return nullptr;
@@ -357,8 +369,43 @@ namespace SmolEngine
 						meta.pOnCollisionBegin = (MonoMethod*)GetMethod("OnCollisionBegin (uint,bool)", name, mono_class);
 						meta.pOnCollisionEnd = (MonoMethod*)GetMethod("OnCollisionEnd (uint,bool)", name, mono_class);
 
+						// Get supported public fileds
+						{
+							void* iter = nullptr;
+							MonoClassField* field = nullptr;
+
+							while ((field = mono_class_get_fields(mono_class, &iter)))
+							{
+								uint32_t flags = mono_field_get_flags(field) & MONO_FIELD_ATTR_FIELD_ACCESS_MASK;
+								if (flags == MONO_FIELD_ATTR_PUBLIC)
+								{
+									if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_I4)
+									{
+										int32_t value = 0;
+										const char* name = mono_field_get_name(field);
+										meta.Fields.PushVariable<int32_t>(&value, name);
+									}
+
+									if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_R4)
+									{
+										float value = 0;
+										const char* name = mono_field_get_name(field);
+										meta.Fields.PushVariable<float>(&value, name);
+									}
+
+									if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_STRING)
+									{
+										std::string str = "";
+										const char* name = mono_field_get_name(field);
+										meta.Fields.PushVariable<std::string>(&str, name);
+									}
+								}
+							}
+						}
+
 						if (meta.pOnBegin && meta.pOnDestroy && meta.pOnUpdate)
 						{
+							meta.Fields.Finilize();
 							m_MetaMap[name] = std::move(meta);
 						}
 					}

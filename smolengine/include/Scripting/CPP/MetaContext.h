@@ -6,7 +6,7 @@
 
 namespace SmolEngine
 {
-	struct CppScriptComponent;
+	struct ScriptComponent;
 	class Actor;
 
 	class MetaContext
@@ -62,16 +62,19 @@ namespace SmolEngine
 			metaData.OnCollBeginFunc = meta::resolve(nameHash).func(onCollBeginHash);
 			metaData.OnCollEndFunc = meta::resolve(nameHash).func(onCollExitHash);
 
+			auto& primitive = metaData.ClassInstance.cast<BehaviourPrimitive>();
+			primitive.m_FieldManager.Finilize();
+
 			m_MetaMap[name] = std::move(metaData);
 			return true;
 		}
 
-		void OnBegin(CppScriptComponent* comp);
-		void OnUpdate(CppScriptComponent* comp, float deltaTime);
-		void OnDestroy(CppScriptComponent* comp);
-		void OnCollisionBegin(CppScriptComponent* comp, Actor* another, bool isTrigger);
-		void OnCollisionEnd(CppScriptComponent* comp, Actor* another, bool isTrigger);
-		void OnReload(CppScriptComponent* comp);
+		void OnBegin(ScriptComponent* comp);
+		void OnUpdate(ScriptComponent* comp, float deltaTime);
+		void OnDestroy(ScriptComponent* comp);
+		void OnCollisionBegin(ScriptComponent* comp, Actor* another, bool isTrigger);
+		void OnCollisionEnd(ScriptComponent* comp, Actor* another, bool isTrigger);
+		void OnConstruct(ScriptComponent* comp);
 
 	private:;
 

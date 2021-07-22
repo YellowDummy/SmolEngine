@@ -50,8 +50,11 @@ namespace SmolEngine
 		T* GetComponent()            { return WorldAdmin::GetSingleton()->GetActiveScene()->GetComponent<T>(m_Entity); }
 		template<typename T>
 		bool HasComponent()          { return WorldAdmin::GetSingleton()->GetActiveScene()->HasComponent<T>(m_Entity); }
+		template<typename T>
+		bool DestroyComponent()       { return WorldAdmin::GetSingleton()->GetActiveScene()->DestroyComponent<T>(m_Entity); }
+
 		template<typename T, typename... Args>
-		T* AddComponent(Args&&... args) { return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponentEX<T>(this, args...); }
+		T* AddComponent(Args&&... args) { return WorldAdmin::GetSingleton()->GetActiveScene()->AddComponent<T>(m_Entity, args...); }
 
 	private:
 		HeadComponent*               GetInfo();
