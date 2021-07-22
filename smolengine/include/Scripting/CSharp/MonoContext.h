@@ -85,7 +85,7 @@ namespace SmolEngine
 		MonoAssembly*                                     m_CSharpAssembly = nullptr;
 		MonoImage*                                        m_Image = nullptr;
 		std::function<void()>                             m_Callback = nullptr;
-		std::string                                       m_DLLPath = "../vendor/mono/SmolEngine.CSharp/Debug/SmolEngine.CSharp.dll";
+		std::string                                       m_DLLPath = "../smolengine.csharp/Debug/SmolEngine.CSharp.dll";
 		std::filesystem::file_time_type                   m_LastWriteTime;
 		std::unordered_map<std::string, MetaData>         m_MetaMap;
 		std::unordered_map<InternalClassType, MonoClass*> m_InternalClasses;

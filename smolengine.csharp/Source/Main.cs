@@ -24,7 +24,7 @@ public class CameraBehaviour: BehaviourPrimitive
 
     public int Health = 100;
     public float Speed = 2.0f;
-    public string AssetPath = "../venod/";
+    public string AssetPath = "../samples/";
 
     private void OnBegin()
     {
@@ -36,11 +36,6 @@ public class CameraBehaviour: BehaviourPrimitive
 
         camera.IsPrimary = true;
         tranform.Position = new Vector3(0, 25, 0);
-    }
-
-    ~CameraBehaviour()
-    {
-        SLog.WriteLine("Destoyed!");
     }
 
     private void OnUpdate() {  }

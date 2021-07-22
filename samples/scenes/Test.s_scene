@@ -43,6 +43,14 @@ value10:
         value2:
           - key: AssetPath
             value: fdhhhth
+    - value0: GameLogic
+      value1:
+        value0:
+          []
+        value1:
+          []
+        value2:
+          []
   value2:
     ptr_wrapper:
       id: 2147483649
