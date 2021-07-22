@@ -4,7 +4,6 @@
 #include "ECS/ComponentsCore.h"
 #include "ECS/Components/Singletons/WorldAdminStateSComponent.h"
 #include "ECS/Systems/PhysicsSystem.h"
-#include "ECS/Systems/ScriptingSystem.h"
 
 #ifndef FROSTIUM_SMOLENGINE_IMPL
 #define FROSTIUM_SMOLENGINE_IMPL

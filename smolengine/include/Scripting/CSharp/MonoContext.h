@@ -66,8 +66,10 @@ namespace SmolEngine
 		void                         LoadMonoImage();
 		void                         LoadDomain();
 		void*                        CreateClassInstance(const std::string& class_name, const Ref<Actor>& actor);
+		void                         UpdateFields(void* script_);
 		void*                        GetMethod(const char* signature, const char* class_name, MonoClass* p_class);
-							         
+		const MonoContext::MetaData* GetMeta(const ScriptComponent* comp, const std::string& class_name) const;
+
 		void                         OnBegin(ScriptComponent* comp);
 		void                         OnUpdate(const ScriptComponent* comp);
 		void                         OnInternalUpdate(float delta);
@@ -75,7 +77,6 @@ namespace SmolEngine
 		void                         OnCollisionBegin(const ScriptComponent* comp, Actor* another, bool isTrigger);
 		void                         OnCollisionEnd(const ScriptComponent* comp, Actor* another, bool isTrigger);
 		void                         OnConstruct(ScriptComponent* comp); 
-		const MonoContext::MetaData* GetMeta(const ScriptComponent* comp, const std::string& class_name) const;
 												  
 	private:		       
 		inline static MonoContext*                        s_Instance = nullptr;

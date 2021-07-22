@@ -60,7 +60,7 @@ namespace SmolEngine
 		template<typename Archive>
 		void serialize(Archive& archive)
 		{
-			archive(CppScripts, CSharpScripts, ComponentID);
+			archive(CppScripts, CSharpScripts, pActor, ComponentID);
 		}
 	};
 }

@@ -104,18 +104,16 @@ namespace SmolEngine
 			if (time != m_LastWriteTime)
 			{
 				NATIVE_WARN("[C# module]: Reloading...");
-				OnRecompilation();
+				Shutdown();
+				Create();
+
 				if (m_Callback != nullptr)
 					m_Callback();
+
+				OnRecompilation();
 				NATIVE_WARN("[C# module]: Reloading complete!");
 			}
 		}
-	}
-
-	void MonoContext::OnRecompilation()
-	{
-		Shutdown();
-		Create();
 	}
 
 	void MonoContext::RunTest()
@@ -198,6 +196,33 @@ namespace SmolEngine
 		return nullptr;
 	}
 
+	void MonoContext::UpdateFields(void* script_)
+	{
+		auto script = (ScriptComponent::CSharpInstance*)script_;
+		MonoObject* instance = (MonoObject*)script->Instance;
+
+		if (!instance)
+			return;
+
+		MonoClass* mono_class = m_MetaMap[script->Name].pClass;
+		for (auto& field : script->Fields.GetFields())
+		{
+			MonoClassField* id_field = mono_class_get_field_from_name(mono_class, field.name.c_str());
+
+			if (field.type == FiledDataFlags::Int32 || field.type == FiledDataFlags::Float)
+			{
+				mono_field_set_value(instance, id_field, field.ptr);
+			}
+
+			if (field.type == FiledDataFlags::String)
+			{
+				std::string* str = (std::string*)field.ptr;
+				MonoString* mono_str = mono_string_new(m_Domain, str->c_str());
+				mono_field_set_value(instance, id_field, mono_str);
+			}
+		}
+	}
+
 	void* MonoContext::GetMethod(const char* signature, const char* class_name, MonoClass* p_class)
 	{
 		std::stringstream ss;
@@ -220,6 +245,8 @@ namespace SmolEngine
 				if (instance)
 				{
 					script.Instance = instance;
+					UpdateFields(&script);
+
 					MonoObject* result = mono_runtime_invoke(meta->pOnBegin, instance, NULL, NULL);
 				}
 			}
@@ -271,7 +298,33 @@ namespace SmolEngine
 
 	void MonoContext::OnConstruct(ScriptComponent* comp)
 	{
+		for (auto& script: comp->CSharpScripts)
+		{
+			auto& it = m_MetaMap.find(script.Name);
+			if (it != m_MetaMap.end())
+			{
+				if (!script.Fields.AreEqual(&it->second.Fields))
+				{
+					script.Fields = it->second.Fields;
+				}
+			}
+			else
+			{
+				NATIVE_WARN("[MonoContext]: C# Script {} not found!", script.Name);
+				script.Name = "";
+			}
+		}
+	}
 
+	void MonoContext::OnRecompilation()
+	{
+		auto& reg = WorldAdmin::GetSingleton()->GetActiveScene()->GetRegistry();
+		const auto& view = reg.view<ScriptComponent>();
+		for (const auto& entity : view)
+		{
+			auto& component = view.get<ScriptComponent>(entity);
+			OnConstruct(&component);
+		}
 	}
 
 	const MonoContext::MetaData* MonoContext::GetMeta(const ScriptComponent* comp, const std::string& class_name) const
@@ -356,59 +409,59 @@ namespace SmolEngine
 			if (is_same == false)
 			{
 				MonoClass* mono_class = mono_class_from_name(m_Image, name_space, name);
-				if (mono_class)
+				if (!mono_class)
+					continue;
+
+				if (!mono_class_is_subclass_of(mono_class, b_class, false))
+					continue;
+
+				MonoContext::MetaData meta = {};
+
+				meta.pClass = mono_class;
+				meta.pOnBegin = (MonoMethod*)GetMethod("OnBegin()", name, mono_class);
+				meta.pOnDestroy = (MonoMethod*)GetMethod("OnDestroy()", name, mono_class);
+				meta.pOnUpdate = (MonoMethod*)GetMethod("OnUpdate()", name, mono_class);
+				meta.pOnCollisionBegin = (MonoMethod*)GetMethod("OnCollisionBegin (uint,bool)", name, mono_class);
+				meta.pOnCollisionEnd = (MonoMethod*)GetMethod("OnCollisionEnd (uint,bool)", name, mono_class);
+
+				// Get supported public fileds
 				{
-					if (mono_class_is_subclass_of(mono_class, b_class, false))
+					void* iter = nullptr;
+					MonoClassField* field = nullptr;
+
+					while ((field = mono_class_get_fields(mono_class, &iter)))
 					{
-						MonoContext::MetaData meta = {};
-
-						meta.pClass = mono_class;
-						meta.pOnBegin = (MonoMethod*)GetMethod("OnBegin()", name, mono_class);
-						meta.pOnDestroy = (MonoMethod*)GetMethod("OnDestroy()", name, mono_class);
-						meta.pOnUpdate = (MonoMethod*)GetMethod("OnUpdate()", name, mono_class);
-						meta.pOnCollisionBegin = (MonoMethod*)GetMethod("OnCollisionBegin (uint,bool)", name, mono_class);
-						meta.pOnCollisionEnd = (MonoMethod*)GetMethod("OnCollisionEnd (uint,bool)", name, mono_class);
-
-						// Get supported public fileds
+						uint32_t flags = mono_field_get_flags(field) & MONO_FIELD_ATTR_FIELD_ACCESS_MASK;
+						if (flags == MONO_FIELD_ATTR_PUBLIC)
 						{
-							void* iter = nullptr;
-							MonoClassField* field = nullptr;
-
-							while ((field = mono_class_get_fields(mono_class, &iter)))
+							if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_I4)
 							{
-								uint32_t flags = mono_field_get_flags(field) & MONO_FIELD_ATTR_FIELD_ACCESS_MASK;
-								if (flags == MONO_FIELD_ATTR_PUBLIC)
-								{
-									if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_I4)
-									{
-										int32_t value = 0;
-										const char* name = mono_field_get_name(field);
-										meta.Fields.PushVariable<int32_t>(&value, name);
-									}
+								int32_t value = 0;
+								const char* name = mono_field_get_name(field);
+								meta.Fields.PushVariable<int32_t>(&value, name);
+							}
 
-									if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_R4)
-									{
-										float value = 0;
-										const char* name = mono_field_get_name(field);
-										meta.Fields.PushVariable<float>(&value, name);
-									}
+							if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_R4)
+							{
+								float value = 0;
+								const char* name = mono_field_get_name(field);
+								meta.Fields.PushVariable<float>(&value, name);
+							}
 
-									if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_STRING)
-									{
-										std::string str = "";
-										const char* name = mono_field_get_name(field);
-										meta.Fields.PushVariable<std::string>(&str, name);
-									}
-								}
+							if (mono_type_get_type(mono_field_get_type(field)) == MONO_TYPE_STRING)
+							{
+								std::string str = "";
+								const char* name = mono_field_get_name(field);
+								meta.Fields.PushVariable<std::string>(&str, name);
 							}
 						}
-
-						if (meta.pOnBegin && meta.pOnDestroy && meta.pOnUpdate)
-						{
-							meta.Fields.Finilize();
-							m_MetaMap[name] = std::move(meta);
-						}
 					}
+				}
+
+				if (meta.pOnBegin && meta.pOnDestroy && meta.pOnUpdate)
+				{
+					meta.Fields.Finilize();
+					m_MetaMap[name] = std::move(meta);
 				}
 			}
 		}

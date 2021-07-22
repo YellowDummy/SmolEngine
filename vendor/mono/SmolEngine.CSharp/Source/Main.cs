@@ -22,7 +22,9 @@ public class CameraBehaviour: BehaviourPrimitive
     TransformComponent tranform;
     CameraComponent camera;
 
-    public float Speed = 0.0f;
+    public int Health = 100;
+    public float Speed = 2.0f;
+    public string AssetPath = "../venod/";
 
     private void OnBegin()
     {
@@ -34,6 +36,11 @@ public class CameraBehaviour: BehaviourPrimitive
 
         camera.IsPrimary = true;
         tranform.Position = new Vector3(0, 25, 0);
+    }
+
+    ~CameraBehaviour()
+    {
+        SLog.WriteLine("Destoyed!");
     }
 
     private void OnUpdate() {  }

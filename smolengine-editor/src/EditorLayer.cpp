@@ -717,7 +717,7 @@ namespace SmolEngine
 
 					if (ImGui::MenuItem("Empty Actor"))
 					{
-						ss << "DefaultActor" << state->Actors.size();
+						ss << "Actor#" << state->Actors.size();
 						m_SelectedActor = m_World->GetActiveScene()->CreateActor(ss.str());
 						m_SelectionFlags = SelectionFlags::Inspector;
 					}
@@ -1629,6 +1629,9 @@ namespace SmolEngine
 							ImGui::Extensions::InputRawString(field.name, *(std::string*)field.ptr);
 						}
 					}
+
+
+					ImGui::NewLine();
 				}
 
 			}
@@ -1657,6 +1660,8 @@ namespace SmolEngine
 							ImGui::Extensions::InputRawString(field.name, *(std::string*)field.ptr);
 						}
 					}
+
+					ImGui::NewLine();
 				}
 
 			}

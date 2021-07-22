@@ -59,7 +59,7 @@ namespace SmolEngine
 	{
 		if (!comp->pActor)
 		{
-			NATIVE_ERROR("[ScriptingSystem]: Actor is nullptr!");
+			NATIVE_ERROR("[MetaContext]: Actor is nullptr!");
 			return;
 		}
 
@@ -68,15 +68,22 @@ namespace SmolEngine
 			auto& it = m_MetaMap.find(script.Name);
 			if (it == m_MetaMap.end())
 			{
-				NATIVE_ERROR("[ScriptingSystem]: Script {} not found!", script.Name);
+				NATIVE_ERROR("[MetaContext]: Script {} not found!", script.Name);
 				continue;
 			}
 
-			script.Instance = it->second.ClassInstance;
-			auto& primitive = script.Instance.cast<BehaviourPrimitive>();
+			auto& primitive = it->second.ClassInstance.cast<BehaviourPrimitive>();
+			if (!script.Fields.AreEqual(&primitive.m_FieldManager))
+			{
+				script.Fields = primitive.m_FieldManager;
+			}
+			else
+			{
+				primitive.m_FieldManager = script.Fields;
+			}
 
+			script.Instance = it->second.ClassInstance;
 			primitive.m_Actor = comp->pActor;
-			primitive.m_FieldManager = script.Fields;
 		}
 	}
 }

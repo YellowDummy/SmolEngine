@@ -1746,5 +1746,6 @@
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\CSharpAPI.cpp" />
     <ClCompile Include="src\Scripting\CPP\MetaContext.cpp" />
+    <ClCompile Include="src\Scripting\FieldManager.cpp" />
   </ItemGroup>
 </Project>

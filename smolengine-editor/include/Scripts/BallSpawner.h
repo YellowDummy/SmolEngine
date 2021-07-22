@@ -7,14 +7,16 @@ namespace SmolEngine
 	class BallSpawner : public BehaviourPrimitive
 	{
 	public:
+		float* testValue = nullptr;
 
 		BallSpawner()
 		{
-
+			CreateValue<float>(222.0f, "TestValue");
 		}
 
 		void OnProcess(float deltaTime)
 		{
+
 			if (Input::IsKeyPressed(KeyCode::J))
 			{
 				glm::vec3 pos = GetComponent<TransformComponent>()->WorldPos;
@@ -38,7 +40,11 @@ namespace SmolEngine
 			}
 		}
 
-		void OnBegin() {}
+		void OnBegin() 
+		{
+			testValue = GetValue<float>("TestValue");
+			NATIVE_WARN("Test value is {}", *testValue);
+		}
 		void OnDestroy() {}
 		void OnCollisionContact() {}
 		void OnCollisionExit() {}
